@@ -10,7 +10,7 @@ class App extends Component {
         this.state = {
         }
 
-        this.url = 'http://localhost:8889/bigdata/namespace/kb/sparql';
+        this.url = 'http://localhost:8889/bigdata/sparql';
 
         this.createRandomId = this.createRandomId.bind(this);
         this.randomString = this.randomString.bind(this);
@@ -66,18 +66,66 @@ class App extends Component {
 //                            rdfs:label ?articleLabel .
 //                }
 //            }`;
-        var that = this
+
+//        let request = obj => {
+//            return new Promise((resolve, reject) => {
+//                let xhr = new XMLHttpRequest();
+//                xhr.open(obj.method || "GET", obj.url);
+//                if (obj.headers) {
+//                    Object.keys(obj.headers).forEach(key => {
+//                        xhr.setRequestHeader(key, obj.headers[key]);
+//                    });
+//                }
+//                xhr.onload = () => {
+//                    if (xhr.status >= 200 && xhr.status < 300) {
+//                        resolve(xhr.response);
+//                    } else {
+//                        reject(xhr.statusText);
+//                    }
+//                };
+//                xhr.onerror = () => reject(xhr.statusText);
+//                xhr.send(obj.body);
+//            });
+//        };
+
+        var that = this;
+
+//        return request({url: this.url, method: 'POST', body: 'query='  +  encodeURIComponent(query),
+//                   headers: {
+//                       'Accept': 'application/sparql-results+json',
+//                       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+//                       'X-Requested-With': 'XMLHttpRequest',
+//                   },
+//                   mode: 'cors'
+//                   })
+//            .then((response) => response.json())
+//            .then((responseJson) => {
+//                that.setState({
+//                    results: responseJson.results,
+//                });
+//            })
+//            .catch((err) => {
+//                console.error(err);
+//                that.setState({
+//                    error: err.message,
+//                });
+//            });
+
 
         return fetch(this.url/* + '?query='  + encodeURIComponent(query)*/, {
 //                method: 'GET',
                 method: 'POST',
-                body: 'query='  +  encodeURIComponent(query),
+                //mode: 'no-cors',
+                body: 'query=' + query,
                 headers: {
                     'Accept': 'application/sparql-results+json',
                     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 }
             })
-            .then((response) => response.json())
+            .then((response) => {
+                console.log('Response type: ' + response.type);
+                return response.json();
+            })
             .then((responseJson) => {
                 that.setState({
                     results: responseJson.results,
