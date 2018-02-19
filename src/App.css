@@ -1,0 +1,16 @@
+.App {
+  text-align: left;
+}
+
+.App-header {
+  padding: 10px;
+  color: black;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-fieldName {
+  font-size: large;
+}
