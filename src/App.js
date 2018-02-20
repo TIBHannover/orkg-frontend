@@ -49,23 +49,21 @@ class App extends Component {
 //                        ?benchmark rdfs:label ?benchmarkLabel .
 //                    }
 //                }`;
-        let query = 'select * where {?s ?p ?o} limit 1';
-//        let query = `
-//            prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-//            prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-//            prefix swrc: <http://swrc.ontoware.org/ontology#>
-//            prefix ub: <http://vocab.cs.uni-bonn.de/unistruct#>
-//            prefix dc: <http://purl.org/dc/elements/1.1/>
-//            prefix : <http://uni-hannover.de/knowledge-graph/ontologies/research-paper#>
-//
-//            select ?articleLabel ?articleCreator
-//            where {
-//                ?article rdf:type swrc:Article .
-//                optional {
-//                    ?article dc:creator ?articleCreator ;
-//                            rdfs:label ?articleLabel .
-//                }
-//            }`;
+//        let query = 'select * where {?s ?p ?o} limit 1';
+        let query = `
+            prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            prefix swrc: <http://swrc.ontoware.org/ontology#>
+            prefix ub: <http://vocab.cs.uni-bonn.de/unistruct#>
+            prefix dc: <http://purl.org/dc/elements/1.1/>
+            prefix : <http://uni-hannover.de/knowledge-graph/ontologies/research-paper#>
+
+            select ?articleLabel ?articleCreator
+            where {
+                ?article rdf:type swrc:Article ; 
+			 rdfs:label ?articleLabel ;
+                         dc:creator ?articleCreator .
+            }`;
 
 //        let request = obj => {
 //            return new Promise((resolve, reject) => {
