@@ -2,8 +2,17 @@
 
 ## Run
 
-TODO @kovtun: This should be a minimal description for how to run the client.
+Run the following command in this directory.
+
+    npm run start
+
+The browser will open automatically on the page http://localhost:3000/.
 
 ## Requirements
 
-TODO @kovtun: Please describe the requirements and how to install them, at least for Linux. Later we will dockerize this, too, to make deployment easier.
+The docker container with the backend application should be run before running the client.
+
+    docker build -t blazegraph .
+    docker run --name blazegraph -d -p 8889:8080 blazegraph
+
+In Blazegraph import the data from an ontology by going to the link http://localhost:8889/bigdata/#update.
