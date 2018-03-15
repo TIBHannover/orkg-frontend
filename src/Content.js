@@ -27,8 +27,8 @@ class Content extends Component {
             return (<p><strong>Error:</strong> {this.props.error} </p>);
         }
 
-        const content = this.props.results.bindings.map(
-                (binding, index) => <ContentItem key={index} binding={binding} editable={false} onChange={this.props.onChange}/>
+        const content = this.props.results.map(
+                (value, index) => <ContentItem key={index} binding={value} editable={false} onChange={this.props.onChange}/>
         );
 
         return (
