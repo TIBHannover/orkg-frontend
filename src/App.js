@@ -10,7 +10,7 @@ class App extends Component {
         this.state = {
         }
 
-        this.url = 'http://localhost:8889/bigdata/sparql';
+        this.url = 'http://localhost:8000/api/';
 
         this.createRandomId = this.createRandomId.bind(this);
         this.randomString = this.randomString.bind(this);
@@ -20,36 +20,6 @@ class App extends Component {
     }
 
     componentDidMount() {
-//        let query = `
-//                prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-//                prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-//                prefix : <http://uni-hannover.de/knowledge-graph/ontologies/research-paper#>
-//
-//                select ?researchTitle ?problemLabel ?approachLabel ?scalabilityLabel ?implementationLabel ?plLabel ?evaluationLabel
-//                        ?datasetLabel ?benchmarkLabel
-//                where {
-//                    ?researchContribution rdf:type :ResearchContribution ;
-//                        rdfs:label ?researchTitle ;
-//                        :addresses ?problem ;
-//                        :followsApproach ?approach .
-//                    ?problem rdfs:label ?problemLabel .
-//                    ?approach :hasScalability ?scalability ;
-//                        rdfs:label ?approachLabel ;
-//                        :hasImplementation ?implementation ;
-//                        :evaluatedBy ?evaluation .
-//                    ?scalability rdfs:label ?scalabilityLabel
-//                    optional {
-//                        ?implementation :usesPl ?pl ;
-//                            rdfs:label ?implementationLabel .
-//                        ?pl rdfs:label ?plLabel .
-//                        ?evaluation :usesDataset ?dataset ;
-//                            rdfs:label ?evaluationLabel .
-//                        ?dataset rdfs:label ?datasetLabel .
-//                        ?evaluation :followsBenchmark ?benchmark .
-//                        ?benchmark rdfs:label ?benchmarkLabel .
-//                    }
-//                }`;
-//        let query = 'select * where {?s ?p ?o} limit 1';
         let query = `
             prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
             prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -67,13 +37,12 @@ class App extends Component {
 
         var that = this;
 
-        return fetch(this.url, {
-                method: 'POST',
-                body: 'query=' + query,
-                headers: {
-                    'Accept': 'application/sparql-results+json',
-                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                }
+        return fetch(this.url + 'contributions/', {
+                method: 'GET',
+//                headers: {
+//                    'Accept': 'application/sparql-results+json',
+//                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+//                }
             })
             .then((response) => {
                 console.log('Response type: ' + response.type);
@@ -81,7 +50,7 @@ class App extends Component {
             })
             .then((responseJson) => {
                 that.setState({
-                    results: responseJson.results,
+                    results: responseJson,
                 });
             })
             .catch((err) => {

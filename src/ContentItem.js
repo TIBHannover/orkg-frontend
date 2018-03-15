@@ -28,48 +28,10 @@ class ContentItem extends Component {
 
     render() {
         const binding = this.props.binding;
-        const articleLabel = binding && binding.articleLabel;
-        const articleCreator = binding && binding.articleCreator;
-//        const problemLabel = binding && binding.problemLabel;
-//        const approachLabel = binding && binding.approachLabel;
-//        const implementationLabel = binding && binding.implementationLabel;
-//        const plLabel = binding && binding.plLabel;
-//        const scalabilityLabel = binding && binding.scalabilityLabel;
-//        const evaluationLabel = binding && binding.evaluationLabel;
-//        const datasetLabel = binding && binding.datasetLabel;
-//        const benchmarkLabel = binding && binding.benchmarkLabel;
-
-//        return (
-//            <li>
-//                {this.renderField("Article:", articleTitle, "articleTitle")}
-//                <ul>
-//                    <li>{this.renderField("Addresses problem:", problemLabel, "problemLabel")}</li>
-//                    <li>
-//                        {this.renderField("Follows approach:", approachLabel, "approachLabel")}
-//                        <ul>
-//                            <li>
-//                                {this.renderField("Has implementation:", implementationLabel, "implementationLabel")}
-//                                <ul>
-//                                    <li>{this.renderField("Uses PL:", plLabel, "plLabel")}</li>
-//                                </ul>
-//                            </li>
-//                            <li>{this.renderField("Has scalability:", scalabilityLabel, "scalabilityLabel")}</li>
-//                            <li>
-//                                {this.renderField("Evaluated by:", evaluationLabel, "evaluationLabel")}
-//                                <ul>
-//                                    <li>{this.renderField("Uses dataset:", datasetLabel, "datasetLabel")}</li>
-//                                    <li>{this.renderField("Follows benchmark:", benchmarkLabel, "benchmarkLabel")}</li>
-//                                </ul>
-//                            </li>
-//                        </ul>
-//                    </li>
-//                </ul>
-//            </li>
 
         return (
             <li>
-                {this.renderField("Article:", articleLabel, "articleLabel")}
-                {this.renderField(" Creator:", articleCreator, "articleCreator")}
+                {this.renderField("Contribution:", binding, "binding")}
             </li>
         );
     }
