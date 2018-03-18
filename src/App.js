@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import './App.css';
-import Content from './Content';
-import ContentItem from './ContentItem';
 import DataList from './components/DataList';
 
 class App extends Component {
