@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
-import Content from './Content';
-import ContentItem from './ContentItem';
+import DataList from './components/DataList';
 
 class App extends Component {
     constructor(props) {
@@ -12,37 +11,16 @@ class App extends Component {
 
         this.url = 'http://localhost:8000/api/';
 
-        this.createRandomId = this.createRandomId.bind(this);
-        this.randomString = this.randomString.bind(this);
         this.setState = this.setState.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount() {
-        let query = `
-            prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            prefix swrc: <http://swrc.ontoware.org/ontology#>
-            prefix ub: <http://vocab.cs.uni-bonn.de/unistruct#>
-            prefix dc: <http://purl.org/dc/elements/1.1/>
-            prefix : <http://uni-hannover.de/knowledge-graph/ontologies/research-paper#>
-
-            select ?articleLabel ?articleCreator
-            where {
-                ?article rdf:type swrc:Article ;
-                        rdfs:label ?articleLabel ;
-                        dc:creator ?articleCreator .
-            }`;
-
         var that = this;
 
         return fetch(this.url + 'contributions/', {
                 method: 'GET',
-//                headers: {
-//                    'Accept': 'application/sparql-results+json',
-//                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-//                }
             })
             .then((response) => {
                 console.log('Response type: ' + response.type);
@@ -68,38 +46,7 @@ class App extends Component {
             formData[field] = this.refs[field].value;
         }
 
-        let query = `
-                prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-                prefix : <http://uni-hannover.de/knowledge-graph/ontologies/research-paper#>
-
-                insert data {
-                    ` + this.createRandomId() + ` rdf:type :ResearchContribution ;
-                    rdfs:label ` + formData.researchTitle + ` .
-                }
-        `;
-
-        alert('query = ' + query);
-
         event.preventDefault();
-    }
-
-    createRandomId() {
-        return 'OWLNamedIndividual_' + this.randomString(20);
-    }
-
-    randomString(length) {
-        var chars = '0123456789'.split('');
-
-        if (!length) {
-            length = Math.floor(Math.random() * chars.length);
-        }
-
-        let str = '';
-        for (let i = 0; i < length; i++) {
-            str += chars[Math.floor(Math.random() * chars.length)];
-        }
-        return str;
     }
 
     handleChange(e) {
@@ -107,17 +54,20 @@ class App extends Component {
     }
 
     render() {
+        if (!(this.state.error || this.state.results)) {
+            return (<p>Loading...</p>);
+        }
+        if (this.state.error) {
+            return (<p><strong>Error:</strong> {this.props.error} </p>);
+        }
+
         return (
             <div className="App">
                 <header className="App-header">
                     <h1 className="App-title">Research contribution</h1>
                 </header>
-                <Content results={this.state.results} error={this.state.error} onChange={this.handleChange}/>
-                <form onSubmit={this.handleSubmit}>
-                    <ContentItem editable={true}/>
-                    <input type="reset" value="Reset"/>
-                    <input type="submit" value="Submit"/>
-                </form>
+
+                <DataList data={this.state.results}/>
             </div>
         );
     }
