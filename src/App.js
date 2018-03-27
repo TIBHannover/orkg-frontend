@@ -15,6 +15,7 @@ class App extends Component {
         this.setState = this.setState.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.buildGraph = this.buildGraph.bind(this);
     }
 
     componentDidMount() {
@@ -54,6 +55,63 @@ class App extends Component {
         this.setState({[e.target.name]: e.target.value});
     }
 
+    cropText(s) {
+        const maxSize = 15;
+        return (s.length <= maxSize) ? s : s.substring(0, maxSize - 3) + '...';
+    }
+
+    buildGraph(array) {
+        /* Name of the ID property. */
+        const idPropertyName = 'id';
+
+        /* Name of the property that should be displayed as text. */
+        const displayPropertyName = 'value';
+
+        /* Hidden properties. */
+        const ignoredProperties = [idPropertyName, displayPropertyName];
+
+        const graph = {nodes: [], edges: []};
+
+        array.forEach((value, index) => {
+            const nodeId = value.id;
+            graph.nodes.push({
+                id: nodeId,
+                label: this.cropText(value.value),
+                scaling: {
+                    label: {
+                        enabled: true,
+                    },
+                },
+                shape: 'circle',
+                size: '30px'
+            });
+
+            const propertiesContent =  Object.entries(value).filter(
+                (entry) => !(entry[0] in ignoredProperties) && entry[1] instanceof Array
+            );
+
+            if (propertiesContent.length > 0) {
+                propertiesContent.forEach(
+                    (value, index) => {
+                        const subgraph = this.buildGraph(value[1]);
+                        const newEdges = subgraph.nodes.map((node, index) => {
+                            return {
+                                from: nodeId,
+                                to: node.id,
+                                label: this.cropText(value[0])
+                            };
+                        });
+
+                        graph.nodes = graph.nodes.concat(subgraph.nodes);
+                        graph.edges = graph.edges.concat(subgraph.edges).concat(newEdges);
+                    }
+                );
+            }
+        });
+
+        return graph;
+    }
+
     render() {
         if (!(this.state.error || this.state.results)) {
             return (<p>Loading...</p>);
@@ -62,32 +120,17 @@ class App extends Component {
             return (<p><strong>Error:</strong> {this.props.error} </p>);
         }
 
-        var graph = {
-          nodes: [
-              {id: 1, label: 'Node 1'},
-              {id: 2, label: 'Node 2'},
-              {id: 3, label: 'Node 3'},
-              {id: 4, label: 'Node 4'},
-              {id: 5, label: 'Node 5'}
-            ],
-          edges: [
-              {from: 1, to: 2},
-              {from: 1, to: 3},
-              {from: 2, to: 4},
-              {from: 2, to: 5}
-            ]
-        };
+        const graph = this.buildGraph(this.state.results);
 
-        var options = {
-            layout: {
-                hierarchical: true
-            },
+        const options = {
+            autoResize: true,
             edges: {
                 color: "#000000"
-            }
+            },
+            height: '500px',
         };
 
-        var events = {
+        const events = {
             select: function(event) {
                 var { nodes, edges } = event;
             }
