@@ -83,7 +83,8 @@ class App extends Component {
                     },
                 },
                 shape: 'circle',
-                size: '30px'
+                size: '30px',
+                title: value.value
             });
 
             const propertiesContent =  Object.entries(value).filter(
@@ -98,7 +99,8 @@ class App extends Component {
                             return {
                                 from: nodeId,
                                 to: node.id,
-                                label: this.cropText(value[0])
+                                label: this.cropText(value[0]),
+                                title: value[0]
                             };
                         });
 
