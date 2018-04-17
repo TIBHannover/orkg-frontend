@@ -32,7 +32,7 @@ class DataRow extends Component {
                         console.log(value + ', ' + index);
                         rows.push(
                             <span>
-                                {index == 0 ? <br/> : null}
+                                {index === 0 ? <br/> : null}
                                 {value[0]}<br/>
                                 <DataList key={index} data={value[1]}/><br/>
                             </span>
