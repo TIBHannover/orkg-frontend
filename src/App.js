@@ -9,7 +9,7 @@ class App extends Component {
         this.state = {
         }
 
-        this.url = 'http://localhost:8000/api/';
+        this.url = 'http://localhost:8000/api/statements/';
 
         this.setState = this.setState.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -19,7 +19,7 @@ class App extends Component {
     componentDidMount() {
         var that = this;
 
-        return fetch(this.url + 'contributions/', {
+        return fetch(this.url + 'resources/', {
                 method: 'GET',
             })
             .then((response) => {

@@ -7,7 +7,7 @@ class DataRow extends Component {
         const idPropertyName = 'id';
 
         /* Name of the property that should be displayed as text. */
-        const displayPropertyName = 'value';
+        const displayPropertyName = 'label';
 
         /* Hidden properties. */
         const ignoredProperties = [idPropertyName, displayPropertyName];
@@ -18,44 +18,7 @@ class DataRow extends Component {
             return null;
         }
 
-        if (data instanceof Object) {
-            /* Objects should be rendered with their content. */
-            const rows = [];
-
-            const propertiesContent =  Object.entries(data).filter(
-                (entry) => !(entry[0] in ignoredProperties) && entry[1] instanceof Array
-            );
-
-            if (propertiesContent.length > 0) {
-                propertiesContent.forEach(
-                    (value, index) => {
-                        console.log(value + ', ' + index);
-                        rows.push(
-                            <span>
-                                {index == 0 ? <br/> : null}
-                                {value[0]}<br/>
-                                <DataList key={index} data={value[1]}/><br/>
-                            </span>
-                        );
-                    }
-                );
-            }
-
-            return (
-                <li>
-                    {data[displayPropertyName]}
-                    <br/>
-                    {rows}
-                </li>
-            );
-        } else {
-            /* Non objects should be rendered as is. */
-            return (
-                <li>
-                    {data}
-                </li>
-            );
-        }
+        return <li>{data[displayPropertyName]}</li>
     }
 }
 
