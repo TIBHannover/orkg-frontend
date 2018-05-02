@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import './App.css';
 import DataList from './components/DataList';
+import Graph from 'vis-react';
+import {Form, Button} from 'semantic-ui-react';
 
 class App extends Component {
     constructor(props) {
@@ -68,6 +70,19 @@ class App extends Component {
                 </header>
 
                 <DataList data={this.state.results}/>
+                Add record
+                <Form>
+                    <Form.Field>
+                        <input placeholder='Subject'/>
+                    </Form.Field>
+                    <Form.Field>
+                        <input placeholder='Predicate'/>
+                    </Form.Field>
+                    <Form.Field>
+                        <input placeholder='Object'/>
+                    </Form.Field>
+                    <Button type='submit'>Submit</Button>
+                </Form>
             </div>
         );
     }
