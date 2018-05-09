@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import DataList from './DataList';
+import {Button, Container, Form, Modal, Icon, Segment, Grid, TextArea, Input, Label} from 'semantic-ui-react';
 
 class DataRow extends Component {
     render() {
