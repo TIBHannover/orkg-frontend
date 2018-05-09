@@ -58,6 +58,9 @@ class App extends Component {
 
     cropText(s) {
         const maxSize = 15;
+        if (!s) {
+            return null;
+        }
         return (s.length <= maxSize) ? s : s.substring(0, maxSize - 3) + '...';
     }
 
@@ -170,29 +173,29 @@ class App extends Component {
                 </header>
 
                 <DataList data={this.state.results}/>
-                Add node
-                <Form>
-                    <Form.Field>
-                        <input placeholder='Node Name'/>
-                    </Form.Field>
-                    <Button onClick={this.onNodeSubmitClick}>Submit</Button>
-                </Form>
-
-                Add link
-                <Form>
-                    <Form.Field>
-                        <input placeholder='Subject'/>
-                    </Form.Field>
-                    <Form.Field>
-                        <input placeholder='Predicate'/>
-                    </Form.Field>
-                    <Form.Field>
-                        <input placeholder='Object'/>
-                    </Form.Field>
-                    <Button type='submit'>Submit</Button>
-                </Form>
             </div>
         );
+//        Add node
+//                        <Form>
+//                            <Form.Field>
+//                                <input placeholder='Node Name'/>
+//                            </Form.Field>
+//                            <Button onClick={this.onNodeSubmitClick}>Submit</Button>
+//                        </Form>
+//
+//                        Add link
+//                        <Form>
+//                            <Form.Field>
+//                                <input placeholder='Subject'/>
+//                            </Form.Field>
+//                            <Form.Field>
+//                                <input placeholder='Predicate'/>
+//                            </Form.Field>
+//                            <Form.Field>
+//                                <input placeholder='Object'/>
+//                            </Form.Field>
+//                            <Button type='submit'>Submit</Button>
+//                        </Form>
     }
 }
 
