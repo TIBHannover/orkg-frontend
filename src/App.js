@@ -55,6 +55,29 @@ class App extends Component {
         this.setState({[e.target.name]: e.target.value});
     }
 
+    onNodeSubmitClick(event, data) {
+//        const id = this.createRandomId();
+
+    }
+
+//    createRandomId() {
+//        return this.randomString(8);
+//    }
+//
+//    randomString(length) {
+//        var chars = '0123456789'.split('');
+//
+//        if (!length) {
+//            length = Math.floor(Math.random() * chars.length);
+//        }
+//
+//        let str = '';
+//        for (let i = 0; i < length; i++) {
+//            str += chars[Math.floor(Math.random() * chars.length)];
+//        }
+//        return str;
+//    }
+
     render() {
         if (!(this.state.error || this.state.results)) {
             return (<p>Loading...</p>);
@@ -70,7 +93,15 @@ class App extends Component {
                 </header>
 
                 <DataList data={this.state.results}/>
-                Add record
+                Add node
+                <Form>
+                    <Form.Field>
+                        <input placeholder='Node Name'/>
+                    </Form.Field>
+                    <Button onClick={this.onNodeSubmitClick}>Submit</Button>
+                </Form>
+
+                Add link
                 <Form>
                     <Form.Field>
                         <input placeholder='Subject'/>
