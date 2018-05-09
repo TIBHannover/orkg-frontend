@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './App.css';
 import DataList from './components/DataList';
 import Graph from 'vis-react';
+import {Button, Container, Form, Modal, Icon, Segment, Grid, TextArea, Input, Label} from 'semantic-ui-react';
 
 class App extends Component {
     constructor(props) {
@@ -142,7 +143,7 @@ class App extends Component {
             <div className="App">
                 <Graph graph={graph} options={options} events={events}/>
                 <header className="App-header">
-                    <h1 className="App-title">Research contribution</h1>
+                    <h1 className="App-title">Research contribution <Button>+</Button></h1>
                 </header>
 
                 <DataList data={this.state.results}/>
