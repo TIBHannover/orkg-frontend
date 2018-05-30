@@ -17,29 +17,11 @@ class App extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.buildGraph = this.buildGraph.bind(this);
+        this.onSearchClick = this.onSearchClick.bind(this);
     }
 
     componentDidMount() {
-        var that = this;
 
-        return fetch(this.url + 'resources/', {
-                method: 'GET',
-            })
-            .then((response) => {
-                console.log('Response type: ' + response.type);
-                return response.json();
-            })
-            .then((responseJson) => {
-                that.setState({
-                    results: responseJson,
-                });
-            })
-            .catch((err) => {
-                console.error(err);
-                that.setState({
-                    error: err.message,
-                });
-            });
     }
 
     handleSubmit(event) {
@@ -118,9 +100,27 @@ class App extends Component {
         return graph;
     }
 
-    onNodeSubmitClick(event, data) {
-//        const id = this.createRandomId();
+    onSearchClick(event, data) {
+        var that = this;
 
+        return fetch(this.url + 'resources/?q=' + encodeURIComponent(this.refs.searchText.value.trim()), {
+                method: 'GET',
+            })
+            .then((response) => {
+                console.log('Response type: ' + response.type);
+                return response.json();
+            })
+            .then((responseJson) => {
+                that.setState({
+                    results: responseJson,
+                });
+            })
+            .catch((err) => {
+                console.error(err);
+                that.setState({
+                    error: err.message,
+                });
+            });
     }
 
 //    createRandomId() {
@@ -142,8 +142,20 @@ class App extends Component {
 //    }
 
     render() {
-        if (!(this.state.error || this.state.results)) {
-            return (<p>Loading...</p>);
+        const resultsPresent = this.state.error || this.state.results;
+        const searchForm = (<div>
+                    <header className="App-header">
+                        <h1 className="App-title">Search</h1>
+                    </header>
+                    <Form>
+                        <Form.Field>
+                            <input ref="searchText"/>
+                            <Button onClick={this.onSearchClick}>Search</Button>
+                        </Form.Field>
+                    </Form>
+                </div>);
+        if (!resultsPresent) {
+            return searchForm;
         }
         if (this.state.error) {
             return (<p><strong>Error:</strong> {this.props.error} </p>);
@@ -167,35 +179,14 @@ class App extends Component {
 
         return (
             <div className="App">
+                {searchForm}
                 <Graph graph={graph} options={options} events={events}/>
                 <header className="App-header">
-                    <h1 className="App-title">Research contribution <Button>+</Button></h1>
+                    <h1 className="App-title">Research contributions <Button>+</Button></h1>
                 </header>
-
                 <DataList data={this.state.results}/>
             </div>
         );
-//        Add node
-//                        <Form>
-//                            <Form.Field>
-//                                <input placeholder='Node Name'/>
-//                            </Form.Field>
-//                            <Button onClick={this.onNodeSubmitClick}>Submit</Button>
-//                        </Form>
-//
-//                        Add link
-//                        <Form>
-//                            <Form.Field>
-//                                <input placeholder='Subject'/>
-//                            </Form.Field>
-//                            <Form.Field>
-//                                <input placeholder='Predicate'/>
-//                            </Form.Field>
-//                            <Form.Field>
-//                                <input placeholder='Object'/>
-//                            </Form.Field>
-//                            <Button type='submit'>Submit</Button>
-//                        </Form>
     }
 }
 
