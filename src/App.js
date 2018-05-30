@@ -18,10 +18,11 @@ class App extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.buildGraph = this.buildGraph.bind(this);
         this.onSearchClick = this.onSearchClick.bind(this);
+        this.getAllResources = this.getAllResources.bind(this);
     }
 
     componentDidMount() {
-
+        this.getAllResources();
     }
 
     handleSubmit(event) {
@@ -101,7 +102,7 @@ class App extends Component {
     }
 
     onSearchClick(event, data) {
-        var that = this;
+        const that = this;
 
         return fetch(this.url + 'resources/?q=' + encodeURIComponent(this.refs.searchText.value.trim()), {
                 method: 'GET',
@@ -113,6 +114,29 @@ class App extends Component {
             .then((responseJson) => {
                 that.setState({
                     results: responseJson,
+                });
+            })
+            .catch((err) => {
+                console.error(err);
+                that.setState({
+                    error: err.message,
+                });
+            });
+    }
+
+    getAllResources() {
+        const that = this;
+
+        return fetch(this.url + 'resources/', {
+                method: 'GET',
+            })
+            .then((response) => {
+                console.log('Response type: ' + response.type);
+                return response.json();
+            })
+            .then((responseJson) => {
+                that.setState({
+                    allResources: responseJson,
                 });
             })
             .catch((err) => {
@@ -142,7 +166,7 @@ class App extends Component {
 //    }
 
     render() {
-        const resultsPresent = this.state.error || this.state.results;
+        const resultsPresent = this.state.error || (this.state.results && this.state.allResources);
         const searchForm = (<div>
                     <header className="App-header">
                         <h1 className="App-title">Search</h1>
@@ -184,7 +208,7 @@ class App extends Component {
                 <header className="App-header">
                     <h1 className="App-title">Research contributions <Button>+</Button></h1>
                 </header>
-                <DataList data={this.state.results}/>
+                <DataList data={this.state.results} allResources={this.state.allResources} level={0}/>
             </div>
         );
     }
