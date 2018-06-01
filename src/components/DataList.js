@@ -9,6 +9,11 @@ class DataList extends Component {
             return null;
         }
 
+        if (!this.props.allResources) {
+            console.error('DataList. allResouces is not specified.');
+            return null;
+        }
+
         const content = data.map(
             (value, index) => <DataRow key={index} data={value} allResources={this.props.allResources} level={this.props.level}/>
         );

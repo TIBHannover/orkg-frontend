@@ -3,6 +3,7 @@ import './App.css';
 import DataList from './components/DataList';
 import Graph from 'vis-react';
 import {Button, Container, Form, Modal, Icon, Segment, Grid, TextArea, Input, Label} from 'semantic-ui-react';
+import SplitPane from 'react-split-pane';
 
 class App extends Component {
     constructor(props) {
@@ -204,11 +205,15 @@ class App extends Component {
         return (
             <div className="App">
                 {searchForm}
-                <Graph graph={graph} options={options} events={events}/>
-                <header className="App-header">
-                    <h1 className="App-title">Research contributions <Button>+</Button></h1>
-                </header>
-                <DataList data={this.state.results} allResources={this.state.allResources} level={0}/>
+                <SplitPane split="vertical" minSize={250} defaultSize={800}>
+                    <div><Graph graph={graph} options={options} events={events}/></div>
+                    <div>
+                        <header className="App-header">
+                            <h1 className="App-title">Research contributions <Button>+</Button></h1>
+                        </header>
+                        <DataList data={this.state.results} allResources={this.state.allResources} level={0}/>
+                    </div>
+                </SplitPane>
             </div>
         );
     }

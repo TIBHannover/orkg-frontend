@@ -29,9 +29,7 @@ class DataRow extends Component {
                 .then((responseJson) => {
                     const conn = responseJson.filter(item => item.subject == subjectId);
                     const connectionIds = conn.map(item => item.object.id);
-                    const connectedResources = that.props.allResources.filter(item => {
-                        return connectionIds.includes(item.id)
-                    });
+                    const connectedResources = that.props.allResources.filter(item => connectionIds.includes(item.id));
                     that.setState({
                         connections: connectedResources,
                     });
@@ -71,7 +69,8 @@ class DataRow extends Component {
         /* Here we limit the number of nested levels. */
         return <li>
             {data[displayPropertyName]}<br/>
-            {this.props.level <= 1 ? <DataList data={this.state.connections} level={this.props.level + 1}/> : null}
+            {this.props.level <= 2 ? <DataList data={this.state.connections} allResources={this.props.allResources}
+                    level={this.props.level + 1}/> : null}
         </li>
     }
 

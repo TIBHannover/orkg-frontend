@@ -9,7 +9,8 @@
     "vis-react": "^0.3.0",
     "semantic-ui-less": "^2.2.12",
     "semantic-ui-react": "^0.80.0",
-    "semantic-ui-css": "^2.3.1"
+    "semantic-ui-css": "^2.3.1",
+    "react-split-pane": "^0.1.77"
   },
   "scripts": {
     "start": "react-scripts start",
