@@ -13,11 +13,12 @@ class DataRow extends Component {
         }
 
         this.findConnections = this.findConnections.bind(this);
-        this.findConnectionsByIds = this.findConnectionsByIds.bind(this);
     }
 
     findConnections(subjectId) {
         const that = this;
+
+        this.state.connections = [];
 
         fetch(this.url, {
                     method: 'GET',
@@ -40,10 +41,6 @@ class DataRow extends Component {
                         error: err.message,
                     });
                 });
-    }
-
-    findConnectionsByIds(connectionIds) {
-        const that = this;
     }
 
     render() {

@@ -5,7 +5,7 @@ class DataList extends Component {
     render() {
         const data = this.props.data;
 
-        if (!data) {
+        if (!data || data.length === 0) {
             return null;
         }
 
@@ -15,12 +15,8 @@ class DataList extends Component {
         }
 
         const content = data.map(
-            (value, index) => <DataRow key={index} data={value} allResources={this.props.allResources} level={this.props.level}/>
+            (value, index) => <DataRow key={value.id} data={value} allResources={this.props.allResources} level={this.props.level}/>
         );
-
-        if (content.length === 0) {
-            return null;
-        }
 
         return (
             <ul>
