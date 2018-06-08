@@ -38,26 +38,66 @@ class App extends Component {
         const hash = window.location.hash;
 
         if (hash) {
-            return fetch(this.url + 'resources/?' + hash.substring(1), {
-                    method: 'GET',
-                })
-                .then((response) => {
-                    console.log('Response type: ' + response.type);
-                    return response.json();
-                })
-                .then((responseJson) => {
-                    that.setState({
-                        results: responseJson,
-                        error: null
-                    });
-                })
-                .catch((err) => {
-                    console.error(err);
-                    that.setState({
-                        results: null,
-                        error: err.message,
-                    });
+            if (hash.startsWith('#q=')) {
+                const queryUrl = this.url + 'resources/?' + hash.substring(1);
+                return fetch(queryUrl, {
+                            method: 'GET',
+                        })
+                        .then((response) => {
+                            console.log('Response type: ' + response.type);
+                            if (!response.ok) {
+                                throw {message: 'Error response. (' + response.status + ') ' + response.statusText};
+                            } else {
+                                return response.json();
+                            }
+                        })
+                        .then((responseJson) => {
+                            that.setState({
+                                results: responseJson,
+                                error: null
+                            });
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                            that.setState({
+                                results: null,
+                                error: err.message,
+                            });
+                        });
+            } else if (hash.startsWith('#id=')) {
+                const queryUrl = this.url + 'resources/' + hash.substring(4);
+                return fetch(queryUrl, {
+                            method: 'GET',
+                        })
+                        .then((response) => {
+                            console.log('Response type: ' + response.type);
+                            if (!response.ok) {
+                                throw {message: 'Error response. (' + response.status + ') ' + response.statusText};
+                            } else {
+                                return response.json();
+                            }
+                        })
+                        .then((responseJson) => {
+                            that.setState({
+                                results: [responseJson],
+                                error: null
+                            });
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                            that.setState({
+                                results: null,
+                                error: err.message,
+                            });
+                        });
+            } else {
+                const errMsg = 'Incorrect hash value.';
+                console.error(errMsg);
+                that.setState({
+                    results: null,
+                    error: errMsg,
                 });
+            }
         }
     }
 
@@ -149,7 +189,11 @@ class App extends Component {
             })
             .then((response) => {
                 console.log('Response type: ' + response.type);
-                return response.json();
+                if (!response.ok) {
+                    throw {message: 'Error response. (' + response.status + ') ' + response.statusText};
+                } else {
+                    return response.json();
+                }
             })
             .then((responseJson) => {
                 that.setState({
@@ -186,13 +230,14 @@ class App extends Component {
 
     render() {
         const resultsPresent = this.state.error || (this.state.results && this.state.allResources);
+        const hash = window.location.hash;
         const searchForm = (<div>
                     <header className="App-header">
                         <h1 className="App-title">Search</h1>
                     </header>
                     <Form>
                         <Form.Field>
-                            <input ref="searchText" defaultValue={window.location.hash
+                            <input ref="searchText" defaultValue={hash && hash.startsWith('#q=')
                                     ? decodeURIComponent(window.location.hash.substring(3)) : null}/>
                             <Button onClick={this.onSearchClick}>Search</Button>
                         </Form.Field>
@@ -202,7 +247,7 @@ class App extends Component {
             return searchForm;
         }
         if (this.state.error) {
-            return (<p><strong>Error:</strong> {this.props.error} </p>);
+            return (<p><strong>Error:</strong> {this.state.error} </p>);
         }
 
         const graph = this.buildGraph(this.state.results);
