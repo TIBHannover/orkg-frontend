@@ -10,6 +10,9 @@ class App extends Component {
         super(props);
 
         this.state = {
+            allResources: null,
+            results: null,
+            error: null,
         }
 
         this.url = 'http://localhost:8000/api/statements/';
@@ -20,10 +23,42 @@ class App extends Component {
         this.buildGraph = this.buildGraph.bind(this);
         this.onSearchClick = this.onSearchClick.bind(this);
         this.getAllResources = this.getAllResources.bind(this);
+        this.handleHashChange = this.handleHashChange.bind(this);
     }
 
     componentDidMount() {
         this.getAllResources();
+
+        window.addEventListener("hashchange", this.handleHashChange);
+        this.handleHashChange();
+    }
+
+    handleHashChange() {
+        const that = this;
+        const hash = window.location.hash;
+
+        if (hash) {
+            return fetch(this.url + 'resources/?' + hash.substring(1), {
+                    method: 'GET',
+                })
+                .then((response) => {
+                    console.log('Response type: ' + response.type);
+                    return response.json();
+                })
+                .then((responseJson) => {
+                    that.setState({
+                        results: responseJson,
+                        error: null
+                    });
+                })
+                .catch((err) => {
+                    console.error(err);
+                    that.setState({
+                        results: null,
+                        error: err.message,
+                    });
+                });
+        }
     }
 
     handleSubmit(event) {
@@ -64,7 +99,7 @@ class App extends Component {
             const nodeId = value.id;
             graph.nodes.push({
                 id: nodeId,
-                label: this.cropText(value.value),
+                label: this.cropText(value.label),
                 scaling: {
                     label: {
                         enabled: true,
@@ -72,7 +107,7 @@ class App extends Component {
                 },
                 shape: 'circle',
                 size: '30px',
-                title: value.value
+                title: value.label
             });
 
             const propertiesContent =  Object.entries(value).filter(
@@ -103,26 +138,7 @@ class App extends Component {
     }
 
     onSearchClick(event, data) {
-        const that = this;
-
-        return fetch(this.url + 'resources/?q=' + encodeURIComponent(this.refs.searchText.value.trim()), {
-                method: 'GET',
-            })
-            .then((response) => {
-                console.log('Response type: ' + response.type);
-                return response.json();
-            })
-            .then((responseJson) => {
-                that.setState({
-                    results: responseJson,
-                });
-            })
-            .catch((err) => {
-                console.error(err);
-                that.setState({
-                    error: err.message,
-                });
-            });
+        window.location.hash = 'q=' + encodeURIComponent(this.refs.searchText.value.trim());
     }
 
     getAllResources() {
@@ -138,11 +154,13 @@ class App extends Component {
             .then((responseJson) => {
                 that.setState({
                     allResources: responseJson,
+                    error: null,
                 });
             })
             .catch((err) => {
                 console.error(err);
                 that.setState({
+                    allResources: null,
                     error: err.message,
                 });
             });
@@ -174,7 +192,8 @@ class App extends Component {
                     </header>
                     <Form>
                         <Form.Field>
-                            <input ref="searchText"/>
+                            <input ref="searchText" defaultValue={window.location.hash
+                                    ? decodeURIComponent(window.location.hash.substring(3)) : null}/>
                             <Button onClick={this.onSearchClick}>Search</Button>
                         </Form.Field>
                     </Form>

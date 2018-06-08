@@ -65,7 +65,7 @@ class DataRow extends Component {
 
         /* Here we limit the number of nested levels. */
         return <li>
-            {data[displayPropertyName]}<br/>
+            <a href={window.location.origin}>{data[displayPropertyName]}</a><br/>
             {this.props.level <= 2 ? <DataList data={this.state.connections} allResources={this.props.allResources}
                     level={this.props.level + 1}/> : null}
         </li>
