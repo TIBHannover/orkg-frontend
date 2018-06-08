@@ -11,6 +11,7 @@ class App extends Component {
 
         this.state = {
             allResources: null,
+            allStatements: null,
             results: null,
             error: null,
         }
@@ -28,9 +29,27 @@ class App extends Component {
 
     componentDidMount() {
         this.getAllResources();
+        this.getAllStatements();
 
         window.addEventListener("hashchange", this.handleHashChange);
         this.handleHashChange();
+    }
+
+    /**
+     * Sends simple GET request to the URL.
+     */
+    submitGetRequest(url, onSuccess, onError) {
+        fetch(url, { method: 'GET' })
+                .then((response) => {
+                    console.log('Response type: ' + response.type);
+                    if (!response.ok) {
+                        throw {message: 'Error response. (' + response.status + ') ' + response.statusText};
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then(onSuccess)
+                .catch(onError);
     }
 
     handleHashChange() {
@@ -40,24 +59,14 @@ class App extends Component {
         if (hash) {
             if (hash.startsWith('#q=')) {
                 const queryUrl = this.url + 'resources/?' + hash.substring(1);
-                return fetch(queryUrl, {
-                            method: 'GET',
-                        })
-                        .then((response) => {
-                            console.log('Response type: ' + response.type);
-                            if (!response.ok) {
-                                throw {message: 'Error response. (' + response.status + ') ' + response.statusText};
-                            } else {
-                                return response.json();
-                            }
-                        })
-                        .then((responseJson) => {
+                this.submitGetRequest(queryUrl,
+                        (responseJson) => {
                             that.setState({
                                 results: responseJson,
                                 error: null
                             });
-                        })
-                        .catch((err) => {
+                        },
+                        (err) => {
                             console.error(err);
                             that.setState({
                                 results: null,
@@ -66,30 +75,20 @@ class App extends Component {
                         });
             } else if (hash.startsWith('#id=')) {
                 const queryUrl = this.url + 'resources/' + hash.substring(4);
-                return fetch(queryUrl, {
-                            method: 'GET',
-                        })
-                        .then((response) => {
-                            console.log('Response type: ' + response.type);
-                            if (!response.ok) {
-                                throw {message: 'Error response. (' + response.status + ') ' + response.statusText};
-                            } else {
-                                return response.json();
-                            }
-                        })
-                        .then((responseJson) => {
-                            that.setState({
-                                results: [responseJson],
-                                error: null
-                            });
-                        })
-                        .catch((err) => {
-                            console.error(err);
-                            that.setState({
-                                results: null,
-                                error: err.message,
-                            });
-                        });
+                this.submitGetRequest(queryUrl,
+                                        (responseJson) => {
+                                            that.setState({
+                                                results: [responseJson],
+                                                error: null
+                                            });
+                                        },
+                                        (err) => {
+                                            console.error(err);
+                                            that.setState({
+                                                results: null,
+                                                error: err.message,
+                                            });
+                                        });
             } else {
                 const errMsg = 'Incorrect hash value.';
                 console.error(errMsg);
@@ -149,28 +148,18 @@ class App extends Component {
                 size: '30px',
                 title: value.label
             });
+        });
 
-            const propertiesContent =  Object.entries(value).filter(
-                (entry) => !(entry[0] in ignoredProperties) && entry[1] instanceof Array
-            );
+        const statements = this.state.allStatements;
+        statements.forEach((value, index) =>{
+            if (value.object.type === 'resource') {
+                graph.edges.push({
+                    from: value.subject,
+                    to: value.object.id,
+                    // TODO: fetch the text of the predicate.
+                    label: this.cropText(value.predicate)
+                });
 
-            if (propertiesContent.length > 0) {
-                propertiesContent.forEach(
-                    (value, index) => {
-                        const subgraph = this.buildGraph(value[1]);
-                        const newEdges = subgraph.nodes.map((node, index) => {
-                            return {
-                                from: nodeId,
-                                to: node.id,
-                                label: this.cropText(value[0]),
-                                title: value[0]
-                            };
-                        });
-
-                        graph.nodes = graph.nodes.concat(subgraph.nodes);
-                        graph.edges = graph.edges.concat(subgraph.edges).concat(newEdges);
-                    }
-                );
             }
         });
 
@@ -184,49 +173,40 @@ class App extends Component {
     getAllResources() {
         const that = this;
 
-        return fetch(this.url + 'resources/', {
-                method: 'GET',
-            })
-            .then((response) => {
-                console.log('Response type: ' + response.type);
-                if (!response.ok) {
-                    throw {message: 'Error response. (' + response.status + ') ' + response.statusText};
-                } else {
-                    return response.json();
-                }
-            })
-            .then((responseJson) => {
-                that.setState({
-                    allResources: responseJson,
-                    error: null,
+        this.submitGetRequest(this.url + 'resources/',
+                (responseJson) => {
+                    that.setState({
+                        allResources: responseJson,
+                        error: null,
+                    });
+                },
+                (err) => {
+                    console.error(err);
+                    that.setState({
+                        allResources: null,
+                        error: err.message,
+                    });
                 });
-            })
-            .catch((err) => {
-                console.error(err);
-                that.setState({
-                    allResources: null,
-                    error: err.message,
-                });
-            });
     }
 
-//    createRandomId() {
-//        return this.randomString(8);
-//    }
-//
-//    randomString(length) {
-//        var chars = '0123456789'.split('');
-//
-//        if (!length) {
-//            length = Math.floor(Math.random() * chars.length);
-//        }
-//
-//        let str = '';
-//        for (let i = 0; i < length; i++) {
-//            str += chars[Math.floor(Math.random() * chars.length)];
-//        }
-//        return str;
-//    }
+    getAllStatements() {
+        const that = this;
+
+        this.submitGetRequest(this.url,
+                (responseJson) => {
+                    that.setState({
+                        allStatements: responseJson,
+                        error: null,
+                    });
+                },
+                (err) => {
+                    console.error(err);
+                    that.setState({
+                        allStatements: null,
+                        error: err.message,
+                    });
+                });
+    }
 
     render() {
         const resultsPresent = this.state.error || (this.state.results && this.state.allResources);
