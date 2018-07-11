@@ -76,19 +76,19 @@ class App extends Component {
             } else if (hash.startsWith('#id=')) {
                 const queryUrl = this.url + 'resources/' + hash.substring(4);
                 this.submitGetRequest(queryUrl,
-                                        (responseJson) => {
-                                            that.setState({
-                                                results: [responseJson],
-                                                error: null
-                                            });
-                                        },
-                                        (err) => {
-                                            console.error(err);
-                                            that.setState({
-                                                results: null,
-                                                error: err.message,
-                                            });
-                                        });
+                        (responseJson) => {
+                            that.setState({
+                                results: [responseJson],
+                                error: null
+                            });
+                        },
+                        (err) => {
+                            console.error(err);
+                            that.setState({
+                                results: null,
+                                error: err.message,
+                            });
+                        });
             } else {
                 const errMsg = 'Incorrect hash value.';
                 console.error(errMsg);
@@ -253,7 +253,7 @@ class App extends Component {
                     <div><Graph graph={graph} options={options} events={events}/></div>
                     <div>
                         <header className="App-header">
-                            <h1 className="App-title">Research contributions <Button>+</Button></h1>
+                            <h1 className="App-title">Results <Button>+</Button></h1>
                         </header>
                         <DataList data={this.state.results} allResources={this.state.allResources} level={0}/>
                     </div>
