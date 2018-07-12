@@ -4,6 +4,8 @@ import DataList from './components/DataList';
 import Graph from 'vis-react';
 import {Button, Container, Form, Modal, Icon, Segment, Grid, TextArea, Input, Label} from 'semantic-ui-react';
 import SplitPane from 'react-split-pane';
+import {GetRequester, url} from './helpers.js';
+//import url from './helpers.js';
 
 class App extends Component {
     constructor(props) {
@@ -15,8 +17,6 @@ class App extends Component {
             results: null,
             error: null,
         }
-
-        this.url = 'http://localhost:8000/api/statements/';
 
         this.setState = this.setState.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -35,22 +35,6 @@ class App extends Component {
         this.handleHashChange();
     }
 
-    /**
-     * Sends simple GET request to the URL.
-     */
-    submitGetRequest(url, onSuccess, onError) {
-        fetch(url, { method: 'GET' })
-                .then((response) => {
-                    console.log('Response type: ' + response.type);
-                    if (!response.ok) {
-                        throw {message: 'Error response. (' + response.status + ') ' + response.statusText};
-                    } else {
-                        return response.json();
-                    }
-                })
-                .then(onSuccess)
-                .catch(onError);
-    }
 
     handleHashChange() {
         const that = this;
@@ -58,11 +42,17 @@ class App extends Component {
 
         if (hash) {
             if (hash.startsWith('#q=')) {
-                const queryUrl = this.url + 'resources/?' + hash.substring(1);
-                this.submitGetRequest(queryUrl,
+                const queryUrl = url + 'resources/?' + hash.substring(1);
+                GetRequester(queryUrl,
                         (responseJson) => {
+                            const results = responseJson.map(item => {
+                                return {
+                                    predicateId: null,
+                                    resource: item
+                                }
+                            });
                             that.setState({
-                                results: responseJson,
+                                results: results,
                                 error: null
                             });
                         },
@@ -74,11 +64,15 @@ class App extends Component {
                             });
                         });
             } else if (hash.startsWith('#id=')) {
-                const queryUrl = this.url + 'resources/' + hash.substring(4);
-                this.submitGetRequest(queryUrl,
+                const queryUrl = url + 'resources/' + hash.substring(4);
+                GetRequester(queryUrl,
                         (responseJson) => {
+                            const results = {
+                                predicateId: null,
+                                resource: responseJson
+                            };
                             that.setState({
-                                results: [responseJson],
+                                results: [results],
                                 error: null
                             });
                         },
@@ -159,7 +153,6 @@ class App extends Component {
                     // TODO: fetch the text of the predicate.
                     label: this.cropText(value.predicate)
                 });
-
             }
         });
 
@@ -173,7 +166,7 @@ class App extends Component {
     getAllResources() {
         const that = this;
 
-        this.submitGetRequest(this.url + 'resources/',
+        GetRequester(url + 'resources/',
                 (responseJson) => {
                     that.setState({
                         allResources: responseJson,
@@ -192,7 +185,7 @@ class App extends Component {
     getAllStatements() {
         const that = this;
 
-        this.submitGetRequest(this.url,
+        GetRequester(url + 'statements/',
                 (responseJson) => {
                     that.setState({
                         allStatements: responseJson,

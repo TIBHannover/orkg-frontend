@@ -28,9 +28,22 @@ class DataRow extends Component {
                     return response.json();
                 })
                 .then((responseJson) => {
-                    const conn = responseJson.filter(item => item.subject == subjectId);
-                    const connectionIds = conn.map(item => item.object.id);
-                    const connectedResources = that.props.allResources.filter(item => connectionIds.includes(item.id));
+                    const conn = responseJson.filter(item => item.subject === subjectId);
+                    const connections = conn.map(item => {
+                        return {
+                            predicateId: item.predicate,
+                            objectId: item.object.id
+                        }
+                    });
+                    const connectionObjectIds = connections.map(connection => connection.objectId);
+                    const connectedResources = that.props.allResources.filter(
+                            item => connectionObjectIds.includes(item.id)).
+                            map(item => {
+                                return {
+                                    predicateId: conn.find(connItem => connItem.object.id === item.id).predicate,
+                                    resource: item
+                                }
+                            });
                     that.setState({
                         connections: connectedResources,
                     });
@@ -66,8 +79,8 @@ class DataRow extends Component {
         /* Here we limit the number of nested levels. */
         return <li>
             <a href={window.location.origin + '/#id=' + data[idPropertyName]}>{data[displayPropertyName]}</a><br/>
-            {this.props.level <= 2 ? <DataList data={this.state.connections} allResources={this.props.allResources}
-                    level={this.props.level + 1}/> : null}
+            {this.props.level <= 2 ? <DataList data={this.state.connections}
+                    allResources={this.props.allResources} level={this.props.level + 1}/> : null}
         </li>
     }
 
