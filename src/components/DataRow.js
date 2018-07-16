@@ -80,7 +80,8 @@ class DataRow extends Component {
         return <li>
             <a href={window.location.origin + '/#id=' + data[idPropertyName]}>{data[displayPropertyName]}</a><br/>
             {this.props.level <= 2 ? <DataList data={this.state.connections}
-                    allResources={this.props.allResources} level={this.props.level + 1}/> : null}
+                    allResources={this.props.allResources} allPredicates={this.props.allPredicates}
+                    level={this.props.level + 1}/> : null}
         </li>
     }
 

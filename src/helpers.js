@@ -3,7 +3,7 @@ export const url = 'http://localhost:8000/api/';
 /**
  * Sends simple GET request to the URL.
  */
-export function GetRequester(url, onSuccess, onError) {
+export function submitGetRequest(url, onSuccess, onError) {
     fetch(url, { method: 'GET' })
             .then((response) => {
                 console.log('Response type: ' + response.type);

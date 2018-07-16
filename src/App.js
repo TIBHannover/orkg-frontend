@@ -4,8 +4,7 @@ import DataList from './components/DataList';
 import Graph from 'vis-react';
 import {Button, Container, Form, Modal, Icon, Segment, Grid, TextArea, Input, Label} from 'semantic-ui-react';
 import SplitPane from 'react-split-pane';
-import {GetRequester, url} from './helpers.js';
-//import url from './helpers.js';
+import {submitGetRequest, url} from './helpers.js';
 
 class App extends Component {
     constructor(props) {
@@ -14,6 +13,7 @@ class App extends Component {
         this.state = {
             allResources: null,
             allStatements: null,
+            allPredicates: [],
             results: null,
             error: null,
         }
@@ -23,18 +23,38 @@ class App extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.buildGraph = this.buildGraph.bind(this);
         this.onSearchClick = this.onSearchClick.bind(this);
-        this.getAllResources = this.getAllResources.bind(this);
         this.handleHashChange = this.handleHashChange.bind(this);
+        this.findAllResources = this.findAllResources.bind(this);
+        this.findAllStatements = this.findAllStatements.bind(this);
+        this.findAllPredicateNames = this.findAllPredicateNames.bind(this);
     }
 
     componentDidMount() {
-        this.getAllResources();
-        this.getAllStatements();
+        this.findAllResources();
+        this.findAllStatements();
+        this.findAllPredicateNames();
 
         window.addEventListener("hashchange", this.handleHashChange);
         this.handleHashChange();
     }
 
+    // TODO: Run this after all queries completed.
+    findAllPredicateNames(predicateIds) {
+        const that = this;
+        submitGetRequest(url + 'predicates/', (responseJson) => {
+            that.setState({
+                allPredicates: responseJson,
+                error: null
+            });
+        },
+        (err) => {
+            console.error(err);
+            that.setState({
+                allPredicates: [],
+                error: err.message,
+            });
+        });
+    }
 
     handleHashChange() {
         const that = this;
@@ -43,7 +63,7 @@ class App extends Component {
         if (hash) {
             if (hash.startsWith('#q=')) {
                 const queryUrl = url + 'resources/?' + hash.substring(1);
-                GetRequester(queryUrl,
+                submitGetRequest(queryUrl,
                         (responseJson) => {
                             const results = responseJson.map(item => {
                                 return {
@@ -65,7 +85,7 @@ class App extends Component {
                         });
             } else if (hash.startsWith('#id=')) {
                 const queryUrl = url + 'resources/' + hash.substring(4);
-                GetRequester(queryUrl,
+                submitGetRequest(queryUrl,
                         (responseJson) => {
                             const results = {
                                 predicateId: null,
@@ -163,10 +183,10 @@ class App extends Component {
         window.location.hash = 'q=' + encodeURIComponent(this.refs.searchText.value.trim());
     }
 
-    getAllResources() {
+    findAllResources() {
         const that = this;
 
-        GetRequester(url + 'resources/',
+        submitGetRequest(url + 'resources/',
                 (responseJson) => {
                     that.setState({
                         allResources: responseJson,
@@ -182,10 +202,10 @@ class App extends Component {
                 });
     }
 
-    getAllStatements() {
+    findAllStatements() {
         const that = this;
 
-        GetRequester(url + 'statements/',
+        submitGetRequest(url + 'statements/',
                 (responseJson) => {
                     that.setState({
                         allStatements: responseJson,
@@ -248,7 +268,8 @@ class App extends Component {
                         <header className="App-header">
                             <h1 className="App-title">Results <Button>+</Button></h1>
                         </header>
-                        <DataList data={this.state.results} allResources={this.state.allResources} level={0}/>
+                        <DataList data={this.state.results} allResources={this.state.allResources}
+                                allPredicates={this.state.allPredicates} level={0}/>
                     </div>
                 </SplitPane>
             </div>

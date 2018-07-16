@@ -1,19 +1,8 @@
 import React, {Component} from 'react';
 import DataRow from './DataRow';
-import {GetRequester, url} from '../helpers.js';
+import {submitGetRequest, url} from '../helpers.js';
 
 class DataList extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-        }
-    }
-
-    findPredicateNames(predicateIds) {
-        GetRequester();
-    }
-
     render() {
         const data = this.props.data;
 
@@ -26,16 +15,17 @@ class DataList extends Component {
             return null;
         }
 
-        const predicateIds = data.map(value => value.predicateId);
-
-        const content = data.map(
-            (value, index) => <span>
-                    {value.predicateId && (index === 0 || data[index - 1].predicateId !== value.predicateId)
-                            ? value.predicateId : null}
-                    <DataRow key={value.id} data={value.resource}
-                            allResources={this.props.allResources} level={this.props.level}/>
+        const that = this;
+        const content = data.map((value, index) => {
+            const predicate = value.predicateId && (index === 0 || data[index - 1].predicateId !== value.predicateId)
+                    ? (that.props.allPredicates.find(predicate => predicate.id === value.predicateId).label) : null;
+            return <span>
+                {predicate}
+                <DataRow key={value.id} data={value.resource}
+                        allResources={that.props.allResources} allPredicates={that.props.allPredicates}
+                        level={that.props.level}/>
             </span>
-        );
+        });
 
         return (
             <ul>
