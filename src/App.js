@@ -1,55 +1,63 @@
 import React, {Component} from 'react';
-import './App.css';
 import DataList from './components/DataList';
+import AddResourceModal from './components/AddResourceModal';
 import Graph from 'vis-react';
-import {Button, Container, Form, Modal, Icon, Segment, Grid, TextArea, Input, Label} from 'semantic-ui-react';
+import {Button, Form} from 'semantic-ui-react';
 import SplitPane from 'react-split-pane';
+import {NotificationContainer} from 'react-notifications';
+import {submitGetRequest, url} from './helpers.js';
+import './App.css';
 
 class App extends Component {
+    state = {
+        allResources: null,
+        allStatements: null,
+        allPredicates: [],
+        results: null,
+        error: null,
+    }
+
+    query = '';
+
     constructor(props) {
         super(props);
-
-        this.state = {
-            allResources: null,
-            allStatements: null,
-            results: null,
-            error: null,
-        }
-
-        this.url = 'http://localhost:8000/api/statements/';
 
         this.setState = this.setState.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.buildGraph = this.buildGraph.bind(this);
         this.onSearchClick = this.onSearchClick.bind(this);
-        this.getAllResources = this.getAllResources.bind(this);
         this.handleHashChange = this.handleHashChange.bind(this);
+        this.findAllResources = this.findAllResources.bind(this);
+        this.findAllStatements = this.findAllStatements.bind(this);
+        this.findAllPredicateNames = this.findAllPredicateNames.bind(this);
     }
 
     componentDidMount() {
-        this.getAllResources();
-        this.getAllStatements();
+        this.findAllResources();
+        this.findAllStatements();
+        this.findAllPredicateNames();
 
         window.addEventListener("hashchange", this.handleHashChange);
         this.handleHashChange();
     }
 
-    /**
-     * Sends simple GET request to the URL.
-     */
-    submitGetRequest(url, onSuccess, onError) {
-        fetch(url, { method: 'GET' })
-                .then((response) => {
-                    console.log('Response type: ' + response.type);
-                    if (!response.ok) {
-                        throw {message: 'Error response. (' + response.status + ') ' + response.statusText};
-                    } else {
-                        return response.json();
-                    }
-                })
-                .then(onSuccess)
-                .catch(onError);
+    // TODO: Run this after all queries completed.
+    findAllPredicateNames(predicateIds) {
+        const that = this;
+        submitGetRequest(url + 'predicates/', (responseJson) => {
+            that.setState({
+                allPredicates: responseJson,
+                error: null
+            });
+        },
+        (err) => {
+            console.error(err);
+            that.setState({
+                allPredicates: [],
+                error: err.message,
+            });
+        });
     }
 
     handleHashChange() {
@@ -58,11 +66,18 @@ class App extends Component {
 
         if (hash) {
             if (hash.startsWith('#q=')) {
-                const queryUrl = this.url + 'resources/?' + hash.substring(1);
-                this.submitGetRequest(queryUrl,
+                const queryUrl = url + 'resources/?' + hash.substring(1);
+                submitGetRequest(queryUrl,
                         (responseJson) => {
+                            const results = responseJson.map(item => {
+                                return {
+                                    statementId: null,
+                                    predicateId: null,
+                                    resource: item
+                                }
+                            });
                             that.setState({
-                                results: responseJson,
+                                results: results,
                                 error: null
                             });
                         },
@@ -74,21 +89,26 @@ class App extends Component {
                             });
                         });
             } else if (hash.startsWith('#id=')) {
-                const queryUrl = this.url + 'resources/' + hash.substring(4);
-                this.submitGetRequest(queryUrl,
-                                        (responseJson) => {
-                                            that.setState({
-                                                results: [responseJson],
-                                                error: null
-                                            });
-                                        },
-                                        (err) => {
-                                            console.error(err);
-                                            that.setState({
-                                                results: null,
-                                                error: err.message,
-                                            });
-                                        });
+                const queryUrl = url + 'resources/' + hash.substring(4);
+                submitGetRequest(queryUrl,
+                        (responseJson) => {
+                            const results = {
+                                statementId: null,
+                                predicateId: null,
+                                resource: responseJson
+                            };
+                            that.setState({
+                                results: [results],
+                                error: null
+                            });
+                        },
+                        (err) => {
+                            console.error(err);
+                            that.setState({
+                                results: null,
+                                error: err.message,
+                            });
+                        });
             } else {
                 const errMsg = 'Incorrect hash value.';
                 console.error(errMsg);
@@ -123,15 +143,6 @@ class App extends Component {
     }
 
     buildGraph(array) {
-        /* Name of the ID property. */
-        const idPropertyName = 'id';
-
-        /* Name of the property that should be displayed as text. */
-        const displayPropertyName = 'value';
-
-        /* Hidden properties. */
-        const ignoredProperties = [idPropertyName, displayPropertyName];
-
         const graph = {nodes: [], edges: []};
 
         array.forEach((value, index) => {
@@ -151,15 +162,24 @@ class App extends Component {
         });
 
         const statements = this.state.allStatements;
-        statements.forEach((value, index) =>{
-            if (value.object.type === 'resource') {
-                graph.edges.push({
-                    from: value.subject,
-                    to: value.object.id,
-                    // TODO: fetch the text of the predicate.
-                    label: this.cropText(value.predicate)
-                });
-
+        statements.forEach((value, index) => {
+            switch (value.object.type) {
+                case 'resource': {
+                    graph.edges.push({
+                        from: value.subject,
+                        to: value.object.id,
+                        // TODO: fetch the text of the predicate.
+                        label: this.cropText(value.predicate)
+                    });
+                }
+                case 'literal': {
+                    graph.edges.push({
+                        from: value.subject,
+                        to: value.object.value,
+                        // TODO: fetch the text of the predicate.
+                        label: this.cropText(value.predicate)
+                    });
+                }
             }
         });
 
@@ -167,13 +187,13 @@ class App extends Component {
     }
 
     onSearchClick(event, data) {
-        window.location.hash = 'q=' + encodeURIComponent(this.refs.searchText.value.trim());
+        window.location.hash = 'q=' + encodeURIComponent(this.query);
     }
 
-    getAllResources() {
+    findAllResources() {
         const that = this;
 
-        this.submitGetRequest(this.url + 'resources/',
+        submitGetRequest(url + 'resources/',
                 (responseJson) => {
                     that.setState({
                         allResources: responseJson,
@@ -189,10 +209,10 @@ class App extends Component {
                 });
     }
 
-    getAllStatements() {
+    findAllStatements() {
         const that = this;
 
-        this.submitGetRequest(this.url,
+        submitGetRequest(url + 'statements/',
                 (responseJson) => {
                     that.setState({
                         allStatements: responseJson,
@@ -217,8 +237,9 @@ class App extends Component {
                     </header>
                     <Form>
                         <Form.Field>
-                            <input ref="searchText" defaultValue={hash && hash.startsWith('#q=')
-                                    ? decodeURIComponent(window.location.hash.substring(3)) : null}/>
+                            <Form.Input defaultValue={hash && hash.startsWith('#q=')
+                                    ? decodeURIComponent(window.location.hash.substring(3)) : null}
+                                    onChange={(event, data) => this.query = data.value.trim()}/>
                             <Button onClick={this.onSearchClick}>Search</Button>
                         </Form.Field>
                     </Form>
@@ -242,24 +263,24 @@ class App extends Component {
 
         const events = {
             select: function(event) {
-                var { nodes, edges } = event;
+//                var { nodes, edges } = event;
             }
         }
 
-        return (
-            <div className="App">
-                {searchForm}
-                <SplitPane split="vertical" minSize={250} defaultSize={800}>
-                    <div><Graph graph={graph} options={options} events={events}/></div>
-                    <div>
-                        <header className="App-header">
-                            <h1 className="App-title">Research contributions <Button>+</Button></h1>
-                        </header>
-                        <DataList data={this.state.results} allResources={this.state.allResources} level={0}/>
-                    </div>
-                </SplitPane>
-            </div>
-        );
+        return <div className="App">
+            <NotificationContainer/>
+            {searchForm}
+            <SplitPane split="vertical" minSize={250} defaultSize={800}>
+                <div><Graph graph={graph} options={options} events={events}/></div>
+                <div>
+                    <header className="App-header">
+                        <h1 className="App-title">Results&nbsp;<AddResourceModal/></h1>
+                    </header>
+                    <DataList data={this.state.results} allResources={this.state.allResources}
+                            allPredicates={this.state.allPredicates} level={0}/>
+                </div>
+            </SplitPane>
+        </div>
     }
 }
 

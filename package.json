@@ -5,11 +5,12 @@
   "dependencies": {
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-notifications": "^1.4.3",
     "react-scripts": "1.0.17",
-    "react-split-pane": "^0.1.77",
-    "semantic-ui-css": "^2.3.1",
+    "react-split-pane": "^0.1.82",
+    "semantic-ui-css": "^2.3.3",
     "semantic-ui-less": "^2.2.12",
-    "semantic-ui-react": "^0.80.0",
+    "semantic-ui-react": "^0.80.2",
     "vis-react": "^0.3.0",
     "webcola": "^3.3.8"
   },
