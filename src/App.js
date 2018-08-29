@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import DataList from './components/DataList';
-import AddResourceModal from './components/AddResourceModal';
-import Graph from 'vis-react';
-import {Button, Form} from 'semantic-ui-react';
-import SplitPane from 'react-split-pane';
-import {NotificationContainer} from 'react-notifications';
+// import DataList from './components/DataList';
+// import AddResourceModal from './components/AddResourceModal';
+// import Graph from 'vis-react';
+import { Button, Form } from 'reactstrap';
+// import SplitPane from 'react-split-pane';
+// import {NotificationContainer} from 'react-notifications';
 import {submitGetRequest, url} from './helpers.js';
 import './App.css';
 
@@ -15,7 +15,7 @@ class App extends Component {
         allPredicates: [],
         results: null,
         error: null,
-    }
+    };
 
     query = '';
 
@@ -229,58 +229,134 @@ class App extends Component {
     }
 
     render() {
-        const resultsPresent = this.state.error || (this.state.results && this.state.allResources);
-        const hash = window.location.hash;
-        const searchForm = (<div>
-                    <header className="App-header">
-                        <h1 className="App-title">Search</h1>
-                    </header>
-                    <Form>
-                        <Form.Field>
-                            <Form.Input defaultValue={hash && hash.startsWith('#q=')
-                                    ? decodeURIComponent(window.location.hash.substring(3)) : null}
-                                    onChange={(event, data) => this.query = data.value.trim()}/>
-                            <Button onClick={this.onSearchClick}>Search</Button>
-                        </Form.Field>
-                    </Form>
-                </div>);
-        if (!resultsPresent) {
-            return searchForm;
-        }
-        if (this.state.error) {
-            return (<p><strong>Error:</strong> {this.state.error} </p>);
-        }
+        return <div>
+            <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+                <a className="navbar-brand col-sm-3 col-md-2 mr-0" href="#">ORKG</a>
+                <input className="form-control form-control-dark w-100" type="text" placeholder="Search (not implemented)"
+                       aria-label="Search"/>
+                    <ul className="navbar-nav px-3">
+                        <li className="nav-item text-nowrap">
+                            <a className="nav-link" href="#">Sign out (not implemented)</a>
+                        </li>
+                    </ul>
+            </nav>
 
-        const graph = this.buildGraph(this.state.results);
+            <div className="container-fluid">
+                <div className="row">
+                    <nav className="col-md-2 d-none d-md-block bg-light sidebar">
+                        <div className="sidebar-sticky">
+                            <ul className="nav flex-column">
+                                <li className="nav-item">
+                                    <a className="nav-link active" href="#">
+                                        <span data-feather="home"></span>
+                                        Problem
+                                    </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#">
+                                        <span data-feather="file"></span>
+                                        Approach
+                                    </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#">
+                                        <span data-feather="shopping-cart"></span>
+                                        Implementation
+                                    </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#">
+                                        <span data-feather="users"></span>
+                                        Evaluation
+                                    </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#">
+                                        <span data-feather="bar-chart-2"></span>
+                                        Etc.
+                                    </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#">
+                                        <span data-feather="layers"></span>
+                                        Etc., etc.
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
 
-        const options = {
-            autoResize: true,
-            edges: {
-                color: "#000000"
-            },
-            height: '500px',
-        };
+                    <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                        <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                            <h1 className="h2">Header</h1>
+                            <div className="btn-toolbar mb-2 mb-md-0">
+                                <button className="btn btn-sm btn-outline-secondary dropdown-toggle">
+                                    <span data-feather="calendar"></span>
+                                    This week
+                                </button>
+                            </div>
+                        </div>
 
-        const events = {
-            select: function(event) {
-//                var { nodes, edges } = event;
-            }
-        }
+                        <canvas className="my-4" id="myChart" width="900" height="380"></canvas>
 
-        return <div className="App">
-            <NotificationContainer/>
-            {searchForm}
-            <SplitPane split="vertical" minSize={250} defaultSize={800}>
-                <div><Graph graph={graph} options={options} events={events}/></div>
-                <div>
-                    <header className="App-header">
-                        <h1 className="App-title">Results&nbsp;<AddResourceModal/></h1>
-                    </header>
-                    <DataList data={this.state.results} allResources={this.state.allResources}
-                            allPredicates={this.state.allPredicates} level={0}/>
+                        Some content
+                    </main>
                 </div>
-            </SplitPane>
+            </div>
         </div>
+
+//         const resultsPresent = this.state.error || (this.state.results && this.state.allResources);
+//         const hash = window.location.hash;
+//         const searchForm = (<div>
+//                     <header className="App-header">
+//                         <h1 className="App-title">Search</h1>
+//                     </header>
+//                     <Form>
+//                         <Form.Field>
+//                             <Form.Input defaultValue={hash && hash.startsWith('#q=')
+//                                     ? decodeURIComponent(window.location.hash.substring(3)) : null}
+//                                     onChange={(event, data) => this.query = data.value.trim()}/>
+//                             <Button onClick={this.onSearchClick}>Search</Button>
+//                         </Form.Field>
+//                     </Form>
+//                 </div>);
+//         if (!resultsPresent) {
+//             return searchForm;
+//         }
+//         if (this.state.error) {
+//             return (<p><strong>Error:</strong> {this.state.error} </p>);
+//         }
+//
+//         const graph = this.buildGraph(this.state.results);
+//
+//         const options = {
+//             autoResize: true,
+//             edges: {
+//                 color: "#000000"
+//             },
+//             height: '500px',
+//         };
+//
+//         const events = {
+//             select: function(event) {
+// //                var { nodes, edges } = event;
+//             }
+//         };
+//
+//         return <div className="App">
+//             <NotificationContainer/>
+//             {searchForm}
+//             <SplitPane split="vertical" minSize={250} defaultSize={800}>
+//                 <div><Graph graph={graph} options={options} events={events}/></div>
+//                 <div>
+//                     <header className="App-header">
+//                         <h1 className="App-title">Results&nbsp;<AddResourceModal/></h1>
+//                     </header>
+//                     <DataList data={this.state.results} allResources={this.state.allResources}
+//                             allPredicates={this.state.allPredicates} level={0}/>
+//                 </div>
+//             </SplitPane>
+//         </div>
     }
 }
 

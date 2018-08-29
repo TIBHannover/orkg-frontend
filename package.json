@@ -3,14 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "bootstrap": "^4.1.1",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
     "react-notifications": "^1.4.3",
     "react-scripts": "1.0.17",
     "react-split-pane": "^0.1.82",
-    "semantic-ui-css": "^2.3.3",
-    "semantic-ui-less": "^2.2.12",
-    "semantic-ui-react": "^0.80.2",
+    "reactstrap": "^6.4.0",
     "vis-react": "^0.3.0",
     "webcola": "^3.3.8"
   },

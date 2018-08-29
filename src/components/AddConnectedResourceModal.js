@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Form, Modal, Icon, Header} from 'semantic-ui-react';
+import {Button, Form, Modal, Icon, Header} from 'reactstrap';
 import {NotificationManager} from 'react-notifications';
 import {createResourceStatement, createLiteralStatement} from '../helpers.js';
 
