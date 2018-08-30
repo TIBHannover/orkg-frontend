@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "babel-preset-es2018": "^1.0.0",
     "bootstrap": "^4.1.1",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
@@ -18,5 +19,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0"
   }
 }

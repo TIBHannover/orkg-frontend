@@ -70,3 +70,11 @@
 .SplitPane {
     position: relative !important;
 }
+
+dd {
+    padding-left: 20px;
+}
+
+.CodeContainerButton {
+    marginBottom: '1rem';
+}
