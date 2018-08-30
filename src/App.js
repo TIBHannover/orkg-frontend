@@ -4,14 +4,12 @@ import React, {Component} from 'react';
 // import Graph from 'vis-react';
 import {
     Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown, Card, CardImg,
-    CardBody, CardTitle, CardSubtitle, CardText, CardGroup, CardHeader, UncontrolledCollapse
+    CardBody, CardTitle, CardSubtitle, CardText, CardGroup, CardHeader, UncontrolledCollapse, Nav, NavItem, NavLink
 } from 'reactstrap';
 // import SplitPane from 'react-split-pane';
 // import {NotificationContainer} from 'react-notifications';
 import {submitGetRequest, url} from './helpers.js';
 import './App.css';
-import DefinitionTable from "./components/DefinitionTable";
-import DefinitionTableRow from "./components/DefinitionTableRow";
 import CodeContainer from "./components/CodeContainer";
 
 class App extends Component {
@@ -258,55 +256,26 @@ class App extends Component {
 
             <div className="container-fluid">
                 <div className="row">
-                    <nav className="col-md-2 d-none d-md-block bg-light sidebar">
-                        <div className="sidebar-sticky">
-                            <ul className="nav flex-column">
-                                <li className="nav-item">
-                                    <a className="nav-link active" href="/#/researchContributions/">
-                                        Research contributions
-                                    </a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link active" href="/#/problems/">
-                                        Problems
-                                    </a>
-                                    {/*<UncontrolledDropdown>*/}
-                                        {/*<DropdownToggle caret color="primary">Sorting</DropdownToggle>*/}
-                                        {/*<DropdownMenu>*/}
-                                            {/*<DropdownItem tag="a" href="/#/sortingId">Sorting</DropdownItem>*/}
-                                            {/*<DropdownItem tag="a" href="/#/queryExecutionId">Query execution</DropdownItem>*/}
-                                            {/*<DropdownItem tag="a" href="/#/doId">Design of ontologies</DropdownItem>*/}
-                                        {/*</DropdownMenu>*/}
-                                    {/*</UncontrolledDropdown>*/}
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link" href="#">
-                                        Approaches
-                                    </a>
-                                    {/*<UncontrolledDropdown>*/}
-                                        {/*<DropdownToggle caret color="primary"></DropdownToggle>*/}
-                                        {/*<DropdownMenu>*/}
-                                        {/*</DropdownMenu>*/}
-                                    {/*</UncontrolledDropdown>*/}
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link" href="#">
-                                        Implementations
-                                    </a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link" href="#">
-                                        Evaluations
-                                    </a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link" href="#">
-                                        Etc.
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
+                    <Nav className="bg-light" vertical>
+                        <NavItem>
+                            <NavLink href="/#/researchContributions/">Research contributions</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink href="/#/problems/">Problems</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink href="/#/researchContributions/">Approaches</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink href="#">Implementations</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink href="#">Evaluations</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink href="#">Etc</NavLink>
+                        </NavItem>
+                    </Nav>
 
                     <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
@@ -814,13 +783,13 @@ end procedure`}
                                                 <dt>Code</dt>
                                                 <dd>
                                                     <CodeContainer>
-{`procedure slowsort(A,i,j)                            // sorts Array A[i],...,A[j]
-   if i >= j then return
-   m := ⌊(i+j)/2⌋
-   slowsort(A,i,m)                                    // (1.1)
-   slowsort(A,m+1,j)                                  // (1.2)
-   if A[j] < A[m] then swap A[j] and A[m]             // (1.3)
-   slowsort(A,i,j-1)                                  // (2)`}
+{`procedure slowsort(A,i,j)                  // sorts Array A[i],...,A[j]
+    if i >= j then return
+    m := ⌊(i+j)/2⌋
+    slowsort(A,i,m)                        // (1.1)
+    slowsort(A,m+1,j)                      // (1.2)
+    if A[j] < A[m] then swap A[j] and A[m] // (1.3)
+    slowsort(A,i,j-1)                      // (2)`}
                                                     </CodeContainer>
                                                 </dd>
                                             </dl>
