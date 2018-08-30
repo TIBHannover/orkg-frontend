@@ -76,5 +76,10 @@ dd {
 }
 
 .CodeContainerButton {
-    marginBottom: '1rem';
+    margin-bottom: 1rem;
+    display: block !important;
+}
+
+.card {
+    margin-top: 1rem;
 }
