@@ -45,9 +45,13 @@
     width: 100%;
 }
 
-.statementView-mainPiece-container {}
+.statementView-mainSnak-container {}
 
-.statementView-mainPiece {
+.statementView-mainSnak-body {
+    word-wrap: break-word;
+}
+
+.statementView-mainSnak {
     position: relative;
     margin-left: 15em;
     margin-right: 18em;
@@ -55,3 +59,17 @@
     word-wrap: break-word;
 }
 
+.snakView {
+    padding: 10px 5px 5px 10px;
+}
+
+.snakView-value-container {
+    margin-left: 16px;
+    min-height: 1.6em;
+}
+
+.snakView-body {}
+
+.snakView-value {
+    display: inline;
+}
