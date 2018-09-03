@@ -11,6 +11,8 @@ import {
 import {submitGetRequest, url} from './helpers.js';
 import './App.css';
 import CodeContainer from "./components/CodeContainer";
+import StatementsCard from "./components/statements/StatementsCard";
+import Statement from "./components/statements/Statement";
 
 class App extends Component {
     state = {
@@ -286,66 +288,55 @@ class App extends Component {
 
                         <h2 className="h3">Statements</h2>
 
-                        <Card>
-                            <CardHeader>instance of</CardHeader>
-                            <CardBody>
-                                <div><a href="#">Comparison sort</a></div>
-                                <div><a href="#">Divide and conquer algorithm</a></div>
-                            </CardBody>
-                        </Card>
+                        <StatementsCard href="#" label="instance of">
+                            <Statement><a href="#">Comparison sort</a></Statement>
+                            <Statement><a href="#">Divide and conquer algorithm</a></Statement>
+                        </StatementsCard>
 
-                        <Card>
-                            <CardHeader>image</CardHeader>
-                            <CardBody>
-                                <div><img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Sorting_quicksort_anim.gif"/></div>
-                            </CardBody>
-                        </Card>
+                        <StatementsCard href="#" label="image">
+                            <Statement>
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Sorting_quicksort_anim.gif"/>
+                            </Statement>
+                        </StatementsCard>
 
-                        <Card>
-                            <CardHeader>discoverer or inventor</CardHeader>
-                            <CardBody>
-                                <div><a href="#">Charles Antony Richard Hoare</a></div>
-                            </CardBody>
-                        </Card>
+                        <StatementsCard href="#" label="discoverer or inventor">
+                            <Statement>
+                                <a href="#">Charles Antony Richard Hoare</a>
+                            </Statement>
+                        </StatementsCard>
 
-                        <Card>
-                            <CardHeader>worst-case performance</CardHeader>
-                            <CardBody>
-                                <div>n^2</div>
-                            </CardBody>
-                        </Card>
+                        <StatementsCard href="#" label="worst-case performance">
+                            <Statement>
+                                n^2
+                            </Statement>
+                        </StatementsCard>
 
-                        <Card>
-                            <CardHeader>best-case performance</CardHeader>
-                            <CardBody>
-                                <div>n log(n)</div>
-                            </CardBody>
-                        </Card>
+                        <StatementsCard href="#" label="best-case performance">
+                            <Statement>
+                                n log(n)
+                            </Statement>
+                        </StatementsCard>
 
-                        <Card>
-                            <CardHeader>average performance</CardHeader>
-                            <CardBody>
-                                <div>n log(n)</div>
-                            </CardBody>
-                        </Card>
+                        <StatementsCard href="#" label="average performance">
+                            <Statement>
+                                n log(n)
+                            </Statement>
+                        </StatementsCard>
 
-                        <Card>
-                            <CardHeader>worst-case space complexity</CardHeader>
-                            <CardBody>
-                                <div>n</div>
-                            </CardBody>
-                        </Card>
+                        <StatementsCard href="#" label="worst-case space complexity">
+                            <Statement>
+                                n
+                            </Statement>
+                        </StatementsCard>
 
-                        <Card>
-                            <CardHeader>average space complexity</CardHeader>
-                            <CardBody>
-                                <div>log(n)</div>
-                            </CardBody>
-                        </Card>
+                        <StatementsCard href="#" label="average space complexity">
+                            <Statement>
+                                log(n)
+                            </Statement>
+                        </StatementsCard>
 
-                        <Card>
-                            <CardHeader>code</CardHeader>
-                            <CardBody>
+                        <StatementsCard href="#" label="code">
+                            <Statement>
                                 <CodeContainer>
 {`algorithm quicksort(A, lo, hi) is
     if lo < hi then
@@ -388,8 +379,8 @@ algorithm partition(A, lo, hi) is
 
         swap A[i] with A[j]`}
                                 </CodeContainer>
-                            </CardBody>
-                        </Card>
+                            </Statement>
+                        </StatementsCard>
                     </main>
                 </div>
             </div>

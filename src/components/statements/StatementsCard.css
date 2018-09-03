@@ -1,0 +1,57 @@
+.statementGroupView {
+    float: left;
+    margin-bottom: 2em;
+    position: relative;
+    width: 100%;
+    /*border: 1px solid #c8ccd1;*/
+}
+
+.statementGroupView-property {
+    border: 1px solid #c8ccd1;
+    border-right: 0;
+}
+
+.statementGroupView .statementGroupView-property {
+    width: 15em;
+    background: #eaecf0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    z-index: 1;
+}
+
+.statementGroupView-property-label {
+    float: left;
+    word-wrap: break-word;
+    padding: 10px 10px 0;
+    transition: top 0.3s ease-out;
+}
+
+.statementListView {
+    float: left;
+    position: relative;
+    background-color: #ffffff;
+    width: 100%;
+    border: 1px solid #c8ccd1;
+}
+
+.statementView {
+    border-bottom: 1px solid #eaecf0;
+    float: left;
+    position: relative;
+    padding-bottom: 1em;
+    width: 100%;
+}
+
+.statementView-mainPiece-container {}
+
+.statementView-mainPiece {
+    position: relative;
+    margin-left: 15em;
+    margin-right: 18em;
+    max-width: 32em;
+    word-wrap: break-word;
+}
+
