@@ -73,3 +73,38 @@
 .snakView-value {
     display: inline;
 }
+
+.toolbar-container {
+    position: absolute;
+    right: 0;
+    top: 10px;
+    white-space: nowrap;
+    width: 18em;
+}
+
+.toolbar-container > .toolbar-container {
+    position: static;
+    width: auto;
+}
+
+.toolbar-button a {
+    font-size: small;
+    padding: 0;
+}
+
+.statementListView > .toolbar-wrapper {
+    background-color: #eaecf0;
+    display: block;
+    float: left;
+    position: relative;
+    width: 100%;
+}
+
+.addToolbar {
+    line-height: 2em;
+    position: static;
+    float: right;
+    right: 0;
+    top: 0;
+    width: 18em;
+}

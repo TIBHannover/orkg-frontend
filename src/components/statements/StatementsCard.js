@@ -14,6 +14,16 @@ export default class StatementsCard extends Component {
                 <div className="statementListView-listView">
                     {this.props.children}
                 </div>
+                <span className="toolbar-wrapper">
+                    <div className="toolbar toolbar-container addToolbar">
+                        <span className="toolbar-button toolbar-button-add">
+                            <a href="#" title="Add a new value">
+                                <span className="fa fa-plus" aria-hidden="true"/>
+                                add value
+                            </a>
+                        </span>
+                    </div>
+                </span>
             </div>
         </div>
     }
