@@ -1,3 +1,9 @@
+a {
+    text-decoration: none;
+    color: #0645ad;
+    background: none;
+}
+
 .statementGroupView {
     float: left;
     margin-bottom: 2em;
@@ -87,9 +93,31 @@
     width: auto;
 }
 
-.toolbar-button a {
+.statementView .toolbar-container {
+    display: block;
+    top: 10px;
+    white-space: nowrap;
+}
+
+.editToolbar-container > .toolbar {
+    padding-left: 0;
+}
+
+.toolbar-button > a {
     font-size: small;
-    padding: 0;
+    padding: 0 5px 0 0;
+}
+
+.toolbar-button > a > span {
+    width: 15px;
+    height: 13px;
+    text-align: right;
+    padding-right: 2px;
+    background-image: none;
+}
+
+.editToolbar-container .toolbar-button {
+
 }
 
 .statementListView > .toolbar-wrapper {
@@ -107,4 +135,79 @@
     right: 0;
     top: 0;
     width: 18em;
+}
+
+.newStatement {
+    padding-bottom: 0;
+}
+
+.newStatement:last-child {
+    border-bottom: 0;
+}
+
+.statementView-rankSelector {
+    position: absolute;
+    margin-left: 15.2em;
+    margin-top: 10px;
+    z-index: 1;
+}
+
+.rankSelector {
+    background: none;
+    border: 0;
+}
+
+.newStatement .statementView-mainSnak .snakView-property-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -15em;
+    width: 15em;
+    display: block;
+    z-index: 2;
+}
+
+.snakView .snakView-value-container {
+    margin-left: 16px;
+    min-height: 1.6em;
+}
+
+.statementGroupView .newStatement .statementView-mainSnak .snakView-value {
+    display: block;
+    min-height: 1.5em;
+    max-width: 32em;
+}
+
+.snakView .snakView-value .valueView {
+    display: inherit;
+}
+
+.valueView .valueView-value {
+    position: relative;
+}
+
+.valueView .valueView-input {
+    background-color: white;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    border: 1px solid gray;
+    border-radius: 0;
+    padding: 0 2px;
+}
+
+.statementView textarea {
+    margin: 0;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+textarea {
+    display: block;
+}
+
+.statementView-qualifiers > .toolbar-container {
+    float: right;
+    margin-bottom: 1em;
+    position: static;
 }

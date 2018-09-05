@@ -1,9 +1,21 @@
 import React, {Component} from 'react';
 import './StatementsCard.css';
+import NewStatement from "./NewStatement";
 
 export default class StatementsCard extends Component {
 
+    constructor() {
+        super();
+
+        this.onAddValueClick = this.onAddValueClick.bind(this);
+    }
+
+    onAddValueClick() {
+
+    }
+
     render() {
+        // TODO: check if div inside span can be fixed.
         return <div className="statementGroupView">
             <div className="statementGroupView-property">
                 <div className="statementGroupView-property-label">
@@ -11,8 +23,9 @@ export default class StatementsCard extends Component {
                 </div>
             </div>
             <div className="statementListView">
-                <div className="statementListView-listView">
+                <div className="statementListView-listView" ref="innerListView">
                     {this.props.children}
+                    <NewStatement/>
                 </div>
                 <span className="toolbar-wrapper">
                     <div className="toolbar toolbar-container addToolbar">
