@@ -13,6 +13,9 @@ import './App.css';
 import CodeContainer from "./components/CodeContainer";
 import StatementsCard from "./components/statements/StatementsCard";
 import Statement from "./components/statements/Statement";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import Contribution from "./components/pages/Contribution"
+import Contributions from "./components/pages/Contributions"
 
 class App extends Component {
     state = {
@@ -256,14 +259,15 @@ class App extends Component {
                     </ul>
             </nav>
 
-            <div className="container-fluid">
+            <Router>
+                <div className="container-fluid">
                 <div className="row">
                     <Nav className="bg-light" vertical>
                         <NavItem>
-                            <NavLink href="/#/researchContributions/">Research contributions</NavLink>
+                            <NavLink><Link to="/">Research contributions</Link></NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="/#/problems/">Problems</NavLink>
+                            <NavLink><Link to="/contribution">Research contribution</Link></NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink href="/#/researchContributions/">Approaches</NavLink>
@@ -280,111 +284,12 @@ class App extends Component {
                     </Nav>
 
                     <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-                        <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-                            <h1 className="h2">Quick sort</h1>
-                        </div>
-
-                        Average-case optimal divide and conquer comparison sorting algorithm
-
-                        <StatementsCard href="#" label="instance of">
-                            <Statement><a href="#">Research contribution</a></Statement>
-                            <Statement><a href="#">Comparison sort</a></Statement>
-                        </StatementsCard>
-
-                        <StatementsCard href="#" label="addresses">
-                            <Statement><a href="#">Array sorting</a></Statement>
-                        </StatementsCard>
-
-                        <StatementsCard href="#" label="employs">
-                            <Statement><a href="#">Quick sort method</a></Statement>
-                            <Statement><a href="#">Quick sort formal analysis</a></Statement>
-                            <Statement><a href="#">Lomuto partition scheme</a></Statement>
-                            <Statement><a href="#">Hoare partition scheme</a></Statement>
-                        </StatementsCard>
-
-                        <StatementsCard href="#" label="yields">
-                            <Statement/>
-                        </StatementsCard>
-
-                        {/*<StatementsCard href="#" label="worst-case performance">*/}
-                            {/*<Statement>*/}
-                                {/*n^2*/}
-                            {/*</Statement>*/}
-                        {/*</StatementsCard>*/}
-
-                        {/*<StatementsCard href="#" label="best-case performance">*/}
-                            {/*<Statement>*/}
-                                {/*n log(n)*/}
-                            {/*</Statement>*/}
-                        {/*</StatementsCard>*/}
-
-                        {/*<StatementsCard href="#" label="average performance">*/}
-                            {/*<Statement>*/}
-                                {/*n log(n)*/}
-                            {/*</Statement>*/}
-                        {/*</StatementsCard>*/}
-
-                        {/*<StatementsCard href="#" label="worst-case space complexity">*/}
-                            {/*<Statement>*/}
-                                {/*n*/}
-                            {/*</Statement>*/}
-                        {/*</StatementsCard>*/}
-
-                        {/*<StatementsCard href="#" label="average space complexity">*/}
-                            {/*<Statement>*/}
-                                {/*log(n)*/}
-                            {/*</Statement>*/}
-                        {/*</StatementsCard>*/}
-
-                        {/*<StatementsCard href="#" label="code">*/}
-                            {/*<Statement>*/}
-                                {/*<CodeContainer>*/}
-{/*{`algorithm quicksort(A, lo, hi) is*/}
-    {/*if lo < hi then*/}
-        {/*p := partition(A, lo, hi)*/}
-        {/*quicksort(A, lo, p - 1 )*/}
-        {/*quicksort(A, p + 1, hi)*/}
-
-{/*algorithm partition(A, lo, hi) is*/}
-    {/*pivot := A[hi]*/}
-    {/*i := lo*/}
-    {/*for j := lo to hi - 1 do*/}
-        {/*if A[j] < pivot then*/}
-            {/*swap A[i] with A[j]*/}
-            {/*i := i + 1*/}
-    {/*swap A[i] with A[hi]*/}
-    {/*return i`}*/}
-                                {/*</CodeContainer>*/}
-                                {/*<CodeContainer>*/}
-{/*{`algorithm quicksort(A, lo, hi) is*/}
-    {/*if lo < hi then*/}
-        {/*p := partition(A, lo, hi)*/}
-        {/*quicksort(A, lo, p)*/}
-        {/*quicksort(A, p + 1, hi)*/}
-
-{/*algorithm partition(A, lo, hi) is*/}
-    {/*pivot := A[lo]*/}
-    {/*i := lo - 1*/}
-    {/*j := hi + 1*/}
-    {/*loop forever*/}
-        {/*do*/}
-            {/*i := i + 1*/}
-        {/*while A[i] < pivot*/}
-
-        {/*do*/}
-            {/*j := j - 1*/}
-        {/*while A[j] > pivot*/}
-
-        {/*if i >= j then*/}
-            {/*return j*/}
-
-        {/*swap A[i] with A[j]`}*/}
-                                {/*</CodeContainer>*/}
-                            {/*</Statement>*/}
-                        {/*</StatementsCard>*/}
+                        <Route exact path="/" component={Contributions}/>
+                        <Route path="/contribution" component={Contribution}/>
                     </main>
                 </div>
             </div>
+            </Router>
         </div>
 
 //         const resultsPresent = this.state.error || (this.state.results && this.state.allResources);

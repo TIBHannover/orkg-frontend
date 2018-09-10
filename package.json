@@ -8,6 +8,7 @@
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-notifications": "^1.4.3",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "1.0.17",
     "react-split-pane": "^0.1.82",
     "reactstrap": "^6.4.0",
