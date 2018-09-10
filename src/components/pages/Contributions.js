@@ -9,19 +9,20 @@ export default class Contributions extends Component {
 
     render() {
         return <div>
-            <ShortRecord header="http://orkg.tib.eu/resource/68bcfb497a403353f68bf3144b35aaf5">
+            <ShortRecord header="http://orkg.tib.eu/resource/68bcfb497a403353f68bf3144b35aaf5"
+                    href="#">
                 ""
             </ShortRecord>
-            <ShortRecord header="http://orkg.tib.eu/resource/0">
+            <ShortRecord header="http://orkg.tib.eu/resource/0" href="#">
                 "Record 1"
             </ShortRecord>
-            <ShortRecord header="http://orkg.tib.eu/resource/1">
+            <ShortRecord header="http://orkg.tib.eu/resource/1" href="#">
                 "Record 2"
             </ShortRecord>
-            <ShortRecord header="http://orkg.tib.eu/resource/2">
+            <ShortRecord header="http://orkg.tib.eu/resource/2" href="#">
                 "Record 3"
             </ShortRecord>
-        </div>;
+        </div>
     }
 
 }
