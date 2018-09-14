@@ -5,8 +5,6 @@ import {submitGetRequest, url} from "../../helpers.js";
 export default class Contributions extends Component {
     state = {
         allResources: null,
-        allStatements: null,
-        allPredicates: [],
         results: null,
         error: null,
     };
@@ -17,7 +15,7 @@ export default class Contributions extends Component {
         this.findAllResources = this.findAllResources.bind(this);
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.findAllResources();
     }
 
@@ -48,12 +46,12 @@ export default class Contributions extends Component {
         }
 
         if (resultsPresent) {
-            const statements = this.state.allResources.map(
-                statement => <ShortRecord key={statement.id} header={statement.id} href={'/contribution/' + encodeURIComponent(statement.id)}>{statement.label}</ShortRecord>
+            const resources = this.state.allResources.map(
+                resource => <ShortRecord key={resource.id} header={resource.id} href={'/contribution/' + encodeURIComponent(resource.id)}>{resource.label}</ShortRecord>
             );
 
             return <div>
-                {statements}
+                {resources}
             </div>
         } else {
             return null;
