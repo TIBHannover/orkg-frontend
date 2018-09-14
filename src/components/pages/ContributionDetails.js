@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import StatementsCard from "../statements/StatementsCard";
 import Statement from "../statements/Statement";
 
-export default class Contribution extends Component {
+export default class ContributionDetails extends Component {
 
     constructor(props) {
         super(props);

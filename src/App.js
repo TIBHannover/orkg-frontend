@@ -14,7 +14,7 @@ import CodeContainer from "./components/CodeContainer";
 import StatementsCard from "./components/statements/StatementsCard";
 import Statement from "./components/statements/Statement";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import Contribution from "./components/pages/Contribution"
+import ContributionDetails from "./components/pages/ContributionDetails"
 import Contributions from "./components/pages/Contributions"
 
 class App extends Component {
@@ -40,7 +40,6 @@ class App extends Component {
         this.buildGraph = this.buildGraph.bind(this);
         this.onSearchClick = this.onSearchClick.bind(this);
         this.handleHashChange = this.handleHashChange.bind(this);
-        this.findAllResources = this.findAllResources.bind(this);
         this.findAllStatements = this.findAllStatements.bind(this);
         this.findAllPredicateNames = this.findAllPredicateNames.bind(this);
     }
@@ -52,7 +51,6 @@ class App extends Component {
     }
 
     componentDidMount() {
-        this.findAllResources();
         this.findAllStatements();
         this.findAllPredicateNames();
 
@@ -208,25 +206,6 @@ class App extends Component {
         window.location.hash = 'q=' + encodeURIComponent(this.query);
     }
 
-    findAllResources() {
-        const that = this;
-
-        submitGetRequest(url + 'resources/',
-                (responseJson) => {
-                    that.setState({
-                        allResources: responseJson,
-                        error: null,
-                    });
-                },
-                (err) => {
-                    console.error(err);
-                    that.setState({
-                        allResources: null,
-                        error: err.message,
-                    });
-                });
-    }
-
     findAllStatements() {
         const that = this;
 
@@ -285,7 +264,7 @@ class App extends Component {
 
                     <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                         <Route exact path="/" component={Contributions}/>
-                        <Route path="/contribution" component={Contribution}/>
+                        <Route path="/contribution" component={ContributionDetails}/>
                     </main>
                 </div>
             </div>

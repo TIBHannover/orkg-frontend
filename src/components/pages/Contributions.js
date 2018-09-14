@@ -1,28 +1,63 @@
 import React, {Component} from 'react';
 import ShortRecord from "../statements/ShortRecord";
+import {submitGetRequest, url} from "../../helpers.js";
 
 export default class Contributions extends Component {
+    state = {
+        allResources: null,
+        allStatements: null,
+        allPredicates: [],
+        results: null,
+        error: null,
+    };
 
     constructor(props) {
         super(props);
+
+        this.findAllResources = this.findAllResources.bind(this);
+    }
+
+    componentDidMount() {
+        this.findAllResources();
+    }
+
+    findAllResources() {
+        const that = this;
+
+        submitGetRequest(url + 'resources/',
+            (responseJson) => {
+                that.setState({
+                    allResources: responseJson,
+                    error: null,
+                });
+            },
+            (err) => {
+                console.error(err);
+                that.setState({
+                    allResources: null,
+                    error: err.message,
+                });
+            });
     }
 
     render() {
-        return <div>
-            <ShortRecord header="http://orkg.tib.eu/resource/68bcfb497a403353f68bf3144b35aaf5"
-                    href="#">
-                ""
-            </ShortRecord>
-            <ShortRecord header="http://orkg.tib.eu/resource/0" href="#">
-                "Record 1"
-            </ShortRecord>
-            <ShortRecord header="http://orkg.tib.eu/resource/1" href="#">
-                "Record 2"
-            </ShortRecord>
-            <ShortRecord header="http://orkg.tib.eu/resource/2" href="#">
-                "Record 3"
-            </ShortRecord>
-        </div>
+        const resultsPresent = this.state.error || (/*this.state.results &&*/ this.state.allResources);
+
+        if (this.state.error) {
+            return <p><strong>Error:</strong> {this.state.error} </p>;
+        }
+
+        if (resultsPresent) {
+            const statements = this.state.allResources.map(
+                statement => <ShortRecord header={statement.id} href="#">{statement.label}</ShortRecord>
+            );
+
+            return <div>
+                {statements}
+            </div>
+        } else {
+            return null;
+        }
     }
 
 }
