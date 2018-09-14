@@ -13,7 +13,7 @@ import './App.css';
 import CodeContainer from "./components/CodeContainer";
 import StatementsCard from "./components/statements/StatementsCard";
 import Statement from "./components/statements/Statement";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import {BrowserRouter as Router, Route, Link, Switch} from "react-router-dom";
 import ContributionDetails from "./components/pages/ContributionDetails"
 import Contributions from "./components/pages/Contributions"
 
@@ -238,8 +238,7 @@ class App extends Component {
                     </ul>
             </nav>
 
-            <Router>
-                <div className="container-fluid">
+            <div className="container-fluid">
                 <div className="row">
                     <Nav className="bg-light" vertical>
                         <NavItem>
@@ -263,12 +262,15 @@ class App extends Component {
                     </Nav>
 
                     <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-                        <Route exact path="/" component={Contributions}/>
-                        <Route path="/contribution" component={ContributionDetails}/>
+                        <Switch>
+                            <Route exact path="/" component={Contributions}/>
+                            <Route path="/contribution/:contributionId" render={({ match }) => (
+                                <ContributionDetails id={decodeURIComponent(match.params.contributionId)}/>
+                            )}/>
+                        </Switch>
                     </main>
                 </div>
             </div>
-            </Router>
         </div>
 
 //         const resultsPresent = this.state.error || (this.state.results && this.state.allResources);

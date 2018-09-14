@@ -49,7 +49,7 @@ export default class Contributions extends Component {
 
         if (resultsPresent) {
             const statements = this.state.allResources.map(
-                statement => <ShortRecord header={statement.id} href="#">{statement.label}</ShortRecord>
+                statement => <ShortRecord key={statement.id} header={statement.id} href={'/contribution/' + encodeURIComponent(statement.id)}>{statement.label}</ShortRecord>
             );
 
             return <div>
