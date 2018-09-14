@@ -52,14 +52,6 @@ export default class ContributionDetails extends Component {
         }
 
         if (resultsPresent) {
-            const statements = this.state.allStatements.filter(statement => statement.subject === id &&
-                    statement.predicate !== labelId && statement.predicate !== abstractId).map(
-                        statement => (
-                            <StatementsCard href="#" label={statement.predicate}>
-                                <Statement><a href="#">{statement.object.id}</a></Statement>
-                            </StatementsCard>
-                        )
-                    );
             const titleText = this.state.allStatements.find(statement => statement.subject === id
                 && statement.predicate === labelId);
             const title = titleText ? <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
@@ -71,6 +63,15 @@ export default class ContributionDetails extends Component {
             const abstract = abstractText ? <div>
                 {abstractText.object.id}
             </div> : null;
+
+            const statements = this.state.allStatements.filter(statement => statement.subject === id &&
+                statement.predicate !== labelId && statement.predicate !== abstractId).map(
+                statement => (
+                    <StatementsCard href="#" label={statement.predicate}>
+                        <Statement><a href="#">{statement.object.id}</a></Statement>
+                    </StatementsCard>
+                )
+            );
 
             return <div>
                 {[title, abstract].concat(statements)}
