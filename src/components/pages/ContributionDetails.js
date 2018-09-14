@@ -44,30 +44,37 @@ export default class ContributionDetails extends Component {
     render() {
         const id = this.props.id;
         const resultsPresent = this.state.error || (this.state.allStatements);
+        const labelId = "http://www.w3.org/2000/01/rdf-schema#label";
+        const abstractId = "http://orkg.tib.eu/ontology/abstract";
 
         if (this.state.error) {
             return <p><strong>Error:</strong> {this.state.error} </p>;
         }
 
         if (resultsPresent) {
-            const statements = this.state.allStatements.filter(statement => statement.subject === id).map(
-                statement => (
-                    <StatementsCard href="#" label={statement.predicate}>
-                        <Statement><a href="#">{statement.object.id}</a></Statement>
-                    </StatementsCard>
-                )
-            );
+            const statements = this.state.allStatements.filter(statement => statement.subject === id &&
+                    statement.predicate !== labelId && statement.predicate !== abstractId).map(
+                        statement => (
+                            <StatementsCard href="#" label={statement.predicate}>
+                                <Statement><a href="#">{statement.object.id}</a></Statement>
+                            </StatementsCard>
+                        )
+                    );
+            const title = <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                <h1 className="h2">{this.state.allStatements.find(statement => statement.subject === id
+                        && statement.predicate === labelId).object.id}</h1>
+            </div>;
+            const abstract = <div>
+                {this.state.allStatements.find(statement => statement.subject === id
+                    && statement.predicate === abstractId).object.id}
+            </div>;
 
             return <div>
-                {statements}
+                {[title, abstract].concat(statements)}
             </div>
         } else {
             return null;
         }
-
-        return <div>
-            {id}
-        </div>
 
         return <div>
             <div
