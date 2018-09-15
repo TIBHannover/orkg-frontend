@@ -94,7 +94,6 @@ a {
 }
 
 .statementView .toolbar-container {
-    display: block;
     top: 10px;
     white-space: nowrap;
 }
@@ -210,4 +209,8 @@ textarea {
     float: right;
     margin-bottom: 1em;
     position: static;
+}
+
+.toolbar-container > .toolbar {
+    padding-left: 0;
 }

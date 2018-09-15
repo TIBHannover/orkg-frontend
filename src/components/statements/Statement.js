@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import EditToolbar from "./EditToolbar";
 
 export default class Statement extends Component {
 
@@ -21,14 +22,7 @@ export default class Statement extends Component {
                 </div>
             </div>
             <span className="editToolbar-container toolbar-container" aria-disabled={false}>
-                <span className="toolbar toolbar-container" aria-disabled={false}>
-                    <span className="toolbar-button">
-                        <a href="#">
-                            <span className="fa fa-pencil" aria-hidden="true"></span>
-                            edit
-                        </a>
-                    </span>
-                </span>
+                <EditToolbar editing={true}/>
             </span>
         </div>
     }
