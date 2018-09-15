@@ -4,6 +4,15 @@ a {
     background: none;
 }
 
+textarea {
+    width: 100%;
+    padding: 0.1em;
+    display: block;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
 .statementGroupView {
     float: left;
     margin-bottom: 2em;
@@ -181,6 +190,17 @@ a {
     display: inherit;
 }
 
+.valueView .valueView-input {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 0;
+    padding: 0 2px;
+    resize: none;
+}
+
 .valueView .valueView-value {
     position: relative;
 }
@@ -213,4 +233,28 @@ textarea {
 
 .toolbar-container > .toolbar {
     padding-left: 0;
+}
+
+.edit .snakView-value {
+    display: block;
+}
+
+.snakView .snakView-value .valueView {
+    display: inherit;
+}
+
+.valueView-inEditMode .valueView-input {
+    border-color: gray;
+    background-color: white;
+}
+
+div.statementView textarea {
+    margin: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.snakView-variation-valueSnak textarea {
+    width: 100%;
 }
