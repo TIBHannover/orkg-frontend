@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import StatementsCard from "../statements/StatementsCard";
 import Statement from "../statements/Statement";
-import {submitGetRequest, url} from "../../helpers";
+import {groupBy, submitGetRequest, url} from "../../helpers";
 import ShortRecord from "../statements/ShortRecord";
 
 export default class ContributionDetails extends Component {
@@ -53,28 +53,39 @@ export default class ContributionDetails extends Component {
 
         if (resultsPresent) {
             const titleText = this.state.allStatements.find(statement => statement.subject === id
-                && statement.predicate === labelId);
-            const title = titleText ? <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                    && statement.predicate === labelId);
+            const titleJsx = titleText ? <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
                 <h1 className="h2">{titleText.object.id}</h1>
             </div> : null;
 
             const abstractText = this.state.allStatements.find(statement => statement.subject === id
-                && statement.predicate === abstractId);
-            const abstract = abstractText ? <div>
+                    && statement.predicate === abstractId);
+            const abstractJsx = abstractText ? <div>
                 {abstractText.object.id}
             </div> : null;
 
+            const groupingProperty = "predicate";
             const statements = this.state.allStatements.filter(statement => statement.subject === id &&
-                statement.predicate !== labelId && statement.predicate !== abstractId).map(
-                statement => (
-                    <StatementsCard href="#" label={statement.predicate}>
-                        <Statement><a href="#">{statement.object.id}</a></Statement>
-                    </StatementsCard>
-                )
+                    statement.predicate !== labelId && statement.predicate !== abstractId);
+            const groupedStatements = groupBy(statements, groupingProperty);
+            const statementsJsx = groupedStatements.map(
+                statementGroup => {
+                    if (statementGroup.length > 0) {
+                        const label = statementGroup[0][groupingProperty];
+                        const statements = statementGroup.map(
+                                statement => <Statement><a href="#">{statement.object.id}</a></Statement>);
+
+                        return <StatementsCard href="#" label={label}>
+                            {statements}
+                        </StatementsCard>
+                    } else {
+                        return null;
+                    }
+                }
             );
 
             return <div>
-                {[title, abstract].concat(statements)}
+                {[titleJsx, abstractJsx].concat(statementsJsx)}
             </div>
         } else {
             return null;

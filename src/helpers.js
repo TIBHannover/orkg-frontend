@@ -49,5 +49,23 @@ export function createLiteralStatement(subjectId, predicateId, property, onSucce
 }
 
 export function hashCode(s) {
-  return s.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);
+  return s.split("").reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+  }, 0);
+}
+
+export function groupBy(array, group) {
+    const hash = Object.create(null);
+    const result = [];
+
+    array.forEach((a) => {
+        if (!hash[a[group]]) {
+            hash[a[group]] = [];
+            result.push(hash[a[group]]);
+        }
+        hash[a[group]].push(a);
+    });
+
+    return result;
 }
