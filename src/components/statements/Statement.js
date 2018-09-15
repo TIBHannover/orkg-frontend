@@ -4,18 +4,31 @@ import MainSnak from "./MainSnak";
 
 export default class Statement extends Component {
 
+    state = {
+        inEditMode: false
+    };
+
+    onEditClick(event) {
+        this.setState({inEditMode: true});
+    }
+
+    onCancelClick(event) {
+        this.setState({inEditMode: false});
+    }
+
     render() {
         return <div className="statementView">
             <div className="statementView-rankSelector"/>
             <div className="statementView-mainSnak-container">
-                <MainSnak editing={true}>
+                <MainSnak editing={this.state.inEditMode}>
                     {this.props.children}
                 </MainSnak>
             </div>
             <span className="editToolbar-container toolbar-container" aria-disabled={false}>
-                <EditToolbar editing={true}/>
+                <EditToolbar editing={this.state.inEditMode} onEditClick={this.onEditClick.bind(this)}
+                        onCancelClick={this.onCancelClick.bind(this)}/>
             </span>
         </div>
     }
 
-}
+};

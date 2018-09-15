@@ -6,7 +6,7 @@ export default class EditToolbar extends Component {
         let content = null;
         if (!this.props.editing) {
             content = <span className="toolbar-button">
-                <a href="#">
+                <a href="#" onClick={this.props.onEditClick}>
                     <span className="fa fa-pencil" aria-hidden="true"></span>
                     edit
                 </a>
@@ -26,7 +26,7 @@ export default class EditToolbar extends Component {
                     </a>
                 </span>
                 <span className="toolbar-container toolbar-button">
-                    <a href="#" title="">
+                    <a href="#" title="" onClick={this.props.onCancelClick}>
                         <span className="fa fa-close"></span>
                         cancel
                     </a>
