@@ -38,7 +38,7 @@ export default class EditToolbar extends Component {
                 break;
             }
             case 'loading': {
-                content = <span className="fa fa-spinner"></span>;
+                content = <span className="fa fa-spinner fa-spin"></span>;
                 break;
             }
         }
