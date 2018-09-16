@@ -60,7 +60,8 @@ export default class Statement extends Component {
                         onInput={this.onValueChange.bind(this)}/>
             </div>
             <span className="editToolbar-container toolbar-container" aria-disabled={false}>
-                <EditToolbar editorState={this.state.editorState} onEditClick={this.onEditClick.bind(this)}
+                <EditToolbar editorState={this.state.editorState} showRemoveButton={true}
+                        onEditClick={this.onEditClick.bind(this)}
                         onPublishClick={this.onPublishClick.bind(this)}
                         onCancelClick={this.onCancelClick.bind(this)}/>
             </span>

@@ -1,6 +1,45 @@
 import React, {Component} from 'react';
+import EditToolbar from "./EditToolbar";
+import {createResource} from "../../helpers";
+import {NotificationManager} from "react-notifications";
+import MainSnak from "./MainSnak";
 
 export default class NewStatement extends Component {
+
+    state = {
+        /* Possible values: 'edit', 'loading'. */
+        editorState: 'edit',
+    };
+
+    value = null;
+
+    constructor(props) {
+        super(props);
+
+        this.value = this.props.text;
+    }
+
+    onPublishClick(event) {
+        // if (this.value && this.value.length !== 0) {
+        //     createResource(this.value, (responseJson) => {
+        //             this.setEditorState('view');
+        //             NotificationManager.success('Resource submitted successfully', 'Success', 5000);
+        //         },
+        //         (error) => {
+        //             this.setEditorState('view');
+        //             console.error(error);
+        //             NotificationManager.error(error.message, 'Error submitting resource', 5000);
+        //         });
+        // }
+        // this.setEditorState('loading');
+    }
+
+    onCancelClick(event) {
+    }
+
+    onValueChange(event) {
+        this.value = event.target.value.trim();
+    }
 
     render() {
         return <div id="new" className="statementView newStatement">
@@ -10,26 +49,7 @@ export default class NewStatement extends Component {
                 </div>
             </div>
             <div className="statementView-mainSnak-container">
-                <div className="statementView-mainSnak" dir="auto">
-                    <div className="snakView">
-                        <div className="snakView-property-container"></div>
-                        <div className="snakView-value-container" dir="auto">
-                            <div className="snakView-body">
-                                <div className="snakView-value">
-                                    <div className="valueView" aria-disabled="false">
-                                        <div className="valueView-value">
-                                            <textarea className="valueView-input" style={{
-                                                height: "21.8px",
-                                                overflow: "hidden",
-                                                resize: "none"
-                                            }}/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <MainSnak editing={true} text="" onInput={this.onValueChange.bind(this)}/>
                 <div className="statementView-qualifiers">
                     <div className="listView"/>
                     <div className="toolbar-container">
@@ -44,20 +64,9 @@ export default class NewStatement extends Component {
             </div>
             <div className="statementView-references-container"/>
             <div className="editToolbar-container toolbar-container">
-                <span className="toolbar-container toolbar">
-                    <span className="toolbar-button toolbar-item toolbar-button-save" aria-disabled={true}>
-                        <a href="#" title="" tabIndex={-1}>
-                            <span className="fa fa-check"/>
-                            publish
-                        </a>
-                    </span>
-                    <span className="toolbar-button toolbar-item toolbar-button-cancel">
-                        <a href="#" title="">
-                            <span className="fa fa-close"/>
-                            cancel
-                        </a>
-                    </span>
-                </span>
+                <EditToolbar editorState={this.state.editorState} showRemoveButton={false}
+                        onPublishClick={this.onPublishClick.bind(this)}
+                        onCancelClick={this.onCancelClick.bind(this)}/>
             </div>
         </div>
     }

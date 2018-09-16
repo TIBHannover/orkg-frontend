@@ -22,12 +22,12 @@ export default class EditToolbar extends Component {
                             publish
                         </a>
                     </span>
-                    <span className="toolbar-container toolbar-button">
+                    {this.props.showRemoveButton ? <span className="toolbar-container toolbar-button">
                         <a href="javascript:void(0)" title="">
                             <span className="fa fa-trash"></span>
                             remove
                         </a>
-                    </span>
+                    </span> : null}
                     <span className="toolbar-container toolbar-button">
                         <a href="javascript:void(0)" title="" onClick={this.props.onCancelClick}>
                             <span className="fa fa-close"></span>
