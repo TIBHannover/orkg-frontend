@@ -73,7 +73,7 @@ export default class ContributionDetails extends Component {
                     if (statementGroup.length > 0) {
                         const label = statementGroup[0][groupingProperty];
                         const statements = statementGroup.map(
-                                statement => <Statement><a href="#">{statement.object.id}</a></Statement>);
+                                statement => <Statement text={statement.object.id}></Statement>);
 
                         return <StatementsCard href="#" label={label}>
                             {statements}

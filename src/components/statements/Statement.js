@@ -20,9 +20,7 @@ export default class Statement extends Component {
         return <div className="statementView">
             <div className="statementView-rankSelector"/>
             <div className="statementView-mainSnak-container">
-                <MainSnak editing={this.state.inEditMode}>
-                    {this.props.children}
-                </MainSnak>
+                <MainSnak editing={this.state.inEditMode} text={this.props.text}/>
             </div>
             <span className="editToolbar-container toolbar-container" aria-disabled={false}>
                 <EditToolbar editing={this.state.inEditMode} onEditClick={this.onEditClick.bind(this)}

@@ -10,7 +10,9 @@ export default class EditToolbar extends Component {
                     <div className="snakView-typeSelector"/>
                     <div className="snakView-body">
                         <div className="snakView-value">
-                            {this.props.children}
+                            <a href="javascript:void(0)">
+                                {this.props.text}
+                            </a>
                         </div>
                         <div className="snakView-indicators"/>
                     </div>
@@ -27,6 +29,7 @@ export default class EditToolbar extends Component {
                             <div className="valueView valueView-inEditMode">
                                 <div className="valueView-value">
                                     <textarea className="valueView-input"
+                                            defaultValue={this.props.text}
                                             style={{height: "20.7812px", overflow: "hidden", resize: "none"}}>
                                     </textarea>
                                 </div>
