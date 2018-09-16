@@ -30,7 +30,8 @@ export default class EditToolbar extends Component {
                                 <div className="valueView-value">
                                     <textarea className="valueView-input"
                                             defaultValue={this.props.text}
-                                            style={{height: "20.7812px", overflow: "hidden", resize: "none"}}>
+                                            style={{height: "20.7812px", overflow: "hidden", resize: "none"}}
+                                            onInput={this.props.onInput}>
                                     </textarea>
                                 </div>
                             </div>

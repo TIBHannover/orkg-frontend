@@ -1,29 +1,67 @@
 import React, {Component} from 'react';
 import EditToolbar from "./EditToolbar";
 import MainSnak from "./MainSnak";
+import {createResource} from "../../helpers";
+import {NotificationManager} from "react-notifications";
 
 export default class Statement extends Component {
 
     state = {
-        inEditMode: false
+        /* Possible values: 'view', 'edit', 'loading'. */
+        editorState: 'view',
     };
 
+    value = null;
+
+    constructor(props) {
+        super(props);
+
+        this.value = this.props.text;
+
+        this.setEditorState = this.setEditorState.bind(this);
+    }
+
     onEditClick(event) {
-        this.setState({inEditMode: true});
+        this.setEditorState('edit');
+    }
+
+    onPublishClick(event) {
+        if (this.value && this.value.length !== 0) {
+            createResource(this.value, (responseJson) => {
+                    this.setEditorState('view');
+                    NotificationManager.success('Resource submitted successfully', 'Success', 5000);
+                },
+                (error) => {
+                    this.setEditorState('view');
+                    console.error(error);
+                    NotificationManager.error(error.message, 'Error submitting resource', 5000);
+                });
+        }
+        this.setEditorState('loading');
+    }
+
+    onValueChange(event) {
+        this.value = event.target.value.trim();
     }
 
     onCancelClick(event) {
-        this.setState({inEditMode: false});
+        this.setEditorState('view');
+    }
+
+    setEditorState(editorState) {
+        this.setState({editorState: editorState});
     }
 
     render() {
         return <div className="statementView">
             <div className="statementView-rankSelector"/>
             <div className="statementView-mainSnak-container">
-                <MainSnak editing={this.state.inEditMode} text={this.props.text}/>
+                <MainSnak editing={this.state.editorState === 'edit'} text={this.props.text}
+                        onInput={this.onValueChange.bind(this)}/>
             </div>
             <span className="editToolbar-container toolbar-container" aria-disabled={false}>
-                <EditToolbar editing={this.state.inEditMode} onEditClick={this.onEditClick.bind(this)}
+                <EditToolbar editorState={this.state.editorState} onEditClick={this.onEditClick.bind(this)}
+                        onPublishClick={this.onPublishClick.bind(this)}
                         onCancelClick={this.onCancelClick.bind(this)}/>
             </span>
         </div>
