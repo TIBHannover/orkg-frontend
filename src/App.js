@@ -38,7 +38,6 @@ class App extends Component {
         this.toggle = this.toggle.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.buildGraph = this.buildGraph.bind(this);
         this.onSearchClick = this.onSearchClick.bind(this);
         this.handleHashChange = this.handleHashChange.bind(this);
         this.findAllStatements = this.findAllStatements.bind(this);
@@ -159,50 +158,6 @@ class App extends Component {
         return (s.length <= maxSize) ? s : s.substring(0, maxSize - 3) + '...';
     }
 
-    buildGraph(array) {
-        const graph = {nodes: [], edges: []};
-
-        array.forEach((value, index) => {
-            const nodeId = value.id;
-            graph.nodes.push({
-                id: nodeId,
-                label: this.cropText(value.label),
-                scaling: {
-                    label: {
-                        enabled: true,
-                    },
-                },
-                shape: 'circle',
-                size: '30px',
-                title: value.label
-            });
-        });
-
-        const statements = this.state.allStatements;
-        statements.forEach((value, index) => {
-            switch (value.object.type) {
-                case 'resource': {
-                    graph.edges.push({
-                        from: value.subject,
-                        to: value.object.id,
-                        // TODO: fetch the text of the predicate.
-                        label: this.cropText(value.predicate)
-                    });
-                }
-                case 'literal': {
-                    graph.edges.push({
-                        from: value.subject,
-                        to: value.object.value,
-                        // TODO: fetch the text of the predicate.
-                        label: this.cropText(value.predicate)
-                    });
-                }
-            }
-        });
-
-        return graph;
-    }
-
     onSearchClick(event, data) {
         window.location.hash = 'q=' + encodeURIComponent(this.query);
     }
@@ -274,59 +229,6 @@ class App extends Component {
                 </div>
             </div>
         </div>
-
-//         const resultsPresent = this.state.error || (this.state.results && this.state.allResources);
-//         const hash = window.location.hash;
-//         const searchForm = (<div>
-//                     <header className="App-header">
-//                         <h1 className="App-title">Search</h1>
-//                     </header>
-//                     <Form>
-//                         <Form.Field>
-//                             <Form.Input defaultValue={hash && hash.startsWith('#q=')
-//                                     ? decodeURIComponent(window.location.hash.substring(3)) : null}
-//                                     onChange={(event, data) => this.query = data.value.trim()}/>
-//                             <Button onClick={this.onSearchClick}>Search</Button>
-//                         </Form.Field>
-//                     </Form>
-//                 </div>);
-//         if (!resultsPresent) {
-//             return searchForm;
-//         }
-//         if (this.state.error) {
-//             return (<p><strong>Error:</strong> {this.state.error} </p>);
-//         }
-//
-//         const graph = this.buildGraph(this.state.results);
-//
-//         const options = {
-//             autoResize: true,
-//             edges: {
-//                 color: "#000000"
-//             },
-//             height: '500px',
-//         };
-//
-//         const events = {
-//             select: function(event) {
-// //                var { nodes, edges } = event;
-//             }
-//         };
-//
-//         return <div className="App">
-//             <NotificationContainer/>
-//             {searchForm}
-//             <SplitPane split="vertical" minSize={250} defaultSize={800}>
-//                 <div><Graph graph={graph} options={options} events={events}/></div>
-//                 <div>
-//                     <header className="App-header">
-//                         <h1 className="App-title">Results&nbsp;<AddResourceModal/></h1>
-//                     </header>
-//                     <DataList data={this.state.results} allResources={this.state.allResources}
-//                             allPredicates={this.state.allPredicates} level={0}/>
-//                 </div>
-//             </SplitPane>
-//         </div>
     }
 }
 
