@@ -20,18 +20,22 @@ export default class NewStatement extends Component {
     }
 
     onPublishClick(event) {
-        // if (this.value && this.value.length !== 0) {
-        //     createResource(this.value, (responseJson) => {
-        //             this.setEditorState('view');
-        //             NotificationManager.success('Resource submitted successfully', 'Success', 5000);
-        //         },
-        //         (error) => {
-        //             this.setEditorState('view');
-        //             console.error(error);
-        //             NotificationManager.error(error.message, 'Error submitting resource', 5000);
-        //         });
-        // }
-        // this.setEditorState('loading');
+        if (this.value && this.value.length !== 0) {
+            createResource(this.value, (responseJson) => {
+                    this.setEditorState('edit');
+                    NotificationManager.success('Resource submitted successfully', 'Success', 5000);
+                },
+                (error) => {
+                    this.setEditorState('edit');
+                    console.error(error);
+                    NotificationManager.error(error.message, 'Error submitting resource', 5000);
+                });
+            this.setEditorState('loading');
+        }
+    }
+
+    setEditorState(editorState) {
+        this.setState({editorState: editorState});
     }
 
     onValueChange(event) {

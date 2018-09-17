@@ -36,8 +36,8 @@ export default class Statement extends Component {
                     console.error(error);
                     NotificationManager.error(error.message, 'Error submitting resource', 5000);
                 });
+            this.setEditorState('loading');
         }
-        this.setEditorState('loading');
     }
 
     onValueChange(event) {
