@@ -52,6 +52,14 @@ export function createLiteralStatement(subjectId, predicateId, property, onSucce
             {'Content-Type': 'application/json'}, { 'value' : property, 'type' : 'literal' }, onSuccess, onError);
 }
 
+export function getPredicate(id, onSuccess, onError) {
+    submitGetRequest(predicatesUrl + id + '/', onSuccess, onError);
+}
+
+export function getResource(id, onSuccess, onError) {
+    submitGetRequest(resourcesUrl + id + '/', onSuccess, onError);
+}
+
 export function hashCode(s) {
   return s.split("").reduce((a, b) => {
       a = ((a << 5) - a) + b.charCodeAt(0);

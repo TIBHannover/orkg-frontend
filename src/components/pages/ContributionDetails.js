@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import StatementsCard from "../statements/StatementsCard";
 import Statement from "../statements/Statement";
-import {groupBy, submitGetRequest, url} from "../../helpers";
+import {getPredicate, getResource, groupBy, submitGetRequest, url} from "../../helpers";
 import ShortRecord from "../statements/ShortRecord";
 
 export default class ContributionDetails extends Component {
@@ -10,12 +10,15 @@ export default class ContributionDetails extends Component {
         allStatements: null,
         results: null,
         error: null,
+        predicateMap: {},
+        objectMap: {},
     };
 
     constructor(props) {
         super(props);
 
         this.findAllStatements = this.findAllStatements.bind(this);
+        this.updateMissingPredicateLabels = this.updateMissingPredicateLabels.bind(this);
     }
 
     componentWillMount() {
@@ -41,7 +44,50 @@ export default class ContributionDetails extends Component {
             });
     }
 
+    updateMissingPredicateLabels() {
+        // TODO: implement more efficient way to fetch all predicates instead of querying them one by one.
+        const that = this;
+        this.state.allStatements.forEach((statement) => {
+            if (!that.state.predicateMap[statement.predicate]) {
+                getPredicate(statement.predicate,
+                    (responseJson) => {
+                        const predicateMap = that.state.predicateMap;
+                        predicateMap[responseJson.id] = responseJson.label;
+                        that.setState({predicateMap: predicateMap});
+                    },
+                    (err) => {
+                        console.error(err);
+                        that.setState({
+                            error: err.message,
+                        });
+                    });
+            }
+        });
+    }
+
+    updateMissingObjectLabels() {
+        // TODO: implement more efficient way to fetch all objects instead of querying them one by one.
+        const that = this;
+        this.state.allStatements.forEach((statement) => {
+            if (!that.state.objectMap[statement.object.id]) {
+                getResource(statement.object.id,
+                    (responseJson) => {
+                        const objectMap = that.state.objectMap;
+                        objectMap[responseJson.id] = responseJson.label;
+                        that.setState({objectMap: objectMap});
+                    },
+                    (err) => {
+                        console.error(err);
+                        that.setState({
+                            error: err.message,
+                        });
+                    });
+            }
+        });
+    }
+
     render() {
+        const that = this;
         const id = this.props.id;
         const resultsPresent = this.state.error || (this.state.allStatements);
         const labelId = "http://www.w3.org/2000/01/rdf-schema#label";
@@ -52,6 +98,9 @@ export default class ContributionDetails extends Component {
         }
 
         if (resultsPresent) {
+            this.updateMissingPredicateLabels();
+            this.updateMissingObjectLabels();
+
             const titleText = this.state.allStatements.find(statement => statement.subject === id
                     && statement.predicate === labelId);
             const titleJsx = titleText ? <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
@@ -65,15 +114,19 @@ export default class ContributionDetails extends Component {
             </div> : null;
 
             const groupingProperty = "predicate";
-            const statements = this.state.allStatements.filter(statement => statement.subject === id &&
-                    statement.predicate !== labelId && statement.predicate !== abstractId);
+            const statements = this.state.allStatements.filter(statement => statement.subject === id
+                    && statement.predicate !== labelId && statement.predicate !== abstractId);
             const groupedStatements = groupBy(statements, groupingProperty);
             const statementsJsx = groupedStatements.map(
                 statementGroup => {
                     if (statementGroup.length > 0) {
-                        const label = statementGroup[0][groupingProperty];
+                        const propertyId = statementGroup[0][groupingProperty];
+                        const label = this.state.predicateMap[propertyId] || propertyId;
+
                         const statements = statementGroup.map(
-                                statement => <Statement text={statement.object.id} id={statement.object.id}></Statement>);
+                                statement => <Statement
+                                        text={that.state.objectMap[statement.object.id] || statement.object.id}
+                                        id={statement.object.id}></Statement>);
 
                         return <StatementsCard href="#" label={label}>
                             {statements}
@@ -91,5 +144,4 @@ export default class ContributionDetails extends Component {
             return null;
         }
     }
-
 }
