@@ -1,21 +1,27 @@
 import React, {Component} from 'react';
 import './StatementsCard.css';
 import NewStatement from "./NewStatement";
+import AddValueToolbar from "./AddValueToolbar";
 
 export default class StatementsCard extends Component {
 
+    state = {
+        newStatementVisible: false,
+    };
+
     constructor() {
         super();
-
-        this.onAddValueClick = this.onAddValueClick.bind(this);
     }
 
     onAddValueClick() {
+        this.setState({newStatementVisible: true});
+    }
 
+    onCancelAddValueClick() {
+        this.setState({newStatementVisible: false});
     }
 
     render() {
-        // TODO: check if div inside span can be fixed.
         return <div className="statementGroupView">
             <div className="statementGroupView-property">
                 <div className="statementGroupView-property-label">
@@ -25,18 +31,12 @@ export default class StatementsCard extends Component {
             <div className="statementListView">
                 <div className="statementListView-listView" ref="innerListView">
                     {this.props.children}
-                    <NewStatement/>
+                    {this.state.newStatementVisible
+                            && <NewStatement onCancelClick={this.onCancelAddValueClick.bind(this)}/>}
                 </div>
-                <span className="toolbar-wrapper">
-                    <div className="toolbar toolbar-container addToolbar">
-                        <span className="toolbar-button toolbar-button-add">
-                            <a href="#" title="Add a new value">
-                                <span className="fa fa-plus" aria-hidden="true"/>
-                                add value
-                            </a>
-                        </span>
-                    </div>
-                </span>
+                <div className="toolbar-wrapper">
+                    <AddValueToolbar onAddValueClick={this.onAddValueClick.bind(this)}/>
+                </div>
             </div>
         </div>
     }

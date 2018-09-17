@@ -34,9 +34,6 @@ export default class NewStatement extends Component {
         // this.setEditorState('loading');
     }
 
-    onCancelClick(event) {
-    }
-
     onValueChange(event) {
         this.value = event.target.value.trim();
     }
@@ -66,7 +63,7 @@ export default class NewStatement extends Component {
             <div className="editToolbar-container toolbar-container">
                 <EditToolbar editorState={this.state.editorState} showRemoveButton={false}
                         onPublishClick={this.onPublishClick.bind(this)}
-                        onCancelClick={this.onCancelClick.bind(this)}/>
+                        onCancelClick={this.props.onCancelClick}/>
             </div>
         </div>
     }
