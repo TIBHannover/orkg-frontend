@@ -53,11 +53,11 @@ export function createLiteralStatement(subjectId, predicateId, property, onSucce
 }
 
 export function getPredicate(id, onSuccess, onError) {
-    submitGetRequest(predicatesUrl + id + '/', onSuccess, onError);
+    submitGetRequest(predicatesUrl + encodeURIComponent(id) + '/', onSuccess, onError);
 }
 
 export function getResource(id, onSuccess, onError) {
-    submitGetRequest(resourcesUrl + id + '/', onSuccess, onError);
+    submitGetRequest(resourcesUrl + encodeURIComponent(id) + '/', onSuccess, onError);
 }
 
 export function hashCode(s) {
