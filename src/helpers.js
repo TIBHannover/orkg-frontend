@@ -34,6 +34,10 @@ function submitPostRequest(url, headers, data, onSuccess, onError) {
             .catch(onError);
 }
 
+export function updateResource(id, label, onSuccess, onError) {
+    submitPostRequest(resourcesUrl, {'Content-Type': 'application/json'}, {id: id, label: label}, onSuccess, onError);
+}
+
 export function createResource(label, onSuccess, onError) {
     submitPostRequest(resourcesUrl, {'Content-Type': 'application/json'}, {label: label}, onSuccess, onError);
 }

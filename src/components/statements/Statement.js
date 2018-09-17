@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import EditToolbar from "./EditToolbar";
 import MainSnak from "./MainSnak";
-import {createResource} from "../../helpers";
+import {updateResource} from "../../helpers";
 import {NotificationManager} from "react-notifications";
 
 export default class Statement extends Component {
@@ -11,11 +11,13 @@ export default class Statement extends Component {
         editorState: 'view',
     };
 
+    id = null;
     value = null;
 
     constructor(props) {
         super(props);
 
+        this.id = this.props.id;
         this.value = this.props.text;
 
         this.setEditorState = this.setEditorState.bind(this);
@@ -27,7 +29,7 @@ export default class Statement extends Component {
 
     onPublishClick(event) {
         if (this.value && this.value.length !== 0) {
-            createResource(this.value, (responseJson) => {
+            updateResource(this.id, this.value, (responseJson) => {
                     this.setEditorState('view');
                     NotificationManager.success('Resource submitted successfully', 'Success', 5000);
                 },
