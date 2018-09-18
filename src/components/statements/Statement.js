@@ -27,11 +27,18 @@ export default class Statement extends Component {
         this.setEditorState('edit');
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        this.value = nextProps.text;
+        return true;
+    }
+
     onPublishClick(event) {
         if (this.value && this.value.length !== 0) {
             updateResource(this.id, this.value, (responseJson) => {
                     this.setEditorState('view');
                     NotificationManager.success('Resource submitted successfully', 'Success', 5000);
+                    this.forceUpdate();
+                    // this.props.onUpdate();
                 },
                 (error) => {
                     this.setEditorState('view');
@@ -58,7 +65,7 @@ export default class Statement extends Component {
         return <div className="statementView">
             <div className="statementView-rankSelector"/>
             <div className="statementView-mainSnak-container">
-                <MainSnak editing={this.state.editorState === 'edit'} text={this.props.text}
+                <MainSnak editing={this.state.editorState === 'edit'} text={this.value}
                         onInput={this.onValueChange.bind(this)}/>
             </div>
             <span className="editToolbar-container toolbar-container" aria-disabled={false}>

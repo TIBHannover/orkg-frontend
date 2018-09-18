@@ -11,14 +11,23 @@ export default class StatementsCard extends Component {
 
     constructor() {
         super();
+
+        this.onAddValueClick = this.onAddValueClick.bind(this);
+        this.onCancelAddValueClick = this.onCancelAddValueClick.bind(this)
+        this.onPublishSuccess = this.onPublishSuccess.bind(this)
     }
 
-    onAddValueClick() {
+    onAddValueClick(event) {
         this.setState({newStatementVisible: true});
     }
 
-    onCancelAddValueClick() {
+    onCancelAddValueClick(event) {
         this.setState({newStatementVisible: false});
+    }
+
+    onPublishSuccess() {
+        this.setState({newStatementVisible: false});
+        this.props.onUpdate();
     }
 
     render() {
@@ -32,10 +41,12 @@ export default class StatementsCard extends Component {
                 <div className="statementListView-listView" ref="innerListView">
                     {this.props.children}
                     {this.state.newStatementVisible
-                            && <NewStatement onCancelClick={this.onCancelAddValueClick.bind(this)}/>}
+                            && <NewStatement subjectId={this.props.subjectId} predicateId={this.props.predicateId}
+                                    onCancelClick={this.onCancelAddValueClick}
+                                    onPublishSuccess={this.onPublishSuccess}/>}
                 </div>
                 <div className="toolbar-wrapper">
-                    <AddValueToolbar onAddValueClick={this.onAddValueClick.bind(this)}/>
+                    <AddValueToolbar onAddValueClick={this.onAddValueClick}/>
                 </div>
             </div>
         </div>

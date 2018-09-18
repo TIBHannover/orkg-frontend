@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import EditToolbar from "./EditToolbar";
-import {createResource} from "../../helpers";
+import {createResource, createResourceStatement} from "../../helpers";
 import {NotificationManager} from "react-notifications";
 import MainSnak from "./MainSnak";
 
@@ -17,18 +17,32 @@ export default class NewStatement extends Component {
         super(props);
 
         this.value = this.props.text;
+        this.onResourceCreationSuccess = this.onResourceCreationSuccess.bind(this);
+        this.onResourceCreationError = this.onResourceCreationError.bind(this);
+    }
+
+    onResourceCreationSuccess(responseJson) {
+        this.setEditorState('edit');
+        NotificationManager.success('Resource added successfully', 'Success', 5000);
+        this.props.onPublishSuccess();
+    }
+
+    onResourceCreationError(error) {
+        this.setEditorState('edit');
+        console.error(error);
+        NotificationManager.error(error.message, 'Error creating resource statement (predicate)', 5000);
     }
 
     onPublishClick(event) {
         if (this.value && this.value.length !== 0) {
             createResource(this.value, (responseJson) => {
-                    this.setEditorState('edit');
-                    NotificationManager.success('Resource submitted successfully', 'Success', 5000);
+                    createResourceStatement(this.props.subjectId, this.props.predicateId, responseJson.id,
+                            this.onResourceCreationSuccess, this.onResourceCreationError);
                 },
                 (error) => {
                     this.setEditorState('edit');
                     console.error(error);
-                    NotificationManager.error(error.message, 'Error submitting resource', 5000);
+                    NotificationManager.error(error.message, 'Error creating resource', 5000);
                 });
             this.setEditorState('loading');
         }

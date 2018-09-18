@@ -14,11 +14,14 @@ export default class ContributionDetails extends Component {
         objectMap: {},
     };
 
+    initialState = this.state;
+
     constructor(props) {
         super(props);
 
         this.findAllStatements = this.findAllStatements.bind(this);
         this.updateMissingPredicateLabels = this.updateMissingPredicateLabels.bind(this);
+        this.reset = this.reset.bind(this);
     }
 
     componentWillMount() {
@@ -57,9 +60,9 @@ export default class ContributionDetails extends Component {
                     },
                     (err) => {
                         console.error(err);
-                        that.setState({
-                            error: err.message,
-                        });
+                        // that.setState({
+                        //     error: err.message,
+                        // });
                     });
             }
         });
@@ -78,12 +81,18 @@ export default class ContributionDetails extends Component {
                     },
                     (err) => {
                         console.error(err);
-                        that.setState({
-                            error: err.message,
-                        });
+                        // that.setState({
+                        //     error: err.message,
+                        // });
                     });
             }
         });
+    }
+
+    reset() {
+        this.setState(this.initialState);
+        this.findAllStatements();
+        this.forceUpdate();
     }
 
     render() {
@@ -103,15 +112,13 @@ export default class ContributionDetails extends Component {
 
             const titleText = this.state.allStatements.find(statement => statement.subject === id
                     && statement.predicate === labelId);
-            const titleJsx = titleText ? <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            const titleJsx = titleText && <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
                 <h1 className="h2">{titleText.object.id}</h1>
-            </div> : null;
+            </div>;
 
             const abstractText = this.state.allStatements.find(statement => statement.subject === id
                     && statement.predicate === abstractId);
-            const abstractJsx = abstractText ? <div>
-                {abstractText.object.id}
-            </div> : null;
+            const abstractJsx = abstractText && <div>{abstractText.object.id}</div>;
 
             const groupingProperty = "predicate";
             const statements = this.state.allStatements.filter(statement => statement.subject === id
@@ -122,13 +129,16 @@ export default class ContributionDetails extends Component {
                     if (statementGroup.length > 0) {
                         const propertyId = statementGroup[0][groupingProperty];
                         const label = this.state.predicateMap[propertyId] || propertyId;
+                        const subjectId = statementGroup[0].subject;
+                        const predicateId = statementGroup[0].predicate;
 
                         const statements = statementGroup.map(
                                 statement => <Statement
                                         text={that.state.objectMap[statement.object.id] || statement.object.id}
-                                        id={statement.object.id}></Statement>);
+                                        id={statement.object.id} onUpdate={that.reset}></Statement>);
 
-                        return <StatementsCard href="#" label={label}>
+                        return <StatementsCard href="#" label={label} subjectId={subjectId} predicateId={predicateId}
+                                onUpdate={that.reset}>
                             {statements}
                         </StatementsCard>
                     } else {
