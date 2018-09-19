@@ -34,6 +34,10 @@ function submitPostRequest(url, headers, data, onSuccess, onError) {
             .catch(onError);
 }
 
+export function updateResource(id, label, onSuccess, onError) {
+    submitPostRequest(resourcesUrl, {'Content-Type': 'application/json'}, {id: id, label: label}, onSuccess, onError);
+}
+
 export function createResource(label, onSuccess, onError) {
     submitPostRequest(resourcesUrl, {'Content-Type': 'application/json'}, {label: label}, onSuccess, onError);
 }
@@ -48,6 +52,32 @@ export function createLiteralStatement(subjectId, predicateId, property, onSucce
             {'Content-Type': 'application/json'}, { 'value' : property, 'type' : 'literal' }, onSuccess, onError);
 }
 
+export function getPredicate(id, onSuccess, onError) {
+    submitGetRequest(predicatesUrl + encodeURIComponent(id) + '/', onSuccess, onError);
+}
+
+export function getResource(id, onSuccess, onError) {
+    submitGetRequest(resourcesUrl + encodeURIComponent(id) + '/', onSuccess, onError);
+}
+
 export function hashCode(s) {
-  return s.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);
+  return s.split("").reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+  }, 0);
+}
+
+export function groupBy(array, group) {
+    const hash = Object.create(null);
+    const result = [];
+
+    array.forEach((a) => {
+        if (!hash[a[group]]) {
+            hash[a[group]] = [];
+            result.push(hash[a[group]]);
+        }
+        hash[a[group]].push(a);
+    });
+
+    return result;
 }

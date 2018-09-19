@@ -10,7 +10,7 @@ class DataRow extends Component {
         this.url = 'http://localhost:8000/api/statements/';
 
         this.state = {
-        }
+        };
 
         this.setState = this.setState.bind(this);
         this.findConnections = this.findConnections.bind(this);
