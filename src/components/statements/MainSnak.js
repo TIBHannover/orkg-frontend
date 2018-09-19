@@ -2,6 +2,25 @@ import React, {Component} from 'react';
 
 export default class EditToolbar extends Component {
 
+    // constructor(props) {
+    //     super(props);
+    //     this.state = {text: this.props.text};
+    //
+    //     this.setText = this.setText.bind(this);
+    // }
+    //
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     if (nextProps.text !== nextState.text) {
+    //         this.setState({text: nextProps.text});
+    //     }
+    //
+    //     return true;
+    // }
+    //
+    // setText(text) {
+    //     this.setState({text: text});
+    // }
+
     render() {
         let content = null;
         if (!this.props.editing) {
@@ -36,7 +55,7 @@ export default class EditToolbar extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="wikibase-snakview-indicators"></div>
+                        <div className="snakView-indicators"></div>
                     </div>
                 </div>
             </div>

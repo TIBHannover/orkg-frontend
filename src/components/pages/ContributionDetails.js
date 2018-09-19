@@ -22,6 +22,8 @@ export default class ContributionDetails extends Component {
         this.findAllStatements = this.findAllStatements.bind(this);
         this.updateMissingPredicateLabels = this.updateMissingPredicateLabels.bind(this);
         this.reset = this.reset.bind(this);
+        this.getStatementText = this.getStatementText.bind(this);
+        this.setStatementText = this.setStatementText.bind(this);
     }
 
     componentWillMount() {
@@ -77,7 +79,9 @@ export default class ContributionDetails extends Component {
                     (responseJson) => {
                         const objectMap = that.state.objectMap;
                         objectMap[responseJson.id] = responseJson.label;
-                        that.setState({objectMap: objectMap});
+                        this.setStatementText(responseJson.id)(responseJson.label);
+
+                        // that.setState({objectMap: objectMap});
                     },
                     (err) => {
                         console.error(err);
@@ -93,6 +97,18 @@ export default class ContributionDetails extends Component {
         this.setState(this.initialState);
         this.findAllStatements();
         this.forceUpdate();
+    }
+
+    getStatementText(statementId) {
+        return () => {
+            return this.state.objectMap[statementId] || statementId;
+        }
+    }
+
+    setStatementText(statementId) {
+        return (text) => {
+            this.state.objectMap[statementId] = text;
+        }
     }
 
     render() {
@@ -133,8 +149,8 @@ export default class ContributionDetails extends Component {
                         const predicateId = statementGroup[0].predicate;
 
                         const statements = statementGroup.map(
-                                statement => <Statement
-                                        text={that.state.objectMap[statement.object.id] || statement.object.id}
+                            (statement, index) => <Statement getText={this.getStatementText(statement.object.id)}
+                                        setText={this.setStatementText(statement.object.id)}
                                         id={statement.object.id} onUpdate={that.reset}></Statement>);
 
                         return <StatementsCard href="#" label={label} subjectId={subjectId} predicateId={predicateId}

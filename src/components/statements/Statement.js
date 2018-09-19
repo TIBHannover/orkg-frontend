@@ -12,35 +12,49 @@ export default class Statement extends Component {
     };
 
     id = null;
-    value = null;
+    oldText = null;
 
     constructor(props) {
         super(props);
 
         this.id = this.props.id;
-        this.value = this.props.text;
+
+        this.getText = this.props.getText;
+        this.setText = this.props.setText;
 
         this.setEditorState = this.setEditorState.bind(this);
+        this.onValueChange = this.onValueChange.bind(this);
+        this.onEditClick = this.onEditClick.bind(this);
+        this.onPublishClick = this.onPublishClick.bind(this);
+        this.onCancelClick = this.onCancelClick.bind(this);
+    }
+
+    storeText() {
+        this.oldText = this.props.getText();
+    }
+
+    revertText() {
+        this.setText(this.oldText);
+        this.oldText = null;
     }
 
     onEditClick(event) {
         this.setEditorState('edit');
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        this.value = nextProps.text;
-        return true;
+        this.storeText();
     }
 
     onPublishClick(event) {
-        if (this.value && this.value.length !== 0) {
-            updateResource(this.id, this.value, (responseJson) => {
+        const that = this;
+        const value = this.props.getText();
+        if (value && value.length !== 0) {
+            updateResource(this.id, value, (responseJson) => {
+                    this.setText(responseJson.label);
                     this.setEditorState('view');
                     NotificationManager.success('Resource submitted successfully', 'Success', 5000);
-                    this.forceUpdate();
-                    // this.props.onUpdate();
+                    // this.forceUpdate();
                 },
                 (error) => {
+                    this.revertText();
                     this.setEditorState('view');
                     console.error(error);
                     NotificationManager.error(error.message, 'Error submitting resource', 5000);
@@ -50,11 +64,13 @@ export default class Statement extends Component {
     }
 
     onValueChange(event) {
-        this.value = event.target.value.trim();
+        this.setText(event.target.value.trim());
+        this.forceUpdate();
     }
 
     onCancelClick(event) {
         this.setEditorState('view');
+        this.revertText();
     }
 
     setEditorState(editorState) {
@@ -65,14 +81,14 @@ export default class Statement extends Component {
         return <div className="statementView">
             <div className="statementView-rankSelector"/>
             <div className="statementView-mainSnak-container">
-                <MainSnak editing={this.state.editorState === 'edit'} text={this.value}
-                        onInput={this.onValueChange.bind(this)}/>
+                <MainSnak ref="mainSnak" editing={this.state.editorState === 'edit'} text={this.getText()}
+                        onInput={this.onValueChange}/>
             </div>
             <span className="editToolbar-container toolbar-container" aria-disabled={false}>
                 <EditToolbar editorState={this.state.editorState} showRemoveButton={true}
-                        onEditClick={this.onEditClick.bind(this)}
-                        onPublishClick={this.onPublishClick.bind(this)}
-                        onCancelClick={this.onCancelClick.bind(this)}/>
+                        onEditClick={this.onEditClick}
+                        onPublishClick={this.onPublishClick}
+                        onCancelClick={this.onCancelClick}/>
             </span>
         </div>
     }
