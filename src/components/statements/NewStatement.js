@@ -19,6 +19,7 @@ export default class NewStatement extends Component {
         this.value = this.props.text;
         this.onResourceCreationSuccess = this.onResourceCreationSuccess.bind(this);
         this.onResourceCreationError = this.onResourceCreationError.bind(this);
+        this.onPublishClick = this.onPublishClick.bind(this);
     }
 
     onResourceCreationSuccess(responseJson) {
@@ -80,7 +81,7 @@ export default class NewStatement extends Component {
             <div className="statementView-references-container"/>
             <div className="editToolbar-container toolbar-container">
                 <EditToolbar editorState={this.state.editorState} showRemoveButton={false}
-                        onPublishClick={this.onPublishClick.bind(this)}
+                        onPublishClick={this.onPublishClick}
                         onCancelClick={this.props.onCancelClick}/>
             </div>
         </div>

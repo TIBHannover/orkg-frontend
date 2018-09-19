@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import StatementsCard from "../statements/StatementsCard";
+import StatementGroupCard from "../statements/StatementGroupCard";
 import Statement from "../statements/Statement";
 import {getPredicate, getResource, groupBy, submitGetRequest, url} from "../../helpers";
 import ShortRecord from "../statements/ShortRecord";
@@ -112,7 +112,6 @@ export default class ContributionDetails extends Component {
     }
 
     render() {
-        const that = this;
         const id = this.props.id;
         const resultsPresent = this.state.error || (this.state.allStatements);
         const labelId = "http://www.w3.org/2000/01/rdf-schema#label";
@@ -140,23 +139,14 @@ export default class ContributionDetails extends Component {
             const statements = this.state.allStatements.filter(statement => statement.subject === id
                     && statement.predicate !== labelId && statement.predicate !== abstractId);
             const groupedStatements = groupBy(statements, groupingProperty);
-            const statementsJsx = groupedStatements.map(
+            const statementGroupsJsx = groupedStatements.map(
                 statementGroup => {
                     if (statementGroup.length > 0) {
                         const propertyId = statementGroup[0][groupingProperty];
-                        const label = this.state.predicateMap[propertyId] || propertyId;
-                        const subjectId = statementGroup[0].subject;
-                        const predicateId = statementGroup[0].predicate;
-
-                        const statements = statementGroup.map(
-                            (statement, index) => <Statement getText={this.getStatementText(statement.object.id)}
-                                        setText={this.setStatementText(statement.object.id)}
-                                        id={statement.object.id} onUpdate={that.reset}></Statement>);
-
-                        return <StatementsCard href="#" label={label} subjectId={subjectId} predicateId={predicateId}
-                                onUpdate={that.reset}>
-                            {statements}
-                        </StatementsCard>
+                        return <StatementGroupCard href="#" label={this.state.predicateMap[propertyId] || propertyId}
+                                onUpdate={this.reset} statementGroup={statementGroup}
+                                getStatementText={this.getStatementText}
+                                setStatementText={this.setStatementText}/>
                     } else {
                         return null;
                     }
@@ -164,7 +154,7 @@ export default class ContributionDetails extends Component {
             );
 
             return <div>
-                {[titleJsx, abstractJsx].concat(statementsJsx)}
+                {[titleJsx, abstractJsx].concat(statementGroupsJsx)}
             </div>
         } else {
             return null;
