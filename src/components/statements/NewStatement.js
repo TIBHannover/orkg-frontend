@@ -25,7 +25,7 @@ export default class NewStatement extends Component {
     onResourceCreationSuccess(responseJson) {
         this.setEditorState('edit');
         NotificationManager.success('Resource added successfully', 'Success', 5000);
-        this.props.onPublishSuccess();
+        this.props.onPublishSuccess(responseJson.label);
     }
 
     onResourceCreationError(error) {

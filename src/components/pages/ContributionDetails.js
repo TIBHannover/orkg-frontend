@@ -58,13 +58,10 @@ export default class ContributionDetails extends Component {
                     (responseJson) => {
                         const predicateMap = that.state.predicateMap;
                         predicateMap[responseJson.id] = responseJson.label;
-                        that.setState({predicateMap: predicateMap});
+                        that.forceUpdate();
                     },
                     (err) => {
                         console.error(err);
-                        // that.setState({
-                        //     error: err.message,
-                        // });
                     });
             }
         });
@@ -77,37 +74,32 @@ export default class ContributionDetails extends Component {
             if (!that.state.objectMap[statement.object.id]) {
                 getResource(statement.object.id,
                     (responseJson) => {
-                        const objectMap = that.state.objectMap;
-                        objectMap[responseJson.id] = responseJson.label;
-                        this.setStatementText(responseJson.id)(responseJson.label);
-
-                        // that.setState({objectMap: objectMap});
+                        that.setStatementText(responseJson.id)(responseJson.label);
+                        that.forceUpdate();
                     },
                     (err) => {
                         console.error(err);
-                        // that.setState({
-                        //     error: err.message,
-                        // });
                     });
             }
         });
     }
 
-    reset() {
-        this.setState(this.initialState);
+    reset(newRecordLabel) {
         this.findAllStatements();
-        this.forceUpdate();
+        this.setState(this.initialState);
     }
 
     getStatementText(statementId) {
+        const that = this;
         return () => {
-            return this.state.objectMap[statementId] || statementId;
+            return that.state.objectMap[statementId] || statementId;
         }
     }
 
     setStatementText(statementId) {
+        const that = this;
         return (text) => {
-            this.state.objectMap[statementId] = text;
+            that.state.objectMap[statementId] = text;
         }
     }
 

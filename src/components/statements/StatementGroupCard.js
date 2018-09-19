@@ -26,9 +26,9 @@ export default class StatementGroupCard extends Component {
         this.setState({newStatementVisible: false});
     }
 
-    onPublishSuccess() {
+    onPublishSuccess(newRecordLabel) {
         this.setState({newStatementVisible: false});
-        this.props.onUpdate();
+        this.props.onUpdate(newRecordLabel);
     }
 
     render() {
