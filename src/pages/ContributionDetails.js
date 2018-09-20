@@ -147,7 +147,7 @@ export default class ContributionDetails extends Component {
             const newStatementJsx = <NewStatementGroupCard onUpdate={this.reset}
                     getStatementText={this.getStatementText} setStatementText={this.setStatementText}/>;
 
-            return <div>
+            return <div className="entityView-main">
                 {[titleJsx, abstractJsx].concat(statementGroupsJsx).concat([newStatementJsx])}
             </div>
         } else {

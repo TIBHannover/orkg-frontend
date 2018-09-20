@@ -31,7 +31,7 @@ export default class NewStatementGroupCard extends Component {
     }
 
     render() {
-        return <div className="statementGroupView">
+        return <div className="statementGroupView new">
             <div className="statementGroupView-property edit">
                 <div className="statementGroupView-property-label">
                     <a href={this.props.href}>{this.props.label}</a>

@@ -35,7 +35,7 @@ class App extends Component {
             </nav>
 
             <div className="container-fluid">
-                <div className="row">
+                <div className="row entityView">
                     <Nav className="bg-light" vertical>
                         <NavItem>
                             <NavLink><Link to="/">Research contributions</Link></NavLink>

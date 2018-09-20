@@ -38,10 +38,13 @@ export default class EditToolbar extends Component {
                 </div>
             </div>
         } else {
+            const inputStyle = {height: "20.7812px", overflow: "hidden", resize: "none"};
             content = <div className="snakView edit" aria-disabled="false">
-                {/*<div className="snakView-property-container">*/}
-                    {/*<div className="snakView-property" dir="auto"></div>*/}
-                {/*</div>*/}
+                <div className="snakView-property-container">
+                    <div className="snakView-property" dir="auto">
+                        <input placeholder="property" style={inputStyle}/>
+                    </div>
+                </div>
                 <div className="snakView-value-container" dir="auto">
                     <div className="snakView-body">
                         <div className="snakView-value snakView-variation-valueSnak ">
@@ -49,7 +52,7 @@ export default class EditToolbar extends Component {
                                 <div className="valueView-value">
                                     <textarea className="valueView-input"
                                             defaultValue={this.props.text}
-                                            style={{height: "20.7812px", overflow: "hidden", resize: "none"}}
+                                            style={inputStyle}
                                             onInput={this.props.onInput}>
                                     </textarea>
                                 </div>

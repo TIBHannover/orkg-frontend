@@ -13,6 +13,12 @@ textarea {
     box-sizing: border-box;
 }
 
+.entityView input {
+    border: 1px solid #a2a9b1;
+    border-radius: 0;
+    box-sizing: border-box;
+}
+
 .statementGroupView {
     float: left;
     margin-bottom: 2em;
@@ -278,4 +284,16 @@ div.statementView textarea {
 
 .statementGroupView-property.edit {
     background-color: #b6c8ec;
+}
+
+.entityView-main .new .snakView-property {
+    padding: 10px;
+    word-wrap: break-word;
+}
+
+.entityView-main .new .snakView-property input {
+    width: 100%;
+    box-sizing: border-box;
+    border-color: gray;
+    background-color: white;
 }
