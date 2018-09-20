@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import ShortRecord from "../statements/ShortRecord";
-import {submitGetRequest, url} from "../../helpers.js";
+import ShortRecord from "../components/statements/ShortRecord";
+import {submitGetRequest, url} from "../helpers.js";
 
 export default class Contributions extends Component {
     state = {

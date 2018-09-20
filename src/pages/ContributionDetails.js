@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import StatementGroupCard from "../statements/existing/StatementGroupCard";
-import NewStatementGroupCard from "../statements/new/NewStatementGroupCard";
-import {getPredicate, getResource, groupBy, submitGetRequest, url} from "../../helpers";
+import StatementGroupCard from "../components/statements/existing/StatementGroupCard";
+import NewStatementGroupCard from "../components/statements/new/NewStatementGroupCard";
+import {getPredicate, getResource, groupBy, submitGetRequest, url} from "../helpers";
 import './ContributionDetails.css';
 
 export default class ContributionDetails extends Component {

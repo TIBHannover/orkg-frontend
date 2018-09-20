@@ -14,8 +14,8 @@ import CodeContainer from "./components/CodeContainer";
 import StatementGroupCard from "./components/statements/existing/StatementGroupCard";
 import Statement from "./components/statements/Statement";
 import {BrowserRouter as Router, Route, Link, Switch} from "react-router-dom";
-import ContributionDetails from "./components/pages/ContributionDetails"
-import Contributions from "./components/pages/Contributions"
+import ContributionDetails from "./pages/ContributionDetails"
+import Contributions from "./pages/Contributions"
 import {NotificationContainer} from "react-notifications";
 
 class App extends Component {
