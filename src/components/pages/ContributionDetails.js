@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import StatementGroupCard from "../statements/StatementGroupCard";
-import Statement from "../statements/Statement";
+import StatementGroupCard from "../statements/existing/StatementGroupCard";
+import NewStatementGroupCard from "../statements/new/NewStatementGroupCard";
 import {getPredicate, getResource, groupBy, submitGetRequest, url} from "../../helpers";
-import ShortRecord from "../statements/ShortRecord";
+import './ContributionDetails.css';
 
 export default class ContributionDetails extends Component {
 
@@ -144,9 +144,11 @@ export default class ContributionDetails extends Component {
                     }
                 }
             );
+            const newStatementJsx = <NewStatementGroupCard onUpdate={this.reset}
+                    getStatementText={this.getStatementText} setStatementText={this.setStatementText}/>;
 
             return <div>
-                {[titleJsx, abstractJsx].concat(statementGroupsJsx)}
+                {[titleJsx, abstractJsx].concat(statementGroupsJsx).concat([newStatementJsx])}
             </div>
         } else {
             return null;

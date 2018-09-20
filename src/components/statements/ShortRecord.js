@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import './ShortRecord.css';
 
 export default class Statement extends Component {
 

@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import './StatementGroupCard.css';
-import NewStatement from "./NewStatement";
-import AddValueToolbar from "./AddValueToolbar";
-import Statement from "./Statement";
+import NewStatement from "../NewStatement";
+import AddValueToolbar from "../AddValueToolbar";
+import Statement from "../Statement";
 
 export default class StatementGroupCard extends Component {
 
