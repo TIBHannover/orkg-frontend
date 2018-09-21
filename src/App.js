@@ -21,7 +21,7 @@ import {NotificationContainer} from "react-notifications";
 class App extends Component {
 
     render() {
-        return <div>
+        return <div className="body">
             <NotificationContainer/>
             <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
                 <a className="navbar-brand col-sm-3 col-md-2 mr-0" href="#">ORKG</a>
@@ -34,7 +34,7 @@ class App extends Component {
                     </ul>
             </nav>
 
-            <div className="container-fluid">
+            <div className="body-content container-fluid">
                 <div className="row entityView">
                     <Nav className="bg-light" vertical>
                         <NavItem>
