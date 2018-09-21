@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import StatementGroupCard from "../components/statements/existing/StatementGroupCard";
-import NewStatementGroupCard from "../components/statements/new/NewStatementGroupCard";
-import {getPredicate, getResource, groupBy, submitGetRequest, url} from "../helpers";
+import StatementGroupCard from '../components/statements/existing/StatementGroupCard';
+import {getPredicate, getResource, groupBy, submitGetRequest, url} from '../helpers';
 import './ContributionDetails.css';
-import AddStatementLink from "../components/statements/new/AddStatementLink";
+import NewStatementsSection from '../components/statements/new/NewStatementsSection';
 
 export default class ContributionDetails extends Component {
 
@@ -132,7 +131,7 @@ export default class ContributionDetails extends Component {
             const statements = this.state.allStatements.filter(statement => statement.subject === id
                     && statement.predicate !== labelId && statement.predicate !== abstractId);
             const groupedStatements = groupBy(statements, groupingProperty);
-            const statementGroupsJsx = groupedStatements.map(
+            const statementGroupJsxs = groupedStatements.map(
                 statementGroup => {
                     if (statementGroup.length > 0) {
                         const propertyId = statementGroup[0][groupingProperty];
@@ -145,12 +144,10 @@ export default class ContributionDetails extends Component {
                     }
                 }
             );
-            const newStatementJsx = <NewStatementGroupCard onUpdate={this.reset}
-                    getStatementText={this.getStatementText} setStatementText={this.setStatementText}/>;
-            const addStatementLinkJsx = <AddStatementLink/>;
+            const newStatementsSectionJsx = <NewStatementsSection/>;
 
             return <div className="entityView-main">
-                {[titleJsx, abstractJsx].concat(statementGroupsJsx).concat([newStatementJsx, addStatementLinkJsx])}
+                {[titleJsx, abstractJsx].concat(statementGroupJsxs).concat([newStatementsSectionJsx])}
             </div>
         } else {
             return null;

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import NewStatement from "../NewStatement";
-import AddValueToolbar from "./AddValueToolbar";
-import Statement from "../Statement";
+import NewStatementObject from '../NewStatementObject';
+import AddValueToolbar from './AddValueToolbar';
+import Statement from '../Statement';
 
 export default class StatementGroupCard extends Component {
 
@@ -50,9 +50,9 @@ export default class StatementGroupCard extends Component {
                 <div className="statementListView-listView" ref="innerListView">
                     {statements}
                     {this.state.newStatementVisible
-                            && <NewStatement subjectId={subjectId} predicateId={predicateId}
-                                    onCancelClick={this.onCancelAddValueClick}
-                                    onPublishSuccess={this.onPublishSuccess}/>}
+                            && <NewStatementObject subjectId={subjectId} predicateId={predicateId}
+                                                   onCancelClick={this.onCancelAddValueClick}
+                                                   onPublishSuccess={this.onPublishSuccess}/>}
                 </div>
                 <div className="toolbar-wrapper">
                     <AddValueToolbar onAddValueClick={this.onAddValueClick}/>

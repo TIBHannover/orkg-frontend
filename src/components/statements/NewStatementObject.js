@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import EditToolbar from "./EditToolbar";
-import {createResource, createResourceStatement} from "../../helpers";
-import {NotificationManager} from "react-notifications";
-import MainSnak from "./MainSnak";
+import EditToolbar from './EditToolbar';
+import {createResource, createResourceStatement} from '../../helpers';
+import {NotificationManager} from 'react-notifications';
+import MainSnak from './MainSnak';
 
-export default class NewStatement extends Component {
+export default class NewStatementObject extends Component {
 
     state = {
         /* Possible values: 'edit', 'loading'. */
@@ -70,7 +70,7 @@ export default class NewStatement extends Component {
                     <div className="listView"/>
                     <div className="toolbar-container">
                         <span className="toolbar-button toolbar-container">
-                            <a href="#" title="">
+                            <a href="javascript:void(0)" title="">
                                 <span className="fa fa-plus"/>
                                 add qualifier
                             </a>
