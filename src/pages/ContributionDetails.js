@@ -3,6 +3,7 @@ import StatementGroupCard from "../components/statements/existing/StatementGroup
 import NewStatementGroupCard from "../components/statements/new/NewStatementGroupCard";
 import {getPredicate, getResource, groupBy, submitGetRequest, url} from "../helpers";
 import './ContributionDetails.css';
+import AddStatementLink from "../components/statements/new/AddStatementLink";
 
 export default class ContributionDetails extends Component {
 
@@ -146,9 +147,10 @@ export default class ContributionDetails extends Component {
             );
             const newStatementJsx = <NewStatementGroupCard onUpdate={this.reset}
                     getStatementText={this.getStatementText} setStatementText={this.setStatementText}/>;
+            const addStatementLinkJsx = <AddStatementLink/>;
 
             return <div className="entityView-main">
-                {[titleJsx, abstractJsx].concat(statementGroupsJsx).concat([newStatementJsx])}
+                {[titleJsx, abstractJsx].concat(statementGroupsJsx).concat([newStatementJsx, addStatementLinkJsx])}
             </div>
         } else {
             return null;
