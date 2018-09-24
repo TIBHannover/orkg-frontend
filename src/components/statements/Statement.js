@@ -82,7 +82,7 @@ export default class Statement extends Component {
             <div className="statementView-rankSelector"/>
             <div className="statementView-mainSnak-container">
                 <MainSnak ref="mainSnak" editing={this.state.editorState === 'edit'} text={this.getText()}
-                        onInput={this.onValueChange}/>
+                        onInput={this.onValueChange} newProperty={false}/>
             </div>
             <span className="editToolbar-container toolbar-container" aria-disabled={false}>
                 <EditToolbar editorState={this.state.editorState} showRemoveButton={true}

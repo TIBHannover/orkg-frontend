@@ -65,7 +65,8 @@ export default class NewStatementObject extends Component {
                 </div>
             </div>
             <div className="statementView-mainSnak-container">
-                <MainSnak editing={true} text="" onInput={this.onValueChange.bind(this)}/>
+                <MainSnak editing={true} text="" onInput={this.onValueChange.bind(this)}
+                        newProperty={this.props.subjectId === null}/>
                 <div className="statementView-qualifiers">
                     <div className="listView"/>
                     <div className="toolbar-container">
