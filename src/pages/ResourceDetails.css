@@ -85,7 +85,6 @@ textarea {
 }
 
 .snakView-value-container {
-    margin-left: 16px;
     min-height: 1.6em;
 }
 
@@ -182,7 +181,6 @@ textarea {
 }
 
 .snakView .snakView-value-container {
-    margin-left: 16px;
     min-height: 1.6em;
 }
 
@@ -306,6 +304,11 @@ div.statementView textarea {
 
 .snakView-value-container .snakView-body {
     float: left;
+}
+
+.snakView-typeSelector {
+    float: left;
+    padding: 0 2px;
 }
 
 .valueView-input-group-prepend {

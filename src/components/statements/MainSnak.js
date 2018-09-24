@@ -1,25 +1,7 @@
 import React, {Component} from 'react';
+import ObjectTypeSelector from './ObjectTypeSelector';
 
 export default class EditToolbar extends Component {
-
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {text: this.props.text};
-    //
-    //     this.setText = this.setText.bind(this);
-    // }
-    //
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     if (nextProps.text !== nextState.text) {
-    //         this.setState({text: nextProps.text});
-    //     }
-    //
-    //     return true;
-    // }
-    //
-    // setText(text) {
-    //     this.setState({text: text});
-    // }
 
     render() {
         let content = null;
@@ -48,8 +30,9 @@ export default class EditToolbar extends Component {
                     </div>
                 }
                 <div className="snakView-value-container" dir="auto">
-                    <div class="valueView-input-group-prepend">
-                        <span class="valueView-input-group-text">&quot;</span>
+                    <ObjectTypeSelector/>
+                    <div className="valueView-input-group-prepend">
+                        <span className="valueView-input-group-text">&quot;</span>
                     </div>
                     <div className="snakView-body">
                         <div className="snakView-value snakView-variation-valueSnak ">
@@ -65,8 +48,8 @@ export default class EditToolbar extends Component {
                         </div>
                         <div className="snakView-indicators"></div>
                     </div>
-                    <div class="valueView-input-group-append">
-                        <span class="valueView-input-group-text">&quot;</span>
+                    <div className="valueView-input-group-append">
+                        <span className="valueView-input-group-text">&quot;</span>
                     </div>
                 </div>
             </div>
