@@ -2,6 +2,7 @@ export const url = 'http://localhost:8000/api/';
 export const resourcesUrl = url + 'resources/';
 export const predicatesUrl = url + 'predicates/';
 export const statementsUrl = url + 'statements/';
+export const crossrefUrl = 'https://api.crossref.org/works/';
 
 /**
  * Sends simple GET request to the URL.
