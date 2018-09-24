@@ -34,7 +34,7 @@ class App extends Component {
 
             <div className="body-content container-fluid">
                 <div className="row entityView">
-                    <Nav className="bg-light" vertical>
+                    <Nav className="bg-light col-md-3 col-lg-2" vertical>
                         <NavItem>
                             <NavLink><Link to="/">Resources</Link></NavLink>
                         </NavItem>
@@ -46,7 +46,7 @@ class App extends Component {
                         </NavItem>
                     </Nav>
 
-                    <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                    <main role="main" className="col-md-9 col-lg-10 pt-3 px-4">
                         <Switch>
                             <Route exact path="/" component={Resources}/>
                             <Route exact path="/addResource" component={AddResource}/>
