@@ -58,7 +58,7 @@ export default class AddResource extends Component {
     render() {
         return <div>
             <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Resource name or DOI" onInput={this.handleInput}
+                <input type="text" class="form-control" placeholder="Resource title or DOI" onInput={this.handleInput}
                         onKeyUp={this.handleKeyUp}
                         aria-label="Resource title or DOI" aria-describedby="basic-addon2"/>
                 <div class="input-group-append">
