@@ -1,13 +1,8 @@
 import React, {Component} from 'react';
-// import DataList from './components/DataList';
-// import AddResourceModal from './components/AddResourceModal';
-// import Graph from 'vis-react';
 import {
     Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown, Card, CardImg,
     CardBody, CardTitle, CardSubtitle, CardText, CardGroup, CardHeader, UncontrolledCollapse, Nav, NavItem, NavLink
 } from 'reactstrap';
-// import SplitPane from 'react-split-pane';
-// import {NotificationContainer} from 'react-notifications';
 import {submitGetRequest, url} from './helpers.js';
 import './App.css';
 import CodeContainer from "./components/CodeContainer";
@@ -17,6 +12,7 @@ import {BrowserRouter as Router, Route, Link, Switch} from "react-router-dom";
 import ResourceDetails from "./pages/ResourceDetails"
 import Resources from "./pages/Resources"
 import {NotificationContainer} from "react-notifications";
+import AddResource from "./pages/AddResource";
 
 class App extends Component {
 
@@ -51,6 +47,7 @@ class App extends Component {
                     <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                         <Switch>
                             <Route exact path="/" component={Resources}/>
+                            <Route exact path="/addResource" component={AddResource}/>
                             <Route path="/resource/:resourceId" render={({match}) => (
                                 <ResourceDetails id={decodeURIComponent(match.params.resourceId)}/>
                             )}/>
