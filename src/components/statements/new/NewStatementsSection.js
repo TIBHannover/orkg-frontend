@@ -19,6 +19,7 @@ export default class NewStatementsSection extends Component {
         });
         this.counter++;
         this.forceUpdate();
+        return false;
     };
 
     onCancelClick = (event) => {
@@ -27,6 +28,7 @@ export default class NewStatementsSection extends Component {
         });
         this.state.newStatementBoxes = newStatementBoxes;
         this.forceUpdate();
+        return false;
     };
 
     render () {

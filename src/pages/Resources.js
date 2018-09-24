@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import ShortRecord from "../components/statements/ShortRecord";
+import {Link} from "react-router-dom";
 import {submitGetRequest, url} from "../helpers.js";
 
 export default class Resources extends Component {
@@ -39,7 +40,7 @@ export default class Resources extends Component {
     }
 
     render() {
-        const resultsPresent = this.state.error || (/*this.state.results &&*/ this.state.allResources);
+        const resultsPresent = this.state.error || (this.state.allResources);
 
         if (this.state.error) {
             return <p><strong>Error:</strong> {this.state.error} </p>;
@@ -51,6 +52,13 @@ export default class Resources extends Component {
             );
 
             return <div>
+                <div className="addResource toolbar addToolbar-container">
+                    <span className="toolbar-button toolbar-button-add">
+                        <Link to="/addResource">
+                            <span className="fa fa-plus"/>add resource
+                        </Link>
+                    </span>
+                </div>
                 {resources}
             </div>
         } else {

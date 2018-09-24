@@ -297,3 +297,9 @@ div.statementView textarea {
     border-color: gray;
     background-color: white;
 }
+
+.addResource {
+    float: none;
+    text-align: right;
+    height: 2em;
+}
