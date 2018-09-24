@@ -14,8 +14,8 @@ import CodeContainer from "./components/CodeContainer";
 import StatementGroupCard from "./components/statements/existing/StatementGroupCard";
 import Statement from "./components/statements/Statement";
 import {BrowserRouter as Router, Route, Link, Switch} from "react-router-dom";
-import ContributionDetails from "./pages/ContributionDetails"
-import Contributions from "./pages/Contributions"
+import ResourceDetails from "./pages/ResourceDetails"
+import Resources from "./pages/Resources"
 import {NotificationContainer} from "react-notifications";
 
 class App extends Component {
@@ -38,10 +38,10 @@ class App extends Component {
                 <div className="row entityView">
                     <Nav className="bg-light" vertical>
                         <NavItem>
-                            <NavLink><Link to="/">Research contributions</Link></NavLink>
+                            <NavLink><Link to="/">Resources</Link></NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink><Link to="/addContribution">Add research contribution</Link></NavLink>
+                            <NavLink><Link to="/addResource">Add resource</Link></NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink href="/statements">Statements</NavLink>
@@ -50,9 +50,9 @@ class App extends Component {
 
                     <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                         <Switch>
-                            <Route exact path="/" component={Contributions}/>
-                            <Route path="/contribution/:contributionId" render={({match}) => (
-                                <ContributionDetails id={decodeURIComponent(match.params.contributionId)}/>
+                            <Route exact path="/" component={Resources}/>
+                            <Route path="/resource/:resourceId" render={({match}) => (
+                                <ResourceDetails id={decodeURIComponent(match.params.resourceId)}/>
                             )}/>
                         </Switch>
                     </main>

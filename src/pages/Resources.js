@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ShortRecord from "../components/statements/ShortRecord";
 import {submitGetRequest, url} from "../helpers.js";
 
-export default class Contributions extends Component {
+export default class Resources extends Component {
     state = {
         allResources: null,
         results: null,
@@ -47,7 +47,7 @@ export default class Contributions extends Component {
 
         if (resultsPresent) {
             const resources = this.state.allResources.map(
-                resource => <ShortRecord key={resource.id} header={resource.id} href={'/contribution/' + encodeURIComponent(resource.id)}>{resource.label}</ShortRecord>
+                resource => <ShortRecord key={resource.id} header={resource.id} href={'/resource/' + encodeURIComponent(resource.id)}>{resource.label}</ShortRecord>
             );
 
             return <div>

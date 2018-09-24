@@ -29,7 +29,7 @@ export default class EditToolbar extends Component {
                     <div className="snakView-typeSelector"/>
                     <div className="snakView-body">
                         <div className="snakView-value">
-                            <a href={'/contribution/' + this.props.id}>
+                            <a href={'/resource/' + this.props.id}>
                                 {this.props.text}
                             </a>
                         </div>

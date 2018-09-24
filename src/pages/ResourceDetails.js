@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import StatementGroupCard from '../components/statements/existing/StatementGroupCard';
 import {getPredicate, getResource, groupBy, submitGetRequest, resourcesUrl, statementsUrl} from '../helpers';
-import './ContributionDetails.css';
+import './ResourceDetails.css';
 import NewStatementsSection from '../components/statements/new/NewStatementsSection';
 
-export default class ContributionDetails extends Component {
+export default class ResourceDetails extends Component {
 
     state = {
         allStatements: null,
@@ -27,11 +27,11 @@ export default class ContributionDetails extends Component {
     }
 
     componentWillMount() {
-        this.findContribution();
+        this.findResource();
         this.findAllStatements();
     }
 
-    findContribution = () => {
+    findResource = () => {
         const that = this;
 
         submitGetRequest(resourcesUrl + this.props.id + '/',
