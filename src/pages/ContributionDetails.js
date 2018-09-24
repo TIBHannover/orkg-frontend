@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import StatementGroupCard from '../components/statements/existing/StatementGroupCard';
-import {getPredicate, getResource, groupBy, submitGetRequest, url} from '../helpers';
+import {getPredicate, getResource, groupBy, submitGetRequest, resourcesUrl, statementsUrl} from '../helpers';
 import './ContributionDetails.css';
 import NewStatementsSection from '../components/statements/new/NewStatementsSection';
 
@@ -10,6 +10,7 @@ export default class ContributionDetails extends Component {
         allStatements: null,
         results: null,
         error: null,
+        title: null,
         predicateMap: {},
         objectMap: {},
     };
@@ -19,7 +20,6 @@ export default class ContributionDetails extends Component {
     constructor(props) {
         super(props);
 
-        this.findAllStatements = this.findAllStatements.bind(this);
         this.updateMissingPredicateLabels = this.updateMissingPredicateLabels.bind(this);
         this.reset = this.reset.bind(this);
         this.getStatementText = this.getStatementText.bind(this);
@@ -27,13 +27,32 @@ export default class ContributionDetails extends Component {
     }
 
     componentWillMount() {
+        this.findContribution();
         this.findAllStatements();
     }
 
-    findAllStatements() {
+    findContribution = () => {
         const that = this;
 
-        submitGetRequest(url + 'statements/',
+        submitGetRequest(resourcesUrl + this.props.id + '/',
+                (responseJson) => {
+                    that.setState({
+                        title: responseJson.label,
+                    });
+                },
+                (err) => {
+                    console.error(err);
+                    that.setState({
+                        title: null,
+                        error: err.message,
+                    });
+                });
+    };
+
+    findAllStatements = () => {
+        const that = this;
+
+        submitGetRequest(statementsUrl,
             (responseJson) => {
                 that.setState({
                     allStatements: responseJson,
@@ -47,7 +66,7 @@ export default class ContributionDetails extends Component {
                     error: err.message,
                 });
             });
-    }
+    };
 
     updateMissingPredicateLabels() {
         // TODO: implement more efficient way to fetch all predicates instead of querying them one by one.
@@ -117,10 +136,9 @@ export default class ContributionDetails extends Component {
             this.updateMissingPredicateLabels();
             this.updateMissingObjectLabels();
 
-            const titleText = this.state.allStatements.find(statement => statement.subject === id
-                    && statement.predicate === labelId);
+            const titleText = this.state.title;
             const titleJsx = titleText && <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-                <h1 className="h2">{titleText.object.id}</h1>
+                <h1 className="h2">{titleText}</h1>
             </div>;
 
             const abstractText = this.state.allStatements.find(statement => statement.subject === id
