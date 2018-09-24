@@ -48,6 +48,9 @@ export default class EditToolbar extends Component {
                     </div>
                 }
                 <div className="snakView-value-container" dir="auto">
+                    <div class="valueView-input-group-prepend">
+                        <span class="valueView-input-group-text">&quot;</span>
+                    </div>
                     <div className="snakView-body">
                         <div className="snakView-value snakView-variation-valueSnak ">
                             <div className="valueView valueView-inEditMode">
@@ -61,6 +64,9 @@ export default class EditToolbar extends Component {
                             </div>
                         </div>
                         <div className="snakView-indicators"></div>
+                    </div>
+                    <div class="valueView-input-group-append">
+                        <span class="valueView-input-group-text">&quot;</span>
                     </div>
                 </div>
             </div>
