@@ -16,6 +16,13 @@ export default class AddResource extends Component {
         this.setState({value: event.target.value});
     };
 
+    handleKeyUp = (event) => {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            this.createResource(event);
+        }
+    };
+
     createResource = (event) => {
         const value = this.state.value;
         if (value && value.length !== 0) {
@@ -37,6 +44,7 @@ export default class AddResource extends Component {
         return <div>
             <div class="input-group mb-3">
                 <input type="text" class="form-control" placeholder="Resource name or DOI" onInput={this.handleInput}
+                        onKeyUp={this.handleKeyUp}
                         aria-label="Resource name or DOI" aria-describedby="basic-addon2"/>
                 <div class="input-group-append">
                     <button class="btn btn-outline-primary" type="button" onClick={this.createResource}>Add</button>
