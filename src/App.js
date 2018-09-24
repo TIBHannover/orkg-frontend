@@ -13,6 +13,7 @@ import ResourceDetails from "./pages/ResourceDetails"
 import Resources from "./pages/Resources"
 import {NotificationContainer} from "react-notifications";
 import AddResource from "./pages/AddResource";
+import Predicates from "./pages/Predicates";
 
 class App extends Component {
 
@@ -40,7 +41,7 @@ class App extends Component {
                             <NavLink><Link to="/addResource">Add resource</Link></NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="/statements">Statements</NavLink>
+                            <NavLink href="/predicates">Predicates</NavLink>
                         </NavItem>
                     </Nav>
 
@@ -48,6 +49,7 @@ class App extends Component {
                         <Switch>
                             <Route exact path="/" component={Resources}/>
                             <Route exact path="/addResource" component={AddResource}/>
+                            <Route exact path="/predicates" component={Predicates}/>
                             <Route path="/resource/:resourceId" render={({match}) => (
                                 <ResourceDetails id={decodeURIComponent(match.params.resourceId)}/>
                             )}/>
