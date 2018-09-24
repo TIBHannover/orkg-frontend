@@ -10,6 +10,7 @@ import StatementGroupCard from "./components/statements/existing/StatementGroupC
 import Statement from "./components/statements/Statement";
 import {BrowserRouter as Router, Route, Link, Switch} from "react-router-dom";
 import ResourceDetails from "./pages/ResourceDetails"
+import PredicateDetails from "./pages/PredicateDetails"
 import Resources from "./pages/Resources"
 import {NotificationContainer} from "react-notifications";
 import AddResource from "./pages/AddResource";
@@ -52,6 +53,9 @@ class App extends Component {
                             <Route exact path="/predicates" component={Predicates}/>
                             <Route path="/resource/:resourceId" render={({match}) => (
                                 <ResourceDetails id={decodeURIComponent(match.params.resourceId)}/>
+                            )}/>
+                            <Route path="/predicate/:predicateId" render={({match}) => (
+                                <PredicateDetails id={decodeURIComponent(match.params.predicateId)}/>
                             )}/>
                         </Switch>
                     </main>
