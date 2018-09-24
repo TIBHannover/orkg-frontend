@@ -8,18 +8,32 @@ export default class NewStatementsSection extends Component {
         newStatementBoxes: [],
     };
 
-    onAddNewStatement = () => {
-        this.state.newStatementBoxes.push(<NewStatementGroupCard onUpdate={this.reset}
-                getStatementText={this.getStatementText} setStatementText={this.setStatementText}/>);
+    counter = 0;
+
+    onAddNewStatementClick = (event) => {
+        this.state.newStatementBoxes.push({
+            id: this.counter,
+            card: <NewStatementGroupCard id={this.counter} key={this.counter} onUpdate={this.reset}
+                onCancelClick={this.onCancelClick} getStatementText={this.getStatementText}
+                setStatementText={this.setStatementText}/>
+        });
+        this.counter++;
+        this.forceUpdate();
+    };
+
+    onCancelClick = (event) => {
+        const newStatementBoxes = this.state.newStatementBoxes.filter((statementBox) => {
+            return statementBox.id != event.cardId;
+        });
+        this.state.newStatementBoxes = newStatementBoxes;
         this.forceUpdate();
     };
 
     render () {
-        const newStatementJsx = <NewStatementGroupCard onUpdate={this.reset} getStatementText={this.getStatementText}
-                setStatementText={this.setStatementText}/>;
-        const addStatementLinkJsx = <AddStatementLink onClick={this.onAddNewStatement}/>;
+        const addStatementLinkJsx = <AddStatementLink onClick={this.onAddNewStatementClick}/>;
+        const newStatementBoxes = this.state.newStatementBoxes.map((statementBox) => statementBox.card)
 
-        return this.state.newStatementBoxes.concat([addStatementLinkJsx]);
+        return newStatementBoxes.concat([addStatementLinkJsx]);
     }
 
 }

@@ -9,24 +9,29 @@ export default class NewStatementGroupCard extends Component {
 
     constructor() {
         super();
-
-        this.onAddValueClick = this.onAddValueClick.bind(this);
-        this.onCancelAddValueClick = this.onCancelAddValueClick.bind(this)
-        this.onPublishSuccess = this.onPublishSuccess.bind(this)
     }
 
-    onAddValueClick(event) {
+    componentDidMount() {
+        this.id = this.props.id;
+    }
+
+    onAddValueClick = (event) => {
         this.setState({newStatementVisible: true});
-    }
+    };
 
-    onCancelAddValueClick(event) {
+    onCancelAddValueClick = (event) => {
         this.setState({newStatementVisible: false});
-    }
+    };
 
-    onPublishSuccess(newRecordLabel) {
+    onPublishSuccess = (newRecordLabel) => {
         this.setState({newStatementVisible: false});
         this.props.onUpdate(newRecordLabel);
-    }
+    };
+
+    onCancelClick = (event) => {
+        event.cardId = this.id;
+        this.props.onCancelClick(event);
+    };
 
     render() {
         return <div className="statementGroupView new">
@@ -38,8 +43,8 @@ export default class NewStatementGroupCard extends Component {
             <div className="statementListView">
                 <div className="statementListView-listView" ref="innerListView">
                     <NewStatementObject subjectId={null} predicateId={null}
-                                        onCancelClick={this.onCancelAddValueClick}
-                                        onPublishSuccess={this.onPublishSuccess}/>
+                            onCancelClick={this.onCancelClick}
+                            onPublishSuccess={this.onPublishSuccess}/>
                 </div>
             </div>
         </div>
