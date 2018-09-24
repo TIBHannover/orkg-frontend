@@ -41,26 +41,17 @@ class App extends Component {
                             <NavLink><Link to="/">Research contributions</Link></NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink><Link to="/contribution">Research contribution</Link></NavLink>
+                            <NavLink><Link to="/addContribution">Add research contribution</Link></NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="/#/researchContributions/">Approaches</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink href="#">Implementations</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink href="#">Evaluations</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink href="#">Etc</NavLink>
+                            <NavLink href="/statements">Statements</NavLink>
                         </NavItem>
                     </Nav>
 
                     <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                         <Switch>
                             <Route exact path="/" component={Contributions}/>
-                            <Route path="/contribution/:contributionId" render={({ match }) => (
+                            <Route path="/contribution/:contributionId" render={({match}) => (
                                 <ContributionDetails id={decodeURIComponent(match.params.contributionId)}/>
                             )}/>
                         </Switch>
