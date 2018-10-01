@@ -40,7 +40,7 @@ export default class EditToolbar extends Component {
                     </div>
                 }
                 <div className="snakView-value-container" dir="auto">
-                    <ObjectTypeSelector onItemSelect={this.handleItemSelect}/>
+                    <ObjectTypeSelector onItemSelect={this.handleItemSelect} objectType={this.state.objectType}/>
                     {this.state.objectType === 'literal' && <div className="valueView-input-group-prepend">
                         <span className="valueView-input-group-text">&quot;</span>
                     </div>}

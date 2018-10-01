@@ -4,16 +4,25 @@ import {guid} from '../../helpers.js';
 // TODO: maybe dropdown popup show/hide and item selection can be done automatically by Bootstrap.
 export default class ObjectTypeSelector extends Component {
 
+    state = {
+        dropdownVisible: false,
+    };
+
     handleDropdownClick = (event) => {
-        event.target.nextSibling.style.display = (event.target.nextSibling.style.display === '') ? 'block' : '';
-    }
+        this.setState({dropdownVisible: !this.state.dropdownVisible});
+    };
+
+    closeOverlay = () => {
+        this.setState({dropdownVisible: false});
+    };
 
     handleMenuItemClick = (event) => {
         const menuItems = event.target.parentNode.childNodes;
         menuItems.forEach((menuItem) => menuItem.classList.remove('active'));
         event.target.classList.add('active');
+        this.closeOverlay();
         this.props.onItemSelect(event.target.name);
-    }
+    };
 
     render() {
         const dropdownId = guid();
@@ -24,12 +33,13 @@ export default class ObjectTypeSelector extends Component {
                     onClick={this.handleDropdownClick}>
                 <span className="fa fa-bars" title="type"></span>
             </button>
-            <div className="dropdown-menu" aria-labelledby={id}>
-                <button name="literal" className="dropdown-item active" type="button"
-                        onClick={this.handleMenuItemClick}>literal</button>
-                <button name="object" className="dropdown-item" type="button"
-                        onClick={this.handleMenuItemClick}>object</button>
-            </div>
+            {this.state.dropdownVisible && [<div className="dropdown-menu" aria-labelledby={id}>
+                <button name="literal" className={'dropdown-item' + (this.props.objectType === 'literal' ? ' active' : '')}
+                        type="button" onClick={this.handleMenuItemClick}>literal</button>
+                <button name="object" className={'dropdown-item' + (this.props.objectType === 'object' ? ' active' : '')}
+                        type="button" onClick={this.handleMenuItemClick}>object</button>
+            </div>,
+            <div className="overlay" onClick={this.closeOverlay}></div>]}
         </div>
     }
 
