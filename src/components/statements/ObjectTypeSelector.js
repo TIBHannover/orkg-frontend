@@ -12,6 +12,7 @@ export default class ObjectTypeSelector extends Component {
         const menuItems = event.target.parentNode.childNodes;
         menuItems.forEach((menuItem) => menuItem.classList.remove('active'));
         event.target.classList.add('active');
+        this.props.onItemSelect(event.target.name);
     }
 
     render() {
@@ -24,8 +25,10 @@ export default class ObjectTypeSelector extends Component {
                 <span className="fa fa-bars" title="type"></span>
             </button>
             <div className="dropdown-menu" aria-labelledby={id}>
-                <button className="dropdown-item active" type="button" onClick={this.handleMenuItemClick}>literal</button>
-                <button className="dropdown-item" type="button" onClick={this.handleMenuItemClick}>object</button>
+                <button name="literal" className="dropdown-item active" type="button"
+                        onClick={this.handleMenuItemClick}>literal</button>
+                <button name="object" className="dropdown-item" type="button"
+                        onClick={this.handleMenuItemClick}>object</button>
             </div>
         </div>
     }
