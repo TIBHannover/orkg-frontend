@@ -31,6 +31,7 @@ export default class EditToolbar extends Component {
             </div>
         } else {
             const inputStyle = {height: "21.8px", overflow: "hidden", resize: "none"};
+            const shouldShowQuotes = this.state.objectType === 'literal';
             content = <div className="snakView edit" aria-disabled="false">
                 {
                     this.props.newProperty && <div className="snakView-property-container">
@@ -41,7 +42,7 @@ export default class EditToolbar extends Component {
                 }
                 <div className="snakView-value-container" dir="auto">
                     <ObjectTypeSelector onItemSelect={this.handleItemSelect} objectType={this.state.objectType}/>
-                    {this.state.objectType === 'literal' && <div className="valueView-input-group-prepend">
+                    {shouldShowQuotes && <div className="valueView-input-group-prepend">
                         <span className="valueView-input-group-text">&quot;</span>
                     </div>}
                     <div className="snakView-body">
@@ -58,7 +59,7 @@ export default class EditToolbar extends Component {
                         </div>
                         <div className="snakView-indicators"></div>
                     </div>
-                    {this.state.objectType === 'literal' && <div className="valueView-input-group-prepend">
+                    {shouldShowQuotes && <div className="valueView-input-group-prepend">
                         <span className="valueView-input-group-text">&quot;</span>
                     </div>}
                 </div>

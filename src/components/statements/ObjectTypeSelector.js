@@ -25,21 +25,20 @@ export default class ObjectTypeSelector extends Component {
     };
 
     render() {
-        const dropdownId = guid();
         const id = guid();
-        return <div id={dropdownId} className="snakView-typeSelector dropdown">
+        return <div className="snakView-typeSelector dropdown">
             <button type="button" id={id} className="snakTypeSelector btn btn-primary dropdown-toggle"
                     data-toggle="dropdown" aria-disabled="false" aria-haspopup="true" aria-expanded="false"
                     onClick={this.handleDropdownClick}>
                 <span className="fa fa-bars" title="type"></span>
             </button>
-            {this.state.dropdownVisible && [<div className="dropdown-menu" aria-labelledby={id}>
+            {this.state.dropdownVisible && <div className="dropdown-menu" aria-labelledby={id}>
                 <button name="literal" className={'dropdown-item' + (this.props.objectType === 'literal' ? ' active' : '')}
                         type="button" onClick={this.handleMenuItemClick}>literal</button>
                 <button name="object" className={'dropdown-item' + (this.props.objectType === 'object' ? ' active' : '')}
                         type="button" onClick={this.handleMenuItemClick}>object</button>
-            </div>,
-            <div className="overlay" onClick={this.closeOverlay}></div>]}
+            </div>}
+            {this.state.dropdownVisible && <div className="overlay" onClick={this.closeOverlay}></div>}
         </div>
     }
 
