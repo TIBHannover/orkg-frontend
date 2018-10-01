@@ -4,7 +4,7 @@ import {getPredicate, getResource, groupBy, submitGetRequest, predicatesUrl} fro
 import './ResourceDetails.css';
 import NewStatementsSection from '../components/statements/new/NewStatementsSection';
 
-export default class ResourceDetails extends Component {
+export default class PredicateDetails extends Component {
 
     state = {
         error: null,
