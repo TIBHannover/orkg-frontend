@@ -15,9 +15,13 @@ export default class EditToolbar extends Component {
                     <div className="snakView-typeSelector"/>
                     <div className="snakView-body">
                         <div className="snakView-value">
-                            <a href={'/resource/' + this.props.id}>
-                                {this.props.text}
-                            </a>
+                            {
+                                this.props.type === 'resource'
+                                ? <a href={'/resource/' + this.props.id}>
+                                    {this.props.text}
+                                </a>
+                                : this.props.text
+                            }
                         </div>
                         <div className="snakView-indicators"/>
                     </div>

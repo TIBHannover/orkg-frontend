@@ -35,7 +35,7 @@ export default class ObjectTypeSelector extends Component {
             {this.state.dropdownVisible && <div className="dropdown-menu" aria-labelledby={id}>
                 <button name="literal" className={'dropdown-item' + (this.props.objectType === 'literal' ? ' active' : '')}
                         type="button" onClick={this.handleMenuItemClick}>literal</button>
-                <button name="object" className={'dropdown-item' + (this.props.objectType === 'object' ? ' active' : '')}
+                <button name="resource" className={'dropdown-item' + (this.props.objectType === 'resource' ? ' active' : '')}
                         type="button" onClick={this.handleMenuItemClick}>object</button>
             </div>}
             {this.state.dropdownVisible && <div className="overlay" onClick={this.closeOverlay}></div>}

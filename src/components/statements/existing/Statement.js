@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import EditToolbar from "./EditToolbar";
-import MainSnak from "./MainSnak";
-import {updateResource} from "../../helpers";
+import EditToolbar from "../EditToolbar";
+import MainSnak from "../MainSnak";
+import {updateResource} from "../../../helpers";
 import {NotificationManager} from "react-notifications";
 
 export default class Statement extends Component {
@@ -51,7 +51,6 @@ export default class Statement extends Component {
                     this.setText(responseJson.label);
                     this.setEditorState('view');
                     NotificationManager.success('Resource submitted successfully', 'Success', 5000);
-                    // this.forceUpdate();
                 },
                 (error) => {
                     this.revertText();
@@ -82,7 +81,7 @@ export default class Statement extends Component {
             <div className="statementView-rankSelector"/>
             <div className="statementView-mainSnak-container">
                 <MainSnak ref="mainSnak" editing={this.state.editorState === 'edit'} id={this.id} text={this.getText()}
-                        onInput={this.onValueChange} newProperty={false}/>
+                        onInput={this.onValueChange} newProperty={false} type={this.props.type}/>
             </div>
             <span className="editToolbar-container toolbar-container" aria-disabled={false}>
                 <EditToolbar editorState={this.state.editorState} showRemoveButton={true}

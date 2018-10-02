@@ -6,8 +6,6 @@ import {
 import {submitGetRequest, url} from './helpers.js';
 import './App.css';
 import CodeContainer from "./components/CodeContainer";
-import StatementGroupCard from "./components/statements/existing/StatementGroupCard";
-import Statement from "./components/statements/Statement";
 import {BrowserRouter as Router, Route, Link, Switch} from "react-router-dom";
 import ResourceDetails from "./pages/ResourceDetails"
 import PredicateDetails from "./pages/PredicateDetails"

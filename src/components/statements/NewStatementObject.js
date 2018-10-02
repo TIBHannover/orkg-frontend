@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import EditToolbar from './EditToolbar';
-import {createResource, createResourceStatement} from '../../helpers';
+import {createResource, createResourceStatement, createLiteralStatement} from '../../helpers';
 import {NotificationManager} from 'react-notifications';
 import MainSnak from './MainSnak';
 
@@ -18,38 +18,59 @@ export default class NewStatementObject extends Component {
         super(props);
 
         this.value = this.props.text;
-        this.onResourceCreationSuccess = this.onResourceCreationSuccess.bind(this);
-        this.onResourceCreationError = this.onResourceCreationError.bind(this);
-        this.onPublishClick = this.onPublishClick.bind(this);
     }
 
-    onResourceCreationSuccess(responseJson) {
+    onLiteralStatementCreationSuccess = (responseJson) => {
+        this.setEditorState('edit');
+        NotificationManager.success('Statement created successfully', 'Success', 5000);
+        this.props.onPublishSuccess(responseJson.label);
+    };
+
+    onResourceCreationSuccess = (responseJson) => {
         this.setEditorState('edit');
         NotificationManager.success('Resource added successfully', 'Success', 5000);
         this.props.onPublishSuccess(responseJson.label);
-    }
+    };
 
-    onResourceCreationError(error) {
+    onResourceCreationError = (error) => {
         this.setEditorState('edit');
         console.error(error);
         NotificationManager.error(error.message, 'Error creating resource statement (predicate)', 5000);
-    }
+    };
 
-    onPublishClick(event) {
+    onPublishClick = (event) => {
         if (this.value && this.value.length !== 0) {
-            createResource(this.value, (responseJson) => {
-                    createResourceStatement(this.props.subjectId, this.props.predicateId, responseJson.id,
-                            this.onResourceCreationSuccess, this.onResourceCreationError);
-                },
-                (error) => {
-                    this.setEditorState('edit');
-                    console.error(error);
-                    NotificationManager.error(error.message, 'Error creating resource', 5000);
-                });
+            switch (this.state.objectType) {
+                case 'literal': {
+                    createLiteralStatement(this.props.subjectId, this.props.predicateId, this.value,
+                            this.onLiteralStatementCreationSuccess, (error) => {
+                                this.setEditorState('edit');
+                                console.error(error);
+                                NotificationManager.error(error.message, 'Error creating resource', 5000);
+                            });
+                    break;
+                }
+                case 'resource': {
+                    createResource(this.value, (responseJson) => {
+                            createResourceStatement(this.props.subjectId, this.props.predicateId, responseJson.id,
+                                    this.onResourceCreationSuccess, this.onResourceCreationError);
+                        },
+                        (error) => {
+                            this.setEditorState('edit');
+                            console.error(error);
+                            NotificationManager.error(error.message, 'Error creating resource', 5000);
+                        });
+                    break;
+                }
+                default: {
+                    throw `Unknown object type. [this.state.objectType={this.state.objectType}]`;
+                    break;
+                }
+            }
             this.setEditorState('loading');
         }
         return false;
-    }
+    };
 
     setEditorState(editorState) {
         this.setState({editorState: editorState});
