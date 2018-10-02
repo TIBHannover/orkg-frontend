@@ -9,6 +9,7 @@ export default class NewStatementObject extends Component {
     state = {
         /* Possible values: 'edit', 'loading'. */
         editorState: 'edit',
+        objectType: 'literal',
     };
 
     value = null;
@@ -47,6 +48,7 @@ export default class NewStatementObject extends Component {
                 });
             this.setEditorState('loading');
         }
+        return false;
     }
 
     setEditorState(editorState) {
@@ -57,6 +59,12 @@ export default class NewStatementObject extends Component {
         this.value = event.target.value.trim();
     }
 
+    handleObjectTypeSelect = (itemName) => {
+        this.setState({
+            objectType: itemName
+        });
+    };
+
     render() {
         return <div id="new" className="statementView newStatement">
             <div className="statementView-rankSelector">
@@ -66,6 +74,7 @@ export default class NewStatementObject extends Component {
             </div>
             <div className="statementView-mainSnak-container">
                 <MainSnak editing={true} text="" onInput={this.onValueChange.bind(this)}
+                        onObjectTypeSelect={this.handleObjectTypeSelect} objectType={this.state.objectType}
                         newProperty={this.props.subjectId === null}/>
                 <div className="statementView-qualifiers">
                     <div className="listView"/>

@@ -3,14 +3,8 @@ import ObjectTypeSelector from './ObjectTypeSelector';
 
 export default class EditToolbar extends Component {
 
-    state = {
-        objectType: 'literal',
-    };
-
     handleItemSelect = (itemName) => {
-        this.setState({
-            objectType: itemName
-        });
+        this.props.onObjectTypeSelect(itemName);
     };
 
     render() {
@@ -31,7 +25,7 @@ export default class EditToolbar extends Component {
             </div>
         } else {
             const inputStyle = {height: "21.8px", overflow: "hidden", resize: "none"};
-            const shouldShowQuotes = this.state.objectType === 'literal';
+            const shouldShowQuotes = this.props.objectType === 'literal';
             content = <div className="snakView edit" aria-disabled="false">
                 {
                     this.props.newProperty && <div className="snakView-property-container">
@@ -41,7 +35,7 @@ export default class EditToolbar extends Component {
                     </div>
                 }
                 <div className="snakView-value-container" dir="auto">
-                    <ObjectTypeSelector onItemSelect={this.handleItemSelect} objectType={this.state.objectType}/>
+                    <ObjectTypeSelector onItemSelect={this.handleItemSelect} objectType={this.props.objectType}/>
                     {shouldShowQuotes && <div className="valueView-input-group-prepend">
                         <span className="valueView-input-group-text">&quot;</span>
                     </div>}

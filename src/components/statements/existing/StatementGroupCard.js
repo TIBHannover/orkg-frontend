@@ -19,10 +19,12 @@ export default class StatementGroupCard extends Component {
 
     onAddValueClick(event) {
         this.setState({newStatementVisible: true});
+        return false;
     }
 
     onCancelAddValueClick(event) {
         this.setState({newStatementVisible: false});
+        return false;
     }
 
     onPublishSuccess(newRecordLabel) {
@@ -51,8 +53,8 @@ export default class StatementGroupCard extends Component {
                     {statements}
                     {this.state.newStatementVisible
                             && <NewStatementObject subjectId={subjectId} predicateId={predicateId}
-                                                   onCancelClick={this.onCancelAddValueClick}
-                                                   onPublishSuccess={this.onPublishSuccess}/>}
+                                    onCancelClick={this.onCancelAddValueClick}
+                                    onPublishSuccess={this.onPublishSuccess}/>}
                 </div>
                 <div className="toolbar-wrapper">
                     <AddValueToolbar onAddValueClick={this.onAddValueClick}/>
