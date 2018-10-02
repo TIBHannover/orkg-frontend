@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import ObjectTypeSelector from './ObjectTypeSelector';
 
-export default class EditToolbar extends Component {
+export default class MainSnak extends Component {
 
     handleItemSelect = (itemName) => {
         this.props.onObjectTypeSelect(itemName);
@@ -16,7 +16,7 @@ export default class EditToolbar extends Component {
                     <div className="snakView-body">
                         <div className="snakView-value">
                             {
-                                this.props.type === 'resource'
+                                this.props.objectType === 'resource'
                                 ? <a href={'/resource/' + this.props.id}>
                                     {this.props.text}
                                 </a>
@@ -47,10 +47,8 @@ export default class EditToolbar extends Component {
                         <div className="snakView-value snakView-variation-valueSnak ">
                             <div className="valueView valueView-inEditMode">
                                 <div className="valueView-value">
-                                    <textarea className="valueView-input"
-                                            defaultValue={this.props.text}
-                                            style={inputStyle}
-                                            onInput={this.props.onInput}>
+                                    <textarea className="valueView-input" defaultValue={this.props.text}
+                                            style={inputStyle} onInput={this.props.onInput}>
                                     </textarea>
                                 </div>
                             </div>

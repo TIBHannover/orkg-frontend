@@ -9,6 +9,7 @@ export default class Statement extends Component {
     state = {
         /* Possible values: 'view', 'edit', 'loading'. */
         editorState: 'view',
+        objectType: 'literal',
     };
 
     id = null;
@@ -21,6 +22,8 @@ export default class Statement extends Component {
 
         this.getText = this.props.getText;
         this.setText = this.props.setText;
+
+        this.state.objectType = this.props.type;
 
         this.setEditorState = this.setEditorState.bind(this);
         this.onValueChange = this.onValueChange.bind(this);
@@ -66,7 +69,7 @@ export default class Statement extends Component {
         const that = this;
         const value = this.props.getText();
         if (value && value.length !== 0) {
-            switch (this.props.type) {
+            switch (this.state.objectType) {
                 case 'literal': {
                     createLiteralStatement(this.props.subjectId, this.props.predicateId, value,
                             this.onUpdateLiteralSuccess, this.onUpdateError);
@@ -77,7 +80,7 @@ export default class Statement extends Component {
                     break;
                 }
                 default: {
-                    throw `Unknown object type. [this.props.type={this.props.type}]`;
+                    throw 'Unknown object type: ' + this.state.objectType + ']';
                 }
             }
             this.setEditorState('loading');
@@ -98,12 +101,19 @@ export default class Statement extends Component {
         this.setState({editorState: editorState});
     }
 
+    handleObjectTypeSelect = (itemName) => {
+        this.setState({
+            objectType: itemName
+        });
+    };
+
     render() {
         return <div className="statementView">
             <div className="statementView-rankSelector"/>
             <div className="statementView-mainSnak-container">
                 <MainSnak ref="mainSnak" editing={this.state.editorState === 'edit'} id={this.id} text={this.getText()}
-                        onInput={this.onValueChange} newProperty={false} type={this.props.type}/>
+                        onInput={this.onValueChange} newProperty={false}
+                        onObjectTypeSelect={this.handleObjectTypeSelect} objectType={this.state.objectType}/>
             </div>
             <span className="editToolbar-container toolbar-container" aria-disabled={false}>
                 <EditToolbar editorState={this.state.editorState} showRemoveButton={true}
