@@ -6,7 +6,7 @@ export default class EditToolbar extends Component {
         let content = null;
         switch (this.props.editorState) {
             case 'view': {
-                    content = <span className="toolbar-button">
+                content = <span className="toolbar-button">
                     <a href="javascript:void(0)" onClick={this.props.onEditClick}>
                         <span className="fa fa-pencil" aria-hidden="true"></span>
                         edit
@@ -40,6 +40,9 @@ export default class EditToolbar extends Component {
             case 'loading': {
                 content = <span className="fa fa-spinner fa-spin"></span>;
                 break;
+            }
+            default: {
+                throw `Unknown state '{this.props.editorState}'`;
             }
         }
 

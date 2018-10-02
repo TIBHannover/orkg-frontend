@@ -38,12 +38,10 @@ export default class StatementGroupCard extends Component {
         const predicateId = statementGroup[0].predicate;
 
         const statements = statementGroup.map(
-            (statement) => <Statement getText={
-                    statement.object.type === 'resource'
-                    ? this.props.getStatementText(statement.object.id)
-                    : () => statement.object.value}
-                    setText={this.props.setStatementText(statement.object.id)}
-                    id={statement.object.id} onUpdate={this.reset} type={statement.object.type}/>);
+            (statement) => <Statement getText={this.props.getStatementText(statement)}
+                    setText={this.props.setStatementText(statement)}
+                    id={statement.object.id} onUpdate={this.reset} type={statement.object.type}
+                    subjectId={statement.subject} predicateId={statement.predicate}/>);
 
         return <div className="statementGroupView">
             <div className="statementGroupView-property">

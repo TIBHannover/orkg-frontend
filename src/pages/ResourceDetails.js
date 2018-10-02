@@ -90,15 +90,27 @@ export default class ResourceDetails extends Component {
         // TODO: implement more efficient way to fetch all objects instead of querying them one by one.
         const that = this;
         this.state.allStatements.forEach((statement) => {
-            if (!that.state.objectMap[statement.object.id]) {
-                getResource(statement.object.id,
-                    (responseJson) => {
-                        that.setStatementText(responseJson.id)(responseJson.label);
-                        that.forceUpdate();
-                    },
-                    (err) => {
-                        console.error(err);
-                    });
+            if (!that.state.objectMap[statement.statementId]) {
+                switch (statement.object.type) {
+                    case 'literal': {
+                        that.setStatementText(statement)(statement.object.value);
+                        break;
+                    }
+                    case 'resource': {
+                        getResource(statement.object.id,
+                                (responseJson) => {
+                                    that.setStatementText(statement)(responseJson.label);
+                                    that.forceUpdate();
+                                },
+                                (err) => {
+                                    console.error(err);
+                                });
+                        break;
+                    }
+                    default: {
+                        throw 'Unknown statement object type: ' + statement.object.type + '.';
+                    }
+                }
             }
         });
     }
@@ -108,17 +120,17 @@ export default class ResourceDetails extends Component {
         this.setState(this.initialState);
     }
 
-    getStatementText(statementId) {
+    getStatementText(statement) {
         const that = this;
         return () => {
-            return that.state.objectMap[statementId] || statementId;
+            return that.state.objectMap[statement.statementId] || statement.object.id;
         }
     }
 
-    setStatementText(statementId) {
+    setStatementText(statement) {
         const that = this;
         return (text) => {
-            that.state.objectMap[statementId] = text;
+            that.state.objectMap[statement.statementId] = text;
         }
     }
 

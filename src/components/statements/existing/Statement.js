@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import EditToolbar from "../EditToolbar";
 import MainSnak from "../MainSnak";
-import {updateResource} from "../../../helpers";
+import {updateResource, createLiteralStatement} from "../../../helpers";
 import {NotificationManager} from "react-notifications";
 
 export default class Statement extends Component {
@@ -43,21 +43,43 @@ export default class Statement extends Component {
         this.storeText();
     }
 
+    onUpdateResourceSuccess = (responseJson) => {
+        this.setText(responseJson.label);
+        this.setEditorState('view');
+        NotificationManager.success('Resource submitted successfully', 'Success', 5000);
+    };
+
+    onUpdateLiteralSuccess = (responseJson) => {
+        this.setText(responseJson.object.value);
+        this.setEditorState('view');
+        NotificationManager.success('Resource submitted successfully', 'Success', 5000);
+    };
+
+    onUpdateError = (error) => {
+        this.revertText();
+        this.setEditorState('view');
+        console.error(error);
+        NotificationManager.error(error.message, 'Error submitting resource', 5000);
+    };
+
     onPublishClick(event) {
         const that = this;
         const value = this.props.getText();
         if (value && value.length !== 0) {
-            updateResource(this.id, value, (responseJson) => {
-                    this.setText(responseJson.label);
-                    this.setEditorState('view');
-                    NotificationManager.success('Resource submitted successfully', 'Success', 5000);
-                },
-                (error) => {
-                    this.revertText();
-                    this.setEditorState('view');
-                    console.error(error);
-                    NotificationManager.error(error.message, 'Error submitting resource', 5000);
-                });
+            switch (this.props.type) {
+                case 'literal': {
+                    createLiteralStatement(this.props.subjectId, this.props.predicateId, value,
+                            this.onUpdateLiteralSuccess, this.onUpdateError);
+                    break;
+                }
+                case 'resource': {
+                    updateResource(this.id, value, this.onUpdateResourceSuccess, this.onUpdateError);
+                    break;
+                }
+                default: {
+                    throw `Unknown object type. [this.props.type={this.props.type}]`;
+                }
+            }
             this.setEditorState('loading');
         }
     }
