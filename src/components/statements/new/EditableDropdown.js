@@ -1,14 +1,38 @@
 import {Component} from 'react';
 import React from 'react';
+import {getPredicatesByLabel} from '../../../helpers';
 
 
 export default class EditableDropdown extends Component {
     state = {
         value: '',
+        dropdownMenuJsx: null,
     };
 
+    // TODO: add timer, so that the request is not sent on every keystroke.
     handleChange = (event) => {
-        this.setState({value: event.target.value});
+        const value = event.target.value;
+        this.setState({value: value});
+
+        if (value && value.length >= 0) {
+            getPredicatesByLabel(value, (responseJson) => {
+                    if (responseJson.length > 0) {
+                        const menuItemsJsx = responseJson.map(
+                            (predicate) => <a id={predicate.id} className="dropdown-item" href="#"
+                                    onClick={this.handleItemClick}>{predicate.label}</a>);
+                        this.setState({
+                            dropdownMenuJsx: <div className="dropdown-menu">{menuItemsJsx}</div>,
+                        });
+                    } else {
+                        this.setState({dropdownMenuJsx: null});
+                    }
+                },
+                (err) => {
+                    console.error(err);
+                });
+        } else {
+            this.setState({dropdownMenuJsx: null});
+        }
     };
 
     handleItemClick = (event) => {
@@ -20,13 +44,7 @@ export default class EditableDropdown extends Component {
         return <div className="dropdown">
             <input placeholder="property" className="dropdown-toggle" style={inputStyle} value={this.state.value}
                    onChange={this.handleChange}/>
-            <div className="dropdown-menu">
-                <a className="dropdown-item" href="#" onClick={this.handleItemClick}>Link 1</a>
-                <a className="dropdown-item" href="#" onClick={this.handleItemClick}>Link 2</a>
-                <a className="dropdown-item" href="#" onClick={this.handleItemClick}>Link 3</a>
-                <div className="dropdown-divider"></div>
-                <a className="dropdown-item" href="#" onClick={this.handleItemClick}>Another link</a>
-            </div>
+            {this.state.dropdownMenuJsx}
         </div>;
     }
 }
