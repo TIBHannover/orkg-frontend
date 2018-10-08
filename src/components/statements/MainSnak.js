@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import ObjectTypeSelector from './ObjectTypeSelector';
+import EditableDropdown from './new/EditableDropdown';
 
 export default class MainSnak extends Component {
 
@@ -18,9 +19,9 @@ export default class MainSnak extends Component {
                             {
                                 this.props.objectType === 'resource'
                                 ? <a href={'/resource/' + this.props.id}>
-                                    {this.props.text}
+                                    {this.props.value}
                                 </a>
-                                : this.props.text
+                                : this.props.value
                             }
                         </div>
                         <div className="snakView-indicators"/>
@@ -34,7 +35,9 @@ export default class MainSnak extends Component {
                 {
                     this.props.newProperty && <div className="snakView-property-container">
                         <div className="snakView-property" dir="auto">
-                            <input placeholder="property" style={inputStyle}/>
+                            {/*<input placeholder="property" style={inputStyle}/>*/}
+
+                            <EditableDropdown/>
                         </div>
                     </div>
                 }
@@ -47,7 +50,7 @@ export default class MainSnak extends Component {
                         <div className="snakView-value snakView-variation-valueSnak ">
                             <div className="valueView valueView-inEditMode">
                                 <div className="valueView-value">
-                                    <textarea className="valueView-input" defaultValue={this.props.text}
+                                    <textarea className="valueView-input" defaultValue={this.props.value}
                                             style={inputStyle} onInput={this.props.onInput}>
                                     </textarea>
                                 </div>

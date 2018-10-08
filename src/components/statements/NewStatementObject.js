@@ -17,7 +17,7 @@ export default class NewStatementObject extends Component {
     constructor(props) {
         super(props);
 
-        this.value = this.props.text;
+        this.value = this.props.value;
     }
 
     onLiteralStatementCreationSuccess = (responseJson) => {
