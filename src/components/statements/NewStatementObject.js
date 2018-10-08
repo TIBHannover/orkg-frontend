@@ -10,6 +10,7 @@ export default class NewStatementObject extends Component {
         /* Possible values: 'edit', 'loading'. */
         editorState: 'edit',
         objectType: 'literal',
+        selectedPredicateId: null,
     };
 
     value = null;
@@ -40,9 +41,10 @@ export default class NewStatementObject extends Component {
 
     onPublishClick = (event) => {
         if (this.value && this.value.length !== 0) {
+            const predicateId = this.props.predicateId || this.state.selectedPredicateId;
             switch (this.state.objectType) {
                 case 'literal': {
-                    createLiteralStatement(this.props.subjectId, this.props.predicateId, this.value,
+                    createLiteralStatement(this.props.subjectId, predicateId, this.value,
                             this.onLiteralStatementCreationSuccess, (error) => {
                                 this.setEditorState('edit');
                                 console.error(error);
@@ -52,7 +54,7 @@ export default class NewStatementObject extends Component {
                 }
                 case 'resource': {
                     createResource(this.value, (responseJson) => {
-                            createResourceStatement(this.props.subjectId, this.props.predicateId, responseJson.id,
+                            createResourceStatement(this.props.subjectId, predicateId, responseJson.id,
                                     this.onResourceCreationSuccess, this.onResourceCreationError);
                         },
                         (error) => {
@@ -64,7 +66,6 @@ export default class NewStatementObject extends Component {
                 }
                 default: {
                     throw `Unknown object type. [this.state.objectType={this.state.objectType}]`;
-                    break;
                 }
             }
             this.setEditorState('loading');
@@ -76,9 +77,9 @@ export default class NewStatementObject extends Component {
         this.setState({editorState: editorState});
     }
 
-    onValueChange(event) {
+    onValueChange = (event) => {
         this.value = event.target.value.trim();
-    }
+    };
 
     handleObjectTypeSelect = (itemName) => {
         this.setState({
@@ -86,7 +87,13 @@ export default class NewStatementObject extends Component {
         });
     };
 
+    handlePredicateSelect = (predicateId) => {
+        this.setState({selectedPredicateId: predicateId});
+    };
+
     render() {
+        const newProperty = this.props.predicateId === null;
+        const showButtons = !newProperty || this.state.selectedPredicateId;
         return <div id="new" className="statementView newStatement">
             <div className="statementView-rankSelector">
                 <div className="rankSelector">
@@ -94,26 +101,30 @@ export default class NewStatementObject extends Component {
                 </div>
             </div>
             <div className="statementView-mainSnak-container">
-                <MainSnak editing={true} text="" onInput={this.onValueChange.bind(this)}
-                        onObjectTypeSelect={this.handleObjectTypeSelect} objectType={this.state.objectType}
-                        newProperty={this.props.subjectId === null}/>
+                <MainSnak editing={true} text="" onInput={this.onValueChange}
+                        onObjectTypeSelect={this.handleObjectTypeSelect}
+                        objectType={this.state.objectType}
+                        newProperty={newProperty} onPredicateSelect={this.handlePredicateSelect}/>
                 <div className="statementView-qualifiers">
                     <div className="listView"/>
                     <div className="toolbar-container">
                         <span className="toolbar-button toolbar-container">
-                            <a href="javascript:void(0)" title="">
-                                <span className="fa fa-plus"/>
-                                add qualifier
-                            </a>
+                                <a href="#" title="">
+                                    {
+                                        showButtons && [<span className="fa fa-plus"/>, 'add qualifier']
+                                    }
+                                </a>
                         </span>
                     </div>
                 </div>
             </div>
             <div className="statementView-references-container"/>
             <div className="editToolbar-container toolbar-container">
-                <EditToolbar editorState={this.state.editorState} showRemoveButton={false}
-                        onPublishClick={this.onPublishClick}
-                        onCancelClick={this.props.onCancelClick}/>
+                {
+                    showButtons && <EditToolbar editorState={this.state.editorState}
+                    showRemoveButton={false} onPublishClick={this.onPublishClick}
+                    onCancelClick={this.props.onCancelClick}/>
+                }
             </div>
         </div>
     }

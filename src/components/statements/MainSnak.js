@@ -5,15 +5,16 @@ import EditableDropdown from './new/EditableDropdown';
 export default class MainSnak extends Component {
 
     state = {
-        selectedPropertyId: null,
+        selectedPredicateId: null,
     };
 
     handleItemSelect = (itemName) => {
         this.props.onObjectTypeSelect(itemName);
     };
 
-    handlePropertySelect = (propertyId) => {
-        this.setState({selectedPropertyId: propertyId});
+    handlePropertySelect = (predicateId) => {
+        this.setState({selectedPredicateId: predicateId});
+        this.props.onPredicateSelect && this.props.onPredicateSelect(predicateId);
     };
 
     render() {
@@ -27,9 +28,9 @@ export default class MainSnak extends Component {
                             {
                                 this.props.objectType === 'resource'
                                 ? <a href={'/resource/' + this.props.id}>
-                                    {this.props.value}
+                                    {this.props.text}
                                 </a>
-                                : this.props.value
+                                : this.props.text
                             }
                         </div>
                         <div className="snakView-indicators"/>
@@ -48,7 +49,7 @@ export default class MainSnak extends Component {
                     </div>
                 }
                 {
-                    !this.props.newProperty || this.state.selectedPropertyId != null ?
+                    !this.props.newProperty || this.state.selectedPredicateId != null ?
                     <div className="snakView-value-container" dir="auto">
                         <ObjectTypeSelector onItemSelect={this.handleItemSelect} objectType={this.props.objectType}/>
                         {shouldShowQuotes && <div className="valueView-input-group-prepend">
@@ -59,9 +60,9 @@ export default class MainSnak extends Component {
                             <div className="snakView-value snakView-variation-valueSnak ">
                                 <div className="valueView valueView-inEditMode">
                                     <div className="valueView-value">
-                                        <textarea className="valueView-input" defaultValue={this.props.value}
+                                        <textarea className="valueView-input" defaultValue={this.props.text}
                                                   style={inputStyle} onInput={this.props.onInput}
-                                                  autoFocus={this.state.selectedPropertyId != null}>
+                                                  autoFocus={this.state.selectedPredicateId != null}>
                                         </textarea>
                                     </div>
                                 </div>

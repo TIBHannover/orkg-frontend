@@ -175,7 +175,8 @@ export default class ResourceDetails extends Component {
                     }
                 }
             );
-            const newStatementsSectionJsx = <NewStatementsSection/>;
+
+            const newStatementsSectionJsx = <NewStatementsSection subjectId={id} onUpdate={this.reset}/>;
 
             return <div className="entityView-main">
                 {[titleJsx, abstractJsx].concat(statementGroupJsxs).concat([newStatementsSectionJsx])}

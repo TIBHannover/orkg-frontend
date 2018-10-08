@@ -42,7 +42,7 @@ export default class NewStatementGroupCard extends Component {
             </div>
             <div className="statementListView">
                 <div className="statementListView-listView" ref="innerListView">
-                    <NewStatementObject subjectId={null} predicateId={null}
+                    <NewStatementObject subjectId={this.props.subjectId} predicateId={null}
                             onCancelClick={this.onCancelClick}
                             onPublishSuccess={this.onPublishSuccess}/>
                 </div>
