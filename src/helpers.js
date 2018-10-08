@@ -61,6 +61,10 @@ export function getResource(id, onSuccess, onError) {
     submitGetRequest(resourcesUrl + encodeURIComponent(id) + '/', onSuccess, onError);
 }
 
+export function getPredicatesByLabel(label, onSuccess, onError) {
+    submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(label), onSuccess, onError)
+}
+
 export function hashCode(s) {
   return s.split("").reduce((a, b) => {
       a = ((a << 5) - a) + b.charCodeAt(0);

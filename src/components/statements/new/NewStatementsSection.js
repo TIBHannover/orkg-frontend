@@ -10,10 +10,15 @@ export default class NewStatementsSection extends Component {
 
     counter = 0;
 
+    reset = (newRecordLabel) => {
+        this.forceUpdate();
+    };
+
     onAddNewStatementClick = (event) => {
         this.state.newStatementBoxes.push({
             id: this.counter,
-            card: <NewStatementGroupCard id={this.counter} key={this.counter} onUpdate={this.reset}
+            card: <NewStatementGroupCard id={this.counter} key={this.counter} onUpdate={this.props.onUpdate}
+                subjectId={this.props.subjectId}
                 onCancelClick={this.onCancelClick}/>
         });
         this.counter++;
