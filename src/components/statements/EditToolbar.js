@@ -7,22 +7,22 @@ export default class EditToolbar extends Component {
         let content = null;
         switch (this.props.editorState) {
             case 'view': {
-                content = <span className="toolbar-button">
-                    <LinkButton value="edit" onClick={this.props.onEditClick} spanClassName="fa fa-pencil"/>
-                </span>;
+                content = <LinkButton value="edit" onClick={this.props.onEditClick} className="toolbar-button"
+                        spanClassName="fa fa-pencil"/>;
                 break;
             }
             case 'edit': {
+                const className = 'toolbar-container toolbar-button' + (this.props.editEnabled ? ''
+                        : ' toolbarButton-disabled');
+                const onPublishClickHandler = this.props.editEnabled ? this.props.onPublishClick
+                        : () => {};
                 content = <span className="toolbar toolbar-container">
-                    <span className="toolbar-container toolbar-button">
-                        <LinkButton value="publish" onClick={this.props.onPublishClick} spanClassName="fa fa-check"/>
-                    </span>
-                    {this.props.showRemoveButton ? <span className="toolbar-container toolbar-button">
-                        <LinkButton value="remove" spanClassName="fa fa-trash"/>
-                    </span> : null}
-                    <span className="toolbar-container toolbar-button">
-                        <LinkButton value="cancel" onClick={this.props.onCancelClick} spanClassName="fa fa-close"/>
-                    </span>
+                    <LinkButton value="publish" onClick={onPublishClickHandler}
+                            className={className} spanClassName="fa fa-check"/>
+                    {this.props.showRemoveButton ? <LinkButton value="remove"
+                            className="toolbar-container toolbar-button" spanClassName="fa fa-trash"/> : null}
+                    <LinkButton value="cancel" onClick={this.props.onCancelClick}
+                            className="toolbar-container toolbar-button" spanClassName="fa fa-close"/>
                 </span>;
                 break;
             }

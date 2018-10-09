@@ -334,3 +334,10 @@ div.statementView textarea {
     border: 1px solid #ced4da;
     border-radius: 0;
 }
+
+.toolbarButton-disabled a:link, .toolbarButton-disabled a:hover, .toolbarButton-disabled a:active,
+        .toolbarButton-disabled a:visited {
+    color: #72777d;
+    text-decoration: none;
+    cursor: default;
+}

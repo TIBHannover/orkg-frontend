@@ -116,7 +116,7 @@ export default class Statement extends Component {
                         onObjectTypeSelect={this.handleObjectTypeSelect} objectType={this.state.objectType}/>
             </div>
             <span className="editToolbar-container toolbar-container" aria-disabled={false}>
-                <EditToolbar editorState={this.state.editorState} showRemoveButton={true}
+                <EditToolbar editorState={this.state.editorState} showRemoveButton={true} editEnabled={true}
                         onEditClick={this.onEditClick}
                         onPublishClick={this.onPublishClick}
                         onCancelClick={this.onCancelClick}/>

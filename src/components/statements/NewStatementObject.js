@@ -93,7 +93,7 @@ export default class NewStatementObject extends Component {
 
     render() {
         const newProperty = this.props.predicateId === null;
-        const showButtons = !newProperty || this.state.selectedPredicateId;
+        const editEnabled = !newProperty || this.state.selectedPredicateId;
         return <div id="new" className="statementView newStatement">
             <div className="statementView-rankSelector">
                 <div className="rankSelector">
@@ -111,7 +111,7 @@ export default class NewStatementObject extends Component {
                         <span className="toolbar-button toolbar-container">
                                 <a href="#" title="">
                                     {
-                                        showButtons && [<span className="fa fa-plus"/>, 'add qualifier']
+                                        editEnabled && [<span className="fa fa-plus"/>, 'add qualifier']
                                     }
                                 </a>
                         </span>
@@ -120,11 +120,8 @@ export default class NewStatementObject extends Component {
             </div>
             <div className="statementView-references-container"/>
             <div className="editToolbar-container toolbar-container">
-                {
-                    showButtons && <EditToolbar editorState={this.state.editorState}
-                    showRemoveButton={false} onPublishClick={this.onPublishClick}
-                    onCancelClick={this.props.onCancelClick}/>
-                }
+                <EditToolbar editorState={this.state.editorState} showRemoveButton={false} editEnabled={editEnabled}
+                        onPublishClick={this.onPublishClick} onCancelClick={this.props.onCancelClick}/>
             </div>
         </div>
     }
