@@ -16,11 +16,11 @@ export default class App extends Component {
         signInVisible: false,
     };
 
-    toggleSignInVisibility = (event) => {
+    toggleSignInVisibility = () => {
         this.setState({signInVisible: !this.state.signInVisible});
     };
 
-    handleOverlayClick = (event) => {
+    handleOverlayClick = () => {
         this.setState({signInVisible: false});
     };
 
@@ -44,10 +44,10 @@ export default class App extends Component {
                 <div className="row entityView">
                     <Nav className="bg-light col-md-3 col-lg-2" vertical>
                         <NavItem>
-                            <NavLink><Link to="/">Resources</Link></NavLink>
+                            <NavLink><Link to="/">Research contributions</Link></NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink><Link to="/addResource">Add resource</Link></NavLink>
+                            <NavLink><Link to="/addResource">Add research contribution</Link></NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink href="/predicates">Predicates</NavLink>
