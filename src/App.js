@@ -1,20 +1,28 @@
 import React, {Component} from 'react';
-import {
-    Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown, Card, CardImg,
-    CardBody, CardTitle, CardSubtitle, CardText, CardGroup, CardHeader, UncontrolledCollapse, Nav, NavItem, NavLink
-} from 'reactstrap';
-import {submitGetRequest, url} from './helpers.js';
+import {Nav, NavItem, NavLink} from 'reactstrap';
 import './App.css';
-import CodeContainer from "./components/CodeContainer";
-import {BrowserRouter as Router, Route, Link, Switch} from "react-router-dom";
-import ResourceDetails from "./pages/ResourceDetails"
-import PredicateDetails from "./pages/PredicateDetails"
-import Resources from "./pages/Resources"
-import {NotificationContainer} from "react-notifications";
-import AddResource from "./pages/AddResource";
-import Predicates from "./pages/Predicates";
+import {Link, Route, Switch} from 'react-router-dom';
+import ResourceDetails from './pages/ResourceDetails'
+import PredicateDetails from './pages/PredicateDetails'
+import Resources from './pages/Resources'
+import {NotificationContainer} from 'react-notifications';
+import AddResource from './pages/AddResource';
+import Predicates from './pages/Predicates';
+import SignInPopup from './components/SignInPopup';
 
-class App extends Component {
+export default class App extends Component {
+
+    state = {
+        signInVisible: false,
+    };
+
+    toggleSignInVisibility = (event) => {
+        this.setState({signInVisible: !this.state.signInVisible});
+    };
+
+    handleOverlayClick = (event) => {
+        this.setState({signInVisible: false});
+    };
 
     render() {
         return <div className="body">
@@ -24,8 +32,10 @@ class App extends Component {
                 <input className="form-control form-control-dark w-100" type="text" placeholder="Search (not implemented)"
                        aria-label="Search"/>
                     <ul className="navbar-nav px-3">
-                        <li className="nav-item text-nowrap">
-                            <a className="nav-link" href="#">Sign in (not implemented)</a>
+                        <li className="nav-item text-nowrap dropdown show">
+                            <a className="nav-link btn btn-secondary dropdown-toggle" href="#" aria-haspopup="true"
+                                    onClick={this.toggleSignInVisibility}>Sign in</a>
+                            {this.state.signInVisible && <SignInPopup onOverlayClick={this.handleOverlayClick}/>}
                         </li>
                     </ul>
             </nav>
@@ -62,5 +72,3 @@ class App extends Component {
         </div>
     }
 }
-
-export default App;
