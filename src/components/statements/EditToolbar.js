@@ -15,7 +15,7 @@ export default class EditToolbar extends Component {
                 const className = 'toolbar-container toolbar-button' + (this.props.editEnabled ? ''
                         : ' toolbarButton-disabled');
                 const onPublishClickHandler = this.props.editEnabled ? this.props.onPublishClick
-                        : () => {};
+                        : (event) => {};
                 content = <span className="toolbar toolbar-container">
                     <LinkButton value="publish" onClick={onPublishClickHandler}
                             className={className} spanClassName="fa fa-check"/>

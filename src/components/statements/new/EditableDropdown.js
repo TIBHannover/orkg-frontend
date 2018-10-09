@@ -58,8 +58,8 @@ export default class EditableDropdown extends Component {
 
     render() {
         const inputStyle = {height: "21.8px", overflow: "hidden", resize: "none"};
-        return <div className="dropdown">
-            <input placeholder="property" className="dropdown-toggle" style={inputStyle} value={this.state.value}
+        return <div className="dropdown valueView">
+            <input placeholder="property" className="dropdown-toggle valueView-input" style={inputStyle} value={this.state.value}
                    onChange={this.handleChange}/>
             {this.state.dropdownMenuJsx}
         </div>;
