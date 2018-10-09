@@ -1,6 +1,5 @@
-import {Component} from 'react';
-import React from 'react';
-import {getPredicatesByLabel} from '../../../helpers';
+import React, {Component} from 'react';
+import {submitGetRequest} from '../../../helpers';
 
 export default class EditableDropdown extends Component {
     state = {
@@ -23,21 +22,20 @@ export default class EditableDropdown extends Component {
         });
 
         if (value && value.length >= 0) {
-            getPredicatesByLabel(value, (responseJson) => {
+            submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value), (responseJson) => {
                     if (responseJson.length > 0) {
                         const menuItemsJsx = responseJson.map(
-                            (predicate) => <a id={predicate.id} key={predicate.id} className="dropdown-item" href="#"
-                                    onClick={this.handleItemClick}>{predicate.label}</a>).slice(0, maxValues);
+                            (item) => <a id={item.id} key={item.id} className="dropdown-item" href="#"
+                                    onClick={this.handleItemClick}>{item.label}</a>).slice(0, maxValues);
                         this.setState({
                             dropdownMenuJsx: <div className="dropdown-menu">{menuItemsJsx}</div>,
                         });
                     } else {
                         this.hideDropdownMenu();
                     }
-                },
-                (err) => {
+                }, (err) => {
                     console.error(err);
-                });
+                })
         } else {
             this.hideDropdownMenu();
         }
@@ -59,8 +57,8 @@ export default class EditableDropdown extends Component {
     render() {
         const inputStyle = {height: "21.8px", overflow: "hidden", resize: "none"};
         return <div className="dropdown valueView">
-            <input placeholder="property" className="dropdown-toggle valueView-input" style={inputStyle} value={this.state.value}
-                   onChange={this.handleChange}/>
+            <input placeholder={this.props.placeholder} className="dropdown-toggle valueView-input" style={inputStyle}
+                    value={this.state.value} onChange={this.handleChange}/>
             {this.state.dropdownMenuJsx}
         </div>;
     }

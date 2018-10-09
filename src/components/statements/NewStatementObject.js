@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import EditToolbar from './EditToolbar';
-import {createResource, createResourceStatement, createLiteralStatement} from '../../helpers';
+import {createResourceStatement, createLiteralStatement} from '../../helpers';
 import {NotificationManager} from 'react-notifications';
 import MainSnak from './MainSnak';
 
@@ -11,6 +11,7 @@ export default class NewStatementObject extends Component {
         editorState: 'edit',
         objectType: 'literal',
         selectedPredicateId: null,
+        selectedObjectId: null,
     };
 
     value = null;
@@ -23,52 +24,48 @@ export default class NewStatementObject extends Component {
 
     onLiteralStatementCreationSuccess = (responseJson) => {
         this.setEditorState('edit');
-        NotificationManager.success('Statement created successfully', 'Success', 5000);
+        NotificationManager.success('Literal statement created successfully', 'Success', 5000);
         this.props.onPublishSuccess(responseJson.label);
     };
 
-    onResourceCreationSuccess = (responseJson) => {
+    onStatementCreationSuccess = (responseJson) => {
         this.setEditorState('edit');
-        NotificationManager.success('Resource added successfully', 'Success', 5000);
+        NotificationManager.success('Object statement created successfully', 'Success', 5000);
         this.props.onPublishSuccess(responseJson.label);
     };
 
-    onResourceCreationError = (error) => {
+    onStatementCreationError = (error) => {
         this.setEditorState('edit');
         console.error(error);
-        NotificationManager.error(error.message, 'Error creating resource statement (predicate)', 5000);
+        NotificationManager.error(error.message, 'Error creating object statement (predicate)', 5000);
     };
 
     onPublishClick = (event) => {
-        if (this.value && this.value.length !== 0) {
-            const predicateId = this.props.predicateId || this.state.selectedPredicateId;
-            switch (this.state.objectType) {
-                case 'literal': {
+        const predicateId = this.props.predicateId || this.state.selectedPredicateId;
+        switch (this.state.objectType) {
+            case 'literal': {
+                if (this.value && this.value.length !== 0) {
                     createLiteralStatement(this.props.subjectId, predicateId, this.value,
-                            this.onLiteralStatementCreationSuccess, (error) => {
-                                this.setEditorState('edit');
-                                console.error(error);
-                                NotificationManager.error(error.message, 'Error creating resource', 5000);
-                            });
-                    break;
-                }
-                case 'resource': {
-                    createResource(this.value, (responseJson) => {
-                            createResourceStatement(this.props.subjectId, predicateId, responseJson.id,
-                                    this.onResourceCreationSuccess, this.onResourceCreationError);
-                        },
-                        (error) => {
+                        this.onLiteralStatementCreationSuccess, (error) => {
                             this.setEditorState('edit');
                             console.error(error);
                             NotificationManager.error(error.message, 'Error creating resource', 5000);
                         });
-                    break;
+                    this.setEditorState('loading');
                 }
-                default: {
-                    throw `Unknown object type. [this.state.objectType={this.state.objectType}]`;
-                }
+                break;
             }
-            this.setEditorState('loading');
+            case 'resource': {
+                if (this.state.selectedObjectId) {
+                    createResourceStatement(this.props.subjectId, predicateId, this.state.selectedObjectId,
+                            this.onStatementCreationSuccess, this.onStatementCreationError);
+                    this.setEditorState('loading');
+                }
+                break;
+            }
+            default: {
+                throw `Unknown object type. [this.state.objectType={this.state.objectType}]`;
+            }
         }
         return false;
     };
@@ -91,6 +88,10 @@ export default class NewStatementObject extends Component {
         this.setState({selectedPredicateId: predicateId});
     };
 
+    handleObjectSelect = (objectId) => {
+        this.setState({selectedObjectId: objectId});
+    };
+
     render() {
         const newProperty = this.props.predicateId === null;
         const editEnabled = !newProperty || this.state.selectedPredicateId;
@@ -104,7 +105,9 @@ export default class NewStatementObject extends Component {
                 <MainSnak editing={true} text="" onInput={this.onValueChange}
                         onObjectTypeSelect={this.handleObjectTypeSelect}
                         objectType={this.state.objectType}
-                        newProperty={newProperty} onPredicateSelect={this.handlePredicateSelect}/>
+                        newProperty={newProperty}
+                        onObjectSelect={this.handleObjectSelect}
+                        onPredicateSelect={this.handlePredicateSelect}/>
                 <div className="statementView-qualifiers">
                     <div className="listView"/>
                     <div className="toolbar-container">
