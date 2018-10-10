@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Nav, NavItem, NavLink} from 'reactstrap';
 import './App.css';
 import {Link, Redirect, Route, Switch} from 'react-router-dom';
-import ResourceDetails, {addressSection} from './pages/ResourceDetails'
+import ResourceDetails, {descriptionSection} from './pages/ResourceDetails'
 import PredicateDetails from './pages/PredicateDetails'
 import Resources from './pages/Resources'
 import {NotificationContainer} from 'react-notifications';
@@ -66,7 +66,7 @@ export default class App extends Component {
                             <Route path="/predicate/:predicateId" render={({match}) => (
                                 <PredicateDetails id={decodeURIComponent(match.params.predicateId)}/>
                             )}/>
-                            <Redirect from="/resource/:resourceId" to={'/resource/:resourceId/' + addressSection}/>
+                            <Redirect from="/resource/:resourceId" to={'/resource/:resourceId/' + descriptionSection}/>
                         </Switch>
                     </main>
                 </div>

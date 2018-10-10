@@ -5,7 +5,7 @@ import {getPredicate, getResource, groupBy, resourcesUrl, statementsUrl, submitG
 import './ResourceDetails.css';
 import {Nav, NavLink} from 'reactstrap';
 
-export const addressSection = 'address';
+export const descriptionSection = 'description';
 export const implementationSection = 'implementation';
 export const evaluationSection = 'evaluation';
 export const miscSection = 'misc';
@@ -175,8 +175,8 @@ export default class ResourceDetails extends Component {
 
             const newStatementsSectionJsx = <NewStatementsSection subjectId={id} onUpdate={this.reset}/>;
             // const navigationButtons = <ButtonGroup>
-            //     <Button disabled={this.props.sectionName === addressSection}
-            //             onClick={() => window.location = addressSection}>
+            //     <Button disabled={this.props.sectionName === descriptionSection}
+            //             onClick={() => window.location = descriptionSection}>
             //         Address
             //     </Button>
             //     <Button disabled={this.props.sectionName === implementationSection}
@@ -195,8 +195,8 @@ export default class ResourceDetails extends Component {
 
             // const navigationButtons = <Nav>
             //     <NavItem>
-            //         <Button disabled={this.props.sectionName === addressSection}
-            //                 onClick={() => window.location = addressSection}>
+            //         <Button disabled={this.props.sectionName === descriptionSection}
+            //                 onClick={() => window.location = descriptionSection}>
             //             Address
             //         </Button>
             //     </NavItem>
@@ -221,8 +221,8 @@ export default class ResourceDetails extends Component {
             // </Nav>;
 
             const navigationButtons = <Nav>
-                <NavLink href={addressSection} disabled={this.props.sectionName === addressSection}>
-                    Address
+                <NavLink href={descriptionSection} disabled={this.props.sectionName === descriptionSection}>
+                    Problem description
                 </NavLink>
                 <NavLink href={implementationSection} disabled={this.props.sectionName === implementationSection}>
                     Implementation
