@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import NewStatementsSection from '../components/statements/new/NewStatementsSection';
 import StatementGroupCard from '../components/statements/existing/StatementGroupCard';
-import {getPredicate, getResource, groupBy, submitGetRequest, resourcesUrl, statementsUrl} from '../helpers';
+import {getPredicate, getResource, groupBy, resourcesUrl, statementsUrl, submitGetRequest} from '../helpers';
 import './ResourceDetails.css';
-import {Button, ButtonGroup} from 'reactstrap';
-import {Link} from 'react-router-dom';
+import {Nav, NavLink} from 'reactstrap';
 
 export const addressSection = 'address';
 export const implementationSection = 'implementation';
@@ -175,24 +174,66 @@ export default class ResourceDetails extends Component {
             );
 
             const newStatementsSectionJsx = <NewStatementsSection subjectId={id} onUpdate={this.reset}/>;
-            const navigationButtons = <ButtonGroup>
-                <Button disabled={this.props.sectionName === addressSection}
-                        onClick={() => window.location = addressSection}>
+            // const navigationButtons = <ButtonGroup>
+            //     <Button disabled={this.props.sectionName === addressSection}
+            //             onClick={() => window.location = addressSection}>
+            //         Address
+            //     </Button>
+            //     <Button disabled={this.props.sectionName === implementationSection}
+            //             onClick={() => window.location = implementationSection}>
+            //         Implementation
+            //     </Button>
+            //     <Button disabled={this.props.sectionName === evaluationSection}
+            //             onClick={() => window.location = evaluationSection}>
+            //         Evaluation
+            //     </Button>
+            //     <Button disabled={this.props.sectionName === miscSection}
+            //             onClick={() => window.location = miscSection}>
+            //         Misc
+            //     </Button>
+            // </ButtonGroup>;
+
+            // const navigationButtons = <Nav>
+            //     <NavItem>
+            //         <Button disabled={this.props.sectionName === addressSection}
+            //                 onClick={() => window.location = addressSection}>
+            //             Address
+            //         </Button>
+            //     </NavItem>
+            //     <NavItem>
+            //         <Button disabled={this.props.sectionName === implementationSection}
+            //                 onClick={() => window.location = implementationSection}>
+            //             Implementation
+            //         </Button>
+            //     </NavItem>
+            //     <NavItem>
+            //         <Button disabled={this.props.sectionName === evaluationSection}
+            //                 onClick={() => window.location = evaluationSection}>
+            //             Evaluation
+            //         </Button>
+            //     </NavItem>
+            //     <NavItem>
+            //         <Button disabled={this.props.sectionName === miscSection}
+            //                 onClick={() => window.location = miscSection}>
+            //             Misc
+            //         </Button>
+            //     </NavItem>
+            // </Nav>;
+
+            const navigationButtons = <Nav>
+                <NavLink href={addressSection} disabled={this.props.sectionName === addressSection}>
                     Address
-                </Button>
-                <Button disabled={this.props.sectionName === implementationSection}
-                        onClick={() => window.location = implementationSection}>
+                </NavLink>
+                <NavLink href={implementationSection} disabled={this.props.sectionName === implementationSection}>
                     Implementation
-                </Button>
-                <Button disabled={this.props.sectionName === evaluationSection}
-                        onClick={() => window.location = evaluationSection}>
+                </NavLink>
+                <NavLink href={evaluationSection} disabled={this.props.sectionName === evaluationSection}>
                     Evaluation
-                </Button>
-                <Button disabled={this.props.sectionName === miscSection}
-                        onClick={() => window.location = miscSection}>
+                </NavLink>
+                <NavLink href={miscSection} disabled={this.props.sectionName === miscSection}>
                     Misc
-                </Button>
-            </ButtonGroup>;
+                </NavLink>
+            </Nav>;
 
             return <div className="entityView-main">
                 {[titleJsx, abstractJsx, navigationButtons].concat(statementGroupJsxs).concat([newStatementsSectionJsx])}
