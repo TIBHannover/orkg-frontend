@@ -341,3 +341,17 @@ div.statementView textarea {
     text-decoration: none;
     cursor: default;
 }
+
+.snakView .btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 0.1rem 0.2rem;
+    font-size: 0.875rem;
+    line-height: 1;
+    border-radius: 0.15rem;
+}
