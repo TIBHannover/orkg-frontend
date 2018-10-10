@@ -3,10 +3,15 @@ import {submitGetRequest} from '../../../helpers';
 
 export default class EditableDropdown extends Component {
     state = {
-        value: '',
         selectedItemId: null,
         dropdownMenuJsx: null,
     };
+
+    constructor(props) {
+        super(props);
+
+        this.state.value = this.props.value || '';
+    }
 
     // TODO: add timer, so that the request is not sent on every keystroke.
     handleChange = (event) => {
