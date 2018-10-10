@@ -60,7 +60,7 @@ export default class App extends Component {
                             <Route exact path="/addResource" component={AddResource}/>
                             <Route exact path="/predicates" component={Predicates}/>
                             <Route path="/resource/:resourceId/:sectionName" render={({match}) => (
-                                <ResourceDetails id={decodeURIComponent(match.params.resourceId)}
+                                <ResourceDetails {...this.props} id={decodeURIComponent(match.params.resourceId)}
                                         sectionName={decodeURIComponent(match.params.sectionName)}/>
                             )}/>
                             <Route path="/predicate/:predicateId" render={({match}) => (

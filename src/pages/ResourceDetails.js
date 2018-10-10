@@ -4,6 +4,7 @@ import StatementGroupCard from '../components/statements/existing/StatementGroup
 import {getPredicate, getResource, groupBy, submitGetRequest, resourcesUrl, statementsUrl} from '../helpers';
 import './ResourceDetails.css';
 import {Button, ButtonGroup} from 'reactstrap';
+import {Link} from 'react-router-dom';
 
 export const addressSection = 'address';
 export const implementationSection = 'implementation';
@@ -22,15 +23,6 @@ export default class ResourceDetails extends Component {
     };
 
     initialState = this.state;
-
-    constructor(props) {
-        super(props);
-
-        this.updateMissingPredicateLabels = this.updateMissingPredicateLabels.bind(this);
-        this.reset = this.reset.bind(this);
-        this.getStatementText = this.getStatementText.bind(this);
-        this.setStatementText = this.setStatementText.bind(this);
-    }
 
     componentWillMount() {
         this.findResource();
@@ -74,7 +66,7 @@ export default class ResourceDetails extends Component {
             });
     };
 
-    updateMissingPredicateLabels() {
+    updateMissingPredicateLabels = () => {
         // TODO: implement more efficient way to fetch all predicates instead of querying them one by one.
         const that = this;
         this.state.allStatements.forEach((statement) => {
@@ -90,9 +82,9 @@ export default class ResourceDetails extends Component {
                     });
             }
         });
-    }
+    };
 
-    updateMissingObjectLabels() {
+    updateMissingObjectLabels = () => {
         // TODO: implement more efficient way to fetch all objects instead of querying them one by one.
         const that = this;
         this.state.allStatements.forEach((statement) => {
@@ -119,26 +111,26 @@ export default class ResourceDetails extends Component {
                 }
             }
         });
-    }
+    };
 
-    reset() {
+    reset = () => {
         this.findAllStatements();
         this.setState(this.initialState);
-    }
+    };
 
-    getStatementText(statement) {
+    getStatementText = (statement) => {
         const that = this;
         return () => {
             return that.state.objectMap[statement.statementId] || statement.object.id;
         }
-    }
+    };
 
-    setStatementText(statement) {
+    setStatementText = (statement) => {
         const that = this;
         return (text) => {
             that.state.objectMap[statement.statementId] = text;
         }
-    }
+    };
 
     render() {
         const id = this.props.id;
@@ -184,10 +176,22 @@ export default class ResourceDetails extends Component {
 
             const newStatementsSectionJsx = <NewStatementsSection subjectId={id} onUpdate={this.reset}/>;
             const navigationButtons = <ButtonGroup>
-                <Button disabled={this.props.sectionName === addressSection}>Address</Button>
-                <Button disabled={this.props.sectionName === implementationSection}>Implementation</Button>
-                <Button disabled={this.props.sectionName === evaluationSection}>Evaluation</Button>
-                <Button disabled={this.props.sectionName === miscSection}>Misc</Button>
+                <Button disabled={this.props.sectionName === addressSection}
+                        onClick={() => window.location = addressSection}>
+                    Address
+                </Button>
+                <Button disabled={this.props.sectionName === implementationSection}
+                        onClick={() => window.location = implementationSection}>
+                    Implementation
+                </Button>
+                <Button disabled={this.props.sectionName === evaluationSection}
+                        onClick={() => window.location = evaluationSection}>
+                    Evaluation
+                </Button>
+                <Button disabled={this.props.sectionName === miscSection}
+                        onClick={() => window.location = miscSection}>
+                    Misc
+                </Button>
             </ButtonGroup>;
 
             return <div className="entityView-main">
