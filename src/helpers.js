@@ -2,6 +2,7 @@ export const url = 'http://localhost:8000/api/';
 export const resourcesUrl = url + 'resources/';
 export const predicatesUrl = url + 'predicates/';
 export const statementsUrl = url + 'statements/';
+export const crossrefUrl = 'https://api.crossref.org/works/';
 
 /**
  * Sends simple GET request to the URL.
@@ -34,6 +35,10 @@ function submitPostRequest(url, headers, data, onSuccess, onError) {
             .catch(onError);
 }
 
+export function updateResource(id, label, onSuccess, onError) {
+    submitPostRequest(resourcesUrl, {'Content-Type': 'application/json'}, {id: id, label: label}, onSuccess, onError);
+}
+
 export function createResource(label, onSuccess, onError) {
     submitPostRequest(resourcesUrl, {'Content-Type': 'application/json'}, {label: label}, onSuccess, onError);
 }
@@ -48,6 +53,45 @@ export function createLiteralStatement(subjectId, predicateId, property, onSucce
             {'Content-Type': 'application/json'}, { 'value' : property, 'type' : 'literal' }, onSuccess, onError);
 }
 
-export function hashCode(s) {
-  return s.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);
+export function getPredicate(id, onSuccess, onError) {
+    submitGetRequest(predicatesUrl + encodeURIComponent(id) + '/', onSuccess, onError);
 }
+
+export function getResource(id, onSuccess, onError) {
+    submitGetRequest(resourcesUrl + encodeURIComponent(id) + '/', onSuccess, onError);
+}
+
+export function getPredicatesByLabel(label, onSuccess, onError) {
+    submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(label), onSuccess, onError)
+}
+
+export function hashCode(s) {
+  return s.split("").reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+  }, 0);
+}
+
+export function groupBy(array, group) {
+    const hash = Object.create(null);
+    const result = [];
+
+    array.forEach((a) => {
+        if (!hash[a[group]]) {
+            hash[a[group]] = [];
+            result.push(hash[a[group]]);
+        }
+        hash[a[group]].push(a);
+    });
+
+    return result;
+}
+
+export const guid = () => {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+};

@@ -70,3 +70,16 @@
 .SplitPane {
     position: relative !important;
 }
+
+dd {
+    padding-left: 20px;
+}
+
+.CodeContainerButton {
+    margin-bottom: 1em;
+    display: block !important;
+}
+
+.card {
+    margin-top: 1em;
+}
