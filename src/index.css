@@ -88,13 +88,13 @@ body {
         vertical-align: middle;
         user-select: none;
         border: 1px solid transparent;
-            border-top-color: transparent;
-            border-right-color: transparent;
-            border-bottom-color: transparent;
-            border-left-color: transparent;
-        padding: 0.1rem 0.1rem;
-        font-size: 0.875rem;
-        line-height: 1;
-        border-radius: 0.15rem;
+        /*padding: 0.1rem 0.1rem;*/
+        /*font-size: 0.875rem;*/
+        line-height: 1.5;
+        border-radius: 0.25rem;
+    }
+
+    .btn-group {
+        margin-bottom: 1em;
     }
 }

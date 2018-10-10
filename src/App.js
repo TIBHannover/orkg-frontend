@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Nav, NavItem, NavLink} from 'reactstrap';
 import './App.css';
-import {Link, Route, Switch} from 'react-router-dom';
-import ResourceDetails from './pages/ResourceDetails'
+import {Link, Redirect, Route, Switch} from 'react-router-dom';
+import ResourceDetails, {addressSection} from './pages/ResourceDetails'
 import PredicateDetails from './pages/PredicateDetails'
 import Resources from './pages/Resources'
 import {NotificationContainer} from 'react-notifications';
@@ -59,12 +59,14 @@ export default class App extends Component {
                             <Route exact path="/" component={Resources}/>
                             <Route exact path="/addResource" component={AddResource}/>
                             <Route exact path="/predicates" component={Predicates}/>
-                            <Route path="/resource/:resourceId" render={({match}) => (
-                                <ResourceDetails id={decodeURIComponent(match.params.resourceId)}/>
+                            <Route path="/resource/:resourceId/:sectionName" render={({match}) => (
+                                <ResourceDetails id={decodeURIComponent(match.params.resourceId)}
+                                        sectionName={decodeURIComponent(match.params.sectionName)}/>
                             )}/>
                             <Route path="/predicate/:predicateId" render={({match}) => (
                                 <PredicateDetails id={decodeURIComponent(match.params.predicateId)}/>
                             )}/>
+                            <Redirect from="/resource/:resourceId" to={'/resource/:resourceId/' + addressSection}/>
                         </Switch>
                     </main>
                 </div>

@@ -1,8 +1,14 @@
 import React, {Component} from 'react';
+import NewStatementsSection from '../components/statements/new/NewStatementsSection';
 import StatementGroupCard from '../components/statements/existing/StatementGroupCard';
 import {getPredicate, getResource, groupBy, submitGetRequest, resourcesUrl, statementsUrl} from '../helpers';
 import './ResourceDetails.css';
-import NewStatementsSection from '../components/statements/new/NewStatementsSection';
+import {Button, ButtonGroup} from 'reactstrap';
+
+export const addressSection = 'address';
+export const implementationSection = 'implementation';
+export const evaluationSection = 'evaluation';
+export const miscSection = 'misc';
 
 export default class ResourceDetails extends Component {
 
@@ -115,7 +121,7 @@ export default class ResourceDetails extends Component {
         });
     }
 
-    reset(newRecordLabel) {
+    reset() {
         this.findAllStatements();
         this.setState(this.initialState);
     }
@@ -177,10 +183,16 @@ export default class ResourceDetails extends Component {
             );
 
             const newStatementsSectionJsx = <NewStatementsSection subjectId={id} onUpdate={this.reset}/>;
+            const navigationButtons = <ButtonGroup>
+                <Button disabled={this.props.sectionName === addressSection}>Address</Button>
+                <Button disabled={this.props.sectionName === implementationSection}>Implementation</Button>
+                <Button disabled={this.props.sectionName === evaluationSection}>Evaluation</Button>
+                <Button disabled={this.props.sectionName === miscSection}>Misc</Button>
+            </ButtonGroup>;
 
             return <div className="entityView-main">
-                {[titleJsx, abstractJsx].concat(statementGroupJsxs).concat([newStatementsSectionJsx])}
-            </div>
+                {[titleJsx, abstractJsx, navigationButtons].concat(statementGroupJsxs).concat([newStatementsSectionJsx])}
+            </div>;
         } else {
             return null;
         }
