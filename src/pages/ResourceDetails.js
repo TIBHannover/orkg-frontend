@@ -4,6 +4,7 @@ import StatementGroupCard from '../components/statements/existing/StatementGroup
 import {getPredicate, getResource, groupBy, resourcesUrl, statementsUrl, submitGetRequest} from '../helpers';
 import './ResourceDetails.css';
 import {Nav, NavLink} from 'reactstrap';
+import EditableHeader from '../components/EditableHeader';
 
 export const descriptionSection = 'description';
 export const implementationSection = 'implementation';
@@ -22,7 +23,6 @@ export default class ResourceDetails extends Component {
     };
 
     initialState = this.state;
-
     componentWillMount() {
         this.findResource();
         this.findAllStatements();
@@ -131,6 +131,10 @@ export default class ResourceDetails extends Component {
         }
     };
 
+    handleHeaderChange = (event) => {
+        this.setState({title: event.value});
+    };
+
     render() {
         const id = this.props.id;
         const resultsPresent = this.state.error || (this.state.allStatements);
@@ -146,9 +150,8 @@ export default class ResourceDetails extends Component {
             this.updateMissingObjectLabels();
 
             const titleText = this.state.title;
-            const titleJsx = titleText && <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-                <h1 className="h2">{titleText}</h1>
-            </div>;
+            const titleJsx = titleText && <EditableHeader {...this.props} value={titleText}
+                    onChange={this.handleHeaderChange}/>
 
             const abstractText = this.state.allStatements.find(statement => statement.subject === id
                     && statement.predicate === abstractId);

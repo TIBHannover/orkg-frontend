@@ -79,7 +79,6 @@ export default class Statement extends Component {
                     createResourceStatement(this.props.subjectId, this.props.predicateId,
                             this.state.selectedObjectId || this.id,
                             this.onUpdateResourceSuccess, this.onUpdateError);
-                    // updateResource(this.state.selectedObjectId || this.id, value, this.onUpdateResourceSuccess, this.onUpdateError);
                     break;
                 }
                 default: {

@@ -102,6 +102,16 @@ textarea {
     width: 18em;
 }
 
+.toolbar-container-header {
+    position: relative;
+    margin-top: 1em;
+    height: 3em;
+}
+
+.snakView-header {
+    width: 100%;
+}
+
 .toolbar-container > .toolbar-container {
     position: static;
     width: auto;
@@ -217,6 +227,14 @@ textarea {
     border: 1px solid gray;
     border-radius: 0;
     padding: 0 2px;
+}
+
+.valueView .valueView-input-header {
+    font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
+    font-size: 1.8em;
+    margin-top: 1em;
+    line-height: 1.3;
+    margin-bottom: 0.25em;
 }
 
 .statementView textarea {
