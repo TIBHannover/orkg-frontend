@@ -10,6 +10,7 @@ export const descriptionSection = 'description';
 export const implementationSection = 'implementation';
 export const evaluationSection = 'evaluation';
 export const miscSection = 'misc';
+const sections = [descriptionSection, implementationSection, evaluationSection, miscSection];
 
 export default class ResourceDetails extends Component {
 
@@ -151,7 +152,7 @@ export default class ResourceDetails extends Component {
 
             const titleText = this.state.title;
             const titleJsx = titleText && <EditableHeader {...this.props} value={titleText}
-                    onChange={this.handleHeaderChange}/>
+                    onChange={this.handleHeaderChange}/>;
 
             const abstractText = this.state.allStatements.find(statement => statement.subject === id
                     && statement.predicate === abstractId);
@@ -223,23 +224,35 @@ export default class ResourceDetails extends Component {
             //     </NavItem>
             // </Nav>;
 
-            const navigationButtons = <Nav>
-                <NavLink href={descriptionSection} disabled={this.props.sectionName === descriptionSection}>
+            const sectionName = this.props.sectionName;
+            const navigationButtons = <Nav tag="div">
+                <NavLink href={descriptionSection} disabled={sectionName === descriptionSection}>
                     Problem description
                 </NavLink>
-                <NavLink href={implementationSection} disabled={this.props.sectionName === implementationSection}>
+                <NavLink href={implementationSection} disabled={sectionName === implementationSection}>
                     Implementation
                 </NavLink>
-                <NavLink href={evaluationSection} disabled={this.props.sectionName === evaluationSection}>
+                <NavLink href={evaluationSection} disabled={sectionName === evaluationSection}>
                     Evaluation
                 </NavLink>
-                <NavLink href={miscSection} disabled={this.props.sectionName === miscSection}>
+                <NavLink href={miscSection} disabled={sectionName === miscSection}>
                     Misc
                 </NavLink>
             </Nav>;
 
+            const sectionIndex = sections.findIndex((value) => value === sectionName);
+            const bottomNavigationButtons = <Nav className="bottomNavigator" tag="div">
+                <NavLink href={sections[sectionIndex - 1]} disabled={!(sectionIndex > 0)}>
+                    Previous
+                </NavLink>
+                <NavLink href={sections[sectionIndex + 1]} disabled={!(sectionIndex < sections.length - 1)}>
+                    Next
+                </NavLink>
+            </Nav>;
+
             return <div className="entityView-main">
-                {[titleJsx, abstractJsx, navigationButtons].concat(statementGroupJsxs).concat([newStatementsSectionJsx])}
+                {[titleJsx, abstractJsx, navigationButtons].concat(statementGroupJsxs)
+                        .concat([newStatementsSectionJsx, bottomNavigationButtons])}
             </div>;
         } else {
             return null;

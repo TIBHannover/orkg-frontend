@@ -373,3 +373,17 @@ div.statementView textarea {
     line-height: 1;
     border-radius: 0.15rem;
 }
+
+div.nav.bottomNavigator {
+    float: left;
+    display: block;
+    width: 100%;
+}
+
+div.nav.bottomNavigator > * {
+    display: inline-flex;
+}
+
+div.nav.bottomNavigator > *:last-child {
+    float: right;
+}
