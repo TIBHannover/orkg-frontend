@@ -1,0 +1,20 @@
+image: node
+
+stages:
+  - deploy
+
+pages:
+  stage: deploy
+  script:
+    - npm install
+    - CI=false npm run build
+    # There's a conflict in names because GitLab Pages need to be in the "public" directory.
+    # We delete the provided one and replace it so deployment works correctly.
+    - rm -rf public
+    - mv build public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+
