@@ -81,6 +81,9 @@ export default class EditableHeader extends Component {
                 content = <span className="fa fa-spinner fa-spin"/>;
                 break;
             }
+            default: {
+                throw new Error(`Unknown state '${this.state.editorState}'`);
+            }
         }
 
         return <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center

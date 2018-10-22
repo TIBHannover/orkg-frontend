@@ -33,8 +33,8 @@ export default class App extends Component {
                        aria-label="Search"/>
                     <ul className="navbar-nav px-3">
                         <li className="nav-item text-nowrap dropdown show">
-                            <a className="nav-link btn btn-secondary dropdown-toggle" href="#" aria-haspopup="true"
-                                    onClick={this.toggleSignInVisibility}>Sign in</a>
+                            <a className="nav-link btn btn-secondary dropdown-toggle" href="#"
+                                    aria-haspopup="true" onClick={this.toggleSignInVisibility}>Sign in</a>
                             {this.state.signInVisible && <SignInPopup onOverlayClick={this.handleOverlayClick}/>}
                         </li>
                     </ul>

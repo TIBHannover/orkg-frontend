@@ -7,10 +7,6 @@ export default class NewStatementGroupCard extends Component {
         newStatementVisible: false,
     };
 
-    constructor() {
-        super();
-    }
-
     componentDidMount() {
         this.id = this.props.id;
     }

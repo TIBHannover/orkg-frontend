@@ -82,7 +82,7 @@ export default class Statement extends Component {
                     break;
                 }
                 default: {
-                    throw 'Unknown object type: ' + this.state.objectType + ']';
+                    throw new Error(`Unknown object type: ${this.state.objectType}]`);
                 }
             }
             this.setEditorState('loading');

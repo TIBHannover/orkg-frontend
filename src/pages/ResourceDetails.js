@@ -106,7 +106,7 @@ export default class ResourceDetails extends Component {
                         break;
                     }
                     default: {
-                        throw 'Unknown statement object type: ' + statement.object.type + '.';
+                        throw new Error('Unknown statement object type: ' + statement.object.type + '.');
                     }
                 }
             }
