@@ -166,7 +166,8 @@ export default class ResourceDetails extends Component {
                 statementGroup => {
                     if (statementGroup.length > 0) {
                         const propertyId = statementGroup[0][groupingProperty];
-                        return <StatementGroupCard href={'/predicate/' + propertyId} key={propertyId}
+                        return <StatementGroupCard href={`${process.env.PUBLIC_URL}/predicate/${propertyId}`}
+                                key={propertyId}
                                 label={this.state.predicateMap[propertyId] || propertyId}
                                 onUpdate={this.reset} statementGroup={statementGroup}
                                 getStatementText={this.getStatementText}
@@ -242,10 +243,10 @@ export default class ResourceDetails extends Component {
 
             const sectionIndex = sections.findIndex((value) => value === sectionName);
             const bottomNavigationButtons = <Nav className="bottomNavigator" tag="div">
-                <NavLink href={sections[sectionIndex - 1]} disabled={!(sectionIndex > 0)}>
+                <NavLink className="btn btn-primary" href={sections[sectionIndex - 1]} disabled={!(sectionIndex > 0)}>
                     Previous
                 </NavLink>
-                <NavLink href={sections[sectionIndex + 1]} disabled={!(sectionIndex < sections.length - 1)}>
+                <NavLink className="btn btn-primary" href={sections[sectionIndex + 1]} disabled={!(sectionIndex < sections.length - 1)}>
                     Next
                 </NavLink>
             </Nav>;

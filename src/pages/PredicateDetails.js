@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
-import StatementGroupCard from '../components/statements/existing/StatementGroupCard';
-import {getPredicate, getResource, groupBy, submitGetRequest, predicatesUrl} from '../helpers';
+import {predicatesUrl, submitGetRequest} from '../helpers';
 import './ResourceDetails.css';
-import NewStatementsSection from '../components/statements/new/NewStatementsSection';
 
 export default class PredicateDetails extends Component {
 

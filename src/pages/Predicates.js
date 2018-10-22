@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import ShortRecord from "../components/statements/ShortRecord";
-import {submitGetRequest, url} from "../helpers.js";
+import ShortRecord from '../components/statements/ShortRecord';
+import {submitGetRequest, url} from '../helpers.js';
 
 export default class Predicates extends Component {
     state = {
@@ -47,7 +47,10 @@ export default class Predicates extends Component {
 
         if (resultsPresent) {
             const predicates = this.state.allPredicates.map(
-                predicate => <ShortRecord key={predicate.id} header={predicate.id} href={'/predicate/' + encodeURIComponent(predicate.id)}>{predicate.label}</ShortRecord>
+                predicate => <ShortRecord key={predicate.id} header={predicate.id}
+                    href={`${process.env.PUBLIC_URL}/predicate/${encodeURIComponent(predicate.id)}`}>
+                    {predicate.label}
+                    </ShortRecord>
             );
 
             return <div>

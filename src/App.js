@@ -44,29 +44,33 @@ export default class App extends Component {
                 <div className="row entityView">
                     <Nav className="bg-light col-md-3 col-lg-2" vertical>
                         <NavItem>
-                            <NavLink><Link to="/">Research contributions</Link></NavLink>
+                            <NavLink><Link to={`${process.env.PUBLIC_URL}/`}>Research contributions</Link></NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink><Link to="/addResource">Add research contribution</Link></NavLink>
+                            <NavLink>
+                                <Link to={`${process.env.PUBLIC_URL}/addResource`}>Add research contribution</Link>
+                            </NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="/predicates">Predicates</NavLink>
+                            <NavLink href={`${process.env.PUBLIC_URL}/predicates`}>Predicates</NavLink>
                         </NavItem>
                     </Nav>
 
                     <main role="main" className="col-md-9 col-lg-10 pt-3 px-4">
                         <Switch>
-                            <Route exact path="/" component={Resources}/>
-                            <Route exact path="/addResource" component={AddResource}/>
-                            <Route exact path="/predicates" component={Predicates}/>
-                            <Route path="/resource/:resourceId/:sectionName" render={({match}) => (
-                                <ResourceDetails {...this.props} id={decodeURIComponent(match.params.resourceId)}
-                                        sectionName={decodeURIComponent(match.params.sectionName)}/>
-                            )}/>
-                            <Route path="/predicate/:predicateId" render={({match}) => (
+                            <Route exact path={`${process.env.PUBLIC_URL}/`} component={Resources}/>
+                            <Route exact path={`${process.env.PUBLIC_URL}/addResource`} component={AddResource}/>
+                            <Route exact path={`${process.env.PUBLIC_URL}/predicates`} component={Predicates}/>
+                            <Route path={`${process.env.PUBLIC_URL}/resource/:resourceId/:sectionName`}
+                                render={({match}) => (
+                                    <ResourceDetails {...this.props} id={decodeURIComponent(match.params.resourceId)}
+                                            sectionName={decodeURIComponent(match.params.sectionName)}/>
+                                )}/>
+                            <Route path={`${process.env.PUBLIC_URL}/predicate/:predicateId`} render={({match}) => (
                                 <PredicateDetails id={decodeURIComponent(match.params.predicateId)}/>
                             )}/>
-                            <Redirect from="/resource/:resourceId" to={'/resource/:resourceId/' + descriptionSection}/>
+                            <Redirect from={`${process.env.PUBLIC_URL}/resource/:resourceId`}
+                                to={'/resource/:resourceId/' + descriptionSection}/>
                         </Switch>
                     </main>
                 </div>
