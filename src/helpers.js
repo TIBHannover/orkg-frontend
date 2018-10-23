@@ -1,4 +1,4 @@
-export const url = 'http://localhost:8000/api/';
+export const url = process.env.REACT_APP_SERVER_URL;
 export const resourcesUrl = url + 'resources/';
 export const predicatesUrl = url + 'predicates/';
 export const statementsUrl = url + 'statements/';
