@@ -2,7 +2,7 @@ export const url = process.env.REACT_APP_SERVER_URL;
 export const resourcesUrl = url + 'resources/';
 export const predicatesUrl = url + 'predicates/';
 export const statementsUrl = url + 'statements/';
-export const crossrefUrl = 'https://api.crossref.org/works/';
+export const crossrefUrl = process.env.REACT_APP_CROSSREF_URL;
 
 /**
  * Sends simple GET request to the URL.
