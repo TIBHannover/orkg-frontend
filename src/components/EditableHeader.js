@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import LinkButton from './LinkButton';
 import {Input} from 'reactstrap';
-import {updateResource} from '../helpers';
+import {updateResource} from '../network';
 import {NotificationManager} from 'react-notifications';
 
 export default class EditableHeader extends Component {

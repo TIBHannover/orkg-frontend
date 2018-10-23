@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import ObjectTypeSelector from './ObjectTypeSelector';
 import EditableDropdown from './new/EditableDropdown';
-import {predicatesUrl, resourcesUrl} from '../../helpers';
+import {predicatesUrl, resourcesUrl} from '../../network';
 
 export default class MainSnak extends Component {
 

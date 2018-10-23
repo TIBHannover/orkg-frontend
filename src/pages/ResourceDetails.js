@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import NewStatementsSection from '../components/statements/new/NewStatementsSection';
 import StatementGroupCard from '../components/statements/existing/StatementGroupCard';
-import {getPredicate, getResource, groupBy, resourcesUrl, statementsUrl, submitGetRequest} from '../helpers';
+import {getPredicate, getResource, resourcesUrl, statementsUrl, submitGetRequest} from '../network';
+import {groupBy} from '../utils';
 import './ResourceDetails.css';
 import {Nav, NavLink} from 'reactstrap';
 import EditableHeader from '../components/EditableHeader';

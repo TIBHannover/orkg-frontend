@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ShortRecord from '../components/statements/ShortRecord';
-import {submitGetRequest, url} from '../helpers.js';
+import {submitGetRequest, url} from '../network';
 
 export default class Predicates extends Component {
     state = {

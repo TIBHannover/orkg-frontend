@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import EditToolbar from '../EditToolbar';
 import MainSnak from '../MainSnak';
-import {createLiteralStatement, createResourceStatement} from '../../../helpers';
+import {createLiteralStatement, createResourceStatement} from '../../../network';
 import {NotificationManager} from 'react-notifications';
 
 export default class Statement extends Component {

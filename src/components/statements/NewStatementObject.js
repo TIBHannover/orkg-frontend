@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import EditToolbar from './EditToolbar';
-import {createLiteralStatement, createResourceStatement} from '../../helpers';
+import {createLiteralStatement, createResourceStatement} from '../../network';
 import {NotificationManager} from 'react-notifications';
 import MainSnak from './MainSnak';
 
