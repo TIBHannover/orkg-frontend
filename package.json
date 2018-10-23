@@ -1,9 +1,7 @@
 {
   "name": "knowledge-graph",
   "version": "0.1.0",
-  "homepage": "http://localhost:3000/orkg",
   "private": true,
-  "homepage": "http://orkg.git.tib.eu/orkg-web-client/",
   "dependencies": {
     "babel-preset-es2018": "^1.0.0",
     "bootstrap": "^4.1.1",
