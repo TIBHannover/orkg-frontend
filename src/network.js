@@ -1,8 +1,8 @@
-export const url = 'http://localhost:8000/api/';
+export const url = process.env.REACT_APP_SERVER_URL;
 export const resourcesUrl = url + 'resources/';
 export const predicatesUrl = url + 'predicates/';
 export const statementsUrl = url + 'statements/';
-export const crossrefUrl = 'https://api.crossref.org/works/';
+export const crossrefUrl = process.env.REACT_APP_CROSSREF_URL;
 
 /**
  * Sends simple GET request to the URL.
@@ -64,34 +64,3 @@ export function getResource(id, onSuccess, onError) {
 export function getPredicatesByLabel(label, onSuccess, onError) {
     submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(label), onSuccess, onError)
 }
-
-export function hashCode(s) {
-  return s.split("").reduce((a, b) => {
-      a = ((a << 5) - a) + b.charCodeAt(0);
-      return a & a;
-  }, 0);
-}
-
-export function groupBy(array, group) {
-    const hash = Object.create(null);
-    const result = [];
-
-    array.forEach((a) => {
-        if (!hash[a[group]]) {
-            hash[a[group]] = [];
-            result.push(hash[a[group]]);
-        }
-        hash[a[group]].push(a);
-    });
-
-    return result;
-}
-
-export const guid = () => {
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000)
-      .toString(16)
-      .substring(1);
-  }
-  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-};

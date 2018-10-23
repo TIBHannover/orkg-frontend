@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import EditToolbar from './EditToolbar';
-import {createResourceStatement, createLiteralStatement} from '../../helpers';
+import {createLiteralStatement, createResourceStatement} from '../../network';
 import {NotificationManager} from 'react-notifications';
 import MainSnak from './MainSnak';
 
@@ -64,7 +64,7 @@ export default class NewStatementObject extends Component {
                 break;
             }
             default: {
-                throw `Unknown object type. [this.state.objectType={this.state.objectType}]`;
+                throw new Error(`Unknown object type. [this.state.objectType=${this.state.objectType}]`);
             }
         }
         return false;

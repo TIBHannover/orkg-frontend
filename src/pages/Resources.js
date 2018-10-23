@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import ShortRecord from "../components/statements/ShortRecord";
-import {Link} from "react-router-dom";
-import {submitGetRequest, url} from "../helpers.js";
+import ShortRecord from '../components/statements/ShortRecord';
+import {Link} from 'react-router-dom';
+import {submitGetRequest, url} from '../network';
 
 export default class Resources extends Component {
     state = {
@@ -48,14 +48,17 @@ export default class Resources extends Component {
 
         if (resultsPresent) {
             const resources = this.state.allResources.map(
-                resource => <ShortRecord key={resource.id} header={resource.id} href={'/resource/' + encodeURIComponent(resource.id)}>{resource.label}</ShortRecord>
+                resource => <ShortRecord key={resource.id} header={resource.id}
+                    href={`${process.env.PUBLIC_URL}/resource/${encodeURIComponent(resource.id)}`}>
+                    {resource.label}
+                    </ShortRecord>
             );
 
             return <div>
                 <div className="addResource toolbar addToolbar-container">
                     <span className="toolbar-button toolbar-button-add">
                         <Link to="/addResource">
-                            <span className="fa fa-plus"/>add resource
+                            <span className="fa fa-plus"/>add research contribution
                         </Link>
                     </span>
                 </div>

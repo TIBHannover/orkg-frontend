@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
-import StatementGroupCard from '../components/statements/existing/StatementGroupCard';
-import {getPredicate, getResource, groupBy, submitGetRequest, predicatesUrl} from '../helpers';
+import {predicatesUrl, submitGetRequest} from '../network';
 import './ResourceDetails.css';
-import NewStatementsSection from '../components/statements/new/NewStatementsSection';
 
 export default class PredicateDetails extends Component {
 
@@ -12,10 +10,6 @@ export default class PredicateDetails extends Component {
     };
 
     initialState = this.state;
-
-    constructor(props) {
-        super(props);
-    }
 
     componentWillMount() {
         this.findPredicate();
@@ -40,7 +34,6 @@ export default class PredicateDetails extends Component {
     };
 
     render() {
-        const id = this.props.id;
         const resultsPresent = this.state.error || (this.state.title);
 
         if (this.state.error) {

@@ -1,27 +1,27 @@
 import React, {Component} from 'react';
-import {updateResource, submitGetRequest, crossrefUrl} from '../helpers.js';
-import {NotificationManager} from "react-notifications";
+import {crossrefUrl, submitGetRequest, updateResource} from '../network';
+import {NotificationManager} from 'react-notifications';
 import './AddResource.css';
 
 export default class AddResource extends Component {
     state = {
         value: '',
-    }
+    };
 
-    handleAdd = (event) => {
-        const doiRegex = /\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&\'<>])\S)+)\b/g;
+    handleAdd = () => {
+        const doiRegex = /\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&'<>])\S)+)\b/g;
         if (!doiRegex.test(this.state.value)) {
-            this.createResource(event);
+            this.createResource();
         } else {
-            this.createResourceUsingDoi(event);
+            this.createResourceUsingDoi();
         }
     };
 
-    createResourceUsingDoi = (event) => {
+    createResourceUsingDoi = () => {
         submitGetRequest(crossrefUrl + this.state.value,
                 (responseJson) => {
                     this.setState({value: responseJson.message.title[0]});
-                    this.createResource(event);
+                    this.createResource();
                 },
                 (error) => {
                     console.error(error);
@@ -36,11 +36,11 @@ export default class AddResource extends Component {
     handleKeyUp = (event) => {
         event.preventDefault();
         if (event.keyCode === 13) {
-            this.createResource(event);
+            this.handleAdd();
         }
     };
 
-    createResource = (event) => {
+    createResource = () => {
         const value = this.state.value;
         if (value && value.length !== 0) {
             updateResource(this.id, value,
@@ -57,7 +57,8 @@ export default class AddResource extends Component {
 
     render() {
         return <div className="input-group mb-3">
-            <input type="text" className="form-control" placeholder="Resource title or DOI" onInput={this.handleInput}
+            <input type="text" className="form-control" placeholder="Research contribution title or DOI"
+                    onInput={this.handleInput}
                     onKeyUp={this.handleKeyUp}
                     aria-label="Resource title or DOI" aria-describedby="basic-addon2"/>
             <div className="input-group-append">

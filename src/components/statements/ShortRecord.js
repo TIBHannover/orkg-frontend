@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-export default class Statement extends Component {
+export default class ShortRecord extends Component {
 
     render() {
         return <div className="shortRecord">

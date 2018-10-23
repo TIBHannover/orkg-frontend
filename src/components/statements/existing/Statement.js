@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import EditToolbar from "../EditToolbar";
-import MainSnak from "../MainSnak";
-import {updateResource, createLiteralStatement} from "../../../helpers";
-import {NotificationManager} from "react-notifications";
+import EditToolbar from '../EditToolbar';
+import MainSnak from '../MainSnak';
+import {createLiteralStatement, createResourceStatement} from '../../../network';
+import {NotificationManager} from 'react-notifications';
 
 export default class Statement extends Component {
 
@@ -10,6 +10,7 @@ export default class Statement extends Component {
         /* Possible values: 'view', 'edit', 'loading'. */
         editorState: 'view',
         objectType: 'literal',
+        selectedObjectId: null,
     };
 
     id = null;
@@ -41,7 +42,7 @@ export default class Statement extends Component {
         this.oldText = null;
     }
 
-    onEditClick(event) {
+    onEditClick() {
         this.setEditorState('edit');
         this.storeText();
     }
@@ -65,8 +66,7 @@ export default class Statement extends Component {
         NotificationManager.error(error.message, 'Error submitting resource', 5000);
     };
 
-    onPublishClick(event) {
-        const that = this;
+    onPublishClick() {
         const value = this.props.getText();
         if (value && value.length !== 0) {
             switch (this.state.objectType) {
@@ -76,11 +76,13 @@ export default class Statement extends Component {
                     break;
                 }
                 case 'resource': {
-                    updateResource(this.id, value, this.onUpdateResourceSuccess, this.onUpdateError);
+                    createResourceStatement(this.props.subjectId, this.props.predicateId,
+                            this.state.selectedObjectId || this.id,
+                            this.onUpdateResourceSuccess, this.onUpdateError);
                     break;
                 }
                 default: {
-                    throw 'Unknown object type: ' + this.state.objectType + ']';
+                    throw new Error(`Unknown object type: ${this.state.objectType}]`);
                 }
             }
             this.setEditorState('loading');
@@ -92,7 +94,7 @@ export default class Statement extends Component {
         this.forceUpdate();
     }
 
-    onCancelClick(event) {
+    onCancelClick() {
         this.setEditorState('view');
         this.revertText();
     }
@@ -107,13 +109,21 @@ export default class Statement extends Component {
         });
     };
 
+    handleObjectSelect = (objectId) => {
+        this.setState({
+            selectedObjectId: objectId
+        });
+    };
+
     render() {
         return <div className="statementView">
             <div className="statementView-rankSelector"/>
             <div className="statementView-mainSnak-container">
                 <MainSnak ref="mainSnak" editing={this.state.editorState === 'edit'} id={this.id} text={this.getText()}
                         onInput={this.onValueChange} newProperty={false}
-                        onObjectTypeSelect={this.handleObjectTypeSelect} objectType={this.state.objectType}/>
+                        onObjectTypeSelect={this.handleObjectTypeSelect}
+                        onObjectSelect={this.handleObjectSelect}
+                        objectType={this.state.objectType}/>
             </div>
             <span className="editToolbar-container toolbar-container" aria-disabled={false}>
                 <EditToolbar editorState={this.state.editorState} showRemoveButton={true} editEnabled={true}

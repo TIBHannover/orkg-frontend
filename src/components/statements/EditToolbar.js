@@ -31,7 +31,7 @@ export default class EditToolbar extends Component {
                 break;
             }
             default: {
-                throw `Unknown state '{this.props.editorState}'`;
+                throw new Error(`Unknown state '${this.props.editorState}'`);
             }
         }
 

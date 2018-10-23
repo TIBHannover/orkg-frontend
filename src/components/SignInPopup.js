@@ -22,8 +22,8 @@ export default class SignInPopup extends Component {
                 <button type="submit" className="btn btn-primary">Sign in</button>
             </form>
             <div className="dropdown-divider"/>
-            <a className="dropdown-item" href="#">New around here? Sign up</a>
-            <a className="dropdown-item" href="#">Forgot password?</a>
+            <a className="dropdown-item" href="/">New around here? Sign up</a>
+            <a className="dropdown-item" href="/">Forgot password?</a>
             <div className="overlay" onClick={this.props.onOverlayClick}/>
         </div>
     }

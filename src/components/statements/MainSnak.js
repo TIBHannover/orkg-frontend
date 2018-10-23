@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import ObjectTypeSelector from './ObjectTypeSelector';
 import EditableDropdown from './new/EditableDropdown';
-import {predicatesUrl, resourcesUrl} from '../../helpers';
+import {predicatesUrl, resourcesUrl} from '../../network';
 
 export default class MainSnak extends Component {
 
@@ -52,7 +52,7 @@ export default class MainSnak extends Component {
                 <div className="snakView-value snakView-variation-valueSnak ">
                     <div className="valueView valueView-inEditMode">
                         <div className="valueView-value">
-                            <EditableDropdown requestUrl={resourcesUrl} placeholder="object"
+                            <EditableDropdown requestUrl={resourcesUrl} placeholder="object" value={this.props.text}
                                     onItemSelected={this.handleObjectSelect}/>
                         </div>
                     </div>
@@ -72,7 +72,7 @@ export default class MainSnak extends Component {
                         <div className="snakView-value">
                             {
                                 this.props.objectType === 'resource'
-                                ? <a href={'/resource/' + this.props.id}>
+                                ? <a href={`${process.env.PUBLIC_URL}/resource/${this.props.id}`}>
                                     {this.props.text}
                                 </a>
                                 : this.props.text

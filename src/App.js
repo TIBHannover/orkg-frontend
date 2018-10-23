@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Nav, NavItem, NavLink } from 'reactstrap';
 import './App.css';
-import { Link, Route, Switch } from 'react-router-dom';
-import ResourceDetails from './pages/ResourceDetails'
+import {Link, Redirect, Route, Switch} from 'react-router-dom';
+import ResourceDetails, {descriptionSection} from './pages/ResourceDetails'
 import PredicateDetails from './pages/PredicateDetails'
 import Resources from './pages/Resources'
 import SearchResults from './pages/SearchResults'
@@ -31,44 +31,47 @@ export default class App extends Component {
             <NotificationContainer />
             <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
                 <Link className="navbar-brand col-sm-3 col-md-2 mr-0" to="#">ORKG</Link>
-                <SearchFrom placeholder="Enter search term here" />
-                <ul className="navbar-nav px-3">
-                    <li className="nav-item text-nowrap dropdown show">
-                        <a className="nav-link btn btn-secondary dropdown-toggle" href="#" aria-haspopup="true"
-                            onClick={this.toggleSignInVisibility}>Sign in</a>
-                        {this.state.signInVisible && <SignInPopup onOverlayClick={this.handleOverlayClick} />}
-                    </li>
-                </ul>
+                <SearchFrom placeholder="Enter search term here"/>
+                    <ul className="navbar-nav px-3">
+                        <li className="nav-item text-nowrap dropdown show">
+                            <a className="nav-link btn btn-secondary dropdown-toggle" href="#"
+                                    aria-haspopup="true" onClick={this.toggleSignInVisibility}>Sign in</a>
+                            {this.state.signInVisible && <SignInPopup onOverlayClick={this.handleOverlayClick}/>}
+                        </li>
+                    </ul>
             </nav>
 
             <div className="body-content container-fluid">
                 <div className="row entityView">
                     <Nav className="bg-light col-md-3 col-lg-2" vertical>
                         <NavItem>
-                            <NavLink><Link to="/">Resources</Link></NavLink>
+                            <NavLink><Link to={`${process.env.PUBLIC_URL}/`}>Research contributions</Link></NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink><Link to="/addResource">Add resource</Link></NavLink>
+                            <NavLink>
+                                <Link to={`${process.env.PUBLIC_URL}/addResource`}>Add research contribution</Link>
+                            </NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="/predicates">Predicates</NavLink>
+                            <NavLink href={`${process.env.PUBLIC_URL}/predicates`}>Predicates</NavLink>
                         </NavItem>
                     </Nav>
 
                     <main role="main" className="col-md-9 col-lg-10 pt-3 px-4">
                         <Switch>
-                            <Route exact path="/" component={Resources} />
-                            <Route exact path="/addResource" component={AddResource} />
-                            <Route exact path="/predicates" component={Predicates} />
-                            <Route path="/resource/:resourceId" render={({ match }) => (
-                                <ResourceDetails id={decodeURIComponent(match.params.resourceId)} />
-                            )} />
-                            <Route path="/predicate/:predicateId" render={({ match }) => (
-                                <PredicateDetails id={decodeURIComponent(match.params.predicateId)} />
-                            )} />
-                            <Route path="/search/:searchTerm" render={({ match }) => (
-                                <SearchResults term={decodeURIComponent(match.params.searchTerm)} />
-                            )} />
+                            <Route exact path={`${process.env.PUBLIC_URL}/`} component={Resources}/>
+                            <Route exact path={`${process.env.PUBLIC_URL}/addResource`} component={AddResource}/>
+                            <Route exact path={`${process.env.PUBLIC_URL}/predicates`} component={Predicates}/>
+                            <Route path={`${process.env.PUBLIC_URL}/resource/:resourceId/:sectionName`}
+                                render={({match}) => (
+                                    <ResourceDetails {...this.props} id={decodeURIComponent(match.params.resourceId)}
+                                            sectionName={decodeURIComponent(match.params.sectionName)}/>
+                                )}/>
+                            <Route path={`${process.env.PUBLIC_URL}/predicate/:predicateId`} render={({match}) => (
+                                <PredicateDetails id={decodeURIComponent(match.params.predicateId)}/>
+                            )}/>
+                            <Redirect from={`${process.env.PUBLIC_URL}/resource/:resourceId`}
+                                to={'/resource/:resourceId/' + descriptionSection}/>
                         </Switch>
                     </main>
                 </div>

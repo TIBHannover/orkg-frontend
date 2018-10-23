@@ -28,16 +28,15 @@ export default class NewStatementsSection extends Component {
 
     onCancelClick = (event) => {
         const newStatementBoxes = this.state.newStatementBoxes.filter((statementBox) => {
-            return statementBox.id != event.cardId;
+            return statementBox.id !== event.cardId;
         });
-        this.state.newStatementBoxes = newStatementBoxes;
-        this.forceUpdate();
+        this.setState({newStatementBoxes: newStatementBoxes});
         return false;
     };
 
     render () {
         const addStatementLinkJsx = <AddStatementLink onClick={this.onAddNewStatementClick}/>;
-        const newStatementBoxes = this.state.newStatementBoxes.map((statementBox) => statementBox.card)
+        const newStatementBoxes = this.state.newStatementBoxes.map((statementBox) => statementBox.card);
 
         return newStatementBoxes.concat([addStatementLinkJsx]);
     }

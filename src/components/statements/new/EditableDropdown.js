@@ -1,12 +1,17 @@
 import React, {Component} from 'react';
-import {submitGetRequest} from '../../../helpers';
+import {submitGetRequest} from '../../../network';
 
 export default class EditableDropdown extends Component {
     state = {
-        value: '',
         selectedItemId: null,
         dropdownMenuJsx: null,
     };
+
+    constructor(props) {
+        super(props);
+
+        this.state.value = this.props.value || '';
+    }
 
     // TODO: add timer, so that the request is not sent on every keystroke.
     handleChange = (event) => {
@@ -25,8 +30,8 @@ export default class EditableDropdown extends Component {
             submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value), (responseJson) => {
                     if (responseJson.length > 0) {
                         const menuItemsJsx = responseJson.map(
-                            (item) => <a id={item.id} key={item.id} className="dropdown-item" href="#"
-                                    onClick={this.handleItemClick}>{item.label}</a>).slice(0, maxValues);
+                            (item) => <button id={item.id} key={item.id} className="dropdown-item"
+                                    onClick={this.handleItemClick}>{item.label}</button>).slice(0, maxValues);
                         this.setState({
                             dropdownMenuJsx: <div className="dropdown-menu">{menuItemsJsx}</div>,
                         });
