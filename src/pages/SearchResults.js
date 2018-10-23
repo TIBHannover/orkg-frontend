@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import ShortRecord from "../components/statements/ShortRecord";
-import { Link } from "react-router-dom";
-import { submitGetRequest, url } from "../helpers.js";
+import React, {Component} from 'react';
+import ShortRecord from '../components/statements/ShortRecord';
+import {submitGetRequest, url} from '../network';
 
 export default class SearchResults extends Component {
     state = {
@@ -25,7 +24,7 @@ export default class SearchResults extends Component {
     findResources() {
         const that = this;
 
-        submitGetRequest(url + 'resources/?q=' + this.props.term,
+        submitGetRequest(`${url}resources/?q=${this.props.term}`,
             (responseJson) => {
                 that.setState({
                     resources: responseJson,
@@ -44,7 +43,7 @@ export default class SearchResults extends Component {
     findPredicates() {
         const that = this;
 
-        submitGetRequest(url + 'predicates/?q=' + this.props.term,
+        submitGetRequest(`${url}predicates/?q=${this.props.term}`,
             (responseJson) => {
                 that.setState({
                     predicates: responseJson,
