@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import ShortRecord from '../components/statements/ShortRecord';
 import {Link} from 'react-router-dom';
-import {submitGetRequest, url} from '../helpers.js';
+import {submitGetRequest, url} from '../network';
 
 export default class Resources extends Component {
     state = {

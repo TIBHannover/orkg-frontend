@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {guid} from '../../helpers.js';
+import {guid} from '../../utils';
 
 // TODO: maybe dropdown popup show/hide and item selection can be done automatically by Bootstrap.
 export default class ObjectTypeSelector extends Component {

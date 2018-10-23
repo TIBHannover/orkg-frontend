@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {updateResource, submitGetRequest, crossrefUrl} from '../helpers.js';
-import {NotificationManager} from "react-notifications";
+import {crossrefUrl, submitGetRequest, updateResource} from '../network';
+import {NotificationManager} from 'react-notifications';
 import './AddResource.css';
 
 export default class AddResource extends Component {
@@ -36,7 +36,7 @@ export default class AddResource extends Component {
     handleKeyUp = (event) => {
         event.preventDefault();
         if (event.keyCode === 13) {
-            this.createResource();
+            this.handleAdd();
         }
     };
 

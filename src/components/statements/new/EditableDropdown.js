@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {submitGetRequest} from '../../../helpers';
+import {submitGetRequest} from '../../../network';
 
 export default class EditableDropdown extends Component {
     state = {

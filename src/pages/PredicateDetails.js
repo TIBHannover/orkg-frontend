@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {predicatesUrl, submitGetRequest} from '../helpers';
+import {predicatesUrl, submitGetRequest} from '../network';
 import './ResourceDetails.css';
 
 export default class PredicateDetails extends Component {
