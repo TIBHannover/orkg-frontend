@@ -83,3 +83,13 @@ dd {
 .card {
     margin-top: 1em;
 }
+
+.search-form input {
+    width: 95% !important;
+    float: left;
+}
+
+.search-form button {
+    width: 5% !important;
+    float: left;
+}
