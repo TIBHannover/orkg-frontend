@@ -58,7 +58,7 @@ export default class Resources extends Component {
                 <div className="addResource toolbar addToolbar-container">
                     <span className="toolbar-button toolbar-button-add">
                         <Link to="/addResource">
-                            <span className="fa fa-plus"/>add resource
+                            <span className="fa fa-plus"/>add research contribution
                         </Link>
                     </span>
                 </div>
