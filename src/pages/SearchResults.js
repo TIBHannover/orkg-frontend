@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component } from 'react';
 import ShortRecord from '../components/statements/ShortRecord';
-import { submitGetRequest, url } from '../network';
+import {submitGetRequest, url} from '../network';
 
 export default class SearchResults extends Component {
     state = {
@@ -73,33 +73,32 @@ export default class SearchResults extends Component {
                 resource => <ShortRecord key={resource.id} header={resource.id} href={'/resource/' + encodeURIComponent(resource.id)}>{resource.label}</ShortRecord>
             );
             if (resources.length > 0)
+            {
                 body1 =
+                <div>
                     <div>
-                        <div>
-                            <span><u>Resources</u> related to: <b>{this.props.term}</b></span>
-                        </div>
-                        {resources}
-                    </div>;
-            else
-                body1 = <div>
-                    <span>No <b>resources</b> found that match your search query</span>
+                        <span><u>Resources</u> related to: <b>{this.props.term}</b></span>
+                    </div>
+                    {resources}
                 </div>;
+            }
+            else
+            {
+                body1 = <div> <span>No <b>resources</b> found that match your search query</span> </div>;
+            }
         }
         if (predicatesResultsPresent) {
             const predicates = this.state.predicates.map(
                 predicate => <ShortRecord key={predicate.id} header={predicate.id} href={'/predicate/' + encodeURIComponent(predicate.id)}>{predicate.label}</ShortRecord>
             );
             if (predicates.length > 0)
-                body2 = <div>
-                    <div>
-                        <span><u>Predicates</u> related to: <b>{this.props.term}</b></span>
-                    </div>
-                    {predicates}
-                </div>;
+            {
+                body2 = <div> <div> <span><u>Predicates</u> related to: <b>{this.props.term}</b></span> </div> {predicates} </div>;
+            }
             else
-                body2 = <div>
-                    <span>No <b>predicates</b> found that match your search query</span>
-                </div>;
+            {
+                body2 = <div> <span>No <b>predicates</b> found that match your search query</span> </div>;
+            }
         }
         return [body1, body2];
     }

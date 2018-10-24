@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import React, {Component} from 'react';
+import {withRouter} from 'react-router-dom';
 
 class SearchForm extends Component {
 
@@ -29,9 +29,9 @@ class SearchForm extends Component {
             <form className="w-100" onSubmit={this.handleSubmit}>
                 <div className="search-form">
                     <input className="form-control form-control-dark" type="text" placeholder={this.props.placeholder}
-                        aria-label="Search" value={this.state.value} onChange={this.handleChange} />
+                        aria-label="Search" value={this.state.value} onChange={this.handleChange}/>
                     <button className="form-control form-control-dark" type="submit">
-                        <i className="fa fa-search" />
+                        <i className="fa fa-search"/>
                     </button>
                 </div>
             </form>
