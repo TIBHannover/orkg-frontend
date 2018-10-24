@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { Nav, NavItem, NavLink } from 'reactstrap';
+import React, {Component} from 'react';
+import {Nav, NavItem, NavLink} from 'reactstrap';
 import './App.css';
-import { Link, Redirect, Route, Switch } from 'react-router-dom';
-import ResourceDetails, { descriptionSection } from './pages/ResourceDetails'
+import {Link, Redirect, Route, Switch} from 'react-router-dom';
+import ResourceDetails, {descriptionSection} from './pages/ResourceDetails'
 import PredicateDetails from './pages/PredicateDetails'
 import Resources from './pages/Resources'
 import SearchResults from './pages/SearchResults'
-import { NotificationContainer } from 'react-notifications';
+import {NotificationContainer} from 'react-notifications';
 import AddResource from './pages/AddResource';
 import Predicates from './pages/Predicates';
 import SignInPopup from './components/SignInPopup';
-import SearchFrom from './components/SearchFrom';
+import SearchForm from './components/SearchForm';
 
 export default class App extends Component {
 
@@ -18,11 +18,11 @@ export default class App extends Component {
         signInVisible: false,
     };
 
-    toggleSignInVisibility = (event) => {
+    toggleSignInVisibility = () => {
         this.setState({ signInVisible: !this.state.signInVisible });
     };
 
-    handleOverlayClick = (event) => {
+    handleOverlayClick = () => {
         this.setState({ signInVisible: false });
     };
 
@@ -31,7 +31,7 @@ export default class App extends Component {
             <NotificationContainer />
             <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
                 <Link className="navbar-brand col-sm-3 col-md-2 mr-0" to="#">ORKG</Link>
-                <SearchFrom placeholder="Enter search term here" />
+                <SearchForm placeholder="Enter search term here" />
                 <ul className="navbar-nav px-3">
                     <li className="nav-item text-nowrap dropdown show">
                         <a className="nav-link btn btn-secondary dropdown-toggle" href="#"
