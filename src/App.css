@@ -92,4 +92,5 @@ dd {
 .search-form button {
     width: 5% !important;
     float: left;
+    padding-left: 5px;
 }
