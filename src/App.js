@@ -30,7 +30,7 @@ export default class App extends Component {
         return <div className="body">
             <NotificationContainer />
             <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-                <Link className="navbar-brand col-sm-3 col-md-2 mr-0" to="#">ORKG</Link>
+                <Link className="navbar-brand col-sm-3 col-md-2 mr-0" to="/">ORKG</Link>
                 <SearchForm placeholder="Enter search term here" />
                 <ul className="navbar-nav px-3">
                     <li className="nav-item text-nowrap dropdown show">
