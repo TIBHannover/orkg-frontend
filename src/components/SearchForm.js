@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import React, {Component} from 'react';
+import {withRouter} from 'react-router-dom';
 
-class SearchFrom extends Component {
+class SearchForm extends Component {
 
     constructor(props) {
         super(props);
@@ -16,9 +16,8 @@ class SearchFrom extends Component {
     }
 
     handleSubmit(event) {
-        const { router, params, location, routes } = this.props
-        const path = '/search/' + encodeURIComponent(this.state.value);
-        event.preventDefault()
+        const path = `/search/${encodeURIComponent(this.state.value)}`;
+        event.preventDefault();
         this.props.history.push(path);
     }
 
@@ -27,12 +26,14 @@ class SearchFrom extends Component {
             <form className="w-100" onSubmit={this.handleSubmit}>
                 <div className="search-form">
                     <input className="form-control form-control-dark" type="text" placeholder={this.props.placeholder}
-                        aria-label="Search" value={this.state.value} onChange={this.handleChange} />
-                    <button className="form-control form-control-dark" type="submit"><i class="fa fa-search"></i></button>
+                        aria-label="Search" value={this.state.value} onChange={this.handleChange}/>
+                    <button className="form-control form-control-dark" type="submit">
+                        <i className="fa fa-search"/>
+                    </button>
                 </div>
-            </form >
+            </form>
         );
     }
 }
 
-export default withRouter(SearchFrom);
+export default withRouter(SearchForm);

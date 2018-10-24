@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ShortRecord from '../components/statements/ShortRecord';
-import {submitGetRequest, url} from '../network';
+import { submitGetRequest, url } from '../network';
 
 export default class SearchResults extends Component {
     state = {
@@ -91,7 +91,6 @@ export default class SearchResults extends Component {
                 {predicates}
             </div>;
         }
-        console.log([body1, body2]);
         return [body1, body2];
     }
 
