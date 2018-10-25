@@ -7,7 +7,7 @@ deploy_develop:
   stage: deploy
   environment:
     name: develop
-    url: http://orkg01.develop.labs.tib.eu/
+    url: http://orkg01.develop.labs.tib.eu/orkg/
   variables:
     DEPLOY_HOST: orkg01.develop.labs.tib.eu
     DEPLOY_PORT: 8080
@@ -30,7 +30,7 @@ deploy_develop:
     - npm install
     - CI=false npm run build
     # Deploy to web server
-    - rsync -av --delete build/ orkg@${DEPLOY_HOST}:/tib/app/orkg/www/htdocs
+    - rsync -av --delete build/ orkg@${DEPLOY_HOST}:/tib/app/orkg/www/htdocs/orkg/
   only:
     - master
 
