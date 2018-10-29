@@ -12,7 +12,7 @@ export function submitGetRequest(url, onSuccess, onError) {
             .then((response) => {
                 console.log('Response type: ' + response.type);
                 if (!response.ok) {
-                    throw new Error('Error response. (' + response.status + ') ' + response.statusText);
+                    onError(new Error('Error response. (' + response.status + ') ' + response.statusText));
                 } else {
                     return response.json();
                 }
@@ -26,7 +26,7 @@ function submitPostRequest(url, headers, data, onSuccess, onError) {
             .then((response) => {
                 console.log('Response type: ' + response.type);
                 if (!response.ok) {
-                    throw new Error('Error response. (' + response.status + ') ' + response.statusText);
+                    onError(new Error('Error response. (' + response.status + ') ' + response.statusText));
                 } else {
                     return response.json();
                 }
