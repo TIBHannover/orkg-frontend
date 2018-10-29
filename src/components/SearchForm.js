@@ -5,7 +5,12 @@ class SearchForm extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { value: '' };
+        
+        if (this.props.location.pathname.includes('/search/')) {
+            this.state = { value: this.props.location.pathname.substring(this.props.location.pathname.lastIndexOf('/')+1) };
+        } else {
+            this.state = { value: '' };
+        }
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -18,7 +23,11 @@ class SearchForm extends Component {
     handleSubmit(event) {
         const path = `/search/${encodeURIComponent(this.state.value)}`;
         event.preventDefault();
-        this.props.history.push(path);
+        //if (this.props.location)
+        //console.log(this.props.location.pathname.includes('/search/'));
+        //this.props.history.push(path);
+        this.setState({ value: '' });
+        window.location.href = path;
     }
 
     render() {

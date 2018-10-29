@@ -45,12 +45,10 @@ export default class App extends Component {
                 <div className="row entityView">
                     <Nav className="bg-light col-md-3 col-lg-2" vertical>
                         <NavItem>
-                            <NavLink><Link to={`${process.env.PUBLIC_URL}/`}>Research contributions</Link></NavLink>
+                            <NavLink href={`${process.env.PUBLIC_URL}/`}>Research contributions</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink>
-                                <Link to={`${process.env.PUBLIC_URL}/addResource`}>Add research contribution</Link>
-                            </NavLink>
+                            <NavLink href={`${process.env.PUBLIC_URL}/addResource`}>Add research contribution</NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink href={`${process.env.PUBLIC_URL}/predicates`}>Predicates</NavLink>
