@@ -22,10 +22,7 @@ export function submitGetRequest(url, onSuccess, onError) {
                 }
             })
             .then(onSuccess)
-            .catch((error) => {
-                console.error(`Network error. [url='${url}']`);
-                onError(error);
-            });
+            .catch(onError);
 }
 
 function submitPostRequest(url, headers, data, onSuccess, onError) {

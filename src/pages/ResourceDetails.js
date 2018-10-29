@@ -33,7 +33,7 @@ export default class ResourceDetails extends Component {
     findResource = () => {
         const that = this;
 
-        submitGetRequest(resourcesUrl + this.props.id + '/',
+        submitGetRequest(resourcesUrl + encodeURIComponent(this.props.id) + '/',
                 (responseJson) => {
                     that.setState({
                         title: responseJson.label,

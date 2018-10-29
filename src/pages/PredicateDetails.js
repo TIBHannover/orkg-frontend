@@ -18,7 +18,7 @@ export default class PredicateDetails extends Component {
     findPredicate = () => {
         const that = this;
 
-        submitGetRequest(predicatesUrl + this.props.id + '/',
+        submitGetRequest(predicatesUrl + encodeURIComponent(this.props.id) + '/',
                 (responseJson) => {
                     that.setState({
                         title: responseJson.label,
