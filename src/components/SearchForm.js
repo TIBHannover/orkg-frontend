@@ -21,7 +21,7 @@ class SearchForm extends Component {
     }
 
     handleSubmit(event) {
-        const path = `/search/${encodeURIComponent(this.state.value)}`;
+        const path = `${process.env.PUBLIC_URL}/search/${encodeURIComponent(this.state.value)}`;
         event.preventDefault();
         //if (this.props.location)
         //console.log(this.props.location.pathname.includes('/search/'));
