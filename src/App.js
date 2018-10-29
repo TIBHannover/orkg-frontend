@@ -72,7 +72,7 @@ export default class App extends Component {
                                 <SearchResults term={decodeURIComponent(match.params.searchTerm)} />
                             )} />
                             <Redirect from={`${process.env.PUBLIC_URL}/resource/:resourceId`}
-                                to={'/resource/:resourceId/' + descriptionSection} />
+                                to={`${process.env.PUBLIC_URL}/resource/:resourceId/${descriptionSection}`} />
                         </Switch>
                     </main>
                 </div>
