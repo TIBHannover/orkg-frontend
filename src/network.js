@@ -8,25 +8,36 @@ export const crossrefUrl = process.env.REACT_APP_CROSSREF_URL;
  * Sends simple GET request to the URL.
  */
 export function submitGetRequest(url, onSuccess, onError) {
+    if (!url) {
+        throw new Error('Cannot submit GET request. URL is null or undefined.');
+    }
+
     fetch(url, { method: 'GET' })
             .then((response) => {
                 console.log('Response type: ' + response.type);
                 if (!response.ok) {
-                    throw new Error('Error response. (' + response.status + ') ' + response.statusText);
+                    throw new Error(`Error response. (${response.status}) ${response.statusText}`);
                 } else {
                     return response.json();
                 }
             })
             .then(onSuccess)
-            .catch(onError);
+            .catch((error) => {
+                console.error(`Network error. [url='${url}']`);
+                onError(error);
+            });
 }
 
 function submitPostRequest(url, headers, data, onSuccess, onError) {
+    if (!url) {
+        throw new Error('Cannot submit POST request. URL is null or undefined.');
+    }
+
     fetch(url, { method: 'POST',  headers: headers, body: JSON.stringify(data) })
             .then((response) => {
                 console.log('Response type: ' + response.type);
                 if (!response.ok) {
-                    throw new Error('Error response. (' + response.status + ') ' + response.statusText);
+                    throw new Error(`Error response. (${response.status}) ${response.statusText}`);
                 } else {
                     return response.json();
                 }
