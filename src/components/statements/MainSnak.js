@@ -72,7 +72,7 @@ export default class MainSnak extends Component {
                         <div className="snakView-value">
                             {
                                 this.props.objectType === 'resource'
-                                ? <a href={`${process.env.PUBLIC_URL}/resource/${this.props.id}`}>
+                                ? <a href={`${process.env.PUBLIC_URL}/resource/${encodeURIComponent(this.props.id)}`}>
                                     {this.props.text}
                                 </a>
                                 : this.props.text

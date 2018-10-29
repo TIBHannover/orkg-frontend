@@ -167,7 +167,7 @@ export default class ResourceDetails extends Component {
                 statementGroup => {
                     if (statementGroup.length > 0) {
                         const propertyId = statementGroup[0][groupingProperty];
-                        return <StatementGroupCard href={`${process.env.PUBLIC_URL}/predicate/${propertyId}`}
+                        return <StatementGroupCard href={`${process.env.PUBLIC_URL}/predicate/${encodeURIComponent(propertyId)}`}
                                 key={propertyId}
                                 label={this.state.predicateMap[propertyId] || propertyId}
                                 onUpdate={this.reset} statementGroup={statementGroup}
