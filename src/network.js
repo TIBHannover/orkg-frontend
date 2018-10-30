@@ -43,6 +43,24 @@ function submitPostRequest(url, headers, data, onSuccess, onError) {
             .catch(onError);
 }
 
+export function submitPutRequest(url, headers, data, onSuccess, onError) {
+    if (!url) {
+        throw new Error('Cannot submit PUT request. URL is null or undefined.');
+    }
+
+    fetch(url, { method: 'PUT',  headers: headers, body: JSON.stringify(data) })
+        .then((response) => {
+            console.log('Response type: ' + response.type);
+            if (!response.ok) {
+                throw new Error(`Error response. (${response.status}) ${response.statusText}`);
+            } else {
+                return response.json();
+            }
+        })
+        .then(onSuccess)
+        .catch(onError);
+}
+
 export function updateResource(id, label, onSuccess, onError) {
     submitPostRequest(resourcesUrl, {'Content-Type': 'application/json'}, {id: id, label: label}, onSuccess, onError);
 }
