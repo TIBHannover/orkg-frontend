@@ -3,6 +3,7 @@ import EditToolbar from './EditToolbar';
 import {createLiteralStatement, createResourceStatement} from '../../network';
 import {NotificationManager} from 'react-notifications';
 import MainSnak from './MainSnak';
+import {Button} from 'reactstrap';
 
 export default class NewStatementObject extends Component {
 
@@ -40,7 +41,7 @@ export default class NewStatementObject extends Component {
         NotificationManager.error(error.message, 'Error creating object statement (predicate)', 5000);
     };
 
-    onPublishClick = (event) => {
+    onPublishClick = () => {
         const predicateId = this.props.predicateId || this.state.selectedPredicateId;
         switch (this.state.objectType) {
             case 'literal': {
@@ -112,11 +113,11 @@ export default class NewStatementObject extends Component {
                     <div className="listView"/>
                     <div className="toolbar-container">
                         <span className="toolbar-button toolbar-container">
-                                <a href="#" title="">
+                                <Button>
                                     {
                                         editEnabled && [<span className="fa fa-plus"/>, 'add qualifier']
                                     }
-                                </a>
+                                </Button>
                         </span>
                     </div>
                 </div>

@@ -1,30 +1,8 @@
-a {
-    text-decoration: none;
-    color: #0645ad;
-    background: none;
-}
-
-textarea {
-    width: 100%;
-    padding: 0.1em;
-    display: block;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.entityView input {
-    border: 1px solid #a2a9b1;
-    border-radius: 0;
-    box-sizing: border-box;
-}
-
 .statementGroupView {
     float: left;
     margin-bottom: 2em;
     position: relative;
     width: 100%;
-    /*border: 1px solid #c8ccd1;*/
 }
 
 .statementGroupView-property {
@@ -126,21 +104,13 @@ textarea {
     padding-left: 0;
 }
 
-.toolbar-button > a {
-    font-size: small;
-    padding: 0 5px 0 0;
-}
-
-.toolbar-button > a > span {
+.toolbar-button > a > span,
+.toolbar-button > button > span {
     width: 15px;
     height: 13px;
     text-align: right;
     padding-right: 2px;
     background-image: none;
-}
-
-.editToolbar-container .toolbar-button {
-
 }
 
 .statementListView > .toolbar-wrapper {
@@ -241,10 +211,6 @@ textarea {
     margin: 0;
     box-sizing: border-box;
     width: 100%;
-}
-
-textarea {
-    display: block;
 }
 
 .statementView-qualifiers > .toolbar-container {
@@ -353,11 +319,58 @@ div.statementView textarea {
     border-radius: 0;
 }
 
-.toolbarButton-disabled a:link, .toolbarButton-disabled a:hover, .toolbarButton-disabled a:active,
-        .toolbarButton-disabled a:visited {
+.toolbarButton-disabled a:link,
+.toolbarButton-disabled a:hover,
+.toolbarButton-disabled a:active,
+.toolbarButton-disabled a:visited,
+.toolbarButton-disabled button:hover,
+.toolbarButton-disabled button:active {
     color: #72777d;
     text-decoration: none;
     cursor: default;
+}
+
+.toolbar-button button {
+    align-items: normal;
+    background: none;
+    border: none;
+    box-sizing: content-box;
+    color: #007bff;
+    cursor: pointer;
+    display: inline;
+    font: inherit;
+    height: auto;
+    padding: 0;
+    perspective-origin: 0 0;
+    text-align: start;
+    text-decoration: none;
+    transform-origin: 0 0;
+    width: auto;
+    -moz-appearance: none;
+}
+
+.toolbar-button button:hover,
+.toolbar-button button:active {
+    background: none !important;
+    color: #0645ad !important;
+    text-decoration: underline;
+}
+
+.toolbar-button > a,
+.toolbar-button > button {
+    font-size: small;
+    padding: 0 5px 0 0;
+}
+
+@supports (-moz-appearance:none) { /* Mozilla-only */
+    button::-moz-focus-inner { /* reset any predefined properties */
+        border: none;
+        padding: 0;
+    }
+    button:focus { /* add outline to focus pseudo-class */
+        outline-style: dotted;
+        outline-width: 1px;
+    }
 }
 
 .snakView .btn {
