@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Nav, NavItem, NavLink} from 'reactstrap';
+import {Button, Nav, NavItem, NavLink} from 'reactstrap';
 import './App.css';
 import {Link, Redirect, Route, Switch} from 'react-router-dom';
 import ResourceDetails, {descriptionSection} from './pages/ResourceDetails'
@@ -34,9 +34,9 @@ export default class App extends Component {
                 <SearchForm placeholder="Enter search term here" />
                 <ul className="navbar-nav px-3">
                     <li className="nav-item text-nowrap dropdown show">
-                        <a className="nav-link btn btn-secondary dropdown-toggle" href="#"
-                            aria-haspopup="true" onClick={this.toggleSignInVisibility}>Sign in</a>
-                        {this.state.signInVisible && <SignInPopup onOverlayClick={this.handleOverlayClick} />}
+                        <Button className="nav-link btn btn-secondary dropdown-toggle"
+                                onClick={this.toggleSignInVisibility}>Sign in</Button>
+                        {this.state.signInVisible && <SignInPopup onOverlayClick={this.handleOverlayClick}/>}
                     </li>
                 </ul>
             </nav>
