@@ -1,30 +1,8 @@
-a {
-    text-decoration: none;
-    color: #0645ad;
-    background: none;
-}
-
-textarea {
-    width: 100%;
-    padding: 0.1em;
-    display: block;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.entityView input {
-    border: 1px solid #a2a9b1;
-    border-radius: 0;
-    box-sizing: border-box;
-}
-
 .statementGroupView {
     float: left;
     margin-bottom: 2em;
     position: relative;
     width: 100%;
-    /*border: 1px solid #c8ccd1;*/
 }
 
 .statementGroupView-property {
@@ -235,10 +213,6 @@ textarea {
     width: 100%;
 }
 
-textarea {
-    display: block;
-}
-
 .statementView-qualifiers > .toolbar-container {
     float: right;
     margin-bottom: 1em;
@@ -382,6 +356,12 @@ div.statementView textarea {
     text-decoration: underline;
 }
 
+.toolbar-button > a,
+.toolbar-button > button {
+    font-size: small;
+    padding: 0 5px 0 0;
+}
+
 @supports (-moz-appearance:none) { /* Mozilla-only */
     button::-moz-focus-inner { /* reset any predefined properties */
         border: none;
@@ -419,10 +399,4 @@ div.nav.bottomNavigator > * {
 
 div.nav.bottomNavigator > *:last-child {
     float: right;
-}
-
-.toolbar-button > a,
-.toolbar-button > button {
-    font-size: small;
-    padding: 0 5px 0 0;
 }

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Card, CardBody, UncontrolledCollapse} from "reactstrap";
+import {Button, Card, CardBody, UncontrolledCollapse} from 'reactstrap';
 import '../App.css';
 
 class CodeContainer extends Component {
@@ -15,7 +15,7 @@ class CodeContainer extends Component {
     render() {
         const id = this.randId();
         return [
-            <Button color="primary" id={id} className="CodeContainerButton">
+            <Button color="primary" id={id} className="codeContainerButton">
                 Show
             </Button>,
             <UncontrolledCollapse toggler={'#' + id}>
