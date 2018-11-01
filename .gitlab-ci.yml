@@ -28,7 +28,7 @@ deploy_develop:
     - cat .env
     # Prepare and build
     - npm install
-    - CI=false npm run build
+    - npm run build
     # Deploy to web server
     - rsync -av --delete build/ orkg@${DEPLOY_HOST}:/tib/app/orkg/www/htdocs/orkg/
   only:
