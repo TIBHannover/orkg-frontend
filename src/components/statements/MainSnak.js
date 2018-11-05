@@ -65,7 +65,7 @@ export default class MainSnak extends Component {
                     <div className="valueView valueView-inEditMode">
                         <div className="valueView-value">
                             <EditableDropdown requestUrl={resourcesUrl} placeholder="object" value={this.props.text}
-                                    onItemSelected={this.handleObjectSelect}/>
+                                    onItemSelected={this.handleObjectSelect} onInput={this.props.onInput}/>
                         </div>
                     </div>
                 </div>

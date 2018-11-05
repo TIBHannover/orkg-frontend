@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import EditToolbar from './EditToolbar';
-import {createLiteralStatement, createPredicate, createResourceStatement} from '../../network';
+import {createLiteralStatement, createPredicate, createResource, createResourceStatement} from '../../network';
 import {NotificationManager} from 'react-notifications';
 import MainSnak from './MainSnak';
 import {Button} from 'reactstrap';
@@ -52,6 +52,23 @@ export default class NewStatementObject extends Component {
         NotificationManager.error(error.message, 'Error creating predicate', 5000);
     };
 
+    getResourceCreationHandler = (predicateId) => {
+        const that = this;
+        return (responseJson) => {
+            this.setEditorState('edit');
+            NotificationManager.success('Resource created successfully', 'Success', 5000);
+
+            createResourceStatement(that.props.subjectId, predicateId, responseJson.id,
+                    that.onStatementCreationSuccess, that.onStatementCreationError);
+        };
+    };
+
+    handleResourceCreationError = (error) => {
+        this.setEditorState('edit');
+        console.error(error);
+        NotificationManager.error(error.message, 'Error creating object statement', 5000);
+    };
+
     handlePublishClick = () => {
         const predicateId = this.props.predicateId || this.state.selectedPredicateId;
         const newPredicateLabel = this.state.newPredicateLabel;
@@ -80,9 +97,12 @@ export default class NewStatementObject extends Component {
             case 'resource': {
                 if (this.state.selectedObjectId) {
                     createResourceStatement(this.props.subjectId, predicateId, this.state.selectedObjectId,
-                        this.onStatementCreationSuccess, this.onStatementCreationError);
-                    this.setEditorState('loading');
+                            this.onStatementCreationSuccess, this.onStatementCreationError);
+                } else {
+                    createResource(this.value, this.getResourceCreationHandler(predicateId),
+                            this.handleResourceCreationError);
                 }
+                this.setEditorState('loading');
                 break;
             }
             default: {

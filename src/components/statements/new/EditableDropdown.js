@@ -44,6 +44,8 @@ export default class EditableDropdown extends Component {
         } else {
             this.hideDropdownMenu();
         }
+
+        this.props.onInput && this.props.onInput(event);
     };
 
     handleItemClick = (event) => {

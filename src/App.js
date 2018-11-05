@@ -61,10 +61,11 @@ export default class App extends Component {
                             <Route exact path={`${process.env.PUBLIC_URL}/addResource`} component={AddResource} />
                             <Route exact path={`${process.env.PUBLIC_URL}/predicates`} component={Predicates} />
                             <Route path={`${process.env.PUBLIC_URL}/resource/:resourceId/:sectionName`}
-                                render={({ match }) => (
-                                    <ResourceDetails {...this.props} id={decodeURIComponent(match.params.resourceId)}
-                                        sectionName={decodeURIComponent(match.params.sectionName)} />
-                                )} />
+                                render={({ match }) => {
+                                    const id = decodeURIComponent(match.params.resourceId);
+                                    return <ResourceDetails {...this.props} id={id} key={id}
+                                            sectionName={decodeURIComponent(match.params.sectionName)} />
+                                }} />
                             <Route path={`${process.env.PUBLIC_URL}/predicate/:predicateId`} render={({ match }) => (
                                 <PredicateDetails id={decodeURIComponent(match.params.predicateId)} />
                             )} />
