@@ -40,7 +40,7 @@ export default class EditableDropdown extends Component {
                     }
                 }, (err) => {
                     console.error(err);
-                })
+                });
         } else {
             this.hideDropdownMenu();
         }
@@ -55,6 +55,13 @@ export default class EditableDropdown extends Component {
         this.props.onItemSelected(event.target.id);
     };
 
+    handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            const value = event.target.value.trim();
+            this.props.onEnterPressed && this.props.onEnterPressed(value);
+        }
+    };
+
     hideDropdownMenu = () => {
         this.setState({dropdownMenuJsx: null});
     };
@@ -63,7 +70,7 @@ export default class EditableDropdown extends Component {
         const inputStyle = {height: "21.8px", overflow: "hidden", resize: "none"};
         return <div className="dropdown valueView">
             <input placeholder={this.props.placeholder} className="dropdown-toggle valueView-input" style={inputStyle}
-                    value={this.state.value} onChange={this.handleChange}/>
+                    value={this.state.value} onChange={this.handleChange} onKeyPress={this.handleKeyPress}/>
             {this.state.dropdownMenuJsx}
         </div>;
     }

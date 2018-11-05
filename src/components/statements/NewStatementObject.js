@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import EditToolbar from './EditToolbar';
-import {createLiteralStatement, createResourceStatement} from '../../network';
+import {createLiteralStatement, createPredicate, createResourceStatement} from '../../network';
 import {NotificationManager} from 'react-notifications';
 import MainSnak from './MainSnak';
 import {Button} from 'reactstrap';
@@ -12,6 +12,7 @@ export default class NewStatementObject extends Component {
         editorState: 'edit',
         objectType: 'literal',
         selectedPredicateId: null,
+        newPredicateLabel: null,
         selectedObjectId: null,
     };
 
@@ -38,11 +39,31 @@ export default class NewStatementObject extends Component {
     onStatementCreationError = (error) => {
         this.setEditorState('edit');
         console.error(error);
-        NotificationManager.error(error.message, 'Error creating object statement (predicate)', 5000);
+        NotificationManager.error(error.message, 'Error creating object statement', 5000);
     };
 
-    onPublishClick = () => {
+    onPredicateCreationSuccess = (responseJson) => {
+        this.createStatement(responseJson.id);
+    };
+
+    onPredicateCreationError = (error) => {
+        this.setEditorState('edit');
+        console.error(error);
+        NotificationManager.error(error.message, 'Error creating predicate', 5000);
+    };
+
+    handlePublishClick = () => {
         const predicateId = this.props.predicateId || this.state.selectedPredicateId;
+        const newPredicateLabel = this.state.newPredicateLabel;
+
+        if (!predicateId && newPredicateLabel) {
+            createPredicate(newPredicateLabel, this.onPredicateCreationSuccess, this.onPredicateCreationError);
+        } else {
+            this.createStatement(predicateId);
+        }
+    };
+
+    createStatement(predicateId) {
         switch (this.state.objectType) {
             case 'literal': {
                 if (this.value && this.value.length !== 0) {
@@ -59,7 +80,7 @@ export default class NewStatementObject extends Component {
             case 'resource': {
                 if (this.state.selectedObjectId) {
                     createResourceStatement(this.props.subjectId, predicateId, this.state.selectedObjectId,
-                            this.onStatementCreationSuccess, this.onStatementCreationError);
+                        this.onStatementCreationSuccess, this.onStatementCreationError);
                     this.setEditorState('loading');
                 }
                 break;
@@ -68,8 +89,7 @@ export default class NewStatementObject extends Component {
                 throw new Error(`Unknown object type. [this.state.objectType=${this.state.objectType}]`);
             }
         }
-        return false;
-    };
+    }
 
     setEditorState(editorState) {
         this.setState({editorState: editorState});
@@ -86,7 +106,17 @@ export default class NewStatementObject extends Component {
     };
 
     handlePredicateSelect = (predicateId) => {
-        this.setState({selectedPredicateId: predicateId});
+        this.setState({
+            newPredicateLabel: null,
+            selectedPredicateId: predicateId,
+        });
+    };
+
+    handleNewPredicate = (newPredicateLabel) => {
+        this.setState({
+            newPredicateLabel: newPredicateLabel,
+            selectedPredicateId: null,
+        });
     };
 
     handleObjectSelect = (objectId) => {
@@ -95,7 +125,8 @@ export default class NewStatementObject extends Component {
 
     render() {
         const newProperty = this.props.predicateId === null;
-        const editEnabled = !newProperty || this.state.selectedPredicateId;
+        const editEnabled = !newProperty || this.state.selectedPredicateId !== null
+                || this.state.newPredicateLabel !== null;
         return <div id="new" className="statementView newStatement">
             <div className="statementView-rankSelector">
                 <div className="rankSelector">
@@ -108,7 +139,8 @@ export default class NewStatementObject extends Component {
                         objectType={this.state.objectType}
                         newProperty={newProperty}
                         onObjectSelect={this.handleObjectSelect}
-                        onPredicateSelect={this.handlePredicateSelect}/>
+                        onPredicateSelect={this.handlePredicateSelect}
+                        onNewPredicate={this.handleNewPredicate}/>
                 <div className="statementView-qualifiers">
                     <div className="listView"/>
                     <div className="toolbar-container">
@@ -125,7 +157,7 @@ export default class NewStatementObject extends Component {
             <div className="statementView-references-container"/>
             <div className="editToolbar-container toolbar-container">
                 <EditToolbar editorState={this.state.editorState} showRemoveButton={false} editEnabled={editEnabled}
-                        onPublishClick={this.onPublishClick} onCancelClick={this.props.onCancelClick}/>
+                        onPublishClick={this.handlePublishClick} onCancelClick={this.props.onCancelClick}/>
             </div>
         </div>
     }

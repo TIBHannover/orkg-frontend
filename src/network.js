@@ -79,6 +79,10 @@ export function createLiteralStatement(subjectId, predicateId, property, onSucce
             {'Content-Type': 'application/json'}, { 'value' : property, 'type' : 'literal' }, onSuccess, onError);
 }
 
+export function createPredicate(label, onSuccess, onError) {
+    submitPostRequest(predicatesUrl, {'Content-Type': 'application/json'}, { 'label' : label }, onSuccess, onError);
+}
+
 export function getPredicate(id, onSuccess, onError) {
     submitGetRequest(predicatesUrl + encodeURIComponent(id) + '/', onSuccess, onError);
 }
