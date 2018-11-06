@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import EditToolbar from '../EditToolbar';
 import MainSnak from '../MainSnak';
-import {createLiteralStatement, createResourceStatement} from '../../../network';
+import {createLiteralStatement, updateResource} from '../../../network';
 import {NotificationManager} from 'react-notifications';
 
 export default class Statement extends Component {
@@ -76,9 +76,7 @@ export default class Statement extends Component {
                     break;
                 }
                 case 'resource': {
-                    createResourceStatement(this.props.subjectId, this.props.predicateId,
-                            this.state.selectedObjectId || this.id,
-                            this.onUpdateResourceSuccess, this.onUpdateError);
+                    updateResource(this.id, value, this.onUpdateResourceSuccess, this.onUpdateError);
                     break;
                 }
                 default: {

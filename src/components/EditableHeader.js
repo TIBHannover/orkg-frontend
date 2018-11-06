@@ -23,7 +23,7 @@ export default class EditableHeader extends Component {
 
     handleSubmitClick = (event) => {
         updateResource(this.props.id, this.state.value,
-                (responseJson) => {
+                () => {
                     event.value = this.state.value;
                     NotificationManager.success('Resource name updated successfully', 'Success', 5000);
                     this.props.onChange(event);
@@ -50,8 +50,8 @@ export default class EditableHeader extends Component {
         switch (this.state.editorState) {
             case 'view': {
                 content = [
-                    <h1 className="h2">{this.state.value}</h1>,
-                    <span className="toolbar toolbar-container toolbar-container-header">
+                    <h1 key="h" className="h2">{this.state.value}</h1>,
+                    <span key="span" className="toolbar toolbar-container toolbar-container-header">
                         <LinkButton value="edit" className="toolbar-button" spanClassName="fa fa-pencil"
                                 onClick={this.handleEditClick}/>
                     </span>,

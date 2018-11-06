@@ -179,53 +179,8 @@ export default class ResourceDetails extends Component {
                 }
             );
 
-            const newStatementsSectionJsx = <NewStatementsSection subjectId={id} onUpdate={this.reset}/>;
-            // const navigationButtons = <ButtonGroup>
-            //     <Button disabled={this.props.sectionName === descriptionSection}
-            //             onClick={() => window.location = descriptionSection}>
-            //         Address
-            //     </Button>
-            //     <Button disabled={this.props.sectionName === implementationSection}
-            //             onClick={() => window.location = implementationSection}>
-            //         Implementation
-            //     </Button>
-            //     <Button disabled={this.props.sectionName === evaluationSection}
-            //             onClick={() => window.location = evaluationSection}>
-            //         Evaluation
-            //     </Button>
-            //     <Button disabled={this.props.sectionName === miscSection}
-            //             onClick={() => window.location = miscSection}>
-            //         Misc
-            //     </Button>
-            // </ButtonGroup>;
-
-            // const navigationButtons = <Nav>
-            //     <NavItem>
-            //         <Button disabled={this.props.sectionName === descriptionSection}
-            //                 onClick={() => window.location = descriptionSection}>
-            //             Address
-            //         </Button>
-            //     </NavItem>
-            //     <NavItem>
-            //         <Button disabled={this.props.sectionName === implementationSection}
-            //                 onClick={() => window.location = implementationSection}>
-            //             Implementation
-            //         </Button>
-            //     </NavItem>
-            //     <NavItem>
-            //         <Button disabled={this.props.sectionName === evaluationSection}
-            //                 onClick={() => window.location = evaluationSection}>
-            //             Evaluation
-            //         </Button>
-            //     </NavItem>
-            //     <NavItem>
-            //         <Button disabled={this.props.sectionName === miscSection}
-            //                 onClick={() => window.location = miscSection}>
-            //             Misc
-            //         </Button>
-            //     </NavItem>
-            // </Nav>;
-
+            const newStatementsSectionJsx = <NewStatementsSection subjectId={id}
+                    onUpdate={this.reset}/>;
             const sectionName = this.props.sectionName;
             const navigationButtons = <Nav tag="div">
                 <NavLink href={descriptionSection} disabled={sectionName === descriptionSection}>
@@ -253,8 +208,12 @@ export default class ResourceDetails extends Component {
             </Nav>;
 
             return <div className="entityView-main">
-                {[titleJsx, abstractJsx, navigationButtons].concat(statementGroupJsxs)
-                        .concat([newStatementsSectionJsx, bottomNavigationButtons])}
+                {titleJsx}
+                {abstractJsx}
+                {navigationButtons}
+                {statementGroupJsxs}
+                {newStatementsSectionJsx}
+                {bottomNavigationButtons}
             </div>;
         } else {
             return null;

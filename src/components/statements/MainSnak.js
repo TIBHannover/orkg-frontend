@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import ObjectTypeSelector from './ObjectTypeSelector';
 import EditableDropdown from './new/EditableDropdown';
 import {predicatesUrl, resourcesUrl} from '../../network';
@@ -6,6 +6,7 @@ import {predicatesUrl, resourcesUrl} from '../../network';
 export default class MainSnak extends Component {
 
     state = {
+        newPredicateLabel: null,
         selectedPredicateId: null,
         selectedObjectId: null,
     };
@@ -15,8 +16,19 @@ export default class MainSnak extends Component {
     };
 
     handlePropertySelect = (predicateId) => {
-        this.setState({selectedPredicateId: predicateId});
+        this.setState({
+            newPredicateLabel: null,
+            selectedPredicateId: predicateId,
+        });
         this.props.onPredicateSelect && this.props.onPredicateSelect(predicateId);
+    };
+
+    handleNewProperty = (value) => {
+        this.setState({
+            newPredicateLabel: value.length > 0 ? value : null,
+            selectedPredicateId: null,
+        });
+        this.props.onNewPredicate && this.props.onNewPredicate(value);
     };
 
     handleObjectSelect = (objectId) => {
@@ -26,10 +38,10 @@ export default class MainSnak extends Component {
 
     getInput(isLiteral, inputStyle) {
         if (isLiteral) {
-            return [
+            return <Fragment>
                 <div className="valueView-input-group-prepend">
                     <span className="valueView-input-group-text">&quot;</span>
-                </div>,
+                </div>
                 <div className="snakView-body">
                     <div className="snakView-value snakView-variation-valueSnak ">
                         <div className="valueView valueView-inEditMode">
@@ -42,18 +54,18 @@ export default class MainSnak extends Component {
                         </div>
                     </div>
                     <div className="snakView-indicators"/>
-                </div>,
+                </div>
                 <div className="valueView-input-group-prepend">
                     <span className="valueView-input-group-text">&quot;</span>
                 </div>
-            ];
+            </Fragment>;
         } else {
             return <div className="snakView-body">
                 <div className="snakView-value snakView-variation-valueSnak ">
                     <div className="valueView valueView-inEditMode">
                         <div className="valueView-value">
                             <EditableDropdown requestUrl={resourcesUrl} placeholder="object" value={this.props.text}
-                                    onItemSelected={this.handleObjectSelect}/>
+                                    onItemSelected={this.handleObjectSelect} onInput={this.props.onInput}/>
                         </div>
                     </div>
                 </div>
@@ -90,12 +102,12 @@ export default class MainSnak extends Component {
                     this.props.newProperty && <div className="snakView-property-container">
                         <div className="snakView-property" dir="auto">
                             <EditableDropdown requestUrl={predicatesUrl} placeholder="property"
-                                    onItemSelected={this.handlePropertySelect}/>
+                                    onItemSelected={this.handlePropertySelect} onEnterPressed={this.handleNewProperty}/>
                         </div>
                     </div>
                 }
                 {
-                    !this.props.newProperty || this.state.selectedPredicateId != null ?
+                    !this.props.newProperty || this.state.selectedPredicateId || this.state.newPredicateLabel ?
                     <div className="snakView-value-container" dir="auto">
                         <ObjectTypeSelector onItemSelect={this.handleItemSelect} objectType={this.props.objectType}/>
                         {this.getInput(shouldShowQuotes, inputStyle)}

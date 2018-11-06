@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import NewStatementGroupCard from './NewStatementGroupCard';
-import AddStatementLink from './AddStatementLink';
+import AddStatementButton from './AddStatementButton';
 
 export default class NewStatementsSection extends Component {
 
@@ -10,11 +10,11 @@ export default class NewStatementsSection extends Component {
 
     counter = 0;
 
-    reset = (newRecordLabel) => {
+    reset = () => {
         this.forceUpdate();
     };
 
-    onAddNewStatementClick = (event) => {
+    onAddNewStatementClick = () => {
         this.state.newStatementBoxes.push({
             id: this.counter,
             card: <NewStatementGroupCard id={this.counter} key={this.counter} onUpdate={this.props.onUpdate}
@@ -35,10 +35,13 @@ export default class NewStatementsSection extends Component {
     };
 
     render () {
-        const addStatementLinkJsx = <AddStatementLink onClick={this.onAddNewStatementClick}/>;
+        const addStatementLinkJsx = <AddStatementButton onClick={this.onAddNewStatementClick}/>;
         const newStatementBoxes = this.state.newStatementBoxes.map((statementBox) => statementBox.card);
 
-        return newStatementBoxes.concat([addStatementLinkJsx]);
+        return <Fragment>
+            {newStatementBoxes}
+            {addStatementLinkJsx}
+        </Fragment>
     }
 
 }
