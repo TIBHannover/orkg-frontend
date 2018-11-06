@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import NewStatementGroupCard from './NewStatementGroupCard';
-import AddStatementLink from './AddStatementLink';
+import AddStatementButton from './AddStatementButton';
 
 export default class NewStatementsSection extends Component {
 
@@ -35,7 +35,7 @@ export default class NewStatementsSection extends Component {
     };
 
     render () {
-        const addStatementLinkJsx = <AddStatementLink onClick={this.onAddNewStatementClick}/>;
+        const addStatementLinkJsx = <AddStatementButton onClick={this.onAddNewStatementClick}/>;
         const newStatementBoxes = this.state.newStatementBoxes.map((statementBox) => statementBox.card);
 
         return <Fragment>
