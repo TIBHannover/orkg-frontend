@@ -152,7 +152,7 @@ export default class ResourceDetails extends Component {
             this.updateMissingObjectLabels();
 
             const titleText = this.state.title;
-            const titleJsx = titleText && <EditableHeader {...this.props} key="title" value={titleText}
+            const titleJsx = titleText && <EditableHeader {...this.props} value={titleText}
                     onChange={this.handleHeaderChange}/>;
 
             const abstractText = this.state.allStatements.find(statement => statement.subject === id
@@ -179,10 +179,10 @@ export default class ResourceDetails extends Component {
                 }
             );
 
-            const newStatementsSectionJsx = <NewStatementsSection key="newStatement" subjectId={id}
+            const newStatementsSectionJsx = <NewStatementsSection subjectId={id}
                     onUpdate={this.reset}/>;
             const sectionName = this.props.sectionName;
-            const navigationButtons = <Nav tag="div" key="buttons">
+            const navigationButtons = <Nav tag="div">
                 <NavLink href={descriptionSection} disabled={sectionName === descriptionSection}>
                     Problem description
                 </NavLink>
@@ -198,7 +198,7 @@ export default class ResourceDetails extends Component {
             </Nav>;
 
             const sectionIndex = sections.findIndex((value) => value === sectionName);
-            const bottomNavigationButtons = <Nav className="bottomNavigator" tag="div" key="bottomNavigation">
+            const bottomNavigationButtons = <Nav className="bottomNavigator" tag="div">
                 <NavLink className="btn btn-primary" href={sections[sectionIndex - 1]} disabled={!(sectionIndex > 0)}>
                     Previous
                 </NavLink>
@@ -208,8 +208,12 @@ export default class ResourceDetails extends Component {
             </Nav>;
 
             return <div className="entityView-main">
-                {[titleJsx, abstractJsx, navigationButtons].concat(statementGroupJsxs)
-                        .concat([newStatementsSectionJsx, bottomNavigationButtons])}
+                {titleJsx}
+                {abstractJsx}
+                {navigationButtons}
+                {statementGroupJsxs}
+                {newStatementsSectionJsx}
+                {bottomNavigationButtons}
             </div>;
         } else {
             return null;

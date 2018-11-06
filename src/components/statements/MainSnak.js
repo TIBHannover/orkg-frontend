@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import ObjectTypeSelector from './ObjectTypeSelector';
 import EditableDropdown from './new/EditableDropdown';
 import {predicatesUrl, resourcesUrl} from '../../network';
@@ -38,10 +38,10 @@ export default class MainSnak extends Component {
 
     getInput(isLiteral, inputStyle) {
         if (isLiteral) {
-            return [
+            return <Fragment>
                 <div className="valueView-input-group-prepend">
                     <span className="valueView-input-group-text">&quot;</span>
-                </div>,
+                </div>
                 <div className="snakView-body">
                     <div className="snakView-value snakView-variation-valueSnak ">
                         <div className="valueView valueView-inEditMode">
@@ -54,11 +54,11 @@ export default class MainSnak extends Component {
                         </div>
                     </div>
                     <div className="snakView-indicators"/>
-                </div>,
+                </div>
                 <div className="valueView-input-group-prepend">
                     <span className="valueView-input-group-text">&quot;</span>
                 </div>
-            ];
+            </Fragment>;
         } else {
             return <div className="snakView-body">
                 <div className="snakView-value snakView-variation-valueSnak ">

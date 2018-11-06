@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import NewStatementObject from '../NewStatementObject';
 import AddValueToolbar from './AddValueToolbar';
 import Statement from './Statement';
@@ -13,16 +13,16 @@ export default class StatementGroupCard extends Component {
         super();
 
         this.onAddValueClick = this.onAddValueClick.bind(this);
-        this.onCancelAddValueClick = this.onCancelAddValueClick.bind(this)
-        this.onPublishSuccess = this.onPublishSuccess.bind(this)
+        this.onCancelAddValueClick = this.onCancelAddValueClick.bind(this);
+        this.onPublishSuccess = this.onPublishSuccess.bind(this);
     }
 
-    onAddValueClick(event) {
+    onAddValueClick() {
         this.setState({newStatementVisible: true});
         return false;
     }
 
-    onCancelAddValueClick(event) {
+    onCancelAddValueClick() {
         this.setState({newStatementVisible: false});
         return false;
     }
@@ -38,10 +38,15 @@ export default class StatementGroupCard extends Component {
         const predicateId = statementGroup[0].predicate;
 
         const statements = statementGroup.map(
-            (statement) => <Statement getText={this.props.getStatementText(statement)}
+            (statement, index) => <Statement key={index}
+                    getText={this.props.getStatementText(statement)}
                     setText={this.props.setStatementText(statement)}
-                    id={statement.object.id} onUpdate={this.reset} type={statement.object.type}
-                    subjectId={statement.subject} predicateId={statement.predicate}/>);
+                    id={statement.object.id}
+                    onUpdate={this.reset}
+                    type={statement.object.type}
+                    subjectId={statement.subject}
+                    predicateId={statement.predicate}/>
+        );
 
         return <div className="statementGroupView">
             <div className="statementGroupView-property">
@@ -51,11 +56,13 @@ export default class StatementGroupCard extends Component {
             </div>
             <div className="statementListView">
                 <div className="statementListView-listView" ref="innerListView">
-                    {statements}
-                    {this.state.newStatementVisible
-                            && <NewStatementObject subjectId={subjectId} predicateId={predicateId}
-                                    onCancelClick={this.onCancelAddValueClick}
-                                    onPublishSuccess={this.onPublishSuccess}/>}
+                    <Fragment>
+                        {statements}
+                        {this.state.newStatementVisible
+                                && <NewStatementObject subjectId={subjectId} predicateId={predicateId}
+                                        onCancelClick={this.onCancelAddValueClick}
+                                        onPublishSuccess={this.onPublishSuccess}/>}
+                    </Fragment>
                 </div>
                 <div className="toolbar-wrapper">
                     <AddValueToolbar onAddValueClick={this.onAddValueClick}/>

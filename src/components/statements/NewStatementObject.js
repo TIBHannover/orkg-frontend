@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import EditToolbar from './EditToolbar';
 import {createLiteralStatement, createPredicate, createResource, createResourceStatement} from '../../network';
 import {NotificationManager} from 'react-notifications';
@@ -167,7 +167,7 @@ export default class NewStatementObject extends Component {
                         <span className="toolbar-button toolbar-container">
                                 <Button>
                                     {
-                                        editEnabled && [<span className="fa fa-plus"/>, 'add qualifier']
+                                        editEnabled && <Fragment><span className="fa fa-plus"/>add qualifier</Fragment>
                                     }
                                 </Button>
                         </span>
