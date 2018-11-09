@@ -102,7 +102,8 @@ export default class MainSnak extends Component {
                     this.props.newProperty && <div className="snakView-property-container">
                         <div className="snakView-property" dir="auto">
                             <EditableDropdown requestUrl={predicatesUrl} placeholder="property"
-                                    onItemSelected={this.handlePropertySelect} onEnterPressed={this.handleNewProperty}/>
+                                    onItemSelected={this.handlePropertySelect}
+                                    onNewItemSelected={this.handleNewProperty}/>
                         </div>
                     </div>
                 }
