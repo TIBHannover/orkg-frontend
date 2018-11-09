@@ -32,7 +32,7 @@ export default class EditableDropdown extends Component {
                         (item) => <button id={item.id} key={item.id} className="dropdown-item"
                                 onClick={this.handleItemClick}>{item.label}</button>).slice(0, maxValues);
 
-                    const firstItem = <Fragment>
+                    const firstItem = this.props.onNewItemSelected && <Fragment>
                         <button id="-" key="-" className="dropdown-item" onClick={this.handleNewItemClick}
                                 value={value.trim()}>
                             <strong>New: {value.trim()}</strong>
@@ -40,10 +40,14 @@ export default class EditableDropdown extends Component {
                         {menuItemsJsx.length > 0 && <hr/>}
                     </Fragment>;
 
-                    const completeMenuItemsJsx = [firstItem, ...menuItemsJsx];
-                    this.setState({
-                        dropdownMenuJsx: <div className="dropdown-menu">{completeMenuItemsJsx}</div>,
-                    });
+                    const completeMenuItemsJsx = firstItem ? [firstItem, ...menuItemsJsx] : menuItemsJsx;
+                    if (completeMenuItemsJsx.length > 0) {
+                        this.setState({
+                            dropdownMenuJsx: <div className="dropdown-menu">{completeMenuItemsJsx}</div>,
+                        });
+                    } else {
+                        this.hideDropdownMenu();
+                    }
                 }, (err) => {
                     console.error(err);
                 });
