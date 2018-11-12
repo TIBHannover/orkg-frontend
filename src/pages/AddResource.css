@@ -23,3 +23,11 @@
     margin-top: 0;
     margin-bottom: 0;
 }
+
+.container.vertical-centered {
+    max-width: none;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

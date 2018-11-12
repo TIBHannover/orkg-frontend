@@ -1,3 +1,5 @@
+export const doiPredicateLabel = process.env.REACT_APP_DOI_PREDICATE_LABEL;
+
 export function hashCode(s) {
     return s.split("").reduce((a, b) => {
         a = ((a << 5) - a) + b.charCodeAt(0);
