@@ -14,11 +14,18 @@ import {doiPredicateLabel} from '../utils';
 export default class AddResource extends Component {
     state = {
         value: '',
+        /* Possible values: 'edit', 'loading'. */
+        editorState: 'edit',
     };
 
     doi = null;
 
+    setEditorState = (editorState) => {
+        this.setState({editorState: editorState});
+    };
+
     handleAdd = () => {
+        this.setEditorState('loading');
         const doiRegex = /\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&'<>])\S)+)\b/g;
         if (!doiRegex.test(this.state.value)) {
             this.createResource(false);
@@ -37,11 +44,12 @@ export default class AddResource extends Component {
                 (error) => {
                     console.error(error);
                     NotificationManager.error(error.message, 'Error finding DOI', 5000);
+                    this.setEditorState('edit');
                 });
     };
 
     handleInput = (event) => {
-        this.setState({value: event.target.value});
+        this.setState({value: event.target.value.trim()});
     };
 
     handleKeyUp = (event) => {
@@ -71,11 +79,13 @@ export default class AddResource extends Component {
                 (error) => {
                     console.error(error);
                     NotificationManager.error(error.message, 'Error creating resource', 5000);
+                    this.setEditorState('edit');
                 });
         }
     };
 
     navigateToResource = (resourceId) => {
+        this.setEditorState('edit');
         document.location.href = '/resource/' + resourceId;
     };
 
@@ -93,6 +103,7 @@ export default class AddResource extends Component {
                                 this.createLiteralStatement(resourceId, responseJson2.id);
                             },
                             (error) => {
+                                this.setEditorState('edit');
                                 console.error(error);
                                 NotificationManager.error(error.message, 'Error creating predicate', 5000);
                             });
@@ -103,18 +114,26 @@ export default class AddResource extends Component {
             (error) => {
                 console.error(error);
                 NotificationManager.error(error.message, 'Error finding predicates', 5000);
+                this.setEditorState('edit');
             });
     };
 
     render() {
+        const loading = this.state.editorState === 'loading';
         return <div className="input-group mb-3">
             <input type="text" className="form-control" placeholder="Research contribution title or DOI"
+                    disabled={loading}
                     onInput={this.handleInput}
                     onKeyUp={this.handleKeyUp}
                     aria-label="Resource title or DOI" aria-describedby="basic-addon2"/>
-            <div className="input-group-append">
-                <button className="btn btn-outline-primary" type="button" onClick={this.handleAdd}>Add</button>
-            </div>
+            {
+                !loading ? <div className="input-group-append">
+                        <button className="btn btn-outline-primary" type="button" onClick={this.handleAdd}>Add</button>
+                    </div>
+                    : <div className="container vertical-centered">
+                        <span className="fa fa-spinner fa-spin"/>
+                    </div>
+            }
         </div>
     }
 
