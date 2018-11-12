@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {submitGetRequest} from '../../../network';
 
 export default class EditableDropdown extends Component {
@@ -28,12 +28,22 @@ export default class EditableDropdown extends Component {
 
         if (value && value.length >= 0) {
             submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value), (responseJson) => {
-                    if (responseJson.length > 0) {
-                        const menuItemsJsx = responseJson.map(
-                            (item) => <button id={item.id} key={item.id} className="dropdown-item"
-                                    onClick={this.handleItemClick}>{item.label}</button>).slice(0, maxValues);
+                    const menuItemsJsx = responseJson.map(
+                        (item) => <button id={item.id} key={item.id} className="dropdown-item"
+                                onClick={this.handleItemClick}>{item.label}</button>).slice(0, maxValues);
+
+                    const firstItem = this.props.onNewItemSelected && <Fragment>
+                        <button id="-" key="-" className="dropdown-item" onClick={this.handleNewItemClick}
+                                value={value.trim()}>
+                            <strong>New: {value.trim()}</strong>
+                        </button>
+                        {menuItemsJsx.length > 0 && <hr/>}
+                    </Fragment>;
+
+                    const completeMenuItemsJsx = firstItem ? [firstItem, ...menuItemsJsx] : menuItemsJsx;
+                    if (completeMenuItemsJsx.length > 0) {
                         this.setState({
-                            dropdownMenuJsx: <div className="dropdown-menu">{menuItemsJsx}</div>,
+                            dropdownMenuJsx: <div className="dropdown-menu">{completeMenuItemsJsx}</div>,
                         });
                     } else {
                         this.hideDropdownMenu();
@@ -48,6 +58,12 @@ export default class EditableDropdown extends Component {
         this.props.onInput && this.props.onInput(event);
     };
 
+    handleNewItemClick = (event) => {
+        const value = event.target.value.trim();
+        this.hideDropdownMenu();
+        this.props.onNewItemSelected && this.props.onNewItemSelected(value);
+    };
+
     handleItemClick = (event) => {
         this.setState({
             value: event.target.innerText,
@@ -55,13 +71,6 @@ export default class EditableDropdown extends Component {
         });
         this.hideDropdownMenu();
         this.props.onItemSelected(event.target.id);
-    };
-
-    handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            const value = event.target.value.trim();
-            this.props.onEnterPressed && this.props.onEnterPressed(value);
-        }
     };
 
     hideDropdownMenu = () => {
@@ -72,7 +81,7 @@ export default class EditableDropdown extends Component {
         const inputStyle = {height: "21.8px", overflow: "hidden", resize: "none"};
         return <div className="dropdown valueView">
             <input placeholder={this.props.placeholder} className="dropdown-toggle valueView-input" style={inputStyle}
-                    value={this.state.value} onChange={this.handleChange} onKeyPress={this.handleKeyPress}/>
+                    value={this.state.value} onChange={this.handleChange}/>
             {this.state.dropdownMenuJsx}
         </div>;
     }
