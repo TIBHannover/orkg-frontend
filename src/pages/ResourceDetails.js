@@ -4,14 +4,13 @@ import StatementGroupCard from '../components/statements/existing/StatementGroup
 import {getPredicate, getResource, resourcesUrl, statementsUrl, submitGetRequest} from '../network';
 import {groupBy} from '../utils';
 import './ResourceDetails.css';
-import {Nav, NavLink} from 'reactstrap';
 import EditableHeader from '../components/EditableHeader';
 
 export const descriptionSection = 'description';
 export const implementationSection = 'implementation';
 export const evaluationSection = 'evaluation';
 export const miscSection = 'misc';
-const sections = [descriptionSection, implementationSection, evaluationSection, miscSection];
+// const sections = [descriptionSection, implementationSection, evaluationSection, miscSection];
 
 export default class ResourceDetails extends Component {
 
@@ -181,39 +180,39 @@ export default class ResourceDetails extends Component {
 
             const newStatementsSectionJsx = <NewStatementsSection subjectId={id}
                     onUpdate={this.reset}/>;
-            const sectionName = this.props.sectionName;
-            const navigationButtons = <Nav tag="div">
-                <NavLink href={descriptionSection} disabled={sectionName === descriptionSection}>
-                    Problem description
-                </NavLink>
-                <NavLink href={implementationSection} disabled={sectionName === implementationSection}>
-                    Implementation
-                </NavLink>
-                <NavLink href={evaluationSection} disabled={sectionName === evaluationSection}>
-                    Evaluation
-                </NavLink>
-                <NavLink href={miscSection} disabled={sectionName === miscSection}>
-                    Misc
-                </NavLink>
-            </Nav>;
+            // const sectionName = this.props.sectionName;
+            // const navigationButtons = <Nav tag="div">
+            //     <NavLink href={descriptionSection} disabled={sectionName === descriptionSection}>
+            //         Problem description
+            //     </NavLink>
+            //     <NavLink href={implementationSection} disabled={sectionName === implementationSection}>
+            //         Implementation
+            //     </NavLink>
+            //     <NavLink href={evaluationSection} disabled={sectionName === evaluationSection}>
+            //         Evaluation
+            //     </NavLink>
+            //     <NavLink href={miscSection} disabled={sectionName === miscSection}>
+            //         Misc
+            //     </NavLink>
+            // </Nav>;
 
-            const sectionIndex = sections.findIndex((value) => value === sectionName);
-            const bottomNavigationButtons = <Nav className="bottomNavigator" tag="div">
-                <NavLink className="btn btn-primary" href={sections[sectionIndex - 1]} disabled={!(sectionIndex > 0)}>
-                    Previous
-                </NavLink>
-                <NavLink className="btn btn-primary" href={sections[sectionIndex + 1]} disabled={!(sectionIndex < sections.length - 1)}>
-                    Next
-                </NavLink>
-            </Nav>;
+            // const sectionIndex = sections.findIndex((value) => value === sectionName);
+            // const bottomNavigationButtons = <Nav className="bottomNavigator" tag="div">
+            //     <NavLink className="btn btn-primary" href={sections[sectionIndex - 1]} disabled={!(sectionIndex > 0)}>
+            //         Previous
+            //     </NavLink>
+            //     <NavLink className="btn btn-primary" href={sections[sectionIndex + 1]} disabled={!(sectionIndex < sections.length - 1)}>
+            //         Next
+            //     </NavLink>
+            // </Nav>;
 
             return <div className="entityView-main">
                 {titleJsx}
                 {abstractJsx}
-                {navigationButtons}
+                {/*{navigationButtons}*/}
                 {statementGroupJsxs}
                 {newStatementsSectionJsx}
-                {bottomNavigationButtons}
+                {/*{bottomNavigationButtons}*/}
             </div>;
         } else {
             return null;
