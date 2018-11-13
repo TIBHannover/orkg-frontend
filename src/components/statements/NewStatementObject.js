@@ -163,7 +163,7 @@ export default class NewStatementObject extends Component {
                         onNewPredicate={this.handleNewPredicate}/>
                 <div className="statementView-qualifiers">
                     <div className="listView"/>
-                    <div className="toolbar-container">
+                    <div className="toolbar-container hidden">
                         <span className="toolbar-button toolbar-container">
                                 <Button>
                                     {

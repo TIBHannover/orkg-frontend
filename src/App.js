@@ -32,13 +32,13 @@ export default class App extends Component {
             <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
                 <Link className="navbar-brand col-sm-3 col-md-2 mr-0" to="/">ORKG</Link>
                 <SearchForm placeholder="Enter search term here" />
-                <ul className="navbar-nav px-3">
+                {/*<ul className="navbar-nav px-3">
                     <li className="nav-item text-nowrap dropdown show">
                         <Button className="nav-link btn btn-secondary dropdown-toggle"
                                 onClick={this.toggleSignInVisibility}>Sign in</Button>
                         {this.state.signInVisible && <SignInPopup onOverlayClick={this.handleOverlayClick}/>}
                     </li>
-                </ul>
+                </ul>*/}
             </nav>
 
             <div className="body-content container-fluid">
@@ -48,7 +48,7 @@ export default class App extends Component {
                             <NavLink href={`${process.env.PUBLIC_URL}/`}>Research contributions</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href={`${process.env.PUBLIC_URL}/addResource`}>Add research contribution</NavLink>
+                            <NavLink href={`${process.env.PUBLIC_URL}/addResource`}>Add Resource</NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink href={`${process.env.PUBLIC_URL}/predicates`}>Predicates</NavLink>

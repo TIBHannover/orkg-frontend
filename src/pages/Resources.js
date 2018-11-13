@@ -58,7 +58,7 @@ export default class Resources extends Component {
                 <div className="addResource toolbar addToolbar-container">
                     <span className="toolbar-button toolbar-button-add">
                         <Link to={`${process.env.PUBLIC_URL}/addResource`}>
-                            <span className="fa fa-plus"/>add research contribution
+                            <span className="fa fa-plus"/>add new resource
                         </Link>
                     </span>
                 </div>
