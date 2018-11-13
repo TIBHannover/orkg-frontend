@@ -86,7 +86,7 @@ export default class AddResource extends Component {
 
     navigateToResource = (resourceId) => {
         this.setEditorState('edit');
-        document.location.href = '/resource/' + resourceId;
+        document.location.href = `${process.env.PUBLIC_URL}/resource/${resourceId}`;
     };
 
     createLiteralStatement = (resourceId, predicateId) => {
