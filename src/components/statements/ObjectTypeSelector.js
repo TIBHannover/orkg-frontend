@@ -8,7 +8,7 @@ export default class ObjectTypeSelector extends Component {
         dropdownVisible: false,
     };
 
-    handleDropdownClick = (event) => {
+    handleDropdownClick = () => {
         this.setState({dropdownVisible: !this.state.dropdownVisible});
     };
 
@@ -30,15 +30,16 @@ export default class ObjectTypeSelector extends Component {
             <button type="button" id={id} className="snakTypeSelector btn btn-primary dropdown-toggle"
                     data-toggle="dropdown" aria-disabled="false" aria-haspopup="true" aria-expanded="false"
                     onClick={this.handleDropdownClick}>
-                <span className="fa fa-bars" title="type"></span>
+                <span className="fa fa-bars" title="type"/>
             </button>
             {this.state.dropdownVisible && <div className="dropdown-menu" aria-labelledby={id}>
                 <button name="literal" className={'dropdown-item' + (this.props.objectType === 'literal' ? ' active' : '')}
-                        type="button" onClick={this.handleMenuItemClick}>literal</button>
+                        type="button" onClick={this.handleMenuItemClick} title="Plain text property">literal</button>
                 <button name="resource" className={'dropdown-item' + (this.props.objectType === 'resource' ? ' active' : '')}
-                        type="button" onClick={this.handleMenuItemClick}>object</button>
+                        type="button" onClick={this.handleMenuItemClick}
+                        title="Object property, which can have other properties">object</button>
             </div>}
-            {this.state.dropdownVisible && <div className="overlay" onClick={this.closeOverlay}></div>}
+            {this.state.dropdownVisible && <div className="overlay" onClick={this.closeOverlay}/>}
         </div>
     }
 
