@@ -132,8 +132,7 @@ export default class ResourceDetails extends Component {
                 }
             );
 
-            const newStatementsSectionJsx = <NewStatementsSection subjectId={id}
-                    onUpdate={this.reset}/>;
+            const newStatementsSectionJsx = <NewStatementsSection subjectId={id} onUpdate={this.reset}/>;
             // const sectionName = this.props.sectionName;
             // const navigationButtons = <Nav tag="div">
             //     <NavLink href={descriptionSection} disabled={sectionName === descriptionSection}>

@@ -59,7 +59,7 @@ export default class StatementGroupCard extends Component {
                     <Fragment>
                         {statements}
                         {this.state.newStatementVisible
-                                && <NewStatementObject subject={subject} predicate={predicate}
+                                && <NewStatementObject subjectId={subject.id} predicate={predicate}
                                         onCancelClick={this.onCancelAddValueClick}
                                         onPublishSuccess={this.onPublishSuccess}/>}
                     </Fragment>

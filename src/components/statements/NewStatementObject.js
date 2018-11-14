@@ -58,7 +58,7 @@ export default class NewStatementObject extends Component {
             this.setEditorState('edit');
             NotificationManager.success('Resource created successfully', 'Success', 5000);
 
-            createResourceStatement(that.props.subject.id, predicateId, responseJson.id,
+            createResourceStatement(that.props.subjectId, predicateId, responseJson.id,
                     that.onStatementCreationSuccess, that.onStatementCreationError);
         };
     };
@@ -70,7 +70,7 @@ export default class NewStatementObject extends Component {
     };
 
     handlePublishClick = () => {
-        const predicateId = this.props.predicate.id || this.state.selectedPredicateId;
+        const predicateId = this.props.predicate || this.state.selectedPredicateId;
         const newPredicateLabel = this.state.newPredicateLabel;
 
         if (!predicateId && newPredicateLabel) {
@@ -84,7 +84,7 @@ export default class NewStatementObject extends Component {
         switch (this.state.objectType) {
             case 'literal': {
                 if (this.value && this.value.length !== 0) {
-                    createLiteralStatement(this.props.subject.id, predicateId, this.value,
+                    createLiteralStatement(this.props.subjectId, predicateId, this.value,
                         this.onLiteralStatementCreationSuccess, (error) => {
                             this.setEditorState('edit');
                             console.error(error);
@@ -96,7 +96,7 @@ export default class NewStatementObject extends Component {
             }
             case 'resource': {
                 if (this.state.selectedObjectId) {
-                    createResourceStatement(this.props.subject.id, predicateId, this.state.selectedObjectId,
+                    createResourceStatement(this.props.subjectId, predicateId, this.state.selectedObjectId,
                             this.onStatementCreationSuccess, this.onStatementCreationError);
                 } else {
                     createResource(this.value, this.getResourceCreationHandler(predicateId),
