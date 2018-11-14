@@ -122,7 +122,8 @@ export default class ResourceDetails extends Component {
                         return <StatementGroupCard href={`${process.env.PUBLIC_URL}/predicate/${encodeURIComponent(propertyId)}`}
                                 key={propertyId}
                                 label={this.state.predicateMap[propertyId] || propertyId}
-                                onUpdate={this.reset} statementGroup={statementGroup}
+                                onUpdate={this.reset}
+                                statementGroup={statementGroup}
                                 getStatementText={this.getStatementText}
                                 setStatementText={this.setStatementText}/>
                     } else {

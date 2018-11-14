@@ -34,8 +34,8 @@ export default class StatementGroupCard extends Component {
 
     render() {
         const statementGroup = this.props.statementGroup;
-        const subjectId = statementGroup[0].subject;
-        const predicateId = statementGroup[0].predicate;
+        const subject = statementGroup[0].subject;
+        const predicate = statementGroup[0].predicate;
 
         const statements = statementGroup.map(
             (statement, index) => <Statement key={index}
@@ -59,7 +59,7 @@ export default class StatementGroupCard extends Component {
                     <Fragment>
                         {statements}
                         {this.state.newStatementVisible
-                                && <NewStatementObject subjectId={subjectId} predicateId={predicateId}
+                                && <NewStatementObject subject={subject} predicate={predicate}
                                         onCancelClick={this.onCancelAddValueClick}
                                         onPublishSuccess={this.onPublishSuccess}/>}
                     </Fragment>
