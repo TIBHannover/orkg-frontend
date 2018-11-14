@@ -12,11 +12,28 @@ export function groupBy(array, group) {
     const result = [];
 
     array.forEach((a) => {
-        if (!hash[a[group]]) {
-            hash[a[group]] = [];
-            result.push(hash[a[group]]);
+        const groupByElement = a[group];
+        if (!hash[groupByElement]) {
+            hash[groupByElement] = [];
+            result.push(hash[groupByElement]);
         }
-        hash[a[group]].push(a);
+        hash[groupByElement].push(a);
+    });
+
+    return result;
+}
+
+export function groupByObjectWithId(array, propertyName) {
+    const hash = Object.create(null);
+    const result = [];
+
+    array.forEach((a) => {
+        const groupId = a[propertyName].id;
+        if (!hash[groupId]) {
+            hash[groupId] = [];
+            result.push(hash[groupId]);
+        }
+        hash[groupId].push(a);
     });
 
     return result;
