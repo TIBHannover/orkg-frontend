@@ -44,8 +44,8 @@ export default class StatementGroupCard extends Component {
                     id={statement.object.id}
                     onUpdate={this.reset}
                     type={statement.object.type}
-                    subjectId={statement.subject.id}
-                    predicateId={statement.predicate.id}/>
+                    subject={statement.subject}
+                    predicate={statement.predicate}/>
         );
 
         return <div className="statementGroupView">

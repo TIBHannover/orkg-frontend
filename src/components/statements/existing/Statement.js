@@ -71,7 +71,7 @@ export default class Statement extends Component {
         if (value && value.length !== 0) {
             switch (this.state.objectType) {
                 case 'literal': {
-                    createLiteralStatement(this.props.subjectId, this.props.predicateId, value,
+                    createLiteralStatement(this.props.subject.id, this.props.predicate.id, value,
                             this.onUpdateLiteralSuccess, this.onUpdateError);
                     break;
                 }
