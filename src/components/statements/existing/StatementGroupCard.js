@@ -43,7 +43,7 @@ export default class StatementGroupCard extends Component {
                     setText={this.props.setStatementText(statement)}
                     id={statement.object.id}
                     onUpdate={this.reset}
-                    type={statement.object.type}
+                    type={statement.object._class}
                     subject={statement.subject}
                     predicate={statement.predicate}/>
         );
