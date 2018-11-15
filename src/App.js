@@ -48,7 +48,7 @@ export default class App extends Component {
                             <NavLink href={`${process.env.PUBLIC_URL}/`}>Research contributions</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href={`${process.env.PUBLIC_URL}/addResource`}>Add Resource</NavLink>
+                            <NavLink href={`${process.env.PUBLIC_URL}/addResource`}>Add resource</NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink href={`${process.env.PUBLIC_URL}/predicates`}>Predicates</NavLink>
