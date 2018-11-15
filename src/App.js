@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Nav, NavItem, NavLink} from 'reactstrap';
+import {Nav, NavItem, NavLink} from 'reactstrap';
 import './App.css';
 import {Link, Redirect, Route, Switch} from 'react-router-dom';
 import ResourceDetails, {descriptionSection} from './pages/ResourceDetails'
@@ -9,7 +9,6 @@ import SearchResults from './pages/SearchResults'
 import {NotificationContainer} from 'react-notifications';
 import AddResource from './pages/AddResource';
 import Predicates from './pages/Predicates';
-import SignInPopup from './components/SignInPopup';
 import SearchForm from './components/SearchForm';
 
 export default class App extends Component {
@@ -45,7 +44,7 @@ export default class App extends Component {
                 <div className="row entityView">
                     <Nav className="bg-light col-md-3 col-lg-2" vertical>
                         <NavItem>
-                            <NavLink href={`${process.env.PUBLIC_URL}/`}>Research contributions</NavLink>
+                            <NavLink href={`${process.env.PUBLIC_URL}/`}>Resources</NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink href={`${process.env.PUBLIC_URL}/addResource`}>Add resource</NavLink>
