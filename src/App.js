@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Nav, NavItem, NavLink} from 'reactstrap';
+import {Nav, NavItem, NavLink} from 'reactstrap';
 import './App.css';
 import {Link, Redirect, Route, Switch} from 'react-router-dom';
 import ResourceDetails, {descriptionSection} from './pages/ResourceDetails'
@@ -9,7 +9,6 @@ import SearchResults from './pages/SearchResults'
 import {NotificationContainer} from 'react-notifications';
 import AddResource from './pages/AddResource';
 import Predicates from './pages/Predicates';
-import SignInPopup from './components/SignInPopup';
 import SearchForm from './components/SearchForm';
 
 export default class App extends Component {
@@ -32,23 +31,23 @@ export default class App extends Component {
             <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
                 <Link className="navbar-brand col-sm-3 col-md-2 mr-0" to="/">ORKG</Link>
                 <SearchForm placeholder="Enter search term here" />
-                <ul className="navbar-nav px-3">
+                {/*<ul className="navbar-nav px-3">
                     <li className="nav-item text-nowrap dropdown show">
                         <Button className="nav-link btn btn-secondary dropdown-toggle"
                                 onClick={this.toggleSignInVisibility}>Sign in</Button>
                         {this.state.signInVisible && <SignInPopup onOverlayClick={this.handleOverlayClick}/>}
                     </li>
-                </ul>
+                </ul>*/}
             </nav>
 
             <div className="body-content container-fluid">
                 <div className="row entityView">
                     <Nav className="bg-light col-md-3 col-lg-2" vertical>
                         <NavItem>
-                            <NavLink href={`${process.env.PUBLIC_URL}/`}>Research contributions</NavLink>
+                            <NavLink href={`${process.env.PUBLIC_URL}/`}>Resources</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href={`${process.env.PUBLIC_URL}/addResource`}>Add research contribution</NavLink>
+                            <NavLink href={`${process.env.PUBLIC_URL}/addResource`}>Add resource</NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink href={`${process.env.PUBLIC_URL}/predicates`}>Predicates</NavLink>
