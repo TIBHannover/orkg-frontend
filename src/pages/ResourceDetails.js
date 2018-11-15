@@ -100,9 +100,6 @@ export default class ResourceDetails extends Component {
         }
 
         if (resultsPresent) {
-            // this.updateMissingPredicateLabels();
-            // this.updateMissingObjectLabels();
-
             const titleText = this.state.title;
             const titleJsx = titleText && <EditableHeader {...this.props} value={titleText}
                     onChange={this.handleHeaderChange}/>;
