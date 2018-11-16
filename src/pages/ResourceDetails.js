@@ -74,14 +74,14 @@ export default class ResourceDetails extends Component {
     getStatementText = (statement) => {
         const that = this;
         return () => {
-            return that.state.objectMap[statement.statementId] || statement.object.label;
+            return that.state.objectMap[statement.id] || statement.object.label;
         }
     };
 
     setStatementText = (statement) => {
         const that = this;
         return (text) => {
-            that.state.objectMap[statement.statementId] = text;
+            that.state.objectMap[statement.id] = text;
         }
     };
 
