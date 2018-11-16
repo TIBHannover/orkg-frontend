@@ -48,7 +48,8 @@ export default class MainSnak extends Component {
                             <div className="valueView-value">
                                 <textarea className="valueView-input" defaultValue={this.props.text}
                                         style={inputStyle} onInput={this.props.onInput}
-                                        autoFocus={this.state.selectedPredicateId != null}>
+                                        autoFocus={true}
+                                        onKeyUp={this.props.onTextAreaKeyUp}>
                                 </textarea>
                             </div>
                         </div>
@@ -65,7 +66,8 @@ export default class MainSnak extends Component {
                     <div className="valueView valueView-inEditMode">
                         <div className="valueView-value">
                             <EditableDropdown requestUrl={resourcesUrl} placeholder="object" value={this.props.text}
-                                    onItemSelected={this.handleObjectSelect} onInput={this.props.onInput}/>
+                                    onItemSelected={this.handleObjectSelect} onInput={this.props.onInput}
+                                    onKeyUp={this.props.onKeyUp}/>
                         </div>
                     </div>
                 </div>
@@ -103,7 +105,8 @@ export default class MainSnak extends Component {
                         <div className="snakView-property" dir="auto">
                             <EditableDropdown requestUrl={predicatesUrl} placeholder="property"
                                     onItemSelected={this.handlePropertySelect}
-                                    onNewItemSelected={this.handleNewProperty}/>
+                                    onNewItemSelected={this.handleNewProperty}
+                                    onKeyUp={() => {}}/>
                         </div>
                     </div>
                 }

@@ -159,6 +159,19 @@ export default class NewStatementObject extends Component {
         this.setState({selectedObjectId: objectId});
     };
 
+    handleKeyUp = (event) => {
+        switch (event.keyCode) {
+            case 13: {
+                this.handlePublishClick();
+                return false;
+            }
+            case 27: {
+                this.props.onCancelClick(event);
+                return false;
+            }
+        }
+    };
+
     render() {
         const newProperty = this.props.predicate === null;
         const editEnabled = !newProperty || this.state.selectedPredicateId !== null
@@ -176,7 +189,8 @@ export default class NewStatementObject extends Component {
                         newProperty={newProperty}
                         onObjectSelect={this.handleObjectSelect}
                         onPredicateSelect={this.handlePredicateSelect}
-                        onNewPredicate={this.handleNewPredicate}/>
+                        onNewPredicate={this.handleNewPredicate}
+                        onKeyUp={this.handleKeyUp}/>
                 <div className="statementView-qualifiers">
                     <div className="listView"/>
                     <div className="toolbar-container hidden">
