@@ -14,7 +14,7 @@ import {Button} from 'reactstrap';
 export default class NewStatementObject extends Component {
 
     state = {
-        /* Possible values: 'edit', 'loading'. */
+        /* Possible valhttp://10.115.83.128:3000/ues: 'edit', 'loading'. */
         editorState: 'edit',
         objectType: 'resource',
         selectedPredicateId: null,
@@ -168,6 +168,9 @@ export default class NewStatementObject extends Component {
             case 27: {
                 this.props.onCancelClick(event);
                 return false;
+            }
+            default: {
+                break;
             }
         }
     };

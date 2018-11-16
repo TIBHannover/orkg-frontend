@@ -124,6 +124,9 @@ export default class Statement extends Component {
                 this.onCancelClick();
                 return false;
             }
+            default: {
+                break;
+            }
         }
     };
 
@@ -136,6 +139,9 @@ export default class Statement extends Component {
             case 27: {
                 this.onCancelClick();
                 return false;
+            }
+            default: {
+                break;
             }
         }
     };
