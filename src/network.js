@@ -63,7 +63,11 @@ export function submitPutRequest(url, headers, data, onSuccess, onError) {
 }
 
 export function updateResource(id, label, onSuccess, onError) {
-    submitPostRequest(resourcesUrl, {'Content-Type': 'application/json'}, {id: id, label: label}, onSuccess, onError);
+    submitPutRequest(`${resourcesUrl}${id}`, {'Content-Type': 'application/json'}, {label: label}, onSuccess, onError);
+}
+
+export function updateLiteral(id, label, onSuccess, onError) {
+    submitPutRequest(`${literalsUrl}${id}`, {'Content-Type': 'application/json'}, {label: label}, onSuccess, onError);
 }
 
 export function createResource(label, onSuccess, onError) {

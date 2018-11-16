@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import EditToolbar from '../EditToolbar';
 import MainSnak from '../MainSnak';
-import {createLiteralStatement, updateResource} from '../../../network';
+import {updateLiteral, updateResource} from '../../../network';
 import {NotificationManager} from 'react-notifications';
 
 export default class Statement extends Component {
@@ -54,7 +54,7 @@ export default class Statement extends Component {
     };
 
     onUpdateLiteralSuccess = (responseJson) => {
-        this.setText(responseJson.object.value);
+        this.setText(responseJson.label);
         this.setEditorState('view');
         NotificationManager.success('Resource submitted successfully', 'Success', 5000);
     };
@@ -71,8 +71,9 @@ export default class Statement extends Component {
         if (value && value.length !== 0) {
             switch (this.state.objectType) {
                 case 'literal': {
-                    createLiteralStatement(this.props.subject.id, this.props.predicate.id, value,
-                            this.onUpdateLiteralSuccess, this.onUpdateError);
+                    // createLiteralStatement(this.props.subject.id, this.props.predicate.id, value,
+                    //         this.onUpdateLiteralSuccess, this.onUpdateError);
+                    updateLiteral(this.id, value, this.onUpdateLiteralSuccess, this.onUpdateError);
                     break;
                 }
                 case 'resource': {
