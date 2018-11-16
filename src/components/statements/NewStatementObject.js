@@ -1,6 +1,12 @@
 import React, {Component, Fragment} from 'react';
 import EditToolbar from './EditToolbar';
-import {createLiteralStatement, createPredicate, createResource, createResourceStatement} from '../../network';
+import {
+    createLiteral,
+    createLiteralStatement,
+    createPredicate,
+    createResource,
+    createResourceStatement
+} from '../../network';
 import {NotificationManager} from 'react-notifications';
 import MainSnak from './MainSnak';
 import {Button} from 'reactstrap';
@@ -70,7 +76,7 @@ export default class NewStatementObject extends Component {
     };
 
     handlePublishClick = () => {
-        const predicateId = this.props.predicate || this.state.selectedPredicateId;
+        const predicateId = this.props.predicate !== null ? this.props.predicate.id : this.state.selectedPredicateId;
         const newPredicateLabel = this.state.newPredicateLabel;
 
         if (!predicateId && newPredicateLabel) {
@@ -80,16 +86,26 @@ export default class NewStatementObject extends Component {
         }
     };
 
+    getLiteralCreationSuccessHandler = (predicateId) => {
+        return (responseJson) => {
+            createLiteralStatement(this.props.subjectId, predicateId, responseJson.id,
+                    this.onLiteralStatementCreationSuccess, (error) => {
+                        this.setEditorState('edit');
+                        console.error(error);
+                        NotificationManager.error(error.message, 'Error creating literal statement', 5000);
+                    });
+        }
+    };
+
     createStatement(predicateId) {
         switch (this.state.objectType) {
             case 'literal': {
                 if (this.value && this.value.length !== 0) {
-                    createLiteralStatement(this.props.subjectId, predicateId, this.value,
-                        this.onLiteralStatementCreationSuccess, (error) => {
-                            this.setEditorState('edit');
-                            console.error(error);
-                            NotificationManager.error(error.message, 'Error creating resource', 5000);
-                        });
+                    createLiteral(this.value, this.getLiteralCreationSuccessHandler(predicateId), (error) => {
+                        this.setEditorState('edit');
+                        console.error(error);
+                        NotificationManager.error(error.message, 'Error creating literal', 5000);
+                    });
                     this.setEditorState('loading');
                 }
                 break;
