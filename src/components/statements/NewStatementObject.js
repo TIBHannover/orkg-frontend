@@ -16,7 +16,7 @@ export default class NewStatementObject extends Component {
     state = {
         /* Possible values: 'edit', 'loading'. */
         editorState: 'edit',
-        objectType: 'literal',
+        objectType: 'resource',
         selectedPredicateId: null,
         newPredicateLabel: null,
         selectedObjectId: null,
