@@ -8,6 +8,21 @@ body {
     display: flex !important;
 }
 
+.notification-container {
+    top: auto;
+    right: auto;
+    bottom: 0;
+    left: 0;
+}
+
+.notification-enter {
+    transform: translate3d(-100%, 0, 0);
+}
+
+.notification-leave.notification-leave-active {
+    transform: translate3d(-100%, 0, 0);
+}
+
 @media screen {
     .body,
     .parsoid-body {
