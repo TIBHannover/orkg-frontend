@@ -11,11 +11,11 @@ export default class NewStatementGroupCard extends Component {
         this.id = this.props.id;
     }
 
-    onAddValueClick = (event) => {
+    onAddValueClick = () => {
         this.setState({newStatementVisible: true});
     };
 
-    onCancelAddValueClick = (event) => {
+    onCancelAddValueClick = () => {
         this.setState({newStatementVisible: false});
     };
 
@@ -38,7 +38,7 @@ export default class NewStatementGroupCard extends Component {
             </div>
             <div className="statementListView">
                 <div className="statementListView-listView" ref="innerListView">
-                    <NewStatementObject subjectId={this.props.subjectId} predicateId={null}
+                    <NewStatementObject subjectId={this.props.subjectId} predicate={null}
                             onCancelClick={this.onCancelClick}
                             onPublishSuccess={this.onPublishSuccess}/>
                 </div>

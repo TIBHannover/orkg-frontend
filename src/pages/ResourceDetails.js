@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import NewStatementsSection from '../components/statements/new/NewStatementsSection';
 import StatementGroupCard from '../components/statements/existing/StatementGroupCard';
-import {getPredicate, getResource, resourcesUrl, statementsUrl, submitGetRequest} from '../network';
-import {groupBy} from '../utils';
+import {resourcesUrl, statementsUrl, submitGetRequest} from '../network';
+import {groupByObjectWithId} from '../utils';
 import './ResourceDetails.css';
 import EditableHeader from '../components/EditableHeader';
 
@@ -66,53 +66,6 @@ export default class ResourceDetails extends Component {
             });
     };
 
-    updateMissingPredicateLabels = () => {
-        // TODO: implement more efficient way to fetch all predicates instead of querying them one by one.
-        const that = this;
-        this.state.allStatements.forEach((statement) => {
-            if (!that.state.predicateMap[statement.predicate]) {
-                getPredicate(statement.predicate,
-                    (responseJson) => {
-                        const predicateMap = that.state.predicateMap;
-                        predicateMap[responseJson.id] = responseJson.label;
-                        that.forceUpdate();
-                    },
-                    (err) => {
-                        console.error(err);
-                    });
-            }
-        });
-    };
-
-    updateMissingObjectLabels = () => {
-        // TODO: implement more efficient way to fetch all objects instead of querying them one by one.
-        const that = this;
-        this.state.allStatements.forEach((statement) => {
-            if (!that.state.objectMap[statement.statementId]) {
-                switch (statement.object.type) {
-                    case 'literal': {
-                        that.setStatementText(statement)(statement.object.value);
-                        break;
-                    }
-                    case 'resource': {
-                        getResource(statement.object.id,
-                                (responseJson) => {
-                                    that.setStatementText(statement)(responseJson.label);
-                                    that.forceUpdate();
-                                },
-                                (err) => {
-                                    console.error(err);
-                                });
-                        break;
-                    }
-                    default: {
-                        throw new Error('Unknown statement object type: ' + statement.object.type + '.');
-                    }
-                }
-            }
-        });
-    };
-
     reset = () => {
         this.findAllStatements();
         this.setState(this.initialState);
@@ -121,14 +74,14 @@ export default class ResourceDetails extends Component {
     getStatementText = (statement) => {
         const that = this;
         return () => {
-            return that.state.objectMap[statement.statementId] || statement.object.id;
+            return that.state.objectMap[statement.id] || statement.object.label;
         }
     };
 
     setStatementText = (statement) => {
         const that = this;
         return (text) => {
-            that.state.objectMap[statement.statementId] = text;
+            that.state.objectMap[statement.id] = text;
         }
     };
 
@@ -147,29 +100,27 @@ export default class ResourceDetails extends Component {
         }
 
         if (resultsPresent) {
-            this.updateMissingPredicateLabels();
-            this.updateMissingObjectLabels();
-
             const titleText = this.state.title;
             const titleJsx = titleText && <EditableHeader {...this.props} value={titleText}
                     onChange={this.handleHeaderChange}/>;
 
-            const abstractText = this.state.allStatements.find(statement => statement.subject === id
-                    && statement.predicate === abstractId);
+            const abstractText = this.state.allStatements.find((statement) => statement.subject.id === id
+                    && statement.predicate.id === abstractId);
             const abstractJsx = abstractText && <div>{abstractText.object.id}</div>;
 
             const groupingProperty = "predicate";
-            const statements = this.state.allStatements.filter(statement => statement.subject === id
-                    && statement.predicate !== labelId && statement.predicate !== abstractId);
-            const groupedStatements = groupBy(statements, groupingProperty);
+            const statements = this.state.allStatements.filter((statement) => statement.subject.id === id
+                    && statement.predicate.id !== labelId && statement.predicate.id !== abstractId);
+            const groupedStatements = groupByObjectWithId(statements, groupingProperty);
             const statementGroupJsxs = groupedStatements.map(
                 statementGroup => {
                     if (statementGroup.length > 0) {
-                        const propertyId = statementGroup[0][groupingProperty];
+                        const propertyId = statementGroup[0][groupingProperty].label;
                         return <StatementGroupCard href={`${process.env.PUBLIC_URL}/predicate/${encodeURIComponent(propertyId)}`}
                                 key={propertyId}
                                 label={this.state.predicateMap[propertyId] || propertyId}
-                                onUpdate={this.reset} statementGroup={statementGroup}
+                                onUpdate={this.reset}
+                                statementGroup={statementGroup}
                                 getStatementText={this.getStatementText}
                                 setStatementText={this.setStatementText}/>
                     } else {
@@ -178,8 +129,7 @@ export default class ResourceDetails extends Component {
                 }
             );
 
-            const newStatementsSectionJsx = <NewStatementsSection subjectId={id}
-                    onUpdate={this.reset}/>;
+            const newStatementsSectionJsx = <NewStatementsSection subjectId={id} onUpdate={this.reset}/>;
             // const sectionName = this.props.sectionName;
             // const navigationButtons = <Nav tag="div">
             //     <NavLink href={descriptionSection} disabled={sectionName === descriptionSection}>
