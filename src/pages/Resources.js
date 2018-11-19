@@ -48,9 +48,8 @@ export default class Resources extends Component {
 
         if (resultsPresent) {
             const resources = this.state.allResources.map(
-                resource => <ShortRecord key={resource.id} header={resource.id}
+                resource => <ShortRecord key={resource.id} header={resource.label}
                     href={`${process.env.PUBLIC_URL}/resource/${encodeURIComponent(resource.id)}`}>
-                    {resource.label}
                     </ShortRecord>
             );
 
