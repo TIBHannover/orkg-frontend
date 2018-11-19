@@ -159,7 +159,7 @@ export default class NewStatementObject extends Component {
         this.setState({selectedObjectId: objectId});
     };
 
-    handleKeyUp = (event) => {
+    handleKeyDown = (event) => {
         switch (event.keyCode) {
             case 13: {
                 this.handlePublishClick();
@@ -193,7 +193,7 @@ export default class NewStatementObject extends Component {
                         onObjectSelect={this.handleObjectSelect}
                         onPredicateSelect={this.handlePredicateSelect}
                         onNewPredicate={this.handleNewPredicate}
-                        onKeyUp={this.handleKeyUp}/>
+                        onKeyDown={this.handleKeyDown}/>
                 <div className="statementView-qualifiers">
                     <div className="listView"/>
                     <div className="toolbar-container hidden">

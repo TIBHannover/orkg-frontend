@@ -62,6 +62,7 @@ export default class EditableDropdown extends Component {
         const value = event.target.value.trim();
         this.hideDropdownMenu();
         this.props.onNewItemSelected && this.props.onNewItemSelected(value);
+        return false;
     };
 
     handleItemClick = (event) => {
@@ -71,6 +72,7 @@ export default class EditableDropdown extends Component {
         });
         this.hideDropdownMenu();
         this.props.onItemSelected(event.target.id);
+        return false;
     };
 
     hideDropdownMenu = () => {
