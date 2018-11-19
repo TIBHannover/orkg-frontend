@@ -14,9 +14,9 @@ import {Button} from 'reactstrap';
 export default class NewStatementObject extends Component {
 
     state = {
-        /* Possible values: 'edit', 'loading'. */
+        /* Possible valhttp://10.115.83.128:3000/ues: 'edit', 'loading'. */
         editorState: 'edit',
-        objectType: 'literal',
+        objectType: 'resource',
         selectedPredicateId: null,
         newPredicateLabel: null,
         selectedObjectId: null,
@@ -159,6 +159,22 @@ export default class NewStatementObject extends Component {
         this.setState({selectedObjectId: objectId});
     };
 
+    handleKeyUp = (event) => {
+        switch (event.keyCode) {
+            case 13: {
+                this.handlePublishClick();
+                return false;
+            }
+            case 27: {
+                this.props.onCancelClick(event);
+                return false;
+            }
+            default: {
+                break;
+            }
+        }
+    };
+
     render() {
         const newProperty = this.props.predicate === null;
         const editEnabled = !newProperty || this.state.selectedPredicateId !== null
@@ -176,7 +192,8 @@ export default class NewStatementObject extends Component {
                         newProperty={newProperty}
                         onObjectSelect={this.handleObjectSelect}
                         onPredicateSelect={this.handlePredicateSelect}
-                        onNewPredicate={this.handleNewPredicate}/>
+                        onNewPredicate={this.handleNewPredicate}
+                        onKeyUp={this.handleKeyUp}/>
                 <div className="statementView-qualifiers">
                     <div className="listView"/>
                     <div className="toolbar-container hidden">

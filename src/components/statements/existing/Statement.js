@@ -114,6 +114,38 @@ export default class Statement extends Component {
         });
     };
 
+    handleKeyUp = (event) => {
+        switch (event.keyCode) {
+            case 13: {
+                this.onPublishClick();
+                return false;
+            }
+            case 27: {
+                this.onCancelClick();
+                return false;
+            }
+            default: {
+                break;
+            }
+        }
+    };
+
+    handleTextAreaKeyUp = (event) => {
+        if (event.ctrlKey && event.keyCode === 13) {
+            this.onPublishClick();
+            return false;
+        }
+        switch (event.keyCode) {
+            case 27: {
+                this.onCancelClick();
+                return false;
+            }
+            default: {
+                break;
+            }
+        }
+    };
+
     render() {
         return <div className="statementView">
             <div className="statementView-rankSelector"/>
@@ -122,7 +154,9 @@ export default class Statement extends Component {
                         onInput={this.onValueChange} newProperty={false}
                         onObjectTypeSelect={this.handleObjectTypeSelect}
                         onObjectSelect={this.handleObjectSelect}
-                        objectType={this.state.objectType}/>
+                        objectType={this.state.objectType}
+                        onKeyUp={this.handleKeyUp}
+                        onTextAreaKeyUp={this.handleTextAreaKeyUp}/>
             </div>
             <span className="editToolbar-container toolbar-container" aria-disabled={false}>
                 <EditToolbar editorState={this.state.editorState} showRemoveButton={false} editEnabled={true}
