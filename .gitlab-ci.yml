@@ -3,8 +3,30 @@ image: node
 stages:
   - deploy
 
-deploy_develop:
+.deployment_job: &deployment
+  before_script:
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+  - 'which rsync || ( apt-get -y update -y && apt-get -y install rsync )'
+  script:
+  # Update the build configuration to match the environment
+  - sed '/^REACT_APP_SERVER_URL=/d' default.env > .env
+  - echo "REACT_APP_SERVER_URL=$BACKEND_URL" >> .env
+  - cat .env
+  # Prepare and build
+  - npm install
+  - npm run build
+  # Deploy to web server
+  - rsync -av --delete build/ orkg@${DEPLOY_HOST}:/tib/app/orkg/www/htdocs/orkg/
+
+deploy to develop:
   stage: deploy
+  <<: *deployment
   environment:
     name: develop
     url: http://orkg01.develop.labs.tib.eu/orkg/
@@ -12,25 +34,18 @@ deploy_develop:
     DEPLOY_HOST: orkg01.develop.labs.tib.eu
     DEPLOY_PORT: 8080
     BACKEND_URL: http://${DEPLOY_HOST}:${DEPLOY_PORT}/orkg-prototype/api/
-  before_script:
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
-    - 'which rsync || ( apt-get -y update -y && apt-get -y install rsync )'
-  script:
-    # Update the build configuration to match the environment
-    - sed '/^REACT_APP_SERVER_URL=/d' default.env > .env
-    - echo "REACT_APP_SERVER_URL=$BACKEND_URL" >> .env
-    - cat .env
-    # Prepare and build
-    - npm install
-    - npm run build
-    # Deploy to web server
-    - rsync -av --delete build/ orkg@${DEPLOY_HOST}:/tib/app/orkg/www/htdocs/orkg/
   only:
     - master
 
+deploy to production:
+  stage: deploy
+  <<: *deployment
+  environment:
+    name: prod
+    url: https://labs.tib.eu/orkg/
+  variables:
+    DEPLOY_HOST: orkg21.labs.tib.eu
+    BACKEND_URL: https://${DEPLOY_HOST}/orkg/api/
+  only:
+    - master
+  when: manual
