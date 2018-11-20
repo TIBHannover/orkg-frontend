@@ -115,10 +115,11 @@ export default class ResourceDetails extends Component {
             const statementGroupJsxs = groupedStatements.map(
                 statementGroup => {
                     if (statementGroup.length > 0) {
-                        const propertyId = statementGroup[0][groupingProperty].label;
+                        const propertyId = statementGroup[0][groupingProperty].id;
+                        const propertyLabel = statementGroup[0][groupingProperty].label;
                         return <StatementGroupCard href={`${process.env.PUBLIC_URL}/predicate/${encodeURIComponent(propertyId)}`}
                                 key={propertyId}
-                                label={this.state.predicateMap[propertyId] || propertyId}
+                                label={this.state.predicateMap[propertyId] || propertyLabel}
                                 onUpdate={this.reset}
                                 statementGroup={statementGroup}
                                 getStatementText={this.getStatementText}
