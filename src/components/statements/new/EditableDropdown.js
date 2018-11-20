@@ -33,8 +33,8 @@ export default class EditableDropdown extends Component {
                                 onClick={this.handleItemClick}>{item.label}</button>).slice(0, maxValues);
 
                     const firstItem = this.props.onNewItemSelected && <Fragment>
-                        <button id="-" key="-" className="dropdown-item" onClick={this.handleNewItemClick}
-                                value={value.trim()}>
+                        <button id="-" key="-" className="dropdown-item"
+                                onClick={this.getNewItemClickHandler(value.trim())}>
                             <strong>New: {value.trim()}</strong>
                         </button>
                         {menuItemsJsx.length > 0 && <hr/>}
@@ -58,11 +58,12 @@ export default class EditableDropdown extends Component {
         this.props.onInput && this.props.onInput(event);
     };
 
-    handleNewItemClick = (event) => {
-        const value = event.target.value.trim();
-        this.hideDropdownMenu();
-        this.props.onNewItemSelected && this.props.onNewItemSelected(value);
-        return false;
+    getNewItemClickHandler = (value) => {
+        return () => {
+            this.hideDropdownMenu();
+            this.props.onNewItemSelected && this.props.onNewItemSelected(value);
+            return false;
+        }
     };
 
     handleItemClick = (event) => {
