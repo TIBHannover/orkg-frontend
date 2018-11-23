@@ -67,6 +67,7 @@ export default class Statement extends Component {
     handlePublishClick = async () => {
         const value = this.props.getText();
         if (value && value.length !== 0) {
+            this.setEditorState('loading');
             switch (this.state.objectType) {
                 case 'literal': {
                     try {
@@ -90,7 +91,6 @@ export default class Statement extends Component {
                     throw new Error(`Unknown object type: ${this.state.objectType}`);
                 }
             }
-            this.setEditorState('loading');
         }
     };
 

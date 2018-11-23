@@ -64,8 +64,8 @@ export default class NewStatementObject extends Component {
             NotificationManager.success('Resource created successfully', 'Success', 5000);
 
             try {
-                const responseJson = createResourceStatement(this.props.subjectId, predicateId, responseJson.id);
-                this.onStatementCreationSuccess(responseJson);
+                const responseJson1 = createResourceStatement(this.props.subjectId, predicateId, responseJson.id);
+                this.onStatementCreationSuccess(responseJson1);
             } catch (e) {
                 this.onStatementCreationError(e);
             }
@@ -97,8 +97,8 @@ export default class NewStatementObject extends Component {
     getLiteralCreationSuccessHandler = async (predicateId) => {
         return (responseJson) => {
             try {
-                const responseJson = createLiteralStatement(this.props.subjectId, predicateId, responseJson.id);
-                this.onLiteralStatementCreationSuccess(responseJson);
+                const responseJson1 = createLiteralStatement(this.props.subjectId, predicateId, responseJson.id);
+                this.onLiteralStatementCreationSuccess(responseJson1);
             } catch (error) {
                 this.setEditorState('edit');
                 console.error(error);
