@@ -24,50 +24,45 @@ export default class ResourceDetails extends Component {
     };
 
     initialState = this.state;
-    componentWillMount() {
-        this.findResource();
-        this.findAllStatements();
+    async componentWillMount() {
+        await this.findResource();
+        await this.findAllStatements();
     }
 
-    findResource = () => {
-        const that = this;
-
-        submitGetRequest(resourcesUrl + encodeURIComponent(this.props.id) + '/',
-                (responseJson) => {
-                    that.setState({
-                        title: responseJson.label,
-                    });
-                },
-                (err) => {
-                    console.error(err);
-                    that.setState({
-                        title: null,
-                        error: err.message,
-                    });
-                });
-    };
-
-    findAllStatements = () => {
-        const that = this;
-
-        submitGetRequest(statementsUrl,
-            (responseJson) => {
-                that.setState({
-                    allStatements: responseJson,
-                    error: null,
-                });
-            },
-            (err) => {
-                console.error(err);
-                that.setState({
-                    allStatements: null,
-                    error: err.message,
-                });
+    findResource = async () => {
+        try {
+            const responseJson = await submitGetRequest(resourcesUrl + encodeURIComponent(this.props.id));
+            this.setState({
+                title: responseJson.label,
             });
+        } catch (err) {
+            console.error(err);
+            this.setState({
+                title: null,
+                error: err.message,
+            });
+        }
     };
 
-    reset = () => {
-        this.findAllStatements();
+    findAllStatements = async () => {
+        try {
+            const responseJson = await submitGetRequest(statementsUrl);
+
+            this.setState({
+                allStatements: responseJson,
+                error: null,
+            });
+        } catch (err) {
+            console.error(err);
+            this.setState({
+                allStatements: null,
+                error: err.message,
+            });
+        }
+    };
+
+    reset = async () => {
+        await this.findAllStatements();
         this.setState(this.initialState);
     };
 

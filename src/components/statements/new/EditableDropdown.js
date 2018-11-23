@@ -14,7 +14,7 @@ export default class EditableDropdown extends Component {
     }
 
     // TODO: add timer, so that the request is not sent on every keystroke.
-    handleChange = (event) => {
+    handleChange = async (event) => {
         const maxValues = 10;
         const value = event.target.value;
 
@@ -27,30 +27,32 @@ export default class EditableDropdown extends Component {
         });
 
         if (value && value.length >= 0) {
-            submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value), (responseJson) => {
-                    const menuItemsJsx = responseJson.map(
-                        (item) => <button id={item.id} key={item.id} className="dropdown-item"
-                                onClick={this.handleItemClick}>{item.label}</button>).slice(0, maxValues);
+            try {
+                const responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value));
 
-                    const firstItem = this.props.onNewItemSelected && <Fragment>
-                        <button id="-" key="-" className="dropdown-item" onClick={this.handleNewItemClick}
-                                value={value.trim()}>
-                            <strong>New: {value.trim()}</strong>
-                        </button>
-                        {menuItemsJsx.length > 0 && <hr/>}
-                    </Fragment>;
+                const menuItemsJsx = responseJson.map(
+                    (item) => <button id={item.id} key={item.id} className="dropdown-item"
+                        onClick={this.handleItemClick}>{item.label}</button>).slice(0, maxValues);
 
-                    const completeMenuItemsJsx = firstItem ? [firstItem, ...menuItemsJsx] : menuItemsJsx;
-                    if (completeMenuItemsJsx.length > 0) {
-                        this.setState({
-                            dropdownMenuJsx: <div className="dropdown-menu">{completeMenuItemsJsx}</div>,
-                        });
-                    } else {
-                        this.hideDropdownMenu();
-                    }
-                }, (err) => {
-                    console.error(err);
-                });
+                const firstItem = this.props.onNewItemSelected && <Fragment>
+                    <button id="-" key="-" className="dropdown-item" onClick={this.handleNewItemClick}
+                        value={value.trim()}>
+                        <strong>New: {value.trim()}</strong>
+                    </button>
+                    {menuItemsJsx.length > 0 && <hr/>}
+                </Fragment>;
+
+                const completeMenuItemsJsx = firstItem ? [firstItem, ...menuItemsJsx] : menuItemsJsx;
+                if (completeMenuItemsJsx.length > 0) {
+                    this.setState({
+                        dropdownMenuJsx: <div className="dropdown-menu">{completeMenuItemsJsx}</div>,
+                    });
+                } else {
+                    this.hideDropdownMenu();
+                }
+            } catch(err) {
+                console.error(err);
+            }
         } else {
             this.hideDropdownMenu();
         }

@@ -8,98 +8,104 @@ export const crossrefUrl = process.env.REACT_APP_CROSSREF_URL;
 /**
  * Sends simple GET request to the URL.
  */
-export function submitGetRequest(url, onSuccess, onError) {
+export const submitGetRequest = (url) => {
     if (!url) {
         throw new Error('Cannot submit GET request. URL is null or undefined.');
     }
 
-    fetch(url, { method: 'GET' })
-            .then((response) => {
-                console.log('Response type: ' + response.type);
-                if (!response.ok) {
-                    throw new Error(`Error response. (${response.status}) ${response.statusText}`);
-                } else {
-                    return response.json();
-                }
-            })
-            .then(onSuccess)
-            .catch(onError);
-}
+    return new Promise(
+        (resolve, reject) => {
+            fetch(url, { method: 'GET' })
+                    .then((response) => {
+                        console.log(`Response type: ${response.type}`);
+                        if (!response.ok) {
+                            reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
+                        } else {
+                            return resolve(response.json());
+                        }
+                    });
+        }
+    );
+};
 
-function submitPostRequest(url, headers, data, onSuccess, onError) {
+const submitPostRequest = (url, headers, data) => {
     if (!url) {
         throw new Error('Cannot submit POST request. URL is null or undefined.');
     }
 
-    fetch(url, { method: 'POST',  headers: headers, body: JSON.stringify(data) })
-            .then((response) => {
-                console.log('Response type: ' + response.type);
-                if (!response.ok) {
-                    throw new Error(`Error response. (${response.status}) ${response.statusText}`);
-                } else {
-                    return response.json();
-                }
-            })
-            .then(onSuccess)
-            .catch(onError);
-}
+    return new Promise(
+        (resolve, reject) => {
+            fetch(url, { method: 'POST', headers: headers, body: JSON.stringify(data) })
+                .then((response) => {
+                    console.log(`Response type: ${response.type}`);
+                    if (!response.ok) {
+                        reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
+                    } else {
+                        return resolve(response.json());
+                    }
+                });
+        }
+    );
+};
 
-export function submitPutRequest(url, headers, data, onSuccess, onError) {
+const submitPutRequest = (url, headers, data) => {
     if (!url) {
         throw new Error('Cannot submit PUT request. URL is null or undefined.');
     }
 
-    fetch(url, { method: 'PUT',  headers: headers, body: JSON.stringify(data) })
-            .then((response) => {
-                console.log('Response type: ' + response.type);
-                if (!response.ok) {
-                    throw new Error(`Error response. (${response.status}) ${response.statusText}`);
-                } else {
-                    return response.json();
-                }
-            })
-            .then(onSuccess)
-            .catch(onError);
-}
+    return new Promise(
+        (resolve, reject) => {
+            fetch(url, { method: 'PUT', headers: headers, body: JSON.stringify(data) })
+                .then((response) => {
+                    console.log(`Response type: ${response.type}`);
+                    if (!response.ok) {
+                        reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
+                    } else {
+                        return resolve(response.json());
+                    }
+                });
+        }
+    );
+};
 
-export function updateResource(id, label, onSuccess, onError) {
-    submitPutRequest(`${resourcesUrl}${id}`, {'Content-Type': 'application/json'}, {label: label}, onSuccess, onError);
-}
+export const updateResource = (id, label) => {
+    return submitPutRequest(`${resourcesUrl}${id}`, {'Content-Type': 'application/json'}, {label: label});
+};
 
-export function updateLiteral(id, label, onSuccess, onError) {
-    submitPutRequest(`${literalsUrl}${id}`, {'Content-Type': 'application/json'}, {label: label}, onSuccess, onError);
-}
+export const updateLiteral = (id, label) => {
+    return submitPutRequest(`${literalsUrl}${id}`, {'Content-Type': 'application/json'}, {label: label});
+};
 
-export function createResource(label, onSuccess, onError) {
-    submitPostRequest(resourcesUrl, {'Content-Type': 'application/json'}, {label: label}, onSuccess, onError);
-}
+export const createResource = (label) => {
+    submitPostRequest(resourcesUrl, {'Content-Type': 'application/json'}, {label: label});
+};
 
-export function createLiteral(label, onSuccess, onError) {
-    submitPostRequest(literalsUrl, {'Content-Type': 'application/json'}, {label: label}, onSuccess, onError);
-}
+export const createLiteral = (label) => {
+    submitPostRequest(literalsUrl, {'Content-Type': 'application/json'}, {label: label});
+};
 
-export function createResourceStatement(subjectId, predicateId, objectId, onSuccess, onError) {
-    submitPostRequest(`${statementsUrl}${subjectId}/${predicateId}/${objectId}/`,
-            {'Content-Type': 'application/json'}, {}, onSuccess, onError);
-}
+export const createResourceStatement = (subjectId, predicateId, objectId) => {
+    submitPostRequest(`${statementsUrl}${subjectId}/${predicateId}/${objectId}/`, {'Content-Type': 'application/json'},
+            {});
+};
 
-export function createLiteralStatement(subjectId, predicateId, property, onSuccess, onError) {
-    submitPostRequest(`${statementsUrl}${subjectId}/${predicateId}/`,
-            {'Content-Type': 'application/json'}, {'object': {'id': property}}, onSuccess, onError);
-}
+export const createLiteralStatement = (subjectId, predicateId, property) => {
+    submitPostRequest(`${statementsUrl}${subjectId}/${predicateId}/`, {'Content-Type': 'application/json'},
+            {'object': {'id': property}});
+};
 
-export function createPredicate(label, onSuccess, onError) {
-    submitPostRequest(predicatesUrl, {'Content-Type': 'application/json'}, { 'label' : label }, onSuccess, onError);
-}
+export const createPredicate = (label) => {
+    submitPostRequest(predicatesUrl, {'Content-Type': 'application/json'}, { label: label });
+};
 
-export function getPredicate(id, onSuccess, onError) {
-    submitGetRequest(`${predicatesUrl}${encodeURIComponent(id)}/`, onSuccess, onError);
-}
+export const getPredicate = (id) => {
+    submitGetRequest(`${predicatesUrl}${encodeURIComponent(id)}/`);
+};
 
-export function getResource(id, onSuccess, onError) {
-    submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`, onSuccess, onError);
-}
+export const getResource = (id) => {
+    submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`);
+};
 
-export function getPredicatesByLabel(label, onSuccess, onError) {
-    submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(label), onSuccess, onError)
-}
+export const getPredicatesByLabel = (label) => {
+    submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(label));
+};

@@ -48,8 +48,8 @@ export default class NewStatementObject extends Component {
         NotificationManager.error(error.message, 'Error creating object statement', 5000);
     };
 
-    onPredicateCreationSuccess = (responseJson) => {
-        this.createStatement(responseJson.id);
+    onPredicateCreationSuccess = async (responseJson) => {
+        await this.createStatement(responseJson.id);
     };
 
     onPredicateCreationError = (error) => {
@@ -58,14 +58,17 @@ export default class NewStatementObject extends Component {
         NotificationManager.error(error.message, 'Error creating predicate', 5000);
     };
 
-    getResourceCreationHandler = (predicateId) => {
-        const that = this;
+    getResourceCreationHandler = async (predicateId) => {
         return (responseJson) => {
             this.setEditorState('edit');
             NotificationManager.success('Resource created successfully', 'Success', 5000);
 
-            createResourceStatement(that.props.subjectId, predicateId, responseJson.id,
-                    that.onStatementCreationSuccess, that.onStatementCreationError);
+            try {
+                const responseJson = createResourceStatement(this.props.subjectId, predicateId, responseJson.id);
+                this.onStatementCreationSuccess(responseJson);
+            } catch (e) {
+                this.onStatementCreationError(e);
+            }
         };
     };
 
@@ -75,48 +78,68 @@ export default class NewStatementObject extends Component {
         NotificationManager.error(error.message, 'Error creating object statement', 5000);
     };
 
-    handlePublishClick = () => {
+    handlePublishClick = async () => {
         const predicateId = this.props.predicate !== null ? this.props.predicate.id : this.state.selectedPredicateId;
         const newPredicateLabel = this.state.newPredicateLabel;
 
         if (!predicateId && newPredicateLabel) {
-            createPredicate(newPredicateLabel, this.onPredicateCreationSuccess, this.onPredicateCreationError);
+            try {
+                const responseJson = await createPredicate(newPredicateLabel);
+                await this.onPredicateCreationSuccess(responseJson);
+            } catch (e) {
+                this.onPredicateCreationError(e);
+            }
         } else {
-            this.createStatement(predicateId);
+            await this.createStatement(predicateId);
         }
     };
 
-    getLiteralCreationSuccessHandler = (predicateId) => {
+    getLiteralCreationSuccessHandler = async (predicateId) => {
         return (responseJson) => {
-            createLiteralStatement(this.props.subjectId, predicateId, responseJson.id,
-                    this.onLiteralStatementCreationSuccess, (error) => {
-                        this.setEditorState('edit');
-                        console.error(error);
-                        NotificationManager.error(error.message, 'Error creating literal statement', 5000);
-                    });
+            try {
+                const responseJson = createLiteralStatement(this.props.subjectId, predicateId, responseJson.id);
+                this.onLiteralStatementCreationSuccess(responseJson);
+            } catch (error) {
+                this.setEditorState('edit');
+                console.error(error);
+                NotificationManager.error(error.message, 'Error creating literal statement', 5000);
+            }
         }
     };
 
-    createStatement(predicateId) {
+    createStatement = async (predicateId) => {
         switch (this.state.objectType) {
             case 'literal': {
                 if (this.value && this.value.length !== 0) {
-                    createLiteral(this.value, this.getLiteralCreationSuccessHandler(predicateId), (error) => {
+                    this.setEditorState('loading');
+
+                    try {
+                        const responseJson = await createLiteral(this.value);
+                        (await this.getLiteralCreationSuccessHandler(predicateId))(responseJson);
+                    } catch (error) {
                         this.setEditorState('edit');
                         console.error(error);
                         NotificationManager.error(error.message, 'Error creating literal', 5000);
-                    });
-                    this.setEditorState('loading');
+                    }
                 }
                 break;
             }
             case 'resource': {
                 if (this.state.selectedObjectId) {
-                    createResourceStatement(this.props.subjectId, predicateId, this.state.selectedObjectId,
-                            this.onStatementCreationSuccess, this.onStatementCreationError);
+                    try {
+                        const responseJson = await createResourceStatement(this.props.subjectId, predicateId,
+                                this.state.selectedObjectId);
+                        this.onStatementCreationSuccess(responseJson);
+                    } catch (e) {
+                        this.onStatementCreationError(e);
+                    }
                 } else {
-                    createResource(this.value, this.getResourceCreationHandler(predicateId),
-                            this.handleResourceCreationError);
+                    try {
+                        const responseJson = await createResource(this.value);
+                        this.getResourceCreationHandler(predicateId)(responseJson);
+                    } catch (e) {
+                        this.handleResourceCreationError(e);
+                    }
                 }
                 this.setEditorState('loading');
                 break;
@@ -125,7 +148,7 @@ export default class NewStatementObject extends Component {
                 throw new Error(`Unknown object type. [this.state.objectType=${this.state.objectType}]`);
             }
         }
-    }
+    };
 
     setEditorState(editorState) {
         this.setState({editorState: editorState});
@@ -159,10 +182,10 @@ export default class NewStatementObject extends Component {
         this.setState({selectedObjectId: objectId});
     };
 
-    handleKeyDown = (event) => {
+    handleKeyDown = async (event) => {
         switch (event.keyCode) {
             case 13: {
-                this.handlePublishClick();
+                await this.handlePublishClick();
                 return false;
             }
             case 27: {

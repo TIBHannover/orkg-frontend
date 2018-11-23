@@ -24,38 +24,37 @@ export default class AddResource extends Component {
         this.setState({editorState: editorState});
     };
 
-    handleAdd = () => {
+    handleAdd = async () => {
         this.setEditorState('loading');
         const doiRegex = /\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&'<>])\S)+)\b/g;
         if (!doiRegex.test(this.state.value)) {
-            this.createResource(false);
+            await this.createResource(false);
         } else {
             this.doi = this.state.value;
-            this.createResourceUsingDoi();
+            await this.createResourceUsingDoi();
         }
     };
 
-    createResourceUsingDoi = () => {
-        submitGetRequest(crossrefUrl + this.state.value,
-                (responseJson) => {
-                    this.setState({value: responseJson.message.title[0]});
-                    this.createResource(true);
-                },
-                (error) => {
-                    console.error(error);
-                    NotificationManager.error(error.message, 'Error finding DOI', 5000);
-                    this.setEditorState('edit');
-                });
+    createResourceUsingDoi = async () => {
+        try {
+            const responseJson = await submitGetRequest(crossrefUrl + this.state.value);
+            this.setState({value: responseJson.message.title[0]});
+            await this.createResource(true);
+        } catch (error) {
+            console.error(error);
+            NotificationManager.error(error.message, 'Error finding DOI', 5000);
+            this.setEditorState('edit');
+        }
     };
 
     handleInput = (event) => {
         this.setState({value: event.target.value.trim()});
     };
 
-    handleKeyUp = (event) => {
+    handleKeyUp = async (event) => {
         event.preventDefault();
         if (event.keyCode === 13) {
-            this.handleAdd();
+            await this.handleAdd();
         }
     };
 
@@ -64,23 +63,23 @@ export default class AddResource extends Component {
         NotificationManager.error(error.message, 'Error creating literal statement', 5000);
     };
 
-    createResource = (usingDoi) => {
+    createResource = async (usingDoi) => {
         const value = this.state.value;
         if (value && value.length !== 0) {
-            createResource(value,
-                (responseJson) => {
-                    const resourceId = responseJson.id;
-                    if (usingDoi) {
-                        this.createDoiStatement(resourceId);
-                    } else {
-                        this.navigateToResource(resourceId);
-                    }
-                },
-                (error) => {
-                    console.error(error);
-                    NotificationManager.error(error.message, 'Error creating resource', 5000);
-                    this.setEditorState('edit');
-                });
+            try {
+                const responseJson = await createResource(value);
+                const resourceId = responseJson.id;
+
+                if (usingDoi) {
+                    await this.createDoiStatement(resourceId);
+                } else {
+                    this.navigateToResource(resourceId);
+                }
+            } catch (error) {
+                this.setEditorState('edit');
+                console.error(error);
+                NotificationManager.error(error.message, 'Error creating resource', 5000);
+            }
         }
     };
 
@@ -94,28 +93,27 @@ export default class AddResource extends Component {
                 () => this.navigateToResource(resourceId), this.handleLiteralStatementCreationError);
     };
 
-    createDoiStatement = (resourceId) => {
-        getPredicatesByLabel(doiPredicateLabel,
-            (responseJson1) => {
-                const doiPredicate = responseJson1.find((item) => item.label === doiPredicateLabel);
-                if (!doiPredicate) {
-                    createPredicate(doiPredicateLabel, (responseJson2) => {
-                                this.createLiteralStatement(resourceId, responseJson2.id);
-                            },
-                            (error) => {
-                                this.setEditorState('edit');
-                                console.error(error);
-                                NotificationManager.error(error.message, 'Error creating predicate', 5000);
-                            });
-                } else {
-                    this.createLiteralStatement(resourceId, doiPredicate.id);
+    createDoiStatement = async (resourceId) => {
+        try {
+            const responseJson1 = await getPredicatesByLabel(doiPredicateLabel);
+            const doiPredicate = responseJson1.find((item) => item.label === doiPredicateLabel);
+            if (!doiPredicate) {
+                try {
+                    const responseJson2 = await createPredicate(doiPredicateLabel);
+                    await this.createLiteralStatement(resourceId, responseJson2.id);
+                } catch (error) {
+                    this.setEditorState('edit');
+                    console.error(error);
+                    NotificationManager.error(error.message, 'Error creating predicate', 5000);
                 }
-            },
-            (error) => {
-                console.error(error);
-                NotificationManager.error(error.message, 'Error finding predicates', 5000);
-                this.setEditorState('edit');
-            });
+            } else {
+                this.createLiteralStatement(resourceId, doiPredicate.id);
+            }
+        } catch (error) {
+            console.error(error);
+            NotificationManager.error(error.message, 'Error finding predicates', 5000);
+            this.setEditorState('edit');
+        }
     };
 
     render() {

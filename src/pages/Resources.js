@@ -10,34 +10,26 @@ export default class Resources extends Component {
         error: null,
     };
 
-    constructor(props) {
-        super(props);
-
-        this.findAllResources = this.findAllResources.bind(this);
+    async componentWillMount() {
+        await this.findAllResources();
     }
 
-    componentWillMount() {
-        this.findAllResources();
-    }
+    findAllResources = async () => {
+        try {
+            const responseJson = await submitGetRequest(url + 'resources/');
 
-    findAllResources() {
-        const that = this;
-
-        submitGetRequest(url + 'resources/',
-            (responseJson) => {
-                that.setState({
-                    allResources: responseJson,
-                    error: null,
-                });
-            },
-            (err) => {
-                console.error(err);
-                that.setState({
-                    allResources: null,
-                    error: err.message,
-                });
+            this.setState({
+                allResources: responseJson,
+                error: null,
             });
-    }
+        } catch (err) {
+            console.error(err);
+            this.setState({
+                allResources: null,
+                error: err.message,
+            });
+        }
+    };
 
     render() {
         const resultsPresent = this.state.error || (this.state.allResources);

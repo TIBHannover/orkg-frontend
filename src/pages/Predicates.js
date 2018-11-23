@@ -9,34 +9,25 @@ export default class Predicates extends Component {
         error: null,
     };
 
-    constructor(props) {
-        super(props);
-
-        this.findAllPredicates = this.findAllPredicates.bind(this);
+    async componentWillMount() {
+        await this.findAllPredicates();
     }
 
-    componentWillMount() {
-        this.findAllPredicates();
-    }
-
-    findAllPredicates() {
-        const that = this;
-
-        submitGetRequest(url + 'predicates/',
-            (responseJson) => {
-                that.setState({
-                    allPredicates: responseJson,
-                    error: null,
-                });
-            },
-            (err) => {
-                console.error(err);
-                that.setState({
-                    allPredicates: null,
-                    error: err.message,
-                });
+    findAllPredicates = async () => {
+        try {
+            const responseJson = await submitGetRequest(url + 'predicates/');
+            this.setState({
+                allPredicates: responseJson,
+                error: null,
             });
-    }
+        } catch (err) {
+            console.error(err);
+            this.setState({
+                allPredicates: null,
+                error: err.message,
+            });
+        }
+    };
 
     render() {
         const resultsPresent = this.state.error || (/*this.state.results &&*/ this.state.allPredicates);

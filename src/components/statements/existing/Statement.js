@@ -29,8 +29,6 @@ export default class Statement extends Component {
         this.setEditorState = this.setEditorState.bind(this);
         this.onValueChange = this.onValueChange.bind(this);
         this.onEditClick = this.onEditClick.bind(this);
-        this.onPublishClick = this.onPublishClick.bind(this);
-        this.onCancelClick = this.onCancelClick.bind(this);
     }
 
     storeText() {
@@ -66,37 +64,45 @@ export default class Statement extends Component {
         NotificationManager.error(error.message, 'Error submitting resource', 5000);
     };
 
-    onPublishClick() {
+    handlePublishClick = async () => {
         const value = this.props.getText();
         if (value && value.length !== 0) {
             switch (this.state.objectType) {
                 case 'literal': {
-                    // createLiteralStatement(this.props.subject.id, this.props.predicate.id, value,
-                    //         this.onUpdateLiteralSuccess, this.onUpdateError);
-                    updateLiteral(this.id, value, this.onUpdateLiteralSuccess, this.onUpdateError);
+                    try {
+                        const responseJson = await updateLiteral(this.id, value);
+                        this.onUpdateLiteralSuccess(responseJson);
+                    } catch (e) {
+                        this.onUpdateError(e);
+                    }
                     break;
                 }
                 case 'resource': {
-                    updateResource(this.id, value, this.onUpdateResourceSuccess, this.onUpdateError);
+                    try {
+                        const responseJson = await updateResource(this.id, value);
+                        this.onUpdateResourceSuccess(responseJson);
+                    } catch (e) {
+                        this.onUpdateError(e);
+                    }
                     break;
                 }
                 default: {
-                    throw new Error(`Unknown object type: ${this.state.objectType}]`);
+                    throw new Error(`Unknown object type: ${this.state.objectType}`);
                 }
             }
             this.setEditorState('loading');
         }
-    }
+    };
 
     onValueChange(event) {
         this.setText(event.target.value.trim());
         this.forceUpdate();
     }
 
-    onCancelClick() {
+    handleCancelClick = () => {
         this.setEditorState('view');
         this.revertText();
-    }
+    };
 
     setEditorState(editorState) {
         this.setState({editorState: editorState});
@@ -114,14 +120,14 @@ export default class Statement extends Component {
         });
     };
 
-    handleKeyUp = (event) => {
+    handleKeyUp = async (event) => {
         switch (event.keyCode) {
             case 13: {
-                this.onPublishClick();
+                await this.handlePublishClick();
                 return false;
             }
             case 27: {
-                this.onCancelClick();
+                this.handleCancelClick();
                 return false;
             }
             default: {
@@ -130,14 +136,14 @@ export default class Statement extends Component {
         }
     };
 
-    handleTextAreaKeyUp = (event) => {
+    handleTextAreaKeyUp = async (event) => {
         if (event.ctrlKey && event.keyCode === 13) {
-            this.onPublishClick();
+            await this.handlePublishClick();
             return false;
         }
         switch (event.keyCode) {
             case 27: {
-                this.onCancelClick();
+                this.handleCancelClick();
                 return false;
             }
             default: {
@@ -161,8 +167,8 @@ export default class Statement extends Component {
             <span className="editToolbar-container toolbar-container" aria-disabled={false}>
                 <EditToolbar editorState={this.state.editorState} showRemoveButton={false} editEnabled={true}
                         onEditClick={this.onEditClick}
-                        onPublishClick={this.onPublishClick}
-                        onCancelClick={this.onCancelClick}/>
+                        onPublishClick={this.handlePublishClick}
+                        onCancelClick={this.handleCancelClick}/>
             </span>
         </div>
     }
