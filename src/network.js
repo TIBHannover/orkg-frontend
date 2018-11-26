@@ -21,14 +21,20 @@ export const submitGetRequest = (url) => {
                         if (!response.ok) {
                             reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
                         } else {
-                            return resolve(response.json());
+                            const json = response.json();
+                            if (json.then) {
+                                json.then(resolve).catch(reject);
+                            } else {
+                                return resolve(json);
+                            }
                         }
-                    });
+                    })
+                    .catch(reject);
         }
     );
 };
 
-const submitPostRequest = (url, headers, data) => {
+const submitPostRequest = async (url, headers, data) => {
     if (!url) {
         throw new Error('Cannot submit POST request. URL is null or undefined.');
     }
@@ -41,9 +47,15 @@ const submitPostRequest = (url, headers, data) => {
                     if (!response.ok) {
                         reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
                     } else {
-                        return resolve(response.json());
+                        const json = response.json();
+                        if (json.then) {
+                            json.then(resolve).catch(reject);
+                        } else {
+                            return resolve(json);
+                        }
                     }
-                });
+                })
+                .catch(reject);
         }
     );
 };
@@ -61,9 +73,15 @@ const submitPutRequest = (url, headers, data) => {
                     if (!response.ok) {
                         reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
                     } else {
-                        return resolve(response.json());
+                        const json = response.json();
+                        if (json.then) {
+                            json.then(resolve).catch(reject);
+                        } else {
+                            return resolve(json);
+                        }
                     }
-                });
+                })
+                .catch(reject);
         }
     );
 };
@@ -77,35 +95,35 @@ export const updateLiteral = (id, label) => {
 };
 
 export const createResource = (label) => {
-    submitPostRequest(resourcesUrl, {'Content-Type': 'application/json'}, {label: label});
+    return submitPostRequest(resourcesUrl, {'Content-Type': 'application/json'}, {label: label});
 };
 
 export const createLiteral = (label) => {
-    submitPostRequest(literalsUrl, {'Content-Type': 'application/json'}, {label: label});
+    return submitPostRequest(literalsUrl, {'Content-Type': 'application/json'}, {label: label});
 };
 
 export const createResourceStatement = (subjectId, predicateId, objectId) => {
-    submitPostRequest(`${statementsUrl}${subjectId}/${predicateId}/${objectId}/`, {'Content-Type': 'application/json'},
-            {});
+    return submitPostRequest(`${statementsUrl}${subjectId}/${predicateId}/${objectId}/`,
+            {'Content-Type': 'application/json'}, {});
 };
 
 export const createLiteralStatement = (subjectId, predicateId, property) => {
-    submitPostRequest(`${statementsUrl}${subjectId}/${predicateId}/`, {'Content-Type': 'application/json'},
+    return submitPostRequest(`${statementsUrl}${subjectId}/${predicateId}/`, {'Content-Type': 'application/json'},
             {'object': {'id': property}});
 };
 
 export const createPredicate = (label) => {
-    submitPostRequest(predicatesUrl, {'Content-Type': 'application/json'}, { label: label });
+    return submitPostRequest(predicatesUrl, {'Content-Type': 'application/json'}, { label: label });
 };
 
 export const getPredicate = (id) => {
-    submitGetRequest(`${predicatesUrl}${encodeURIComponent(id)}/`);
+    return submitGetRequest(`${predicatesUrl}${encodeURIComponent(id)}/`);
 };
 
 export const getResource = (id) => {
-    submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`);
+    return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`);
 };
 
 export const getPredicatesByLabel = (label) => {
-    submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(label));
+    return submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(label));
 };

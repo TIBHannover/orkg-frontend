@@ -26,6 +26,8 @@ export default class EditableDropdown extends Component {
             selectedItemId: null,
         });
 
+        this.props.onInput && this.props.onInput(event);
+
         if (value && value.length >= 0) {
             try {
                 const responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value));
@@ -56,8 +58,6 @@ export default class EditableDropdown extends Component {
         } else {
             this.hideDropdownMenu();
         }
-
-        this.props.onInput && this.props.onInput(event);
     };
 
     handleNewItemClick = (event) => {

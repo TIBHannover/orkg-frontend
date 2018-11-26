@@ -58,13 +58,13 @@ export default class NewStatementObject extends Component {
         NotificationManager.error(error.message, 'Error creating predicate', 5000);
     };
 
-    getResourceCreationHandler = async (predicateId) => {
-        return (responseJson) => {
+    getResourceCreationHandler = (predicateId) => {
+        return async (responseJson) => {
             this.setEditorState('edit');
             NotificationManager.success('Resource created successfully', 'Success', 5000);
 
             try {
-                const responseJson1 = createResourceStatement(this.props.subjectId, predicateId, responseJson.id);
+                const responseJson1 = await createResourceStatement(this.props.subjectId, predicateId, responseJson.id);
                 this.onStatementCreationSuccess(responseJson1);
             } catch (e) {
                 this.onStatementCreationError(e);
@@ -94,17 +94,18 @@ export default class NewStatementObject extends Component {
         }
     };
 
-    getLiteralCreationSuccessHandler = async (predicateId) => {
-        return (responseJson) => {
+    getLiteralCreationSuccessHandler = (predicateId) => {
+        return async (responseJson) => {
+            console.log(`Inner function is called. [predicateId=${predicateId}, responseJson=${responseJson}]`);
             try {
-                const responseJson1 = createLiteralStatement(this.props.subjectId, predicateId, responseJson.id);
+                const responseJson1 = await createLiteralStatement(this.props.subjectId, predicateId, responseJson.id);
                 this.onLiteralStatementCreationSuccess(responseJson1);
             } catch (error) {
                 this.setEditorState('edit');
                 console.error(error);
                 NotificationManager.error(error.message, 'Error creating literal statement', 5000);
             }
-        }
+        };
     };
 
     createStatement = async (predicateId) => {
@@ -115,7 +116,8 @@ export default class NewStatementObject extends Component {
 
                     try {
                         const responseJson = await createLiteral(this.value);
-                        (await this.getLiteralCreationSuccessHandler(predicateId))(responseJson);
+                        console.log(`createStatement. [responseJson=${responseJson}]`);
+                        await this.getLiteralCreationSuccessHandler(predicateId)(responseJson);
                     } catch (error) {
                         this.setEditorState('edit');
                         console.error(error);
@@ -136,7 +138,7 @@ export default class NewStatementObject extends Component {
                 } else {
                     try {
                         const responseJson = await createResource(this.value);
-                        this.getResourceCreationHandler(predicateId)(responseJson);
+                        await (this.getResourceCreationHandler(predicateId))(responseJson);
                     } catch (e) {
                         this.handleResourceCreationError(e);
                     }
