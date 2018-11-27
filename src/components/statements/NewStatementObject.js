@@ -33,13 +33,13 @@ export default class NewStatementObject extends Component {
     onLiteralStatementCreationSuccess = (responseJson) => {
         this.setEditorState('edit');
         NotificationManager.success('Literal statement created successfully', 'Success', 5000);
-        this.props.onPublishSuccess(responseJson.label);
+        this.props.onPublishSuccess(responseJson.object.label);
     };
 
     onStatementCreationSuccess = (responseJson) => {
         this.setEditorState('edit');
         NotificationManager.success('Object statement created successfully', 'Success', 5000);
-        this.props.onPublishSuccess(responseJson.label);
+        this.props.onPublishSuccess(responseJson.object.label);
     };
 
     onStatementCreationError = (error) => {
@@ -99,6 +99,7 @@ export default class NewStatementObject extends Component {
             console.log(`Inner function is called. [predicateId=${predicateId}, responseJson=${responseJson}]`);
             try {
                 const responseJson1 = await createLiteralStatement(this.props.subjectId, predicateId, responseJson.id);
+                NotificationManager.success('Literal created successfully', 'Success', 5000);
                 this.onLiteralStatementCreationSuccess(responseJson1);
             } catch (error) {
                 this.setEditorState('edit');
@@ -116,7 +117,6 @@ export default class NewStatementObject extends Component {
 
                     try {
                         const responseJson = await createLiteral(this.value);
-                        console.log(`createStatement. [responseJson=${responseJson}]`);
                         await this.getLiteralCreationSuccessHandler(predicateId)(responseJson);
                     } catch (error) {
                         this.setEditorState('edit');

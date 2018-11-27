@@ -62,8 +62,8 @@ export default class ResourceDetails extends Component {
     };
 
     reset = async () => {
-        await this.findAllStatements();
         this.setState(this.initialState);
+        await this.findAllStatements();
     };
 
     getStatementText = (statement) => {
