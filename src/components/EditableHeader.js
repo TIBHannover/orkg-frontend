@@ -3,6 +3,7 @@ import LinkButton from './LinkButton';
 import {Input} from 'reactstrap';
 import {updateResource} from '../network';
 import {NotificationManager} from 'react-notifications';
+import {popupDelay} from '../utils';
 
 export default class EditableHeader extends Component {
 
@@ -27,12 +28,12 @@ export default class EditableHeader extends Component {
         try {
             await updateResource(this.props.id, this.state.value);
             event.value = this.state.value;
-            NotificationManager.success('Resource name updated successfully', 'Success', 5000);
+            NotificationManager.success('Resource name updated successfully', 'Success', popupDelay);
             this.props.onChange(event);
             this.setState({editorState: 'view'});
         } catch (error) {
             console.error(error);
-            NotificationManager.error(error.message, 'Error updating resource', 5000);
+            NotificationManager.error(error.message, 'Error updating resource', popupDelay);
             this.setState({editorState: 'view'});
         }
     };

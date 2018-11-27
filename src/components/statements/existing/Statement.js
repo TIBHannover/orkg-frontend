@@ -3,6 +3,7 @@ import EditToolbar from '../EditToolbar';
 import MainSnak from '../MainSnak';
 import {updateLiteral, updateResource} from '../../../network';
 import {NotificationManager} from 'react-notifications';
+import {popupDelay} from '../../../utils';
 
 export default class Statement extends Component {
 
@@ -48,20 +49,20 @@ export default class Statement extends Component {
     onUpdateResourceSuccess = (responseJson) => {
         this.setText(responseJson.label);
         this.setEditorState('view');
-        NotificationManager.success('Resource submitted successfully', 'Success', 5000);
+        NotificationManager.success('Resource submitted successfully', 'Success', popupDelay);
     };
 
     onUpdateLiteralSuccess = (responseJson) => {
         this.setText(responseJson.label);
         this.setEditorState('view');
-        NotificationManager.success('Resource submitted successfully', 'Success', 5000);
+        NotificationManager.success('Resource submitted successfully', 'Success', popupDelay);
     };
 
     onUpdateError = (error) => {
         this.revertText();
         this.setEditorState('view');
         console.error(error);
-        NotificationManager.error(error.message, 'Error submitting resource', 5000);
+        NotificationManager.error(error.message, 'Error submitting resource', popupDelay);
     };
 
     handlePublishClick = async () => {
