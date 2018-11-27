@@ -11,26 +11,23 @@ export default class PredicateDetails extends Component {
 
     initialState = this.state;
 
-    componentWillMount() {
-        this.findPredicate();
+    async componentWillMount() {
+        await this.findPredicate();
     }
 
-    findPredicate = () => {
-        const that = this;
-
-        submitGetRequest(predicatesUrl + encodeURIComponent(this.props.id) + '/',
-                (responseJson) => {
-                    that.setState({
-                        title: responseJson.label,
-                    });
-                },
-                (err) => {
-                    console.error(err);
-                    that.setState({
-                        title: null,
-                        error: err.message,
-                    });
-                });
+    findPredicate = async () => {
+        try {
+            const responseJson = await submitGetRequest(predicatesUrl + encodeURIComponent(this.props.id));
+            this.setState({
+                title: responseJson.label,
+            });
+        } catch (err) {
+            console.error(err);
+            this.setState({
+                title: null,
+                error: err.message,
+            });
+        }
     };
 
     render() {

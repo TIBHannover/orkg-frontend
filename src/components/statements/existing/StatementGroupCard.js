@@ -14,7 +14,6 @@ export default class StatementGroupCard extends Component {
 
         this.onAddValueClick = this.onAddValueClick.bind(this);
         this.onCancelAddValueClick = this.onCancelAddValueClick.bind(this);
-        this.onPublishSuccess = this.onPublishSuccess.bind(this);
     }
 
     onAddValueClick() {
@@ -27,10 +26,10 @@ export default class StatementGroupCard extends Component {
         return false;
     }
 
-    onPublishSuccess(newRecordLabel) {
+    handlePublishSuccess = async (newRecordLabel) => {
         this.setState({newStatementVisible: false});
-        this.props.onUpdate(newRecordLabel);
-    }
+        await this.props.onUpdate(newRecordLabel);
+    };
 
     render() {
         const statementGroup = this.props.statementGroup;
@@ -61,7 +60,7 @@ export default class StatementGroupCard extends Component {
                         {this.state.newStatementVisible
                                 && <NewStatementObject subjectId={subject.id} predicate={predicate}
                                         onCancelClick={this.onCancelAddValueClick}
-                                        onPublishSuccess={this.onPublishSuccess}/>}
+                                        onPublishSuccess={this.handlePublishSuccess}/>}
                     </Fragment>
                 </div>
                 <div className="toolbar-wrapper">

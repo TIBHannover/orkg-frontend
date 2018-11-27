@@ -21,20 +21,20 @@ export default class EditableHeader extends Component {
         this.setState({editorState: 'edit'});
     };
 
-    handleSubmitClick = (event) => {
-        updateResource(this.props.id, this.state.value,
-                () => {
-                    event.value = this.state.value;
-                    NotificationManager.success('Resource name updated successfully', 'Success', 5000);
-                    this.props.onChange(event);
-                    this.setState({editorState: 'view'});
-                },
-                (error) => {
-                    console.error(error);
-                    NotificationManager.error(error.message, 'Error updating resource', 5000);
-                    this.setState({editorState: 'view'});
-                });
+    handleSubmitClick = async (event) => {
         this.setState({editorState: 'loading'});
+
+        try {
+            await updateResource(this.props.id, this.state.value);
+            event.value = this.state.value;
+            NotificationManager.success('Resource name updated successfully', 'Success', 5000);
+            this.props.onChange(event);
+            this.setState({editorState: 'view'});
+        } catch (error) {
+            console.error(error);
+            NotificationManager.error(error.message, 'Error updating resource', 5000);
+            this.setState({editorState: 'view'});
+        }
     };
 
     handleCancelClick = () => {

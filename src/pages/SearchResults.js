@@ -16,48 +16,44 @@ export default class SearchResults extends Component {
         this.findPredicates = this.findPredicates.bind(this);
     }
 
-    componentWillMount() {
-        this.findResources();
-        this.findPredicates();
+    async componentWillMount() {
+        await this.findResources();
+        await this.findPredicates();
     }
 
-    findResources() {
-        const that = this;
+    findResources = async () => {
+        try {
+            const responseJson = await submitGetRequest(`${url}resources/?q=${this.props.term}`);
 
-        submitGetRequest(`${url}resources/?q=${this.props.term}`,
-            (responseJson) => {
-                that.setState({
-                    resources: responseJson,
-                    error: null,
-                });
-            },
-            (err) => {
-                console.error(err);
-                that.setState({
-                    resources: null,
-                    error: err.message,
-                });
+            this.setState({
+                resources: responseJson,
+                error: null,
             });
-    }
-
-    findPredicates() {
-        const that = this;
-
-        submitGetRequest(`${url}predicates/?q=${this.props.term}`,
-            (responseJson) => {
-                that.setState({
-                    predicates: responseJson,
-                    error: null,
-                });
-            },
-            (err) => {
-                console.error(err);
-                that.setState({
-                    predicates: null,
-                    error: err.message,
-                });
+        } catch (err) {
+            console.error(err);
+            this.setState({
+                resources: null,
+                error: err.message,
             });
-    }
+        }
+    };
+
+    findPredicates = async () => {
+        try {
+            const responseJson = await submitGetRequest(`${url}predicates/?q=${this.props.term}`);
+
+            this.setState({
+                predicates: responseJson,
+                error: null,
+            });
+        } catch (err) {
+            console.error(err);
+            this.setState({
+                predicates: null,
+                error: err.message,
+            });
+        }
+    };
 
     render() {
         const resourcesResultsPresent = this.state.error || (this.state.resources);

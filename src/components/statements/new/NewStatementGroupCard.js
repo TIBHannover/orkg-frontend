@@ -19,9 +19,9 @@ export default class NewStatementGroupCard extends Component {
         this.setState({newStatementVisible: false});
     };
 
-    onPublishSuccess = (newRecordLabel) => {
+    handlePublishSuccess = async (newRecordLabel) => {
         this.setState({newStatementVisible: false});
-        this.props.onUpdate(newRecordLabel);
+        await this.props.onUpdate(newRecordLabel);
     };
 
     onCancelClick = (event) => {
@@ -40,7 +40,7 @@ export default class NewStatementGroupCard extends Component {
                 <div className="statementListView-listView" ref="innerListView">
                     <NewStatementObject subjectId={this.props.subjectId} predicate={null}
                             onCancelClick={this.onCancelClick}
-                            onPublishSuccess={this.onPublishSuccess}/>
+                            onPublishSuccess={this.handlePublishSuccess}/>
                 </div>
             </div>
         </div>
