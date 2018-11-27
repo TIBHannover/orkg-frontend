@@ -10,6 +10,7 @@ import {
 import {NotificationManager} from 'react-notifications';
 import MainSnak from './MainSnak';
 import {Button} from 'reactstrap';
+import {popupDelay} from '../../utils';
 
 export default class NewStatementObject extends Component {
 
@@ -32,20 +33,20 @@ export default class NewStatementObject extends Component {
 
     onLiteralStatementCreationSuccess = (responseJson) => {
         this.setEditorState('edit');
-        NotificationManager.success('Literal statement created successfully', 'Success', 5000);
+        NotificationManager.success('Literal statement created successfully', 'Success', popupDelay);
         this.props.onPublishSuccess(responseJson.object.label);
     };
 
     onStatementCreationSuccess = (responseJson) => {
         this.setEditorState('edit');
-        NotificationManager.success('Object statement created successfully', 'Success', 5000);
+        NotificationManager.success('Object statement created successfully', 'Success', popupDelay);
         this.props.onPublishSuccess(responseJson.object.label);
     };
 
     onStatementCreationError = (error) => {
         this.setEditorState('edit');
         console.error(error);
-        NotificationManager.error(error.message, 'Error creating object statement', 5000);
+        NotificationManager.error(error.message, 'Error creating object statement', popupDelay);
     };
 
     onPredicateCreationSuccess = async (responseJson) => {
@@ -55,13 +56,13 @@ export default class NewStatementObject extends Component {
     onPredicateCreationError = (error) => {
         this.setEditorState('edit');
         console.error(error);
-        NotificationManager.error(error.message, 'Error creating predicate', 5000);
+        NotificationManager.error(error.message, 'Error creating predicate', popupDelay);
     };
 
     getResourceCreationHandler = (predicateId) => {
         return async (responseJson) => {
             this.setEditorState('edit');
-            NotificationManager.success('Resource created successfully', 'Success', 5000);
+            NotificationManager.success('Resource created successfully', 'Success', popupDelay);
 
             try {
                 const responseJson1 = await createResourceStatement(this.props.subjectId, predicateId, responseJson.id);
@@ -75,7 +76,7 @@ export default class NewStatementObject extends Component {
     handleResourceCreationError = (error) => {
         this.setEditorState('edit');
         console.error(error);
-        NotificationManager.error(error.message, 'Error creating object statement', 5000);
+        NotificationManager.error(error.message, 'Error creating object statement', popupDelay);
     };
 
     handlePublishClick = async () => {
@@ -99,12 +100,12 @@ export default class NewStatementObject extends Component {
             console.log(`Inner function is called. [predicateId=${predicateId}, responseJson=${responseJson}]`);
             try {
                 const responseJson1 = await createLiteralStatement(this.props.subjectId, predicateId, responseJson.id);
-                NotificationManager.success('Literal created successfully', 'Success', 5000);
+                NotificationManager.success('Literal created successfully', 'Success', popupDelay);
                 this.onLiteralStatementCreationSuccess(responseJson1);
             } catch (error) {
                 this.setEditorState('edit');
                 console.error(error);
-                NotificationManager.error(error.message, 'Error creating literal statement', 5000);
+                NotificationManager.error(error.message, 'Error creating literal statement', popupDelay);
             }
         };
     };
@@ -121,7 +122,7 @@ export default class NewStatementObject extends Component {
                     } catch (error) {
                         this.setEditorState('edit');
                         console.error(error);
-                        NotificationManager.error(error.message, 'Error creating literal', 5000);
+                        NotificationManager.error(error.message, 'Error creating literal', popupDelay);
                     }
                 }
                 break;

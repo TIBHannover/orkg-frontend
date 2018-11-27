@@ -9,7 +9,7 @@ import {
 } from '../network';
 import {NotificationManager} from 'react-notifications';
 import './AddResource.css';
-import {doiPredicateLabel} from '../utils';
+import {doiPredicateLabel, popupDelay} from '../utils';
 
 export default class AddResource extends Component {
     state = {
@@ -42,7 +42,7 @@ export default class AddResource extends Component {
             await this.createResource(true);
         } catch (error) {
             console.error(error);
-            NotificationManager.error(error.message, 'Error finding DOI', 5000);
+            NotificationManager.error(error.message, 'Error finding DOI', popupDelay);
             this.setEditorState('edit');
         }
     };
@@ -60,7 +60,7 @@ export default class AddResource extends Component {
 
     handleLiteralStatementCreationError = (error) => {
         console.error(error);
-        NotificationManager.error(error.message, 'Error creating literal statement', 5000);
+        NotificationManager.error(error.message, 'Error creating literal statement', popupDelay);
     };
 
     createResource = async (usingDoi) => {
@@ -78,7 +78,7 @@ export default class AddResource extends Component {
             } catch (error) {
                 this.setEditorState('edit');
                 console.error(error);
-                NotificationManager.error(error.message, 'Error creating resource', 5000);
+                NotificationManager.error(error.message, 'Error creating resource', popupDelay);
             }
         }
     };
@@ -104,14 +104,14 @@ export default class AddResource extends Component {
                 } catch (error) {
                     this.setEditorState('edit');
                     console.error(error);
-                    NotificationManager.error(error.message, 'Error creating predicate', 5000);
+                    NotificationManager.error(error.message, 'Error creating predicate', popupDelay);
                 }
             } else {
                 this.createLiteralStatement(resourceId, doiPredicate.id);
             }
         } catch (error) {
             console.error(error);
-            NotificationManager.error(error.message, 'Error finding predicates', 5000);
+            NotificationManager.error(error.message, 'Error finding predicates', popupDelay);
             this.setEditorState('edit');
         }
     };
