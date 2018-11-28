@@ -34,7 +34,7 @@ export const submitGetRequest = (url) => {
     );
 };
 
-const submitPostRequest = async (url, headers, data) => {
+const submitPostRequest = (url, headers, data) => {
     if (!url) {
         throw new Error('Cannot submit POST request. URL is null or undefined.');
     }
