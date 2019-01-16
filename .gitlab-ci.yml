@@ -22,7 +22,7 @@ stages:
   - npm install
   - npm run build
   # Deploy to web server
-  - rsync -av --delete build/ orkg@${DEPLOY_HOST}:/tib/app/orkg/www/htdocs/orkg/
+  - rsync -av --delete --exclude='/doc/' build/ orkg@${DEPLOY_HOST}:/tib/app/orkg/www/htdocs/orkg/
 
 deploy to develop:
   stage: deploy
