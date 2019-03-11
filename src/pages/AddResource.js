@@ -10,6 +10,7 @@ import {
 import {NotificationManager} from 'react-notifications';
 import './AddResource.css';
 import {doiPredicateLabel, popupDelay} from '../utils';
+import { Container } from 'reactstrap';
 
 export default class AddResource extends Component {
     state = {
@@ -118,21 +119,26 @@ export default class AddResource extends Component {
 
     render() {
         const loading = this.state.editorState === 'loading';
-        return <div className="input-group mb-3">
-            <input type="text" className="form-control" placeholder="Research contribution title or DOI"
-                    disabled={loading}
-                    onInput={this.handleInput}
-                    onKeyUp={this.handleKeyUp}
-                    aria-label="Resource title or DOI" aria-describedby="basic-addon2"/>
-            {
-                !loading ? <div className="input-group-append">
-                        <button className="btn btn-outline-primary" type="button" onClick={this.handleAdd}>Add</button>
-                    </div>
-                    : <div className="container vertical-centered">
-                        <span className="fa fa-spinner fa-spin"/>
-                    </div>
-            }
-        </div>
+
+        return (
+            <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5">
+                <div className="input-group mb-3">
+                    <input type="text" className="form-control" placeholder="Research contribution title or DOI"
+                            disabled={loading}
+                            onInput={this.handleInput}
+                            onKeyUp={this.handleKeyUp}
+                            aria-label="Resource title or DOI" aria-describedby="basic-addon2"/>
+                    {
+                        !loading ? <div className="input-group-append">
+                                <button className="btn btn-outline-primary" type="button" onClick={this.handleAdd}>Add</button>
+                            </div>
+                            : <div className="container vertical-centered">
+                                <span className="fa fa-spinner fa-spin"/>
+                            </div>
+                    }
+                </div>
+            </Container>
+        );
     }
 
 }

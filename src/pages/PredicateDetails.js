@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {predicatesUrl, submitGetRequest} from '../network';
 import './ResourceDetails.css';
+import { Container } from 'reactstrap';
 
 export default class PredicateDetails extends Component {
 
@@ -43,9 +44,9 @@ export default class PredicateDetails extends Component {
                 <h1 className="h2">{titleText}</h1>
             </div>;
 
-            return <div className="entityView-main">
+            return <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix"><div className="entityView-main">
                 {titleJsx}
-            </div>
+            </div></Container>
         } else {
             return null;
         }

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ShortRecord from '../components/statements/ShortRecord';
 import {Link} from 'react-router-dom';
 import {submitGetRequest, url} from '../network';
+import { Container } from 'reactstrap';
 
 export default class Resources extends Component {
     state = {
@@ -45,7 +46,7 @@ export default class Resources extends Component {
                     </ShortRecord>
             );
 
-            return <div>
+            return <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5">
                 <div className="addResource toolbar addToolbar-container">
                     <span className="toolbar-button toolbar-button-add">
                         <Link to={`${process.env.PUBLIC_URL}/addResource`}>
@@ -54,7 +55,7 @@ export default class Resources extends Component {
                     </span>
                 </div>
                 {resources}
-            </div>
+            </Container>
         } else {
             return null;
         }
