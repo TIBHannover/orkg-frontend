@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Nav, NavItem, NavLink, Navbar, NavbarBrand, NavbarToggler, Collapse, Container, Row, Col, Button } from 'reactstrap';
-import './DefaultLayout.scss';
+import '../../assets/scss/DefaultLayout.scss';
 import { NotificationContainer } from 'react-notifications';
 import Header from './Header/Header';
 import Footer from './Footer';

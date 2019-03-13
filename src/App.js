@@ -9,10 +9,10 @@ import AddResource from './pages/AddResource';
 import Predicates from './pages/Predicates';
 import DefaultLayout from './components/Layout/DefaultLayout';
 import ROUTES from './constants/routes.js';
-import 'react-notifications/lib/notifications.css';
 import './assets/scss/CustomBootstrap.scss';
+import 'react-notifications/lib/notifications.css';
 
-import Home from './components/Home';
+import Home from './components/Home/Home';
 
 export default class App extends Component {
     render() {

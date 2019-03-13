@@ -34,3 +34,29 @@ body {
     box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.13);
     background: #fff;
 }
+
+.notification-container {
+    .notification {
+        margin-bottom:15px;
+
+        h4 {
+            color:inherit;
+        }
+    }
+}
+
+// Change notifications 
+/*.notification-container {
+    top: auto;
+    right: auto;
+    bottom: 0;
+    left: 0;
+}
+
+.notification-enter {
+    transform: translate3d(-100%, 0, 0);
+}
+
+.notification-leave.notification-leave-active {
+    transform: translate3d(-100%, 0, 0);
+}*/
