@@ -1,9 +1,14 @@
 @import "../../assets/scss/ThemeVariables.scss";
 
+html {
+    overflow-y: scroll; // always show scrollbars to prevent moving elements when scrollbars become visible
+}
+
 body {
     padding-top: 100px;
     color:#646464;
 }
+
 
 #main-navbar {
     background: #fff!important;

@@ -6,9 +6,14 @@ $ORKG-border-width: 2px; // Width of border for buttons, inputs
 // Theme variables
 $primary: $ORKG-primary-color;
 //$secondary: #3C4C58;
+$light: #E6E6E6;
 $body-bg: #E9EBF2;
 $body-color: #646464;
 $border-width: $ORKG-border-width;
+$border-radius: $ORKG-border-radius;
+
+// Forms
+$form-feedback-font-size: 90%;
 
 // Inputs
 $input-border-radius: $ORKG-border-radius;
@@ -19,6 +24,7 @@ $btn-border-radius-lg: $btn-border-radius;
 $input-bg: #F7F7F7;
 $input-btn-padding-x: 30px;
 $input-padding-x: .75rem;
+$btn-padding-x-sm: 1.25rem;
 
 // Headings
 $headings-font-weight: 400;

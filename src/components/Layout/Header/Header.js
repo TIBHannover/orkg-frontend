@@ -57,7 +57,7 @@ class Header extends Component {
                                     </DropdownMenu>
                                 </ButtonDropdown>
                             </Nav>
-                            <Link to={ROUTES.ADD_RESOURCE}>
+                            <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
                                 <Button color="primary" className="mr-3">Add paper</Button>
                             </Link>
 

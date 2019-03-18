@@ -31,6 +31,7 @@ export default class AddResource extends Component {
         if (!doiRegex.test(this.state.value)) {
             await this.createResource(false);
         } else {
+            console.log('this is a DOI');
             this.doi = this.state.value;
             await this.createResourceUsingDoi();
         }
@@ -39,8 +40,9 @@ export default class AddResource extends Component {
     createResourceUsingDoi = async () => {
         try {
             const responseJson = await submitGetRequest(crossrefUrl + this.state.value);
+            console.log(responseJson);
             this.setState({value: responseJson.message.title[0]});
-            await this.createResource(true);
+            //await this.createResource(true);
         } catch (error) {
             console.error(error);
             NotificationManager.error(error.message, 'Error finding DOI', popupDelay);
