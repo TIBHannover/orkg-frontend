@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ProgressBar from './ProgressBar';
 import { range } from '../../../utils';
+import Tooltip from '../../Utils/Tooltip';
 
 class GeneralData extends Component {
     constructor(props) {
@@ -38,7 +39,7 @@ class GeneralData extends Component {
             10: 'October',
             11: 'November',
             12: 'December',
-        }; 
+        };
     }
 
     //TODO this logic should be placed inside an action creator when redux is implemented
@@ -136,7 +137,9 @@ class GeneralData extends Component {
                         <div>
                             <Form className="mt-4">
                                 <FormGroup>
-                                    <Label for="paperDoi">Paper DOI <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" /></Label>
+                                    <Label for="paperDoi">
+                                        <Tooltip message="Digital Object Identifier or DOI is a persistent identifier or handle used to uniquely identify objects">Paper DOI</Tooltip>
+                                    </Label>
                                     <InputGroup>
                                         <Input type="text" name="doi" id="paperDoi" value={this.state.doi} onChange={this.handleInputChange} invalid={this.state.errorMessage} />
                                         <FormFeedback className="order-1">{this.state.errorMessage}</FormFeedback> {/* Need to set order-1 here to fix Bootstrap bug of missing rounded borders */}
@@ -175,20 +178,26 @@ class GeneralData extends Component {
                         :
                         <Form className="mt-4">
                             <FormGroup>
-                                <Label for="paperTitle">Paper title <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" /></Label>
+                                <Label for="paperTitle">
+                                    <Tooltip message="The main title of the paper">Paper title</Tooltip>
+                                </Label>
                                 <Input type="text" name="paperTitle" id="paperTitle" value={this.state.paperTitle} onChange={this.handleInputChange} invalid={this.state.errorMessage} />
                                 <FormFeedback>{this.state.errorMessage}</FormFeedback>
                             </FormGroup>
                             <Row form>
                                 <Col md={6} className="pr-3">
                                     <FormGroup>
-                                        <Label for="paperAuthors">Paper authors <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" /></Label>
+                                        <Label for="paperAuthors">
+                                            <Tooltip message="The author or authors of the paper. Enter both the first and last name">Paper authors</Tooltip>
+                                        </Label>
                                         <Input type="text" name="paperAuthors" id="paperAuthors" value={this.state.paperAuthors} onChange={this.handleInputChange} />
                                     </FormGroup>
                                 </Col>
                                 <Col md={6} className="pl-3">
                                     <FormGroup>
-                                        <Label for="paperCreationDate">Publication date <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" /></Label>
+                                        <Label for="paperCreationDate">
+                                            <Tooltip message="The publication date of the paper, in the form of month and year">Publication date</Tooltip>
+                                        </Label>
                                         <Row form>
                                             <Col md={6} >
                                                 <Input type="select" name="paperCreationDateMonth" aria-label="Select publication month">
