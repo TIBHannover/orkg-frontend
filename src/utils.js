@@ -48,3 +48,7 @@ export const guid = () => {
     }
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 };
+
+export const range = (start, end) => { 
+    return [...Array(1+end-start).keys()].map(v => start+v) 
+}

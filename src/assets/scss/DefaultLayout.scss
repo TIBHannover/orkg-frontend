@@ -40,6 +40,9 @@ body {
     background: #fff;
 }
 
+// PLUGINS
+
+// NOTIFICATION PLUGIN
 .notification-container {
     .notification {
         margin-bottom:15px;
@@ -50,18 +53,11 @@ body {
     }
 }
 
-// Change notifications 
-/*.notification-container {
-    top: auto;
-    right: auto;
-    bottom: 0;
-    left: 0;
-}
+//DATEPICKER PLUGIN
+.react-datepicker-wrapper {
+    width: 100%;
 
-.notification-enter {
-    transform: translate3d(-100%, 0, 0);
+    .react-datepicker__input-container {
+        width:100%;
+    }
 }
-
-.notification-leave.notification-leave-active {
-    transform: translate3d(-100%, 0, 0);
-}*/

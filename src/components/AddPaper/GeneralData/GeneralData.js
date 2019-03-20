@@ -4,6 +4,7 @@ import { Container, Row, Col, Form, FormGroup, Label, Input, InputGroup, InputGr
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ProgressBar from './ProgressBar';
+import { range } from '../../../utils';
 
 class GeneralData extends Component {
     constructor(props) {
@@ -22,6 +23,22 @@ class GeneralData extends Component {
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleDataEntryClick = this.handleDataEntryClick.bind(this);
+
+        this.years = range(1900, new Date().getFullYear()).reverse();
+        this.months = {
+            1: 'January',
+            2: 'February',
+            3: 'March',
+            4: 'April',
+            5: 'May',
+            6: 'June',
+            7: 'July',
+            8: 'August',
+            9: 'September',
+            10: 'October',
+            11: 'November',
+            12: 'December',
+        }; 
     }
 
     //TODO this logic should be placed inside an action creator when redux is implemented
@@ -87,6 +104,10 @@ class GeneralData extends Component {
     }
 
     render() {
+        var monthsOptions = Object.keys(this.months).map((key) => {
+            return <option value={key} key={key}>{this.months[key]}</option>
+        });
+
         return (
             <div>
                 <Container className="p-0">
@@ -100,25 +121,25 @@ class GeneralData extends Component {
 
                     <ButtonGroup className="float-right" style={{ marginTop: '-30px' }}>
                         <Button size="sm"
-                            color={this.state.dataEntry == 'doi' ? 'primary' : 'light'}
+                            color={this.state.dataEntry === 'doi' ? 'primary' : 'light'}
                             onClick={() => this.handleDataEntryClick('doi')}>
                             By DOI
                         </Button>
                         <Button size="sm"
-                            color={this.state.dataEntry == 'manually' ? 'primary' : 'light'}
+                            color={this.state.dataEntry === 'manually' ? 'primary' : 'light'}
                             onClick={() => this.handleDataEntryClick('manually')}>
                             Manually
                         </Button>
                     </ButtonGroup>
 
-                    {this.state.dataEntry == 'doi' ?
+                    {this.state.dataEntry === 'doi' ?
                         <div>
                             <Form className="mt-4">
                                 <FormGroup>
                                     <Label for="paperDoi">Paper DOI <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" /></Label>
                                     <InputGroup>
                                         <Input type="text" name="doi" id="paperDoi" value={this.state.doi} onChange={this.handleInputChange} invalid={this.state.errorMessage} />
-                                        <FormFeedback className="order-1">{this.state.errorMessage}</FormFeedback> {/* Need to set order-1 here to fix Bootstrap box of missing rounded borders */}
+                                        <FormFeedback className="order-1">{this.state.errorMessage}</FormFeedback> {/* Need to set order-1 here to fix Bootstrap bug of missing rounded borders */}
                                         <InputGroupAddon addonType="append">
                                             <Button outline color="primary" style={{ minWidth: 130 }}
                                                 onClick={this.handleLookupClick}
@@ -168,7 +189,18 @@ class GeneralData extends Component {
                                 <Col md={6} className="pl-3">
                                     <FormGroup>
                                         <Label for="paperCreationDate">Publication date <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" /></Label>
-                                        <Input type="text" name="paperCreationDate" id="paperCreationDate" value={this.state.paperCreationDate} onChange={this.handleInputChange} />
+                                        <Row form>
+                                            <Col md={6} >
+                                                <Input type="select" name="paperCreationDateMonth" aria-label="Select publication month">
+                                                    {monthsOptions}
+                                                </Input>
+                                            </Col>
+                                            <Col md={6} >
+                                                <Input type="select" name="paperCreationDateYear" aria-label="Select publication year">
+                                                    {this.years.map((year) => <option key={year}>{year}</option>)}
+                                                </Input>
+                                            </Col>
+                                        </Row>
                                     </FormGroup>
                                 </Col>
                             </Row>
