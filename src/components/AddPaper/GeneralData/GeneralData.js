@@ -20,7 +20,8 @@ class GeneralData extends Component {
             showDoiTable: false,
             paperTitle: '',
             paperAuthors: [],
-            paperCreationDate: '',
+            paperPublicationMonth: 0,
+            paperPublicationYear: 0,
         }
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -66,14 +67,15 @@ class GeneralData extends Component {
             const responseJson = await submitGetRequest(crossrefUrl + this.state.doi);
             console.log(responseJson);
 
-            let paperTitle = '', paperAuthors = [], paperCreationDate = '';
+            let paperTitle = '', paperAuthors = [], paperPublicationMonth = 0, paperPublicationYear = 0;
 
             try {
                 paperTitle = responseJson.message.title[0];
                 paperAuthors = responseJson.message.author.map(function (author) {
                     return author.given + ' ' + author.family;
                 });
-                paperCreationDate = responseJson.message.created['date-parts'][0];
+                paperPublicationMonth = responseJson.message.created['date-parts'][0][1];
+                paperPublicationYear = '20' + responseJson.message.created['date-parts'][0][2]; // date is supplied in short format, so prepend 20
             } catch (e) {
                 console.log('Error setting paper data: ', e);
             }
@@ -84,7 +86,8 @@ class GeneralData extends Component {
                 showDoiTable: true,
                 paperTitle,
                 paperAuthors,
-                paperCreationDate,
+                paperPublicationMonth,
+                paperPublicationYear,
             });
         } catch (e) {
             this.setState({
@@ -176,7 +179,7 @@ class GeneralData extends Component {
                                                     <td><strong>Authors:</strong> {this.state.paperAuthors}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><strong>Publication date:</strong> {this.state.paperCreationDate}</td>
+                                                    <td><strong>Publication date:</strong> {this.months[this.state.paperPublicationMonth]} {this.state.paperPublicationYear}</td>
                                                 </tr>
                                             </tbody>
                                         </Table>
@@ -209,12 +212,12 @@ class GeneralData extends Component {
                                         </Label>
                                         <Row form>
                                             <Col md={6} >
-                                                <Input type="select" name="paperCreationDateMonth" aria-label="Select publication month">
+                                                <Input type="select" name="paperPublicationMonth" aria-label="Select publication month" value={this.state.paperPublicationMonth} onChange={this.handleInputChange}>
                                                     {monthsOptions}
                                                 </Input>
                                             </Col>
                                             <Col md={6} >
-                                                <Input type="select" name="paperCreationDateYear" aria-label="Select publication year">
+                                                <Input type="select" name="paperPublicationYear" aria-label="Select publication year" value={this.state.paperPublicationYear} onChange={this.handleInputChange}>
                                                     {this.years.map((year) => <option key={year}>{year}</option>)}
                                                 </Input>
                                             </Col>
