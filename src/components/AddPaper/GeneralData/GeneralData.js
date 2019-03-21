@@ -6,6 +6,7 @@ import { faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ProgressBar from './ProgressBar';
 import { range } from '../../../utils';
 import Tooltip from '../../Utils/Tooltip';
+import TagsInput from '../../Utils/TagsInput';
 
 class GeneralData extends Component {
     constructor(props) {
@@ -18,12 +19,13 @@ class GeneralData extends Component {
             errorMessage: '',
             showDoiTable: false,
             paperTitle: '',
-            paperAuthors: '',
+            paperAuthors: [],
             paperCreationDate: '',
         }
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleDataEntryClick = this.handleDataEntryClick.bind(this);
+        this.handleAuthorsChange = this.handleAuthorsChange.bind(this);
 
         this.years = range(1900, new Date().getFullYear()).reverse();
         this.months = {
@@ -87,7 +89,8 @@ class GeneralData extends Component {
         } catch (e) {
             this.setState({
                 isFetching: false,
-                errorMessage: 'Paper DOI has not been found'
+                errorMessage: 'Paper DOI has not been found',
+                showDoiTable: false,
             });
         }
     }
@@ -104,8 +107,14 @@ class GeneralData extends Component {
         });
     }
 
+    handleAuthorsChange(tags) {
+        this.setState({
+            paperAuthors: tags
+        });
+    }
+
     render() {
-        var monthsOptions = Object.keys(this.months).map((key) => {
+        const monthsOptions = Object.keys(this.months).map((key) => {
             return <option value={key} key={key}>{this.months[key]}</option>
         });
 
@@ -190,7 +199,7 @@ class GeneralData extends Component {
                                         <Label for="paperAuthors">
                                             <Tooltip message="The author or authors of the paper. Enter both the first and last name">Paper authors</Tooltip>
                                         </Label>
-                                        <Input type="text" name="paperAuthors" id="paperAuthors" value={this.state.paperAuthors} onChange={this.handleInputChange} />
+                                        <TagsInput handler={this.handleAuthorsChange} value={this.state.paperAuthors} />
                                     </FormGroup>
                                 </Col>
                                 <Col md={6} className="pl-3">
