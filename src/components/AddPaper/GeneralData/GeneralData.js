@@ -7,22 +7,11 @@ import ProgressBar from './ProgressBar';
 import { range } from '../../../utils';
 import Tooltip from '../../Utils/Tooltip';
 import TagsInput from '../../Utils/TagsInput';
+import FormValidator from '../../Utils/FormValidator';
 
 class GeneralData extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            doi: '10.1109/jiot.2014.2312291',
-            isFetching: false,
-            dataEntry: 'doi',
-            errorMessage: '',
-            showDoiTable: false,
-            paperTitle: '',
-            paperAuthors: [],
-            paperPublicationMonth: 0,
-            paperPublicationYear: 0,
-        }
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleDataEntryClick = this.handleDataEntryClick.bind(this);
@@ -43,24 +32,45 @@ class GeneralData extends Component {
             11: 'November',
             12: 'December',
         };
+
+        this.validator = new FormValidator([
+            {
+                field: 'doi',
+                method: 'isEmpty',
+                validWhen: false,
+                message: 'Please enter the DOI, or select \'manual\' to enter the paper details yourself'
+            }
+        ]);
+
+        this.state = {
+            doi: '10.1109/jiot.2014.2312291',
+            isFetching: false,
+            dataEntry: 'doi',
+            showDoiTable: false,
+            paperTitle: '',
+            paperAuthors: [],
+            paperPublicationMonth: 0,
+            paperPublicationYear: 0,
+            validation: this.validator.valid(),
+        }
     }
 
     //TODO this logic should be placed inside an action creator when redux is implemented
     handleLookupClick = async () => {
         this.setState({
-            doi: this.state.doi.trim()
+            doi: this.state.doi.trim(),
+            showDoiTable: false,
         });
 
-        if (!this.state.doi) {
-            this.setState({
-                errorMessage: 'Please enter the DOI, or select \'manual\' to enter the paper details yourself',
-            });
+        let validation = this.validator.validate({ doi: this.state.doi });
+        this.setState({ validation });
+
+        if (!validation.isValid) {
             return;
         }
 
         this.setState({
             isFetching: true,
-            errorMessage: '',
         });
 
         try {
@@ -75,14 +85,13 @@ class GeneralData extends Component {
                     return author.given + ' ' + author.family;
                 });
                 paperPublicationMonth = responseJson.message.created['date-parts'][0][1];
-                paperPublicationYear = '20' + responseJson.message.created['date-parts'][0][2]; // date is supplied in short format, so prepend 20
+                paperPublicationYear = '20' + responseJson.message.created['date-parts'][0][2]; // year is returned in short format, so prepend 20
             } catch (e) {
                 console.log('Error setting paper data: ', e);
             }
 
             this.setState({
                 isFetching: false,
-                errorMessage: '',
                 showDoiTable: true,
                 paperTitle,
                 paperAuthors,
@@ -90,10 +99,14 @@ class GeneralData extends Component {
                 paperPublicationYear,
             });
         } catch (e) {
+            let validation = this.validator.setError({ 
+                field: 'doi',
+                message: 'No paper has been found',
+            });
+
             this.setState({
                 isFetching: false,
-                errorMessage: 'Paper DOI has not been found',
-                showDoiTable: false,
+                validation,
             });
         }
     }
@@ -153,8 +166,8 @@ class GeneralData extends Component {
                                         <Tooltip message="Digital Object Identifier or DOI is a persistent identifier or handle used to uniquely identify objects">Paper DOI</Tooltip>
                                     </Label>
                                     <InputGroup>
-                                        <Input type="text" name="doi" id="paperDoi" value={this.state.doi} onChange={this.handleInputChange} invalid={this.state.errorMessage} />
-                                        <FormFeedback className="order-1">{this.state.errorMessage}</FormFeedback> {/* Need to set order-1 here to fix Bootstrap bug of missing rounded borders */}
+                                        <Input type="text" name="doi" id="paperDoi" value={this.state.doi} onChange={this.handleInputChange} invalid={this.state.validation.doi.isInvalid} />
+                                        <FormFeedback className="order-1">{this.state.validation.doi.message}</FormFeedback> {/* Need to set order-1 here to fix Bootstrap bug of missing rounded borders */}
                                         <InputGroupAddon addonType="append">
                                             <Button outline color="primary" style={{ minWidth: 130 }}
                                                 onClick={this.handleLookupClick}
