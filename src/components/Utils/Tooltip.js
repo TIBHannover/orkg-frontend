@@ -25,8 +25,6 @@ class Tooltip extends React.Component {
     }
 
     render() {  
-        
-
         return (
             <span>
                 <span id={this.id}>
