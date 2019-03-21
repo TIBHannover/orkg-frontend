@@ -9,7 +9,7 @@ import AddResource from './pages/AddResource';
 import Predicates from './pages/Predicates';
 import DefaultLayout from './components/Layout/DefaultLayout';
 import ROUTES from './constants/routes.js';
-import AddPaperGeneralData from './components/AddPaper/GeneralData/GeneralData'
+import AddPaper from './components/AddPaper/AddPaper'
 import './assets/scss/CustomBootstrap.scss';
 import 'react-notifications/lib/notifications.css';
 
@@ -23,7 +23,7 @@ export default class App extends Component {
                 <Route exact path={ROUTES.RESOURCES} component={Resources} />
                 <Route exact path={ROUTES.ADD_RESOURCE} component={AddResource} />
                 <Route exact path={ROUTES.PREDICATES} component={Predicates} />
-                <Route exact path={ROUTES.ADD_PAPER.GENERAL_DATA} component={AddPaperGeneralData} />
+                <Route exact path={ROUTES.ADD_PAPER.GENERAL_DATA} component={AddPaper} />
 
                 <Route path={`${process.env.PUBLIC_URL}/resource/:resourceId/:sectionName`}
                     render={({ match }) => {
