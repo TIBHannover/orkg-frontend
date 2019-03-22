@@ -1,0 +1,14 @@
+.fieldSelector {
+    max-width: 260px;
+    height: 300px;
+    overflow-y: auto;
+}
+.listGroupItem {
+
+}
+.listGroupItem {
+    padding-top: 0.5rem!important;
+    padding-bottom: 0.5rem!important;
+    cursor:pointer;
+    border-radius: 0 !important; //overwrite bootstrap border radius since a card is used to display the lists
+}

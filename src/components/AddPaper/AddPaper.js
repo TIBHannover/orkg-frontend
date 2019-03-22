@@ -32,7 +32,7 @@ class AddPaper extends Component {
 
         switch (this.state.step) {
             case 1:
-                currentStepDetails = <GeneralData setParentState={this.handleNextClick} />
+                currentStepDetails = <GeneralData setParentState={this.handleNextClick} /> /* pass the state to the child to load data on previous step */
                 break;
             case 2:
                 currentStepDetails = <ResearchField setParentState={this.handleNextClick} />
