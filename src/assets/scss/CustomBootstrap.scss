@@ -2,3 +2,7 @@
 @import "~bootstrap/scss/bootstrap.scss";
 
 //CSS overrides (not everything can be changed using theme variables)
+
+.dropdown-item {
+    outline: 0!important; // bootstrap menus are accessible by keyboard, the background changes (so no outline needed)
+}

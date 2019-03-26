@@ -109,6 +109,7 @@
     .valueTypeDropdown {
         font-size:95%;
         padding: 0 15px;
+        min-width: 95px;
     }
     .valueActionButton {
         padding: 0 15px;
@@ -128,6 +129,7 @@
     }
 }
 .dropdownItem {
+    outline: 0;
     svg {
         display: none;
         color:#989898!important;

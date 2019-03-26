@@ -1,118 +1,134 @@
 import React, { Component } from 'react';
-import { crossrefUrl, submitGetRequest } from '../../../network';
+import { crossrefUrl, submitGetRequest } from '../../../../network';
 import { Container, Row, Col, Form, FormGroup, Label, Input, InputGroup, InputGroupAddon, Button, ButtonGroup, FormFeedback, Table, Card, ListGroup, ListGroupItem, CardDeck, Modal, ModalHeader, ModalBody, ModalFooter, Collapse, DropdownToggle, DropdownMenu, InputGroupButtonDropdown, DropdownItem } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
-import ProgressBar from '../ProgressBar';
-import { range } from '../../../utils';
-import Tooltip from '../../Utils/Tooltip';
-import TagsInput from '../../Utils/TagsInput';
-import FormValidator from '../../Utils/FormValidator';
-import { getStatementsBySubject } from '../../../network';
-import styles from './Contributions.module.scss';
+import { guid } from '../../../../utils';
+import Tooltip from '../../../Utils/Tooltip';
+import TagsInput from '../../../Utils/TagsInput';
+import FormValidator from '../../../Utils/FormValidator';
+import { getStatementsBySubject } from '../../../../network';
+import styles from '../Contributions.module.scss';
+import StatementItem from './StatementItem';
+import AddStatement from './AddStatement';
 
 class Statements extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            deleteContributionModal: false,
-            collapse: false, //replace
-            dropdownOpen: false, //replace
+            showAddStatement: false,
+            newPredicateValue: '',
+            statements: [
+                {
+                    predicateLabel: 'has results',
+                    predicateId: 'fake-1',
+                },
+                {
+                    predicateLabel: 'has evluation',
+                    predicateId: 'fake-2',
+                },
+                {
+                    predicateLabel: 'has approach',
+                    predicateId: 'fake-3',
+                }
+            ]
         }
     }
 
-    toggleDeleteContribution = () => {
-        this.setState(prevState => ({
-            deleteContributionModal: !prevState.deleteContributionModal
-        }));
-    }
-
-    toggle = () => {
-        this.setState(state => ({ collapse: !state.collapse }));
-    }
-
-    toggleDropDown = () => {
+    handleShowAddStatement = () => {
         this.setState({
-            dropdownOpen: !this.state.dropdownOpen
+            showAddStatement: true,
         });
+    }
+
+    handleHideAddStatement = () => {
+        this.setState({
+            showAddStatement: false,
+            newPredicateValue: '',
+        });
+    }
+
+    handleAddStatement = () => {
+        this.handleHideAddStatement();
+    }
+
+    handleInputChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+    }
+
+    toggleCollapseStatement = (clickedIndex) => {
+        let statements = [...this.state.statements];
+
+        // toggle (=show/close) clicked item, hide all other items
+        for (let i = 0; i < statements.length; i++) {
+            statements[i].collapse = (i == clickedIndex) ? !statements[i].collapse : false;
+        }
+
+        this.setState({ statements });
+    }
+
+    handleAdd = ({ predicateId, propertyLabel }) => {
+        console.log('predicateId', predicateId);
+        console.log('label', propertyLabel);
+
+        predicateId = !predicateId ? 'new-' + guid() : predicateId;
+
+        let statements = [...this.state.statements];
+
+        statements.push({
+            predicateLabel: propertyLabel,
+            predicateId
+        });
+
+        this.setState(
+            { statements },
+            () => { // select the just created property only after updating the state in sync
+                this.toggleCollapseStatement(statements.length - 1)
+            }
+        );
+    }
+
+    handleDelete = (predicateId) => {
+        console.log('handle delete:', predicateId);
+
+        let statements = [...this.state.statements];
+
+        var indexToDelete = -1;
+
+        for (let i = 0; i < statements.length; i++) {
+            if (statements[i].predicateId == predicateId) {
+                indexToDelete = i;
+                break;
+            }
+        }
+        console.log(indexToDelete);
+
+        if (indexToDelete > -1) {
+            statements.splice(indexToDelete, 1);
+
+            this.setState({ statements });
+        }
     }
 
     render() {
         return (
             <ListGroup>
-                <ListGroupItem active={true} onClick={this.toggle} className={`${styles.statementItem} ${styles.statementActive}`}>
-                    Has results
-                                                <Icon icon={faChevronCircleDown} className={`${styles.statementItemIcon} ${styles.open} float-right`} />{' '}
-                    <span className={`${styles.deletePredicate} float-right mr-4`} onClick={this.toggleDeleteContribution}>
-                        <Tooltip message="Delete contribution" hideDefaultIcon={true}>
-                            <Icon icon={faTrash} /> Delete
-                                                    </Tooltip>
-                    </span>
-                </ListGroupItem>
-                <Collapse isOpen={this.state.collapse}>
-                    <div className={styles.listGroupOpen}>
-                        <ListGroup flush>
-                            <ListGroupItem className={styles.valueItem}>
-                                <span className={styles.objectLink}>Configuration 1</span>
-                                <span className={`${styles.deleteValue} float-right`} onClick={this.toggleDeleteContribution}>
-                                    <Tooltip message="Delete contribution" hideDefaultIcon={true}>
-                                        <Icon icon={faTrash} /> Delete
-                                                                </Tooltip>
-                                </span>
-                            </ListGroupItem>
-                            <ListGroupItem className={styles.valueItem}>
-                                <span className={styles.objectLink}>Configuration 2</span>
-                            </ListGroupItem>
-                            <ListGroupItem className={styles.valueItem}>
-                                <span className="btn btn-link p-0">+ Add value</span>
-                            </ListGroupItem>
-                            <ListGroupItem className={styles.valueItem}>
-                                <InputGroup>
-                                    <InputGroupButtonDropdown addonType="prepend" isOpen={this.state.dropdownOpen} toggle={this.toggleDropDown}>
-                                        <DropdownToggle caret color="primary" className={styles.valueTypeDropdown}>
-                                            Object
-                                                                    </DropdownToggle>
-                                        <DropdownMenu>
-                                            <DropdownItem className={styles.dropdownItem}>
-                                                <Tooltip message="Choose object to link this to an object, which can contain values on its own" >
-                                                    Object
-                                                                            </Tooltip>
-                                            </DropdownItem>
-                                            <DropdownItem className={styles.dropdownItem}>
-                                                <Tooltip message="Choose literal for values like numbers or plain text" >
-                                                    Literal
-                                                                            </Tooltip>
-                                            </DropdownItem>
-                                        </DropdownMenu>
-                                    </InputGroupButtonDropdown>
-                                    <Input size="sm" />
-                                    <InputGroupAddon addonType="append">
-                                        <Button color="light" className={styles.valueActionButton}>Cancel</Button>
-                                        <Button color="light" className={styles.valueActionButton}>Done</Button>
-                                    </InputGroupAddon>
-                                </InputGroup>
-                            </ListGroupItem>
-                        </ListGroup>
-                    </div>
-                </Collapse>
-                <ListGroupItem className={styles.statementItem}>
-                    Has evaluation
-                                                <Icon icon={faChevronCircleDown} className={`${styles.statementItemIcon} float-right`} />
-                </ListGroupItem>
-                <ListGroupItem className={styles.statementItem}>
-                    Has approach
-                                                <Icon icon={faChevronCircleDown} className={`${styles.statementItemIcon} float-right`} />
-                </ListGroupItem>
-                <ListGroupItem className={`${styles.statementItem} ${styles.statementItemInput}`}>
-                    <InputGroup className={styles.addStatement}>
-                        <Input size="sm" />
-                        <InputGroupAddon addonType="append">
-                            <Button color="light" className={styles.addStatementActionButton}>Cancel</Button>
-                            <Button color="light" className={styles.addStatementActionButton}>Done</Button>
-                        </InputGroupAddon>
-                    </InputGroup>
-                </ListGroupItem>
+                {this.state.statements.map((statement, index) => {
+                    return <StatementItem
+                        predicateLabel={statement.predicateLabel}
+                        predicateId={statement.predicateId}
+                        key={'statement-' + index}
+                        collapse={statement.collapse}
+                        index={index}
+                        toggleCollapseStatement={this.toggleCollapseStatement}
+                        handleDelete={this.handleDelete}
+                    />
+                })}
+
+                <AddStatement handleAdd={this.handleAdd} />
             </ListGroup>
         );
     }
