@@ -28,7 +28,7 @@ class Tooltip extends React.Component {
         return (
             <span>
                 <span id={this.id}>
-                    {this.props.children} <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" />
+                    {this.props.children} {!this.props.hideDefaultIcon ? <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" /> : ''}
                 </span>
 
                 <ReactstrapTooltip placement="right" delay={{show:0,hide:0}} 
@@ -43,6 +43,11 @@ class Tooltip extends React.Component {
 Tooltip.propTypes = {
     children: PropTypes.node,
     message: PropTypes.string.isRequired,
+    hideDefaultIcon: PropTypes.bool,
+}
+
+Tooltip.defaultProps = {
+    hideDefaultIcon: false,
 }
 
 export default Tooltip;

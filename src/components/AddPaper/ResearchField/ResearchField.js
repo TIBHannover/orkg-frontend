@@ -1,13 +1,5 @@
 import React, { Component } from 'react';
-import { crossrefUrl, submitGetRequest } from '../../../network';
-import { Container, Row, Col, Form, FormGroup, Label, Input, InputGroup, InputGroupAddon, Button, ButtonGroup, FormFeedback, Table, Card, ListGroup, ListGroupItem, CardDeck } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, fas, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
-import ProgressBar from '../ProgressBar';
-import { range } from '../../../utils';
-import Tooltip from '../../Utils/Tooltip';
-import TagsInput from '../../Utils/TagsInput';
-import FormValidator from '../../Utils/FormValidator';
+import { Button, Card, ListGroup, ListGroupItem, CardDeck } from 'reactstrap';
 import styles from './ResearchField.module.scss';
 import { getStatementsBySubject } from '../../../network';
 
@@ -17,6 +9,7 @@ import { getStatementsBySubject } from '../../../network';
  */
 class GeneralData extends Component {
     // TODO: make an initial selector, in case the page is visited when the 'back' button is pressed 
+    // alternative would be to save the complete state of this component in the parent's state 
     constructor(props) {
         super(props);
 

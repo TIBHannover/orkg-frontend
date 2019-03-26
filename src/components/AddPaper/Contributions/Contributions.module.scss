@@ -1,0 +1,138 @@
+@import "../../../assets/scss/ThemeVariables.scss";
+@import "~bootstrap/scss/bootstrap.scss"; //TODO only load variables, not complete bootstrap
+
+.contributionsList {
+    list-style: none;
+    padding: 0;
+    padding-top: 15px;
+
+    > li {
+        padding: 9px 10px 9px 15px;
+        margin-bottom: 5px;
+
+        > span {
+            cursor: pointer;
+        }
+        &.activeContribution {
+            background: $ORKG-primary-color;
+            color: #fff;
+            border-top-left-radius: $border-radius;
+            border-bottom-left-radius: $border-radius;
+            cursor: initial !important;
+        }
+        .deleteContribution {
+            cursor: pointer;
+        }
+        &.addContribution span:hover {
+            text-decoration: underline;
+        }
+    }
+}
+.contribution {
+    border-radius: $border-radius;
+    border-width: $border-width;
+    border-color: $ORKG-primary-color;
+    border-style: solid;
+    padding: 15px 30px;
+}
+
+.listGroupOpen {
+    border-left-width: $border-width;
+    border-right-width: $border-width;
+    border-left-style: solid;
+    border-right-style: solid;
+    border-left-color: $list-group-border-color;
+    border-right-color: $list-group-border-color;
+    padding: 10px 20px;
+}
+
+.statementItem {
+    padding: 0.5rem 0.75rem !important; //overwrite bootstrap
+    cursor: pointer;
+    background-color: $input-bg !important;
+
+    > .statementItemIcon {
+        font-size: 18px;
+        margin-top: 3px;
+        color: $ORKG-primary-color;
+
+        &.open {
+            color: #fff;
+        }
+    }
+
+    > .deletePredicate {
+        font-size: 90%;
+        display: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    &.statementActive {
+        background-color: $ORKG-primary-color !important;
+
+        .deletePredicate {
+            display: inline-block !important;
+        }
+    }
+
+    &.statementItemInput {
+        cursor: default;
+    }
+}
+
+.valueItem {
+    padding: 8px 0px !important;
+
+    .objectLink {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    .deleteValue {
+        font-size: 90%;
+        //display: none;
+        cursor: pointer;
+        color: $ORKG-primary-color;
+        display:none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    &:hover {
+        .deleteValue {
+            display: inline-block
+        }
+    }
+    .valueTypeDropdown {
+        font-size:95%;
+        padding: 0 15px;
+    }
+    .valueActionButton {
+        padding: 0 15px;
+        font-size:95%;
+        border-color:$list-group-border-color
+    }
+}
+
+.addStatement {
+    input[type="text"] {
+        background: #fff!important;
+    }
+    .addStatementActionButton {
+        padding: 0 15px;
+        font-size:95%;
+        border-color:$list-group-border-color
+    }
+}
+.dropdownItem {
+    svg {
+        display: none;
+        color:#989898!important;
+    }
+    &:hover svg {
+        display: inline-block
+    }
+}

@@ -7,6 +7,7 @@ html {
 body {
     padding-top: 100px;
     color:#646464;
+    padding-right: 0px !important; // overwrite bootstrap's model padding-right: 15px
 }
 
 

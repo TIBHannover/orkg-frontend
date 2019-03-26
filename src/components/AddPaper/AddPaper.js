@@ -6,6 +6,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ProgressBar from './ProgressBar';
 import GeneralData from './GeneralData/GeneralData';
 import ResearchField from './ResearchField/ResearchField';
+import Contributions from './Contributions/Contributions';
 
 
 class AddPaper extends Component {
@@ -37,7 +38,13 @@ class AddPaper extends Component {
             case 2:
                 currentStepDetails = <ResearchField setParentState={this.handleNextClick} />
                 break;
+            case 3:
+                currentStepDetails = <Contributions setParentState={this.handleNextClick} />
+                break;
         }
+
+        // FOR DEBUGGING
+        currentStepDetails = <Contributions setParentState={this.handleNextClick} />
 
         return (
             <div>

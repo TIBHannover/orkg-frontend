@@ -17,6 +17,7 @@ $form-feedback-font-size: 90%;
 
 // Inputs
 $input-border-radius: $ORKG-border-radius;
+$input-border-radius-sm: $ORKG-border-radius;
 $btn-border-radius: $ORKG-border-radius;
 $btn-border-radius: $ORKG-border-radius;
 $btn-border-radius-sm: $btn-border-radius;
@@ -28,4 +29,8 @@ $btn-padding-x-sm: 1.25rem;
 
 // Headings
 $headings-font-weight: 400;
-$headings-color:#373F45
+$headings-color:#373F45;
+
+// Modal
+$modal-content-border-radius: 11px;
+$modal-content-border-width: 3px;
