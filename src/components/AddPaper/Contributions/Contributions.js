@@ -84,8 +84,14 @@ class GeneralData extends Component {
                                             <Tooltip message="Provide details about this contribution by making statements. Some suggestions are already displayed, you can use this when it is useful, or delete it when it is not">Statements</Tooltip>
                                         </Label>
                                         
-                                        <Statements />
+                                        <Statements level="1"
+                                            resourceId="Rfake"
+                                            hidden={true} />
 
+                                        <Statements level="3"
+                                            resourceId="Rfake" 
+                                            hidden={false} />
+                                            
                                     </FormGroup>
                                 </Form>
                             </div>

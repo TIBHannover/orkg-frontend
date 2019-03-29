@@ -41,8 +41,8 @@
     border-right-width: $border-width;
     border-left-style: solid;
     border-right-style: solid;
-    border-left-color: $list-group-border-color;
-    border-right-color: $list-group-border-color;
+    border-left-color: #DFDFDF; //don't use default color, since it is partially transparent $list-group-border-color;$list-group-border-color;
+    border-right-color: #DFDFDF; //don't use default color, since it is partially transparent $list-group-border-color; $list-group-border-color;
     padding: 10px 20px;
 }
 
@@ -95,7 +95,7 @@
         //display: none;
         cursor: pointer;
         color: $ORKG-primary-color;
-        display:none;
+        display: none;
 
         &:hover {
             text-decoration: underline;
@@ -103,38 +103,55 @@
     }
     &:hover {
         .deleteValue {
-            display: inline-block
+            display: inline-block;
         }
     }
     .valueTypeDropdown {
-        font-size:95%;
+        font-size: 95%;
         padding: 0 15px;
         min-width: 95px;
     }
     .valueActionButton {
         padding: 0 15px;
-        font-size:95%;
-        border-color:$list-group-border-color
+        font-size: 95%;
+        border-color: $list-group-border-color;
     }
 }
 
 .addStatement {
     input[type="text"] {
-        background: #fff!important;
+        background: #fff !important;
     }
     .addStatementActionButton {
         padding: 0 15px;
-        font-size:95%;
-        border-color:$list-group-border-color
+        font-size: 95%;
+        border-color: $list-group-border-color;
     }
 }
 .dropdownItem {
     outline: 0;
     svg {
         display: none;
-        color:#989898!important;
+        color: #989898 !important;
     }
     &:hover svg {
-        display: inline-block
+        display: inline-block;
+    }
+}
+.levelBox {
+    border-color: #DFDFDF; //don't use default color, since it is partially transparent $list-group-border-color;
+    border-radius: $border-radius;
+    padding-left: 8px;
+    border-style: solid;
+    border-width: 2px;
+    box-shadow: -2px 0px 4px 0px rgba(0, 0, 0, 0.06);
+    margin-top: -2px;
+    margin-right: -2px;
+    margin-bottom: -2px;
+
+    .listGroupEnlarge {
+        margin-top: -2px;
+        margin-right: -2px;
+        margin-bottom: -2px;
     }
 }

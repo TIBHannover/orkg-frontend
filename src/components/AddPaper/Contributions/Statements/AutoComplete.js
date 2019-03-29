@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { submitGetRequest } from '../../../../network';
 import { Input } from 'reactstrap';
-
+import classNames from 'classnames';
 
 class AutoComplete extends Component {
     state = {
@@ -35,7 +35,7 @@ class AutoComplete extends Component {
                 const responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value));
 
                 const menuItemsJsx = responseJson.map((item) =>
-                    <button type="button" id={item.id} key={item.id} className="dropdown-item" onClick={this.handleItemClick}>
+                    <button type="button" id={item.id} key={item.id} className="dropdown-item" onClick={this.handleItemClick} style={{whiteSpace: 'normal'}}>
                         {item.label}
                     </button>).slice(0, maxValues);
 
@@ -92,16 +92,32 @@ class AutoComplete extends Component {
     };
 
     render() {
-        return <>
+        let inputStyle = {};
+
+        // disable border radius when is used in a button group (since there is a 
+        // span around the dropdown, disabling using :first-child doesn't work)
+        if (this.props.disableBorderRadiusLeft) {
+            inputStyle.borderTopLeftRadius = 0;
+            inputStyle.borderBottomLeftRadius = 0;
+        }
+
+        if (this.props.disableBorderRadiusRight) {
+            inputStyle.borderTopRightRadius = 0;
+            inputStyle.borderBottomRightRadius = 0;
+        }
+        
+        return <span className="dropdown" style={{flex: '1 1 auto'}}>
             <Input bsSize="sm"
                 autoFocus={true}
                 placeholder={this.props.placeholder}
                 value={this.state.value}
                 onChange={this.handleChange}
                 onKeyUp={this.props.onKeyUp}
+                style={inputStyle}
             />
+
             {this.state.dropdownMenuJsx}
-        </>;
+        </span>;
     }
 }
 

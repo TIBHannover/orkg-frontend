@@ -43,21 +43,33 @@ class Statement extends Component {
                 <ListGroupItem active={this.props.collapse} onClick={() => this.props.toggleCollapseStatement(this.props.index)} className={listGroupClass}>
                     {this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1)}
 
+                    {this.props.values && this.props.values.length == 1 && !this.props.collapse ? 
+                        <>: <em className="text-muted">{this.props.values[0].label}</em></>
+                    : ''} 
+
                     <Icon icon={this.props.collapse ? faChevronCircleDown : faChevronCircleRight} className={chevronClass} />{' '}
 
                     <DeleteStatement handleDelete={() => this.props.handleDelete(this.props.predicateId)} /> 
                 </ListGroupItem>
+
                 <Collapse isOpen={this.props.collapse}>
                     <div className={styles.listGroupOpen}>
                         <ListGroup flush>
-                            <ValueItem label="Configuration 1" />
-                            <ValueItem label="Configuration 2" />
-                            
-                            <AddValue />
+                            {this.props.values && this.props.values.map((value, index) => (
+                                <ValueItem 
+                                    key={index}
+                                    label={value.label} 
+                                    id={value.id} 
+                                    type={value.type}
+                                    predicateId={this.props.predicateId}
+                                    handleDeleteValue={this.props.handleDeleteValue} />
+                            ))}
+
+                            <AddValue handleAddValue={this.props.handleAddValue}
+                                predicateId={this.props.predicateId} />
                         </ListGroup>
                     </div>
                 </Collapse>
-                
             </>
         );
     }

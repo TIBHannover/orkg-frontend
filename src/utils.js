@@ -40,6 +40,25 @@ export function groupByObjectWithId(array, propertyName) {
     return result;
 }
 
+export function deleteArrayEntryByObjectValue(arr, object, value) {
+    let newArr = [...arr];
+
+    var indexToDelete = -1;
+
+    for (let i = 0; i < newArr.length; i++) {
+        if (newArr[i][object] == value) {
+            indexToDelete = i;
+            break;
+        }
+    }
+
+    if (indexToDelete > -1) {
+        newArr.splice(indexToDelete, 1);
+    }
+
+    return newArr;
+}
+
 export const guid = () => {
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)
@@ -49,6 +68,6 @@ export const guid = () => {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 };
 
-export const range = (start, end) => { 
-    return [...Array(1+end-start).keys()].map(v => start+v) 
+export const range = (start, end) => {
+    return [...Array(1 + end - start).keys()].map(v => start + v)
 }

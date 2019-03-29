@@ -44,7 +44,7 @@ class AddPaper extends Component {
         }
 
         // FOR DEBUGGING
-        currentStepDetails = <Contributions setParentState={this.handleNextClick} />
+        //currentStepDetails = <Contributions setParentState={this.handleNextClick} />
 
         return (
             <div>

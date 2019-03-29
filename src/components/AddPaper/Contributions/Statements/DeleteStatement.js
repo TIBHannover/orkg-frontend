@@ -36,7 +36,7 @@ class DeleteStatement extends Component {
         return (
             <>
                 <span className={`${styles.deletePredicate} float-right mr-4`} onClick={this.toggleDeleteModal}>
-                    <Tooltip message="Delete contribution" hideDefaultIcon={true}>
+                    <Tooltip message="Delete statement" hideDefaultIcon={true}>
                         <Icon icon={faTrash} /> Delete
                     </Tooltip>
                 </span>
@@ -44,7 +44,7 @@ class DeleteStatement extends Component {
                 <Modal isOpen={this.state.showDeleteModal} toggle={this.toggleDeleteModal}>
                     <ModalHeader toggle={this.toggleDeleteModal}>Are you sure?</ModalHeader>
                     <ModalBody>
-                        Are you sure you want to delete this statement?
+                        Are you sure you want to delete this statement and its related values?
                     </ModalBody>
                     <ModalFooter>
                         <Button color="light" onClick={this.toggleDeleteModal}>Cancel</Button>{' '}

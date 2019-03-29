@@ -82,7 +82,7 @@ class AddStatement extends Component {
             <>
                 <ListGroupItem className={`${styles.statementItem} ${styles.statementItemInput}`}>
                     {this.state.showAddStatement ?
-                        <InputGroup className={`${styles.addStatement} dropdown`}>
+                        <InputGroup className={`${styles.addStatement}`}>
                             {/*<Input bsSize="sm"
                             placeholder="Enter a predicate"
                             name="newPredicateValue"
@@ -93,7 +93,8 @@ class AddStatement extends Component {
                                 placeholder="Enter a property"
                                 onItemSelected={this.handlePropertySelect}
                                 onNewItemSelected={this.toggleConfirmNewProperty}
-                                onKeyUp={() => { }} />
+                                onKeyUp={() => { }} 
+                                disableBorderRadiusRight />
 
                             <InputGroupAddon addonType="append">
                                 <Button color="light" className={styles.addStatementActionButton} onClick={this.handleHideAddStatement}>Cancel</Button>
@@ -104,7 +105,7 @@ class AddStatement extends Component {
                         :
                         <span className="btn btn-link p-0 border-0 align-baseline" onClick={this.handleShowAddStatement}>
                             + Add statement
-                    </span>
+                        </span>
                     }
                 </ListGroupItem>
 
