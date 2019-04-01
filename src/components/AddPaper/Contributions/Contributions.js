@@ -11,8 +11,10 @@ import FormValidator from '../../Utils/FormValidator';
 import { getStatementsBySubject } from '../../../network';
 import styles from './Contributions.module.scss';
 import Statements from './Statements/Statements';
+import { connect } from 'react-redux';
+import { nextStep, previousStep } from '../../../actions/addPaper';
 
-class GeneralData extends Component {
+class Contributions extends Component {
     constructor(props) {
         super(props);
 
@@ -112,10 +114,22 @@ class GeneralData extends Component {
 
                 <hr className="mt-5 mb-3" />
                 <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Next step</Button>
-                <Button color="light" className="float-right mb-4 mr-2" onClick={this.handlePreviousClick}>Previous step</Button>
+                <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>Previous step</Button>
             </div>
         );
     }
 }
 
-export default GeneralData;
+const mapStateToProps = state => ({
+    ...state.addPaper
+});
+
+const mapDispatchToProps = dispatch => ({
+    nextStep: () => dispatch(nextStep()),
+    previousStep: () => dispatch(previousStep())
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Contributions);

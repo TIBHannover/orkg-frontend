@@ -7,44 +7,31 @@ import ProgressBar from './ProgressBar';
 import GeneralData from './GeneralData/GeneralData';
 import ResearchField from './ResearchField/ResearchField';
 import Contributions from './Contributions/Contributions';
-
+import { connect } from 'react-redux';
 
 class AddPaper extends Component {
     constructor(props) {
         super(props);
-
-        this.handleNextClick = this.handleNextClick.bind(this);
-        //this.handleAuthorsChange = this.handleAuthorsChange.bind(this);
-
-        this.state = {
-            step: 1,
-        }
-    }
-
-    handleNextClick(newState) {
-        this.setState((prevState, props) => ({
-            ...prevState,
-            ...newState,
-        }),() => { console.log('New state', this.state); });
     }
 
     render() {
+        let { currentStep } = this.props;
         let currentStepDetails;
 
-        switch (this.state.step) {
+        switch (currentStep) {
             case 1:
-                currentStepDetails = <GeneralData setParentState={this.handleNextClick} /> /* pass the state to the child to load data on previous step */
+                currentStepDetails = <GeneralData /> 
                 break;
             case 2:
-                currentStepDetails = <ResearchField setParentState={this.handleNextClick} />
+                currentStepDetails = <ResearchField />
                 break;
             case 3:
-                currentStepDetails = <Contributions setParentState={this.handleNextClick} />
+                currentStepDetails = <Contributions />
                 break;
         }
 
         // FOR DEBUGGING
-        //currentStepDetails = <Contributions setParentState={this.handleNextClick} />
+        //currentStepDetails = <Contributions />
 
         return (
             <div>
@@ -52,16 +39,25 @@ class AddPaper extends Component {
                     <h1 className="h4 mt-4 mb-4">Add paper</h1>
                 </Container>
                 <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
-                    <ProgressBar currentStep={this.state.step} />
+                    <ProgressBar currentStep={currentStep} />
                     <hr />
 
                     {currentStepDetails}
-
-                    
                 </Container>
             </div>
         );
     }
 }
 
-export default AddPaper;
+const mapStateToProps = state => ({
+    ...state.addPaper
+});
+
+const mapDispatchToProps = dispatch => ({
+
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AddPaper);

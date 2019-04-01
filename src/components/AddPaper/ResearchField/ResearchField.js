@@ -2,31 +2,32 @@ import React, { Component } from 'react';
 import { Button, Card, ListGroup, ListGroupItem, CardDeck } from 'reactstrap';
 import styles from './ResearchField.module.scss';
 import { getStatementsBySubject } from '../../../network';
+import { connect } from 'react-redux';
+import { updateResearchField, nextStep, previousStep } from '../../../actions/addPaper';
 
 /**
  * Component for selecting the research field of a paper
  * This might be redundant in the future, if the research field can be derived from the research problem
  */
-class GeneralData extends Component {
-    // TODO: make an initial selector, in case the page is visited when the 'back' button is pressed 
-    // alternative would be to save the complete state of this component in the parent's state 
+class ResearchField extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            researchFields: [],
-            selectedResearchField: null,
             showError: false,
         }
     }
 
     componentDidMount() {
-        this.getFields('R11', 0);
+        // select the main field is none is selected yet (i.e. first time visiting this step)
+        if (this.props.selectedResearchField === null) { 
+            this.getFields('R11', 0);
+        }
     }
 
     handleNextClick = () => {
         // TODO validation: check if a research field is selected
-        if (this.state.selectedResearchField == 'R11') {
+        if (this.props.selectedResearchField == 'R11') {
             this.setState({
                 showError: true
             });
@@ -34,16 +35,7 @@ class GeneralData extends Component {
             return;
         }
 
-        this.props.setParentState({
-            step: 3,
-            researchField: this.state.selectedResearchField
-        });
-    }
-
-    handlePreviousClick = () => {
-        this.props.setParentState({
-            step: 1,
-        });
+        this.props.nextStep();
     }
 
     getFields(fieldId, level) {
@@ -58,7 +50,7 @@ class GeneralData extends Component {
                 });
             });
 
-            let researchFieldsNew = this.state.researchFields;
+            let researchFieldsNew = [...this.props.researchFields];
             researchFieldsNew[level] = researchFields;
 
             // add active to selected field
@@ -75,7 +67,7 @@ class GeneralData extends Component {
                 }
             });
 
-            this.setState({
+            this.props.updateResearchField({
                 researchFields: researchFieldsNew,
                 selectedResearchField: fieldId
             });
@@ -96,7 +88,7 @@ class GeneralData extends Component {
                 <h2 className="h4 mt-4 mb-5">Select the research field</h2>
 
                 <CardDeck>
-                    {this.state.researchFields.length > 0 && this.state.researchFields.map((fields, level) => {
+                    {this.props.researchFields.length > 0 && this.props.researchFields.map((fields, level) => {
                         return fields.length > 0 ? <Card key={level} className={`${styles.fieldSelector}`}>
                             <ListGroup className={styles.listGroup} flush>
                                 {fields.map((field) => (
@@ -118,10 +110,23 @@ class GeneralData extends Component {
                 <span >{this.state.selectedResearchField}</span>*/}
 
                 <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Next step</Button>
-                <Button color="light" className="float-right mb-4 mr-2" onClick={this.handlePreviousClick}>Previous step</Button>
+                <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>Previous step</Button>
             </div>
         );
     }
 }
 
-export default GeneralData;
+const mapStateToProps = state => ({
+    ...state.addPaper
+});
+
+const mapDispatchToProps = dispatch => ({
+    updateResearchField: (data) => dispatch(updateResearchField(data)),
+    nextStep: () => dispatch(nextStep()),
+    previousStep: () => dispatch(previousStep()),
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ResearchField);

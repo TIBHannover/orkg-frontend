@@ -7,6 +7,8 @@ import { range } from '../../../utils';
 import Tooltip from '../../Utils/Tooltip';
 import TagsInput from '../../Utils/TagsInput';
 import FormValidator from '../../Utils/FormValidator';
+import { connect } from 'react-redux';
+import { updateGeneralData, nextStep } from '../../../actions/addPaper';
 
 class GeneralData extends Component {
     constructor(props) {
@@ -43,20 +45,24 @@ class GeneralData extends Component {
         ]);
 
         this.state = {
-            doi: '10.1109/jiot.2014.2312291', // example doi value for testing
+            doi: this.props.doi ? this.props.doi : '10.1109/jiot.2014.2312291', // debug only, change to: this.props.doi
             isFetching: false,
             dataEntry: 'doi',
             showDoiTable: false,
-            paperTitle: '',
-            paperAuthors: [],
-            paperPublicationMonth: 0,
-            paperPublicationYear: 0,
+            paperTitle: this.props.title,
+            paperAuthors: this.props.authors,
+            paperPublicationMonth: this.props.publicationMonth,
+            paperPublicationYear: this.props.publicationYear,
             validation: this.validator.valid(),
         }
+        
+
+        console.log(this.props);
     }
 
-    //TODO this logic should be placed inside an action creator when redux is implemented
+    //TODO this logic should be placed inside an action creator 
     handleLookupClick = async () => {
+
         this.setState({
             doi: this.state.doi.trim(),
             showDoiTable: false,
@@ -131,16 +137,17 @@ class GeneralData extends Component {
 
     handleNextClick() {
         // TODO do some sort of validation, before proceeding to the next step
-        let { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi } = this.state; 
+        let { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi } = this.state;
 
-        this.props.setParentState({
-            step: 2,
-            paperTitle,
-            paperAuthors,
-            paperPublicationMonth,
-            paperPublicationYear,
-            doi,
+        this.props.updateGeneralData({
+            title: paperTitle,
+            authors: paperAuthors,
+            publicationMonth: paperPublicationMonth,
+            publicationYear: paperPublicationYear,
+            doi: doi,
         });
+
+        this.props.nextStep();
     }
 
     render() {
@@ -255,4 +262,16 @@ class GeneralData extends Component {
     }
 }
 
-export default GeneralData;
+const mapStateToProps = state => ({
+    ...state.addPaper
+});
+
+const mapDispatchToProps = dispatch => ({
+    updateGeneralData: (data) => dispatch(updateGeneralData(data)),
+    nextStep: () => dispatch(nextStep())
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(GeneralData);
