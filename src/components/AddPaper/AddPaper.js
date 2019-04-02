@@ -31,7 +31,7 @@ class AddPaper extends Component {
         }
 
         // FOR DEBUGGING
-        //currentStepDetails = <Contributions />
+        currentStepDetails = <Contributions />
 
         return (
             <div>

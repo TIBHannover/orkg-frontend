@@ -11,7 +11,10 @@ import { getStatementsBySubject } from '../../../../network';
 import styles from '../Contributions.module.scss';
 import StatementItem from './StatementItem';
 import AutoComplete from './AutoComplete';
+import { connect } from 'react-redux';
+import { createProperty } from '../../../../actions/addPaper';
 
+// TODO: this is about adding a property, not really a statement. So rename this component?
 class AddStatement extends Component {
     constructor(props) {
         super(props);
@@ -71,10 +74,16 @@ class AddStatement extends Component {
         });
 
         this.toggleConfirmNewProperty(); // hide dialog
-
-        this.props.handleAdd({
-            propertyLabel: this.state.propertyLabel
+        console.log(this.props.selectedResource);
+        this.props.createProperty({
+            resourceId: this.props.selectedResource,
+            //existingPredicateId: null,
+            label: this.state.propertyLabel,
         });
+
+        /*this.props.handleAdd({
+            propertyLabel: this.state.propertyLabel
+        });*/
     }
 
     render() {
@@ -93,7 +102,7 @@ class AddStatement extends Component {
                                 placeholder="Enter a property"
                                 onItemSelected={this.handlePropertySelect}
                                 onNewItemSelected={this.toggleConfirmNewProperty}
-                                onKeyUp={() => { }} 
+                                onKeyUp={() => { }}
                                 disableBorderRadiusRight />
 
                             <InputGroupAddon addonType="append">
@@ -104,7 +113,7 @@ class AddStatement extends Component {
                         </InputGroup>
                         :
                         <span className="btn btn-link p-0 border-0 align-baseline" onClick={this.handleShowAddStatement}>
-                            + Add statement
+                            + Add property
                         </span>
                     }
                 </ListGroupItem>
@@ -124,4 +133,18 @@ class AddStatement extends Component {
     }
 }
 
-export default AddStatement;
+const mapStateToProps = state => {
+    return {
+        ...state.addPaper,
+        researchProblems: state.addPaper.contributions.byId[state.addPaper.selectedContribution] ? state.addPaper.contributions.byId[state.addPaper.selectedContribution].researchProblems : []
+    }
+};
+
+const mapDispatchToProps = dispatch => ({
+    createProperty: (data) => dispatch(createProperty(data)),
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AddStatement);

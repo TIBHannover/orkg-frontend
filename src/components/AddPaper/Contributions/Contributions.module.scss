@@ -23,6 +23,13 @@
         .deleteContribution {
             cursor: pointer;
         }
+        .selectContribution {
+            cursor:pointer;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
         &.addContribution span:hover {
             text-decoration: underline;
         }

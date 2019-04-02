@@ -11,6 +11,8 @@ import { getStatementsBySubject } from '../../../../network';
 import styles from '../Contributions.module.scss';
 import StatementItem from './StatementItem';
 import AddStatement from './AddStatement';
+import { connect } from 'react-redux';
+import { nextStep } from '../../../../actions/addPaper';
 
 class Statements extends Component {
     constructor(props) {
@@ -216,4 +218,18 @@ class Statements extends Component {
     }
 }
 
-export default Statements;
+const mapStateToProps = state => {
+    return {
+        ...state.addPaper,
+        researchProblems: state.addPaper.contributions.byId[state.addPaper.selectedContribution] ? state.addPaper.contributions.byId[state.addPaper.selectedContribution].researchProblems : []
+    }
+};
+
+const mapDispatchToProps = dispatch => ({
+    nextStep: () => dispatch(nextStep()),
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Statements);

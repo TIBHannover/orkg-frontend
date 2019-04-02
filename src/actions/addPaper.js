@@ -1,4 +1,5 @@
 import * as type from './types.js';
+import { guid } from '../utils';
 
 export const updateGeneralData = (data) => dispatch => {
     dispatch({
@@ -23,5 +24,53 @@ export const updateResearchField = (data) => dispatch => {
     dispatch({
         type: type.UPDATE_RESEARCH_FIELD,
         payload: data,
+    })
+}
+
+export const createContribution = (data) => dispatch => {
+    dispatch({
+        type: type.CREATE_CONTRIBUTION,
+        payload: {
+            id: guid(),
+            resourceId: guid(),
+        }
+    })
+}
+
+export const deleteContribution = (id) => dispatch => {
+    dispatch({
+        type: type.DELETE_CONTRIBUTION,
+        payload: {
+            id
+        }
+    })
+}
+
+export const selectContribution = (id) => dispatch => {
+    dispatch({
+        type: type.SELECT_CONTRIBUTION,
+        payload: {
+            id
+        }
+    })
+}
+
+export const updateResearchProblems = (data) => dispatch => {
+    dispatch({
+        type: type.UPDATE_RESEARCH_PROBLEMS,
+        payload: data
+    })
+}
+
+export const createProperty = (data) => dispatch => {
+    dispatch({
+        type: type.CREATE_PROPERTY,
+        payload: {
+            propertyId: guid(),
+            ...data,
+            /*resourceId: data.resourceId,
+            existingPredicateId: data.existingPredicateId,
+            label: data.label,*/
+        }
     })
 }

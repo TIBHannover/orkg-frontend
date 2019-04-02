@@ -12,45 +12,61 @@ import { getStatementsBySubject } from '../../../network';
 import styles from './Contributions.module.scss';
 import Statements from './Statements/Statements';
 import { connect } from 'react-redux';
-import { nextStep, previousStep } from '../../../actions/addPaper';
+import { nextStep, previousStep, createContribution, deleteContribution, selectContribution, updateResearchProblems } from '../../../actions/addPaper';
+import Confirm from 'reactstrap-confirm';
 
 class Contributions extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            deleteContributionModal: false,
+            //deleteContributionModal: false,
             researchProblems: [],
             collapse: false, //replace
             dropdownOpen: false, //replace
         }
+
+        // if there is no contribution yet, create the first one
+        if (this.props.contributions.allIds.length === 0) {
+            this.props.createContribution();
+        }
     }
 
     handleNextClick = () => {
-        this.props.setParentState({
-            step: 4,
-        });
+        this.props.nextStep();
     }
 
-    handlePreviousClick = () => {
-        this.props.setParentState({
-            step: 2,
-        });
-    }
-
-    toggleDeleteContribution = () => {
-        this.setState(prevState => ({
+    toggleDeleteContribution = async (id) => {
+        /*this.setState(prevState => ({
             deleteContributionModal: !prevState.deleteContributionModal
-        }));
+        }));*/
+        let result = await Confirm({
+            title: 'Are you sure?',
+            message: 'Are you sure you want to delete this contribution?',
+            cancelColor: 'light'
+        });
+
+        if (result) {
+            console.log('delete contribution', id);
+            this.props.deleteContribution(id);
+            //this.props.handleDeleteValue(this.props.id, this.props.predicateId);
+        }
     }
 
-    handleResearchProblemsChange = (problems) => {
-        this.setState({
-            researchProblems: problems
+    handleResearchProblemsChange = (problemsArray) => {
+        this.props.updateResearchProblems({
+            problemsArray,
+            contributionId: this.props.selectedContribution
         });
+    }
+
+    handleSelectContribution = (contributionId) => {
+        this.props.selectContribution(contributionId);
     }
 
     render() {
+        let selectedResourceId = this.props.selectedContribution; //TODO, if this.props.selectedResourceId == null, then this.props.selectedContribution
+
         return (
             <div>
                 <h2 className="h4 mt-4 mb-5">Specify research contributions</h2>
@@ -59,16 +75,23 @@ class Contributions extends Component {
                     <Row noGutters={true}>
                         <Col xs="3">
                             <ul className={styles.contributionsList}>
-                                <li className={styles.activeContribution}>
-                                    Contribution 1
-                                    <span className={`${styles.deleteContribution} float-right mr-1`}>
-                                        <Tooltip message="Delete contribution" hideDefaultIcon={true}>
-                                            <Icon icon={faTrash} onClick={this.toggleDeleteContribution} />
-                                        </Tooltip>
-                                    </span>
-                                </li>
+                                {this.props.contributions.allIds.map((contribution, index) => {
+                                    let contributionId = this.props.contributions.byId[contribution]['id'];
+
+                                    return <li className={contributionId === this.props.selectedContribution ? styles.activeContribution : ''} key={contributionId}>
+                                        <span className={styles.selectContribution} onClick={() => this.handleSelectContribution(contributionId)}>
+                                            Contribution {index + 1}
+                                            <span className={`${styles.deleteContribution} float-right mr-1 ${contributionId !== this.props.selectedContribution && 'd-none'}`}>
+                                                <Tooltip message="Delete contribution" hideDefaultIcon={true}>
+                                                    <Icon icon={faTrash} onClick={() => this.toggleDeleteContribution(contributionId)} />
+                                                </Tooltip>
+                                            </span>
+                                        </span>
+                                    </li>
+                                })}
+
                                 <li className={`${styles.addContribution} text-primary`}>
-                                    <span>+ Add another contribution</span>
+                                    <span onClick={this.props.createContribution}>+ Add another contribution</span>
                                 </li>
                             </ul>
                         </Col>
@@ -79,38 +102,30 @@ class Contributions extends Component {
                                         <Label>
                                             <Tooltip message="Specify the research problems that this contributions addresses. Normally, a research problem consists of very few words (around 2 or 3)">Research problems</Tooltip>
                                         </Label>
-                                        <TagsInput handler={this.handleResearchProblemsChange} value={this.state.researchProblems} />
+                                        <TagsInput handler={this.handleResearchProblemsChange} value={this.props.researchProblems} />
                                     </FormGroup>
                                     <FormGroup>
                                         <Label>
                                             <Tooltip message="Provide details about this contribution by making statements. Some suggestions are already displayed, you can use this when it is useful, or delete it when it is not">Statements</Tooltip>
                                         </Label>
-                                        
-                                        <Statements level="1"
+
+                                        <Statements level="0"
+                                            resourceId={selectedResourceId} />
+
+                                        {/*<Statements level="1"
                                             resourceId="Rfake"
                                             hidden={true} />
 
                                         <Statements level="3"
-                                            resourceId="Rfake" 
-                                            hidden={false} />
-                                            
+                                            resourceId="Rfake"
+                                            hidden={false} />*/}
+
                                     </FormGroup>
                                 </Form>
                             </div>
                         </Col>
                     </Row>
                 </Container>
-
-                <Modal isOpen={this.state.deleteContributionModal} toggle={this.toggleDeleteContribution}>
-                    <ModalHeader toggle={this.toggleDeleteContribution}>Are you sure?</ModalHeader>
-                    <ModalBody>
-                        Are you sure you want to delete this contribution and its corresponding statements?
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="light" onClick={this.toggleDeleteContribution}>Cancel</Button>{' '}
-                        <Button color="primary" onClick={this.toggleDeleteContribution}>Delete</Button>
-                    </ModalFooter>
-                </Modal>
 
                 <hr className="mt-5 mb-3" />
                 <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Next step</Button>
@@ -120,13 +135,20 @@ class Contributions extends Component {
     }
 }
 
-const mapStateToProps = state => ({
-    ...state.addPaper
-});
+const mapStateToProps = state => {
+    return {
+        ...state.addPaper,
+        researchProblems: state.addPaper.contributions.byId[state.addPaper.selectedContribution] ? state.addPaper.contributions.byId[state.addPaper.selectedContribution].researchProblems : []
+    }
+};
 
 const mapDispatchToProps = dispatch => ({
     nextStep: () => dispatch(nextStep()),
-    previousStep: () => dispatch(previousStep())
+    previousStep: () => dispatch(previousStep()),
+    createContribution: () => dispatch(createContribution()),
+    deleteContribution: (id) => dispatch(deleteContribution(id)),
+    selectContribution: (id) => dispatch(selectContribution(id)),
+    updateResearchProblems: (data) => dispatch(updateResearchProblems(data)),
 });
 
 export default connect(
