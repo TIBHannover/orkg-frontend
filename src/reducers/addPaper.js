@@ -1,10 +1,8 @@
 import * as type from '../actions/types';
 import merge from 'lodash/merge';
-import omit from 'lodash/omit';
-import remove from 'lodash/remove';
-import set from 'lodash/fp/set'
 import dotProp from 'dot-prop-immutable';
 
+// TODO: for now this reducer is rather large, maybe split up later in smaller chunks 
 const initialState = {
     currentStep: 1,
     title: '',
@@ -16,6 +14,8 @@ const initialState = {
     selectedResearchField: null,
     selectedContribution: null,
     selectedResource: null,
+    selectedProperty: null,
+    level: 0,
     contributions: {
         byId: {},
         allIds: []
@@ -29,6 +29,10 @@ const initialState = {
         allIds: [],
     },
     values: {
+        byId: {},
+        allIds: [],
+    },
+    resourceHistory: {
         byId: {},
         allIds: [],
     }
@@ -102,7 +106,7 @@ export default (state = initialState, action) => {
                     },
                     allIds: [
                         ...state.resources.allIds,
-                        payload.property_id,
+                        payload.resourceId,
                     ]
                 }
             }
@@ -114,10 +118,9 @@ export default (state = initialState, action) => {
                     selectedContribution: payload.id,
                     selectedResource: payload.resourceId, //also set the selected resource id
                 }
+                
             }
-
-            
-
+            console.log(selectedContribution);
             return merge({}, state, contribution, selectedContribution, resources);
         }
 
@@ -153,11 +156,12 @@ export default (state = initialState, action) => {
 
         case type.SELECT_CONTRIBUTION: {
             let { payload } = action;
-
+            console.log(payload.id);
             return {
                 ...state,
                 selectedContribution: payload.id,
                 selectedResource: state.contributions.byId[payload.id].resourceId,
+                level: 0,
             };
         }
 
@@ -171,6 +175,13 @@ export default (state = initialState, action) => {
             let { payload } = action;
 
             //return dotProp.set(state, `resources.byId`, payload.problemsArray);
+        }
+
+        case type.TOGGLE_PROPERTY_COLLAPSE: {
+            return {
+                ...state,
+                selectedProperty: action.id !== state.selectedProperty ? action.id : null
+            };
         }
 
         case type.CREATE_PROPERTY: {
@@ -190,6 +201,133 @@ export default (state = initialState, action) => {
             newState = dotProp.set(newState, `properties.allIds`, ids => [...ids, payload.propertyId]);
   
             return newState;
+        }
+
+        case type.DELETE_PROPERTY: {
+            let { payload } = action;
+
+            let newState = dotProp.delete(state, `properties.byId.${payload.id}`);
+
+            let propertyIndex = dotProp.get(newState, `properties.allIds`).indexOf(payload.id);
+            newState = dotProp.delete(newState, `properties.allIds.${propertyIndex}`);
+
+            let resourceIndex = dotProp.get(newState, `resources.byId.${payload.resourceId}.propertyIds`).indexOf(payload.id);
+            newState = dotProp.delete(newState, `resources.byId.${payload.resourceId}.propertyIds.${resourceIndex}`);
+
+            // TODO: maybe also delete related values, so it becomes easier to make the API call later?
+            
+            return newState;
+        }
+
+        case type.CREATE_VALUE: {
+            let { payload } = action;
+
+            let newState = dotProp.set(state, `properties.byId.${payload.propertyId}.valueIds`, valueIds => [...valueIds, payload.valueId]);
+            
+            newState = dotProp.set(newState, `values.byId`, ids => ({
+                ...ids,
+                [payload.valueId]: {
+                    type: payload.type,
+                    label: payload.label ? payload.label : '',
+                    resourceId: payload.resourceId ? payload.resourceId : null,
+                }
+            }));
+
+            newState = dotProp.set(newState, `values.allIds`, ids => [...ids, payload.valueId]);
+
+            // TODO is the same as creating a resource in the contributions, so make a function 
+            // add a new resource when a object value is created
+            if (payload.type === 'object') {
+                newState = dotProp.set(newState, `resources.allIds`, ids => [...ids, payload.resourceId]);
+                
+                newState = dotProp.set(newState, `resources.byId`, ids => ({
+                    ...ids,
+                    [payload.resourceId]: {
+                        existingId: payload.existingResourceId ? payload.existingResourceId : null,
+                        id: payload.resourceId,
+                        label: payload.label, 
+                        propertyIds: [],
+                    }
+                }));
+            }
+  
+            return newState;
+        }
+
+        case type.DELETE_VALUE: {
+            let { payload } = action;
+
+            let newState = dotProp.delete(state, `values.byId.${payload.id}`);
+
+            let valueIndex = dotProp.get(newState, `valueIds.allIds`).indexOf(payload.id);
+            newState = dotProp.delete(newState, `values.allIds.${valueIndex}`);
+
+            let propertyIndex = dotProp.get(newState, `properties.byId.${payload.propertyId}.valueIds`).indexOf(payload.id);
+            newState = dotProp.delete(newState, `properties.byId.${payload.propertyId}.valueIds.${propertyIndex}`);
+            
+            return newState;
+        }
+
+        case type.SELECT_RESOURCE: {
+            let { payload } = action;
+            let level = payload.increaseLevel ? state.level + 1 : state.level - 1;
+
+            return {
+                ...state,
+                selectedResource: payload.resourceId,
+                level
+            };
+        }
+
+        case type.ADD_RESOURCE_HISTORY: {
+            let { payload } = action;
+            let resourceId = payload.resourceId ? payload.resourceId : state.contributions.byId[state.selectedContribution].resourceId;
+
+            let newState = dotProp.set(state, `resourceHistory.byId`, ids => ({
+                ...ids,
+                [resourceId]: {
+                    id: resourceId,
+                    label: payload.label,
+                }
+            }));
+
+            newState = dotProp.set(newState, `resourceHistory.allIds`, ids => [...ids, resourceId]);
+
+            return newState;
+        }
+
+        case type.GOTO_RESOURCE_HISTORY: {
+            let { payload } = action;
+            let ids = state.resourceHistory.allIds.slice(0, payload.historyIndex + 1);
+
+            return {
+                ...state,
+                level: payload.historyIndex,
+                selectedResource: payload.id,
+                resourceHistory: {
+                    allIds: ids,
+                    byId: {
+                        ...state.resourceHistory.byId // TODO: also remove the history item from byId object (not really necessary, but it is cleaner)
+                    }
+                }
+            };
+        }
+
+        case type.CLEAR_RESOURCE_HISTORY: {
+            return {
+                ...state,
+                resourceHistory: {
+                    byId: {},
+                    allIds: [],
+                }
+            };
+        }
+
+        case type.CLEAR_SELECTED_PROPERTY: {
+            return {
+                ...state,
+                selectedProperty: null,
+            };
         }
 
         default: {

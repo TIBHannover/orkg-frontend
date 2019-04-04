@@ -5,55 +5,52 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../../../Utils/Tooltip';
 import styles from '../Contributions.module.scss';
+import { connect } from 'react-redux';
+import { deleteProperty } from '../../../../actions/addPaper';
+import Confirm from 'reactstrap-confirm';
 
 class DeleteStatement extends Component {
-    constructor(props) {
-        super(props);
+  
+    toggleDeleteContribution = async () => {
+        let result = await Confirm({
+            title: 'Are you sure?',
+            message: 'Are you sure you want to delete this statement and its related values?',
+            cancelColor: 'light'
+        });
 
-        this.state = {
-            showDeleteModal: false,
+        if (result) {
+            console.log(this.props.id);
+            this.props.deleteProperty({
+                id: this.props.id,
+                resourceId: this.props.selectedResource,
+            });
         }
     }
 
-    toggleDeleteModal = (e) => {
-        e.stopPropagation();
-
-        this.setState(prevState => ({
-            showDeleteModal: !prevState.showDeleteModal
-        }));
-    }
-
-    deleteStatement = () => {
-        this.props.handleDelete();
-
-        this.setState({
-            showDeleteModal: false
-        });
-    }
-
     render() {
-
         return (
             <>
-                <span className={`${styles.deletePredicate} float-right mr-4`} onClick={this.toggleDeleteModal}>
+                <span className={`${styles.deletePredicate} float-right mr-4`} onClick={this.toggleDeleteContribution}>
                     <Tooltip message="Delete statement" hideDefaultIcon={true}>
                         <Icon icon={faTrash} /> Delete
                     </Tooltip>
                 </span>
-
-                <Modal isOpen={this.state.showDeleteModal} toggle={this.toggleDeleteModal}>
-                    <ModalHeader toggle={this.toggleDeleteModal}>Are you sure?</ModalHeader>
-                    <ModalBody>
-                        Are you sure you want to delete this statement and its related values?
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="light" onClick={this.toggleDeleteModal}>Cancel</Button>{' '}
-                        <Button color="primary" onClick={this.deleteStatement}>Delete</Button>
-                    </ModalFooter>
-                </Modal>
             </>
         );
     }
 }
 
-export default DeleteStatement;
+const mapStateToProps = state => {
+    return {
+        ...state.addPaper,
+    }
+};
+
+const mapDispatchToProps = dispatch => ({
+    deleteProperty: (id) => dispatch(deleteProperty(id)),
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(DeleteStatement);

@@ -5,6 +5,8 @@ import Tooltip from '../../../../Utils/Tooltip';
 import styles from '../../Contributions.module.scss';
 import AutoComplete from '../AutoComplete';
 import { guid } from '../../../../../utils';
+import { connect } from 'react-redux';
+import { createValue, deleteValue } from '../../../../../actions/addPaper';
 
 class AddValue extends Component {
     constructor(props) {
@@ -55,24 +57,36 @@ class AddValue extends Component {
     }
 
     handlePropertySelect = ({ id, value }) => {
-        this.props.handleAddValue({
+        /*this.props.handleAddValue({
             valueId: id,
             valueLabel: value,
             valueType: this.state.valueType,
             predicateId: this.props.predicateId,
+        });*/
+        this.props.createValue({
+            label: value,
+            type: this.state.valueType,
+            propertyId: this.props.selectedProperty,
+            existingResourceId: id,
         });
 
         this.handleHideAddValue();
     }
 
     handleAddValue = () => {
-        console.log('type', this.state.valueType);
+        /*console.log('type', this.state.valueType);
 
         this.props.handleAddValue({
             valueId: guid(),
             valueLabel: this.state.valueType == 'object' ? this.state.objectValue : this.state.literalValue,
             valueType: this.state.valueType,
             predicateId: this.props.predicateId,
+        });*/
+
+        this.props.createValue({
+            label: this.state.valueType == 'object' ? this.state.objectValue : this.state.literalValue,
+            type: this.state.valueType,
+            propertyId: this.props.selectedProperty,
         });
 
         this.handleHideAddValue();
@@ -140,4 +154,17 @@ class AddValue extends Component {
     }
 }
 
-export default AddValue;
+const mapStateToProps = state => {
+    return {
+        ...state.addPaper,
+    }
+};
+
+const mapDispatchToProps = dispatch => ({
+    createValue: (data) => dispatch(createValue(data)),
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AddValue);

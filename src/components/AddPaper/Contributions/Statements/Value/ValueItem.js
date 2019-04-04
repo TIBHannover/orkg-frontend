@@ -6,15 +6,10 @@ import Tooltip from '../../../../Utils/Tooltip';
 import styles from '../../Contributions.module.scss';
 import classNames from 'classnames';
 import Confirm from 'reactstrap-confirm';
+import { connect } from 'react-redux';
+import { selectResource } from '../../../../../actions/addPaper';
 
 class ValueItem extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            deleteModal: false,
-        }
-    }
 
     toggleDeleteContribution = async () => {
         let result = await Confirm({
@@ -28,15 +23,23 @@ class ValueItem extends Component {
         }
     }
 
+    handleResourceClick = () => {
+        this.props.selectResource({
+            increaseLevel: true,
+            resourceId: this.props.resourceId,
+            label: this.props.label,
+        });
+    }
+
     render() {
         const labelClass = classNames({
-            [styles.objectLink]: this.props.type == 'object'
+            [styles.objectLink]: this.props.type === 'object'
         });
 
         return (
             <>
                 <ListGroupItem className={styles.valueItem}>
-                    <span className={labelClass}>{this.props.label}</span>
+                    <span className={labelClass} onClick={this.props.type === 'object' ? this.handleResourceClick : null}>{this.props.label}</span>
                     <span className={`${styles.deleteValue} float-right`} onClick={this.toggleDeleteContribution}>
                         <Tooltip message="Delete value" hideDefaultIcon={true}>
                             <Icon icon={faTrash} /> Delete
@@ -48,4 +51,17 @@ class ValueItem extends Component {
     }
 }
 
-export default ValueItem;
+const mapStateToProps = state => {
+    return {
+        ...state.addPaper,
+    }
+};
+
+const mapDispatchToProps = dispatch => ({
+    selectResource: (data) => dispatch(selectResource(data)),
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ValueItem);

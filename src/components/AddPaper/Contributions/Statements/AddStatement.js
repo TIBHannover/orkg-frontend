@@ -50,22 +50,23 @@ class AddStatement extends Component {
         });
     }
 
-    handlePropertySelect = ({ id, value }) => {
-        this.props.handleAdd({
-            predicateId: id,
-            propertyLabel: value
-        });
-
-        this.setState({
-            showAddStatement: false
-        });
-    }
-
     toggleConfirmNewProperty = (propertyLabel) => {
         this.setState(prevState => ({
             confirmNewPropertyModal: !prevState.confirmNewPropertyModal,
             propertyLabel
         }));
+    }
+
+    handlePropertySelect = ({ id, value: label }) => {
+        this.setState({
+            showAddStatement: false
+        });
+
+        this.props.createProperty({
+            resourceId: this.props.selectedResource,
+            existingPredicateId: id,
+            label: label,
+        });
     }
 
     handleNewProperty = () => {
@@ -74,16 +75,11 @@ class AddStatement extends Component {
         });
 
         this.toggleConfirmNewProperty(); // hide dialog
-        console.log(this.props.selectedResource);
+
         this.props.createProperty({
             resourceId: this.props.selectedResource,
-            //existingPredicateId: null,
             label: this.state.propertyLabel,
         });
-
-        /*this.props.handleAdd({
-            propertyLabel: this.state.propertyLabel
-        });*/
     }
 
     render() {
@@ -136,7 +132,6 @@ class AddStatement extends Component {
 const mapStateToProps = state => {
     return {
         ...state.addPaper,
-        researchProblems: state.addPaper.contributions.byId[state.addPaper.selectedContribution] ? state.addPaper.contributions.byId[state.addPaper.selectedContribution].researchProblems : []
     }
 };
 

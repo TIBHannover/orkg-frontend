@@ -28,7 +28,8 @@ class Contributions extends Component {
 
         // if there is no contribution yet, create the first one
         if (this.props.contributions.allIds.length === 0) {
-            this.props.createContribution();
+            this.props.createContribution({selectAfterCreation: true});
+            //this.props.selectContribution(this.props.selectedContribution);
         }
     }
 
@@ -145,7 +146,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     nextStep: () => dispatch(nextStep()),
     previousStep: () => dispatch(previousStep()),
-    createContribution: () => dispatch(createContribution()),
+    createContribution: (data) => dispatch(createContribution(data)),
     deleteContribution: (id) => dispatch(deleteContribution(id)),
     selectContribution: (id) => dispatch(selectContribution(id)),
     updateResearchProblems: (data) => dispatch(updateResearchProblems(data)),

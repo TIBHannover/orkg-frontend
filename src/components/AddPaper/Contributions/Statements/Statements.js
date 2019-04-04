@@ -13,12 +13,13 @@ import StatementItem from './StatementItem';
 import AddStatement from './AddStatement';
 import { connect } from 'react-redux';
 import { nextStep } from '../../../../actions/addPaper';
+import Breadcrumbs from './Breadcrumbs';
 
 class Statements extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
+        /*this.state = {
             label: 'Configuration 1',
             resourceId: this.props.resourceId, //THIS IS THE MAIN id of the statement list
             statements: [ //the subject of the first level is the paper itself, it does not exist yet, so it is now shown in the state
@@ -62,7 +63,7 @@ class Statements extends Component {
                     }]
                 }
             ]
-        }
+        }*/
     }
 
     handleInputChange = (e) => {
@@ -82,7 +83,7 @@ class Statements extends Component {
         this.setState({ statements });
     }
 
-    handleAdd = ({ predicateId, propertyLabel }) => {
+    /*handleAdd = ({ predicateId, propertyLabel }) => {
         console.log('predicateId', predicateId);
         console.log('label', propertyLabel);
 
@@ -101,13 +102,13 @@ class Statements extends Component {
                 this.toggleCollapseStatement(statements.length - 1)
             }
         );
-    }
+    }*/
 
-    handleDelete = (predicateId) => {
+    /*handleDelete = (predicateId) => {
         let statements = deleteArrayEntryByObjectValue(this.state.statements, 'predicateId', predicateId);
 
         this.setState({ statements });
-    }
+    }*/
 
     handleDeleteValue = (valueId, predicateId) => {
         let statements = [...this.state.statements];
@@ -144,24 +145,28 @@ class Statements extends Component {
     }
 
     statements = () => {
+        let propertyIds = Object.keys(this.props.resources.byId).length !== 0 ? this.props.resources.byId[this.props.selectedResource].propertyIds : [];
+
         return <ListGroup className={styles.listGroupEnlarge}>
-            {this.state.statements.map((statement, index) => {
+            {propertyIds.map((propertyId, index) => {
+                let property = this.props.properties.byId[propertyId];
                 // statement is provided in seperate props, so the props can be validated more easily
                 return <StatementItem
-                    values={statement.values}
-                    predicateLabel={statement.predicateLabel}
-                    predicateId={statement.predicateId}
+                    /*values={statement.values}*/
+                    id={propertyId}
+                    predicateLabel={property.label}
+                    //predicateId={statement.predicateId}
                     key={'statement-' + index}
-                    collapse={statement.collapse}
+                    //collapse={property.collapse}
                     index={index}
-                    toggleCollapseStatement={this.toggleCollapseStatement}
-                    handleDelete={this.handleDelete}
+                    //toggleCollapseStatement={this.toggleCollapseStatement}
+                    //handleDelete={this.handleDelete}
                     handleDeleteValue={this.handleDeleteValue}
                     handleAddValue={this.handleAddValue}
                 />
             })}
 
-            <AddStatement handleAdd={this.handleAdd} />
+            <AddStatement />
         </ListGroup>;
     }
 
@@ -178,14 +183,18 @@ class Statements extends Component {
         }
 
         let elements = this.addLevel(0, this.props.level);
+        let historyIds = this.props.resourceHistory.allIds;
 
         return <>
             {this.props.level != 0 ? <>
                 <br />
-                <div className="btn btn-link p-0 border-0 align-baseline mb-3">
+                <div className="btn btn-link p-0 border-0 align-baseline mb-3 mr-4">
                     <Icon icon={faArrowLeft} /> Back
                 </div>
-                <strong className="ml-4 float-right">{this.state.label}</strong>
+
+                <Breadcrumbs />
+                
+                {/*<strong className="ml-4 float-right">{this.props.resources.byId[this.props.selectedResource].label}</strong>*/}
             </> : ''}
 
             {elements}
@@ -221,7 +230,7 @@ class Statements extends Component {
 const mapStateToProps = state => {
     return {
         ...state.addPaper,
-        researchProblems: state.addPaper.contributions.byId[state.addPaper.selectedContribution] ? state.addPaper.contributions.byId[state.addPaper.selectedContribution].researchProblems : []
+        researchProblems: state.addPaper.contributions.byId[state.addPaper.selectedContribution] ? state.addPaper.contributions.byId[state.addPaper.selectedContribution].researchProblems : [],
     }
 };
 
