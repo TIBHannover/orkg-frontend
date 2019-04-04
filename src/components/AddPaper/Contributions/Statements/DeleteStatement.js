@@ -11,7 +11,7 @@ import Confirm from 'reactstrap-confirm';
 
 class DeleteStatement extends Component {
   
-    toggleDeleteContribution = async () => {
+    toggleDeleteStatement = async () => {
         let result = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure you want to delete this statement and its related values?',
@@ -30,7 +30,7 @@ class DeleteStatement extends Component {
     render() {
         return (
             <>
-                <span className={`${styles.deletePredicate} float-right mr-4`} onClick={this.toggleDeleteContribution}>
+                <span className={`${styles.deletePredicate} float-right mr-4`} onClick={this.toggleDeleteStatement}>
                     <Tooltip message="Delete statement" hideDefaultIcon={true}>
                         <Icon icon={faTrash} /> Delete
                     </Tooltip>

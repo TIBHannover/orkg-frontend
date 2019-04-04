@@ -156,11 +156,21 @@ export default (state = initialState, action) => {
 
         case type.SELECT_CONTRIBUTION: {
             let { payload } = action;
-            console.log(payload.id);
+
+            let contributionId;
+            if (payload.id === undefined) { // if no id is provided, select the first contribution (happens in case of contribution deletion)
+                if (state.contributions.allIds.length === 0) { //if there are not contributions, dont select one
+                    return state;
+                }
+                contributionId = state.contributions.allIds[0];
+            } else {
+                contributionId = payload.id;
+            }
+
             return {
                 ...state,
-                selectedContribution: payload.id,
-                selectedResource: state.contributions.byId[payload.id].resourceId,
+                selectedContribution: contributionId,
+                selectedResource: state.contributions.byId[contributionId].resourceId,
                 level: 0,
             };
         }

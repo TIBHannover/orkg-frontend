@@ -56,7 +56,9 @@ export const deleteContribution = (id) => dispatch => {
         payload: {
             id
         }
-    })
+    });
+
+    dispatch(selectContribution());
 }
 
 export const selectContribution = (id) => dispatch => {

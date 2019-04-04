@@ -49,8 +49,8 @@ class StatementItem extends Component {
                 <ListGroupItem active={isCollapsed} onClick={() => this.props.togglePropertyCollapse(this.props.id)} className={listGroupClass}>
                     {this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1)}
 
-                    {this.props.values && this.props.values.length == 1 && !this.props.collapse ?
-                        <>: <em className="text-muted">{this.props.values[0].label}</em></>
+                    {valueIds.length == 1 && !isCollapsed ?
+                        <>: <em className="text-muted">{this.props.values.byId[valueIds[0]].label}</em></>
                         : ''}
 
                     <Icon icon={isCollapsed ? faChevronCircleDown : faChevronCircleRight} className={chevronClass} />{' '}

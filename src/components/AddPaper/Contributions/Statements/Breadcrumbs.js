@@ -14,9 +14,7 @@ class Breadcrumbs extends Component {
         return <>
             {this.props.resourceHistory.allIds.map((history, index) => {
                 let item = this.props.resourceHistory.byId[history];
-                console.log(item);
-
-                return <> <span className="btn btn-link p-0 border-0 align-baseline mb-3" onClick={() => this.handleOnClick(item.id, index)}>{item.label}</span> / </>;
+                return <span key={index}> <span className="btn btn-link p-0 border-0 align-baseline mb-3" onClick={() => this.handleOnClick(item.id, index)}>{item.label}</span> / </span>;
             })}
         </>
     }

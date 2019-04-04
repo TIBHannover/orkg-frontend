@@ -113,14 +113,6 @@ class Contributions extends Component {
                                         <Statements level="0"
                                             resourceId={selectedResourceId} />
 
-                                        {/*<Statements level="1"
-                                            resourceId="Rfake"
-                                            hidden={true} />
-
-                                        <Statements level="3"
-                                            resourceId="Rfake"
-                                            hidden={false} />*/}
-
                                     </FormGroup>
                                 </Form>
                             </div>
