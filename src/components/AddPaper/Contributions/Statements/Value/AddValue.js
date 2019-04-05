@@ -4,9 +4,8 @@ import { Input, InputGroup, InputGroupAddon, Button, ListGroupItem, DropdownTogg
 import Tooltip from '../../../../Utils/Tooltip';
 import styles from '../../Contributions.module.scss';
 import AutoComplete from '../AutoComplete';
-import { guid } from '../../../../../utils';
 import { connect } from 'react-redux';
-import { createValue, deleteValue } from '../../../../../actions/addPaper';
+import { createValue } from '../../../../../actions/addPaper';
 
 class AddValue extends Component {
     constructor(props) {

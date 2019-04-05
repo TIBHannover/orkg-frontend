@@ -18,52 +18,6 @@ import Breadcrumbs from './Breadcrumbs';
 class Statements extends Component {
     constructor(props) {
         super(props);
-
-        /*this.state = {
-            label: 'Configuration 1',
-            resourceId: this.props.resourceId, //THIS IS THE MAIN id of the statement list
-            statements: [ //the subject of the first level is the paper itself, it does not exist yet, so it is now shown in the state
-                {
-                    predicateId: 'fake-st-1',
-                    predicateLabel: 'has results',
-                    values: [
-                        {
-                            type: 'object',
-                            label: 'Result 1',
-                            id: 'fake-ob-1'
-                        },
-                        {
-                            type: 'object',
-                            label: 'Result 2',
-                            id: 'fake-ob-2',
-                        },
-                        {
-                            type: 'literal',
-                            label: 'This is a textual result',
-                            id: 'fake-ob-3',
-                        }
-                    ]
-                },
-                {
-                    predicateLabel: 'has value',
-                    predicateId: 'fake-st-2',
-                    values: [{
-                        type: 'literal',
-                        label: 'Correct positives',
-                        id: 'fake-ob-3',
-                    }]
-                },
-                {
-                    predicateLabel: 'has metric',
-                    predicateId: 'fake-st-3',
-                    values: [{
-                        type: 'literal',
-                        label: '21',
-                        id: 'fake-ob-3',
-                    }]
-                }
-            ]
-        }*/
     }
 
     handleInputChange = (e) => {
@@ -82,33 +36,6 @@ class Statements extends Component {
 
         this.setState({ statements });
     }
-
-    /*handleAdd = ({ predicateId, propertyLabel }) => {
-        console.log('predicateId', predicateId);
-        console.log('label', propertyLabel);
-
-        predicateId = !predicateId ? 'new-' + guid() : predicateId;
-
-        let statements = [...this.state.statements];
-
-        statements.push({
-            predicateLabel: propertyLabel,
-            predicateId
-        });
-
-        this.setState(
-            { statements },
-            () => { // select the just created property only after updating the state in sync
-                this.toggleCollapseStatement(statements.length - 1)
-            }
-        );
-    }*/
-
-    /*handleDelete = (predicateId) => {
-        let statements = deleteArrayEntryByObjectValue(this.state.statements, 'predicateId', predicateId);
-
-        this.setState({ statements });
-    }*/
 
     handleDeleteValue = (valueId, predicateId) => {
         let statements = [...this.state.statements];
@@ -154,6 +81,7 @@ class Statements extends Component {
                 return <StatementItem
                     /*values={statement.values}*/
                     id={propertyId}
+                    property={property}
                     predicateLabel={property.label}
                     //predicateId={statement.predicateId}
                     key={'statement-' + index}

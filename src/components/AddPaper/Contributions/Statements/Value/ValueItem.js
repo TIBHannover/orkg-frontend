@@ -7,7 +7,7 @@ import styles from '../../Contributions.module.scss';
 import classNames from 'classnames';
 import Confirm from 'reactstrap-confirm';
 import { connect } from 'react-redux';
-import { selectResource, fetchStatementsForResource } from '../../../../../actions/addPaper';
+import { selectResource, fetchStatementsForResource, deleteValue } from '../../../../../actions/addPaper';
 
 class ValueItem extends Component {
 
@@ -17,9 +17,17 @@ class ValueItem extends Component {
             message: 'Are you sure you want to delete this value?',
             cancelColor: 'light'
         });
+        console.log(this.props);
+        console.log({
+            id: this.props.id,
+            propertyId: this.props.propertyId
+        });
 
         if (result) {
-            this.props.handleDeleteValue(this.props.id, this.props.predicateId);
+            this.props.deleteValue({
+                id: this.props.id,
+                propertyId: this.props.propertyId
+            });
         }
     }
 
@@ -71,6 +79,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     selectResource: (data) => dispatch(selectResource(data)),
     fetchStatementsForResource: (data) => dispatch(fetchStatementsForResource(data)),
+    deleteValue: (data) => dispatch(deleteValue(data)),
 });
 
 export default connect(

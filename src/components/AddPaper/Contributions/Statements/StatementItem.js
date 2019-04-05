@@ -67,10 +67,10 @@ class StatementItem extends Component {
                                 return <ValueItem
                                     key={index}
                                     label={value.label}
-                                    id={value.id}
+                                    id={valueId}
                                     type={value.type}
                                     resourceId={value.resourceId}
-                                    //predicateId={this.props.predicateId}
+                                    propertyId={this.props.id}
                                     //handleDeleteValue={this.props.handleDeleteValue} 
                                     />
                             })}

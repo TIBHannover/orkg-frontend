@@ -279,10 +279,10 @@ export default (state = initialState, action) => {
 
         case type.DELETE_VALUE: {
             let { payload } = action;
-
+            console.log('payload', payload);
             let newState = dotProp.delete(state, `values.byId.${payload.id}`);
 
-            let valueIndex = dotProp.get(newState, `valueIds.allIds`).indexOf(payload.id);
+            let valueIndex = dotProp.get(newState, `values.allIds`).indexOf(payload.id);
             newState = dotProp.delete(newState, `values.allIds.${valueIndex}`);
 
             let propertyIndex = dotProp.get(newState, `properties.byId.${payload.propertyId}.valueIds`).indexOf(payload.id);
