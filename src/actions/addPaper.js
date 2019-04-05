@@ -187,7 +187,6 @@ export const fetchStatementsForResource = (data) => {
                         const valueId = guid();
 
                         // check whether there already exist a property for this, then combine 
-                        //if (existingProperties.indexOf(statement.predicate.id) === -1) {
                         if (existingProperties.filter(e => e.existingPredicateId === statement.predicate.id).length === 0) {
 
                             dispatch(createProperty({
@@ -195,6 +194,7 @@ export const fetchStatementsForResource = (data) => {
                                 resourceId: resourceId,
                                 existingPredicateId: statement.predicate.id,
                                 label: statement.predicate.label,
+                                isExistingProperty: true,
                             }));
 
                             existingProperties.push({
@@ -203,16 +203,15 @@ export const fetchStatementsForResource = (data) => {
                             });
                         } else {
                             propertyId = existingProperties.filter(e => e.existingPredicateId === statement.predicate.id)[0].propertyId;
-                            console.log(existingProperties.filter(e => e.existingPredicateId === statement.predicate.id));
                         }
                         
-
                         dispatch(createValue({
                             valueId: valueId,
                             existingResourceId: statement.object.id,
                             propertyId: propertyId,
                             label: statement.object.label,
                             type: 'object',
+                            isExistingValue: true
                         }));
                     }
 

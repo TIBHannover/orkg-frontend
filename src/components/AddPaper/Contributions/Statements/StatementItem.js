@@ -57,7 +57,8 @@ class StatementItem extends Component {
 
                     <Icon icon={isCollapsed ? faChevronCircleDown : faChevronCircleRight} className={chevronClass} />{' '}
 
-                    <DeleteStatement id={this.props.id} />
+                    {!this.props.isExistingProperty ?
+                        <DeleteStatement id={this.props.id} /> : ''}
                 </ListGroupItem>
 
                 <Collapse isOpen={isCollapsed}>
@@ -65,7 +66,7 @@ class StatementItem extends Component {
                         <ListGroup flush>
                             {valueIds.map((valueId, index) => {
                                 let value = this.props.values.byId[valueId];
-                                
+
                                 return <ValueItem
                                     key={index}
                                     label={value.label}
@@ -73,6 +74,7 @@ class StatementItem extends Component {
                                     type={value.type}
                                     resourceId={value.resourceId}
                                     propertyId={this.props.id}
+                                    isExistingValue={value.isExistingValue}
                                 />
                             })}
 

@@ -91,6 +91,7 @@ class Statements extends Component {
                     //handleDelete={this.handleDelete}
                     handleDeleteValue={this.handleDeleteValue}
                     handleAddValue={this.handleAddValue}
+                    isExistingProperty={property.isExistingProperty ? true : false}
                 />
             })}
 

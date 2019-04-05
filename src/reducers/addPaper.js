@@ -216,6 +216,7 @@ export default (state = initialState, action) => {
                     label: payload.label ? payload.label : '',
                     existingPredicateId: payload.existingPredicateId ? payload.existingPredicateId : null,
                     valueIds: [],
+                    isExistingProperty: payload.isExistingProperty ? payload.isExistingProperty : false,
                 }
             }));
 
@@ -251,6 +252,7 @@ export default (state = initialState, action) => {
                     type: payload.type,
                     label: payload.label ? payload.label : '',
                     resourceId: payload.resourceId ? payload.resourceId : null,
+                    isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
                 }
             }));
 
