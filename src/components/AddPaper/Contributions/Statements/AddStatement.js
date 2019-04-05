@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
-import { crossrefUrl, submitGetRequest, predicatesUrl, resourcesUrl } from '../../../../network';
-import { Container, Row, Col, Form, FormGroup, Label, Input, InputGroup, InputGroupAddon, Button, ButtonGroup, FormFeedback, Table, Card, ListGroup, ListGroupItem, CardDeck, Modal, ModalHeader, ModalBody, ModalFooter, Collapse, DropdownToggle, DropdownMenu, InputGroupButtonDropdown, DropdownItem } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTrash, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
-import { range } from '../../../../utils';
-import Tooltip from '../../../Utils/Tooltip';
-import TagsInput from '../../../Utils/TagsInput';
-import FormValidator from '../../../Utils/FormValidator';
-import { getStatementsBySubject } from '../../../../network';
+import { predicatesUrl } from '../../../../network';
+import { InputGroup, InputGroupAddon, Button, ListGroupItem, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import styles from '../Contributions.module.scss';
-import StatementItem from './StatementItem';
 import AutoComplete from './AutoComplete';
 import { connect } from 'react-redux';
 import { createProperty } from '../../../../actions/addPaper';
@@ -39,10 +31,6 @@ class AddStatement extends Component {
             newPredicateValue: '',
         });
     }
-
-    /*handleAddStatement = () => {
-        this.handleHideAddStatement();
-    }*/
 
     handleInputChange = (e) => {
         this.setState({
@@ -88,12 +76,6 @@ class AddStatement extends Component {
                 <ListGroupItem className={`${styles.statementItem} ${styles.statementItemInput}`}>
                     {this.state.showAddStatement ?
                         <InputGroup className={`${styles.addStatement}`}>
-                            {/*<Input bsSize="sm"
-                            placeholder="Enter a predicate"
-                            name="newPredicateValue"
-                            value={this.state.newPredicateValue}
-                            onChange={this.handleInputChange} />*/}
-
                             <AutoComplete requestUrl={predicatesUrl}
                                 placeholder="Enter a property"
                                 onItemSelected={this.handlePropertySelect}
@@ -103,7 +85,6 @@ class AddStatement extends Component {
 
                             <InputGroupAddon addonType="append">
                                 <Button color="light" className={styles.addStatementActionButton} onClick={this.handleHideAddStatement}>Cancel</Button>
-                                {/*<Button color="light" className={styles.addStatementActionButton} onClick={this.handleAddStatement}>Done</Button>*/}
                             </InputGroupAddon>
 
                         </InputGroup>

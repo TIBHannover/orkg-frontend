@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { crossrefUrl, submitGetRequest } from '../../../../network';
-import { ListGroup, ListGroupItem, Collapse, Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../../../Utils/Tooltip';

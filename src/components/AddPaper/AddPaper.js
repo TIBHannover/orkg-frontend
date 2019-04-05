@@ -4,6 +4,7 @@ import ProgressBar from './ProgressBar';
 import GeneralData from './GeneralData/GeneralData';
 import ResearchField from './ResearchField/ResearchField';
 import Contributions from './Contributions/Contributions';
+import Finish from './Finish/Finish';
 import { connect } from 'react-redux';
 
 class AddPaper extends Component {
@@ -25,10 +26,14 @@ class AddPaper extends Component {
             case 3:
                 currentStepDetails = <Contributions />
                 break;
+            case 4:
+                currentStepDetails = <Finish />
+                break;
         }
 
         // FOR DEBUGGING
-        currentStepDetails = <Contributions />
+        //currentStepDetails = <Contributions />
+        //currentStepDetails = <Finish />
 
         return (
             <div>
