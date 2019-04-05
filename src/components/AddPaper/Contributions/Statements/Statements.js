@@ -188,13 +188,8 @@ class Statements extends Component {
         return <>
             {this.props.level != 0 ? <>
                 <br />
-                <div className="btn btn-link p-0 border-0 align-baseline mb-3 mr-4">
-                    <Icon icon={faArrowLeft} /> Back
-                </div>
 
                 <Breadcrumbs />
-                
-                {/*<strong className="ml-4 float-right">{this.props.resources.byId[this.props.selectedResource].label}</strong>*/}
             </> : ''}
 
             {elements}

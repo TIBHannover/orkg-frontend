@@ -7,7 +7,7 @@ import styles from '../../Contributions.module.scss';
 import classNames from 'classnames';
 import Confirm from 'reactstrap-confirm';
 import { connect } from 'react-redux';
-import { selectResource } from '../../../../../actions/addPaper';
+import { selectResource, fetchStatementsForResource } from '../../../../../actions/addPaper';
 
 class ValueItem extends Component {
 
@@ -24,6 +24,17 @@ class ValueItem extends Component {
     }
 
     handleResourceClick = () => {
+        let resource = this.props.resources.byId[this.props.resourceId];
+        let existingResourceId = resource.existingResourceId;
+
+        if (existingResourceId && !resource.isFechted) {
+            // TODO show loading indicator when fetching statements
+            this.props.fetchStatementsForResource({
+                resourceId: this.props.resourceId,
+                existingResourceId
+            });
+        }
+
         this.props.selectResource({
             increaseLevel: true,
             resourceId: this.props.resourceId,
@@ -59,6 +70,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
     selectResource: (data) => dispatch(selectResource(data)),
+    fetchStatementsForResource: (data) => dispatch(fetchStatementsForResource(data)),
 });
 
 export default connect(

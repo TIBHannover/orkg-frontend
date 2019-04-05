@@ -184,7 +184,18 @@ export default (state = initialState, action) => {
         case type.CREATE_RESOURCE: {
             let { payload } = action;
 
-            //return dotProp.set(state, `resources.byId`, payload.problemsArray);
+            let newState = dotProp.set(state, `resources.byId`, ids => ({
+                ...ids,
+                [payload.resourceId]: {
+                    label: payload.label ? payload.label : '',
+                    existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
+                    propertyIds: [],
+                }
+            }));
+
+            newState = dotProp.set(newState, `resources.allIds`, ids => [...ids, payload.resourceId]);
+  
+            return newState;
         }
 
         case type.TOGGLE_PROPERTY_COLLAPSE: {
@@ -247,13 +258,15 @@ export default (state = initialState, action) => {
 
             // TODO is the same as creating a resource in the contributions, so make a function 
             // add a new resource when a object value is created
-            if (payload.type === 'object') {
+
+            //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
+            if (payload.type === 'object' && !state.resources.byId[payload.resourceId]) {
                 newState = dotProp.set(newState, `resources.allIds`, ids => [...ids, payload.resourceId]);
                 
                 newState = dotProp.set(newState, `resources.byId`, ids => ({
                     ...ids,
                     [payload.resourceId]: {
-                        existingId: payload.existingResourceId ? payload.existingResourceId : null,
+                        existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
                         id: payload.resourceId,
                         label: payload.label, 
                         propertyIds: [],
@@ -308,7 +321,7 @@ export default (state = initialState, action) => {
 
         case type.GOTO_RESOURCE_HISTORY: {
             let { payload } = action;
-            let ids = state.resourceHistory.allIds.slice(0, payload.historyIndex + 1);
+            let ids = state.resourceHistory.allIds.slice(0, payload.historyIndex + 1); //TODO: it looks like historyIndex can be derived, so remove it from payload
 
             return {
                 ...state,
@@ -317,7 +330,7 @@ export default (state = initialState, action) => {
                 resourceHistory: {
                     allIds: ids,
                     byId: {
-                        ...state.resourceHistory.byId // TODO: also remove the history item from byId object (not really necessary, but it is cleaner)
+                        ...state.resourceHistory.byId // TODO: remove the history item from byId object (not really necessary, but it is cleaner)
                     }
                 }
             };
@@ -338,6 +351,26 @@ export default (state = initialState, action) => {
                 ...state,
                 selectedProperty: null,
             };
+        }
+
+        case type.ADD_FETCHED_STATEMENT: {
+            let { payload } = action; 
+
+            console.log('add fetched statement', payload);
+
+            return {
+                ...state,
+            }
+        }
+
+        case type.SET_STATEMENT_IS_FECHTED: {
+            let { resourceId } = action; 
+
+            let newState = dotProp.set(state, `resources.byId.${resourceId}.isFechted`, true);
+
+            return {
+                ...newState,
+            }
         }
 
         default: {

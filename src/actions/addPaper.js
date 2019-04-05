@@ -1,5 +1,6 @@
 import * as type from './types.js';
 import { guid } from '../utils';
+import { getStatementsBySubject } from '../network';
 
 export const updateGeneralData = (data) => dispatch => {
     dispatch({
@@ -27,7 +28,7 @@ export const updateResearchField = (data) => dispatch => {
     })
 }
 
-export const createContribution = ({selectAfterCreation = false}) => dispatch => {
+export const createContribution = ({ selectAfterCreation = false }) => dispatch => {
     let newResourceId = guid();
     let newContributionId = guid();
 
@@ -85,7 +86,7 @@ export const selectContribution = (id) => dispatch => {
             label: 'Main',
         }
     });
-    
+
 }
 
 export const updateResearchProblems = (data) => dispatch => {
@@ -106,7 +107,7 @@ export const createProperty = (data) => dispatch => {
     dispatch({
         type: type.CREATE_PROPERTY,
         payload: {
-            propertyId: guid(),
+            propertyId: data.propertyId ? data.propertyId : guid(),
             ...data,
         }
     })
@@ -119,12 +120,24 @@ export const deleteProperty = (data) => dispatch => {
     })
 }
 
+export const createResource = (data) => dispatch => {
+    dispatch({
+        type: type.CREATE_RESOURCE,
+        payload: {
+            resourceId: data.resourceId ? data.resourceId : guid(),
+            label: data.label,
+            existingResourceId: data.existingResourceId
+        }
+    })
+}
+
 export const createValue = (data) => dispatch => {
+    let resourceId = data.existingResourceId ? data.existingResourceId : (data.type === 'object' ? guid() : null);
     dispatch({
         type: type.CREATE_VALUE,
         payload: {
-            valueId: guid(),
-            resourceId: data.type === 'object' ? guid() : null,
+            valueId: data.valueId ? data.valueId : guid(),
+            resourceId: resourceId,
             ...data,
         }
     })
@@ -137,10 +150,14 @@ export const deleteValue = (data) => dispatch => {
     })
 }
 
-export const selectResource = (data) => dispatch => {
+export const selectResource = (data) => dispatch => { // use redux thunk for async action, for capturing the resource properties 
     dispatch({
         type: type.SELECT_RESOURCE,
-        payload: data
+        payload: {
+            increaseLevel: data.increaseLevel,
+            resourceId: data.resourceId,
+            label: data.label,
+        }
     });
 
     dispatch({
@@ -154,6 +171,45 @@ export const selectResource = (data) => dispatch => {
     dispatch({
         type: type.CLEAR_SELECTED_PROPERTY
     });
+}
+
+export const fetchStatementsForResource = (data) => {
+    const { resourceId, existingResourceId } = data;
+
+    return (dispatch) => {
+        return getStatementsBySubject(existingResourceId)
+            .then(
+                response => {
+                    console.log(response)
+                    for (let statement of response) {
+                        const propertyId = guid();
+                        const valueId = guid();
+
+                        // check whether there already exist a property for this, then combine 
+                        dispatch(createProperty({
+                            propertyId: propertyId,
+                            resourceId: resourceId,
+                            existingPredicateId: statement.predicate.id,
+                            label: statement.predicate.label,
+                        }));
+
+                        dispatch(createValue({
+                            valueId: valueId,
+                            existingResourceId: statement.object.id,
+                            propertyId: propertyId,
+                            label: statement.object.label,
+                            type: 'object',
+                        }));
+                    }
+
+                    dispatch({
+                        type: type.SET_STATEMENT_IS_FECHTED,
+                        resourceId: resourceId,
+                    });
+                },
+                error => console.log('An error occurred.', error)
+            )
+    }
 }
 
 export const goToResourceHistory = (data) => dispatch => {
