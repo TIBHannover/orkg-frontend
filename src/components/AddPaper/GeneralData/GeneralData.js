@@ -157,7 +157,7 @@ class GeneralData extends Component {
 
         return (
             <div>
-                <h2 className="h4 mt-4">General paper data</h2>
+                <h2 className="h4 mt-4">General paper data {this.props.currentStep}</h2>
 
                 <ButtonGroup className="float-right" style={{ marginTop: '-30px' }}>
                     <Button size="sm"
