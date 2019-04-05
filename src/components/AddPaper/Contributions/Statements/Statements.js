@@ -1,13 +1,5 @@
 import React, { Component } from 'react';
-import { crossrefUrl, submitGetRequest } from '../../../../network';
-import { Container, Row, Col, Form, FormGroup, Label, Input, InputGroup, InputGroupAddon, Button, ButtonGroup, FormFeedback, Table, Card, ListGroup, ListGroupItem, CardDeck, Modal, ModalHeader, ModalBody, ModalFooter, Collapse, DropdownToggle, DropdownMenu, InputGroupButtonDropdown, DropdownItem } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTrash, faChevronCircleDown, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { guid, deleteArrayEntryByObjectValue } from '../../../../utils';
-import Tooltip from '../../../Utils/Tooltip';
-import TagsInput from '../../../Utils/TagsInput';
-import FormValidator from '../../../Utils/FormValidator';
-import { getStatementsBySubject } from '../../../../network';
+import { ListGroup } from 'reactstrap';
 import styles from '../Contributions.module.scss';
 import StatementItem from './StatementItem';
 import AddStatement from './AddStatement';
@@ -26,71 +18,19 @@ class Statements extends Component {
         });
     }
 
-    toggleCollapseStatement = (clickedIndex) => {
-        let statements = [...this.state.statements];
-
-        // toggle (=show/close) clicked item, hide all other items
-        for (let i = 0; i < statements.length; i++) {
-            statements[i].collapse = (i == clickedIndex) ? !statements[i].collapse : false;
-        }
-
-        this.setState({ statements });
-    }
-
-    handleDeleteValue = (valueId, predicateId) => {
-        let statements = [...this.state.statements];
-        console.log('value', valueId);
-        console.log('predicate', predicateId);
-
-        let predicateIndex = statements.findIndex(x => x.predicateId === predicateId);
-        console.log(predicateIndex);
-
-        statements[predicateIndex].values = deleteArrayEntryByObjectValue(statements[predicateIndex].values, 'id', valueId);
-
-        console.log(statements);
-
-        this.setState({ statements });
-    }
-
-    handleAddValue = ({ valueId, valueLabel, valueType, predicateId }) => {
-        let statements = [...this.state.statements];
-        let predicateIndex = statements.findIndex(x => x.predicateId === predicateId);
-
-        if (statements[predicateIndex].values === undefined) {
-            statements[predicateIndex].values = [];
-        }
-
-        statements[predicateIndex].values.push(
-            {
-                id: valueId,
-                type: valueType,
-                label: valueLabel,
-            }
-        );
-
-        this.setState({ statements });
-    }
-
     statements = () => {
         let propertyIds = Object.keys(this.props.resources.byId).length !== 0 ? this.props.resources.byId[this.props.selectedResource].propertyIds : [];
 
         return <ListGroup className={styles.listGroupEnlarge}>
             {propertyIds.map((propertyId, index) => {
                 let property = this.props.properties.byId[propertyId];
+
                 // statement is provided in seperate props, so the props can be validated more easily
                 return <StatementItem
-                    /*values={statement.values}*/
                     id={propertyId}
-                    property={property}
                     predicateLabel={property.label}
-                    //predicateId={statement.predicateId}
                     key={'statement-' + index}
-                    //collapse={property.collapse}
                     index={index}
-                    //toggleCollapseStatement={this.toggleCollapseStatement}
-                    //handleDelete={this.handleDelete}
-                    handleDeleteValue={this.handleDeleteValue}
-                    handleAddValue={this.handleAddValue}
                     isExistingProperty={property.isExistingProperty ? true : false}
                 />
             })}
@@ -112,7 +52,6 @@ class Statements extends Component {
         }
 
         let elements = this.addLevel(0, this.props.level);
-        let historyIds = this.props.resourceHistory.allIds;
 
         return <>
             {this.props.level != 0 ? <>
@@ -123,31 +62,6 @@ class Statements extends Component {
 
             {elements}
         </>;
-
-        /*return (
-            <div className={styles.levelBox}
-            > <div className={styles.levelBox}>
-            <ListGroup className={styles.listGroupEnlarge}>
-                {this.state.statements.map((statement, index) => {
-                    // statement is provided in seperate props, so the props can be validated more easily
-                    return <StatementItem
-                        values={statement.values}
-                        predicateLabel={statement.predicateLabel}
-                        predicateId={statement.predicateId}
-                        key={'statement-' + index}
-                        collapse={statement.collapse}
-                        index={index}
-                        toggleCollapseStatement={this.toggleCollapseStatement}
-                        handleDelete={this.handleDelete}
-                        handleDeleteValue={this.handleDeleteValue}
-                        handleAddValue={this.handleAddValue}
-                    />
-                })}
-
-                <AddStatement handleAdd={this.handleAdd} />
-            </ListGroup>
-            </div></div>
-        );*/
     }
 }
 

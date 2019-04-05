@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import { crossrefUrl, submitGetRequest } from '../../network';
-import { Container, Row, Col, Form, FormGroup, Label, Input, InputGroup, InputGroupAddon, Button, ButtonGroup, FormFeedback, Table, Card } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { Container } from 'reactstrap';
 import ProgressBar from './ProgressBar';
 import GeneralData from './GeneralData/GeneralData';
 import ResearchField from './ResearchField/ResearchField';
@@ -50,7 +47,7 @@ class AddPaper extends Component {
 }
 
 const mapStateToProps = state => ({
-    ...state.addPaper
+    ...state.addPaper // TODO: scope this reducer, also in other files
 });
 
 const mapDispatchToProps = dispatch => ({

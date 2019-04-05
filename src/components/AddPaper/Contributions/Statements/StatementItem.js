@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import { crossrefUrl, submitGetRequest } from '../../../../network';
 import { ListGroup, ListGroupItem, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTrash, faChevronCircleDown, faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
-import Tooltip from '../../../Utils/Tooltip';
+import { faChevronCircleDown, faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
 import styles from '../Contributions.module.scss';
 import classNames from 'classnames';
 import ValueItem from './Value/ValueItem';
 import AddValue from './Value/AddValue';
 import DeleteStatement from './DeleteStatement';
-import { throws } from 'assert';
 import { connect } from 'react-redux';
 import { togglePropertyCollapse } from '../../../../actions/addPaper';
 

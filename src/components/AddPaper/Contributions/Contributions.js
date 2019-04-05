@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
-import { crossrefUrl, submitGetRequest } from '../../../network';
-import { Container, Row, Col, Form, FormGroup, Label, Input, InputGroup, InputGroupAddon, Button, ButtonGroup, FormFeedback, Table, Card, ListGroup, ListGroupItem, CardDeck, Modal, ModalHeader, ModalBody, ModalFooter, Collapse, DropdownToggle, DropdownMenu, InputGroupButtonDropdown, DropdownItem } from 'reactstrap';
+import { Container, Row, Col, Form, FormGroup, Label, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTrash, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
-import ProgressBar from '../ProgressBar';
-import { range } from '../../../utils';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../../Utils/Tooltip';
 import TagsInput from '../../Utils/TagsInput';
-import FormValidator from '../../Utils/FormValidator';
-import { getStatementsBySubject } from '../../../network';
 import styles from './Contributions.module.scss';
 import Statements from './Statements/Statements';
 import { connect } from 'react-redux';
@@ -20,7 +15,6 @@ class Contributions extends Component {
         super(props);
 
         this.state = {
-            //deleteContributionModal: false,
             researchProblems: [],
             collapse: false, //replace
             dropdownOpen: false, //replace
@@ -29,7 +23,6 @@ class Contributions extends Component {
         // if there is no contribution yet, create the first one
         if (this.props.contributions.allIds.length === 0) {
             this.props.createContribution({selectAfterCreation: true});
-            //this.props.selectContribution(this.props.selectedContribution);
         }
     }
 
@@ -38,9 +31,6 @@ class Contributions extends Component {
     }
 
     toggleDeleteContribution = async (id) => {
-        /*this.setState(prevState => ({
-            deleteContributionModal: !prevState.deleteContributionModal
-        }));*/
         let result = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure you want to delete this contribution?',
@@ -48,9 +38,7 @@ class Contributions extends Component {
         });
 
         if (result) {
-            console.log('delete contribution', id);
             this.props.deleteContribution(id);
-            //this.props.handleDeleteValue(this.props.id, this.props.predicateId);
         }
     }
 
@@ -66,7 +54,7 @@ class Contributions extends Component {
     }
 
     render() {
-        let selectedResourceId = this.props.selectedContribution; //TODO, if this.props.selectedResourceId == null, then this.props.selectedContribution
+        let selectedResourceId = this.props.selectedContribution;
 
         return (
             <div>

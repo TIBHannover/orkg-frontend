@@ -129,7 +129,7 @@ export default (state = initialState, action) => {
             //let newState = { ...state };
 
             // delete both from byId and allIds
-            // TODO states are immutable, so replace this code by building a new state object
+            // TODO: states are immutable, so replace this code by building a new state object
             //newState.contributions.byId = omit(newState.contributions.byId, payload.id);
             //newState.contributions.allIds = newState.contributions.allIds.filter((val) => val !== payload.id);
 
@@ -258,7 +258,7 @@ export default (state = initialState, action) => {
 
             newState = dotProp.set(newState, `values.allIds`, ids => [...ids, payload.valueId]);
 
-            // TODO is the same as creating a resource in the contributions, so make a function 
+            // TODO: is the same as creating a resource in the contributions, so make a function 
             // add a new resource when a object value is created
 
             //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)

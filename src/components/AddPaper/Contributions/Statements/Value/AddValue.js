@@ -13,8 +13,7 @@ class AddValue extends Component {
 
         this.state = {
             deleteContributionModal: false,
-            //collapse: false, //replace
-            dropdownOpen: false, //replace,
+            dropdownValueTypeOpen: false,
             showAddValue: false,
             valueType: 'object',
             objectValue: '',
@@ -22,9 +21,9 @@ class AddValue extends Component {
         }
     }
 
-    toggleDropDown = () => {
+    toggleDropDownValueType = () => {
         this.setState({
-            dropdownOpen: !this.state.dropdownOpen
+            dropdownValueTypeOpen: !this.state.dropdownValueTypeOpen
         });
     }
 
@@ -56,12 +55,6 @@ class AddValue extends Component {
     }
 
     handlePropertySelect = ({ id, value }) => {
-        /*this.props.handleAddValue({
-            valueId: id,
-            valueLabel: value,
-            valueType: this.state.valueType,
-            predicateId: this.props.predicateId,
-        });*/
         this.props.createValue({
             label: value,
             type: this.state.valueType,
@@ -73,15 +66,6 @@ class AddValue extends Component {
     }
 
     handleAddValue = () => {
-        /*console.log('type', this.state.valueType);
-
-        this.props.handleAddValue({
-            valueId: guid(),
-            valueLabel: this.state.valueType == 'object' ? this.state.objectValue : this.state.literalValue,
-            valueType: this.state.valueType,
-            predicateId: this.props.predicateId,
-        });*/
-
         this.props.createValue({
             label: this.state.valueType == 'object' ? this.state.objectValue : this.state.literalValue,
             type: this.state.valueType,
@@ -104,7 +88,7 @@ class AddValue extends Component {
                 <ListGroupItem className={styles.valueItem}>
                     {this.state.showAddValue ?
                         <InputGroup>
-                            <InputGroupButtonDropdown addonType="prepend" isOpen={this.state.dropdownOpen} toggle={this.toggleDropDown}>
+                            <InputGroupButtonDropdown addonType="prepend" isOpen={this.state.dropdownValueTypeOpen} toggle={this.toggleDropDownValueType}>
                                 <DropdownToggle caret color="primary" className={styles.valueTypeDropdown}>
                                     {this.state.valueType.charAt(0).toUpperCase() + this.state.valueType.slice(1)}
                                 </DropdownToggle>
