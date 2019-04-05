@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { submitGetRequest } from '../../../../network';
 import { Input } from 'reactstrap';
-import classNames from 'classnames';
 
 class AutoComplete extends Component {
     state = {

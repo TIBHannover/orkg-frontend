@@ -8,16 +8,13 @@ import Finish from './Finish/Finish';
 import { connect } from 'react-redux';
 
 class AddPaper extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         let { currentStep } = this.props;
         let currentStepDetails;
 
         switch (currentStep) {
             case 1:
+            default:
                 currentStepDetails = <GeneralData /> 
                 break;
             case 2:

@@ -27,7 +27,7 @@ class ResearchField extends Component {
 
     handleNextClick = () => {
         // TODO validation: check if a research field is selected
-        if (this.props.selectedResearchField == 'R11') {
+        if (this.props.selectedResearchField === 'R11') {
             this.setState({
                 showError: true
             });

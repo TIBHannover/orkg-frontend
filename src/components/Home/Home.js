@@ -13,7 +13,7 @@ class Home extends Component {
             </Container>
             <Container className="box pt-4 pb-4 pl-5 pr-5">
                 <FontAwesomeIcon icon={faInfoCircle} className="text-primary" /> The <strong>Open Research Knowledge Graph</strong> - or - ORKG aims to describe research papers and contributions in a structured manner. With ORKG research contributions become findable and comparable. In order to add your own research, or to contribute,
-                {' '}<a href="">learn more</a>
+                {' '}<a href="#">learn more</a>
             </Container>
 
             <Container className="mt-4">

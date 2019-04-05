@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import { crossrefUrl, submitGetRequest } from '../../../network';
 import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faCheckCircle } from '@fortawesome/free-regular-svg-icons';
+import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { connect } from 'react-redux';
-import { updateGeneralData, nextStep } from '../../../actions/addPaper';
+//import { updateGeneralData, nextStep } from '../../../actions/addPaper';
 
 class Finish extends Component {
-    constructor(props) {
+    /*constructor(props) {
         super(props);
-    }
+    }*/
 
     //TODO: redux action creator for saving all the data to the backend
     //TODO: use loading indicator

@@ -3,11 +3,6 @@ import {Button, Card, CardBody, UncontrolledCollapse} from 'reactstrap';
 import '../App.css';
 
 class CodeContainer extends Component {
-
-    constructor(props) {
-        super(props);
-    }
-
     randId() {
         return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
     }

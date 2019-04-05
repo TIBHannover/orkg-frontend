@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import { Container, Row, Col, Form, FormGroup, Label, Input, InputGroup, InputGroupAddon, Button, ButtonGroup, FormFeedback, Table, Card } from 'reactstrap';
+import React from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faQuestionCircle, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import TagsInputReact from 'react-tagsinput';
 import AutosizeInput from 'react-input-autosize';
 import styles from './TagsInput.module.scss';
@@ -25,7 +24,7 @@ const TagsInput = ({handler, value}) => {
             <span key={key} {...other} className={styles.reactTagsinputTag}>
                 {getTagDisplayValue(tag)}
                 {!disabled &&
-                    <a className={styles.reactTagsinputRemove} onClick={(e) => onRemove(key)}>
+                    <a href="#" className={styles.reactTagsinputRemove} onClick={(e) => onRemove(key)}>
                         <Icon icon={faTimes} />
                     </a>
                 }

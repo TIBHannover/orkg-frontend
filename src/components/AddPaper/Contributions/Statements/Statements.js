@@ -8,9 +8,6 @@ import { nextStep } from '../../../../actions/addPaper';
 import Breadcrumbs from './Breadcrumbs';
 
 class Statements extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     handleInputChange = (e) => {
         this.setState({
@@ -40,9 +37,9 @@ class Statements extends Component {
     }
 
     addLevel = (level, maxLevel) => {
-        return maxLevel != 0 ? <div className={styles.levelBox}>
-            {maxLevel != level + 1 && this.addLevel(level + 1, maxLevel)}
-            {maxLevel == level + 1 && this.statements()}
+        return maxLevel !== 0 ? <div className={styles.levelBox}>
+            {maxLevel !== level + 1 && this.addLevel(level + 1, maxLevel)}
+            {maxLevel === level + 1 && this.statements()}
         </div> : this.statements();
     }
 
@@ -54,7 +51,7 @@ class Statements extends Component {
         let elements = this.addLevel(0, this.props.level);
 
         return <>
-            {this.props.level != 0 ? <>
+            {this.props.level !== 0 ? <>
                 <br />
 
                 <Breadcrumbs />

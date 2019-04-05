@@ -40,7 +40,6 @@ const labelGroupStyle = {
 const lineStyle = {
     height: 4,
     width: '50%',
-    background: 'grey',
     display: 'inline-block',
     background: '#e9ecef',
     position: 'absolute',

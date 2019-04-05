@@ -67,7 +67,7 @@ class AddValue extends Component {
 
     handleAddValue = () => {
         this.props.createValue({
-            label: this.state.valueType == 'object' ? this.state.objectValue : this.state.literalValue,
+            label: this.state.valueType === 'object' ? this.state.objectValue : this.state.literalValue,
             type: this.state.valueType,
             propertyId: this.props.selectedProperty,
         });
@@ -106,7 +106,7 @@ class AddValue extends Component {
                                 </DropdownMenu>
                             </InputGroupButtonDropdown>
 
-                            {this.state.valueType == 'object' ?
+                            {this.state.valueType === 'object' ?
                                 <AutoComplete requestUrl={resourcesUrl}
                                     placeholder="Enter a object"
                                     onItemSelected={this.handlePropertySelect}

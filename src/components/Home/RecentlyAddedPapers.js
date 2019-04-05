@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle, faStar, faPlus, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
-import styled from 'styled-components/macro';
-import { getStatementsBySubject } from '../../network';
 import { Link } from "react-router-dom";
 import ROUTES from '../../constants/routes.js';
 

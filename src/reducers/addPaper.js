@@ -142,7 +142,7 @@ export default (state = initialState, action) => {
                             .map(k => ({ [k]: state.contributions.byId[k] }))
                     ),
                     allIds: [
-                        ...state.contributions.allIds.filter((contributionId) => contributionId != payload.id),
+                        ...state.contributions.allIds.filter((contributionId) => contributionId !== payload.id),
                     ]
                 }
             }

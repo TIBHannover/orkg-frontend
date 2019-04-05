@@ -46,7 +46,7 @@ class StatementItem extends Component {
                 <ListGroupItem active={isCollapsed} onClick={() => this.props.togglePropertyCollapse(this.props.id)} className={listGroupClass}>
                     {this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1)}
 
-                    {valueIds.length == 1 && !isCollapsed ?
+                    {valueIds.length === 1 && !isCollapsed ?
                         <>: <em className="text-muted">{this.props.values.byId[valueIds[0]].label}</em></>
                         : valueIds.length > 1 && !isCollapsed ?
                             <>: <em className="text-muted">{valueIds.length} values</em></>
