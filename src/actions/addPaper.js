@@ -180,18 +180,32 @@ export const fetchStatementsForResource = (data) => {
         return getStatementsBySubject(existingResourceId)
             .then(
                 response => {
-                    console.log(response)
+                    let existingProperties = [];
+
                     for (let statement of response) {
-                        const propertyId = guid();
+                        let propertyId = guid();
                         const valueId = guid();
 
                         // check whether there already exist a property for this, then combine 
-                        dispatch(createProperty({
-                            propertyId: propertyId,
-                            resourceId: resourceId,
-                            existingPredicateId: statement.predicate.id,
-                            label: statement.predicate.label,
-                        }));
+                        //if (existingProperties.indexOf(statement.predicate.id) === -1) {
+                        if (existingProperties.filter(e => e.existingPredicateId === statement.predicate.id).length === 0) {
+
+                            dispatch(createProperty({
+                                propertyId: propertyId,
+                                resourceId: resourceId,
+                                existingPredicateId: statement.predicate.id,
+                                label: statement.predicate.label,
+                            }));
+
+                            existingProperties.push({
+                                existingPredicateId: statement.predicate.id,
+                                propertyId,
+                            });
+                        } else {
+                            propertyId = existingProperties.filter(e => e.existingPredicateId === statement.predicate.id)[0].propertyId;
+                            console.log(existingProperties.filter(e => e.existingPredicateId === statement.predicate.id));
+                        }
+                        
 
                         dispatch(createValue({
                             valueId: valueId,

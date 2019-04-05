@@ -51,7 +51,9 @@ class StatementItem extends Component {
 
                     {valueIds.length == 1 && !isCollapsed ?
                         <>: <em className="text-muted">{this.props.values.byId[valueIds[0]].label}</em></>
-                        : ''}
+                        : valueIds.length > 1 && !isCollapsed ?
+                            <>: <em className="text-muted">{valueIds.length} values</em></>
+                            : ''}
 
                     <Icon icon={isCollapsed ? faChevronCircleDown : faChevronCircleRight} className={chevronClass} />{' '}
 
@@ -71,8 +73,7 @@ class StatementItem extends Component {
                                     type={value.type}
                                     resourceId={value.resourceId}
                                     propertyId={this.props.id}
-                                    //handleDeleteValue={this.props.handleDeleteValue} 
-                                    />
+                                />
                             })}
 
                             <AddValue handleAddValue={this.props.handleAddValue}
