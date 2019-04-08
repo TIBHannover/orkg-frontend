@@ -1,6 +1,6 @@
 import * as type from './types.js';
 import { guid } from '../utils';
-import { getStatementsBySubject } from '../network';
+import * as network from '../network';
 
 export const updateGeneralData = (data) => dispatch => {
     dispatch({
@@ -177,7 +177,7 @@ export const fetchStatementsForResource = (data) => {
     const { resourceId, existingResourceId } = data;
 
     return (dispatch) => {
-        return getStatementsBySubject(existingResourceId)
+        return network.getStatementsBySubject(existingResourceId)
             .then(
                 response => {
                     let existingProperties = [];
@@ -204,7 +204,7 @@ export const fetchStatementsForResource = (data) => {
                         } else {
                             propertyId = existingProperties.filter(e => e.existingPredicateId === statement.predicate.id)[0].propertyId;
                         }
-                        
+
                         dispatch(createValue({
                             valueId: valueId,
                             existingResourceId: statement.object.id,
@@ -234,4 +234,120 @@ export const goToResourceHistory = (data) => dispatch => {
     dispatch({
         type: type.CLEAR_SELECTED_PROPERTY
     });
+}
+
+// Middleware function to transform frontend data to backend format 
+// TODO: in order to minimize the amount of requests to the backend, it would be better to make this one backend 
+// call that is replaces all the individual requests (backend change is needed for this)
+export const saveAddPaper = (data) => {
+    return async (dispatch) => {
+        const doiPredicate = process.env.REACT_APP_PREDICATES_HAS_DOI;
+        const authorPredicate = process.env.REACT_APP_PREDICATES_HAS_AUTHOR;
+        const publicationMonthPredicate = process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH;
+        const publicationYearPredicate = process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR;
+        const researchFieldPredicate = process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD;
+        const contributionPredicate = process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION;
+        const researchProblemPredicate = process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM;
+
+        // title
+        let paper = await network.createResource(data.title);
+
+        // DOI
+        let doi = await network.createLiteral(data.doi);
+        await network.createLiteralStatement(paper.id, doiPredicate, doi.id);
+
+        // authors
+        for (let author of data.authors) {
+            let authorResource = await network.createResource(author);
+            await network.createResourceStatement(paper.id, authorPredicate, authorResource.id);
+        }
+
+        // publication month
+        let publicationMonth = await network.createResource(data.publicationMonth);
+        await network.createResourceStatement(paper.id, publicationMonthPredicate, publicationMonth.id);
+
+        // publication year
+        let publicationYear = await network.createResource(data.publicationYear);
+        await network.createResourceStatement(paper.id, publicationYearPredicate, publicationYear.id);
+
+        // research field
+        await network.createResourceStatement(paper.id, researchFieldPredicate, data.selectedResearchField);
+
+        // contributions
+        for (let [key, contribution] of Object.entries(data.contributions)) {
+            let contributionResource = await network.createResource('contribution');
+            await network.createResourceStatement(paper.id, contributionPredicate, contributionResource.id);
+
+            // set the id of the just created contribution for the related resource 
+            data.resources.byId[contribution.resourceId].existingResourceId = contributionResource.id;
+
+            // research problems
+            if (contribution.researchProblems && contribution.researchProblems.length > 0) {
+                for (let researchProblem of contribution.researchProblems) {
+                    let researchProblemResource = await network.createResource(researchProblem);
+                    await network.createResourceStatement(contributionResource.id, researchProblemPredicate, researchProblemResource.id);
+                }
+            }
+        }
+
+        // statements
+        // resources
+        if (data.resources.byId) {
+            for (let [key, resource] of Object.entries(data.resources.byId)) {
+                let resourceId;
+
+                if (!resource.existingResourceId) {
+                    resourceId = await network.createResource(resource.label);
+                    resourceId = resourceId.id;
+                } else {
+                    resourceId = resource.existingResourceId;
+                }
+
+                // predicates
+                if (resource.propertyIds && resource.propertyIds.length > 0) {
+                    for (let propertyId of resource.propertyIds) {
+                        let property = data.properties.byId[propertyId];
+                        
+                        let predicateId;
+
+                        if (!property.existingPredicateId) {
+                            predicateId = await network.createPredicate(property.label);
+                            predicateId = predicateId.id;
+                        } else {
+                            predicateId = property.existingPredicateId;
+                        }
+
+                        // objects/values
+                        if (property.valueIds && property.valueIds.length > 0) {
+                            for (let valueId of property.valueIds) {
+                                let value = data.values.byId[valueId];
+                                
+                                if (value.type === 'literal') {
+                                    let newValueId = await network.createLiteral(value.label);
+                                    newValueId = newValueId.id;
+                                    await network.createLiteralStatement(resourceId, predicateId, newValueId);
+                                } else {
+                                    let newValueId;
+
+                                    if (!value.isExistingValue) {
+                                        newValueId = await network.createResource(value.label);
+                                        newValueId = newValueId.id;
+                                    } else {
+                                        newValueId = value.resourceId;
+                                    }
+
+                                    await network.createResourceStatement(resourceId, predicateId, newValueId);
+                                }                               
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        dispatch({
+            type: type.SAVE_ADD_PAPER,
+            id: paper.id,
+        });
+    }
 }

@@ -16,6 +16,7 @@ const initialState = {
     selectedResource: null,
     selectedProperty: null,
     level: 0,
+    paperNewResourceId: null,
     contributions: {
         byId: {},
         allIds: []
@@ -47,8 +48,8 @@ export default (state = initialState, action) => {
                 ...state,
                 title: payload.title,
                 authors: payload.authors,
-                publicationMonth: payload.authors,
-                publicationYear: payload.authors,
+                publicationMonth: payload.publicationMonth,
+                publicationYear: payload.publicationYear,
                 doi: payload.doi,
             };
         }
@@ -245,7 +246,7 @@ export default (state = initialState, action) => {
             let { payload } = action;
 
             let newState = dotProp.set(state, `properties.byId.${payload.propertyId}.valueIds`, valueIds => [...valueIds, payload.valueId]);
-            
+            console.log(payload);
             newState = dotProp.set(newState, `values.byId`, ids => ({
                 ...ids,
                 [payload.valueId]: {
@@ -364,7 +365,7 @@ export default (state = initialState, action) => {
                 ...state,
             }
         }
-
+        
         case type.SET_STATEMENT_IS_FECHTED: {
             let { resourceId } = action; 
 
@@ -372,6 +373,14 @@ export default (state = initialState, action) => {
 
             return {
                 ...newState,
+            }
+        }
+
+        case type.SAVE_ADD_PAPER: {
+
+            return {
+                ...state,
+                paperNewResourceId: action.id,
             }
         }
 

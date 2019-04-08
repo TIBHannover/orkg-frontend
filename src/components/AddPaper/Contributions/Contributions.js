@@ -7,7 +7,7 @@ import TagsInput from '../../Utils/TagsInput';
 import styles from './Contributions.module.scss';
 import Statements from './Statements/Statements';
 import { connect } from 'react-redux';
-import { nextStep, previousStep, createContribution, deleteContribution, selectContribution, updateResearchProblems } from '../../../actions/addPaper';
+import { nextStep, previousStep, createContribution, deleteContribution, selectContribution, updateResearchProblems, saveAddPaper } from '../../../actions/addPaper';
 import Confirm from 'reactstrap-confirm';
 
 class Contributions extends Component {
@@ -27,6 +27,19 @@ class Contributions extends Component {
     }
 
     handleNextClick = () => {
+        // save add paper 
+        this.props.saveAddPaper({
+            title: this.props.title,
+            authors: this.props.authors,
+            publicationMonth: this.props.publicationMonth,
+            publicationYear: this.props.publicationYear,
+            doi: this.props.doi,
+            selectedResearchField: this.props.selectedResearchField,
+            contributions: this.props.contributions.byId,
+            resources: this.props.resources,
+            properties: this.props.properties,
+            values: this.props.values,
+        });
         this.props.nextStep();
     }
 
@@ -130,6 +143,7 @@ const mapDispatchToProps = dispatch => ({
     deleteContribution: (id) => dispatch(deleteContribution(id)),
     selectContribution: (id) => dispatch(selectContribution(id)),
     updateResearchProblems: (data) => dispatch(updateResearchProblems(data)),
+    saveAddPaper: (data) => dispatch(saveAddPaper(data)),
 });
 
 export default connect(

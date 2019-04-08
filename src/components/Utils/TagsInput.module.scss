@@ -27,6 +27,12 @@
     font-weight: bold;
     margin-left:5px;
     font-size: 99%; /* fix stretched icon */
+    color:#fff;
+
+    &:hover {
+        color:#fff;
+        opacity: 0.7;
+    }
 }
 .tagsInput input {
     border: 0;

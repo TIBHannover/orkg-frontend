@@ -3,6 +3,8 @@ import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { connect } from 'react-redux';
+import { Link } from "react-router-dom";
+
 //import { updateGeneralData, nextStep } from '../../../actions/addPaper';
 
 class Finish extends Component {
@@ -21,7 +23,9 @@ class Finish extends Component {
             <br />
             <h2 className="h5">Paper has been added successfully</h2>
             <br />
-            <Button color="primary" className="mb-4">View paper</Button>
+            <Link to={'/resource/' + this.props.paperNewResourceId}> {/* TODO: change route, this is debug only */}
+                <Button color="primary" className="mb-4">View paper</Button>
+            </Link>
         </div>
     }
 }

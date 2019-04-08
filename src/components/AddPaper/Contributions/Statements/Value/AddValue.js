@@ -60,6 +60,7 @@ class AddValue extends Component {
             type: this.state.valueType,
             propertyId: this.props.selectedProperty,
             existingResourceId: id,
+            isExistingValue: true,
         });
 
         this.handleHideAddValue();
