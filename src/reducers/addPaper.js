@@ -40,6 +40,7 @@ const initialState = {
 }
 
 export default (state = initialState, action) => {
+    console.log(action.type);
     switch (action.type) {
         case type.UPFATE_GENERAL_DATA: {
             let { payload } = action;
@@ -381,6 +382,12 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 paperNewResourceId: action.id,
+            }
+        }
+
+        case '@@router/LOCATION_CHANGE': { //from connected-react-router, reset the wizard when the page is changed
+            return {
+                ...initialState
             }
         }
 
