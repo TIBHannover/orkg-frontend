@@ -178,9 +178,17 @@ export const fetchStatementsForResource = (data) => {
     isContribution = isContribution ? isContribution : false;
 
     return (dispatch) => {
+        dispatch({
+            type: type.IS_FETCHING_STATEMENTS
+        });
+
         return network.getStatementsBySubject(existingResourceId)
             .then(
                 response => {
+                    dispatch({
+                        type: type.DONE_FETCHING_STATEMENTS
+                    });
+
                     let existingProperties = [];
                     let researchProblems = [];
 

@@ -17,6 +17,7 @@ const initialState = {
     selectedProperty: null,
     level: 0,
     paperNewResourceId: null,
+    isFetchingStatements: false,
     contributions: {
         byId: {},
         allIds: []
@@ -381,6 +382,24 @@ export default (state = initialState, action) => {
                 paperNewResourceId: action.id,
             }
         }
+
+        case type.IS_FETCHING_STATEMENTS: {
+
+            return {
+                ...state,
+                isFetchingStatements: true,
+            }
+        }
+
+        case type.DONE_FETCHING_STATEMENTS: {
+
+            return {
+                ...state,
+                isFetchingStatements: false,
+            }
+        }
+
+        
 
         case '@@router/LOCATION_CHANGE': { //from connected-react-router, reset the wizard when the page is changed
             return {

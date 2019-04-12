@@ -31,7 +31,7 @@ const BreadcrumbItem = styled.li`
     max-width:55px;
     cursor:pointer;
     transition: max-width 0.5s;
-    
+
     &:hover {
         max-width: 100%;
         
@@ -61,6 +61,11 @@ const BackButton = styled.div`
     text-align:left!important;
 `;
 
+const Container = styled.div`
+    margin: 0 0 10px 0;
+    height: 35px;
+`;
+
 class Breadcrumbs extends Component {
     handleOnClick = (id, historyIndex) => {
         this.props.goToResourceHistory({
@@ -80,8 +85,7 @@ class Breadcrumbs extends Component {
     }
 
     render() {
-        return <div style={{margin:'0 0 10px 0', height:35}}>
-            {this.props.level !== 0 ? <>
+        return <Container>
             <BackButton className="btn btn-link border-0 align-baseline" onClick={this.handleBackClick}>
                 <Icon icon={faArrowLeft} /> Back
             </BackButton>
@@ -93,9 +97,8 @@ class Breadcrumbs extends Component {
                 })}
                 <div className="clearfix"></div>
             </BreadcrumbList>
-            </> : ''}
             <div className="clearfix"></div>
-        </div>
+        </Container>
     }
 }
 
