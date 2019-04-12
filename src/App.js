@@ -16,6 +16,7 @@ import { ConnectedRouter } from 'connected-react-router'
 import Home from './components/Home/Home';
 import ViewPaper from './components/ViewPaper/ViewPaper';
 import License from './components/StaticPages/License';
+import NotFound from './components/StaticPages/NotFound';
 
 export default class App extends Component {
     render() {
@@ -29,6 +30,7 @@ export default class App extends Component {
                     <Route exact path={ROUTES.ADD_PAPER.GENERAL_DATA} component={AddPaper} />
                     <Route exact path={ROUTES.VIEW_PAPER} component={ViewPaper} /> {/* TODO: slug for the paper title */}
                     <Route exact path={ROUTES.LICENSE} component={License} />
+                    <Route exact path={ROUTES.NOT_FOUND} component={NotFound} />
 
                     <Route path={`${process.env.PUBLIC_URL}/resource/:resourceId/:sectionName`}
                         render={({ match }) => {
@@ -45,6 +47,8 @@ export default class App extends Component {
 
                     <Redirect from={`${process.env.PUBLIC_URL}/resource/:resourceId`}
                         to={`${process.env.PUBLIC_URL}/resource/:resourceId/${descriptionSection}`} />
+
+                    <Route component={NotFound} />
                 </Switch>
             </DefaultLayout>
         </ConnectedRouter>

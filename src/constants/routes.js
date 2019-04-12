@@ -10,6 +10,7 @@ export default {
    },
    VIEW_PAPER: '/paper/:resourceId',
    LICENSE: '/license',
+   NOT_FOUND: '/404',
    // route with params 
    //resource: '/resource/:resourceId',
 }

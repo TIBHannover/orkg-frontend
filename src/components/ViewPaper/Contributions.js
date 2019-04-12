@@ -25,7 +25,6 @@ class Contributions extends Component {
     
     handleSelectContribution = (contributionId) => {
         let contributionIsLoaded = this.props.addPaper.resources.byId[contributionId] ? true : false;
-        console.log('does exist?', contributionIsLoaded);
         this.props.selectContribution({
             contributionId, 
             contributionIsLoaded
@@ -74,7 +73,6 @@ class Contributions extends Component {
 
                                     <Statements enableEdit={false}
                                         resourceId={this.props.addPaper.selectedContribution} />
-
                                 </FormGroup>
                             </Form>
                         </div>
