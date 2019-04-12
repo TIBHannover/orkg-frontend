@@ -45,7 +45,7 @@ class GeneralData extends Component {
         ]);
 
         this.state = {
-            doi: this.props.doi ? this.props.doi : '10.1109/jiot.2014.2312291', // debug only, change to: this.props.doi
+            doi: this.props.doi, // ? this.props.doi : '10.1109/jiot.2014.2312291', // debug only, change to: this.props.doi
             isFetching: false,
             dataEntry: 'doi',
             showDoiTable: false,

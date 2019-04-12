@@ -53,6 +53,12 @@
     padding: 10px 20px;
 }
 
+.listGroupOpenBorderBottom {
+    border-bottom-width: $border-width;
+    border-bottom-style: solid;
+    border-bottom-color: #DFDFDF; //don't use default color, since it is partially transparent $list-group-border-color;$list-group-border-color;
+}
+
 .statementItem {
     padding: 0.5rem 0.75rem !important; //overwrite bootstrap
     cursor: pointer;

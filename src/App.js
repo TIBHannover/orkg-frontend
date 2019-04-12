@@ -14,6 +14,8 @@ import './assets/scss/CustomBootstrap.scss';
 import 'react-notifications/lib/notifications.css';
 import { ConnectedRouter } from 'connected-react-router'
 import Home from './components/Home/Home';
+import ViewPaper from './components/ViewPaper/ViewPaper';
+import License from './components/StaticPages/License';
 
 export default class App extends Component {
     render() {
@@ -25,6 +27,8 @@ export default class App extends Component {
                     <Route exact path={ROUTES.ADD_RESOURCE} component={AddResource} />
                     <Route exact path={ROUTES.PREDICATES} component={Predicates} />
                     <Route exact path={ROUTES.ADD_PAPER.GENERAL_DATA} component={AddPaper} />
+                    <Route exact path={ROUTES.VIEW_PAPER} component={ViewPaper} /> {/* TODO: slug for the paper title */}
+                    <Route exact path={ROUTES.LICENSE} component={License} />
 
                     <Route path={`${process.env.PUBLIC_URL}/resource/:resourceId/:sectionName`}
                         render={({ match }) => {

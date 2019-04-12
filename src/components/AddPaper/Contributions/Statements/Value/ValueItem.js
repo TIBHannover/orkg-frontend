@@ -32,7 +32,7 @@ class ValueItem extends Component {
     }
 
     handleResourceClick = () => {
-        let resource = this.props.resources.byId[this.props.resourceId];
+        let resource = this.props.addPaper.resources.byId[this.props.resourceId];
         let existingResourceId = resource.existingResourceId;
 
         if (existingResourceId && !resource.isFechted) {
@@ -73,7 +73,7 @@ class ValueItem extends Component {
 
 const mapStateToProps = state => {
     return {
-        ...state.addPaper,
+        addPaper: state.addPaper,
     }
 };
 

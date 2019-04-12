@@ -174,45 +174,67 @@ export const selectResource = (data) => dispatch => { // use redux thunk for asy
 }
 
 export const fetchStatementsForResource = (data) => {
-    const { resourceId, existingResourceId } = data;
+    let { resourceId, existingResourceId, isContribution } = data;
+    isContribution = isContribution ? isContribution : false;
 
     return (dispatch) => {
         return network.getStatementsBySubject(existingResourceId)
             .then(
                 response => {
                     let existingProperties = [];
+                    let researchProblems = [];
 
                     for (let statement of response) {
                         let propertyId = guid();
                         const valueId = guid();
 
-                        // check whether there already exist a property for this, then combine 
-                        if (existingProperties.filter(e => e.existingPredicateId === statement.predicate.id).length === 0) {
-
-                            dispatch(createProperty({
-                                propertyId: propertyId,
-                                resourceId: resourceId,
-                                existingPredicateId: statement.predicate.id,
-                                label: statement.predicate.label,
-                                isExistingProperty: true,
-                            }));
-
-                            existingProperties.push({
-                                existingPredicateId: statement.predicate.id,
-                                propertyId,
+                        // filter out research problem to show differently
+                        if (isContribution && statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM) {
+                            researchProblems.push({
+                                label: statement.object.label,
+                                id: statement.object.id,
                             });
                         } else {
-                            propertyId = existingProperties.filter(e => e.existingPredicateId === statement.predicate.id)[0].propertyId;
+                            // check whether there already exist a property for this, then combine 
+                            if (existingProperties.filter(e => e.existingPredicateId === statement.predicate.id).length === 0) {
+
+                                dispatch(createProperty({
+                                    propertyId: propertyId,
+                                    resourceId: resourceId,
+                                    existingPredicateId: statement.predicate.id,
+                                    label: statement.predicate.label,
+                                    isExistingProperty: true,
+                                }));
+
+                                existingProperties.push({
+                                    existingPredicateId: statement.predicate.id,
+                                    propertyId,
+                                });
+                            } else {
+                                propertyId = existingProperties.filter(e => e.existingPredicateId === statement.predicate.id)[0].propertyId;
+                            }
+
+                            dispatch(createValue({
+                                valueId: valueId,
+                                existingResourceId: statement.object.id,
+                                propertyId: propertyId,
+                                label: statement.object.label,
+                                type: 'object',
+                                isExistingValue: true
+                            }));
                         }
 
-                        dispatch(createValue({
-                            valueId: valueId,
-                            existingResourceId: statement.object.id,
-                            propertyId: propertyId,
-                            label: statement.object.label,
-                            type: 'object',
-                            isExistingValue: true
-                        }));
+                    }
+
+                    if (isContribution) {
+                        dispatch({
+                            type: type.SET_RESEARCH_PROBLEMS,
+                            payload: {
+                                researchProblems,
+                                resourceId,
+                            }
+                        });
+                        console.log(researchProblems);
                     }
 
                     dispatch({
@@ -248,9 +270,14 @@ export const saveAddPaper = (data) => {
         const researchFieldPredicate = process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD;
         const contributionPredicate = process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION;
         const researchProblemPredicate = process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM;
+        const isAPredicate = process.env.REACT_APP_PREDICATES_IS_A;
+        const paperResource = process.env.REACT_APP_RESOURCE_TYPES_PAPER;
 
         // title
         let paper = await network.createResource(data.title);
+
+        // set resource type to paper 
+        await network.createResourceStatement(paper.id, isAPredicate, paperResource);
 
         // DOI
         let doi = await network.createLiteral(data.doi);
@@ -307,7 +334,7 @@ export const saveAddPaper = (data) => {
                 if (resource.propertyIds && resource.propertyIds.length > 0) {
                     for (let propertyId of resource.propertyIds) {
                         let property = data.properties.byId[propertyId];
-                        
+
                         let predicateId;
 
                         if (!property.existingPredicateId) {
@@ -321,7 +348,7 @@ export const saveAddPaper = (data) => {
                         if (property.valueIds && property.valueIds.length > 0) {
                             for (let valueId of property.valueIds) {
                                 let value = data.values.byId[valueId];
-                                
+
                                 if (value.type === 'literal') {
                                     let newValueId = await network.createLiteral(value.label);
                                     newValueId = newValueId.id;
@@ -337,7 +364,7 @@ export const saveAddPaper = (data) => {
                                     }
 
                                     await network.createResourceStatement(resourceId, predicateId, newValueId);
-                                }                               
+                                }
                             }
                         }
                     }

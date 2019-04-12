@@ -23,7 +23,7 @@ class Finish extends Component {
             <br />
             <h2 className="h5">Paper has been added successfully</h2>
             <br />
-            <Link to={'/resource/' + this.props.paperNewResourceId}> {/* TODO: change route, this is debug only */}
+            <Link to={'/paper/' + this.props.paperNewResourceId}> {/* TODO: change route: use constants */}
                 <Button color="primary" className="mb-4">View paper</Button>
             </Link>
         </div>

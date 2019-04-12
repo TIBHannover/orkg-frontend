@@ -2,7 +2,7 @@ import * as type from '../actions/types';
 import merge from 'lodash/merge';
 import dotProp from 'dot-prop-immutable';
 
-// TODO: for now this reducer is rather large, maybe split up later in smaller chunks 
+// TODO: for now this reducer is rather large, maybe split up later in smaller chunks (addPaper and statementBrowser reducer)
 const initialState = {
     currentStep: 1,
     title: '',
@@ -40,7 +40,6 @@ const initialState = {
 }
 
 export default (state = initialState, action) => {
-    console.log(action.type);
     switch (action.type) {
         case type.UPFATE_GENERAL_DATA: {
             let { payload } = action;
@@ -122,7 +121,7 @@ export default (state = initialState, action) => {
                 }
                 
             }
-            console.log(selectedContribution);
+
             return merge({}, state, contribution, selectedContribution, resources);
         }
 
@@ -167,8 +166,8 @@ export default (state = initialState, action) => {
                 contributionId = state.contributions.allIds[0];
             } else {
                 contributionId = payload.id;
-            }
-
+            }   
+            
             return {
                 ...state,
                 selectedContribution: contributionId,
@@ -247,7 +246,7 @@ export default (state = initialState, action) => {
             let { payload } = action;
 
             let newState = dotProp.set(state, `properties.byId.${payload.propertyId}.valueIds`, valueIds => [...valueIds, payload.valueId]);
-            console.log(payload);
+
             newState = dotProp.set(newState, `values.byId`, ids => ({
                 ...ids,
                 [payload.valueId]: {
@@ -283,7 +282,7 @@ export default (state = initialState, action) => {
 
         case type.DELETE_VALUE: {
             let { payload } = action;
-            console.log('payload', payload);
+
             let newState = dotProp.delete(state, `values.byId.${payload.id}`);
 
             let valueIndex = dotProp.get(newState, `values.allIds`).indexOf(payload.id);
@@ -359,8 +358,6 @@ export default (state = initialState, action) => {
 
         case type.ADD_FETCHED_STATEMENT: {
             let { payload } = action; 
-
-            console.log('add fetched statement', payload);
 
             return {
                 ...state,

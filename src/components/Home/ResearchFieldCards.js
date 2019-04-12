@@ -4,13 +4,17 @@ import { faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components/macro';
 import { getStatementsBySubject } from '../../network';
 
+/* Bootstrap card column is not working correctly working with vertical alignment,
+thus used custom styling here */
 const Card = styled.div`
     cursor: pointer;
-    background: #E86161;
-    color: #fff;
-    border: 0;
-    border-radius:12px;
-    min-height: 70px;
+    background: #E86161!important;
+    color: #fff!important;
+    border: 0!important;
+    border-radius:12px!important;
+    min-height: 75px;
+    flex: 0 0 calc(33% - 20px)!important;
+    margin:10px;
     transition:opacity 0.2s;
 
     &:hover {
@@ -40,7 +44,7 @@ class ResearchFieldCards extends Component {
     }
 
     componentDidMount() {
-        this.getFields('R11', 'Main'); 
+        this.getFields(process.env.REACT_APP_RESEARCH_FIELD_MAIN, 'Main');
     }
 
     getFields(fieldId, label, addBreadcrumb = true) {
@@ -86,18 +90,16 @@ class ResearchFieldCards extends Component {
     render() {
         return (
             <div className="mt-5">
-                {this.state.breadcrumb.map((field) => 
-                    <BreadcrumbLink key={field.id} onClick={() => this.handleClickBreadcrumb(field.id, field.label)}>{field.label} <FontAwesomeIcon icon={faAngleDoubleRight} /></BreadcrumbLink>    
+                {this.state.breadcrumb.map((field) =>
+                    <BreadcrumbLink key={field.id} onClick={() => this.handleClickBreadcrumb(field.id, field.label)}>{field.label} <FontAwesomeIcon icon={faAngleDoubleRight} /></BreadcrumbLink>
                 )}
 
                 <hr className="mt-3 mb-5" />
-                <div id="research-field-cards" className="card-columns mt-2">
-                    {this.state.researchFields.map((field) => 
-                        <Card className="card" role="button" key={field.id} onClick={() => this.getFields(field.id, field.label)}>
-                        <div className="card-body p-0 pt-2">
+                <div id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap">
+                    {this.state.researchFields.map((field) =>
+                        <Card className="card card-body p-0 justify-content-center" role="button" key={field.id} onClick={() => this.getFields(field.id, field.label)}>
                             <CardTitle className="card-title m-0 text-center">{field.label}</CardTitle>
-                        </div>
-                    </Card>
+                        </Card>
                     )}
                 </div>
             </div>

@@ -26,28 +26,36 @@ class StatementItem extends Component {
     }
 
     render() {
-        const isCollapsed = this.props.selectedProperty === this.props.id;
+
+        const isCollapsed = this.props.addPaper.selectedProperty === this.props.id;
 
         const listGroupClass = classNames({
             [styles.statementActive]: isCollapsed,
-            [styles.statementItem]: true
+            [styles.statementItem]: true,
+            'rounded-bottom': this.props.isLastItem && !isCollapsed && !this.props.enableEdit,
         });
 
         const chevronClass = classNames({
             [styles.statementItemIcon]: true,
             [styles.open]: isCollapsed,
-            'float-right': true
+            'float-right': true,
         });
 
-        let valueIds = Object.keys(this.props.properties.byId).length !== 0 ? this.props.properties.byId[this.props.id].valueIds : [];
+        const openBoxClass = classNames({
+            [styles.listGroupOpen]: true,
+            [styles.listGroupOpenBorderBottom]: this.props.isLastItem && !this.props.enableEdit,
+            'rounded-bottom': this.props.isLastItem && !this.props.enableEdit,
+        });
 
+        let valueIds = Object.keys(this.props.addPaper.properties.byId).length !== 0 ? this.props.addPaper.properties.byId[this.props.id].valueIds : [];
+        
         return (
             <>
                 <ListGroupItem active={isCollapsed} onClick={() => this.props.togglePropertyCollapse(this.props.id)} className={listGroupClass}>
                     {this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1)}
 
                     {valueIds.length === 1 && !isCollapsed ?
-                        <>: <em className="text-muted">{this.props.values.byId[valueIds[0]].label}</em></>
+                        <>: <em className="text-muted">{this.props.addPaper.values.byId[valueIds[0]].label}</em></>
                         : valueIds.length > 1 && !isCollapsed ?
                             <>: <em className="text-muted">{valueIds.length} values</em></>
                             : ''}
@@ -59,13 +67,14 @@ class StatementItem extends Component {
                 </ListGroupItem>
 
                 <Collapse isOpen={isCollapsed}>
-                    <div className={styles.listGroupOpen}>
+                    <div className={openBoxClass}>
                         <ListGroup flush>
                             {valueIds.map((valueId, index) => {
-                                let value = this.props.values.byId[valueId];
+                                let value = this.props.addPaper.values.byId[valueId];
 
                                 return <ValueItem
                                     key={index}
+                                    storeType={this.props.type}
                                     label={value.label}
                                     id={valueId}
                                     type={value.type}
@@ -75,8 +84,8 @@ class StatementItem extends Component {
                                 />
                             })}
 
-                            <AddValue handleAddValue={this.props.handleAddValue}
-                                predicateId={this.props.predicateId} />
+                            {this.props.enableEdit ? <AddValue handleAddValue={this.props.handleAddValue}
+                                predicateId={this.props.predicateId} /> : ''}
                         </ListGroup>
                     </div>
                 </Collapse>
@@ -87,7 +96,7 @@ class StatementItem extends Component {
 
 const mapStateToProps = state => {
     return {
-        ...state.addPaper,
+        addPaper: state.addPaper,
     }
 };
 

@@ -111,7 +111,7 @@ class Contributions extends Component {
                                             <Tooltip message="Provide details about this contribution by making statements. Some suggestions are already displayed, you can use this when it is useful, or delete it when it is not">Statements</Tooltip>
                                         </Label>
 
-                                        <Statements level="0"
+                                        <Statements enableEdit={true}
                                             resourceId={selectedResourceId} />
 
                                     </FormGroup>

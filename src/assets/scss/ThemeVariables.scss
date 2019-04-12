@@ -12,6 +12,11 @@ $body-color: #646464;
 $border-width: $ORKG-border-width;
 $border-radius: $ORKG-border-radius;
 
+// Add a new theme color
+$theme-colors: (
+    lightblue: $body-bg
+);
+
 // Forms
 $form-feedback-font-size: 90%;
 
@@ -35,3 +40,9 @@ $headings-color:#373F45;
 // Modal
 $modal-content-border-radius: 11px;
 $modal-content-border-width: 3px;
+
+// Badges
+$badge-font-size:85%;
+$badge-font-weight: 500;
+$badge-padding-y: 0.3rem;
+$badge-padding-x: 0.8rem;

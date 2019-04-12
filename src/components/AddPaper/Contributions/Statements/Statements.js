@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ListGroup } from 'reactstrap';
+import { ListGroup, ListGroupItem } from 'reactstrap';
 import styles from '../Contributions.module.scss';
 import StatementItem from './StatementItem';
 import AddStatement from './AddStatement';
@@ -16,11 +16,13 @@ class Statements extends Component {
     }
 
     statements = () => {
-        let propertyIds = Object.keys(this.props.resources.byId).length !== 0 ? this.props.resources.byId[this.props.selectedResource].propertyIds : [];
+
+        let propertyIds = Object.keys(this.props.addPaper.resources.byId).length !== 0 ? this.props.addPaper.resources.byId[this.props.addPaper.selectedResource].propertyIds : [];
 
         return <ListGroup className={styles.listGroupEnlarge}>
-            {propertyIds.map((propertyId, index) => {
-                let property = this.props.properties.byId[propertyId];
+            {propertyIds.length > 0 ? 
+            propertyIds.map((propertyId, index) => {
+                let property = this.props.addPaper.properties.byId[propertyId];
 
                 // statement is provided in seperate props, so the props can be validated more easily
                 return <StatementItem
@@ -28,11 +30,15 @@ class Statements extends Component {
                     predicateLabel={property.label}
                     key={'statement-' + index}
                     index={index}
+                    type={this.props.type}
                     isExistingProperty={property.isExistingProperty ? true : false}
+                    enableEdit={this.props.enableEdit}
+                    isLastItem={propertyIds.length === index + 1}
                 />
-            })}
+            }) : <ListGroupItem className={styles.statementItem} style={{cursor: 'default'}}>No values</ListGroupItem>}
 
-            <AddStatement />
+            
+            {this.props.enableEdit ? <AddStatement /> : ''}
         </ListGroup>;
     }
 
@@ -47,11 +53,11 @@ class Statements extends Component {
         if (this.props.hidden) {
             return <></>;
         }
-
-        let elements = this.addLevel(0, this.props.level);
+        
+        let elements = this.addLevel(0, this.props.addPaper.level);
 
         return <>
-            {this.props.level !== 0 ? <>
+            {this.props.addPaper.level !== 0 ? <>
                 <br />
 
                 <Breadcrumbs />
@@ -64,8 +70,7 @@ class Statements extends Component {
 
 const mapStateToProps = state => {
     return {
-        ...state.addPaper,
-        researchProblems: state.addPaper.contributions.byId[state.addPaper.selectedContribution] ? state.addPaper.contributions.byId[state.addPaper.selectedContribution].researchProblems : [],
+        addPaper: state.addPaper,
     }
 };
 

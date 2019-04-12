@@ -3,6 +3,25 @@ import { connect } from 'react-redux';
 import { goToResourceHistory } from '../../../../actions/addPaper';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import styled from 'styled-components/macro';
+
+const BreadcrumbList = styled.ul`
+    list-style: none;
+    padding:0;
+    margin:0 0 10px;
+`;
+
+const BreadcrumbItem = styled.li`
+    border-radius:11px;
+    background:#E86161;
+    padding:4px 10px;
+    float:left;
+    color:#fff;
+    font-size:90%;
+    width:40px;
+    white-space:nowrap;
+    overflow:hidden;
+`;
 
 class Breadcrumbs extends Component {
     handleOnClick = (id, historyIndex) => {
@@ -27,10 +46,14 @@ class Breadcrumbs extends Component {
             <div className="btn btn-link p-0 border-0 align-baseline mb-3 mr-4" onClick={this.handleBackClick}>
                 <Icon icon={faArrowLeft} /> Back
             </div>
-            {this.props.resourceHistory.allIds.map((history, index) => {
-                let item = this.props.resourceHistory.byId[history];
-                return <span key={index}> <span className="btn btn-link p-0 border-0 align-baseline mb-3" onClick={() => this.handleOnClick(item.id, index)}>{item.label}</span> / </span>;
-            })}
+            <BreadcrumbList>
+                {this.props.resourceHistory.allIds.map((history, index) => {
+                    let item = this.props.resourceHistory.byId[history];
+                    
+                    return <BreadcrumbItem key={index} onClick={() => this.handleOnClick(item.id, index)}>{item.label}</BreadcrumbItem>;
+                })}
+                <div className="clearfix"></div>
+            </BreadcrumbList>
         </>
     }
 }

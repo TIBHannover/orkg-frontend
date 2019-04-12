@@ -21,13 +21,13 @@ class ResearchField extends Component {
     componentDidMount() {
         // select the main field is none is selected yet (i.e. first time visiting this step)
         if (this.props.selectedResearchField === null) { 
-            this.getFields('R11', 0);
+            this.getFields(process.env.REACT_APP_RESEARCH_FIELD_MAIN, 0);
         }
     }
 
     handleNextClick = () => {
         // TODO validation: check if a research field is selected
-        if (this.props.selectedResearchField === 'R11') {
+        if (this.props.selectedResearchField === process.env.REACT_APP_RESEARCH_FIELD_MAIN) {
             this.setState({
                 showError: true
             });
