@@ -9,18 +9,56 @@ const BreadcrumbList = styled.ul`
     list-style: none;
     padding:0;
     margin:0 0 10px;
+    display:flex;
+    width:80%;
+    float:left;
+
+    /*&:hover li:last-of-type:not(:hover) {
+        max-width:100px;
+        text-overflow: ellipsis;
+    }*/
 `;
 
 const BreadcrumbItem = styled.li`
     border-radius:11px;
-    background:#E86161;
+    background: #F7F7F7;
     padding:4px 10px;
     float:left;
-    color:#fff;
-    font-size:90%;
-    width:40px;
+    border:2px solid #E86161;
+    font-size:87%;
     white-space:nowrap;
     overflow:hidden;
+    max-width:55px;
+    cursor:pointer;
+    transition: max-width 0.5s;
+    
+    &:hover {
+        max-width: 100%;
+        
+        color:#000;
+    }
+
+    &:hover:not(:last-of-type) {
+        padding-right:15px;
+    }
+
+    :last-of-type  {
+        background:#E86161;
+        color:#fff;
+        max-width:100%;
+    }
+
+    &:not(:first-child) {
+        margin-left:-15px;
+    }
+`;
+
+const BackButton = styled.div`
+    width: 10%;
+    float: left;
+    padding: 4px 0 0 0!important;
+    font-size:95%!important;
+    text-align:left!important;
 `;
 
 class Breadcrumbs extends Component {
@@ -42,10 +80,11 @@ class Breadcrumbs extends Component {
     }
 
     render() {
-        return <>
-            <div className="btn btn-link p-0 border-0 align-baseline mb-3 mr-4" onClick={this.handleBackClick}>
+        return <div style={{margin:'0 0 10px 0', height:35}}>
+            {this.props.level !== 0 ? <>
+            <BackButton className="btn btn-link border-0 align-baseline" onClick={this.handleBackClick}>
                 <Icon icon={faArrowLeft} /> Back
-            </div>
+            </BackButton>
             <BreadcrumbList>
                 {this.props.resourceHistory.allIds.map((history, index) => {
                     let item = this.props.resourceHistory.byId[history];
@@ -54,13 +93,16 @@ class Breadcrumbs extends Component {
                 })}
                 <div className="clearfix"></div>
             </BreadcrumbList>
-        </>
+            </> : ''}
+            <div className="clearfix"></div>
+        </div>
     }
 }
 
 const mapStateToProps = state => {
     return {
         resourceHistory: state.addPaper.resourceHistory,
+        level: state.addPaper.level
     }
 };
 
