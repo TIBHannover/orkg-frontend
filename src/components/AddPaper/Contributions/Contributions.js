@@ -35,7 +35,7 @@ class Contributions extends Component {
             publicationYear: this.props.publicationYear,
             doi: this.props.doi,
             selectedResearchField: this.props.selectedResearchField,
-            contributions: this.props.contributions.byId,
+            contributions: this.props.contributions,
             resources: this.props.resources,
             properties: this.props.properties,
             values: this.props.values,

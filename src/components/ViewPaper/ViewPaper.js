@@ -75,7 +75,7 @@ class ViewPaper extends Component {
             publicationMonth,
             researchField,
             authorNames: authorNamesArray,
-            contributions: contributionArray,
+            contributions: contributionArray.sort(), // sort contributions ascending, so contribution 1, is actually the first one
         });
     }
 

@@ -311,7 +311,8 @@ export const saveAddPaper = (data) => {
         await network.createResourceStatement(paper.id, researchFieldPredicate, data.selectedResearchField);
 
         // contributions
-        for (let [key, contribution] of Object.entries(data.contributions)) {
+        for (let contributionId of data.contributions.allIds) { 
+            let contribution = data.contributions.byId[contributionId];
             let contributionResource = await network.createResource('contribution');
             await network.createResourceStatement(paper.id, contributionPredicate, contributionResource.id);
 
