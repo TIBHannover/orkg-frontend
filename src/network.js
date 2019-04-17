@@ -142,5 +142,5 @@ export const getPredicatesByLabel = (label) => {
 };
 
 export const getStatementsBySubject = (id) => {
-    return submitGetRequest(`${statementsUrl}/subject/${encodeURIComponent(id)}/`);
+    return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/`);
 };

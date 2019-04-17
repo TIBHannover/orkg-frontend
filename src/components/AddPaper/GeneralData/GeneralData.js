@@ -150,6 +150,10 @@ class GeneralData extends Component {
         this.props.nextStep();
     }
 
+    submitHandler = (e) => {
+        e.preventDefault();
+    }
+
     render() {
         const monthsOptions = Object.keys(this.months).map((key) => {
             return <option value={key} key={key}>{this.months[key]}</option>
@@ -174,7 +178,7 @@ class GeneralData extends Component {
 
                 {this.state.dataEntry === 'doi' ?
                     <div>
-                        <Form className="mt-4">
+                        <Form className="mt-4" onSubmit={this.submitHandler}>
                             <FormGroup>
                                 <Label for="paperDoi">
                                     <Tooltip message="Digital Object Identifier or DOI is a persistent identifier or handle used to uniquely identify objects">Paper DOI</Tooltip>
@@ -215,7 +219,7 @@ class GeneralData extends Component {
                             : ''}
                     </div>
                     :
-                    <Form className="mt-4">
+                    <Form className="mt-4" onSubmit={this.submitHandler}>
                         <FormGroup>
                             <Label for="paperTitle">
                                 <Tooltip message="The main title of the paper">Paper title</Tooltip>

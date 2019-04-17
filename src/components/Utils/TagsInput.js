@@ -24,9 +24,9 @@ const TagsInput = ({handler, value}) => {
             <span key={key} {...other} className={styles.reactTagsinputTag}>
                 {getTagDisplayValue(tag)}
                 {!disabled &&
-                    <a href="#" className={styles.reactTagsinputRemove} onClick={(e) => onRemove(key)}>
+                    <span className={styles.reactTagsinputRemove} onClick={(e) => onRemove(key)}>
                         <Icon icon={faTimes} />
-                    </a>
+                    </span>
                 }
             </span>
         )
@@ -39,6 +39,7 @@ const TagsInput = ({handler, value}) => {
                 className={styles.tagsInputInner}
                 renderInput={autosizingRenderInput}
                 renderTag={defaultRenderTag}
+                addOnBlur={true}
                 placeholder=""
                 inputProps={{
                     className: '',

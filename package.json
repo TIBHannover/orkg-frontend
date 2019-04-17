@@ -26,6 +26,7 @@
     "react-scripts": "^2.1.8",
     "react-split-pane": "^0.1.84",
     "react-tagsinput": "^3.19.0",
+    "react-transition-group": "^1.2.1",
     "reactstrap": "^7.1.0",
     "reactstrap-confirm": "^1.0.4",
     "redux": "^4.0.1",

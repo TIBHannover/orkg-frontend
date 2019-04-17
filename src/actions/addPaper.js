@@ -173,6 +173,7 @@ export const selectResource = (data) => dispatch => { // use redux thunk for asy
     });
 }
 
+// TODO: support literals
 export const fetchStatementsForResource = (data) => {
     let { resourceId, existingResourceId, isContribution } = data;
     isContribution = isContribution ? isContribution : false;
@@ -221,14 +222,15 @@ export const fetchStatementsForResource = (data) => {
                             } else {
                                 propertyId = existingProperties.filter(e => e.existingPredicateId === statement.predicate.id)[0].propertyId;
                             }
-
+                            
                             dispatch(createValue({
                                 valueId: valueId,
                                 existingResourceId: statement.object.id,
                                 propertyId: propertyId,
                                 label: statement.object.label,
                                 type: 'object',
-                                isExistingValue: true
+                                isExistingValue: true,
+                                existingStatement: true,
                             }));
                         }
 
@@ -315,6 +317,8 @@ export const saveAddPaper = (data) => {
 
             // set the id of the just created contribution for the related resource 
             data.resources.byId[contribution.resourceId].existingResourceId = contributionResource.id;
+            data.resources.byId[contribution.resourceId].partOfContribution = true;
+
 
             // research problems
             if (contribution.researchProblems && contribution.researchProblems.length > 0) {
@@ -325,18 +329,22 @@ export const saveAddPaper = (data) => {
             }
         }
 
+        await saveStatements(data);
+
         // statements
         // resources
-        if (data.resources.byId) {
+        /*if (data.resources.byId) {
             for (let [key, resource] of Object.entries(data.resources.byId)) {
                 let resourceId;
-
+                
                 if (!resource.existingResourceId) {
                     resourceId = await network.createResource(resource.label);
                     resourceId = resourceId.id;
                 } else {
                     resourceId = resource.existingResourceId;
                 }
+
+                console.log('CREATE RESOURCE', resourceId, resource.label);
 
                 // predicates
                 if (resource.propertyIds && resource.propertyIds.length > 0) {
@@ -352,11 +360,13 @@ export const saveAddPaper = (data) => {
                             predicateId = property.existingPredicateId;
                         }
 
+                        console.log('CREATE PREDICATE', predicateId, property.label);
+
                         // objects/values
                         if (property.valueIds && property.valueIds.length > 0) {
                             for (let valueId of property.valueIds) {
                                 let value = data.values.byId[valueId];
-
+                                console.log('ADDED VALUE', value);
                                 if (value.type === 'literal') {
                                     let newValueId = await network.createLiteral(value.label);
                                     newValueId = newValueId.id;
@@ -372,6 +382,74 @@ export const saveAddPaper = (data) => {
                                     }
 
                                     await network.createResourceStatement(resourceId, predicateId, newValueId);
+                                    console.log('VALUE ID', newValueId);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }*/
+
+        dispatch({
+            type: type.SAVE_ADD_PAPER,
+            id: paper.id,
+        });
+    }
+}
+
+// Maybe this function needs to be resursive
+export const saveStatements = async (data) => {
+    if (data.resources.byId) {
+        //for (let [key, resource] of Object.entries(data.resources.byId)) {
+        for (let resourceIdArray of data.resources.allIds) { // the order matters here, since it is an hierarch, the object doesn't provide a reliable order (so use the array)
+            let resource = data.resources.byId[resourceIdArray];
+            let resourceId;
+            
+            if (!resource.existingResourceId) {
+                resourceId = await network.createResource(resource.label);
+                resourceId = resourceId.id;
+            } else {
+                resourceId = resource.existingResourceId;
+            }
+
+            // predicates
+            if (resource.propertyIds && resource.propertyIds.length > 0) {
+                for (let propertyId of resource.propertyIds) {
+                    let property = data.properties.byId[propertyId];
+
+                    let predicateId;
+
+                    if (!property.existingPredicateId) {
+                        predicateId = await network.createPredicate(property.label);
+                        predicateId = predicateId.id;
+                    } else {
+                        predicateId = property.existingPredicateId;
+                    }
+
+                    // objects/values
+                    if (property.valueIds && property.valueIds.length > 0) {
+                        for (let valueId of property.valueIds) {
+                            let value = data.values.byId[valueId];
+
+                            if (value.type === 'literal' && !value.isExistingValue) {
+                                let newValueId = await network.createLiteral(value.label);
+                                newValueId = newValueId.id;
+
+                                await network.createLiteralStatement(resourceId, predicateId, newValueId);
+                            } else {
+                                let newValueId;
+
+                                if (!value.isExistingValue) {
+                                    newValueId = await network.createResource(value.label);
+                                    newValueId = newValueId.id;
+                                    data.resources.byId[value.resourceId].existingResourceId = newValueId;
+                                } else {
+                                    newValueId = value.resourceId;
+                                }
+
+                                if (!value.existingStatement) {
+                                    await network.createResourceStatement(resourceId, predicateId, newValueId);
                                 }
                             }
                         }
@@ -379,10 +457,5 @@ export const saveAddPaper = (data) => {
                 }
             }
         }
-
-        dispatch({
-            type: type.SAVE_ADD_PAPER,
-            id: paper.id,
-        });
     }
 }

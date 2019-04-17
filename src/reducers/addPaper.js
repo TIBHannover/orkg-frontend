@@ -255,6 +255,7 @@ export default (state = initialState, action) => {
                     label: payload.label ? payload.label : '',
                     resourceId: payload.resourceId ? payload.resourceId : null,
                     isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
+                    existingStatement: payload.existingStatement ? payload.existingStatement : false,
                 }
             }));
 
