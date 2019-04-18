@@ -10,6 +10,15 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../Utils/Tooltip';
 //import Statements from './Statements';
 import Statements from '../AddPaper/Contributions/Statements/Statements';
+import styled from 'styled-components';
+import SimilarContributions from './SimilarContributions';
+
+const Title = styled.div`
+    font-size:18px;
+    font-weight:500;
+    margin-top:30px;
+    margin-bottom:5px;
+`;
 
 // TODO: right now, the reducer from addPaper is being used, since the setup of this page is very similar.
 // Dependent on the future look/functionalitiy of this page, the reducers should split and renamed so viewing
@@ -56,23 +65,25 @@ class Contributions extends Component {
                         <div className={styles.contribution}>
                             <Form>
                                 <FormGroup>
-                                    <Label>
-                                        <strong>Research problem</strong>
-                                    </Label>
+                                    <Title style={{marginTop:0}}>Research problems</Title>
                                     {this.props.viewPaper.researchProblems[selectedContributionId] && this.props.viewPaper.researchProblems[selectedContributionId].map((problem, index) => (
                                         <span key={index}>
-                                            <br />
                                             <span className="btn btn-link p-0 border-0 align-baseline">{problem.label}</span>
                                         </span>
                                     ))}
                                 </FormGroup>
-                                <FormGroup>
-                                    <Label>
-                                        <strong>Statements</strong>
-                                    </Label>
 
+                                <FormGroup>
+                                    <Title>Contribution data</Title>
+                                            
                                     <Statements enableEdit={false}
                                         resourceId={this.props.addPaper.selectedContribution} />
+                                </FormGroup>
+
+                                <FormGroup>
+                                    <Title>Similar contributions</Title>
+
+                                    <SimilarContributions />
                                 </FormGroup>
                             </Form>
                         </div>
