@@ -6,6 +6,19 @@ import ResearchField from './ResearchField/ResearchField';
 import Contributions from './Contributions/Contributions';
 import Finish from './Finish/Finish';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
+import { CSSTransitionGroup } from 'react-transition-group'
+
+const AnimationContainer = styled.div`
+    &.fadeIn-enter {
+        opacity:0;
+    }
+
+    &.fadeIn-enter.fadeIn-enter-active {
+        opacity:1;
+        transition:1s opacity;
+    }
+`;
 
 class AddPaper extends Component {
     render() {
@@ -15,22 +28,18 @@ class AddPaper extends Component {
         switch (currentStep) {
             case 1:
             default:
-                currentStepDetails = <GeneralData /> 
+                currentStepDetails = <AnimationContainer key={1}><GeneralData /></AnimationContainer>
                 break;
             case 2:
-                currentStepDetails = <ResearchField />
+                currentStepDetails = <AnimationContainer key={2}><ResearchField /></AnimationContainer>
                 break;
             case 3:
-                currentStepDetails = <Contributions />
+                currentStepDetails = <AnimationContainer key={3}><Contributions /></AnimationContainer>
                 break;
             case 4:
-                currentStepDetails = <Finish />
+                currentStepDetails = <AnimationContainer key={4}><Finish /></AnimationContainer>
                 break;
         }
-
-        // FOR DEBUGGING
-        //currentStepDetails = <Contributions />
-        //currentStepDetails = <Finish />
 
         return (
             <div>
@@ -40,8 +49,12 @@ class AddPaper extends Component {
                 <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
                     <ProgressBar currentStep={currentStep} />
                     <hr />
-
-                    {currentStepDetails}
+                    <CSSTransitionGroup
+                        transitionName="fadeIn"
+                        transitionEnterTimeout={700}
+                        transitionLeave={false}>
+                            {currentStepDetails}
+                    </CSSTransitionGroup>
                 </Container>
             </div>
         );
@@ -52,11 +65,7 @@ const mapStateToProps = state => ({
     ...state.addPaper // TODO: scope this reducer, also in other files
 });
 
-const mapDispatchToProps = dispatch => ({
-
-});
-
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    null
 )(AddPaper);

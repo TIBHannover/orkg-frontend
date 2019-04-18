@@ -9,6 +9,37 @@ import TagsInput from '../../Utils/TagsInput';
 import FormValidator from '../../Utils/FormValidator';
 import { connect } from 'react-redux';
 import { updateGeneralData, nextStep } from '../../../actions/addPaper';
+import { CSSTransitionGroup } from 'react-transition-group'
+import styled from 'styled-components';
+
+const Container = styled.div`
+    &.fadeIn-enter {
+        opacity:0;
+    }
+
+    &.fadeIn-enter.fadeIn-enter-active {
+        opacity:1;
+        transition:1s opacity;
+    }
+
+    &.fadeIn-leave.fadeIn-leave-active {
+        display:none;
+    }
+
+    &.slideDown-enter {
+        max-height:0;
+        overflow:hidden;
+    }
+
+    &.slideDown-enter.slideDown-enter-active {
+        max-height:1000px;
+        transition:1s;
+    }
+
+    &.slideDown-leave.slideDown-leave-active {
+        display:none;
+    }
+`;
 
 class GeneralData extends Component {
     constructor(props) {
@@ -55,7 +86,7 @@ class GeneralData extends Component {
             paperPublicationYear: this.props.publicationYear,
             validation: this.validator.valid(),
         }
-        
+
 
         console.log(this.props);
     }
@@ -176,88 +207,100 @@ class GeneralData extends Component {
                         </Button>
                 </ButtonGroup>
 
-                {this.state.dataEntry === 'doi' ?
-                    <div>
-                        <Form className="mt-4" onSubmit={this.submitHandler}>
-                            <FormGroup>
-                                <Label for="paperDoi">
-                                    <Tooltip message="Digital Object Identifier or DOI is a persistent identifier or handle used to uniquely identify objects">Paper DOI</Tooltip>
-                                </Label>
-                                <InputGroup>
-                                    <Input type="text" name="doi" id="paperDoi" value={this.state.doi} onChange={this.handleInputChange} invalid={this.state.validation.doi.isInvalid} />
-                                    <FormFeedback className="order-1">{this.state.validation.doi.message}</FormFeedback> {/* Need to set order-1 here to fix Bootstrap bug of missing rounded borders */}
-                                    <InputGroupAddon addonType="append">
-                                        <Button outline color="primary" style={{ minWidth: 130 }}
-                                            onClick={this.handleLookupClick}
-                                            disabled={this.state.isFetching}>
-                                            {!this.state.isFetching ? 'Lookup' : <FontAwesomeIcon icon={faSpinner} spin />}
-                                        </Button>
-                                    </InputGroupAddon>
-                                </InputGroup>
-                            </FormGroup>
-                        </Form>
+                <CSSTransitionGroup
+                    transitionName="fadeIn"
+                    transitionEnterTimeout={500}
+                    transitionLeave={false}>
+                    {this.state.dataEntry === 'doi' ?
+                        <Container key={1}>
+                            <Form className="mt-4" onSubmit={this.submitHandler}>
+                                <FormGroup>
+                                    <Label for="paperDoi">
+                                        <Tooltip message="Digital Object Identifier or DOI is a persistent identifier or handle used to uniquely identify objects">Paper DOI</Tooltip>
+                                    </Label>
+                                    <InputGroup>
+                                        <Input type="text" name="doi" id="paperDoi" value={this.state.doi} onChange={this.handleInputChange} invalid={this.state.validation.doi.isInvalid} />
+                                        <FormFeedback className="order-1">{this.state.validation.doi.message}</FormFeedback> {/* Need to set order-1 here to fix Bootstrap bug of missing rounded borders */}
+                                        <InputGroupAddon addonType="append">
+                                            <Button outline color="primary" style={{ minWidth: 130 }}
+                                                onClick={this.handleLookupClick}
+                                                disabled={this.state.isFetching}>
+                                                {!this.state.isFetching ? 'Lookup' : <FontAwesomeIcon icon={faSpinner} spin />}
+                                            </Button>
+                                        </InputGroupAddon>
+                                    </InputGroup>
+                                </FormGroup>
+                            </Form>
 
-                        {this.state.showDoiTable ?
-                            <div>
-                                <h3 className="h4 mt-5 mb-3">Lookup result</h3>
-                                <Card body>
-                                    <Table className="mb-0">
-                                        <tbody>
-                                            <tr className="table-borderless">
-                                                <td><strong>Paper title:</strong> {this.state.paperTitle}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Authors:</strong> {this.state.paperAuthors}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Publication date:</strong> {this.months[this.state.paperPublicationMonth]} {this.state.paperPublicationYear}</td>
-                                            </tr>
-                                        </tbody>
-                                    </Table>
-                                </Card>
-                            </div>
-                            : ''}
-                    </div>
-                    :
-                    <Form className="mt-4" onSubmit={this.submitHandler}>
-                        <FormGroup>
-                            <Label for="paperTitle">
-                                <Tooltip message="The main title of the paper">Paper title</Tooltip>
-                            </Label>
-                            <Input type="text" name="paperTitle" id="paperTitle" value={this.state.paperTitle} onChange={this.handleInputChange} />
-                            <FormFeedback></FormFeedback>
-                        </FormGroup>
-                        <Row form>
-                            <Col md={6} className="pr-3">
+                            <CSSTransitionGroup
+                                transitionName="slideDown"
+                                transitionEnterTimeout={500}
+                                transitionLeaveTimeout={300}>
+                                {this.state.showDoiTable ?
+                                    <Container key={1} className="mt-5">
+                                        <h3 className="h4 mb-3">Lookup result</h3>
+                                        <Card body>
+                                            <Table className="mb-0">
+                                                <tbody>
+                                                    <tr className="table-borderless">
+                                                        <td><strong>Paper title:</strong> {this.state.paperTitle}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Authors:</strong> {this.state.paperAuthors}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Publication date:</strong> {this.months[this.state.paperPublicationMonth]} {this.state.paperPublicationYear}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </Table>
+                                        </Card>
+                                    </Container>
+                                    : ''}
+                            </CSSTransitionGroup>
+                        </Container>
+                        :
+                        <Container key={2}>
+                            <Form className="mt-4" onSubmit={this.submitHandler}>
                                 <FormGroup>
-                                    <Label for="paperAuthors">
-                                        <Tooltip message="The author or authors of the paper. Enter both the first and last name">Paper authors</Tooltip>
+                                    <Label for="paperTitle">
+                                        <Tooltip message="The main title of the paper">Paper title</Tooltip>
                                     </Label>
-                                    <TagsInput handler={this.handleAuthorsChange} value={this.state.paperAuthors} />
+                                    <Input type="text" name="paperTitle" id="paperTitle" value={this.state.paperTitle} onChange={this.handleInputChange} />
+                                    <FormFeedback></FormFeedback>
                                 </FormGroup>
-                            </Col>
-                            <Col md={6} className="pl-3">
-                                <FormGroup>
-                                    <Label for="paperCreationDate">
-                                        <Tooltip message="The publication date of the paper, in the form of month and year">Publication date</Tooltip>
-                                    </Label>
-                                    <Row form>
-                                        <Col md={6} >
-                                            <Input type="select" name="paperPublicationMonth" aria-label="Select publication month" value={this.state.paperPublicationMonth} onChange={this.handleInputChange}>
-                                                {monthsOptions}
-                                            </Input>
-                                        </Col>
-                                        <Col md={6} >
-                                            <Input type="select" name="paperPublicationYear" aria-label="Select publication year" value={this.state.paperPublicationYear} onChange={this.handleInputChange}>
-                                                {this.years.map((year) => <option key={year}>{year}</option>)}
-                                            </Input>
-                                        </Col>
-                                    </Row>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                    </Form>
-                }
+                                <Row form>
+                                    <Col md={6} className="pr-3">
+                                        <FormGroup>
+                                            <Label for="paperAuthors">
+                                                <Tooltip message="The author or authors of the paper. Enter both the first and last name">Paper authors</Tooltip>
+                                            </Label>
+                                            <TagsInput handler={this.handleAuthorsChange} value={this.state.paperAuthors} />
+                                        </FormGroup>
+                                    </Col>
+                                    <Col md={6} className="pl-3">
+                                        <FormGroup>
+                                            <Label for="paperCreationDate">
+                                                <Tooltip message="The publication date of the paper, in the form of month and year">Publication date</Tooltip>
+                                            </Label>
+                                            <Row form>
+                                                <Col md={6} >
+                                                    <Input type="select" name="paperPublicationMonth" aria-label="Select publication month" value={this.state.paperPublicationMonth} onChange={this.handleInputChange}>
+                                                        {monthsOptions}
+                                                    </Input>
+                                                </Col>
+                                                <Col md={6} >
+                                                    <Input type="select" name="paperPublicationYear" aria-label="Select publication year" value={this.state.paperPublicationYear} onChange={this.handleInputChange}>
+                                                        {this.years.map((year) => <option key={year}>{year}</option>)}
+                                                    </Input>
+                                                </Col>
+                                            </Row>
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </Container>
+                    }
+                </CSSTransitionGroup>
                 <hr className="mt-5 mb-3" />
 
                 <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Next step</Button>

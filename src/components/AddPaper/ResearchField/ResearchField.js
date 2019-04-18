@@ -4,11 +4,27 @@ import styles from './ResearchField.module.scss';
 import { getStatementsBySubject } from '../../../network';
 import { connect } from 'react-redux';
 import { updateResearchField, nextStep, previousStep } from '../../../actions/addPaper';
+import { CSSTransitionGroup } from 'react-transition-group'
+import styled from 'styled-components';
+
+const AnimationContainer = styled(ListGroupItem)`
+    transition: 0.3s background-color,  0.3s border-color;
+
+    &.fadeIn-enter, &.fadeIn-appear {
+        opacity:0;
+    }
+
+    &.fadeIn-enter.fadeIn-enter-active, &.fadeIn-appear.fadeIn-appear-active {
+        opacity:1;
+        transition:0.5s opacity;
+    }
+`;
 
 /**
  * Component for selecting the research field of a paper
  * This might be redundant in the future, if the research field can be derived from the research problem
  */
+
 class ResearchField extends Component {
     constructor(props) {
         super(props);
@@ -20,7 +36,7 @@ class ResearchField extends Component {
 
     componentDidMount() {
         // select the main field is none is selected yet (i.e. first time visiting this step)
-        if (this.props.selectedResearchField === null) { 
+        if (this.props.selectedResearchField === null) {
             this.getFields(process.env.REACT_APP_RESEARCH_FIELD_MAIN, 0);
         }
     }
@@ -88,23 +104,33 @@ class ResearchField extends Component {
                 <h2 className="h4 mt-4 mb-5">Select the research field</h2>
 
                 <CardDeck>
+
                     {this.props.researchFields.length > 0 && this.props.researchFields.map((fields, level) => {
                         return fields.length > 0 ? <Card key={level} className={`${styles.fieldSelector}`}>
                             <ListGroup className={styles.listGroup} flush>
-                                {fields.map((field) => (
-                                    <ListGroupItem className={`${styles.listGroupItem}`} active={field.active}
-                                        key={field.id}
-                                        onClick={() => this.handleFieldClick(field.id, level)}>
-                                        {field.label}
-                                    </ListGroupItem>
-                                ))}
+                                <CSSTransitionGroup
+                                    transitionName="fadeIn"
+                                    transitionEnterTimeout={500}
+                                    transitionLeave={false}
+                                    transitionAppear={true}
+                                    transitionAppearTimeout={500}>
+                                    {fields.map((field) => (
+                                        <AnimationContainer 
+                                            key={field.id} 
+                                            className={`${styles.listGroupItem}`} 
+                                            active={field.active} 
+                                            onClick={() => this.handleFieldClick(field.id, level)}>
+                                            {field.label}
+                                        </AnimationContainer>
+                                    ))}
+                                </CSSTransitionGroup>
                             </ListGroup>
                         </Card>
                             : ''
                     })}
                 </CardDeck>
                 <p className={errorMessageClasses}>Please select the research field</p>
-                
+
                 <hr className="mt-5 mb-3" />
                 {/*<strong>Selected research field</strong> <br />
                 <span >{this.state.selectedResearchField}</span>*/}

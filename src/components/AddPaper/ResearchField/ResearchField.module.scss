@@ -3,29 +3,10 @@
     height: 300px;
     overflow-y: auto;
 }
-.listGroupItem {
 
-}
 .listGroupItem {
-    padding-top: 0.5rem!important;
-    padding-bottom: 0.5rem!important;
-    cursor:pointer;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    cursor: pointer;
     border-radius: 0 !important; //overwrite bootstrap border radius since a card is used to display the lists
 }
-.example-enter {
-    opacity: 0.01;
-  }
-  
-  .example-enter.example-enter-active {
-    opacity: 1;
-    transition: opacity 500ms ease-in;
-  }
-  
-  .example-leave {
-    opacity: 1;
-  }
-  
-  .example-leave.example-leave-active {
-    opacity: 0.01;
-    transition: opacity 300ms ease-in;
-  }
