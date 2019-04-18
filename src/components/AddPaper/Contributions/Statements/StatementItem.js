@@ -80,7 +80,7 @@ class StatementItem extends Component {
                                     type={value.type}
                                     resourceId={value.resourceId}
                                     propertyId={this.props.id}
-                                    isExistingValue={value.isExistingValue}
+                                    existingStatement={value.existingStatement}
                                 />
                             })}
 

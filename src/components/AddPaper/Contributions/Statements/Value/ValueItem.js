@@ -59,7 +59,7 @@ class ValueItem extends Component {
             <>
                 <ListGroupItem className={styles.valueItem}>
                     <span className={labelClass} onClick={this.props.type === 'object' ? this.handleResourceClick : null}>{this.props.label}</span>
-                    {!this.props.isExistingValue ?
+                    {!this.props.existingStatement ?
                         <span className={`${styles.deleteValue} float-right`} onClick={this.toggleDeleteContribution}>
                             <Tooltip message="Delete value" hideDefaultIcon={true}>
                                 <Icon icon={faTrash} /> Delete

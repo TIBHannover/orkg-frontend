@@ -9,6 +9,9 @@
     > li {
         padding: 9px 10px 9px 15px;
         margin-bottom: 5px;
+        transition: 0.3s background;
+        border-top-left-radius: $border-radius;
+        border-bottom-left-radius: $border-radius;
 
         > span {
             cursor: pointer;
@@ -16,12 +19,11 @@
         &.activeContribution {
             background: $ORKG-primary-color;
             color: #fff;
-            border-top-left-radius: $border-radius;
-            border-bottom-left-radius: $border-radius;
             cursor: initial !important;
         }
         .deleteContribution {
             cursor: pointer;
+            color:#fff;
         }
         .selectContribution {
             cursor:pointer;

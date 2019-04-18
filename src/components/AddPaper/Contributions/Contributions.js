@@ -7,7 +7,7 @@ import TagsInput from '../../Utils/TagsInput';
 import styles from './Contributions.module.scss';
 import Statements from './Statements/Statements';
 import { connect } from 'react-redux';
-import { nextStep, previousStep, createContribution, deleteContribution, selectContribution, updateResearchProblems, saveAddPaper } from '../../../actions/addPaper';
+import { nextStep, previousStep, createContribution, deleteContribution, selectContribution, updateResearchProblems, saveAddPaper, prefillStatements } from '../../../actions/addPaper';
 import Confirm from 'reactstrap-confirm';
 
 class Contributions extends Component {
@@ -22,7 +22,11 @@ class Contributions extends Component {
 
         // if there is no contribution yet, create the first one
         if (this.props.contributions.allIds.length === 0) {
-            this.props.createContribution({selectAfterCreation: true});
+            this.props.createContribution({
+                selectAfterCreation: true,
+                prefillStatements: true,
+                researchField: this.props.selectedResearchField,
+            });
         }
     }
 
@@ -144,6 +148,8 @@ const mapDispatchToProps = dispatch => ({
     selectContribution: (id) => dispatch(selectContribution(id)),
     updateResearchProblems: (data) => dispatch(updateResearchProblems(data)),
     saveAddPaper: (data) => dispatch(saveAddPaper(data)),
+    prefillStatements: (data) => dispatch(prefillStatements(data)),
+    
 });
 
 export default connect(

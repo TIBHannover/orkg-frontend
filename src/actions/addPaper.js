@@ -28,7 +28,7 @@ export const updateResearchField = (data) => dispatch => {
     })
 }
 
-export const createContribution = ({ selectAfterCreation = false }) => dispatch => {
+export const createContribution = ({ selectAfterCreation = false, prefillStatements: performPrefill = false, researchField = null }) => dispatch => {
     let newResourceId = guid();
     let newContributionId = guid();
 
@@ -48,6 +48,38 @@ export const createContribution = ({ selectAfterCreation = false }) => dispatch 
                 label: 'Main',
             }
         });
+    }
+
+    if (performPrefill) {
+        dispatch(prefillStatements({
+            researchField,
+            resourceId: newResourceId
+        }));
+    }
+}
+
+export const prefillStatements = ({ researchField, resourceId }) => dispatch => {
+    // TODO: when no match is found, look for the parent researchField
+
+    // This data is only added for demo purposes 
+    if (researchField === 'R133') {
+        dispatch(createProperty({
+            resourceId: resourceId,
+            existingPredicateId: 'P63',
+            label: 'Approach',
+        }));
+
+        dispatch(createProperty({
+            resourceId: resourceId,
+            existingPredicateId: 'P58',
+            label: 'Evaluation',
+        }));
+
+        dispatch(createProperty({
+            resourceId: resourceId,
+            existingPredicateId: 'P16',
+            label: 'Implementation',
+        }));
     }
 }
 
@@ -222,7 +254,7 @@ export const fetchStatementsForResource = (data) => {
                             } else {
                                 propertyId = existingProperties.filter(e => e.existingPredicateId === statement.predicate.id)[0].propertyId;
                             }
-                            
+
                             dispatch(createValue({
                                 valueId: valueId,
                                 existingResourceId: statement.object.id,
@@ -311,7 +343,7 @@ export const saveAddPaper = (data) => {
         await network.createResourceStatement(paper.id, researchFieldPredicate, data.selectedResearchField);
 
         // contributions
-        for (let contributionId of data.contributions.allIds) { 
+        for (let contributionId of data.contributions.allIds) {
             let contribution = data.contributions.byId[contributionId];
             let contributionResource = await network.createResource('contribution');
             await network.createResourceStatement(paper.id, contributionPredicate, contributionResource.id);
@@ -406,7 +438,7 @@ export const saveStatements = async (data) => {
         for (let resourceIdArray of data.resources.allIds) { // the order matters here, since it is an hierarch, the object doesn't provide a reliable order (so use the array)
             let resource = data.resources.byId[resourceIdArray];
             let resourceId;
-            
+
             if (!resource.existingResourceId) {
                 resourceId = await network.createResource(resource.label);
                 resourceId = resourceId.id;
