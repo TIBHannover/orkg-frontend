@@ -118,11 +118,11 @@ class GeneralData extends Component {
 
             try {
                 paperTitle = responseJson.message.title[0];
-                paperAuthors = responseJson.message.author.map(function (author) {
+                paperAuthors = responseJson.message.author.map((author, index) => {
                     return author.given + ' ' + author.family;
                 });
                 paperPublicationMonth = responseJson.message.created['date-parts'][0][1];
-                paperPublicationYear = '20' + responseJson.message.created['date-parts'][0][2]; // year is returned in short format, so prepend 20
+                paperPublicationYear = responseJson.message.created['date-parts'][0][0]; 
             } catch (e) {
                 console.log('Error setting paper data: ', e);
             }
@@ -246,7 +246,9 @@ class GeneralData extends Component {
                                                         <td><strong>Paper title:</strong> {this.state.paperTitle}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td><strong>Authors:</strong> {this.state.paperAuthors}</td>
+                                                        <td><strong>Authors:</strong> {this.state.paperAuthors.map((author, index) => (
+                                                            <span key={index}>{this.state.paperAuthors.length > index + 1 ? author + ', ' : author}</span>
+                                                        ))}</td>
                                                     </tr>
                                                     <tr>
                                                         <td><strong>Publication date:</strong> {this.months[this.state.paperPublicationMonth]} {this.state.paperPublicationYear}</td>
