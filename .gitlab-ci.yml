@@ -16,7 +16,7 @@ stages:
   script:
   # Update the build configuration to match the environment
   - sed '/^REACT_APP_SERVER_URL=/d' default.env > .env
-  - echo "REACT_APP_SERVER_URL=$BACKEND_URL" >> .env
+  - echo "\nREACT_APP_SERVER_URL=$BACKEND_URL" >> .env
   - cat .env
   # Prepare and build
   - npm install
