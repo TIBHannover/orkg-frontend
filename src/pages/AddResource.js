@@ -10,6 +10,7 @@ import {
 import {NotificationManager} from 'react-notifications';
 import './AddResource.css';
 import {doiPredicateLabel, popupDelay} from '../utils';
+import { Container } from 'reactstrap';
 
 export default class AddResource extends Component {
     state = {
@@ -30,6 +31,7 @@ export default class AddResource extends Component {
         if (!doiRegex.test(this.state.value)) {
             await this.createResource(false);
         } else {
+            console.log('this is a DOI');
             this.doi = this.state.value;
             await this.createResourceUsingDoi();
         }
@@ -38,8 +40,9 @@ export default class AddResource extends Component {
     createResourceUsingDoi = async () => {
         try {
             const responseJson = await submitGetRequest(crossrefUrl + this.state.value);
+            console.log(responseJson);
             this.setState({value: responseJson.message.title[0]});
-            await this.createResource(true);
+            //await this.createResource(true);
         } catch (error) {
             console.error(error);
             NotificationManager.error(error.message, 'Error finding DOI', popupDelay);
@@ -118,21 +121,26 @@ export default class AddResource extends Component {
 
     render() {
         const loading = this.state.editorState === 'loading';
-        return <div className="input-group mb-3">
-            <input type="text" className="form-control" placeholder="Research contribution title or DOI"
-                    disabled={loading}
-                    onInput={this.handleInput}
-                    onKeyUp={this.handleKeyUp}
-                    aria-label="Resource title or DOI" aria-describedby="basic-addon2"/>
-            {
-                !loading ? <div className="input-group-append">
-                        <button className="btn btn-outline-primary" type="button" onClick={this.handleAdd}>Add</button>
-                    </div>
-                    : <div className="container vertical-centered">
-                        <span className="fa fa-spinner fa-spin"/>
-                    </div>
-            }
-        </div>
+
+        return (
+            <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5">
+                <div className="input-group mb-3">
+                    <input type="text" className="form-control" placeholder="Research contribution title or DOI"
+                            disabled={loading}
+                            onInput={this.handleInput}
+                            onKeyUp={this.handleKeyUp}
+                            aria-label="Resource title or DOI" aria-describedby="basic-addon2"/>
+                    {
+                        !loading ? <div className="input-group-append">
+                                <button className="btn btn-outline-primary" type="button" onClick={this.handleAdd}>Add</button>
+                            </div>
+                            : <div className="container vertical-centered">
+                                <span className="fa fa-spinner fa-spin"/>
+                            </div>
+                    }
+                </div>
+            </Container>
+        );
     }
 
 }

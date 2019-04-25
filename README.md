@@ -1,14 +1,18 @@
 # ORKG Web Client
 
-## Run
+## Installation
 
-Rename the file `default.env` to `.env`.
+Install the dependencies by running:
 
-    mv default.env .env
+    npm install
 
-Make modifications to the `.env` file if needed.
+Copy the file `default.env` to `.env`:
 
-Run the following command in this directory.
+    cp default.env .env
+
+
+## Running 
+Run the following command:
 
     npm run start
 

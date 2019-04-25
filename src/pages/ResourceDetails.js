@@ -5,11 +5,13 @@ import {resourcesUrl, statementsUrl, submitGetRequest} from '../network';
 import {groupByObjectWithId} from '../utils';
 import './ResourceDetails.css';
 import EditableHeader from '../components/EditableHeader';
+import { Container } from 'reactstrap';
 
 export const descriptionSection = 'description';
 export const implementationSection = 'implementation';
 export const evaluationSection = 'evaluation';
 export const miscSection = 'misc';
+
 // const sections = [descriptionSection, implementationSection, evaluationSection, miscSection];
 
 export default class ResourceDetails extends Component {
@@ -152,14 +154,14 @@ export default class ResourceDetails extends Component {
             //     </NavLink>
             // </Nav>;
 
-            return <div className="entityView-main">
+            return <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix"><div className="entityView-main">
                 {titleJsx}
                 {abstractJsx}
                 {/*{navigationButtons}*/}
                 {statementGroupJsxs}
                 {newStatementsSectionJsx}
                 {/*{bottomNavigationButtons}*/}
-            </div>;
+            </div></Container>;
         } else {
             return null;
         }

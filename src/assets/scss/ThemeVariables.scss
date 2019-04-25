@@ -1,0 +1,48 @@
+// ORKG theme variables
+$ORKG-border-radius: 12px; // General border radius on inputs, buttons, boxes etc. 
+$ORKG-primary-color: #E86161; // Primary color for buttons, icons, links etc.
+$ORKG-border-width: 2px; // Width of border for buttons, inputs 
+
+// Theme variables
+$primary: $ORKG-primary-color;
+//$secondary: #3C4C58;
+$light: #E6E6E6;
+$body-bg: #E9EBF2;
+$body-color: #646464;
+$border-width: $ORKG-border-width;
+$border-radius: $ORKG-border-radius;
+
+// Add a new theme color
+$theme-colors: (
+    lightblue: $body-bg
+);
+
+// Forms
+$form-feedback-font-size: 90%;
+
+// Inputs
+$input-border-radius: $ORKG-border-radius;
+$input-border-radius-sm: $ORKG-border-radius;
+$btn-border-radius: $ORKG-border-radius;
+$btn-border-radius: $ORKG-border-radius;
+$btn-border-radius-sm: $btn-border-radius;
+$btn-border-radius-lg: $btn-border-radius;
+$input-bg: #F7F7F7;
+$input-btn-padding-x: 30px;
+$input-padding-x: .75rem;
+$btn-padding-x-sm: 1.25rem;
+$dropdown-link-hover-bg: rgb(233, 233, 233);
+
+// Headings
+$headings-font-weight: 400;
+$headings-color:#373F45;
+
+// Modal
+$modal-content-border-radius: 11px;
+$modal-content-border-width: 3px;
+
+// Badges
+$badge-font-size:85%;
+$badge-font-weight: 500;
+$badge-padding-y: 0.3rem;
+$badge-padding-x: 0.8rem;

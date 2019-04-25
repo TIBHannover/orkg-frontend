@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import ShortRecord from '../components/statements/ShortRecord';
 import {submitGetRequest, url} from '../network';
+import { Container } from 'reactstrap';
 
 export default class SearchResults extends Component {
     state = {
@@ -94,7 +95,11 @@ export default class SearchResults extends Component {
                 body2 = <div> <span>No <b>predicates</b> found that match your search query</span> </div>;
             }
         }
-        return [body1, body2];
+        return (
+            <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">
+                {body1} {body2}
+            </Container>
+        );
     }
 
 }

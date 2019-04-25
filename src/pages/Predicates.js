@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import ShortRecord from '../components/statements/ShortRecord';
 import {submitGetRequest, url} from '../network';
+import { Container } from 'reactstrap';
 
 export default class Predicates extends Component {
     state = {
@@ -44,9 +45,9 @@ export default class Predicates extends Component {
                     </ShortRecord>
             );
 
-            return <div>
+            return <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">
                 {predicates}
-            </div>
+            </Container>
         } else {
             return null;
         }
