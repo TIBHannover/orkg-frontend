@@ -6,7 +6,7 @@ import { createBrowserHistory } from 'history'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // enable redux debug tools
 
-export const history = createBrowserHistory();
+export const history = createBrowserHistory({ basename: process.env.PUBLIC_URL });
 
 export default function configureStore() {
     return createStore(
