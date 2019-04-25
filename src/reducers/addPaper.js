@@ -359,8 +359,6 @@ export default (state = initialState, action) => {
         }
 
         case type.ADD_FETCHED_STATEMENT: {
-            let { payload } = action; 
-
             return {
                 ...state,
             }

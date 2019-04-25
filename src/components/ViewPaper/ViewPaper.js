@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Card, ListGroup, ListGroupItem, CardDeck, Container } from 'reactstrap';
+import { Container } from 'reactstrap';
 import { getStatementsBySubject, getResource } from '../../network';
 import { connect } from 'react-redux';
-import { updateResearchField, nextStep, previousStep } from '../../actions/addPaper';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar, faBars } from '@fortawesome/free-solid-svg-icons';
 import Contributions from './Contributions';
@@ -88,22 +87,16 @@ class ViewPaper extends Component {
                 <h2 className="h4 mt-4 mb-3">{this.state.title}</h2>
 
                 {/* TODO: change links of badges  */}
-                <a href="#" className="mr-2">
-                    <span className="badge badge-lightblue">
-                        <Icon icon={faCalendar} className="text-primary" /> {months[this.state.publicationMonth]} {this.state.publicationYear}
-                    </span>
-                </a>
-                <a href="#" className="mr-2">
-                    <span className="badge badge-lightblue">
-                        <Icon icon={faBars} className="text-primary" /> {this.state.researchField}
-                    </span>
-                </a>
+                <span className="badge badge-lightblue mr-2">
+                    <Icon icon={faCalendar} className="text-primary" /> {months[this.state.publicationMonth]} {this.state.publicationYear}
+                </span>
+                <span className="badge badge-lightblue mr-2">
+                    <Icon icon={faBars} className="text-primary" /> {this.state.researchField}
+                </span>
                 {this.state.authorNames.map((author, index) => (
-                    <a href="#" key={index} className="mr-2">
-                        <span className="badge badge-lightblue">
-                            <Icon icon={faUser} className="text-primary" /> {author}
-                        </span>
-                    </a>
+                    <span className="badge badge-lightblue  mr-2">
+                        <Icon icon={faUser} className="text-primary" /> {author}
+                    </span>
                 ))}
 
                 <hr className="mt-5 mb-5" />

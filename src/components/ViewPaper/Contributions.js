@@ -1,14 +1,8 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Form, FormGroup, Label, Button } from 'reactstrap';
-import { getStatementsBySubject, getResource } from '../../network';
+import { Container, Row, Col, Form, FormGroup } from 'reactstrap';
 import { connect } from 'react-redux';
 import { selectContribution } from '../../actions/viewPaper';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faBars } from '@fortawesome/free-solid-svg-icons';
 import styles from '../AddPaper/Contributions/Contributions.module.scss';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import Tooltip from '../Utils/Tooltip';
-//import Statements from './Statements';
 import Statements from '../AddPaper/Contributions/Statements/Statements';
 import styled from 'styled-components';
 import SimilarContributions from './SimilarContributions';

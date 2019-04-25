@@ -1,5 +1,4 @@
 import * as type from '../actions/types';
-import merge from 'lodash/merge';
 import dotProp from 'dot-prop-immutable';
 
 const initialState = {

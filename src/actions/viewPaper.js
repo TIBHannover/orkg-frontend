@@ -1,6 +1,4 @@
 import * as type from './types.js';
-import { guid } from '../utils';
-import * as network from '../network';
 import * as addPaper from './addPaper';
 
 export const selectContribution = ({contributionId: id, contributionIsLoaded}) => dispatch => {
