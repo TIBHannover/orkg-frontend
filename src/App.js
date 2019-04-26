@@ -32,22 +32,24 @@ export default class App extends Component {
                     <Route exact path={ROUTES.LICENSE} component={License} />
                     <Route exact path={ROUTES.NOT_FOUND} component={NotFound} />
 
-                    <Route path={`${process.env.PUBLIC_URL}/resource/:resourceId/:sectionName`}
+                    {/* Legacy routes, only used for debugging now */}
+                    <Route path={`/resource/:resourceId/:sectionName`}
                         render={({ match }) => {
                             const id = decodeURIComponent(match.params.resourceId);
                             return <ResourceDetails {...this.props} id={id} key={id}
                                 sectionName={decodeURIComponent(match.params.sectionName)} />
                         }} />
-                    <Route path={`${process.env.PUBLIC_URL}/predicate/:predicateId`} render={({ match }) => (
+                    <Route path={`/predicate/:predicateId`} render={({ match }) => (
                         <PredicateDetails id={decodeURIComponent(match.params.predicateId)} />
                     )} />
-                    <Route path={`${process.env.PUBLIC_URL}/search/:searchTerm`} render={({ match }) => (
+                    <Route path={`/search/:searchTerm`} render={({ match }) => (
                         <SearchResults term={decodeURIComponent(match.params.searchTerm)} />
                     )} />
 
-                    <Redirect from={`${process.env.PUBLIC_URL}/resource/:resourceId`}
-                        to={`${process.env.PUBLIC_URL}/resource/:resourceId/${descriptionSection}`} />
+                    <Redirect from={`/resource/:resourceId`}
+                        to={`/resource/:resourceId/${descriptionSection}`} />
 
+                    {/* Don't add routes below this line */}
                     <Route component={NotFound} />
                 </Switch>
             </DefaultLayout>
