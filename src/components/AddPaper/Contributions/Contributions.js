@@ -1,24 +1,32 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Form, FormGroup, Label, Button } from 'reactstrap';
+import { Container, Row, Col, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../../Utils/Tooltip';
-import TagsInput from '../../Utils/TagsInput';
 import styles from './Contributions.module.scss';
-import Statements from './Statements/Statements';
 import { connect } from 'react-redux';
-import { nextStep, previousStep, createContribution, deleteContribution, selectContribution, updateResearchProblems, saveAddPaper, prefillStatements } from '../../../actions/addPaper';
+import { nextStep, previousStep, createContribution, deleteContribution, selectContribution, saveAddPaper, prefillStatements } from '../../../actions/addPaper';
 import Confirm from 'reactstrap-confirm';
+import Contribution from './Contribution';
+import { CSSTransitionGroup } from 'react-transition-group'
+import styled from 'styled-components';
+
+const AnimationContainer = styled.div`
+    transition: 0.3s background-color,  0.3s border-color;
+
+    &.fadeIn-enter {
+        opacity:0;
+    }
+
+    &.fadeIn-enter.fadeIn-enter-active {
+        opacity:1;
+        transition:0.5s opacity;
+    }
+`;
 
 class Contributions extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            researchProblems: [],
-            collapse: false, //replace
-            dropdownOpen: false, //replace
-        }
 
         // if there is no contribution yet, create the first one
         if (this.props.contributions.allIds.length === 0) {
@@ -59,20 +67,13 @@ class Contributions extends Component {
         }
     }
 
-    handleResearchProblemsChange = (problemsArray) => {
-        this.props.updateResearchProblems({
-            problemsArray,
-            contributionId: this.props.selectedContribution
-        });
-    }
-
     handleSelectContribution = (contributionId) => {
         this.props.selectContribution(contributionId);
     }
 
     render() {
         let selectedResourceId = this.props.selectedContribution;
-
+        console.log(selectedResourceId);
         return (
             <div>
                 <h2 className="h4 mt-4 mb-5">Specify research contributions</h2>
@@ -101,27 +102,18 @@ class Contributions extends Component {
                                 </li>
                             </ul>
                         </Col>
-                        <Col xs="9">
-                            <div className={styles.contribution}>
-                                <Form>
-                                    <FormGroup>
-                                        <Label>
-                                            <Tooltip message="Specify the research problems that this contributions addresses. Normally, a research problem consists of very few words (around 2 or 3)">Research problems</Tooltip>
-                                        </Label>
-                                        <TagsInput handler={this.handleResearchProblemsChange} value={this.props.researchProblems} />
-                                    </FormGroup>
-                                    <FormGroup>
-                                        <Label>
-                                            <Tooltip message="Provide details about this contribution by making statements. Some suggestions are already displayed, you can use this when it is useful, or delete it when it is not">Statements</Tooltip>
-                                        </Label>
 
-                                        <Statements enableEdit={true}
-                                            resourceId={selectedResourceId} />
-
-                                    </FormGroup>
-                                </Form>
-                            </div>
-                        </Col>
+                        <CSSTransitionGroup
+                            transitionName="fadeIn"
+                            transitionEnterTimeout={500}
+                            transitionLeave={false}
+                            component="div"
+                            className="col-9">
+                                <AnimationContainer
+                                    key={selectedResourceId}>
+                                    <Contribution id={selectedResourceId} />
+                                </AnimationContainer>
+                        </CSSTransitionGroup>
                     </Row>
                 </Container>
 
@@ -135,8 +127,7 @@ class Contributions extends Component {
 
 const mapStateToProps = state => {
     return {
-        ...state.addPaper,
-        researchProblems: state.addPaper.contributions.byId[state.addPaper.selectedContribution] ? state.addPaper.contributions.byId[state.addPaper.selectedContribution].researchProblems : []
+        ...state.addPaper
     }
 };
 
@@ -146,10 +137,8 @@ const mapDispatchToProps = dispatch => ({
     createContribution: (data) => dispatch(createContribution(data)),
     deleteContribution: (id) => dispatch(deleteContribution(id)),
     selectContribution: (id) => dispatch(selectContribution(id)),
-    updateResearchProblems: (data) => dispatch(updateResearchProblems(data)),
     saveAddPaper: (data) => dispatch(saveAddPaper(data)),
     prefillStatements: (data) => dispatch(prefillStatements(data)),
-    
 });
 
 export default connect(

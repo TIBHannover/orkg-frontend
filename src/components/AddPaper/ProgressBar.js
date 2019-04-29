@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 /* 
     This component is using React's native component styling, it is kind of a mess...
-    TODO: replacing inline styles by a better alternative 
+    TODO: replacing inline styles with styled components
 */
 
 const labelStyle = {
@@ -90,7 +90,6 @@ class ProgressBar extends Component {
                     </div>
                     <div style={labelStyle}>
                         <div style={{ ...lineStyle, ...styleSelectedFour }}></div>
-                        {/*<div style={{ ...lineStyle, ...lineLeftStyle, ...styleSelectedFour}}></div>*/}
                         <div style={{ ...numberStyle, ...styleSelectedFour }}>4</div>
                         <div style={textStyle}>Finish</div>
                     </div>

@@ -8,6 +8,7 @@ import Finish from './Finish/Finish';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { CSSTransitionGroup } from 'react-transition-group'
+import PropTypes from 'prop-types';
 
 const AnimationContainer = styled.div`
     &.fadeIn-enter {
@@ -48,12 +49,15 @@ class AddPaper extends Component {
                 </Container>
                 <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
                     <ProgressBar currentStep={currentStep} />
+
                     <hr />
+
                     <CSSTransitionGroup
                         transitionName="fadeIn"
                         transitionEnterTimeout={700}
-                        transitionLeave={false}>
-                            {currentStepDetails}
+                        transitionLeave={false}
+                    >
+                        {currentStepDetails}
                     </CSSTransitionGroup>
                 </Container>
             </div>
@@ -61,11 +65,14 @@ class AddPaper extends Component {
     }
 }
 
+AddPaper.propTypes = {
+    currentStep: PropTypes.number.isRequired
+};
+
 const mapStateToProps = state => ({
-    ...state.addPaper // TODO: scope this reducer, also in other files
+    currentStep: state.addPaper.currentStep
 });
 
 export default connect(
-    mapStateToProps,
-    null
+    mapStateToProps
 )(AddPaper);

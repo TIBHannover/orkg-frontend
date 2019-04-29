@@ -53,6 +53,29 @@
     "not op_mini all"
   ],
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "react/jsx-closing-bracket-location": [
+        "error"
+      ],
+      "react/jsx-closing-tag-location": [
+        "error"
+      ],
+      "react/sort-comp": [
+        "error"
+      ],
+      "jsx-quotes": [
+        "error"
+      ],
+      "no-multi-spaces": [
+        "error"
+      ],
+      "react/jsx-tag-spacing": [
+        "error"
+      ],
+      "react/jsx-curly-spacing": [
+        "error"
+      ]
+    }
   }
 }

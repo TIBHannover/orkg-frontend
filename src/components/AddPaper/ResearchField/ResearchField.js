@@ -106,27 +106,30 @@ class ResearchField extends Component {
                 <CardDeck>
 
                     {this.props.researchFields.length > 0 && this.props.researchFields.map((fields, level) => {
-                        return fields.length > 0 ? <Card key={level} className={`${styles.fieldSelector}`}>
-                            <ListGroup className={styles.listGroup} flush>
-                                <CSSTransitionGroup
-                                    transitionName="fadeIn"
-                                    transitionEnterTimeout={500}
-                                    transitionLeave={false}
-                                    transitionAppear={true}
-                                    transitionAppearTimeout={500}>
-                                    {fields.map((field) => (
-                                        <AnimationContainer 
-                                            key={field.id} 
-                                            className={`${styles.listGroupItem}`} 
-                                            active={field.active} 
-                                            onClick={() => this.handleFieldClick(field.id, level)}>
-                                            {field.label}
-                                        </AnimationContainer>
-                                    ))}
-                                </CSSTransitionGroup>
-                            </ListGroup>
-                        </Card>
-                            : ''
+                        return fields.length > 0 ? (
+                            <Card key={level} className={`${styles.fieldSelector}`}>
+                                <ListGroup className={styles.listGroup} flush>
+                                    <CSSTransitionGroup
+                                        transitionName="fadeIn"
+                                        transitionEnterTimeout={500}
+                                        transitionLeave={false}
+                                        transitionAppear={true}
+                                        transitionAppearTimeout={500}
+                                    >
+                                        {fields.map((field) => (
+                                            <AnimationContainer
+                                                key={field.id}
+                                                className={`${styles.listGroupItem}`}
+                                                active={field.active}
+                                                onClick={() => this.handleFieldClick(field.id, level)}
+                                            >
+                                                {field.label}
+                                            </AnimationContainer>
+                                        ))}
+                                    </CSSTransitionGroup>
+                                </ListGroup>
+                            </Card>
+                        ) : ''
                     })}
                 </CardDeck>
                 <p className={errorMessageClasses}>Please select the research field</p>
