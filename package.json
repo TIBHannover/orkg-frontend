@@ -75,6 +75,15 @@
       ],
       "react/jsx-curly-spacing": [
         "error"
+      ],
+      "curly": [
+        "error"
+      ],
+      "react/jsx-wrap-multilines": [
+        "error"
+      ],
+      "react/self-closing-comp": [
+        "error"
       ]
     }
   }

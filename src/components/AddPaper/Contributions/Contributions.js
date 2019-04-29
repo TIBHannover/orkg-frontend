@@ -5,11 +5,12 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../../Utils/Tooltip';
 import styles from './Contributions.module.scss';
 import { connect } from 'react-redux';
-import { nextStep, previousStep, createContribution, deleteContribution, selectContribution, saveAddPaper, prefillStatements } from '../../../actions/addPaper';
+import { nextStep, previousStep, createContribution, deleteContribution, selectContribution, saveAddPaper } from '../../../actions/addPaper';
 import Confirm from 'reactstrap-confirm';
 import Contribution from './Contribution';
 import { CSSTransitionGroup } from 'react-transition-group'
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const AnimationContainer = styled.div`
     transition: 0.3s background-color,  0.3s border-color;
@@ -73,7 +74,7 @@ class Contributions extends Component {
 
     render() {
         let selectedResourceId = this.props.selectedContribution;
-        console.log(selectedResourceId);
+
         return (
             <div>
                 <h2 className="h4 mt-4 mb-5">Specify research contributions</h2>
@@ -85,16 +86,18 @@ class Contributions extends Component {
                                 {this.props.contributions.allIds.map((contribution, index) => {
                                     let contributionId = this.props.contributions.byId[contribution]['id'];
 
-                                    return <li className={contributionId === this.props.selectedContribution ? styles.activeContribution : ''} key={contributionId}>
-                                        <span className={styles.selectContribution} onClick={() => this.handleSelectContribution(contributionId)}>
-                                            Contribution {index + 1}
-                                            <span className={`${styles.deleteContribution} float-right mr-1 ${contributionId !== this.props.selectedContribution && 'd-none'}`}>
-                                                <Tooltip message="Delete contribution" hideDefaultIcon={true}>
-                                                    <Icon icon={faTrash} onClick={() => this.toggleDeleteContribution(contributionId)} />
-                                                </Tooltip>
+                                    return (
+                                        <li className={contributionId === this.props.selectedContribution ? styles.activeContribution : ''} key={contributionId}>
+                                            <span className={styles.selectContribution} onClick={() => this.handleSelectContribution(contributionId)}>
+                                                Contribution {index + 1}
+                                                <span className={`${styles.deleteContribution} float-right mr-1 ${contributionId !== this.props.selectedContribution && 'd-none'}`}>
+                                                    <Tooltip message="Delete contribution" hideDefaultIcon={true}>
+                                                        <Icon icon={faTrash} onClick={() => this.toggleDeleteContribution(contributionId)} />
+                                                    </Tooltip>
+                                                </span>
                                             </span>
-                                        </span>
-                                    </li>
+                                        </li>
+                                    )
                                 })}
 
                                 <li className={`${styles.addContribution} text-primary`}>
@@ -108,11 +111,13 @@ class Contributions extends Component {
                             transitionEnterTimeout={500}
                             transitionLeave={false}
                             component="div"
-                            className="col-9">
-                                <AnimationContainer
-                                    key={selectedResourceId}>
-                                    <Contribution id={selectedResourceId} />
-                                </AnimationContainer>
+                            className="col-9"
+                        >
+                            <AnimationContainer
+                                key={selectedResourceId}
+                            >
+                                <Contribution id={selectedResourceId} />
+                            </AnimationContainer>
                         </CSSTransitionGroup>
                     </Row>
                 </Container>
@@ -125,9 +130,39 @@ class Contributions extends Component {
     }
 }
 
+Contributions.propTypes = {
+    title: PropTypes.string.isRequired,
+    authors: PropTypes.array.isRequired,
+    publicationMonth: PropTypes.number.isRequired,
+    publicationYear: PropTypes.number.isRequired,
+    doi: PropTypes.string.isRequired,
+    selectedResearchField: PropTypes.string.isRequired,
+    contributions: PropTypes.object.isRequired,
+    resources: PropTypes.object.isRequired,
+    properties: PropTypes.object.isRequired,
+    values: PropTypes.object.isRequired,
+    selectedContribution: PropTypes.string.isRequired,
+    nextStep: PropTypes.func.isRequired,
+    previousStep: PropTypes.func.isRequired,
+    createContribution: PropTypes.func.isRequired,
+    deleteContribution: PropTypes.func.isRequired,
+    selectContribution: PropTypes.func.isRequired,
+    saveAddPaper: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = state => {
     return {
-        ...state.addPaper
+        title: state.addPaper.title,
+        authors: state.addPaper.authors,
+        publicationMonth: state.addPaper.publicationMonth,
+        publicationYear: state.addPaper.publicationYear,
+        doi: state.addPaper.doi,
+        selectedResearchField: state.addPaper.selectedResearchField,
+        contributions: state.addPaper.contributions,
+        resources: state.addPaper.resources,
+        properties: state.addPaper.properties,
+        values: state.addPaper.values,
+        selectedContribution: state.addPaper.selectedContribution,
     }
 };
 
@@ -138,7 +173,6 @@ const mapDispatchToProps = dispatch => ({
     deleteContribution: (id) => dispatch(deleteContribution(id)),
     selectContribution: (id) => dispatch(selectContribution(id)),
     saveAddPaper: (data) => dispatch(saveAddPaper(data)),
-    prefillStatements: (data) => dispatch(prefillStatements(data)),
 });
 
 export default connect(

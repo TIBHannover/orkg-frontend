@@ -4,6 +4,7 @@ import { goToResourceHistory } from '../../../../actions/addPaper';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components/macro';
+import PropTypes from 'prop-types';
 
 const BreadcrumbList = styled.ul`
     list-style: none;
@@ -77,7 +78,7 @@ class Breadcrumbs extends Component {
     handleBackClick = () => {
         let historyIndex = this.props.resourceHistory.allIds.length - 2;
         let id = this.props.resourceHistory.allIds[historyIndex];
-        
+
         this.props.goToResourceHistory({
             id,
             historyIndex,
@@ -85,27 +86,34 @@ class Breadcrumbs extends Component {
     }
 
     render() {
-        return <Container>
-            <BackButton className="btn btn-link border-0 align-baseline" onClick={this.handleBackClick}>
-                <Icon icon={faArrowLeft} /> Back
-            </BackButton>
-            <BreadcrumbList>
-                {this.props.resourceHistory.allIds.map((history, index) => {
-                    let item = this.props.resourceHistory.byId[history];
-                    
-                    return <BreadcrumbItem key={index} onClick={() => this.handleOnClick(item.id, index)}>{item.label}</BreadcrumbItem>;
-                })}
-                <div className="clearfix"></div>
-            </BreadcrumbList>
-            <div className="clearfix"></div>
-        </Container>
+        return (
+            <Container>
+                <BackButton className="btn btn-link border-0 align-baseline" onClick={this.handleBackClick}>
+                    <Icon icon={faArrowLeft} /> Back
+                </BackButton>
+                <BreadcrumbList>
+                    {this.props.resourceHistory.allIds.map((history, index) => {
+                        let item = this.props.resourceHistory.byId[history];
+
+                        return <BreadcrumbItem key={index} onClick={() => this.handleOnClick(item.id, index)}>{item.label}</BreadcrumbItem>;
+                    })}
+                    <div className="clearfix" />
+                </BreadcrumbList>
+                <div className="clearfix" />
+            </Container>
+        )
     }
 }
+
+Breadcrumbs.propTypes = {
+    resourceHistory: PropTypes.object.isRequired,
+    goToResourceHistory:  PropTypes.func.isRequired,
+};
 
 const mapStateToProps = state => {
     return {
         resourceHistory: state.addPaper.resourceHistory,
-        level: state.addPaper.level
+        level: state.addPaper.level,
     }
 };
 

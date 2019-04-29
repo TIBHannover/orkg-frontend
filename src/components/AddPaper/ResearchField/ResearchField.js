@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import { Button, Card, ListGroup, ListGroupItem, CardDeck } from 'reactstrap';
-import styles from './ResearchField.module.scss';
 import { getStatementsBySubject } from '../../../network';
 import { connect } from 'react-redux';
 import { updateResearchField, nextStep, previousStep } from '../../../actions/addPaper';
 import { CSSTransitionGroup } from 'react-transition-group'
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
-const AnimationContainer = styled(ListGroupItem)`
+const ListGroupItemStyled = styled(ListGroupItem)`
     transition: 0.3s background-color,  0.3s border-color;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    cursor: pointer;
+    border-radius: 0 !important; //overwrite bootstrap border radius since a card is used to display the lists
 
     &.fadeIn-enter, &.fadeIn-appear {
         opacity:0;
@@ -18,6 +22,12 @@ const AnimationContainer = styled(ListGroupItem)`
         opacity:1;
         transition:0.5s opacity;
     }
+`;
+
+const FieldSelector = styled(Card)`
+    max-width: 260px;
+    height: 300px;
+    overflow-y: auto;
 `;
 
 /**
@@ -36,7 +46,7 @@ class ResearchField extends Component {
 
     componentDidMount() {
         // select the main field is none is selected yet (i.e. first time visiting this step)
-        if (this.props.selectedResearchField === null) {
+        if (this.props.selectedResearchField === '') {
             this.getFields(process.env.REACT_APP_RESEARCH_FIELD_MAIN, 0);
         }
     }
@@ -104,11 +114,10 @@ class ResearchField extends Component {
                 <h2 className="h4 mt-4 mb-5">Select the research field</h2>
 
                 <CardDeck>
-
                     {this.props.researchFields.length > 0 && this.props.researchFields.map((fields, level) => {
                         return fields.length > 0 ? (
-                            <Card key={level} className={`${styles.fieldSelector}`}>
-                                <ListGroup className={styles.listGroup} flush>
+                            <FieldSelector key={level}>
+                                <ListGroup flush>
                                     <CSSTransitionGroup
                                         transitionName="fadeIn"
                                         transitionEnterTimeout={500}
@@ -117,18 +126,17 @@ class ResearchField extends Component {
                                         transitionAppearTimeout={500}
                                     >
                                         {fields.map((field) => (
-                                            <AnimationContainer
+                                            <ListGroupItemStyled
                                                 key={field.id}
-                                                className={`${styles.listGroupItem}`}
                                                 active={field.active}
                                                 onClick={() => this.handleFieldClick(field.id, level)}
                                             >
                                                 {field.label}
-                                            </AnimationContainer>
+                                            </ListGroupItemStyled>
                                         ))}
                                     </CSSTransitionGroup>
                                 </ListGroup>
-                            </Card>
+                            </FieldSelector>
                         ) : ''
                     })}
                 </CardDeck>
@@ -145,8 +153,17 @@ class ResearchField extends Component {
     }
 }
 
+ResearchField.propTypes = {
+    selectedResearchField: PropTypes.string.isRequired,
+    researchFields: PropTypes.array.isRequired,
+    updateResearchField: PropTypes.func.isRequired,
+    nextStep: PropTypes.func.isRequired,
+    previousStep: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = state => ({
-    ...state.addPaper
+    selectedResearchField: state.addPaper.selectedResearchField,
+    researchFields: state.addPaper.researchFields,
 });
 
 const mapDispatchToProps = dispatch => ({

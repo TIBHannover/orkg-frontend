@@ -25,11 +25,11 @@ class Contributions extends Component {
     componentDidMount = async () => {
 
     }
-    
+
     handleSelectContribution = (contributionId) => {
         let contributionIsLoaded = this.props.addPaper.resources.byId[contributionId] ? true : false;
         this.props.selectContribution({
-            contributionId, 
+            contributionId,
             contributionIsLoaded
         })
     }
@@ -41,50 +41,56 @@ class Contributions extends Component {
 
         let selectedContributionId = this.props.addPaper.selectedContribution;
 
-        return <div>
-            <Container>
-                <Row noGutters={true}>
-                    <Col xs="3">
-                        <ul className={styles.contributionsList}>
-                            {this.props.contributions.map((contributionId, index) => {
-                                return <li className={contributionId === selectedContributionId ? styles.activeContribution : ''} key={contributionId}>
-                                    <span className={styles.selectContribution} onClick={() => this.handleSelectContribution(contributionId)}>
-                                        Contribution {index + 1}
-                                    </span>
-                                </li>
-                            })}
-                        </ul>
-                    </Col>
-                    <Col xs="9">
-                        <div className={styles.contribution}>
-                            <Form>
-                                <FormGroup>
-                                    <Title style={{marginTop:0}}>Research problems</Title>
-                                    {this.props.viewPaper.researchProblems[selectedContributionId] && this.props.viewPaper.researchProblems[selectedContributionId].map((problem, index) => (
-                                        <span key={index}>
-                                            <span className="btn btn-link p-0 border-0 align-baseline">{problem.label}</span>
-                                        </span>
-                                    ))}
-                                </FormGroup>
+        return (
+            <div>
+                <Container>
+                    <Row noGutters={true}>
+                        <Col xs="3">
+                            <ul className={styles.contributionsList}>
+                                {this.props.contributions.map((contributionId, index) => {
+                                    return (
+                                        <li className={contributionId === selectedContributionId ? styles.activeContribution : ''} key={contributionId}>
+                                            <span className={styles.selectContribution} onClick={() => this.handleSelectContribution(contributionId)}>
+                                                Contribution {index + 1}
+                                            </span>
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </Col>
+                        <Col xs="9">
+                            <div className={styles.contribution}>
+                                <Form>
+                                    <FormGroup>
+                                        <Title style={{ marginTop: 0 }}>Research problems</Title>
+                                        {this.props.viewPaper.researchProblems[selectedContributionId] && this.props.viewPaper.researchProblems[selectedContributionId].map((problem, index) => (
+                                            <span key={index}>
+                                                <span className="btn btn-link p-0 border-0 align-baseline">{problem.label}</span>
+                                            </span>
+                                        ))}
+                                    </FormGroup>
 
-                                <FormGroup>
-                                    <Title>Contribution data</Title>
-                                            
-                                    <Statements enableEdit={false}
-                                        resourceId={this.props.addPaper.selectedContribution} />
-                                </FormGroup>
+                                    <FormGroup>
+                                        <Title>Contribution data</Title>
 
-                                <FormGroup>
-                                    <Title>Similar contributions</Title>
+                                        <Statements 
+                                            enableEdit={false}
+                                            resourceId={this.props.addPaper.selectedContribution} 
+                                        />
+                                    </FormGroup>
 
-                                    <SimilarContributions />
-                                </FormGroup>
-                            </Form>
-                        </div>
-                    </Col>
-                </Row>
-            </Container>
-        </div>;
+                                    <FormGroup>
+                                        <Title>Similar contributions</Title>
+
+                                        <SimilarContributions />
+                                    </FormGroup>
+                                </Form>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+        );
     }
 }
 

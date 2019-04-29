@@ -11,10 +11,10 @@ const initialState = {
     publicationYear: 2000,
     doi: '',
     researchFields: [],
-    selectedResearchField: null,
-    selectedContribution: null,
-    selectedResource: null,
-    selectedProperty: null,
+    selectedResearchField: '',
+    selectedContribution: '',
+    selectedResource: '',
+    selectedProperty: '',
     level: 0,
     paperNewResourceId: null,
     isFetchingStatements: false,
@@ -203,7 +203,7 @@ export default (state = initialState, action) => {
         case type.TOGGLE_PROPERTY_COLLAPSE: {
             return {
                 ...state,
-                selectedProperty: action.id !== state.selectedProperty ? action.id : null
+                selectedProperty: action.id !== state.selectedProperty ? action.id : ''
             };
         }
 
@@ -354,7 +354,7 @@ export default (state = initialState, action) => {
         case type.CLEAR_SELECTED_PROPERTY: {
             return {
                 ...state,
-                selectedProperty: null,
+                selectedProperty: '',
             };
         }
 

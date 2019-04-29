@@ -5,6 +5,7 @@ import styles from '../Contributions.module.scss';
 import AutoComplete from './AutoComplete';
 import { connect } from 'react-redux';
 import { createProperty } from '../../../../actions/addPaper';
+import PropTypes from 'prop-types';
 
 // TODO: this is about adding a property, not really a statement. So rename this component?
 class AddStatement extends Component {
@@ -76,12 +77,14 @@ class AddStatement extends Component {
                 <ListGroupItem className={`${styles.statementItem} ${styles.statementItemInput}`}>
                     {this.state.showAddStatement ?
                         <InputGroup className={`${styles.addStatement}`}>
-                            <AutoComplete requestUrl={predicatesUrl}
+                            <AutoComplete 
+                                requestUrl={predicatesUrl}
                                 placeholder="Enter a property"
                                 onItemSelected={this.handlePropertySelect}
                                 onNewItemSelected={this.toggleConfirmNewProperty}
                                 onKeyUp={() => { }}
-                                disableBorderRadiusRight />
+                                disableBorderRadiusRight 
+                            />
 
                             <InputGroupAddon addonType="append">
                                 <Button color="light" className={styles.addStatementActionButton} onClick={this.handleHideAddStatement}>Cancel</Button>
@@ -110,9 +113,14 @@ class AddStatement extends Component {
     }
 }
 
+AddStatement.propTypes = {
+    createProperty: PropTypes.func.isRequired,
+    selectedResource: PropTypes.string.isRequired,
+};
+
 const mapStateToProps = state => {
     return {
-        ...state.addPaper,
+        selectedResource: state.addPaper.selectedResource,
     }
 };
 

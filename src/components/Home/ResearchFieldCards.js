@@ -6,6 +6,7 @@ import { getStatementsBySubject } from '../../network';
 
 /* Bootstrap card column is not working correctly working with vertical alignment,
 thus used custom styling here */
+
 const Card = styled.div`
     cursor: pointer;
     background: #E86161!important;
@@ -25,7 +26,7 @@ const Card = styled.div`
 const CardTitle = styled.h5`
     color: #fff;
     font-size: 16px;
-    padding:0 5px
+    padding:0 5px;
 `;
 
 const BreadcrumbLink = styled.span`
@@ -96,11 +97,11 @@ class ResearchFieldCards extends Component {
 
                 <hr className="mt-3 mb-5" />
                 <div id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap">
-                    {this.state.researchFields.map((field) =>
+                    {this.state.researchFields.map((field) => (
                         <Card className="card card-body p-0 justify-content-center" role="button" key={field.id} onClick={() => this.getFields(field.id, field.label)}>
                             <CardTitle className="card-title m-0 text-center">{field.label}</CardTitle>
                         </Card>
-                    )}
+                    ))}
                 </div>
             </div>
         );

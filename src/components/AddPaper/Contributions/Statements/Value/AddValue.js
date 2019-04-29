@@ -6,6 +6,8 @@ import styles from '../../Contributions.module.scss';
 import AutoComplete from '../AutoComplete';
 import { connect } from 'react-redux';
 import { createValue } from '../../../../../actions/addPaper';
+import PropTypes from 'prop-types';
+
 
 class AddValue extends Component {
     constructor(props) {
@@ -74,7 +76,6 @@ class AddValue extends Component {
         });
 
         this.handleHideAddValue();
-        
     }
 
     handleChangeObjectValue = (e) => {
@@ -108,19 +109,23 @@ class AddValue extends Component {
                             </InputGroupButtonDropdown>
 
                             {this.state.valueType === 'object' ?
-                                <AutoComplete requestUrl={resourcesUrl}
-                                    placeholder="Enter a object"
-                                    onItemSelected={this.handlePropertySelect}
-                                    onInput={this.handleChangeObjectValue}
-                                    disableBorderRadiusRight
-                                    disableBorderRadiusLeft
+                                (
+                                    <AutoComplete
+                                        requestUrl={resourcesUrl}
+                                        placeholder="Enter a object"
+                                        onItemSelected={this.handlePropertySelect}
+                                        onInput={this.handleChangeObjectValue}
+                                        disableBorderRadiusRight
+                                        disableBorderRadiusLeft
                                     />
-                                :
-                                <Input bsSize="sm" 
-                                    placeholder="Enter a value" 
-                                    name="literalValue" 
-                                    value={this.state.literalValue} 
-                                    onChange={this.handleInputChange} />
+                                ) : (
+                                    <Input bsSize="sm"
+                                        placeholder="Enter a value"
+                                        name="literalValue"
+                                        value={this.state.literalValue}
+                                        onChange={this.handleInputChange}
+                                    />
+                                )
                             }
 
                             <InputGroupAddon addonType="append">
@@ -138,9 +143,14 @@ class AddValue extends Component {
     }
 }
 
+AddValue.propTypes = {
+    createValue: PropTypes.func.isRequired,
+    selectedProperty: PropTypes.string.isRequired,
+};
+
 const mapStateToProps = state => {
     return {
-        ...state.addPaper,
+        selectedProperty: state.addPaper.selectedProperty,
     }
 };
 

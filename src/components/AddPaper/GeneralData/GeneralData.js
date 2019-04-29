@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { updateGeneralData, nextStep } from '../../../actions/addPaper';
 import { CSSTransitionGroup } from 'react-transition-group'
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const Container = styled.div`
     &.fadeIn-enter {
@@ -76,7 +77,7 @@ class GeneralData extends Component {
         ]);
 
         this.state = {
-            doi: this.props.doi, // ? this.props.doi : '10.1109/jiot.2014.2312291', // debug only, change to: this.props.doi
+            doi: this.props.doi, 
             isFetching: false,
             dataEntry: 'doi',
             showDoiTable: false,
@@ -86,9 +87,6 @@ class GeneralData extends Component {
             paperPublicationYear: this.props.publicationYear,
             validation: this.validator.valid(),
         }
-
-
-        console.log(this.props);
     }
 
     //TODO this logic should be placed inside an action creator 
@@ -122,7 +120,7 @@ class GeneralData extends Component {
                     return author.given + ' ' + author.family;
                 });
                 paperPublicationMonth = responseJson.message.created['date-parts'][0][1];
-                paperPublicationYear = responseJson.message.created['date-parts'][0][0]; 
+                paperPublicationYear = responseJson.message.created['date-parts'][0][0];
             } catch (e) {
                 console.log('Error setting paper data: ', e);
             }
@@ -195,22 +193,27 @@ class GeneralData extends Component {
                 <h2 className="h4 mt-4">General paper data</h2>
 
                 <ButtonGroup className="float-right" style={{ marginTop: '-30px' }}>
-                    <Button size="sm"
+                    <Button
+                        size="sm"
                         color={this.state.dataEntry === 'doi' ? 'primary' : 'light'}
-                        onClick={() => this.handleDataEntryClick('doi')}>
+                        onClick={() => this.handleDataEntryClick('doi')}
+                    >
                         By DOI
-                        </Button>
-                    <Button size="sm"
+                    </Button>
+                    <Button
+                        size="sm"
                         color={this.state.dataEntry === 'manually' ? 'primary' : 'light'}
-                        onClick={() => this.handleDataEntryClick('manually')}>
+                        onClick={() => this.handleDataEntryClick('manually')}
+                    >
                         Manually
-                        </Button>
+                    </Button>
                 </ButtonGroup>
 
                 <CSSTransitionGroup
                     transitionName="fadeIn"
                     transitionEnterTimeout={500}
-                    transitionLeave={false}>
+                    transitionLeave={false}
+                >
                     {this.state.dataEntry === 'doi' ?
                         <Container key={1}>
                             <Form className="mt-4" onSubmit={this.submitHandler}>
@@ -224,7 +227,8 @@ class GeneralData extends Component {
                                         <InputGroupAddon addonType="append">
                                             <Button outline color="primary" style={{ minWidth: 130 }}
                                                 onClick={this.handleLookupClick}
-                                                disabled={this.state.isFetching}>
+                                                disabled={this.state.isFetching}
+                                            >
                                                 {!this.state.isFetching ? 'Lookup' : <FontAwesomeIcon icon={faSpinner} spin />}
                                             </Button>
                                         </InputGroupAddon>
@@ -235,7 +239,8 @@ class GeneralData extends Component {
                             <CSSTransitionGroup
                                 transitionName="slideDown"
                                 transitionEnterTimeout={500}
-                                transitionLeaveTimeout={300}>
+                                transitionLeaveTimeout={300}
+                            >
                                 {this.state.showDoiTable ?
                                     <Container key={1} className="mt-5">
                                         <h3 className="h4 mb-3">Lookup result</h3>
@@ -246,9 +251,11 @@ class GeneralData extends Component {
                                                         <td><strong>Paper title:</strong> {this.state.paperTitle}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td><strong>Authors:</strong> {this.state.paperAuthors.map((author, index) => (
-                                                            <span key={index}>{this.state.paperAuthors.length > index + 1 ? author + ', ' : author}</span>
-                                                        ))}</td>
+                                                        <td>
+                                                            <strong>Authors:</strong> {this.state.paperAuthors.map((author, index) => (
+                                                                <span key={index}>{this.state.paperAuthors.length > index + 1 ? author + ', ' : author}</span>
+                                                            ))}
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td><strong>Publication date:</strong> {this.months[this.state.paperPublicationMonth]} {this.state.paperPublicationYear}</td>
@@ -268,14 +275,14 @@ class GeneralData extends Component {
                                         <Tooltip message="The main title of the paper">Paper title</Tooltip>
                                     </Label>
                                     <Input type="text" name="paperTitle" id="paperTitle" value={this.state.paperTitle} onChange={this.handleInputChange} />
-                                    <FormFeedback></FormFeedback>
+                                    <FormFeedback />
                                 </FormGroup>
                                 <Row form>
                                     <Col md={6} className="pr-3">
                                         <FormGroup>
                                             <Label for="paperAuthors">
                                                 <Tooltip message="The author or authors of the paper. Enter both the first and last name">Paper authors</Tooltip>
-                                            </Label>
+                                            </Label>{console.log(this.state.paperAuthors)}
                                             <TagsInput handler={this.handleAuthorsChange} value={this.state.paperAuthors} />
                                         </FormGroup>
                                     </Col>
@@ -311,13 +318,27 @@ class GeneralData extends Component {
     }
 }
 
+GeneralData.propTypes = {
+    doi: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    authors: PropTypes.array.isRequired,
+    publicationMonth: PropTypes.number.isRequired,
+    publicationYear: PropTypes.number.isRequired,
+    updateGeneralData: PropTypes.func.isRequired,
+    nextStep: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = state => ({
-    ...state.addPaper
+    doi: state.addPaper.doi,
+    title: state.addPaper.title,
+    authors: state.addPaper.authors,
+    publicationMonth: state.addPaper.publicationMonth,
+    publicationYear: state.addPaper.publicationYear,
 });
 
 const mapDispatchToProps = dispatch => ({
     updateGeneralData: (data) => dispatch(updateGeneralData(data)),
-    nextStep: () => dispatch(nextStep())
+    nextStep: () => dispatch(nextStep()),
 });
 
 export default connect(

@@ -7,7 +7,6 @@ import { faUser, faCalendar, faBars } from '@fortawesome/free-solid-svg-icons';
 import Contributions from './Contributions';
 import { months } from '../../utils';
 
-
 class ViewPaper extends Component {
     state = {
         title: '',
@@ -22,7 +21,10 @@ class ViewPaper extends Component {
 
         // check if type is paper
         let hasTypePaper = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_IS_A && statement.object.id === process.env.REACT_APP_RESOURCE_TYPES_PAPER);
-        if (hasTypePaper.length === 0) throw new Error('The requested resource is not of type "paper"');
+        
+        if (hasTypePaper.length === 0) {
+            throw new Error('The requested resource is not of type "paper"');
+        }
 
         // research field
         let researchField = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
@@ -79,31 +81,33 @@ class ViewPaper extends Component {
     }
 
     render() {
-        return <div>
-            <Container className="p-0">
-                <h1 className="h4 mt-4 mb-4">View paper</h1>
-            </Container>
-            <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
-                <h2 className="h4 mt-4 mb-3">{this.state.title}</h2>
+        return (
+            <div>
+                <Container className="p-0">
+                    <h1 className="h4 mt-4 mb-4">View paper</h1>
+                </Container>
+                <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
+                    <h2 className="h4 mt-4 mb-3">{this.state.title}</h2>
 
-                {/* TODO: change links of badges  */}
-                <span className="badge badge-lightblue mr-2">
-                    <Icon icon={faCalendar} className="text-primary" /> {months[this.state.publicationMonth]} {this.state.publicationYear}
-                </span>
-                <span className="badge badge-lightblue mr-2">
-                    <Icon icon={faBars} className="text-primary" /> {this.state.researchField}
-                </span>
-                {this.state.authorNames.map((author, index) => (
-                    <span className="badge badge-lightblue  mr-2">
-                        <Icon icon={faUser} className="text-primary" /> {author}
+                    {/* TODO: change links of badges  */}
+                    <span className="badge badge-lightblue mr-2">
+                        <Icon icon={faCalendar} className="text-primary" /> {months[this.state.publicationMonth]} {this.state.publicationYear}
                     </span>
-                ))}
+                    <span className="badge badge-lightblue mr-2">
+                        <Icon icon={faBars} className="text-primary" /> {this.state.researchField}
+                    </span>
+                    {this.state.authorNames.map((author, index) => (
+                        <span className="badge badge-lightblue  mr-2">
+                            <Icon icon={faUser} className="text-primary" /> {author}
+                        </span>
+                    ))}
 
-                <hr className="mt-5 mb-5" />
+                    <hr className="mt-5 mb-5" />
 
-                <Contributions contributions={this.state.contributions} />
-            </Container>
-        </div>;
+                    <Contributions contributions={this.state.contributions} />
+                </Container>
+            </div>
+        );
     }
 }
 

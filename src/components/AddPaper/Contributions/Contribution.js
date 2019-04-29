@@ -6,6 +6,7 @@ import styles from './Contributions.module.scss';
 import Statements from './Statements/Statements';
 import { connect } from 'react-redux';
 import { updateResearchProblems } from '../../../actions/addPaper';
+import PropTypes from 'prop-types';
 
 class Contributions extends Component {
     handleResearchProblemsChange = (problemsArray) => {
@@ -30,8 +31,10 @@ class Contributions extends Component {
                             <Tooltip message="Provide details about this contribution by making statements. Some suggestions are already displayed, you can use this when it is useful, or delete it when it is not">Statements</Tooltip>
                         </Label>
 
-                        <Statements enableEdit={true}
-                            resourceId={this.props.id} />
+                        <Statements 
+                            enableEdit={true}
+                            resourceId={this.props.id} 
+                        />
 
                     </FormGroup>
                 </Form>
@@ -40,9 +43,13 @@ class Contributions extends Component {
     }
 }
 
+Contributions.propTypes = {
+    id: PropTypes.string.isRequired,
+    updateResearchProblems: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = (state, ownProps) => {
     return {
-        ...state.addPaper,
         researchProblems: state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].researchProblems : []
     }
 };

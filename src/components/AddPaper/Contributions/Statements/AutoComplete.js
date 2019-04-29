@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import { submitGetRequest } from '../../../../network';
 import { Input } from 'reactstrap';
+import PropTypes from 'prop-types';
 
 class AutoComplete extends Component {
-    state = {
-        selectedItemId: null,
-        dropdownMenuJsx: null,
-    };
-
     constructor(props) {
         super(props);
 
         this.state.value = this.props.value || '';
     }
+
+    state = {
+        selectedItemId: null,
+        dropdownMenuJsx: null,
+    };
 
     // TODO: add timer, so that the request is not sent on every keystroke.
     handleChange = async (event) => {
@@ -33,21 +34,36 @@ class AutoComplete extends Component {
             try {
                 const responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value));
 
-                const menuItemsJsx = responseJson.map((item) =>
-                    <button type="button" id={item.id} key={item.id} className="dropdown-item" onClick={this.handleItemClick} style={{whiteSpace: 'normal'}}>
+                const menuItemsJsx = responseJson.map((item) => (
+                    <button
+                        type="button"
+                        id={item.id}
+                        key={item.id}
+                        className="dropdown-item"
+                        onClick={this.handleItemClick}
+                        style={{ whiteSpace: 'normal' }}
+                    >
                         {item.label}
-                    </button>).slice(0, maxValues);
-
-                const lastItem = this.props.onNewItemSelected && <>
-                {menuItemsJsx.length > 0 && <hr />}
-                    <button type="button" id="new" key="new" className="dropdown-item"
-                        onClick={this.getNewItemClickHandler(value.trim())}>
-                        <em>Create new property: {value.trim()}</em>
                     </button>
-                    
-                </>;
+                )).slice(0, maxValues);
+
+                const lastItem = this.props.onNewItemSelected && (
+                    <>
+                        {menuItemsJsx.length > 0 && <hr />}
+                        <button
+                            type="button"
+                            id="new"
+                            key="new"
+                            className="dropdown-item"
+                            onClick={this.getNewItemClickHandler(value.trim())}
+                        >
+                            <em>Create new property: {value.trim()}</em>
+                        </button>
+                    </>
+                );
 
                 const completeMenuItemsJsx = lastItem ? [...menuItemsJsx, lastItem] : menuItemsJsx;
+
                 if (completeMenuItemsJsx.length > 0) {
                     this.setState({
                         dropdownMenuJsx: <div className="dropdown-menu" style={{ width: '100%' }}>{completeMenuItemsJsx}</div>,
@@ -104,20 +120,34 @@ class AutoComplete extends Component {
             inputStyle.borderTopRightRadius = 0;
             inputStyle.borderBottomRightRadius = 0;
         }
-        
-        return <span className="dropdown" style={{flex: '1 1 auto'}}>
-            <Input bsSize="sm"
-                autoFocus={true}
-                placeholder={this.props.placeholder}
-                value={this.state.value}
-                onChange={this.handleChange}
-                onKeyUp={this.props.onKeyUp}
-                style={inputStyle}
-            />
 
-            {this.state.dropdownMenuJsx}
-        </span>;
+        return (
+            <span className="dropdown" style={{ flex: '1 1 auto' }}>
+                <Input bsSize="sm"
+                    autoFocus={true}
+                    placeholder={this.props.placeholder}
+                    value={this.state.value}
+                    onChange={this.handleChange}
+                    onKeyUp={this.props.onKeyUp}
+                    style={inputStyle}
+                />
+
+                {this.state.dropdownMenuJsx}
+            </span>
+        );
     }
 }
+
+AutoComplete.propTypes = {
+    requestUrl: PropTypes.string.isRequired,
+    placeholder: PropTypes.string.isRequired,
+    onItemSelected: PropTypes.func.isRequired,
+    onNewItemSelected: PropTypes.func,
+    onKeyUp: PropTypes.func,
+    disableBorderRadiusRight: PropTypes.bool,
+    disableBorderRadiusLeft: PropTypes.bool,
+    onInput: PropTypes.func,
+    value: PropTypes.string,
+};
 
 export default AutoComplete;

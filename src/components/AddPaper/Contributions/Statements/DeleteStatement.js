@@ -6,6 +6,7 @@ import styles from '../Contributions.module.scss';
 import { connect } from 'react-redux';
 import { deleteProperty } from '../../../../actions/addPaper';
 import Confirm from 'reactstrap-confirm';
+import PropTypes from 'prop-types';
 
 class DeleteStatement extends Component {
   
@@ -17,7 +18,6 @@ class DeleteStatement extends Component {
         });
 
         if (result) {
-            console.log(this.props.id);
             this.props.deleteProperty({
                 id: this.props.id,
                 resourceId: this.props.selectedResource,
@@ -38,9 +38,15 @@ class DeleteStatement extends Component {
     }
 }
 
+DeleteStatement.propTypes = {
+    id: PropTypes.string.isRequired,
+    selectedResource: PropTypes.string.isRequired,
+    deleteProperty: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = state => {
     return {
-        ...state.addPaper,
+        selectedResource: state.addPaper.selectedResource,
     }
 };
 

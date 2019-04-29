@@ -72,24 +72,24 @@ class ProgressBar extends Component {
                 <div style={labelGroupStyle}>
                     <div style={labelStyle}>
                         {/*<div style={{...lineStyle, ...styleSelectedOne}}></div>*/}
-                        <div style={{ ...lineStyle, ...lineLeftStyle, ...styleSelectedTwo }}></div>
+                        <div style={{ ...lineStyle, ...lineLeftStyle, ...styleSelectedTwo }} />
                         <div style={{ ...numberStyle, ...styleSelectedOne }}>1</div>
                         <div style={textStyle}>General</div>
                     </div>
                     <div style={labelStyle}>
-                        <div style={{ ...lineStyle, ...styleSelectedTwo }}></div>
-                        <div style={{ ...lineStyle, ...lineLeftStyle, ...styleSelectedThree }}></div>
+                        <div style={{ ...lineStyle, ...styleSelectedTwo }} />
+                        <div style={{ ...lineStyle, ...lineLeftStyle, ...styleSelectedThree }} />
                         <div style={{ ...numberStyle, ...styleSelectedTwo }}>2</div>
                         <div style={textStyle}>Research field</div>
                     </div>
                     <div style={labelStyle}>
-                        <div style={{ ...lineStyle, ...styleSelectedThree }}></div>
-                        <div style={{ ...lineStyle, ...lineLeftStyle, ...styleSelectedFour }}></div>
+                        <div style={{ ...lineStyle, ...styleSelectedThree }} />
+                        <div style={{ ...lineStyle, ...lineLeftStyle, ...styleSelectedFour }} />
                         <div style={{ ...numberStyle, ...styleSelectedThree }}>3</div>
                         <div style={textStyle}>Contributions</div>
                     </div>
                     <div style={labelStyle}>
-                        <div style={{ ...lineStyle, ...styleSelectedFour }}></div>
+                        <div style={{ ...lineStyle, ...styleSelectedFour }} />
                         <div style={{ ...numberStyle, ...styleSelectedFour }}>4</div>
                         <div style={textStyle}>Finish</div>
                     </div>

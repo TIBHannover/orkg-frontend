@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import Confirm from 'reactstrap-confirm';
 import { connect } from 'react-redux';
 import { selectResource, fetchStatementsForResource, deleteValue } from '../../../../../actions/addPaper';
+import PropTypes from 'prop-types';
 
 class ValueItem extends Component {
 
@@ -16,11 +17,6 @@ class ValueItem extends Component {
             title: 'Are you sure?',
             message: 'Are you sure you want to delete this value?',
             cancelColor: 'light'
-        });
-        console.log(this.props);
-        console.log({
-            id: this.props.id,
-            propertyId: this.props.propertyId
         });
 
         if (result) {
@@ -32,11 +28,10 @@ class ValueItem extends Component {
     }
 
     handleResourceClick = () => {
-        let resource = this.props.addPaper.resources.byId[this.props.resourceId];
+        let resource = this.props.resources.byId[this.props.resourceId];
         let existingResourceId = resource.existingResourceId;
 
         if (existingResourceId && !resource.isFechted) {
-            // TODO show loading indicator when fetching statements
             this.props.fetchStatementsForResource({
                 resourceId: this.props.resourceId,
                 existingResourceId
@@ -71,9 +66,22 @@ class ValueItem extends Component {
     }
 }
 
+ValueItem.propTypes = {
+    deleteValue: PropTypes.func.isRequired,
+    selectResource: PropTypes.func.isRequired,
+    fetchStatementsForResource: PropTypes.func.isRequired,
+    resources: PropTypes.object.isRequired,
+    label: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    resourceId: PropTypes.string.isRequired,
+    propertyId: PropTypes.string.isRequired,
+    existingStatement: PropTypes.bool.isRequired,
+};
+
 const mapStateToProps = state => {
     return {
-        addPaper: state.addPaper,
+        resources: state.addPaper.resources,
     }
 };
 
