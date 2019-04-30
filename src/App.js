@@ -16,6 +16,7 @@ import Home from './components/Home/Home';
 import ViewPaper from './components/ViewPaper/ViewPaper';
 import License from './components/StaticPages/License';
 import NotFound from './components/StaticPages/NotFound';
+import Comparison from './components/Comparison';
 import PropTypes from 'prop-types';
 
 export default class App extends Component {
@@ -32,6 +33,7 @@ export default class App extends Component {
                         <Route exact path={ROUTES.VIEW_PAPER} component={ViewPaper} /> {/* TODO: slug for the paper title */}
                         <Route exact path={ROUTES.LICENSE} component={License} />
                         <Route exact path={ROUTES.NOT_FOUND} component={NotFound} />
+                        <Route exact path={ROUTES.COMPARISON} component={Comparison} /> {/* TODO: slug for the paper title */}
 
                         {/* Legacy routes, only used for debugging now */}
                         <Route 

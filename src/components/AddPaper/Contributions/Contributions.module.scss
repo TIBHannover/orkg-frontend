@@ -86,7 +86,8 @@
     }
 
     &.statementActive {
-        background-color: $ORKG-primary-color !important;
+        background-color: $darkblue !important;
+        border-color: $darkblue !important;
 
         .deletePredicate {
             display: inline-block !important;

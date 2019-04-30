@@ -7,12 +7,18 @@ import Statements from '../AddPaper/Contributions/Statements/Statements';
 import styled from 'styled-components';
 import SimilarContributions from './SimilarContributions';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const Title = styled.div`
     font-size:18px;
     font-weight:500;
     margin-top:30px;
     margin-bottom:5px;
+
+    span {
+        font-size:80%;
+        margin-left:10px;
+    }
 `;
 
 // TODO: right now, the reducer from addPaper is being used, since the setup of this page is very similar.
@@ -74,14 +80,19 @@ class Contributions extends Component {
                                     <FormGroup>
                                         <Title>Contribution data</Title>
 
-                                        <Statements 
+                                        <Statements
                                             enableEdit={false}
-                                            resourceId={this.props.selectedContribution} 
+                                            resourceId={this.props.selectedContribution}
                                         />
                                     </FormGroup>
 
                                     <FormGroup>
-                                        <Title>Similar contributions</Title>
+                                        <Title>
+                                            Similar contributions
+                                            <Link to={`/comparison/${this.props.paperId}/${this.props.selectedContribution}`}>
+                                                <span className="btn btn-link p-0 border-0 align-baseline" onClick={this.handleComparisonClick}>Show full comparison</span>
+                                            </Link>
+                                        </Title>
 
                                         <SimilarContributions />
                                     </FormGroup>
@@ -100,7 +111,8 @@ Contributions.propTypes = {
     resources: PropTypes.object.isRequired,
     selectedContribution: PropTypes.string.isRequired,
     selectContribution: PropTypes.func.isRequired,
-    contributions: PropTypes.object.isRequired,
+    contributions: PropTypes.array.isRequired,
+    paperId: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({

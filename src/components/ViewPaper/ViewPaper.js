@@ -98,14 +98,14 @@ class ViewPaper extends Component {
                         <Icon icon={faBars} className="text-primary" /> {this.state.researchField}
                     </span>
                     {this.state.authorNames.map((author, index) => (
-                        <span className="badge badge-lightblue  mr-2">
+                        <span className="badge badge-lightblue mr-2" key={index}>
                             <Icon icon={faUser} className="text-primary" /> {author}
                         </span>
                     ))}
 
                     <hr className="mt-5 mb-5" />
 
-                    <Contributions contributions={this.state.contributions} />
+                    <Contributions contributions={this.state.contributions} paperId={this.props.match.params.resourceId} />
                 </Container>
             </div>
         );
