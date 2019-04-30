@@ -4,8 +4,11 @@ import AddPaper from './AddPaper';
 import { Provider } from 'react-redux'
 import configureStore, { history } from '../../store'
 
-//beforeEach?
-const mountComponent = () => {
+//TODO: this test is not finished, needs to be determined how componenets will be tested
+// E.g. the backend calls should not be tested, but many of the functionality relies on the backend
+// More info: # https://wanago.io/2018/09/17/javascript-testing-tutorial-part-four-mocking-api-calls-and-simulating-react-components-interactions/
+
+const mountComponent = () => { //beforeEach
     const store = configureStore();
 
     // needed for the tooltips

@@ -6,6 +6,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar, faBars } from '@fortawesome/free-solid-svg-icons';
 import Contributions from './Contributions';
 import { months } from '../../utils';
+import PropTypes from 'prop-types';
 
 class ViewPaper extends Component {
     state = {
@@ -21,7 +22,7 @@ class ViewPaper extends Component {
 
         // check if type is paper
         let hasTypePaper = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_IS_A && statement.object.id === process.env.REACT_APP_RESOURCE_TYPES_PAPER);
-        
+
         if (hasTypePaper.length === 0) {
             throw new Error('The requested resource is not of type "paper"');
         }
@@ -109,6 +110,14 @@ class ViewPaper extends Component {
             </div>
         );
     }
+}
+
+ViewPaper.propTypes = {
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            resourceId: PropTypes.string,
+        }).isRequired,
+    }).isRequired,
 }
 
 const mapStateToProps = state => ({

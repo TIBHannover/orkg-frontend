@@ -99,6 +99,8 @@ Contributions.propTypes = {
     researchProblems: PropTypes.object.isRequired,
     resources: PropTypes.object.isRequired,
     selectedContribution: PropTypes.string.isRequired,
+    selectContribution: PropTypes.func.isRequired,
+    contributions: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
