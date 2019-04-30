@@ -44,7 +44,11 @@
   },
   "devDependencies": {
     "babel-preset-env": "^1.7.0",
-    "named-urls": "^1.4.0"
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.12.1",
+    "enzyme-to-json": "^3.3.5",
+    "named-urls": "^1.4.0",
+    "react-test-renderer": "^16.8.6"
   },
   "browserslist": [
     ">0.2%",
@@ -83,6 +87,9 @@
         "error"
       ],
       "react/self-closing-comp": [
+        "error"
+      ],
+      "react/prop-types": [
         "error"
       ]
     }

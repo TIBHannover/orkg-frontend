@@ -39,6 +39,7 @@ class Finish extends Component {
 
 Finish.propTypes = {
     doi: PropTypes.string.isRequired,
+    paperNewResourceId: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({

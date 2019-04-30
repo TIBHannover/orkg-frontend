@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import { createValue } from '../../../../../actions/addPaper';
 import PropTypes from 'prop-types';
 
-
 class AddValue extends Component {
     constructor(props) {
         super(props);

@@ -148,6 +148,7 @@ AutoComplete.propTypes = {
     disableBorderRadiusLeft: PropTypes.bool,
     onInput: PropTypes.func,
     value: PropTypes.string,
+    hideAfterSelection: PropTypes.bool,
 };
 
 export default AutoComplete;

@@ -6,6 +6,7 @@ import styles from '../AddPaper/Contributions/Contributions.module.scss';
 import Statements from '../AddPaper/Contributions/Statements/Statements';
 import styled from 'styled-components';
 import SimilarContributions from './SimilarContributions';
+import PropTypes from 'prop-types';
 
 const Title = styled.div`
     font-size:18px;
@@ -19,7 +20,7 @@ const Title = styled.div`
 // a paper is not needing a reducer that is called: addPaper (e.g. make a reducer for the statement browser?)
 class Contributions extends Component {
     state = {
-        selectedContribution: null,
+        selectedContribution: '',
     }
 
     componentDidMount = async () => {
@@ -27,7 +28,7 @@ class Contributions extends Component {
     }
 
     handleSelectContribution = (contributionId) => {
-        let contributionIsLoaded = this.props.addPaper.resources.byId[contributionId] ? true : false;
+        let contributionIsLoaded = this.props.resources.byId[contributionId] ? true : false;
         this.props.selectContribution({
             contributionId,
             contributionIsLoaded
@@ -35,11 +36,11 @@ class Contributions extends Component {
     }
 
     render() {
-        if (this.props.addPaper.selectedContribution === null && this.props.contributions[0]) {
+        if (this.props.selectedContribution === '' && this.props.contributions[0]) {
             this.handleSelectContribution(this.props.contributions[0]);
         }
 
-        let selectedContributionId = this.props.addPaper.selectedContribution;
+        let selectedContributionId = this.props.selectedContribution;
 
         return (
             <div>
@@ -63,7 +64,7 @@ class Contributions extends Component {
                                 <Form>
                                     <FormGroup>
                                         <Title style={{ marginTop: 0 }}>Research problems</Title>
-                                        {this.props.viewPaper.researchProblems[selectedContributionId] && this.props.viewPaper.researchProblems[selectedContributionId].map((problem, index) => (
+                                        {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].map((problem, index) => (
                                             <span key={index}>
                                                 <span className="btn btn-link p-0 border-0 align-baseline">{problem.label}</span>
                                             </span>
@@ -75,7 +76,7 @@ class Contributions extends Component {
 
                                         <Statements 
                                             enableEdit={false}
-                                            resourceId={this.props.addPaper.selectedContribution} 
+                                            resourceId={this.props.selectedContribution} 
                                         />
                                     </FormGroup>
 
@@ -94,9 +95,16 @@ class Contributions extends Component {
     }
 }
 
+Contributions.propTypes = {
+    researchProblems: PropTypes.object.isRequired,
+    resources: PropTypes.object.isRequired,
+    selectedContribution: PropTypes.string.isRequired,
+};
+
 const mapStateToProps = state => ({
-    viewPaper: state.viewPaper,
-    addPaper: state.addPaper,
+    researchProblems: state.viewPaper.researchProblems,
+    resources: state.addPaper.resources,
+    selectedContribution: state.addPaper.selectedContribution,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -88,6 +88,7 @@ Statements.propTypes = {
     selectedResource: PropTypes.string.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     resourceId: PropTypes.string.isRequired,
+    type: PropTypes.string,
 };
 
 const mapStateToProps = state => {

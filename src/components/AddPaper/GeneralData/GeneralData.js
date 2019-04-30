@@ -225,9 +225,13 @@ class GeneralData extends Component {
                                         <Input type="text" name="doi" id="paperDoi" value={this.state.doi} onChange={this.handleInputChange} invalid={this.state.validation.doi.isInvalid} />
                                         <FormFeedback className="order-1">{this.state.validation.doi.message}</FormFeedback> {/* Need to set order-1 here to fix Bootstrap bug of missing rounded borders */}
                                         <InputGroupAddon addonType="append">
-                                            <Button outline color="primary" style={{ minWidth: 130 }}
+                                            <Button 
+                                                outline 
+                                                color="primary" 
+                                                style={{ minWidth: 130 }}
                                                 onClick={this.handleLookupClick}
                                                 disabled={this.state.isFetching}
+                                                data-test="lookupDoi"
                                             >
                                                 {!this.state.isFetching ? 'Lookup' : <FontAwesomeIcon icon={faSpinner} spin />}
                                             </Button>
@@ -312,7 +316,7 @@ class GeneralData extends Component {
                 </CSSTransitionGroup>
                 <hr className="mt-5 mb-3" />
 
-                <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Next step</Button>
+                <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick} data-test="nextStep">Next step</Button>
             </div>
         );
     }

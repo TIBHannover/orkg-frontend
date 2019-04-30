@@ -46,6 +46,7 @@ class Contributions extends Component {
 Contributions.propTypes = {
     id: PropTypes.string.isRequired,
     updateResearchProblems: PropTypes.func.isRequired,
+    researchProblems: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => {

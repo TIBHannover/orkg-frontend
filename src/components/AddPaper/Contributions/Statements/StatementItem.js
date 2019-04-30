@@ -104,6 +104,9 @@ StatementItem.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
     isLastItem: PropTypes.bool.isRequired,
     togglePropertyCollapse: PropTypes.func.isRequired,
+    selectedProperty: PropTypes.string.isRequired,
+    properties: PropTypes.object.isRequired,
+    values: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => {

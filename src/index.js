@@ -13,8 +13,10 @@ const render = () => {
         <AppContainer>
             <Provider store={store}>
                 <App history={history} />
-            </Provider></AppContainer>,
-        document.getElementById('root'));
+            </Provider>
+        </AppContainer>,
+        document.getElementById('root')
+    );
 }
 
 render();
