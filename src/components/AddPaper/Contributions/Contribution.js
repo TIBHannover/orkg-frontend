@@ -28,7 +28,7 @@ class Contributions extends Component {
                     </FormGroup>
                     <FormGroup>
                         <Label>
-                            <Tooltip message="Provide details about this contribution by making statements. Some suggestions are already displayed, you can use this when it is useful, or delete it when it is not">Statements</Tooltip>
+                            <Tooltip message="Provide details about this contribution by making statements. Some suggestions are already displayed, you can use this when it is useful, or delete it when it is not">Contribution data</Tooltip>
                         </Label>
 
                         <Statements 

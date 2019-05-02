@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import SimilarContributions from './SimilarContributions';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { CSSTransitionGroup } from 'react-transition-group'
 
 const Title = styled.div`
     font-size:18px;
@@ -15,9 +16,24 @@ const Title = styled.div`
     margin-top:30px;
     margin-bottom:5px;
 
-    span {
-        font-size:80%;
-        margin-left:10px;
+    a {
+        margin-left:15px;
+        span {
+            font-size:80%;
+        }
+    }
+`;
+
+const AnimationContainer = styled.div`
+    transition: 0.3s background-color,  0.3s border-color;
+
+    &.fadeIn-enter {
+        opacity:0;
+    }
+
+    &.fadeIn-enter.fadeIn-enter-active {
+        opacity:1;
+        transition:0.5s opacity;
     }
 `;
 
@@ -65,40 +81,53 @@ class Contributions extends Component {
                                 })}
                             </ul>
                         </Col>
-                        <Col xs="9">
-                            <div className={styles.contribution}>
-                                <Form>
-                                    <FormGroup>
-                                        <Title style={{ marginTop: 0 }}>Research problems</Title>
-                                        {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].map((problem, index) => (
-                                            <span key={index}>
-                                                <span className="btn btn-link p-0 border-0 align-baseline">{problem.label}</span>
-                                            </span>
-                                        ))}
-                                    </FormGroup>
+                        <CSSTransitionGroup
+                            transitionName="fadeIn"
+                            transitionEnterTimeout={500}
+                            transitionLeave={false}
+                            component="div"
+                            className="col-9"
+                        >
+                            <AnimationContainer
+                                key={selectedContributionId}
+                                
+                            >
 
-                                    <FormGroup>
-                                        <Title>Contribution data</Title>
+                                <div className={styles.contribution}>
+                                    <Form>
+                                        <FormGroup>
+                                            <Title style={{ marginTop: 0 }}>Research problems</Title>
+                                            {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].map((problem, index) => (
+                                                <span key={index}>
+                                                    <span className="btn btn-link p-0 border-0 align-baseline">{problem.label}</span>
+                                                </span>
+                                            ))}
+                                        </FormGroup>
 
-                                        <Statements
-                                            enableEdit={false}
-                                            resourceId={this.props.selectedContribution}
-                                        />
-                                    </FormGroup>
+                                        <FormGroup>
+                                            <Title>Contribution data</Title>
 
-                                    <FormGroup>
-                                        <Title>
-                                            Similar contributions
-                                            <Link to={`/comparison/${this.props.paperId}/${this.props.selectedContribution}`}>
-                                                <span className="btn btn-link p-0 border-0 align-baseline" onClick={this.handleComparisonClick}>Show full comparison</span>
-                                            </Link>
-                                        </Title>
+                                            <Statements
+                                                enableEdit={false}
+                                                resourceId={this.props.selectedContribution}
+                                            />
+                                        </FormGroup>
 
-                                        <SimilarContributions />
-                                    </FormGroup>
-                                </Form>
-                            </div>
-                        </Col>
+                                        <FormGroup>
+                                            <Title>
+                                                Similar contributions
+                                                <Link to={`/comparison/${this.props.paperId}/${this.props.selectedContribution}`}>{/* TODO: use constants for URL */}
+                                                    <span className="btn btn-link p-0 border-0 align-baseline" onClick={this.handleComparisonClick}>Show full comparison</span>
+                                                </Link>
+                                            </Title>
+
+                                            <SimilarContributions />
+                                        </FormGroup>
+                                    </Form>
+                                </div>
+
+                            </AnimationContainer>
+                        </CSSTransitionGroup>
                     </Row>
                 </Container>
             </div>
