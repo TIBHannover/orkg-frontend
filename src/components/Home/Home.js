@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle, faStar, faPlus, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import ResearchFieldsCards from './ResearchFieldCards';
+import ResearchFieldCards from './ResearchFieldCards';
 import RecentlyAddedPapers from './RecentlyAddedPapers';
 
 class Home extends Component {
@@ -22,7 +22,7 @@ class Home extends Component {
                         <Col className="col-sm-7 px-0">
                             <div className="box mr-4 p-4 h-100">
                                 <h2 className="h5"><Icon icon={faStar} className="text-primary" /> Browse by research field</h2>
-                                <ResearchFieldsCards />
+                                <ResearchFieldCards />
                             </div>
                         </Col>
                         <Col className="col-sm-5 px-0">

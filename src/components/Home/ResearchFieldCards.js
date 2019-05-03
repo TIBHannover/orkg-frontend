@@ -42,6 +42,7 @@ class ResearchFieldCards extends Component {
     state = {
         researchFields: [],
         breadcrumb: [],
+        error: '',
     }
 
     componentDidMount() {
@@ -49,32 +50,43 @@ class ResearchFieldCards extends Component {
     }
 
     getFields(fieldId, label, addBreadcrumb = true) {
-        getStatementsBySubject(fieldId).then((res) => {
-            let researchFields = [];
-            res.forEach((elm) => {
-                researchFields.push({
-                    'label': elm.object.label,
-                    'id': elm.object.id,
-                });
-            });
-
-            this.setState({
-                researchFields
-            });
-
-            if (addBreadcrumb) {
-                let breadcrumb = this.state.breadcrumb;
-
-                breadcrumb.push({
-                    'label': label,
-                    'id': fieldId,
+        try {
+            getStatementsBySubject(fieldId).then((res) => {
+                let researchFields = [];
+                res.forEach((elm) => {
+                    researchFields.push({
+                        'label': elm.object.label,
+                        'id': elm.object.id,
+                    });
                 });
 
                 this.setState({
-                    breadcrumb: breadcrumb
+                    researchFields,
+                    error: '',
                 });
-            }
-        });
+
+                if (addBreadcrumb) {
+                    let breadcrumb = this.state.breadcrumb;
+
+                    breadcrumb.push({
+                        'label': label,
+                        'id': fieldId,
+                    });
+
+                    this.setState({
+                        breadcrumb: breadcrumb
+                    });
+                }
+            }).catch((e) => {
+                this.setState({
+                    error: e.message,
+                });
+            });
+        } catch (e) {
+            this.setState({
+                error: e.message,
+            });
+        }
     }
 
     handleClickBreadcrumb(fieldId, label) {
@@ -89,6 +101,12 @@ class ResearchFieldCards extends Component {
     }
 
     render() {
+        if (this.state.error) {
+            return (
+                <div className="text-center mt-5 text-danger">{this.state.error}</div>
+            );
+        }
+
         return (
             <div className="mt-5">
                 {this.state.breadcrumb.map((field) =>
