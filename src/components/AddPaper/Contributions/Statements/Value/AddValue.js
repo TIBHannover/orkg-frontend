@@ -111,7 +111,7 @@ class AddValue extends Component {
                                 (
                                     <AutoComplete
                                         requestUrl={resourcesUrl}
-                                        placeholder="Enter a object"
+                                        placeholder="Enter an object"
                                         onItemSelected={this.handlePropertySelect}
                                         onInput={this.handleChangeObjectValue}
                                         disableBorderRadiusRight
