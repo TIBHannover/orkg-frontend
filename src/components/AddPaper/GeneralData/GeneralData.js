@@ -136,7 +136,7 @@ class GeneralData extends Component {
         } catch (e) {
             let validation = this.validator.setError({
                 field: 'doi',
-                message: 'No paper has been found',
+                message: e.statusCode === 404 ? 'No paper has been found' : 'An error occurred, reload the page and try again',
             });
 
             this.setState({

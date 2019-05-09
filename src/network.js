@@ -19,7 +19,11 @@ export const submitGetRequest = (url) => {
                     .then((response) => {
                         console.log(`Response type: ${response.type}`);
                         if (!response.ok) {
-                            reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
+                            reject({
+                                error: new Error(`Error response. (${response.status}) ${response.statusText}`),
+                                statusCode: response.status,
+                                statusText: response.statusText,
+                            });
                         } else {
                             const json = response.json();
                             if (json.then) {
