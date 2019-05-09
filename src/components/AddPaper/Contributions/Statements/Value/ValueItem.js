@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ListGroupItem } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../../../../Utils/Tooltip';
 import styles from '../../Contributions.module.scss';
 import classNames from 'classnames';
@@ -9,9 +9,13 @@ import Confirm from 'reactstrap-confirm';
 import { connect } from 'react-redux';
 import { selectResource, fetchStatementsForResource, deleteValue } from '../../../../../actions/addPaper';
 import PropTypes from 'prop-types';
+import StatementBrowserDialog from '../StatementBrowserDialog';
 
 class ValueItem extends Component {
-
+    state = {
+        modal: false,
+        dialogResourceId: null,
+    }
     toggleDeleteContribution = async () => {
         let result = await Confirm({
             title: 'Are you sure?',
@@ -45,15 +49,46 @@ class ValueItem extends Component {
         });
     }
 
+    handleExistingResourceClick = () => {
+        let resource = this.props.resources.byId[this.props.resourceId];
+        let existingResourceId = resource.existingResourceId;
+        console.log(existingResourceId);
+        this.setState({
+            modal: true,
+            dialogResourceId: existingResourceId
+        });
+    }
+
+    toggleModal = () => {
+        this.setState(prevState => ({
+            modal: !prevState.modal,
+        }));
+    }
+
     render() {
         const labelClass = classNames({
             [styles.objectLink]: this.props.type === 'object'
         });
 
+        let resource = this.props.resources.byId[this.props.resourceId];
+        let existingResourceId = resource.existingResourceId;
+        let onClick = null;
+
+        if (this.props.type === 'object' && existingResourceId) {
+            onClick = this.handleExistingResourceClick;
+        } else if (this.props.type === 'object') {
+            onClick = this.handleResourceClick;
+        }
+
         return (
             <>
                 <ListGroupItem className={styles.valueItem}>
-                    <span className={labelClass} onClick={this.props.type === 'object' ? this.handleResourceClick : null}>{this.props.label}</span>
+                    <span className={labelClass} onClick={onClick}>
+                        {this.props.label}
+                        {existingResourceId ? 
+                            <span> <Icon icon={faExternalLinkAlt} /></span>
+                        : ''}
+                    </span>
                     {!this.props.existingStatement ?
                         <span className={`${styles.deleteValue} float-right`} onClick={this.toggleDeleteContribution}>
                             <Tooltip message="Delete value" hideDefaultIcon={true}>
@@ -61,6 +96,12 @@ class ValueItem extends Component {
                             </Tooltip>
                         </span> : ''}
                 </ListGroupItem>
+
+                <StatementBrowserDialog 
+                    show={this.state.modal} 
+                    toggleModal={this.toggleModal} 
+                    resourceId={this.state.dialogResourceId}
+                />
             </>
         );
     }
