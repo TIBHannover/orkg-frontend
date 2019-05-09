@@ -209,7 +209,6 @@ export default (state = initialState, action) => {
 
         case type.CREATE_PROPERTY: {
             let { payload } = action;
-
             let newState = dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, propertyIds => [...propertyIds, payload.propertyId]);
             
             newState = dotProp.set(newState, `properties.byId`, ids => ({
@@ -303,7 +302,7 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 selectedResource: payload.resourceId,
-                level
+                level: level > 0 ? level : 0,
             };
         }
 

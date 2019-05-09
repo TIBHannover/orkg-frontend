@@ -1,50 +1,46 @@
 import React, { Component } from 'react';
-import { ListGroup, ListGroupItem, Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import styles from '../Contributions.module.scss';
-import StatementItem from './StatementItem';
-import AddStatement from './AddStatement';
+import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import { connect } from 'react-redux';
-import Breadcrumbs from './Breadcrumbs';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import Statements from './Statements';
+import { Provider } from 'react-redux';
+import configureStore from '../../../../store'
 
 class StatementBrowserDialog extends Component {
+    constructor(props) {
+        super(props)
+        this.store = configureStore(); //create a new store because the statement browser should be completely independent from the current state
+    }
 
     render() {
 
         return (
             <Modal isOpen={this.props.show} toggle={this.props.toggleModal} size="lg">
-                <ModalHeader toggle={this.props.toggleModal}>View existing resource</ModalHeader>
+                <ModalHeader toggle={this.props.toggleModal}>View existing resource: {this.props.resourceLabel}</ModalHeader>
                 <ModalBody>
-                    <Statements
-                        enableEdit={false}
-                        resourceId={this.props.resourceId}
-                    />
+                    <Provider store={this.store}>
+                        <Statements
+                            enableEdit={false}
+                            initialResourceId={this.props.resourceId}
+                            initialResourceLabel={this.props.resourceLabel}
+                        />
+                    </Provider>
                 </ModalBody>
-                {/*<ModalFooter>
-                    <Button color="primary" onClick={this.props.toggleModal}>Do Something</Button>{' '}
-                    <Button color="secondary" onClick={this.props.toggleModal}>Cancel</Button>
-                </ModalFooter>*/}
             </Modal>
         );
     }
 }
 
 StatementBrowserDialog.propTypes = {
-  resourceId: PropTypes.any,
-  show: PropTypes.bool,
-  toggleModal: PropTypes.func
+    resourceLabel: PropTypes.string.isRequired,
+    resourceId: PropTypes.string.isRequired,
+    show: PropTypes.bool.isRequired,
+    toggleModal: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => {
     return {
-        //level: state.addPaper.level,
-        //resources: state.addPaper.resources,
-        //properties: state.addPaper.properties,
-        //isFetchingStatements: state.addPaper.isFetchingStatements,
-        //selectedResource: state.addPaper.selectedResource,
+        
     }
 };
 

@@ -2,6 +2,33 @@ import * as type from './types.js';
 import { guid } from '../utils';
 import * as network from '../network';
 
+export const initializeWithoutContribution = (data) => dispatch => {
+    // To initialise: 
+    // 1. Create a resource (the one that is requested), so properties can be connected to this
+    // 2. Select this resource (only a selected resource is shown)
+    // 3. Fetcht the statements related to this resource
+
+    const label = data.label;
+    const resourceId = data.resourceId;
+
+    dispatch(createResource({
+        label: label,
+        existingResourceId: resourceId,
+        resourceId: resourceId,
+    }));
+
+    dispatch(selectResource({
+        increaseLevel: false,
+        resourceId: resourceId,
+        label: label,
+    }));
+
+    dispatch(fetchStatementsForResource({
+        existingResourceId: resourceId,
+        resourceId: resourceId,
+    }));
+}
+
 export const updateGeneralData = (data) => dispatch => {
     dispatch({
         type: type.UPFATE_GENERAL_DATA,
@@ -205,7 +232,7 @@ export const selectResource = (data) => dispatch => { // use redux thunk for asy
     });
 }
 
-// TODO: support literals
+// TODO: support literals (currently not working in backend)
 export const fetchStatementsForResource = (data) => {
     let { resourceId, existingResourceId, isContribution } = data;
     isContribution = isContribution ? isContribution : false;
@@ -276,7 +303,6 @@ export const fetchStatementsForResource = (data) => {
                                 resourceId,
                             }
                         });
-                        console.log(researchProblems);
                     }
 
                     dispatch({
@@ -363,66 +389,6 @@ export const saveAddPaper = (data) => {
         }
 
         await saveStatements(data);
-
-        // statements
-        // resources
-        /*if (data.resources.byId) {
-            for (let [key, resource] of Object.entries(data.resources.byId)) {
-                let resourceId;
-                
-                if (!resource.existingResourceId) {
-                    resourceId = await network.createResource(resource.label);
-                    resourceId = resourceId.id;
-                } else {
-                    resourceId = resource.existingResourceId;
-                }
-
-                console.log('CREATE RESOURCE', resourceId, resource.label);
-
-                // predicates
-                if (resource.propertyIds && resource.propertyIds.length > 0) {
-                    for (let propertyId of resource.propertyIds) {
-                        let property = data.properties.byId[propertyId];
-
-                        let predicateId;
-
-                        if (!property.existingPredicateId) {
-                            predicateId = await network.createPredicate(property.label);
-                            predicateId = predicateId.id;
-                        } else {
-                            predicateId = property.existingPredicateId;
-                        }
-
-                        console.log('CREATE PREDICATE', predicateId, property.label);
-
-                        // objects/values
-                        if (property.valueIds && property.valueIds.length > 0) {
-                            for (let valueId of property.valueIds) {
-                                let value = data.values.byId[valueId];
-                                console.log('ADDED VALUE', value);
-                                if (value.type === 'literal') {
-                                    let newValueId = await network.createLiteral(value.label);
-                                    newValueId = newValueId.id;
-                                    await network.createLiteralStatement(resourceId, predicateId, newValueId);
-                                } else {
-                                    let newValueId;
-
-                                    if (!value.isExistingValue) {
-                                        newValueId = await network.createResource(value.label);
-                                        newValueId = newValueId.id;
-                                    } else {
-                                        newValueId = value.resourceId;
-                                    }
-
-                                    await network.createResourceStatement(resourceId, predicateId, newValueId);
-                                    console.log('VALUE ID', newValueId);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }*/
 
         dispatch({
             type: type.SAVE_ADD_PAPER,

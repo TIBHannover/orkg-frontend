@@ -81,6 +81,7 @@ class StatementItem extends Component {
                                         resourceId={value.resourceId}
                                         propertyId={this.props.id}
                                         existingStatement={value.existingStatement}
+                                        openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                                     />
                                 )
                             })}
@@ -107,6 +108,7 @@ StatementItem.propTypes = {
     selectedProperty: PropTypes.string.isRequired,
     properties: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
+    openExistingResourcesInDialog: PropTypes.bool,
 };
 
 const mapStateToProps = state => {

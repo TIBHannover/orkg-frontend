@@ -45,8 +45,11 @@ class Contributions extends Component {
         selectedContribution: '',
     }
 
-    componentDidMount = async () => {
-
+    componentDidUpdate = () => {
+        if (this.props.selectedContribution === '' && this.props.contributions[0]) {
+            // only executed on first load, can't be placed in the contructor since loading contributions is async
+            this.handleSelectContribution(this.props.contributions[0]);
+        }
     }
 
     handleSelectContribution = (contributionId) => {
@@ -58,10 +61,6 @@ class Contributions extends Component {
     }
 
     render() {
-        if (this.props.selectedContribution === '' && this.props.contributions[0]) {
-            this.handleSelectContribution(this.props.contributions[0]);
-        }
-
         let selectedContributionId = this.props.selectedContribution;
 
         return (
@@ -109,7 +108,7 @@ class Contributions extends Component {
 
                                             <Statements
                                                 enableEdit={false}
-                                                resourceId={this.props.selectedContribution}
+                                                openExistingResourcesInDialog={true}
                                             />
                                         </FormGroup>
 

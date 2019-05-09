@@ -1,5 +1,5 @@
 import * as type from './types.js';
-import * as addPaper from './addPaper';
+import { createResource, fetchStatementsForResource } from './addPaper';
 
 export const selectContribution = ({contributionId: id, contributionIsLoaded}) => dispatch => {
 
@@ -14,15 +14,13 @@ export const selectContribution = ({contributionId: id, contributionIsLoaded}) =
             }
         });
         
-        dispatch(addPaper.createResource({
-        
+        dispatch(createResource({ //only needed for connecting properties, label is not shown
             resourceId: id,
-            label: 'test',
+            label: '', 
             existingResourceId: id
-        
         }));
         
-        dispatch(addPaper.fetchStatementsForResource({
+        dispatch(fetchStatementsForResource({
             resourceId: id, 
             existingResourceId: id, 
             isContribution:true,

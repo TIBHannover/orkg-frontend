@@ -15,6 +15,7 @@ class ValueItem extends Component {
     state = {
         modal: false,
         dialogResourceId: null,
+        dialogResourceLabel: null,
     }
     toggleDeleteContribution = async () => {
         let result = await Confirm({
@@ -55,7 +56,8 @@ class ValueItem extends Component {
         console.log(existingResourceId);
         this.setState({
             modal: true,
-            dialogResourceId: existingResourceId
+            dialogResourceId: existingResourceId,
+            dialogResourceLabel: resource.label,
         });
     }
 
@@ -74,7 +76,7 @@ class ValueItem extends Component {
         let existingResourceId = resource.existingResourceId;
         let onClick = null;
 
-        if (this.props.type === 'object' && existingResourceId) {
+        if (this.props.type === 'object' && existingResourceId && this.props.openExistingResourcesInDialog) {
             onClick = this.handleExistingResourceClick;
         } else if (this.props.type === 'object') {
             onClick = this.handleResourceClick;
@@ -85,9 +87,9 @@ class ValueItem extends Component {
                 <ListGroupItem className={styles.valueItem}>
                     <span className={labelClass} onClick={onClick}>
                         {this.props.label}
-                        {existingResourceId ? 
+                        {existingResourceId && this.props.openExistingResourcesInDialog ?
                             <span> <Icon icon={faExternalLinkAlt} /></span>
-                        : ''}
+                            : ''}
                     </span>
                     {!this.props.existingStatement ?
                         <span className={`${styles.deleteValue} float-right`} onClick={this.toggleDeleteContribution}>
@@ -97,11 +99,13 @@ class ValueItem extends Component {
                         </span> : ''}
                 </ListGroupItem>
 
-                <StatementBrowserDialog 
-                    show={this.state.modal} 
-                    toggleModal={this.toggleModal} 
-                    resourceId={this.state.dialogResourceId}
-                />
+                {this.state.modal ?
+                    <StatementBrowserDialog
+                        show={this.state.modal}
+                        toggleModal={this.toggleModal}
+                        resourceId={this.state.dialogResourceId}
+                        resourceLabel={this.state.dialogResourceLabel}
+                    /> : ''}
             </>
         );
     }
@@ -118,6 +122,7 @@ ValueItem.propTypes = {
     resourceId: PropTypes.string.isRequired,
     propertyId: PropTypes.string.isRequired,
     existingStatement: PropTypes.bool.isRequired,
+    openExistingResourcesInDialog: PropTypes.bool,
 };
 
 const mapStateToProps = state => {

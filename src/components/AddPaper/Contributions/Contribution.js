@@ -33,7 +33,7 @@ class Contributions extends Component {
 
                         <Statements 
                             enableEdit={true}
-                            resourceId={this.props.id} 
+                            openExistingResourcesInDialog={true}
                         />
 
                     </FormGroup>
