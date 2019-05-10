@@ -108,7 +108,7 @@ class Contributions extends Component {
 
                                             <Statements
                                                 enableEdit={false}
-                                                openExistingResourcesInDialog={true}
+                                                openExistingResourcesInDialog={false}
                                             />
                                         </FormGroup>
 
@@ -145,7 +145,7 @@ Contributions.propTypes = {
 
 const mapStateToProps = state => ({
     researchProblems: state.viewPaper.researchProblems,
-    resources: state.addPaper.resources,
+    resources: state.statementBrowser.resources,
     selectedContribution: state.addPaper.selectedContribution,
 });
 

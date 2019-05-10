@@ -8,7 +8,7 @@ import Breadcrumbs from './Breadcrumbs';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import { initializeWithoutContribution } from '../../../../actions/addPaper';
+import { initializeWithoutContribution } from '../../../../actions/statementBrowser';
 
 class Statements extends Component {
     constructor(props) {
@@ -29,7 +29,7 @@ class Statements extends Component {
     }
 
     statements = () => {
-        let propertyIds = Object.keys(this.props.resources.byId).length !== 0 ? this.props.resources.byId[this.props.selectedResource].propertyIds : [];
+        let propertyIds = Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource ? this.props.resources.byId[this.props.selectedResource].propertyIds : [];
 
         return (
             <ListGroup className={styles.listGroupEnlarge}>
@@ -111,11 +111,11 @@ Statements.defaultProps = {
 
 const mapStateToProps = state => {
     return {
-        level: state.addPaper.level,
-        resources: state.addPaper.resources,
-        properties: state.addPaper.properties,
-        isFetchingStatements: state.addPaper.isFetchingStatements,
-        selectedResource: state.addPaper.selectedResource,
+        level: state.statementBrowser.level,
+        resources: state.statementBrowser.resources,
+        properties: state.statementBrowser.properties,
+        isFetchingStatements: state.statementBrowser.isFetchingStatements,
+        selectedResource: state.statementBrowser.selectedResource,
     }
 };
 

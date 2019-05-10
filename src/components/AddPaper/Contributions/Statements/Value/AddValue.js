@@ -5,7 +5,7 @@ import Tooltip from '../../../../Utils/Tooltip';
 import styles from '../../Contributions.module.scss';
 import AutoComplete from '../AutoComplete';
 import { connect } from 'react-redux';
-import { createValue } from '../../../../../actions/addPaper';
+import { createValue } from '../../../../../actions/statementBrowser';
 import PropTypes from 'prop-types';
 
 class AddValue extends Component {
@@ -149,7 +149,7 @@ AddValue.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        selectedProperty: state.addPaper.selectedProperty,
+        selectedProperty: state.statementBrowser.selectedProperty,
     }
 };
 

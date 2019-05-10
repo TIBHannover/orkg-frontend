@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { updateResearchProblems } from '../../../actions/addPaper';
 import PropTypes from 'prop-types';
 
-class Contributions extends Component {
+class Contribution extends Component {
     handleResearchProblemsChange = (problemsArray) => {
         this.props.updateResearchProblems({
             problemsArray,
@@ -43,7 +43,7 @@ class Contributions extends Component {
     }
 }
 
-Contributions.propTypes = {
+Contribution.propTypes = {
     id: PropTypes.string.isRequired,
     updateResearchProblems: PropTypes.func.isRequired,
     researchProblems: PropTypes.array.isRequired,
@@ -62,4 +62,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Contributions);
+)(Contribution);

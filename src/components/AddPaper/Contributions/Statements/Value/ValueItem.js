@@ -7,7 +7,7 @@ import styles from '../../Contributions.module.scss';
 import classNames from 'classnames';
 import Confirm from 'reactstrap-confirm';
 import { connect } from 'react-redux';
-import { selectResource, fetchStatementsForResource, deleteValue } from '../../../../../actions/addPaper';
+import { selectResource, fetchStatementsForResource, deleteValue } from '../../../../../actions/statementBrowser';
 import PropTypes from 'prop-types';
 import StatementBrowserDialog from '../StatementBrowserDialog';
 
@@ -127,7 +127,7 @@ ValueItem.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        resources: state.addPaper.resources,
+        resources: state.statementBrowser.resources,
     }
 };
 

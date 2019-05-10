@@ -8,7 +8,7 @@ import ValueItem from './Value/ValueItem';
 import AddValue from './Value/AddValue';
 import DeleteStatement from './DeleteStatement';
 import { connect } from 'react-redux';
-import { togglePropertyCollapse } from '../../../../actions/addPaper';
+import { togglePropertyCollapse } from '../../../../actions/statementBrowser';
 import PropTypes from 'prop-types';
 
 class StatementItem extends Component {
@@ -113,9 +113,9 @@ StatementItem.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        selectedProperty: state.addPaper.selectedProperty, 
-        properties: state.addPaper.properties,
-        values: state.addPaper.values,
+        selectedProperty: state.statementBrowser.selectedProperty, 
+        properties: state.statementBrowser.properties,
+        values: state.statementBrowser.values,
     }
 };
 

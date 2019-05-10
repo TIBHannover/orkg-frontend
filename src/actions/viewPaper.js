@@ -1,5 +1,5 @@
 import * as type from './types.js';
-import { createResource, fetchStatementsForResource } from './addPaper';
+import { createResource, fetchStatementsForResource, selectResource } from './statementBrowser';
 
 export const selectContribution = ({contributionId: id, contributionIsLoaded}) => dispatch => {
 
@@ -19,13 +19,23 @@ export const selectContribution = ({contributionId: id, contributionIsLoaded}) =
             label: '', 
             existingResourceId: id
         }));
-        
+
         dispatch(fetchStatementsForResource({
             resourceId: id, 
             existingResourceId: id, 
             isContribution:true,
         }));
     }
+
+    dispatch({
+        type: type.CLEAR_RESOURCE_HISTORY
+    });
+    
+    dispatch(selectResource({
+        increaseLevel: false,
+        resourceId: id,
+        label: 'Main',
+    }));
     
     dispatch({
         type: type.SELECT_CONTRIBUTION,
@@ -34,19 +44,4 @@ export const selectContribution = ({contributionId: id, contributionIsLoaded}) =
         }
     });
 
-    dispatch({
-        type: type.CLEAR_RESOURCE_HISTORY
-    });
-
-    dispatch({
-        type: type.CLEAR_SELECTED_PROPERTY
-    });
-
-    dispatch({
-        type: type.ADD_RESOURCE_HISTORY,
-        payload: {
-            //resourceId: id,
-            label: 'Main',
-        }
-    });
 }

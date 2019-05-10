@@ -4,7 +4,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../../../Utils/Tooltip';
 import styles from '../Contributions.module.scss';
 import { connect } from 'react-redux';
-import { deleteProperty } from '../../../../actions/addPaper';
+import { deleteProperty } from '../../../../actions/statementBrowser';
 import Confirm from 'reactstrap-confirm';
 import PropTypes from 'prop-types';
 
@@ -46,7 +46,7 @@ DeleteStatement.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        selectedResource: state.addPaper.selectedResource,
+        selectedResource: state.statementBrowser.selectedResource,
     }
 };
 
