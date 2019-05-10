@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { predicatesUrl } from '../../../../network';
+import { predicatesUrl } from '../../network';
 import { InputGroup, InputGroupAddon, Button, ListGroupItem, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import styles from '../Contributions.module.scss';
+import styles from '../AddPaper/Contributions/Contributions.module.scss';
 import AutoComplete from './AutoComplete';
 import { connect } from 'react-redux';
-import { createProperty } from '../../../../actions/statementBrowser';
+import { createProperty } from '../../actions/statementBrowser';
 import PropTypes from 'prop-types';
 
 // TODO: this is about adding a property, not really a statement. So rename this component?

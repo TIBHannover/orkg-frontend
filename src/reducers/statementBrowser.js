@@ -1,5 +1,4 @@
 import * as type from '../actions/types';
-import merge from 'lodash/merge';
 import dotProp from 'dot-prop-immutable';
 
 const initialState = {
@@ -53,8 +52,6 @@ export default (state = initialState, action) => {
 
         case type.CREATE_PROPERTY: {
             let { payload } = action;
-            console.log(payload.resourceId);
-            console.log(state);
             let newState = dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, propertyIds => [...propertyIds, payload.propertyId]);
             
             newState = dotProp.set(newState, `properties.byId`, ids => ({

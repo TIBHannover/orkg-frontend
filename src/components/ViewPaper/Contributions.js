@@ -3,7 +3,7 @@ import { Container, Row, Col, Form, FormGroup } from 'reactstrap';
 import { connect } from 'react-redux';
 import { selectContribution } from '../../actions/viewPaper';
 import styles from '../AddPaper/Contributions/Contributions.module.scss';
-import Statements from '../AddPaper/Contributions/Statements/Statements';
+import StatementBrowser from '../StatementBrowser/Statements';
 import styled from 'styled-components';
 import SimilarContributions from './SimilarContributions';
 import PropTypes from 'prop-types';
@@ -106,7 +106,7 @@ class Contributions extends Component {
                                         <FormGroup>
                                             <Title>Contribution data</Title>
 
-                                            <Statements
+                                            <StatementBrowser
                                                 enableEdit={false}
                                                 openExistingResourcesInDialog={false}
                                             />

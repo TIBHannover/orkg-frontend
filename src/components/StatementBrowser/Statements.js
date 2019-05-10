@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ListGroup, ListGroupItem } from 'reactstrap';
-import styles from '../Contributions.module.scss';
+import styles from '../AddPaper/Contributions/Contributions.module.scss';
 import StatementItem from './StatementItem';
 import AddStatement from './AddStatement';
 import { connect } from 'react-redux';
@@ -8,7 +8,7 @@ import Breadcrumbs from './Breadcrumbs';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import { initializeWithoutContribution } from '../../../../actions/statementBrowser';
+import { initializeWithoutContribution } from '../../actions/statementBrowser';
 
 class Statements extends Component {
     constructor(props) {

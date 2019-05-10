@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import Tooltip from '../../../Utils/Tooltip';
-import styles from '../Contributions.module.scss';
+import Tooltip from '../Utils/Tooltip';
+import styles from '../AddPaper/Contributions/Contributions.module.scss';
 import { connect } from 'react-redux';
-import { deleteProperty } from '../../../../actions/statementBrowser';
+import { deleteProperty } from '../../actions/statementBrowser';
 import Confirm from 'reactstrap-confirm';
 import PropTypes from 'prop-types';
 

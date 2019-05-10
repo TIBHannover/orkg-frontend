@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { ListGroupItem } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import Tooltip from '../../../../Utils/Tooltip';
-import styles from '../../Contributions.module.scss';
+import Tooltip from '../../Utils/Tooltip';
+import styles from '../../AddPaper/Contributions/Contributions.module.scss';
 import classNames from 'classnames';
 import Confirm from 'reactstrap-confirm';
 import { connect } from 'react-redux';
-import { selectResource, fetchStatementsForResource, deleteValue } from '../../../../../actions/statementBrowser';
+import { selectResource, fetchStatementsForResource, deleteValue } from '../../../actions/statementBrowser';
 import PropTypes from 'prop-types';
 import StatementBrowserDialog from '../StatementBrowserDialog';
 
@@ -53,7 +53,6 @@ class ValueItem extends Component {
     handleExistingResourceClick = () => {
         let resource = this.props.resources.byId[this.props.resourceId];
         let existingResourceId = resource.existingResourceId;
-        console.log(existingResourceId);
         this.setState({
             modal: true,
             dialogResourceId: existingResourceId,

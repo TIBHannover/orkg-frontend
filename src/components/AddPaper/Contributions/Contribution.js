@@ -3,7 +3,7 @@ import { Form, FormGroup, Label } from 'reactstrap';
 import Tooltip from '../../Utils/Tooltip';
 import TagsInput from '../../Utils/TagsInput';
 import styles from './Contributions.module.scss';
-import Statements from './Statements/Statements';
+import StatementBrowser from '../../StatementBrowser/Statements';
 import { connect } from 'react-redux';
 import { updateResearchProblems } from '../../../actions/addPaper';
 import PropTypes from 'prop-types';
@@ -31,11 +31,10 @@ class Contribution extends Component {
                             <Tooltip message="Provide details about this contribution by making statements. Some suggestions are already displayed, you can use this when it is useful, or delete it when it is not">Contribution data</Tooltip>
                         </Label>
 
-                        <Statements 
+                        <StatementBrowser 
                             enableEdit={true}
                             openExistingResourcesInDialog={true}
                         />
-
                     </FormGroup>
                 </Form>
             </div>

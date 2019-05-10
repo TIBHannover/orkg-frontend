@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Statements from './Statements';
 import { Provider } from 'react-redux';
-import configureStore from '../../../../store'
+import configureStore from '../../store'
 
 class StatementBrowserDialog extends Component {
     constructor(props) {
@@ -13,7 +13,6 @@ class StatementBrowserDialog extends Component {
     }
 
     render() {
-
         return (
             <Modal isOpen={this.props.show} toggle={this.props.toggleModal} size="lg">
                 <ModalHeader toggle={this.props.toggleModal}>View existing resource: {this.props.resourceLabel}</ModalHeader>

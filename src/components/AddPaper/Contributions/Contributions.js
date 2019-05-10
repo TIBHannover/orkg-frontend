@@ -156,7 +156,6 @@ Contributions.propTypes = {
 };
 
 const mapStateToProps = state => {
-    console.log('STATE', state);
     return {
         title: state.addPaper.title,
         authors: state.addPaper.authors,

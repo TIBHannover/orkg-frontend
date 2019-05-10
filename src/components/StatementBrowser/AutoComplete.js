@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { submitGetRequest } from '../../../../network';
+import { submitGetRequest } from '../../network';
 import { Input } from 'reactstrap';
 import PropTypes from 'prop-types';
 
