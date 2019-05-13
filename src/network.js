@@ -159,6 +159,7 @@ export const getStatementsBySubject = (id) => {
 };
 
 //TODO: replace this function by a backend request that allows for fetching statements by object 
+//sorting ASC on id
 export const getStatementsByObject = async (id) => {
     let resourceIds = [];
     let allResources = await getAllResources();
@@ -168,7 +169,7 @@ export const getStatementsByObject = async (id) => {
     statements.forEach((statement) => resourceIds.push(statement.subject.id));
 
     let resources = allResources.filter((resource) => resourceIds.indexOf(resource.id) !== -1);
-    console.log(resources.sort((a, b) => a.id > b.id));
+    resources.sort((a, b) => parseInt(a.id.replace('R', '')) - parseInt(b.id.replace('R', '')));
 
     return resources;
 };

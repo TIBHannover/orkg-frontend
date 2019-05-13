@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import ShortRecord from '../components/statements/ShortRecord';
 import { Link } from 'react-router-dom';
-import { submitGetRequest, url, statementsUrl, getStatementsByObject } from '../network';
+import { getStatementsByObject } from '../network';
 import { Container } from 'reactstrap';
 
 /*
