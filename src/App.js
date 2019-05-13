@@ -6,6 +6,7 @@ import Resources from './pages/Resources'
 import SearchResults from './pages/SearchResults'
 import AddResource from './pages/AddResource';
 import Predicates from './pages/Predicates';
+import Papers from './pages/Papers';
 import DefaultLayout from './components/Layout/DefaultLayout';
 import ROUTES from './constants/routes.js';
 import AddPaper from './components/AddPaper/AddPaper'
@@ -34,6 +35,7 @@ export default class App extends Component {
                         <Route exact path={ROUTES.LICENSE} component={License} />
                         <Route exact path={ROUTES.NOT_FOUND} component={NotFound} />
                         <Route exact path={ROUTES.COMPARISON} component={Comparison} /> {/* TODO: slug for the paper title */}
+                        <Route exact path={ROUTES.PAPERS} component={Papers} />
 
                         {/* Legacy routes, only used for debugging now */}
                         <Route 

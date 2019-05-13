@@ -52,6 +52,7 @@ class Header extends Component {
                                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.dropdownOpen} nav inNavbar>
                                     <DropdownToggle nav className="ml-4">Debug <FontAwesomeIcon icon={faSortDown} pull="right" /></DropdownToggle>
                                     <DropdownMenu right>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PAPERS}>All Papers</DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>All Resources</DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>All Predicates</DropdownItem>
                                     </DropdownMenu>

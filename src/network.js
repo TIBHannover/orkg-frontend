@@ -16,24 +16,23 @@ export const submitGetRequest = (url) => {
     return new Promise(
         (resolve, reject) => {
             fetch(url, { method: 'GET' })
-                    .then((response) => {
-                        console.log(`Response type: ${response.type}`);
-                        if (!response.ok) {
-                            reject({
-                                error: new Error(`Error response. (${response.status}) ${response.statusText}`),
-                                statusCode: response.status,
-                                statusText: response.statusText,
-                            });
+                .then((response) => {
+                    if (!response.ok) {
+                        reject({
+                            error: new Error(`Error response. (${response.status}) ${response.statusText}`),
+                            statusCode: response.status,
+                            statusText: response.statusText,
+                        });
+                    } else {
+                        const json = response.json();
+                        if (json.then) {
+                            json.then(resolve).catch(reject);
                         } else {
-                            const json = response.json();
-                            if (json.then) {
-                                json.then(resolve).catch(reject);
-                            } else {
-                                return resolve(json);
-                            }
+                            return resolve(json);
                         }
-                    })
-                    .catch(reject);
+                    }
+                })
+                .catch(reject);
         }
     );
 };
@@ -47,7 +46,6 @@ const submitPostRequest = (url, headers, data) => {
         (resolve, reject) => {
             fetch(url, { method: 'POST', headers: headers, body: JSON.stringify(data) })
                 .then((response) => {
-                    console.log(`Response type: ${response.type}`);
                     if (!response.ok) {
                         reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
                     } else {
@@ -73,7 +71,6 @@ const submitPutRequest = (url, headers, data) => {
         (resolve, reject) => {
             fetch(url, { method: 'PUT', headers: headers, body: JSON.stringify(data) })
                 .then((response) => {
-                    console.log(`Response type: ${response.type}`);
                     if (!response.ok) {
                         reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
                     } else {
@@ -91,46 +88,50 @@ const submitPutRequest = (url, headers, data) => {
 };
 
 export const updateResource = (id, label) => {
-    return submitPutRequest(`${resourcesUrl}${id}`, {'Content-Type': 'application/json'}, {label: label});
+    return submitPutRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' }, { label: label });
 };
 
 export const updateLiteral = (id, label) => {
-    return submitPutRequest(`${literalsUrl}${id}`, {'Content-Type': 'application/json'}, {label: label});
+    return submitPutRequest(`${literalsUrl}${id}`, { 'Content-Type': 'application/json' }, { label: label });
 };
 
 export const createResource = (label) => {
-    return submitPostRequest(resourcesUrl, {'Content-Type': 'application/json'}, {label: label});
+    return submitPostRequest(resourcesUrl, { 'Content-Type': 'application/json' }, { label: label });
 };
 
 export const createLiteral = (label) => {
-    return submitPostRequest(literalsUrl, {'Content-Type': 'application/json'}, {label: label});
+    return submitPostRequest(literalsUrl, { 'Content-Type': 'application/json' }, { label: label });
 };
 
 export const createResourceStatement = (subjectId, predicateId, objectId) => {
     return submitPostRequest(`${statementsUrl}`,
-        {'Content-Type': 'application/json'},
-        {'subject_id' : subjectId,
-        'predicate_id' : predicateId,
-        'object': {
-            'id': objectId,
-            "_class" : "resource"
-        }});
+        { 'Content-Type': 'application/json' },
+        {
+            'subject_id': subjectId,
+            'predicate_id': predicateId,
+            'object': {
+                'id': objectId,
+                "_class": "resource"
+            }
+        });
 };
 
 export const createLiteralStatement = (subjectId, predicateId, property) => {
     return submitPostRequest(`${statementsUrl}`,
-        {'Content-Type': 'application/json'},
-        {'subject_id' : subjectId,
-        'predicate_id' : predicateId,
-        'object': {
-            'id': property,
-            "_class" : "literal"
-        }});
+        { 'Content-Type': 'application/json' },
+        {
+            'subject_id': subjectId,
+            'predicate_id': predicateId,
+            'object': {
+                'id': property,
+                "_class": "literal"
+            }
+        });
 };
 
 
 export const createPredicate = (label) => {
-    return submitPostRequest(predicatesUrl, {'Content-Type': 'application/json'}, { label: label });
+    return submitPostRequest(predicatesUrl, { 'Content-Type': 'application/json' }, { label: label });
 };
 
 export const getPredicate = (id) => {
@@ -141,10 +142,33 @@ export const getResource = (id) => {
     return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`);
 };
 
+export const getAllResources = () => {
+    return submitGetRequest(resourcesUrl);
+};
+
+export const getAllStatements = () => {
+    return submitGetRequest(statementsUrl);
+};
+
 export const getPredicatesByLabel = (label) => {
     return submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(label));
 };
 
 export const getStatementsBySubject = (id) => {
     return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/`);
+};
+
+//TODO: replace this function by a backend request that allows for fetching statements by object 
+export const getStatementsByObject = async (id) => {
+    let resourceIds = [];
+    let allResources = await getAllResources();
+    let allStatements = await getAllStatements();
+    let statements = allStatements.filter((statement) => statement.object.id === id);
+    
+    statements.forEach((statement) => resourceIds.push(statement.subject.id));
+
+    let resources = allResources.filter((resource) => resourceIds.indexOf(resource.id) !== -1);
+    console.log(resources.sort((a, b) => a.id > b.id));
+
+    return resources;
 };
