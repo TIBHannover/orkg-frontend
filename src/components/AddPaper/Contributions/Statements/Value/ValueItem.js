@@ -64,7 +64,7 @@ class ValueItem extends Component {
                     </ListGroupItem>
                     :
                     <Tooltip message="Open resource" hideDefaultIcon>
-                        <span onClick={this.props.type === 'object' ? this.handleResourceClick : null}>{this.props.label}</span> {/* TODO: fix warning for unmounted component (caused by event for dropdown) */}
+                        <span onClick={this.props.type === 'object' ? this.handleResourceClick : null}>{this.props.label}</span> {/* TODO: fix warning for unmounted component (caused by event for expanding box) */}
                     </Tooltip>
                 }
             </>

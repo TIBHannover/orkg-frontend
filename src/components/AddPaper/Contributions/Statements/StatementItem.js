@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ListGroup, ListGroupItem, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faChevronCircleDown, faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
+import { faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
 import styles from '../Contributions.module.scss';
 import classNames from 'classnames';
 import ValueItem from './Value/ValueItem';
@@ -73,7 +73,7 @@ class StatementItem extends Component {
                             <>: <em className="text-muted">{valueIds.length} values</em></>
                             : ''}
 
-                    <Icon icon={isCollapsed ? faChevronCircleDown : faChevronCircleRight} className={chevronClass} />{' '}
+                    <Icon icon={isCollapsed ? faChevronCircleUp : faChevronCircleDown} className={chevronClass} />{' '}
 
                     {!this.props.isExistingProperty ?
                         <DeleteStatement id={this.props.id} /> : ''}
