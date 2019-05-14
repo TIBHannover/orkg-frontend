@@ -6,6 +6,8 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { reverse } from 'named-urls';
+import ROUTES from '../../../constants/routes.js';
 
 class Finish extends Component {
     render() {
@@ -28,7 +30,7 @@ class Finish extends Component {
                     <br />
                     <h2 className="h5">Paper has been added successfully</h2>
                     <br />
-                    <Link to={'/paper/' + this.props.paperNewResourceId}> {/* TODO: change route: use constants */}
+                    <Link to={reverse(ROUTES.VIEW_PAPER, {resourceId: this.props.paperNewResourceId})}>
                         <Button color="primary" className="mb-4">View paper</Button>
                     </Link>
                 </div>

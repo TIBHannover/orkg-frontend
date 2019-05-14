@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { getStatementsByObject } from '../network';
 import { Container } from 'reactstrap';
+import { reverse } from 'named-urls';
+import ROUTES from '../constants/routes.js';
 
 /*
 This page is only for debugging. It is requesting ALL statements and resources in 
@@ -14,7 +16,7 @@ export default class Resources extends Component {
     };
 
     async componentWillMount() {
-        let statements = await getStatementsByObject(process.env.REACT_APP_RESOURCE_TYPES_PAPER);
+        let statements = await getStatementsByObject({id: process.env.REACT_APP_RESOURCE_TYPES_PAPER});
 
         this.setState({
             statements
@@ -27,8 +29,8 @@ export default class Resources extends Component {
                 resource => (
                     <div className="shortRecord" key={resource.id}>
                         <div className="shortRecord-header">
-                            <Link to={`${process.env.PUBLIC_URL}/paper/${encodeURIComponent(resource.id)}`}>
-                                {`${resource.id}: ${resource.label}`}
+                            <Link to={reverse(ROUTES.VIEW_PAPER, {resourceId: resource.subject.id})} style={{ color: 'inherit' }}>
+                                {`${resource.subject.id}: ${resource.subject.label}`}
                             </Link>
                         </div>
                     </div>

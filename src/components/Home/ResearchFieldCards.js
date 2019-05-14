@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faAngleDoubleRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components/macro';
-import { getStatementsBySubject } from '../../network';
+import { getStatementsBySubject, getStatementsByObject } from '../../network';
+import { Link } from "react-router-dom";
+import { reverse } from 'named-urls';
+import ROUTES from '../../constants/routes.js';
 
 /* Bootstrap card column is not working correctly working with vertical alignment,
 thus used custom styling here */
@@ -42,6 +45,7 @@ class ResearchFieldCards extends Component {
     state = {
         researchFields: [],
         breadcrumb: [],
+        papers: null,
         error: '',
     }
 
@@ -49,9 +53,9 @@ class ResearchFieldCards extends Component {
         this.getFields(process.env.REACT_APP_RESEARCH_FIELD_MAIN, 'Main');
     }
 
-    getFields(fieldId, label, addBreadcrumb = true) {
+    async getFields(fieldId, label, addBreadcrumb = true) {
         try {
-            getStatementsBySubject(fieldId).then((res) => {
+            await getStatementsBySubject(fieldId).then(async (res) => {
                 let researchFields = [];
                 res.forEach((elm) => {
                     researchFields.push({
@@ -75,6 +79,23 @@ class ResearchFieldCards extends Component {
 
                     this.setState({
                         breadcrumb: breadcrumb
+                    });
+                }
+
+                if (researchFields.length === 0) {
+                    this.setState({
+                        papers: null, // to show loading indicator
+                    });
+
+                    let papers = await getStatementsByObject({ 
+                        id: fieldId,
+                        order: 'desc',
+                    });
+
+                    papers = papers.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
+
+                    this.setState({
+                        papers,
                     });
                 }
             }).catch((e) => {
@@ -107,11 +128,19 @@ class ResearchFieldCards extends Component {
             );
         }
 
+        let showPapers = this.state.researchFields.length === 0 && this.state.breadcrumb.length !== 0;
+
         return (
             <div className="mt-5">
-                {this.state.breadcrumb.map((field) =>
-                    <BreadcrumbLink key={field.id} onClick={() => this.handleClickBreadcrumb(field.id, field.label)}>{field.label} <FontAwesomeIcon icon={faAngleDoubleRight} /></BreadcrumbLink>
-                )}
+                {this.state.breadcrumb.map((field, index) => (
+                    <BreadcrumbLink
+                        key={field.id}
+                        onClick={() => this.handleClickBreadcrumb(field.id, field.label)}
+                    >
+                        {field.label} {' '}
+                        {index !== this.state.breadcrumb.length - 1 && <Icon icon={faAngleDoubleRight} />}
+                    </BreadcrumbLink>
+                ))}
 
                 <hr className="mt-3 mb-5" />
                 <div id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap">
@@ -121,9 +150,32 @@ class ResearchFieldCards extends Component {
                         </Card>
                     ))}
                 </div>
-            </div>
-        );
-    }
-}
+                {showPapers && (
+                    <div>
+                        <h2 className="h5">{this.state.breadcrumb[this.state.breadcrumb.length - 1].label} papers</h2>
 
+                        {!this.state.papers && <div className="mt-5 text-center"><Icon icon={faSpinner} spin /> Loading</div>}
+
+                        {this.state.papers && this.state.papers.length === 0 ? <div className="mt-5 text-center">No papers found</div> : null}
+
+                        {this.state.papers && (
+                            <ul className="mt-3">
+                                {this.state.papers.map((paper, index) => {
+                                    return (
+                                        <li key={index}>
+                                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.subject.id })}>
+                                                {paper.subject.label}
+                                            </Link>
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        )}
+                    </div>
+                    )}
+            </div>
+                );
+                }
+            }
+            
 export default ResearchFieldCards;

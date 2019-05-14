@@ -76,7 +76,7 @@ class ViewPaper extends Component {
             publicationYear,
             publicationMonth,
             researchField,
-            authorNames: authorNamesArray,
+            authorNames: authorNamesArray.reverse(), // statements are ordered desc, so first author is last => thus reverse
             contributions: contributionArray.sort(), // sort contributions ascending, so contribution 1, is actually the first one
         });
     }
