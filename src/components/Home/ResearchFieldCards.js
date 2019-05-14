@@ -87,7 +87,7 @@ class ResearchFieldCards extends Component {
                         papers: null, // to show loading indicator
                     });
 
-                    let papers = await getStatementsByObject({ 
+                    let papers = await getStatementsByObject({
                         id: fieldId,
                         order: 'desc',
                     });
@@ -172,10 +172,10 @@ class ResearchFieldCards extends Component {
                             </ul>
                         )}
                     </div>
-                    )}
+                )}
             </div>
-                );
-                }
-            }
-            
+        );
+    }
+}
+
 export default ResearchFieldCards;

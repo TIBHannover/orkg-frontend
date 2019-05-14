@@ -13,6 +13,4 @@ export default {
    NOT_FOUND: '/404',
    COMPARISON: '/comparison/:paperId/:contributionId',
    PAPERS: '/papers',
-   // route with params 
-   //resource: '/resource/:resourceId',
 }

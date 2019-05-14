@@ -161,13 +161,10 @@ export const getStatementsBySubject = (id) => {
 //TODO: replace this function by a backend request that allows for fetching statements by object 
 export const getStatementsByObject = async ({id, order = 'asc', limit = null}) => {
     let resourceIds = [];
-    //let allResources = await getAllResources();
     let allStatements = await getAllStatements();
     let statements = allStatements.filter((statement) => statement.object.id === id);
 
     statements.forEach((statement) => resourceIds.push(statement.subject.id));
-
-    //let resources = allResources.filter((resource) => resourceIds.indexOf(resource.id) !== -1);
 
     statements.sort((a, b) => {
         if (order === 'asc') {

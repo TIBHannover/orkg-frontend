@@ -20,8 +20,6 @@ class RecentlyAddedPapers extends Component {
             order: 'desc',
         });
 
-        //let papers = [];
-
         await Promise.all(
             paperStatements.map(async (paper, index) => {
 
@@ -50,8 +48,6 @@ class RecentlyAddedPapers extends Component {
                 paperStatements[index].paperItem = paperItem; // add to statements object to preserve order (because of the random order in which the promise might resolve)
             })
         );
-
-        console.log(paperStatements);
 
         this.setState({
             papers: paperStatements,
