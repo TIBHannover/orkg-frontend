@@ -276,7 +276,6 @@ export const fetchStatementsForResource = (data) => {
                                 resourceId,
                             }
                         });
-                        console.log(researchProblems);
                     }
 
                     dispatch({

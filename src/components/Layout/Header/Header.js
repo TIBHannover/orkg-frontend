@@ -45,14 +45,13 @@ class Header extends Component {
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className="mr-auto" navbar>
                                 <NavItem>
-                                    <NavLink tag={RouterNavLink} exact to={ROUTES.RESOURCES}>
-                                        View all resources{/* TODO: add taxonomy "Browse by research field" <FontAwesomeIcon icon={faSortDown} pull="right" /> */} 
+                                    <NavLink tag={RouterNavLink} exact to={ROUTES.PAPERS}>
+                                        View all papers{/* TODO: add taxonomy "Browse by research field" <FontAwesomeIcon icon={faSortDown} pull="right" /> */} 
                                     </NavLink>
                                 </NavItem>
                                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.dropdownOpen} nav inNavbar>
                                     <DropdownToggle nav className="ml-4">Debug <FontAwesomeIcon icon={faSortDown} pull="right" /></DropdownToggle>
                                     <DropdownMenu right>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PAPERS}>All Papers</DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>All Resources</DropdownItem>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>All Predicates</DropdownItem>
                                     </DropdownMenu>
