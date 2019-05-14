@@ -55,7 +55,20 @@ class StatementItem extends Component {
                     {this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1)}
 
                     {valueIds.length === 1 && !isCollapsed ?
-                        <>: <em className="text-muted">{this.props.values.byId[valueIds[0]].label}</em></>
+                        <>
+                            : {' '}
+                            <em className="text-muted">
+                                <ValueItem
+                                    label={this.props.values.byId[valueIds[0]].label}
+                                    id={valueIds[0]}
+                                    type={this.props.values.byId[valueIds[0]].type}
+                                    resourceId={this.props.values.byId[valueIds[0]].resourceId}
+                                    propertyId={this.props.id}
+                                    existingStatement={this.props.values.byId[valueIds[0]].existingStatement}
+                                    inline
+                                />
+                            </em>
+                        </>
                         : valueIds.length > 1 && !isCollapsed ?
                             <>: <em className="text-muted">{valueIds.length} values</em></>
                             : ''}
@@ -111,7 +124,7 @@ StatementItem.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        selectedProperty: state.addPaper.selectedProperty, 
+        selectedProperty: state.addPaper.selectedProperty,
         properties: state.addPaper.properties,
         values: state.addPaper.values,
     }

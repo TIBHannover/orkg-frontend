@@ -27,7 +27,7 @@ class ValueItem extends Component {
         }
     }
 
-    handleResourceClick = () => {
+    handleResourceClick = (e) => {
         let resource = this.props.resources.byId[this.props.resourceId];
         let existingResourceId = resource.existingResourceId;
 
@@ -52,15 +52,21 @@ class ValueItem extends Component {
 
         return (
             <>
-                <ListGroupItem className={styles.valueItem}>
-                    <span className={labelClass} onClick={this.props.type === 'object' ? this.handleResourceClick : null}>{this.props.label}</span>
-                    {!this.props.existingStatement ?
-                        <span className={`${styles.deleteValue} float-right`} onClick={this.toggleDeleteContribution}>
-                            <Tooltip message="Delete value" hideDefaultIcon={true}>
-                                <Icon icon={faTrash} /> Delete
-                            </Tooltip>
-                        </span> : ''}
-                </ListGroupItem>
+                {!this.props.inline ?
+                    <ListGroupItem className={styles.valueItem}>
+                        <span className={labelClass} onClick={this.props.type === 'object' ? this.handleResourceClick : null}>{this.props.label}</span>
+                        {!this.props.existingStatement ?
+                            <span className={`${styles.deleteValue} float-right`} onClick={this.toggleDeleteContribution}>
+                                <Tooltip message="Delete value" hideDefaultIcon={true}>
+                                    <Icon icon={faTrash} /> Delete
+                                </Tooltip>
+                            </span> : ''}
+                    </ListGroupItem>
+                    :
+                    <Tooltip message="Open resource" hideDefaultIcon>
+                        <span onClick={this.props.type === 'object' ? this.handleResourceClick : null}>{this.props.label}</span> {/* TODO: fix warning for unmounted component (caused by event for dropdown) */}
+                    </Tooltip>
+                }
             </>
         );
     }
@@ -77,7 +83,12 @@ ValueItem.propTypes = {
     resourceId: PropTypes.string.isRequired,
     propertyId: PropTypes.string.isRequired,
     existingStatement: PropTypes.bool.isRequired,
+    inline: PropTypes.bool,
 };
+
+ValueItem.defaultProps = {
+    inline: false,
+}
 
 const mapStateToProps = state => {
     return {

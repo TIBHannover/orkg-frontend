@@ -31,11 +31,13 @@ class Tooltip extends React.Component {
                     {this.props.children} {!this.props.hideDefaultIcon ? <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" /> : ''}
                 </span>
 
-                <ReactstrapTooltip delay={{show:0,hide:0}} 
+                <ReactstrapTooltip 
+                    delay={{show:0,hide:0}} 
                     placement="top" 
                     isOpen={this.state.tooltipOpen} 
                     target={this.id} 
-                    toggle={this.toggle}>
+                    toggle={this.toggle}
+                >
                     {this.props.message}
                 </ReactstrapTooltip>
             </span>

@@ -69,7 +69,6 @@ class Statements extends Component {
             <>
                 {this.props.level !== 0 ? (
                     <>
-                        <br />
                         <Breadcrumbs />
                     </>
                 ) : ''}
