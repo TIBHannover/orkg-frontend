@@ -260,7 +260,7 @@ export const fetchStatementsForResource = (data) => {
                                 existingResourceId: statement.object.id,
                                 propertyId: propertyId,
                                 label: statement.object.label,
-                                type: 'object',
+                                type: statement.object._class === 'literal' ? 'literal' : 'object',
                                 isExistingValue: true,
                                 existingStatement: true,
                             }));

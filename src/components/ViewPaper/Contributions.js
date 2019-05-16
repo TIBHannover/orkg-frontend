@@ -99,7 +99,7 @@ class Contributions extends Component {
                                             <Title style={{ marginTop: 0 }}>Research problems</Title>
                                             {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].map((problem, index) => (
                                                 <span key={index}>
-                                                    <span className="btn btn-link p-0 border-0 align-baseline">{problem.label}</span>
+                                                    <span className="btn btn-link p-0 border-0 align-baseline">{problem.label}</span> <br />
                                                 </span>
                                             ))}
                                         </FormGroup>
