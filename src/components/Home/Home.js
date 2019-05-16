@@ -7,7 +7,7 @@ import RecentlyAddedPapers from './RecentlyAddedPapers';
 
 class Home extends Component {
     render() {
-        let showWarning = process.env.REACT_APP_SERVER_URL.includes('localhost');
+        let showWarning = process.env.REACT_APP_SERVER_URL.includes('labs.tib.eu');
 
         return (
             <div>
