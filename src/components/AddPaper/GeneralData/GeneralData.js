@@ -286,7 +286,7 @@ class GeneralData extends Component {
                                         <FormGroup>
                                             <Label for="paperAuthors">
                                                 <Tooltip message="The author or authors of the paper. Enter both the first and last name">Paper authors</Tooltip>
-                                            </Label>{console.log(this.state.paperAuthors)}
+                                            </Label>
                                             <TagsInput handler={this.handleAuthorsChange} value={this.state.paperAuthors} />
                                         </FormGroup>
                                     </Col>

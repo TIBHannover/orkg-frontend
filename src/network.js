@@ -158,14 +158,10 @@ export const getStatementsBySubject = (id) => {
     return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/`);
 };
 
-//TODO: replace this function by a backend request that allows for fetching statements by object 
 export const getStatementsByObject = async ({id, order = 'asc', limit = null}) => {
-    let resourceIds = [];
-    let allStatements = await getAllStatements();
-    let statements = allStatements.filter((statement) => statement.object.id === id);
+    let statements= await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/`);
 
-    statements.forEach((statement) => resourceIds.push(statement.subject.id));
-
+    // TODO: replace sorting and limit by backend functionalities when ready
     statements.sort((a, b) => {
         if (order === 'asc') {
             return parseInt(a.id.replace('S', '')) - parseInt(b.id.replace('S', ''));
