@@ -22,7 +22,7 @@ class Contributions extends Component {
                 <Form>
                     <FormGroup>
                         <Label>
-                            <Tooltip message="Specify the research problems that this contributions addresses. Normally, a research problem consists of very few words (around 2 or 3)">Research problems</Tooltip>
+                            <Tooltip message="Specify the research problems that this contribution addresses. Normally, a research problem consists of very few words (around 2 or 3)">Research problems</Tooltip>
                         </Label>
                         <TagsInput handler={this.handleResearchProblemsChange} value={this.props.researchProblems} />
                     </FormGroup>

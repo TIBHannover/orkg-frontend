@@ -101,7 +101,7 @@ class AddStatement extends Component {
                 <Modal isOpen={this.state.confirmNewPropertyModal} toggle={this.toggleConfirmNewProperty}>
                     <ModalHeader toggle={this.toggleConfirmNewProperty}>Are you sure you need a new property?</ModalHeader>
                     <ModalBody>
-                        Often there are existing properties that you can use as well. It is better to use existing properties then new ones.
+                        Often there are existing properties that you can use as well. It is better to use existing properties than new ones.
                     </ModalBody>
                     <ModalFooter>
                         <Button color="light" onClick={this.toggleConfirmNewProperty}>Cancel</Button>{' '}
