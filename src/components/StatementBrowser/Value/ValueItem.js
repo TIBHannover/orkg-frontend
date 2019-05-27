@@ -35,7 +35,7 @@ class ValueItem extends Component {
     handleResourceClick = (e) => {
         let resource = this.props.resources.byId[this.props.resourceId];
         let existingResourceId = resource.existingResourceId;
-        console.log(resource);
+
         if (existingResourceId && !resource.isFechted) {
             this.props.fetchStatementsForResource({
                 resourceId: this.props.resourceId,
@@ -105,21 +105,6 @@ class ValueItem extends Component {
                         :
                         this.props.label
                 }
-
-                {/*<ListGroupItem className={styles.valueItem}>
-                    <span className={labelClass} onClick={onClick}>
-                        {this.props.label}
-                        {existingResourceId && this.props.openExistingResourcesInDialog ?
-                            <span> <Icon icon={faExternalLinkAlt} /></span>
-                            : ''}
-                    </span>
-                    {!this.props.existingStatement ?
-                        <span className={`${styles.deleteValue} float-right`} onClick={this.toggleDeleteContribution}>
-                            <Tooltip message="Delete value" hideDefaultIcon={true}>
-                                <Icon icon={faTrash} /> Delete
-                            </Tooltip>
-                        </span> : ''}
-                </ListGroupItem>*/}
 
                 {this.state.modal ?
                     <StatementBrowserDialog
