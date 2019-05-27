@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { resourcesUrl } from '../../../../../network';
+import { resourcesUrl } from '../../../network';
 import { Input, InputGroup, InputGroupAddon, Button, ListGroupItem, DropdownToggle, DropdownMenu, InputGroupButtonDropdown, DropdownItem } from 'reactstrap';
-import Tooltip from '../../../../Utils/Tooltip';
-import styles from '../../Contributions.module.scss';
+import Tooltip from '../../Utils/Tooltip';
+import styles from '../../AddPaper/Contributions/Contributions.module.scss';
 import AutoComplete from '../AutoComplete';
 import { connect } from 'react-redux';
-import { createValue } from '../../../../../actions/addPaper';
+import { createValue } from '../../../actions/statementBrowser';
 import PropTypes from 'prop-types';
 
 class AddValue extends Component {
@@ -149,7 +149,7 @@ AddValue.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        selectedProperty: state.addPaper.selectedProperty,
+        selectedProperty: state.statementBrowser.selectedProperty,
     }
 };
 

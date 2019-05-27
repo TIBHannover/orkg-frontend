@@ -69,7 +69,12 @@ class Contributions extends Component {
     }
 
     handleSelectContribution = (contributionId) => {
-        this.props.selectContribution(contributionId);
+        const resourceId = this.props.contributions.byId[contributionId].resourceId;
+
+        this.props.selectContribution({
+            id: contributionId, 
+            resourceId
+        });
     }
 
     render() {
@@ -159,10 +164,10 @@ const mapStateToProps = state => {
         doi: state.addPaper.doi,
         selectedResearchField: state.addPaper.selectedResearchField,
         contributions: state.addPaper.contributions,
-        resources: state.addPaper.resources,
-        properties: state.addPaper.properties,
-        values: state.addPaper.values,
         selectedContribution: state.addPaper.selectedContribution,
+        resources: state.statementBrowser.resources,
+        properties: state.statementBrowser.properties,
+        values: state.statementBrowser.values,
     }
 };
 

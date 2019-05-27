@@ -3,7 +3,7 @@ import { Container, Row, Col, Form, FormGroup } from 'reactstrap';
 import { connect } from 'react-redux';
 import { selectContribution } from '../../actions/viewPaper';
 import styles from '../AddPaper/Contributions/Contributions.module.scss';
-import Statements from '../AddPaper/Contributions/Statements/Statements';
+import StatementBrowser from '../StatementBrowser/Statements';
 import styled from 'styled-components';
 import SimilarContributions from './SimilarContributions';
 import PropTypes from 'prop-types';
@@ -45,8 +45,11 @@ class Contributions extends Component {
         selectedContribution: '',
     }
 
-    componentDidMount = async () => {
-
+    componentDidUpdate = () => {
+        if (this.props.selectedContribution === '' && this.props.contributions[0]) {
+            // only executed on first load, can't be placed in the contructor since loading contributions is async
+            this.handleSelectContribution(this.props.contributions[0]);
+        }
     }
 
     handleSelectContribution = (contributionId) => {
@@ -58,10 +61,6 @@ class Contributions extends Component {
     }
 
     render() {
-        if (this.props.selectedContribution === '' && this.props.contributions[0]) {
-            this.handleSelectContribution(this.props.contributions[0]);
-        }
-
         let selectedContributionId = this.props.selectedContribution;
 
         return (
@@ -107,9 +106,9 @@ class Contributions extends Component {
                                         <FormGroup>
                                             <Title>Contribution data</Title>
 
-                                            <Statements
+                                            <StatementBrowser
                                                 enableEdit={false}
-                                                resourceId={this.props.selectedContribution}
+                                                openExistingResourcesInDialog={false}
                                             />
                                         </FormGroup>
 
@@ -146,7 +145,7 @@ Contributions.propTypes = {
 
 const mapStateToProps = state => ({
     researchProblems: state.viewPaper.researchProblems,
-    resources: state.addPaper.resources,
+    resources: state.statementBrowser.resources,
     selectedContribution: state.addPaper.selectedContribution,
 });
 

@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { ListGroup, ListGroupItem, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
-import styles from '../Contributions.module.scss';
+import styles from '../AddPaper/Contributions/Contributions.module.scss';
 import classNames from 'classnames';
 import ValueItem from './Value/ValueItem';
 import AddValue from './Value/AddValue';
 import DeleteStatement from './DeleteStatement';
 import { connect } from 'react-redux';
-import { togglePropertyCollapse } from '../../../../actions/addPaper';
+import { togglePropertyCollapse } from '../../actions/statementBrowser';
 import PropTypes from 'prop-types';
 
 class StatementItem extends Component {
@@ -84,7 +84,7 @@ class StatementItem extends Component {
                         <ListGroup flush>
                             {valueIds.map((valueId, index) => {
                                 let value = this.props.values.byId[valueId];
-
+                                console.log('value', value);
                                 return (
                                     <ValueItem
                                         key={index}
@@ -94,6 +94,7 @@ class StatementItem extends Component {
                                         resourceId={value.resourceId}
                                         propertyId={this.props.id}
                                         existingStatement={value.existingStatement}
+                                        openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                                     />
                                 )
                             })}
@@ -120,13 +121,14 @@ StatementItem.propTypes = {
     selectedProperty: PropTypes.string.isRequired,
     properties: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
+    openExistingResourcesInDialog: PropTypes.bool,
 };
 
 const mapStateToProps = state => {
     return {
-        selectedProperty: state.addPaper.selectedProperty,
-        properties: state.addPaper.properties,
-        values: state.addPaper.values,
+        selectedProperty: state.statementBrowser.selectedProperty, 
+        properties: state.statementBrowser.properties,
+        values: state.statementBrowser.values,
     }
 };
 

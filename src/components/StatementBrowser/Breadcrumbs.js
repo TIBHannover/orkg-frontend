@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { goToResourceHistory } from '../../../../actions/addPaper';
+import { goToResourceHistory } from '../../actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components/macro';
@@ -112,8 +112,8 @@ Breadcrumbs.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        resourceHistory: state.addPaper.resourceHistory,
-        level: state.addPaper.level,
+        resourceHistory: state.statementBrowser.resourceHistory,
+        level: state.statementBrowser.level,
     }
 };
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ListGroup, ListGroupItem } from 'reactstrap';
-import styles from '../Contributions.module.scss';
+import styles from '../AddPaper/Contributions/Contributions.module.scss';
 import StatementItem from './StatementItem';
 import AddStatement from './AddStatement';
 import { connect } from 'react-redux';
@@ -8,8 +8,19 @@ import Breadcrumbs from './Breadcrumbs';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
+import { initializeWithoutContribution } from '../../actions/statementBrowser';
 
 class Statements extends Component {
+    constructor(props) {
+        super(props);
+
+        if (this.props.initialResourceId) {
+            this.props.initializeWithoutContribution({
+                resourceId: this.props.initialResourceId,
+                label: this.props.initialResourceLabel,
+            })
+        }
+    }
 
     handleInputChange = (e) => {
         this.setState({
@@ -18,8 +29,7 @@ class Statements extends Component {
     }
 
     statements = () => {
-
-        let propertyIds = Object.keys(this.props.resources.byId).length !== 0 ? this.props.resources.byId[this.props.selectedResource].propertyIds : [];
+        let propertyIds = Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource ? this.props.resources.byId[this.props.selectedResource].propertyIds : [];
 
         return (
             <ListGroup className={styles.listGroupEnlarge}>
@@ -34,10 +44,10 @@ class Statements extends Component {
                                     predicateLabel={property.label}
                                     key={'statement-' + index}
                                     index={index}
-                                    type={this.props.type}
                                     isExistingProperty={property.isExistingProperty ? true : false}
                                     enableEdit={this.props.enableEdit}
                                     isLastItem={propertyIds.length === index + 1}
+                                    openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                                 />
                             )
                         }))
@@ -86,20 +96,33 @@ Statements.propTypes = {
     isFetchingStatements: PropTypes.bool.isRequired,
     selectedResource: PropTypes.string.isRequired,
     enableEdit: PropTypes.bool.isRequired,
-    resourceId: PropTypes.string.isRequired,
-    type: PropTypes.string,
+    initializeWithoutContribution: PropTypes.func.isRequired,
+    initialResourceId: PropTypes.string,
+    initialResourceLabel: PropTypes.string,
+    openExistingResourcesInDialog: PropTypes.bool,
+};
+
+Statements.defaultProps = {
+    openExistingResourcesInDialog: false,
+    initialResourceId: null,
+    initialResourceLabel: null,
 };
 
 const mapStateToProps = state => {
     return {
-        level: state.addPaper.level,
-        resources: state.addPaper.resources,
-        properties: state.addPaper.properties,
-        isFetchingStatements: state.addPaper.isFetchingStatements,
-        selectedResource: state.addPaper.selectedResource,
+        level: state.statementBrowser.level,
+        resources: state.statementBrowser.resources,
+        properties: state.statementBrowser.properties,
+        isFetchingStatements: state.statementBrowser.isFetchingStatements,
+        selectedResource: state.statementBrowser.selectedResource,
     }
 };
 
+const mapDispatchToProps = dispatch => ({
+    initializeWithoutContribution: (data) => dispatch(initializeWithoutContribution(data)),
+});
+
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(Statements);

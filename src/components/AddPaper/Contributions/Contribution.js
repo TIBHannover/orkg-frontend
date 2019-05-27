@@ -3,12 +3,12 @@ import { Form, FormGroup, Label } from 'reactstrap';
 import Tooltip from '../../Utils/Tooltip';
 import TagsInput from '../../Utils/TagsInput';
 import styles from './Contributions.module.scss';
-import Statements from './Statements/Statements';
+import StatementBrowser from '../../StatementBrowser/Statements';
 import { connect } from 'react-redux';
 import { updateResearchProblems } from '../../../actions/addPaper';
 import PropTypes from 'prop-types';
 
-class Contributions extends Component {
+class Contribution extends Component {
     handleResearchProblemsChange = (problemsArray) => {
         this.props.updateResearchProblems({
             problemsArray,
@@ -31,11 +31,10 @@ class Contributions extends Component {
                             <Tooltip message="Provide details about this contribution by making statements. Some suggestions are already displayed, you can use this when it is useful, or delete it when it is not">Contribution data</Tooltip>
                         </Label>
 
-                        <Statements 
+                        <StatementBrowser 
                             enableEdit={true}
-                            resourceId={this.props.id} 
+                            openExistingResourcesInDialog={true}
                         />
-
                     </FormGroup>
                 </Form>
             </div>
@@ -43,7 +42,7 @@ class Contributions extends Component {
     }
 }
 
-Contributions.propTypes = {
+Contribution.propTypes = {
     id: PropTypes.string.isRequired,
     updateResearchProblems: PropTypes.func.isRequired,
     researchProblems: PropTypes.array.isRequired,
@@ -62,4 +61,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Contributions);
+)(Contribution);
