@@ -141,15 +141,16 @@ ValueItem.propTypes = {
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    resourceId: PropTypes.string.isRequired,
     propertyId: PropTypes.string.isRequired,
     existingStatement: PropTypes.bool.isRequired,
+    resourceId: PropTypes.string,
     inline: PropTypes.bool,
     openExistingResourcesInDialog: PropTypes.bool,
 };
 
 ValueItem.defaultProps = {
     inline: false,
+    resourceId: null,
 }
 
 const mapStateToProps = state => {
