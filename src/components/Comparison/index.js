@@ -88,45 +88,68 @@ class Comparison extends Component {
         dropdownOpen: false,
         properties: [],
         data: [],
+        csvData: [],
     }
 
     componentDidMount = async () => {
-        const resourceId = this.props.match.params.paperId;
-        let paperResource = await getResource(resourceId);
-        let paperStatements = await getStatementsBySubject(resourceId);
+        this.performComparison();
+    }
 
-        // check if type is paper
-        let hasTypePaper = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_IS_A && statement.object.id === process.env.REACT_APP_RESOURCE_TYPES_PAPER);
+    componentDidUpdate = (prevProps, prevState) => {
+        // check if the csv export data needs an update
+        if (this.state.properties !== prevState.properties || this.state.contributions !== prevState.contributions || this.state.data !== prevState.data) {
+            this.generateMatrixOfComparison();
+        }
+    }
 
-        if (hasTypePaper.length === 0) {
-            throw new Error('The requested resource is not of type "paper"');
+    generateMatrixOfComparison = () => {
+        /*let contributions = ['Property'];
+
+        for (let contribution of this.state.contributions) {
+            contributions.push(contribution.title);
         }
 
-        // contributions
-        let contributions = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION);
+        let data = [];
 
-        let contributionArray = [];
+        for (let property of this.state.properties) {
+            let row = [property.label];
 
-        if (contributions.length > 0) {
-            for (let contribution of contributions) {
-                contributionArray.push(contribution.object.id);
+            for (let datum of this.state.data[property.id]) {
+                row.push(datum.label);
             }
+            data.push(row);
         }
-
-        const csvData = [
-            ['firstname', 'lastname', 'email'],
-            ['Ahmed', 'Tomi', 'ah@smthing.co.com'],
-            ['aed', 'Labes', 'rl@smthing.co.com'],
-            ['Yezzi', 'Min l3b', 'ymin@cocococo.com']
-        ];
 
         this.setState({
-            title: paperResource.label,
-            contributions: contributionArray.sort(), // sort contributions ascending, so contribution 1, is actually the first one
-            csvData
-        });
+            csvData: [
+                contributions,
+                ...data
+            ]
+        });*/
+        let header = ['Title'];
 
-        this.performComparison();
+        for (let property of this.state.properties) {
+            header.push(property.label);
+        }
+        
+        let rows = [];
+
+        for (let i=0; i<this.state.contributions.length; i++) {
+            let contribution = this.state.contributions[i];
+            let row = [contribution.title];
+
+            for (let property of this.state.properties) {
+                row.push(this.state.data[property.id][i].label);
+            }
+            rows.push(row);
+        }       
+
+        this.setState({
+            csvData: [
+                header,
+                ...rows
+            ]
+        });
     }
 
     performComparison = () => {
@@ -281,7 +304,7 @@ class Comparison extends Component {
         }));
     }
 
-    exportAsCsv = () => {
+    exportAsCsv = (e) => {
         this.setState({
             dropdownOpen: false,
         })
@@ -326,12 +349,12 @@ class Comparison extends Component {
                             <tbody className="table-borderless">
                                 <tr className="table-borderless">
                                     <Properties><PropertiesInner className="first">Properties</PropertiesInner></Properties>
-                                    
+
                                     {this.state.contributions.map((contribution, index) => {
                                         return (
                                             <ItemHeader key={`contribution${index}`}>
                                                 <ItemHeaderInner>{contribution.title}<br />
-                                                <Contribution>{contribution.contributionLabel}</Contribution>
+                                                    <Contribution>{contribution.contributionLabel}</Contribution>
                                                 </ItemHeaderInner>
                                             </ItemHeader>
                                         )
