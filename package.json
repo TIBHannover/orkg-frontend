@@ -17,6 +17,7 @@
     "flow-bin": "^0.95.1",
     "node-sass": "^4.11.0",
     "react": "^16.6.0",
+    "react-csv": "^1.1.1",
     "react-dom": "^16.6.0",
     "react-hot-loader": "^4.8.2",
     "react-input-autosize": "^2.2.1",
@@ -91,6 +92,10 @@
       ],
       "react/prop-types": [
         "error"
+      ],
+      "quotes": [
+        2, 
+        "single"
       ]
     }
   }

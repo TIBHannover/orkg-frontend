@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { Container, Button, Table } from 'reactstrap';
+import { Container, Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { getStatementsBySubject, getResource } from '../../network';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { CSVLink } from 'react-csv';
 
 // There is a lot is styling needed for this table, this it is using a column structure,
 // instead of the default HTML row structure
@@ -82,6 +85,9 @@ class Comparison extends Component {
         title: '',
         authorNames: [],
         contributions: [],
+        dropdownOpen: false,
+        properties: [],
+        data: [],
     }
 
     componentDidMount = async () => {
@@ -96,39 +102,6 @@ class Comparison extends Component {
             throw new Error('The requested resource is not of type "paper"');
         }
 
-        // research field
-        let researchField = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
-
-        if (researchField.length > 0) {
-            researchField = researchField[0].object.label
-        }
-
-        // publication year
-        let publicationYear = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
-
-        if (publicationYear.length > 0) {
-            publicationYear = publicationYear[0].object.label
-        }
-
-        // publication month
-        let publicationMonth = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
-
-        if (publicationMonth.length > 0) {
-            publicationMonth = publicationMonth[0].object.label
-        }
-
-        // authors
-        let authors = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
-
-        let authorNamesArray = [];
-
-        if (authors.length > 0) {
-            for (let author of authors) {
-                let authorName = author.object.label;
-                authorNamesArray.push(authorName);
-            }
-        }
-
         // contributions
         let contributions = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION);
 
@@ -140,14 +113,178 @@ class Comparison extends Component {
             }
         }
 
+        const csvData = [
+            ['firstname', 'lastname', 'email'],
+            ['Ahmed', 'Tomi', 'ah@smthing.co.com'],
+            ['aed', 'Labes', 'rl@smthing.co.com'],
+            ['Yezzi', 'Min l3b', 'ymin@cocococo.com']
+        ];
+
         this.setState({
             title: paperResource.label,
-            publicationYear,
-            publicationMonth,
-            researchField,
-            authorNames: authorNamesArray,
             contributions: contributionArray.sort(), // sort contributions ascending, so contribution 1, is actually the first one
+            csvData
         });
+
+        this.performComparison();
+    }
+
+    performComparison = () => {
+        const apiMockingData = {
+            contributions:
+                [
+                    {
+                        id: 'R1',
+                        paperId: 'R2',
+                        title: 'Algorithm and hardware for a merge sort using multiple processors',
+                        contributionLabel: 'Contribution 2'
+                    },
+                    {
+                        id: 'R1',
+                        paperId: 'R2',
+                        title: 'A variant of heapsort with almost optimal number of comparisons',
+                        contributionLabel: 'Contribution 1'
+                    },
+                    {
+                        id: 'R1',
+                        paperId: 'R2',
+                        title: 'Bubble sort: an archaeologic alalgorithmic analysis',
+                        contributionLabel: 'Contribution 1'
+                    },
+                ],
+            properties:
+                [
+                    {
+                        id: 'P1',
+                        label: 'Algorithm'
+                    },
+                    {
+                        id: 'P2',
+                        label: 'Problem'
+                    },
+                    {
+                        id: 'P3',
+                        label: 'Programming language'
+                    },
+                    {
+                        id: 'P4',
+                        label: 'Stable'
+                    },
+                    {
+                        id: 'P5',
+                        label: 'Best complexity'
+                    },
+                    {
+                        id: 'P6',
+                        label: 'Worst complexity'
+                    },
+                ],
+            data:
+            {
+                'P1': [
+                    {
+                        resourceId: 'R1',
+                        label: 'Merge sort'
+                    },
+                    {
+                        resourceId: 'R1',
+                        label: 'Heap sort'
+                    },
+                    {
+                        resourceId: 'R1',
+                        label: 'Bubble sort'
+                    },
+                ],
+                'P2': [
+                    {
+                        resourceId: 'R1',
+                        label: 'Efficient sorting'
+                    },
+                    {
+                        resourceId: 'R1',
+                        label: 'Efficient sorting'
+                    },
+                    {
+                        resourceId: 'R1',
+                        label: 'Sorting'
+                    },
+                ],
+                'P3': [
+                    {
+                        resourceId: 'R1',
+                        label: 'C++'
+                    },
+                    {
+                        resourceId: 'R1',
+                        label: ''
+                    },
+                    {
+                        resourceId: 'R1',
+                        label: 'Python'
+                    },
+                ],
+                'P4': [
+                    {
+                        resourceId: 'R1',
+                        label: 'Y'
+                    },
+                    {
+                        resourceId: 'R1',
+                        label: 'N'
+                    },
+                    {
+                        resourceId: 'R1',
+                        label: 'N'
+                    },
+                ],
+                'P5': [
+                    {
+                        resourceId: 'R1',
+                        label: 'n log n'
+                    },
+                    {
+                        resourceId: 'R1',
+                        label: 'n'
+                    },
+                    {
+                        resourceId: 'R1',
+                        label: 'n'
+                    },
+                ],
+                'P6': [
+                    {
+                        resourceId: 'R1',
+                        label: 'n log n'
+                    },
+                    {
+                        resourceId: 'R1',
+                        label: 'n log n'
+                    },
+                    {
+                        resourceId: 'R1',
+                        label: 'n log n'
+                    },
+                ],
+            }
+        };
+
+        this.setState({
+            contributions: apiMockingData.contributions,
+            properties: apiMockingData.properties,
+            data: apiMockingData.data,
+        });
+    }
+
+    toggle = () => {
+        this.setState(prevState => ({
+            dropdownOpen: !prevState.dropdownOpen
+        }));
+    }
+
+    exportAsCsv = () => {
+        this.setState({
+            dropdownOpen: false,
+        })
     }
 
     render() {
@@ -157,56 +294,70 @@ class Comparison extends Component {
                     <h1 className="h4 mt-4 mb-4">Contribution comparison</h1>
                 </Container>
                 <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
-                    <h2 className="h4 mt-4 mb-3 float-left">Compare: <br /><span className="h6">{this.state.title}</span></h2>
+                    <h2 className="h4 mt-4 mb-3 float-left">
+                        Compare: <br />
+                        <span className="h6">{this.state.title}</span>
+                    </h2>
+
+                    <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                        <DropdownToggle color="darkblue" size="sm" className="float-right mb-4 mt-4 ml-1 pl-3 pr-3" >
+                            <Icon icon={faEllipsisV} />
+                        </DropdownToggle>
+                        <DropdownMenu right>
+                            <DropdownItem>Select properties</DropdownItem>
+                            {this.state.csvData ?
+                                <CSVLink
+                                    data={this.state.csvData}
+                                    filename={'ORKG Contribution Comparison.csv'}
+                                    className="dropdown-item"
+                                    target="_blank"
+                                    onClick={this.exportAsCsv}
+                                >
+                                    Export as CSV
+                                </CSVLink>
+                                : ''}
+                        </DropdownMenu>
+                    </Dropdown>
 
                     <Button color="darkblue" className="float-right mb-4 mt-4 " size="sm">Add to comparison</Button>
-                    <div style={{overflowX:'auto', float: 'left', width:'100%'}}>
-                    <Table className="mb-0" style={{borderCollapse: 'collapse', tableLayout: 'fixed', height: 'max-content', width:'100%'}}>
-                        <tbody className="table-borderless">
-                            <tr className="table-borderless">
-                                <Properties><PropertiesInner className="first">Properties</PropertiesInner></Properties>
-                                <ItemHeader><ItemHeaderInner>Algorithm and hardware for a merge sort using multiple processors<br /><Contribution>Contribution #2</Contribution></ItemHeaderInner></ItemHeader>
-                                <ItemHeader><ItemHeaderInner>A variant of heapsort with almost optimal number of comparisons<br /><Contribution>Contribution #1</Contribution></ItemHeaderInner></ItemHeader>
-                                <ItemHeader><ItemHeaderInner>Bubble sort: an archaeologic alalgorithmic analysis<br /><Contribution>Contribution #1</Contribution></ItemHeaderInner></ItemHeader>
-                            </tr>
-                            <tr>
-                                <Properties><PropertiesInner>Algorithm</PropertiesInner></Properties>
-                                <Item><ItemInner>Merge sort</ItemInner></Item>
-                                <Item><ItemInner>Heap sort</ItemInner></Item>
-                                <Item><ItemInner>Bubble sort</ItemInner></Item>
-                            </tr>
-                            <tr>
-                                <Properties><PropertiesInner>Problem</PropertiesInner></Properties>
-                                <Item><ItemInner>Efficient sorting</ItemInner></Item>
-                                <Item><ItemInner>Efficient sorting</ItemInner></Item>
-                                <Item><ItemInner>Sorting</ItemInner></Item>
-                            </tr>
-                            <tr>
-                                <Properties><PropertiesInner>Programming language</PropertiesInner></Properties>
-                                <Item><ItemInner>C++</ItemInner></Item>
-                                <Item><ItemInner><em>Empty</em></ItemInner></Item>
-                                <Item><ItemInner>Python</ItemInner></Item>
-                            </tr>
-                            <tr>
-                                <Properties><PropertiesInner>Stable</PropertiesInner></Properties>
-                                <Item><ItemInner>Y</ItemInner></Item>
-                                <Item><ItemInner>N</ItemInner></Item>
-                                <Item><ItemInner>N</ItemInner></Item>
-                            </tr>
-                            <tr>
-                                <Properties><PropertiesInner>Best complexity</PropertiesInner></Properties>
-                                <Item><ItemInner>n log n</ItemInner></Item>
-                                <Item><ItemInner>n</ItemInner></Item>
-                                <Item><ItemInner>n</ItemInner></Item>
-                            </tr>
-                            <tr>
-                                <Properties><PropertiesInner className="last">Worst complexity</PropertiesInner></Properties>
-                                <Item><ItemInner className="last">n log n</ItemInner></Item>
-                                <Item><ItemInner className="last">n log n</ItemInner></Item>
-                                <Item><ItemInner className="last">n log n</ItemInner></Item>
-                            </tr>
-                        </tbody>
-                    </Table>
+
+                    <div style={{ overflowX: 'auto', float: 'left', width: '100%' }}>
+                        <Table className="mb-0" style={{ borderCollapse: 'collapse', tableLayout: 'fixed', height: 'max-content', width: '100%' }}>
+                            <tbody className="table-borderless">
+                                <tr className="table-borderless">
+                                    <Properties><PropertiesInner className="first">Properties</PropertiesInner></Properties>
+                                    
+                                    {this.state.contributions.map((contribution, index) => {
+                                        return (
+                                            <ItemHeader key={`contribution${index}`}>
+                                                <ItemHeaderInner>{contribution.title}<br />
+                                                <Contribution>{contribution.contributionLabel}</Contribution>
+                                                </ItemHeaderInner>
+                                            </ItemHeader>
+                                        )
+                                    })}
+                                </tr>
+
+                                {this.state.properties.map((property, index) => {
+                                    let className = this.state.properties.length === index + 1 ? 'last' : '';
+
+                                    return (
+                                        <tr key={`row${index}`}>
+                                            <Properties>
+                                                <PropertiesInner className={className}>{property.label}</PropertiesInner>
+                                            </Properties>
+                                            {this.state.contributions.map((contribution, index2) => {
+                                                return (
+                                                    <Item key={`data${index2}`}>
+                                                        <ItemInner className={className}>{this.state.data[property.id][index2].label}</ItemInner>
+                                                    </Item>
+                                                )
+                                            })}
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </Table>
                     </div>
                 </Container>
             </div>
