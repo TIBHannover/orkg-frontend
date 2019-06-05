@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar, faBars } from '@fortawesome/free-solid-svg-icons';
 import Contributions from './Contributions';
+import { Link } from 'react-router-dom';
 import { months } from '../../utils';
 import PropTypes from 'prop-types';
 
@@ -31,7 +32,7 @@ class ViewPaper extends Component {
         let researchField = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
 
         if (researchField.length > 0) {
-            researchField = researchField[0].object.label
+            researchField = researchField[0]
         }
 
         // publication year
@@ -94,9 +95,11 @@ class ViewPaper extends Component {
                     <span className="badge badge-lightblue mr-2">
                         <Icon icon={faCalendar} className="text-primary" /> {months[this.state.publicationMonth]} {this.state.publicationYear}
                     </span>
-                    <span className="badge badge-lightblue mr-2">
-                        <Icon icon={faBars} className="text-primary" /> {this.state.researchField}
-                    </span>
+                    {this.state.researchField && (<Link to={`${process.env.PUBLIC_URL}/field/${encodeURIComponent(this.state.researchField.object.id)}`}>
+                        <span className="badge badge-lightblue mr-2">
+                            <Icon icon={faBars} className="text-primary" /> {this.state.researchField.object.label}
+                        </span>
+                    </Link>)}
                     {this.state.authorNames.map((author, index) => (
                         <span className="badge badge-lightblue mr-2" key={index}>
                             <Icon icon={faUser} className="text-primary" /> {author}

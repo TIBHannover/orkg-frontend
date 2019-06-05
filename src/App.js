@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import ResourceDetails, { descriptionSection } from './pages/ResourceDetails'
 import PredicateDetails from './pages/PredicateDetails'
 import ResearchProblem from './pages/ResearchProblem'
+import ResearchField from './pages/ResearchField'
 import Resources from './pages/Resources'
 import SearchResults from './pages/SearchResults'
 import AddResource from './pages/AddResource';
@@ -68,7 +69,12 @@ export default class App extends Component {
                                 <SearchResults term={decodeURIComponent(match.params.searchTerm)} />
                             )}
                         />
-
+                        <Route 
+                            path={`/field/:fieldId`} 
+                            render={({ match }) => (
+                                <ResearchField id={decodeURIComponent(match.params.fieldId)} />
+                            )}
+                        />
                         <Redirect   
                             from={`/resource/:resourceId`}
                             to={`/resource/:resourceId/${descriptionSection}`} 
