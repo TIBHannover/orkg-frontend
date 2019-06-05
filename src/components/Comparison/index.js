@@ -103,29 +103,6 @@ class Comparison extends Component {
     }
 
     generateMatrixOfComparison = () => {
-        /*let contributions = ['Property'];
-
-        for (let contribution of this.state.contributions) {
-            contributions.push(contribution.title);
-        }
-
-        let data = [];
-
-        for (let property of this.state.properties) {
-            let row = [property.label];
-
-            for (let datum of this.state.data[property.id]) {
-                row.push(datum.label);
-            }
-            data.push(row);
-        }
-
-        this.setState({
-            csvData: [
-                contributions,
-                ...data
-            ]
-        });*/
         let header = ['Title'];
 
         for (let property of this.state.properties) {
