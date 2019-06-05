@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import ResourceDetails, { descriptionSection } from './pages/ResourceDetails'
 import PredicateDetails from './pages/PredicateDetails'
+import ResearchProblem from './pages/ResearchProblem'
 import Resources from './pages/Resources'
 import SearchResults from './pages/SearchResults'
 import AddResource from './pages/AddResource';
@@ -53,6 +54,12 @@ export default class App extends Component {
                             path={`/predicate/:predicateId`} 
                             render={({ match }) => (
                                 <PredicateDetails id={decodeURIComponent(match.params.predicateId)} />
+                            )}
+                        />
+                         <Route 
+                            path={`/problem/:problemId`} 
+                            render={({ match }) => (
+                                <ResearchProblem id={decodeURIComponent(match.params.problemId)} />
                             )}
                         />
                         <Route 
