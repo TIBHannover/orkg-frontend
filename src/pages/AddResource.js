@@ -8,7 +8,6 @@ import {
     submitGetRequest
 } from '../network';
 import {NotificationManager} from 'react-notifications';
-import './AddResource.css';
 import {doiPredicateLabel, popupDelay} from '../utils';
 import { Container } from 'reactstrap';
 
