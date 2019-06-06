@@ -303,7 +303,7 @@ class Comparison extends Component {
                         <DropdownToggle color="darkblue" size="sm" className="float-right mb-4 mt-4 ml-1 pl-3 pr-3" >
                             <Icon icon={faEllipsisV} />
                         </DropdownToggle>
-                        <DropdownMenu right>
+                        <DropdownMenu>
                             <DropdownItem>Select properties</DropdownItem>
                             {this.state.csvData ?
                                 <CSVLink
