@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import ResourceDetails, { descriptionSection } from './pages/ResourceDetails'
 import PredicateDetails from './pages/PredicateDetails'
-import ResearchProblem from './pages/ResearchProblem'
-import ResearchField from './pages/ResearchField'
+import ResearchProblem from './components/ResearchProblem/ResearchProblem'
+import ResearchField from './components/ResearchField/ResearchField'
 import Resources from './pages/Resources'
 import SearchResults from './pages/SearchResults'
 import AddResource from './pages/AddResource';
@@ -40,7 +40,7 @@ export default class App extends Component {
                         <Route exact path={ROUTES.PAPERS} component={Papers} />
 
                         {/* Legacy routes, only used for debugging now */}
-                        <Route 
+                        <Route
                             path={`/resource/:resourceId/:sectionName`}
                             render={({ match }) => {
                                 const id = decodeURIComponent(match.params.resourceId);
@@ -51,33 +51,29 @@ export default class App extends Component {
                                 )
                             }}
                         />
-                        <Route 
-                            path={`/predicate/:predicateId`} 
+                        <Route
+                            path={`/predicate/:predicateId`}
                             render={({ match }) => (
                                 <PredicateDetails id={decodeURIComponent(match.params.predicateId)} />
                             )}
                         />
-                         <Route 
-                            path={`/problem/:problemId`} 
-                            render={({ match }) => (
-                                <ResearchProblem id={decodeURIComponent(match.params.problemId)} />
-                            )}
+                        <Route
+                            path={`/problem/:researchProblemId`}
+                            component={ResearchProblem}
                         />
-                        <Route 
-                            path={`/search/:searchTerm`} 
+                        <Route
+                            path={`/search/:searchTerm`}
                             render={({ match }) => (
                                 <SearchResults term={decodeURIComponent(match.params.searchTerm)} />
                             )}
                         />
-                        <Route 
-                            path={`/field/:fieldId`} 
-                            render={({ match }) => (
-                                <ResearchField id={decodeURIComponent(match.params.fieldId)} />
-                            )}
+                        <Route
+                            path={`/field/:researchFieldId`}
+                            component={ResearchField}
                         />
-                        <Redirect   
+                        <Redirect
                             from={`/resource/:resourceId`}
-                            to={`/resource/:resourceId/${descriptionSection}`} 
+                            to={`/resource/:resourceId/${descriptionSection}`}
                         />
                         {/* Don't add routes below this line */}
                         <Route component={NotFound} />

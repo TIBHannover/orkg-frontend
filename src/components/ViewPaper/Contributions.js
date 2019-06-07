@@ -98,10 +98,11 @@ class Contributions extends Component {
                                             <Title style={{ marginTop: 0 }}>Research problems</Title>
                                             {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].map((problem, index) => (
                                                 <span key={index}>
-                                                
+
                                                     <Link to={`${process.env.PUBLIC_URL}/problem/${encodeURIComponent(problem.id)}`}>
                                                         <span className="btn btn-link p-0 border-0 align-baseline">
-                                                            {problem.label}</span>
+                                                            {problem.label}
+                                                        </span>
                                                     </Link>
                                                     <br />
                                                 </span>
