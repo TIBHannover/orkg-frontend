@@ -2,6 +2,17 @@ import React, { Component } from 'react';
 import { submitGetRequest } from '../../network';
 import { Input } from 'reactstrap';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+const DropdownMenuStyled = styled.div`
+    display: block!important;
+    z-index: 1001!important;
+`;
+
+const HrStyled = styled.hr`
+    margin-top: 0;
+    margin-bottom: 0;
+`;
 
 class AutoComplete extends Component {
     constructor(props) {
@@ -49,7 +60,7 @@ class AutoComplete extends Component {
 
                 const lastItem = this.props.onNewItemSelected && (
                     <>
-                        {menuItemsJsx.length > 0 && <hr />}
+                        {menuItemsJsx.length > 0 && <HrStyled />}
                         <button
                             type="button"
                             id="new"
@@ -66,7 +77,7 @@ class AutoComplete extends Component {
 
                 if (completeMenuItemsJsx.length > 0) {
                     this.setState({
-                        dropdownMenuJsx: <div className="dropdown-menu" style={{ width: '100%' }}>{completeMenuItemsJsx}</div>,
+                        dropdownMenuJsx: <DropdownMenuStyled className="dropdown-menu" style={{ width: '100%' }}>{completeMenuItemsJsx}</DropdownMenuStyled>,
                     });
                 } else {
                     this.hideDropdownMenu();
