@@ -188,8 +188,13 @@ export const saveAddPaper = (data) => {
             // research problems
             if (contribution.researchProblems && contribution.researchProblems.length > 0) {
                 for (let researchProblem of contribution.researchProblems) {
-                    let researchProblemResource = await network.createResource(researchProblem);
-                    await network.createResourceStatement(contributionResource.id, researchProblemPredicate, researchProblemResource.id);
+                    // check if the research problem is already a resource
+                    if (researchProblem.hasOwnProperty('_class') && researchProblem._class === 'resource'){
+                        await network.createResourceStatement(contributionResource.id, researchProblemPredicate, researchProblem.id);
+                    }else{
+                        let researchProblemResource = await network.createResource(researchProblem.id);
+                        await network.createResourceStatement(contributionResource.id, researchProblemPredicate, researchProblemResource.id);
+                    }
                 }
             }
         }

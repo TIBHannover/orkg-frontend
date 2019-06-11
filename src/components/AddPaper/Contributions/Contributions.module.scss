@@ -171,3 +171,25 @@
         margin-bottom: -2px;
     }
 }
+
+// this class for overwriting default bootstrap .form-control
+.researchFieldsInput { 
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    height: auto !important;
+    min-height: calc(2.25rem + 4px);
+    cursor: text;
+    padding: 0 !important;
+}
+.researchFieldsInput input {
+    border: 0;
+    background: transparent;
+    max-width: 100%;
+    outline: 0;
+    margin: 5px 2px;
+}
+.researchFieldBrowser {
+    margin: 5px auto;
+    height: auto !important;
+    cursor: text;
+}

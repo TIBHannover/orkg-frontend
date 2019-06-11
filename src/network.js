@@ -176,3 +176,7 @@ export const getStatementsByObject = async ({id, order = 'asc', limit = null}) =
 
     return statements;
 };
+
+export const getStatementsByPredicate = (id) => {
+    return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/`);
+};

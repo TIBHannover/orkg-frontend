@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, FormGroup, Label } from 'reactstrap';
 import Tooltip from '../../Utils/Tooltip';
-import TagsInput from '../../Utils/TagsInput';
+import ResearchProblemInput from './ResearchProblemInput';
 import styles from './Contributions.module.scss';
 import StatementBrowser from '../../StatementBrowser/Statements';
 import { connect } from 'react-redux';
@@ -24,7 +24,7 @@ class Contribution extends Component {
                         <Label>
                             <Tooltip message="Specify the research problems that this contribution addresses. Normally, a research problem consists of very few words (around 2 or 3)">Research problems</Tooltip>
                         </Label>
-                        <TagsInput handler={this.handleResearchProblemsChange} value={this.props.researchProblems} />
+                        <ResearchProblemInput handler={this.handleResearchProblemsChange} value={this.props.researchProblems} />
                     </FormGroup>
                     <FormGroup>
                         <Label>
