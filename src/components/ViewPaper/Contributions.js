@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Form, FormGroup } from 'reactstrap';
+import { Container, Row, Col, Form, FormGroup, CustomInput } from 'reactstrap';
 import { connect } from 'react-redux';
 import { selectContribution } from '../../actions/viewPaper';
 import styles from '../AddPaper/Contributions/Contributions.module.scss';
@@ -60,6 +60,10 @@ class Contributions extends Component {
         })
     }
 
+    toggleCompare = () => {
+
+    }
+
     render() {
         let selectedContributionId = this.props.selectedContribution;
 
@@ -93,6 +97,14 @@ class Contributions extends Component {
                             >
 
                                 <div className={styles.contribution}>
+                                    <div className="float-right">
+                                        <CustomInput 
+                                            type="checkbox" 
+                                            id="addToComparsion" 
+                                            label="Add to comparison" 
+                                            onClick={this.toggleCompare}
+                                        />
+                                    </div>
                                     <Form>
                                         <FormGroup>
                                             <Title style={{ marginTop: 0 }}>Research problems</Title>
