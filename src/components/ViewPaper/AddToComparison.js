@@ -7,26 +7,13 @@ import { compose } from 'redux';
 import { addToComparison, removeFromComparison, loadComparisonFromCookie } from '../../actions/viewPaper';
 
 class AddToComparison extends Component {
-    
-    constructor(props) {
-        super(props);
-
-        const { cookies, contributionId } = this.props;
-
-        this.state = {
-            toggle: false,// cookies.get('comparison') && cookies.get('comparison').allIds.includes(contributionId),
-            //comparisonList: cookies.get('comparisonList') || [],
-            //comparisonContributions: cookies.get('comparisonContributions') || {},
-        }
-    }
-
     componentDidMount() {
         if(this.props.comparison.allIds.length === 0 && this.props.cookies.get('comparison')) { // no comparing values found, sync with cookie
             this.props.loadComparisonFromCookie(this.props.cookies.get('comparison'));
         }
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         if (this.props.comparison !== prevProps.comparison) {
             this.props.cookies.set('comparison', this.props.comparison, { path: '/' });
         }
@@ -41,31 +28,12 @@ class AddToComparison extends Component {
             this.props.addToComparison({
                 contributionId: contributionId,
                 contributionData: {
+                    paperId: this.props.paperId,
                     paperTitle: this.props.paperTitle,
                     contributionTitle: this.props.contributionTitle,
                 }
             });
         }
-
-        this.setState(prevState => ({
-            toggle: !prevState.toggle,
-        }));
-        
-        //});
-
-        /*this.setState(prevState => ({
-            toggle: !prevState.toggle,
-            comparisonList: prevState.comparisonList.includes(contributionId) ? prevState.comparisonList.filter(i => i !== contributionId) : [...prevState.comparisonList, contributionId],
-            comparisonContributions: prevState.comparisonContributions[contributionId] !== undefined ? omit(prevState.comparisonContributions, contributionId) : assign(prevState.comparisonContributions, {
-                [contributionId]: {
-                    paperTitle: this.props.paperTitle,
-                    contributionTitle: this.props.contributionTitle,
-                }
-            }),
-        }), () => {
-            this.props.cookies.set('comparisonList', this.state.comparisonList, { path: '/' });
-            this.props.cookies.set('comparisonContributions', this.state.comparisonContributions, { path: '/' });
-        });*/
     }
 
     render() {
@@ -85,6 +53,7 @@ class AddToComparison extends Component {
 
 AddToComparison.propTypes = {
     contributionId: PropTypes.string.isRequired,
+    paperId: PropTypes.string.isRequired,
     paperTitle: PropTypes.string.isRequired,
     contributionTitle: PropTypes.string.isRequired,
     addToComparison: PropTypes.func.isRequired,
@@ -95,9 +64,6 @@ AddToComparison.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    // researchProblems: state.viewPaper.researchProblems,
-    // resources: state.statementBrowser.resources,
-    // selectedContribution: state.addPaper.selectedContribution,
     comparison: state.viewPaper.comparison,
 });
 

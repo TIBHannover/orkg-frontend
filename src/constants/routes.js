@@ -11,6 +11,6 @@ export default {
    VIEW_PAPER: '/paper/:resourceId',
    LICENSE: '/license',
    NOT_FOUND: '/404',
-   COMPARISON: '/comparison/:paperId/:contributionId',
+   COMPARISON: '/comparison/*',
    PAPERS: '/papers',
 }

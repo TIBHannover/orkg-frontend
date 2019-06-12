@@ -43,6 +43,7 @@ export default (state = initialState, action) => {
 
             let comparisonContributions = assign(state.comparison.byId, {
                 [payload.contributionId]: {
+                    paperId: payload.contributionData.paperId,
                     paperTitle: payload.contributionData.paperTitle,
                     contributionTitle: payload.contributionData.contributionTitle,
                 }

@@ -94,6 +94,7 @@ class Contributions extends Component {
                                 <div className={styles.contribution}>
                                     <AddToComparison 
                                         contributionId={selectedContributionId} 
+                                        paperId={this.props.paperId}
                                         paperTitle={this.props.paperTitle}
                                         contributionTitle="Contribution"
                                     />

@@ -8,6 +8,11 @@ import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronUp, faChevronDown, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
+import { removeFromComparison } from '../../actions/viewPaper';
+import Tooltip from '../Utils/Tooltip';
+import { Link } from 'react-router-dom';
+import { reverse } from 'named-urls';
+import ROUTES from '../../constants/routes.js';
 
 const ComparisonBoxButton = styled(Button)`
     border-radius: 11px 11px 0 0 !important;
@@ -47,9 +52,13 @@ const ContributionItem = styled.li`
     padding:8px 15px;
 `;
 
-const Title = styled.div`
+const Title = styled(Link)`
     color:#fff;
     font-size:90%;
+
+    &:hover {
+        color: inherit;
+    }
 `;
 
 const Number = styled.div`
@@ -63,29 +72,12 @@ const StartComparison = styled(Button)`
 `;
 
 class ComparisonPopup extends Component {
-
     constructor(props) {
         super(props);
 
-        const { cookies } = this.props;
-
         this.state = {
             showComparisonBox: false,
-            //toggle: cookies.get('comparisonList') && cookies.get('comparisonList').includes(contributionId),
-            //comparisonList: cookies.get('comparisonList') || [],
-            //contributionAmount: cookies.get('comparisonList').length ? cookies.get('comparisonList').length : 0,
         }
-    }
-
-    toggleCompare = () => {
-        //const { contributionId } = this.props;
-
-        this.setState(prevState => ({
-            toggle: !prevState.toggle,
-            //comparisonList: prevState.comparisonList.includes(contributionId) ? prevState.comparisonList.filter(i => i !== contributionId) : [...prevState.comparisonList, contributionId],
-        }), () => {
-            this.props.cookies.set('comparisonList', this.state.comparisonList, { path: '/' });
-        });
     }
 
     toggleComparisonBox = () => {
@@ -94,9 +86,11 @@ class ComparisonPopup extends Component {
         }));
     }
 
+    removeFromComparison = (id) => {
+        this.props.removeFromComparison(id);
+    }
+
     render() {
-        //const { cookies } = this.props;
-        //const contributionAmount = cookies.get('comparisonList') && cookies.get('comparisonList').length ? cookies.get('comparisonList').length : 0;
         const { allIds, byId } = this.props.comparison;
 
         if (allIds.length === 0) {
@@ -104,9 +98,8 @@ class ComparisonPopup extends Component {
         }
 
         const contributionAmount = allIds.length;
-
-        //const comparisonArray = cookies.get('comparisonList') || [];
-        //const comparisonContributions = cookies.get('comparisonContributions') || {};
+        const ids = allIds.join('/');
+        const comparisonUrl = ROUTES.COMPARISON.replace('*', '') + ids; // with named-urls it is not possible to use wildcard URLs, so replace the asterisk
 
         return (
             <Navbar fixed="bottom" className="p-0">
@@ -131,20 +124,26 @@ class ComparisonPopup extends Component {
                                         <div className="d-flex">
                                             <div className="pr-3"><Icon icon={faFile} /></div>
                                             <div className="flex-grow-1">
-                                                <Title>{byId[contributionId].paperTitle}</Title>
+                                                <Title to={reverse(ROUTES.VIEW_PAPER, { resourceId: byId[contributionId].paperId })}>
+                                                    {byId[contributionId].paperTitle}
+                                                </Title>
                                                 <Number>{byId[contributionId].contributionTitle}</Number>
                                             </div>
-                                            <div>
-                                                <Icon icon={faTimes} />
-                                            </div>
+                                            <Tooltip message="Remove from comparison" hideDefaultIcon>
+                                                <div>
+                                                    <Icon icon={faTimes} onClick={() => this.removeFromComparison(contributionId)} />
+                                                </div>
+                                            </Tooltip>
                                         </div>
                                     </ContributionItem>
                                 ))}
                             </List>
                             <div className="w-100 text-center">
-                                <StartComparison color="primaryDarker" className="mb-2">
-                                    Start comparison
-                                </StartComparison>
+                                <Link to={comparisonUrl}>
+                                    <StartComparison color="primaryDarker" className="mb-2">
+                                        Start comparison
+                                    </StartComparison>
+                                </Link>
                             </div>
                         </ComparisonBox>
                     }
@@ -156,18 +155,16 @@ class ComparisonPopup extends Component {
 
 ComparisonPopup.propTypes = {
     comparison: PropTypes.object.isRequired,
+    removeFromComparison: PropTypes.func.isRequired,
     cookies: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
-    // researchProblems: state.viewPaper.researchProblems,
-    // resources: state.statementBrowser.resources,
-    // selectedContribution: state.addPaper.selectedContribution,
     comparison: state.viewPaper.comparison,
 });
 
 const mapDispatchToProps = dispatch => ({
-    // selectContribution: (data) => dispatch(selectContribution(data)),
+    removeFromComparison: (data) => dispatch(removeFromComparison(data)),
 });
 
 export default compose(
