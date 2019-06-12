@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { updateGeneralData, nextStep } from '../../../actions/addPaper';
 import { CSSTransitionGroup } from 'react-transition-group'
 import styled from 'styled-components';
+import moment from 'moment'
 import PropTypes from 'prop-types';
 
 const Container = styled.div`
@@ -46,26 +47,13 @@ class GeneralData extends Component {
     constructor(props) {
         super(props);
 
+        // TODO: consistency: remove binds here and use arrow functions 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleDataEntryClick = this.handleDataEntryClick.bind(this);
         this.handleAuthorsChange = this.handleAuthorsChange.bind(this);
         this.handleNextClick = this.handleNextClick.bind(this);
 
         this.years = range(1900, new Date().getFullYear()).reverse();
-        this.months = {
-            1: 'January',
-            2: 'February',
-            3: 'March',
-            4: 'April',
-            5: 'May',
-            6: 'June',
-            7: 'July',
-            8: 'August',
-            9: 'September',
-            10: 'October',
-            11: 'November',
-            12: 'December',
-        };
 
         this.validator = new FormValidator([
             {
@@ -77,7 +65,7 @@ class GeneralData extends Component {
         ]);
 
         this.state = {
-            doi: this.props.doi, 
+            doi: this.props.doi,
             isFetching: false,
             dataEntry: 'doi',
             showDoiTable: false,
@@ -152,6 +140,12 @@ class GeneralData extends Component {
         });
     }
 
+    handleMonthChange = (e) => {
+        this.setState({
+            [e.target.name]: parseInt(e.target.value)
+        });
+    }
+
     handleDataEntryClick(selection) {
         this.setState({
             dataEntry: selection
@@ -184,10 +178,6 @@ class GeneralData extends Component {
     }
 
     render() {
-        const monthsOptions = Object.keys(this.months).map((key) => {
-            return <option value={key} key={key}>{this.months[key]}</option>
-        });
-
         return (
             <div>
                 <h2 className="h4 mt-4">General paper data</h2>
@@ -225,9 +215,9 @@ class GeneralData extends Component {
                                         <Input type="text" name="doi" id="paperDoi" value={this.state.doi} onChange={this.handleInputChange} invalid={this.state.validation.doi.isInvalid} />
                                         <FormFeedback className="order-1">{this.state.validation.doi.message}</FormFeedback> {/* Need to set order-1 here to fix Bootstrap bug of missing rounded borders */}
                                         <InputGroupAddon addonType="append">
-                                            <Button 
-                                                outline 
-                                                color="primary" 
+                                            <Button
+                                                outline
+                                                color="primary"
                                                 style={{ minWidth: 130 }}
                                                 onClick={this.handleLookupClick}
                                                 disabled={this.state.isFetching}
@@ -262,7 +252,7 @@ class GeneralData extends Component {
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><strong>Publication date:</strong> {this.months[this.state.paperPublicationMonth]} {this.state.paperPublicationYear}</td>
+                                                        <td><strong>Publication date:</strong> {moment(this.state.paperPublicationMonth, 'M').format('MMMM')} {this.state.paperPublicationYear}</td>
                                                     </tr>
                                                 </tbody>
                                             </Table>
@@ -297,8 +287,10 @@ class GeneralData extends Component {
                                             </Label>
                                             <Row form>
                                                 <Col md={6} >
-                                                    <Input type="select" name="paperPublicationMonth" aria-label="Select publication month" value={this.state.paperPublicationMonth} onChange={this.handleInputChange}>
-                                                        {monthsOptions}
+                                                    <Input type="select" name="paperPublicationMonth" aria-label="Select publication month" value={this.state.paperPublicationMonth} onChange={this.handleMonthChange}>
+                                                        {moment.months().map((el, index) => {
+                                                            return <option value={index+1} key={index+1}>{el}</option>
+                                                        }) }
                                                     </Input>
                                                 </Col>
                                                 <Col md={6} >
