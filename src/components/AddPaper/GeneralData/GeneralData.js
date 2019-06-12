@@ -47,6 +47,7 @@ class GeneralData extends Component {
     constructor(props) {
         super(props);
 
+        // TODO: consistency: remove binds here and use arrow functions 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleDataEntryClick = this.handleDataEntryClick.bind(this);
         this.handleAuthorsChange = this.handleAuthorsChange.bind(this);
@@ -136,6 +137,12 @@ class GeneralData extends Component {
     handleInputChange(e) {
         this.setState({
             [e.target.name]: e.target.value
+        });
+    }
+
+    handleMonthChange = (e) => {
+        this.setState({
+            [e.target.name]: parseInt(e.target.value)
         });
     }
 
@@ -280,7 +287,7 @@ class GeneralData extends Component {
                                             </Label>
                                             <Row form>
                                                 <Col md={6} >
-                                                    <Input type="select" name="paperPublicationMonth" aria-label="Select publication month" value={this.state.paperPublicationMonth} onChange={this.handleInputChange}>
+                                                    <Input type="select" name="paperPublicationMonth" aria-label="Select publication month" value={this.state.paperPublicationMonth} onChange={this.handleMonthChange}>
                                                         {moment.months().map((el, index) => {
                                                             return <option value={index+1} key={index+1}>{el}</option>
                                                         }) }
