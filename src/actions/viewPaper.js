@@ -45,3 +45,32 @@ export const selectContribution = ({contributionId: id, contributionIsLoaded}) =
     });
 
 }
+
+export const addToComparison = ({contributionId, contributionData}) => dispatch => {
+    dispatch({
+        type: type.ADD_TO_COMPARISON,
+        payload: {
+            contributionId,
+            contributionData,
+        }
+    });
+}
+
+export const removeFromComparison = (id) => dispatch => {
+    dispatch({
+        type: type.REMOVE_FROM_COMPARISON,
+        payload: {
+            id,
+        }
+    });
+}
+
+export const loadComparisonFromCookie = (cookie) => dispatch => {
+    dispatch({
+        type: type.LOAD_COMPARISON_FROM_COOKIE,
+        payload: {
+            allIds: cookie.allIds,
+            byId: cookie.byId,
+        }
+    });
+}

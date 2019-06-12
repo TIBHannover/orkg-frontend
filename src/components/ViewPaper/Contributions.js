@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Form, FormGroup, CustomInput } from 'reactstrap';
+import { Container, Row, Col, Form, FormGroup } from 'reactstrap';
 import { connect } from 'react-redux';
 import { selectContribution } from '../../actions/viewPaper';
 import styles from '../AddPaper/Contributions/Contributions.module.scss';
@@ -9,6 +9,7 @@ import SimilarContributions from './SimilarContributions';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { CSSTransitionGroup } from 'react-transition-group'
+import AddToComparison from './AddToComparison';
 
 const Title = styled.div`
     font-size:18px;
@@ -60,10 +61,6 @@ class Contributions extends Component {
         })
     }
 
-    toggleCompare = () => {
-
-    }
-
     render() {
         let selectedContributionId = this.props.selectedContribution;
 
@@ -93,18 +90,13 @@ class Contributions extends Component {
                         >
                             <AnimationContainer
                                 key={selectedContributionId}
-                                
                             >
-
                                 <div className={styles.contribution}>
-                                    <div className="float-right">
-                                        <CustomInput 
-                                            type="checkbox" 
-                                            id="addToComparsion" 
-                                            label="Add to comparison" 
-                                            onClick={this.toggleCompare}
-                                        />
-                                    </div>
+                                    <AddToComparison 
+                                        contributionId={selectedContributionId} 
+                                        paperTitle={this.props.paperTitle}
+                                        contributionTitle="Contribution"
+                                    />
                                     <Form>
                                         <FormGroup>
                                             <Title style={{ marginTop: 0 }}>Research problems</Title>
@@ -153,6 +145,7 @@ Contributions.propTypes = {
     selectContribution: PropTypes.func.isRequired,
     contributions: PropTypes.array.isRequired,
     paperId: PropTypes.string.isRequired,
+    paperTitle: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({

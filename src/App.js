@@ -19,8 +19,9 @@ import License from './components/StaticPages/License';
 import NotFound from './components/StaticPages/NotFound';
 import Comparison from './components/Comparison';
 import PropTypes from 'prop-types';
+import { withCookies } from 'react-cookie';
 
-export default class App extends Component {
+class App extends Component {
     render() {
         return (
             <ConnectedRouter history={this.props.history}>
@@ -39,7 +40,7 @@ export default class App extends Component {
 
                         {/* Legacy routes, only used for debugging now */}
                         <Route 
-                            path={`/resource/:resourceId/:sectionName`}
+                            path={'/resource/:resourceId/:sectionName'}
                             render={({ match }) => {
                                 const id = decodeURIComponent(match.params.resourceId);
                                 return (
@@ -50,20 +51,20 @@ export default class App extends Component {
                             }}
                         />
                         <Route 
-                            path={`/predicate/:predicateId`} 
+                            path={'/predicate/:predicateId'} 
                             render={({ match }) => (
                                 <PredicateDetails id={decodeURIComponent(match.params.predicateId)} />
                             )}
                         />
                         <Route 
-                            path={`/search/:searchTerm`} 
+                            path={'/search/:searchTerm'} 
                             render={({ match }) => (
                                 <SearchResults term={decodeURIComponent(match.params.searchTerm)} />
                             )}
                         />
 
                         <Redirect   
-                            from={`/resource/:resourceId`}
+                            from={'/resource/:resourceId'}
                             to={`/resource/:resourceId/${descriptionSection}`} 
                         />
                         {/* Don't add routes below this line */}
@@ -78,3 +79,5 @@ export default class App extends Component {
 App.propTypes = {
     history: PropTypes.object,
 };
+
+export default withCookies(App);

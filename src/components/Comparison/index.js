@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Container, Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { getStatementsBySubject, getResource } from '../../network';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';

@@ -17,6 +17,7 @@ $border-radius: $ORKG-border-radius;
 $theme-colors: (
     lightblue: $body-bg,
     darkblue: $darkblue,
+    primaryDarker: darken($ORKG-primary-color, 20%),
 );
 
 // Forms

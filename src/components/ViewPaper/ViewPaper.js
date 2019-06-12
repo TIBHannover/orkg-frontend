@@ -7,6 +7,7 @@ import { faUser, faCalendar, faBars } from '@fortawesome/free-solid-svg-icons';
 import Contributions from './Contributions';
 import { months } from '../../utils';
 import PropTypes from 'prop-types';
+import ComparisonPopup from './ComparisonPopup';
 
 class ViewPaper extends Component {
     state = {
@@ -105,8 +106,15 @@ class ViewPaper extends Component {
 
                     <hr className="mt-5 mb-5" />
 
-                    <Contributions contributions={this.state.contributions} paperId={this.props.match.params.resourceId} />
+                    <Contributions 
+                        contributions={this.state.contributions} 
+                        paperId={this.props.match.params.resourceId} 
+                        paperTitle={this.state.title}
+                    />
+
+                    <ComparisonPopup />
                 </Container>
+
             </div>
         );
     }
