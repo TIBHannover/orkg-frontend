@@ -159,6 +159,12 @@ export default (state = initialState, action) => {
             };
         }
 
+        case type.UPDATE_CONTRIBUTION_LABEL: {
+            let { payload } = action;
+
+            return dotProp.set(state, `contributions.byId.${payload.contributionId}.label`, payload.label);
+        }
+        
         case type.UPDATE_RESEARCH_PROBLEMS: {
             let { payload } = action;
 

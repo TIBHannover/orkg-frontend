@@ -193,3 +193,12 @@
     height: auto !important;
     cursor: text;
 }
+
+.contributionEditableLabel:focus {
+    background: #fff;
+    color: $ORKG-primary-color;
+    outline: 0;
+    border: dotted 2px $list-group-border-color;
+    padding: 0 4px;
+    display: block;
+  }

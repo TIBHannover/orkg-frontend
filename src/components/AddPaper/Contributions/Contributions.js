@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../../Utils/Tooltip';
 import styles from './Contributions.module.scss';
 import { connect } from 'react-redux';
-import { nextStep, previousStep, createContribution, deleteContribution, selectContribution, saveAddPaper } from '../../../actions/addPaper';
+import { nextStep, previousStep, createContribution, deleteContribution, selectContribution, updateContributionLabel, saveAddPaper } from '../../../actions/addPaper';
 import Confirm from 'reactstrap-confirm';
 import Contribution from './Contribution';
+import ContentEditable from 'react-contenteditable'
 import { CSSTransitionGroup } from 'react-transition-group'
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -26,6 +27,14 @@ const AnimationContainer = styled.div`
 `;
 
 class Contributions extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            editing: {}
+        };
+        this.inputRefs = {}
+    }
 
     componentDidMount() {
         // if there is no contribution yet, create the first one
@@ -67,6 +76,21 @@ class Contributions extends Component {
         }
     }
 
+    toggleEditLabelContribution = (contributionId, e) => {
+        if (this.state.editing[contributionId]) {
+            this.setState({ editing: { ...this.state.editing, [contributionId]: false } })
+        } else {
+            // enable editing and focus on the input
+            this.setState({ editing: { ...this.state.editing, [contributionId]: true } }, () => { this.inputRefs[contributionId].focus(); })
+        }
+    };
+
+    pasteAsPlainText = event => {
+        event.preventDefault()
+        const text = event.clipboardData.getData('text/plain')
+        document.execCommand('insertHTML', false, text)
+    }
+
     handleSelectContribution = (contributionId) => {
         const resourceId = this.props.contributions.byId[contributionId].resourceId;
 
@@ -75,6 +99,13 @@ class Contributions extends Component {
             resourceId
         });
     }
+
+    handleChange = (contributionId, e) => {
+        this.props.updateContributionLabel({
+            label: e.target.value,
+            contributionId: contributionId,
+        });
+    };
 
     render() {
         let selectedResourceId = this.props.selectedContribution;
@@ -93,12 +124,32 @@ class Contributions extends Component {
                                     return (
                                         <li className={contributionId === this.props.selectedContribution ? styles.activeContribution : ''} key={contributionId}>
                                             <span className={styles.selectContribution} onClick={() => this.handleSelectContribution(contributionId)}>
-                                                {this.props.contributions.byId[contribution]['label']}
-                                                <span className={`${styles.deleteContribution} float-right mr-1 ${contributionId !== this.props.selectedContribution && 'd-none'}`}>
-                                                    <Tooltip message="Delete contribution" hideDefaultIcon={true}>
-                                                        <Icon icon={faTrash} onClick={() => this.toggleDeleteContribution(contributionId)} />
-                                                    </Tooltip>
-                                                </span>
+                                                <ContentEditable
+                                                    innerRef={(input) => { this.inputRefs[contribution] = input; }}
+                                                    html={this.props.contributions.byId[contribution]['label']}
+                                                    disabled={!this.state.editing[contribution]}
+                                                    onChange={(e) => this.handleChange(contributionId, e)}
+                                                    tagName="span"
+                                                    className={styles.contributionEditableLabel}
+                                                    onPaste={this.pasteAsPlainText}
+                                                    onKeyDown={e => e.keyCode === 13 && e.target.blur()}  // Disable multiline Input
+                                                    onBlur={(e) => this.toggleEditLabelContribution(contributionId)}
+                                                    onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
+                                                />
+                                                {!this.state.editing[contribution] && (
+                                                    <>
+                                                        <span className={`${styles.deleteContribution} float-right mr-1 ${contributionId !== this.props.selectedContribution && 'd-none'}`}>
+                                                            <Tooltip message="Delete contribution" hideDefaultIcon={true}>
+                                                                <Icon icon={faTrash} onClick={() => this.toggleDeleteContribution(contributionId)} />
+                                                            </Tooltip>
+                                                        </span>
+                                                        <span className={`${styles.deleteContribution} float-right mr-1 ${contributionId !== this.props.selectedContribution && 'd-none'}`}>
+                                                            <Tooltip message="Edit the contribution label" hideDefaultIcon={true}>
+                                                                <Icon icon={faPen} onClick={(e) => this.toggleEditLabelContribution(contributionId, e)} />
+                                                            </Tooltip>
+                                                        </span>
+                                                    </>
+                                                )}
                                             </span>
                                         </li>
                                     )
@@ -151,6 +202,7 @@ Contributions.propTypes = {
     createContribution: PropTypes.func.isRequired,
     deleteContribution: PropTypes.func.isRequired,
     selectContribution: PropTypes.func.isRequired,
+    updateContributionLabel: PropTypes.func.isRequired,
     saveAddPaper: PropTypes.func.isRequired,
 };
 
@@ -176,6 +228,7 @@ const mapDispatchToProps = dispatch => ({
     createContribution: (data) => dispatch(createContribution(data)),
     deleteContribution: (id) => dispatch(deleteContribution(id)),
     selectContribution: (id) => dispatch(selectContribution(id)),
+    updateContributionLabel: (data) => dispatch(updateContributionLabel(data)),
     saveAddPaper: (data) => dispatch(saveAddPaper(data)),
 });
 

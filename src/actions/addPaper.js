@@ -125,6 +125,13 @@ export const selectContribution = (data) => dispatch => {
     }));
 }
 
+export const updateContributionLabel = (data) => dispatch => {
+    dispatch({
+        type: type.UPDATE_CONTRIBUTION_LABEL,
+        payload: data
+    })
+}
+
 export const updateResearchProblems = (data) => dispatch => {
     dispatch({
         type: type.UPDATE_RESEARCH_PROBLEMS,
