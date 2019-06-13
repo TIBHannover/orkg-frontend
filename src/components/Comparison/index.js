@@ -1,19 +1,30 @@
 import React, { Component } from 'react';
-import { Container, Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, /*Breadcrumb, BreadcrumbItem*/ } from 'reactstrap';
+import { Container, Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Modal, ModalHeader, ModalBody, ListGroup, ListGroupItem, Badge, CustomInput /*Breadcrumb, BreadcrumbItem*/ } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faTimes, faSort } from '@fortawesome/free-solid-svg-icons';
 import { CSVLink } from 'react-csv';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
 import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
 import Tooltip from '../Utils/Tooltip.js';
+import { SortableContainer, SortableElement, sortableHandle } from 'react-sortable-hoc';
+import arrayMove from 'array-move';
+import dotProp from 'dot-prop-immutable';
 
+// TODO: component is too large, split into smaller componenets 
 // There is a lot is styling needed for this table, this it is using a column structure,
 // instead of the default HTML row structure
+const Row = styled.tr`
+    &:last-child td > div {
+        border-bottom:2px solid #CFCBCB;
+        border-radius:0 0 11px 11px;
+    }
+`;
+
 const Properties = styled.td`
     padding-right:10px;
     padding:0 10px!important;
@@ -54,11 +65,6 @@ const ItemInner = styled.div`
     border-bottom:2px solid #EDEBEB;
     text-align:center;
     height:100%;
-    
-    &.last {
-        border-bottom:2px solid #CFCBCB;
-        border-radius:0 0 11px 11px;
-    }
 `;
 
 const ItemHeader = styled.td`
@@ -102,6 +108,23 @@ const Delete = styled.div`
     cursor:pointer;
 `;
 
+const DragHandle = styled.span`
+    cursor:move;
+    padding:0 10px;
+    color:#A5A5A5;
+    //float:left;
+`;
+
+const ListGroupItemStyled = styled(ListGroupItem)`
+    padding: 10px 10px 9px 5px!important;
+    display:flex!important;
+`;
+
+const ContributionAmount = styled(Badge)`
+    /*float:right;
+    margin: 5px 5px 0 0;*/
+`;
+
 /*const BreadcrumbStyled = styled(Breadcrumb)`
     .breadcrumb {
         background:transparent;
@@ -112,18 +135,25 @@ const Delete = styled.div`
 `;*/
 
 class Comparison extends Component {
-    state = {
-        title: '',
-        authorNames: [],
-        contributions: [],
-        dropdownOpen: false,
-        properties: [],
-        data: [],
-        csvData: [],
-        redirect: null,
-        modal: false,
-        dialogResourceId: null,
-        dialogResourceLabel: null,
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            title: '',
+            authorNames: [],
+            contributions: [],
+            dropdownOpen: false,
+            properties: [],
+            data: [],
+            csvData: [],
+            redirect: null,
+            modal: false,
+            dialogResourceId: null,
+            dialogResourceLabel: null,
+            showPropertiesDialog: false,
+        }
+
     }
 
     componentDidMount = () => {
@@ -202,32 +232,38 @@ class Comparison extends Component {
                     {
                         id: 'P1',
                         label: 'Algorithm',
-                        path: 'Approach > Method > '
+                        path: 'Approach > Method > ',
+                        active: true
                     },
                     {
                         id: 'P2',
                         label: 'Problem',
-                        path: 'Approach > '
+                        path: 'Approach > ',
+                        active: true
                     },
                     {
                         id: 'P3',
                         label: 'Programming language',
-                        path: 'Approach > '
+                        path: 'Approach > ',
+                        active: true
                     },
                     {
                         id: 'P4',
                         label: 'Stable',
-                        path: 'Approach > '
+                        path: 'Approach > ',
+                        active: true
                     },
                     {
                         id: 'P5',
                         label: 'Best complexity',
-                        path: 'Approach > '
+                        path: 'Approach > ',
+                        active: true
                     },
                     {
                         id: 'P6',
                         label: 'Worst complexity',
-                        path: 'Approach > '
+                        path: 'Approach > ',
+                        active: true
                     },
                 ],
             data:
@@ -393,6 +429,65 @@ class Comparison extends Component {
         }));
     }
 
+    togglePropertiesDialog = () => {
+        this.setState(prevState => ({
+            showPropertiesDialog: !prevState.showPropertiesDialog,
+        }));
+    }
+
+    onSortEnd = ({ oldIndex, newIndex }) => {
+        this.setState(({ properties }) => ({
+            properties: arrayMove(properties, oldIndex, newIndex),
+        }));
+    }
+
+    // TODO: place this outside the component class 
+    SortableHandle = sortableHandle(() => (
+        <DragHandle>
+            <Icon icon={faSort} />
+        </DragHandle>
+    ));
+    
+    SortableItem = SortableElement(({ value: property }) => (
+        <ListGroupItemStyled>
+            <this.SortableHandle />
+            <CustomInput
+                type="checkbox"
+                id={`checkbox-${property.label}`}
+                label={property.label}
+                className="flex-grow-1"
+                onChange={() => this.toggleProperty(property.id)}
+                checked={property.active}
+            />
+            <ContributionAmount color="lightblue">3</ContributionAmount>
+        </ListGroupItemStyled>
+    ));
+    
+    SortableList = SortableContainer(({ items }) => {
+        return (
+            <ListGroup>
+                {items.map((value, index) => (
+                    <this.SortableItem key={`item-${index}`} index={index} value={value} />
+                ))}
+            </ListGroup>
+        );
+    });
+
+    // code is a bit ugly because the properties inside an array and not an object
+    toggleProperty = (id) => {
+        let newState = dotProp.set(this.state, 'properties', properties => {
+            properties.forEach((property, index) => {
+                if (property.id === id) {
+                    properties[index].active = !properties[index].active
+                }
+            });
+
+            return properties;
+        });
+
+        this.setState(newState);
+    }
+
     render() {
         return (
             <div>
@@ -421,7 +516,7 @@ class Comparison extends Component {
                             <Icon icon={faEllipsisV} />
                         </DropdownToggle>
                         <DropdownMenu>
-                            <DropdownItem>Select properties</DropdownItem>
+                            <DropdownItem onClick={this.togglePropertiesDialog}>Select properties</DropdownItem>
                             {this.state.csvData ?
                                 <CSVLink
                                     data={this.state.csvData}
@@ -465,12 +560,14 @@ class Comparison extends Component {
                                 </tr>
 
                                 {this.state.properties.map((property, index) => {
-                                    let className = this.state.properties.length === index + 1 ? 'last' : '';
+                                    if (!property.active) {
+                                        return null;
+                                    }
 
                                     return (
-                                        <tr key={`row${index}`}>
+                                        <Row key={`row${index}`}>
                                             <Properties>
-                                                <PropertiesInner className={className}>
+                                                <PropertiesInner>
                                                     <Tooltip message={property.path} colorIcon={'#606679'}>
                                                         {property.label}
                                                     </Tooltip>
@@ -481,7 +578,7 @@ class Comparison extends Component {
 
                                                 return (
                                                     <Item key={`data${index2}`}>
-                                                        <ItemInner className={className}>
+                                                        <ItemInner>
                                                             {data.type === 'resource' ?
                                                                 <span
                                                                     className="btn-link"
@@ -495,7 +592,7 @@ class Comparison extends Component {
                                                     </Item>
                                                 )
                                             })}
-                                        </tr>
+                                        </Row>
                                     )
                                 })}
                             </tbody>
@@ -511,6 +608,19 @@ class Comparison extends Component {
                         resourceLabel={this.state.dialogResourceLabel}
                     />
                 }
+
+                <Modal isOpen={this.state.showPropertiesDialog} toggle={this.togglePropertiesDialog}>
+                    <ModalHeader toggle={this.togglePropertiesDialog}>Select properties</ModalHeader>
+                    <ModalBody>
+                        <this.SortableList
+                            items={this.state.properties}
+                            onSortEnd={this.onSortEnd}
+                            lockAxis="y"
+                            helperClass="sortableHelper"
+                            useDragHandle
+                        />
+                    </ModalBody>
+                </Modal>
             </div>
         );
     }
