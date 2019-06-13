@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Container, Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -99,6 +99,15 @@ const Delete = styled.div`
     color:#E86161;
     cursor:pointer;
 `;
+
+/*const BreadcrumbStyled = styled(Breadcrumb)`
+    .breadcrumb {
+        background:transparent;
+        border-left: 2px solid #caccd5;
+        border-radius: 0;
+        margin: 0 0 0 18px;
+    }
+`;*/
 
 class Comparison extends Component {
     state = {
@@ -344,9 +353,20 @@ class Comparison extends Component {
     render() {
         return (
             <div>
-                <Container className="p-0">
-                    <h1 className="h4 mt-4 mb-4">Contribution comparison</h1>
+                <Container className="p-0 d-flex align-items-center">
+                    <h1 className="h4 mt-4 mb-4 ">Contribution comparison</h1>
+                    {/* 
+                    // Created a breadcrumb so it is possible to navigate back to the original paper (or the first paper)
+                    // problem is: when a contribution is performed, the first paper is not the paper from where the contribution started 
+                    // So maybe a breadcrumb is not intiutive, therefore it is commented out right now
+                    {this.state.contributions[0] &&
+                        <BreadcrumbStyled>}
+                            <BreadcrumbItem><Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.state.contributions[0].paperId })}>Paper</Link></BreadcrumbItem>
+                            <BreadcrumbItem active>Comparison</BreadcrumbItem>
+                        </BreadcrumbStyled>
+                    }*/}
                 </Container>
+
                 <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
                     <h2 className="h4 mt-4 mb-3 float-left">
                         Compare: <br />
