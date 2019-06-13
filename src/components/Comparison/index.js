@@ -503,12 +503,14 @@ class Comparison extends Component {
                     </div>
                 </Container>
 
-                <StatementBrowserDialog
-                    show={this.state.modal}
-                    toggleModal={this.toggleModal}
-                    resourceId={this.state.dialogResourceId}
-                    resourceLabel={this.state.dialogResourceLabel}
-                />
+                {this.state.modal &&
+                    <StatementBrowserDialog
+                        show={this.state.modal}
+                        toggleModal={this.toggleModal}
+                        resourceId={this.state.dialogResourceId}
+                        resourceLabel={this.state.dialogResourceLabel}
+                    />
+                }
             </div>
         );
     }
