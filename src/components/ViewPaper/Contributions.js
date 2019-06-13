@@ -46,9 +46,17 @@ class Contributions extends Component {
     }
 
     componentDidUpdate = () => {
-        if (this.props.selectedContribution === '' && this.props.contributions[0].id) {
-            // only executed on first load, can't be placed in the contructor since loading contributions is async
-            this.handleSelectContribution(this.props.contributions[0].id);
+        if (this.props.selectedContribution !== '' && this.props.selectedContribution !== this.state.selectedContribution) {
+            this.setState({ selectedContribution: this.props.selectedContribution }, () => {
+                this.handleSelectContribution(this.state.selectedContribution);
+            })
+        } else {
+            if (this.state.selectedContribution === '' && this.props.contributions[0].id) {
+                // if contribution param is empty then select the first contribution
+                this.setState({ selectedContribution: this.props.contributions[0].id }, () => {
+                    this.handleSelectContribution(this.state.selectedContribution);
+                })
+            }
         }
     }
 
@@ -61,7 +69,7 @@ class Contributions extends Component {
     }
 
     render() {
-        let selectedContributionId = this.props.selectedContribution;
+        let selectedContributionId = this.state.selectedContribution;
 
         return (
             <div>
@@ -72,9 +80,9 @@ class Contributions extends Component {
                                 {this.props.contributions.map((contribution, index) => {
                                     return (
                                         <li className={contribution.id === selectedContributionId ? styles.activeContribution : ''} key={contribution.id}>
-                                            <span className={styles.selectContribution} onClick={() => this.handleSelectContribution(contribution.id)}>
+                                            <Link to={`/paper/${this.props.paperId}/${contribution.id}`} className={styles.selectContribution}>
                                                 {contribution.label}
-                                            </span>
+                                            </Link>
                                         </li>
                                     )
                                 })}
@@ -152,7 +160,6 @@ Contributions.propTypes = {
 const mapStateToProps = state => ({
     researchProblems: state.viewPaper.researchProblems,
     resources: state.statementBrowser.resources,
-    selectedContribution: state.addPaper.selectedContribution,
 });
 
 const mapDispatchToProps = dispatch => ({

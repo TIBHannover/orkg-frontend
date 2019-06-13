@@ -110,7 +110,11 @@ class ViewPaper extends Component {
 
                     <hr className="mt-5 mb-5" />
 
-                    <Contributions contributions={this.state.contributions} paperId={this.props.match.params.resourceId} />
+                    <Contributions
+                        selectedContribution={this.props.match.params.contributionId ? this.props.match.params.contributionId : ''}
+                        contributions={this.state.contributions}
+                        paperId={this.props.match.params.resourceId}
+                    />
                 </Container>
             </div>
         );
@@ -121,6 +125,7 @@ ViewPaper.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
             resourceId: PropTypes.string,
+            contributionId: PropTypes.string,
         }).isRequired,
     }).isRequired,
 }

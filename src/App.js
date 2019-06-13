@@ -33,6 +33,7 @@ export default class App extends Component {
                         <Route exact path={ROUTES.ADD_RESOURCE} component={AddResource} />
                         <Route exact path={ROUTES.PREDICATES} component={Predicates} />
                         <Route exact path={ROUTES.ADD_PAPER.GENERAL_DATA} component={AddPaper} />
+                        <Route exact path={ROUTES.VIEW_PAPER_CONTRIBUTION} component={ViewPaper} /> {/* TODO: slug for the paper title */}
                         <Route exact path={ROUTES.VIEW_PAPER} component={ViewPaper} /> {/* TODO: slug for the paper title */}
                         <Route exact path={ROUTES.LICENSE} component={License} />
                         <Route exact path={ROUTES.NOT_FOUND} component={NotFound} />
