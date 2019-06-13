@@ -177,7 +177,7 @@ export const saveAddPaper = (data) => {
         // contributions
         for (let contributionId of data.contributions.allIds) {
             let contribution = data.contributions.byId[contributionId];
-            let contributionResource = await network.createResource('contribution');
+            let contributionResource = await network.createResource(contribution.label);
             await network.createResourceStatement(paper.id, contributionPredicate, contributionResource.id);
 
             // set the id of the just created contribution for the related resource 

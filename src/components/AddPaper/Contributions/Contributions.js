@@ -26,9 +26,8 @@ const AnimationContainer = styled.div`
 `;
 
 class Contributions extends Component {
-    constructor(props) {
-        super(props);
 
+    componentDidMount() {
         // if there is no contribution yet, create the first one
         if (this.props.contributions.allIds.length === 0) {
             this.props.createContribution({
@@ -72,7 +71,7 @@ class Contributions extends Component {
         const resourceId = this.props.contributions.byId[contributionId].resourceId;
 
         this.props.selectContribution({
-            id: contributionId, 
+            id: contributionId,
             resourceId
         });
     }
@@ -94,7 +93,7 @@ class Contributions extends Component {
                                     return (
                                         <li className={contributionId === this.props.selectedContribution ? styles.activeContribution : ''} key={contributionId}>
                                             <span className={styles.selectContribution} onClick={() => this.handleSelectContribution(contributionId)}>
-                                                Contribution {index + 1}
+                                                {this.props.contributions.byId[contribution]['label']}
                                                 <span className={`${styles.deleteContribution} float-right mr-1 ${contributionId !== this.props.selectedContribution && 'd-none'}`}>
                                                     <Tooltip message="Delete contribution" hideDefaultIcon={true}>
                                                         <Icon icon={faTrash} onClick={() => this.toggleDeleteContribution(contributionId)} />

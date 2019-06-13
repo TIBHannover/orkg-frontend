@@ -68,7 +68,7 @@ class ViewPaper extends Component {
 
         if (contributions.length > 0) {
             for (let contribution of contributions) {
-                contributionArray.push(contribution.object.id);
+                contributionArray.push(contribution.object);
             }
         }
 
@@ -78,7 +78,7 @@ class ViewPaper extends Component {
             publicationMonth,
             researchField,
             authorNames: authorNamesArray.reverse(), // statements are ordered desc, so first author is last => thus reverse
-            contributions: contributionArray.sort(), // sort contributions ascending, so contribution 1, is actually the first one
+            contributions: contributionArray.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
         });
     }
 

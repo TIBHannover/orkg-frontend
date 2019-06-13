@@ -46,9 +46,9 @@ class Contributions extends Component {
     }
 
     componentDidUpdate = () => {
-        if (this.props.selectedContribution === '' && this.props.contributions[0]) {
+        if (this.props.selectedContribution === '' && this.props.contributions[0].id) {
             // only executed on first load, can't be placed in the contructor since loading contributions is async
-            this.handleSelectContribution(this.props.contributions[0]);
+            this.handleSelectContribution(this.props.contributions[0].id);
         }
     }
 
@@ -69,11 +69,11 @@ class Contributions extends Component {
                     <Row noGutters={true}>
                         <Col xs="3">
                             <ul className={styles.contributionsList}>
-                                {this.props.contributions.map((contributionId, index) => {
+                                {this.props.contributions.map((contribution, index) => {
                                     return (
-                                        <li className={contributionId === selectedContributionId ? styles.activeContribution : ''} key={contributionId}>
-                                            <span className={styles.selectContribution} onClick={() => this.handleSelectContribution(contributionId)}>
-                                                Contribution {index + 1}
+                                        <li className={contribution.id === selectedContributionId ? styles.activeContribution : ''} key={contribution.id}>
+                                            <span className={styles.selectContribution} onClick={() => this.handleSelectContribution(contribution.id)}>
+                                                {contribution.label}
                                             </span>
                                         </li>
                                     )
