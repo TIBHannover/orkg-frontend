@@ -51,13 +51,6 @@ class Contributions extends Component {
             this.setState({ selectedContribution: this.props.selectedContribution }, () => {
                 this.handleSelectContribution(this.state.selectedContribution);
             })
-        } else {
-            if (this.state.selectedContribution === '' && this.props.contributions[0].id) {
-                // if contribution param is empty then select the first contribution
-                this.setState({ selectedContribution: this.props.contributions[0].id }, () => {
-                    this.handleSelectContribution(this.state.selectedContribution);
-                })
-            }
         }
     }
 
