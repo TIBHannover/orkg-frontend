@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
 import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
+import Tooltip from '../Utils/Tooltip.js';
 
 // There is a lot is styling needed for this table, this it is using a column structure,
 // instead of the default HTML row structure
@@ -200,27 +201,33 @@ class Comparison extends Component {
                 [
                     {
                         id: 'P1',
-                        label: 'Algorithm'
+                        label: 'Algorithm',
+                        path: 'Approach > Method > '
                     },
                     {
                         id: 'P2',
-                        label: 'Problem'
+                        label: 'Problem',
+                        path: 'Approach > '
                     },
                     {
                         id: 'P3',
-                        label: 'Programming language'
+                        label: 'Programming language',
+                        path: 'Approach > '
                     },
                     {
                         id: 'P4',
-                        label: 'Stable'
+                        label: 'Stable',
+                        path: 'Approach > '
                     },
                     {
                         id: 'P5',
-                        label: 'Best complexity'
+                        label: 'Best complexity',
+                        path: 'Approach > '
                     },
                     {
                         id: 'P6',
-                        label: 'Worst complexity'
+                        label: 'Worst complexity',
+                        path: 'Approach > '
                     },
                 ],
             data:
@@ -463,7 +470,11 @@ class Comparison extends Component {
                                     return (
                                         <tr key={`row${index}`}>
                                             <Properties>
-                                                <PropertiesInner className={className}>{property.label}</PropertiesInner>
+                                                <PropertiesInner className={className}>
+                                                    <Tooltip message={property.path} colorIcon={'#606679'}>
+                                                        {property.label}
+                                                    </Tooltip>
+                                                </PropertiesInner>
                                             </Properties>
                                             {this.state.contributions.map((contribution, index2) => {
                                                 const data = this.state.data[property.id][index2];
