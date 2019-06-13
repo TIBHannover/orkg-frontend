@@ -14,6 +14,7 @@ import Tooltip from '../Utils/Tooltip.js';
 import { SortableContainer, SortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import dotProp from 'dot-prop-immutable';
+import queryString from 'query-string';
 
 // TODO: component is too large, split into smaller componenets 
 // There is a lot is styling needed for this table, this it is using a column structure,
@@ -110,19 +111,18 @@ const Delete = styled.div`
 
 const DragHandle = styled.span`
     cursor:move;
-    padding:0 10px;
     color:#A5A5A5;
-    //float:left;
+    width:30px;
+    text-align:center;
+`;
+
+const DragHandlePlaceholder = styled.span`
+    width:30px;
 `;
 
 const ListGroupItemStyled = styled(ListGroupItem)`
     padding: 10px 10px 9px 5px!important;
     display:flex!important;
-`;
-
-const ContributionAmount = styled(Badge)`
-    /*float:right;
-    margin: 5px 5px 0 0;*/
 `;
 
 /*const BreadcrumbStyled = styled(Breadcrumb)`
@@ -175,6 +175,17 @@ class Comparison extends Component {
         return this.props.match.params[0].split('/');
     }
 
+    getPropertyIdsFromUrl = () => {
+        let ids = queryString.parse(this.props.location.search).properties;
+        if (!ids) {
+            return [];
+        }
+        ids = ids.split(',');
+        ids = ids.filter(n => n); //filter out empty elements
+
+        return ids;
+    }
+
     generateMatrixOfComparison = () => {
         let header = ['Title'];
 
@@ -204,6 +215,7 @@ class Comparison extends Component {
 
     performComparison = () => {
         const contributionIds = this.getContributionIdsFromUrl();
+        const propertyIds = this.getPropertyIdsFromUrl();
 
         const apiMockingData = {
             contributions:
@@ -379,11 +391,30 @@ class Comparison extends Component {
             let contribution = apiMockingData.contributions[i];
 
             if (contributionIds.includes(contribution.id)) {
-                //apiMockingData.contributions.splice(i, 1);
                 contributions.push(contribution)
             }
         }
+        
+        // if there are properties in the query string 
+        if (propertyIds.length > 0) { 
 
+            // sort properties based on query string (is not presented in query string, sort at the bottom)
+            apiMockingData.properties.sort(function(a, b) {
+                let index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
+                let index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
+                return index1 - index2;
+                
+                //return propertyIds.indexOf(a.id) - propertyIds.indexOf(b.id);
+            });
+
+            // hide properties based on query string
+            apiMockingData.properties.forEach((property, index) => {
+                if (!propertyIds.includes(property.id)) {
+                    apiMockingData.properties[index].active = false;
+                }
+            });
+        }
+        
         this.setState({
             contributions: contributions,
             properties: apiMockingData.properties,
@@ -438,7 +469,9 @@ class Comparison extends Component {
     onSortEnd = ({ oldIndex, newIndex }) => {
         this.setState(({ properties }) => ({
             properties: arrayMove(properties, oldIndex, newIndex),
-        }));
+        }), () => {
+            this.propertiesToUrl();
+        });
     }
 
     // TODO: place this outside the component class 
@@ -450,7 +483,7 @@ class Comparison extends Component {
     
     SortableItem = SortableElement(({ value: property }) => (
         <ListGroupItemStyled>
-            <this.SortableHandle />
+            {property.active ? <this.SortableHandle /> : <DragHandlePlaceholder />}
             <CustomInput
                 type="checkbox"
                 id={`checkbox-${property.label}`}
@@ -459,7 +492,7 @@ class Comparison extends Component {
                 onChange={() => this.toggleProperty(property.id)}
                 checked={property.active}
             />
-            <ContributionAmount color="lightblue">3</ContributionAmount>
+            <Badge color="lightblue">3</Badge>
         </ListGroupItemStyled>
     ));
     
@@ -485,7 +518,23 @@ class Comparison extends Component {
             return properties;
         });
 
-        this.setState(newState);
+        this.setState(newState, () => {
+            this.propertiesToUrl();
+        });
+    }
+
+    propertiesToUrl = () => {
+        let queryString = '?properties=';
+
+        this.state.properties.forEach((property, index) => {
+            if (property.active) {
+                queryString += property.id + ',';
+            }
+        });
+
+        let url = ROUTES.COMPARISON.replace('*', '');
+        let contributionIds = this.getContributionIdsFromUrl().join('/');
+        this.props.history.push(url + contributionIds + queryString);
     }
 
     render() {
@@ -634,6 +683,7 @@ Comparison.propTypes = {
         }).isRequired,
     }).isRequired,
     history: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
