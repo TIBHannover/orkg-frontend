@@ -4,8 +4,11 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { CSVLink } from 'react-csv';
+import { Link } from 'react-router-dom';
+import { reverse } from 'named-urls';
+import ROUTES from '../../constants/routes.js';
 
 // There is a lot is styling needed for this table, this it is using a column structure,
 // instead of the default HTML row structure
@@ -64,6 +67,7 @@ const ItemHeader = styled.td`
     display: table-cell;
     height:100%;
     width:250px;
+    position:relative;
 `;
 
 const ItemHeaderInner = styled.div`
@@ -72,11 +76,28 @@ const ItemHeaderInner = styled.div`
     border-radius:11px 11px 0 0;
     color:#fff;
     height:100%;
+
+    a {
+        color:#fff!important;
+    }
 `;
 
 const Contribution = styled.div`
     color:#FFA5A5;
     font-size:85%;
+`;
+
+const Delete = styled.div`
+    position:absolute;
+    top:-4px;
+    right:7px;
+    background:#FFA3A3;
+    border-radius:20px;
+    width:24px;
+    height:24px;
+    text-align:center;
+    color:#E86161;
+    cursor:pointer;
 `;
 
 class Comparison extends Component {
@@ -88,9 +109,10 @@ class Comparison extends Component {
         properties: [],
         data: [],
         csvData: [],
+        redirect: null,
     }
 
-    componentDidMount = async () => {
+    componentDidMount = () => {
         this.performComparison();
     }
 
@@ -99,6 +121,14 @@ class Comparison extends Component {
         if (this.state.properties !== prevState.properties || this.state.contributions !== prevState.contributions || this.state.data !== prevState.data) {
             this.generateMatrixOfComparison();
         }
+
+        if (this.props.match.params !== prevProps.match.params) {
+            this.performComparison();
+        }
+    }
+
+    getContributionIdsFromUrl = () => {
+        return this.props.match.params[0].split('/');
     }
 
     generateMatrixOfComparison = () => {
@@ -107,10 +137,10 @@ class Comparison extends Component {
         for (let property of this.state.properties) {
             header.push(property.label);
         }
-        
+
         let rows = [];
 
-        for (let i=0; i<this.state.contributions.length; i++) {
+        for (let i = 0; i < this.state.contributions.length; i++) {
             let contribution = this.state.contributions[i];
             let row = [contribution.title];
 
@@ -118,7 +148,7 @@ class Comparison extends Component {
                 row.push(this.state.data[property.id][i].label);
             }
             rows.push(row);
-        }       
+        }
 
         this.setState({
             csvData: [
@@ -129,25 +159,27 @@ class Comparison extends Component {
     }
 
     performComparison = () => {
+        const contributionIds = this.getContributionIdsFromUrl();
+
         const apiMockingData = {
             contributions:
                 [
                     {
-                        id: 'R1',
-                        paperId: 'R2',
-                        title: 'Algorithm and hardware for a merge sort using multiple processors',
+                        id: 'R1026',
+                        paperId: 'R1022',
+                        title: 'Fifth',
                         contributionLabel: 'Contribution 2'
                     },
                     {
-                        id: 'R1',
-                        paperId: 'R2',
-                        title: 'A variant of heapsort with almost optimal number of comparisons',
+                        id: 'R3004',
+                        paperId: 'R3000',
+                        title: 'Research Directions for the Internet of Things',
                         contributionLabel: 'Contribution 1'
                     },
                     {
-                        id: 'R1',
-                        paperId: 'R2',
-                        title: 'Bubble sort: an archaeologic alalgorithmic analysis',
+                        id: 'R1032',
+                        paperId: 'R1028',
+                        title: 'Research Directions for the Internet of Things',
                         contributionLabel: 'Contribution 1'
                     },
                 ],
@@ -267,8 +299,19 @@ class Comparison extends Component {
             }
         };
 
+        // mocking function to allow for deletion of contributions via the url
+        let contributions = [];
+        for (let i = 0; i < apiMockingData.contributions.length; i++) {
+            let contribution = apiMockingData.contributions[i];
+
+            if (contributionIds.includes(contribution.id)) {
+                //apiMockingData.contributions.splice(i, 1);
+                contributions.push(contribution)
+            }
+        }
+
         this.setState({
-            contributions: apiMockingData.contributions,
+            contributions: contributions,
             properties: apiMockingData.properties,
             data: apiMockingData.data,
         });
@@ -284,6 +327,18 @@ class Comparison extends Component {
         this.setState({
             dropdownOpen: false,
         })
+    }
+
+    removeContribution = (contributionId) => {
+        let url = ROUTES.COMPARISON.replace('*', '');
+        let contributionIds = this.getContributionIdsFromUrl();
+        let index = contributionIds.indexOf(contributionId);
+
+        if (index > -1) {
+            contributionIds.splice(index, 1);
+        }
+
+        this.props.history.push(url + contributionIds.join('/'));
     }
 
     render() {
@@ -320,7 +375,7 @@ class Comparison extends Component {
 
                     <Button color="darkblue" className="float-right mb-4 mt-4 " size="sm">Add to comparison</Button>
 
-                    <div style={{ overflowX: 'auto', float: 'left', width: '100%' }}>
+                    <div style={{ overflowX: 'auto', float: 'left', width: '100%', paddingTop: 10 }}>
                         <Table className="mb-0" style={{ borderCollapse: 'collapse', tableLayout: 'fixed', height: 'max-content', width: '100%' }}>
                             <tbody className="table-borderless">
                                 <tr className="table-borderless">
@@ -329,9 +384,18 @@ class Comparison extends Component {
                                     {this.state.contributions.map((contribution, index) => {
                                         return (
                                             <ItemHeader key={`contribution${index}`}>
-                                                <ItemHeaderInner>{contribution.title}<br />
+                                                <ItemHeaderInner>
+                                                    <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: contribution.paperId })}>
+                                                        {contribution.title}
+                                                    </Link>
+                                                    <br />
                                                     <Contribution>{contribution.contributionLabel}</Contribution>
                                                 </ItemHeaderInner>
+
+                                                {this.state.contributions.length > 2 &&
+                                                    <Delete onClick={() => this.removeContribution(contribution.id)}>
+                                                        <Icon icon={faTimes} />
+                                                    </Delete>}
                                             </ItemHeader>
                                         )
                                     })}
@@ -371,6 +435,7 @@ Comparison.propTypes = {
             comparisonId: PropTypes.string,
         }).isRequired,
     }).isRequired,
+    history: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({

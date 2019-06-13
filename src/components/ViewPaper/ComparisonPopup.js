@@ -47,7 +47,6 @@ const List = styled.ul`
 `;
 
 const ContributionItem = styled.li`
-    cursor:pointer;
     border-bottom:2px solid #EF8282;
     padding:8px 15px;
 `;
@@ -69,6 +68,10 @@ const Number = styled.div`
 const StartComparison = styled(Button)`
     bottom:0;
     font-size:95%!important;
+`;
+
+const Remove = styled.div`
+    cursor:pointer;
 `;
 
 class ComparisonPopup extends Component {
@@ -130,9 +133,9 @@ class ComparisonPopup extends Component {
                                                 <Number>{byId[contributionId].contributionTitle}</Number>
                                             </div>
                                             <Tooltip message="Remove from comparison" hideDefaultIcon>
-                                                <div>
+                                                <Remove>
                                                     <Icon icon={faTimes} onClick={() => this.removeFromComparison(contributionId)} />
-                                                </div>
+                                                </Remove>
                                             </Tooltip>
                                         </div>
                                     </ContributionItem>
