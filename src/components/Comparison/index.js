@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { Container, Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, /*Breadcrumb, BreadcrumbItem*/ } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -9,6 +9,7 @@ import { CSVLink } from 'react-csv';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
+import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
 
 // There is a lot is styling needed for this table, this it is using a column structure,
 // instead of the default HTML row structure
@@ -119,6 +120,9 @@ class Comparison extends Component {
         data: [],
         csvData: [],
         redirect: null,
+        modal: false,
+        dialogResourceId: null,
+        dialogResourceLabel: null,
     }
 
     componentDidMount = () => {
@@ -224,85 +228,103 @@ class Comparison extends Component {
                 'P1': [
                     {
                         resourceId: 'R1',
-                        label: 'Merge sort'
+                        label: 'Merge sort',
+                        type: 'resource'
                     },
                     {
                         resourceId: 'R1',
-                        label: 'Heap sort'
+                        label: 'Heap sort',
+                        type: 'resource'
                     },
                     {
                         resourceId: 'R1',
-                        label: 'Bubble sort'
+                        label: 'Bubble sort',
+                        type: 'resource'
                     },
                 ],
                 'P2': [
                     {
                         resourceId: 'R1',
-                        label: 'Efficient sorting'
+                        label: 'Efficient sorting',
+                        type: 'resource'
                     },
                     {
                         resourceId: 'R1',
-                        label: 'Efficient sorting'
+                        label: 'Efficient sorting',
+                        type: 'resource'
                     },
                     {
                         resourceId: 'R1',
-                        label: 'Sorting'
+                        label: 'Sorting',
+                        type: 'resource'
                     },
                 ],
                 'P3': [
                     {
                         resourceId: 'R1',
-                        label: 'C++'
+                        label: 'C++',
+                        type: 'resource'
                     },
                     {
                         resourceId: 'R1',
-                        label: ''
+                        label: '',
+                        type: 'resource'
                     },
                     {
                         resourceId: 'R1',
-                        label: 'Python'
+                        label: 'Python',
+                        type: 'resource'
                     },
                 ],
                 'P4': [
                     {
                         resourceId: 'R1',
-                        label: 'Y'
+                        label: 'Y',
+                        type: 'literal'
                     },
                     {
                         resourceId: 'R1',
-                        label: 'N'
+                        label: 'N',
+                        type: 'literal'
                     },
                     {
                         resourceId: 'R1',
-                        label: 'N'
+                        label: 'N',
+                        type: 'literal'
                     },
                 ],
                 'P5': [
                     {
                         resourceId: 'R1',
-                        label: 'n log n'
+                        label: 'n log n',
+                        type: 'literal'
                     },
                     {
                         resourceId: 'R1',
-                        label: 'n'
+                        label: 'n',
+                        type: 'literal'
                     },
                     {
                         resourceId: 'R1',
-                        label: 'n'
+                        label: 'n',
+                        type: 'literal'
                     },
                 ],
                 'P6': [
                     {
                         resourceId: 'R1',
-                        label: 'n log n'
+                        label: 'n log n',
+                        type: 'literal'
                     },
                     {
                         resourceId: 'R1',
-                        label: 'n log n'
+                        label: 'n log n',
+                        type: 'literal'
                     },
                     {
                         resourceId: 'R1',
-                        label: 'n log n'
+                        label: 'n log n',
+                        type: 'literal'
                     },
                 ],
             }
@@ -332,6 +354,14 @@ class Comparison extends Component {
         }));
     }
 
+    openStatementBrowser = (id, label) => {
+        this.setState({
+            modal: true,
+            dialogResourceId: id,
+            dialogResourceLabel: label,
+        });
+    }
+
     exportAsCsv = (e) => {
         this.setState({
             dropdownOpen: false,
@@ -348,6 +378,12 @@ class Comparison extends Component {
         }
 
         this.props.history.push(url + contributionIds.join('/'));
+    }
+
+    toggleModal = () => {
+        this.setState(prevState => ({
+            modal: !prevState.modal,
+        }));
     }
 
     render() {
@@ -430,9 +466,21 @@ class Comparison extends Component {
                                                 <PropertiesInner className={className}>{property.label}</PropertiesInner>
                                             </Properties>
                                             {this.state.contributions.map((contribution, index2) => {
+                                                const data = this.state.data[property.id][index2];
+
                                                 return (
                                                     <Item key={`data${index2}`}>
-                                                        <ItemInner className={className}>{this.state.data[property.id][index2].label}</ItemInner>
+                                                        <ItemInner className={className}>
+                                                            {data.type === 'resource' ?
+                                                                <span
+                                                                    className="btn-link"
+                                                                    onClick={() => this.openStatementBrowser(data.resourceId, data.label)}
+                                                                    style={{ cursor: 'pointer' }}
+                                                                >
+                                                                    {data.label}
+                                                                </span>
+                                                                : data.label}
+                                                        </ItemInner>
                                                     </Item>
                                                 )
                                             })}
@@ -443,6 +491,13 @@ class Comparison extends Component {
                         </Table>
                     </div>
                 </Container>
+
+                <StatementBrowserDialog
+                    show={this.state.modal}
+                    toggleModal={this.toggleModal}
+                    resourceId={this.state.dialogResourceId}
+                    resourceLabel={this.state.dialogResourceLabel}
+                />
             </div>
         );
     }
