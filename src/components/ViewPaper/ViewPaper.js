@@ -6,7 +6,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar, faBars } from '@fortawesome/free-solid-svg-icons';
 import Contributions from './Contributions';
 import { Link } from 'react-router-dom';
-import { months } from '../../utils';
+import moment from 'moment'
 import PropTypes from 'prop-types';
 
 class ViewPaper extends Component {
@@ -93,7 +93,7 @@ class ViewPaper extends Component {
 
                     {/* TODO: change links of badges  */}
                     <span className="badge badge-lightblue mr-2">
-                        <Icon icon={faCalendar} className="text-primary" /> {months[this.state.publicationMonth]} {this.state.publicationYear}
+                        <Icon icon={faCalendar} className="text-primary" /> {moment(this.state.publicationMonth, 'M').format('MMMM')} {this.state.publicationYear}
                     </span>
                     {this.state.researchField && (
                         <Link to={`${process.env.PUBLIC_URL}/field/${encodeURIComponent(this.state.researchField.object.id)}`}>

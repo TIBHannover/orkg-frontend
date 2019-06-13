@@ -84,7 +84,7 @@ class StatementItem extends Component {
                         <ListGroup flush>
                             {valueIds.map((valueId, index) => {
                                 let value = this.props.values.byId[valueId];
-                                console.log('value', value);
+                                
                                 return (
                                     <ValueItem
                                         key={index}
