@@ -8,15 +8,27 @@ import Contributions from './Contributions';
 import { Link } from 'react-router-dom';
 import moment from 'moment'
 import PropTypes from 'prop-types';
+import ComparisonPopup from './ComparisonPopup';
 
 class ViewPaper extends Component {
     state = {
+        id: null,
         title: '',
         authorNames: [],
         contributions: [],
     }
 
-    componentDidMount = async () => {
+    componentDidMount() {
+        this.loadPaperData();
+    }
+
+    componentDidUpdate = (prevProps) => {
+        if (this.props.match.params.resourceId !== prevProps.match.params.resourceId) {
+            this.loadPaperData();
+        }
+    }
+
+    loadPaperData = async () => {
         const resourceId = this.props.match.params.resourceId;
         let paperResource = await getResource(resourceId);
         let paperStatements = await getStatementsBySubject(resourceId);
@@ -73,6 +85,7 @@ class ViewPaper extends Component {
         }
 
         this.setState({
+            id: this.props.match.params.resourceId,
             title: paperResource.label,
             publicationYear,
             publicationMonth,
@@ -110,12 +123,16 @@ class ViewPaper extends Component {
 
                     <hr className="mt-5 mb-5" />
 
-                    <Contributions
+                    {this.state.contributions.length>0 && <Contributions
                         selectedContribution={this.props.match.params.contributionId ? this.props.match.params.contributionId : ''}
                         contributions={this.state.contributions}
                         paperId={this.props.match.params.resourceId}
-                    />
+                        paperTitle={this.state.title}
+                    />}
+
+                    <ComparisonPopup />
                 </Container>
+
             </div>
         );
     }

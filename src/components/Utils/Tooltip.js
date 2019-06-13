@@ -25,10 +25,13 @@ class Tooltip extends React.Component {
     }
 
     render() {  
+        const style = this.props.colorIcon ? { color: this.props.colorIcon } : {};
+        const className = !this.props.colorIcon ? 'text-primary' : '';
+
         return (
             <span>
                 <span id={this.id}>
-                    {this.props.children} {!this.props.hideDefaultIcon ? <FontAwesomeIcon icon={faQuestionCircle} className="text-primary" /> : ''}
+                    {this.props.children} {!this.props.hideDefaultIcon ? <span style={style}><FontAwesomeIcon icon={faQuestionCircle} className={className} /></span> : ''}
                 </span>
 
                 <ReactstrapTooltip 
@@ -49,10 +52,12 @@ Tooltip.propTypes = {
     children: PropTypes.node,
     message: PropTypes.string.isRequired,
     hideDefaultIcon: PropTypes.bool,
+    colorIcon: PropTypes.string,
 }
 
 Tooltip.defaultProps = {
     hideDefaultIcon: false,
+    colorIcon: null,
 }
 
 export default Tooltip;
