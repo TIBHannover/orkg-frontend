@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
-import { Container, Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Modal, ModalHeader, ModalBody, ListGroup, ListGroupItem, Badge, CustomInput /*Breadcrumb, BreadcrumbItem*/ } from 'reactstrap';
+import { Container, Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, /*Breadcrumb, BreadcrumbItem*/ } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faTimes, faSort } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { CSVLink } from 'react-csv';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
 import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
 import Tooltip from '../Utils/Tooltip.js';
-import { SortableContainer, SortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import dotProp from 'dot-prop-immutable';
 import queryString from 'query-string';
+import SelectProperties from './SelectProperties.js';
 
 // TODO: component is too large, split into smaller componenets 
 // There is a lot is styling needed for this table, this it is using a column structure,
@@ -107,22 +107,6 @@ const Delete = styled.div`
     text-align:center;
     color:#E86161;
     cursor:pointer;
-`;
-
-const DragHandle = styled.span`
-    cursor:move;
-    color:#A5A5A5;
-    width:30px;
-    text-align:center;
-`;
-
-const DragHandlePlaceholder = styled.span`
-    width:30px;
-`;
-
-const ListGroupItemStyled = styled(ListGroupItem)`
-    padding: 10px 10px 9px 5px!important;
-    display:flex!important;
 `;
 
 /*const BreadcrumbStyled = styled(Breadcrumb)`
@@ -481,38 +465,6 @@ class Comparison extends Component {
         });
     }
 
-    // TODO: place this outside the component class 
-    SortableHandle = sortableHandle(() => (
-        <DragHandle>
-            <Icon icon={faSort} />
-        </DragHandle>
-    ));
-    
-    SortableItem = SortableElement(({ value: property }) => (
-        <ListGroupItemStyled>
-            {property.active ? <this.SortableHandle /> : <DragHandlePlaceholder />}
-            <CustomInput
-                type="checkbox"
-                id={`checkbox-${property.label}`}
-                label={property.label}
-                className="flex-grow-1"
-                onChange={() => this.toggleProperty(property.id)}
-                checked={property.active}
-            />
-            <Badge color="lightblue">3</Badge>
-        </ListGroupItemStyled>
-    ));
-    
-    SortableList = SortableContainer(({ items }) => {
-        return (
-            <ListGroup>
-                {items.map((value, index) => (
-                    <this.SortableItem key={`item-${index}`} index={index} value={value} />
-                ))}
-            </ListGroup>
-        );
-    });
-
     // code is a bit ugly because the properties inside an array and not an object
     toggleProperty = (id) => {
         let newState = dotProp.set(this.state, 'properties', properties => {
@@ -675,18 +627,14 @@ class Comparison extends Component {
                     />
                 }
 
-                <Modal isOpen={this.state.showPropertiesDialog} toggle={this.togglePropertiesDialog}>
-                    <ModalHeader toggle={this.togglePropertiesDialog}>Select properties</ModalHeader>
-                    <ModalBody>
-                        <this.SortableList
-                            items={this.state.properties}
-                            onSortEnd={this.onSortEnd}
-                            lockAxis="y"
-                            helperClass="sortableHelper"
-                            useDragHandle
-                        />
-                    </ModalBody>
-                </Modal>
+                <SelectProperties 
+                    properties={this.state.properties}
+                    showPropertiesDialog={this.state.showPropertiesDialog}
+                    togglePropertiesDialog={this.togglePropertiesDialog}
+                    generateUrl={this.generateUrl}
+                    toggleProperty={this.toggleProperty}
+                    onSortEnd={this.onSortEnd}
+                />
             </div>
         );
     }
@@ -707,11 +655,6 @@ const mapStateToProps = state => ({
     viewPaper: state.viewPaper,
 });
 
-const mapDispatchToProps = dispatch => ({
-
-});
-
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProps
 )(Comparison);

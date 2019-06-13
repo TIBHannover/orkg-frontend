@@ -17,7 +17,7 @@ import Home from './components/Home/Home';
 import ViewPaper from './components/ViewPaper/ViewPaper';
 import License from './components/StaticPages/License';
 import NotFound from './components/StaticPages/NotFound';
-import Comparison from './components/Comparison';
+import Comparison from './components/Comparison/Comparison';
 import PropTypes from 'prop-types';
 import { withCookies } from 'react-cookie';
 
