@@ -172,11 +172,18 @@ class Comparison extends Component {
     }
 
     getContributionIdsFromUrl = () => {
-        return this.props.match.params[0].split('/');
+        let ids = this.props.match.params[0];
+
+        if (!ids) {
+            return [];
+        }
+
+        return ids.split('/');
     }
 
     getPropertyIdsFromUrl = () => {
         let ids = queryString.parse(this.props.location.search).properties;
+        
         if (!ids) {
             return [];
         }
@@ -399,6 +406,7 @@ class Comparison extends Component {
         if (propertyIds.length > 0) { 
 
             // sort properties based on query string (is not presented in query string, sort at the bottom)
+            // TODO: sort by label when is not active
             apiMockingData.properties.sort(function(a, b) {
                 let index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
                 let index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
@@ -443,7 +451,6 @@ class Comparison extends Component {
     }
 
     removeContribution = (contributionId) => {
-        let url = ROUTES.COMPARISON.replace('*', '');
         let contributionIds = this.getContributionIdsFromUrl();
         let index = contributionIds.indexOf(contributionId);
 
@@ -451,7 +458,7 @@ class Comparison extends Component {
             contributionIds.splice(index, 1);
         }
 
-        this.props.history.push(url + contributionIds.join('/'));
+        this.generateUrl(contributionIds.join('/'));
     }
 
     toggleModal = () => {
@@ -470,7 +477,7 @@ class Comparison extends Component {
         this.setState(({ properties }) => ({
             properties: arrayMove(properties, oldIndex, newIndex),
         }), () => {
-            this.propertiesToUrl();
+            this.generateUrl();
         });
     }
 
@@ -519,12 +526,12 @@ class Comparison extends Component {
         });
 
         this.setState(newState, () => {
-            this.propertiesToUrl();
+            this.generateUrl();
         });
     }
 
-    propertiesToUrl = () => {
-        let queryString = '?properties=';
+    propertiesToQueryString = () => {
+        let queryString = '';
 
         this.state.properties.forEach((property, index) => {
             if (property.active) {
@@ -532,9 +539,19 @@ class Comparison extends Component {
             }
         });
 
+        return queryString;
+    }
+
+    generateUrl = (contributionIds, propertyIds) => {
+        if (!contributionIds) {
+            contributionIds = this.getContributionIdsFromUrl().join('/');
+        }
+        if (!propertyIds) {
+            propertyIds = this.propertiesToQueryString();
+        }
+
         let url = ROUTES.COMPARISON.replace('*', '');
-        let contributionIds = this.getContributionIdsFromUrl().join('/');
-        this.props.history.push(url + contributionIds + queryString);
+        this.props.history.push(url + contributionIds + '?properties=' + propertyIds);
     }
 
     render() {
