@@ -7,6 +7,11 @@ import configureStore, { history } from './store'
 import { AppContainer } from 'react-hot-loader';
 import rootReducer from './reducers/rootReducer';
 import { CookiesProvider } from 'react-cookie';
+import { ThemeProvider } from 'styled-components';
+
+// Extract Sass variables into a JS object
+// eslint-disable-next-line import/no-webpack-loader-syntax
+const theme = require('sass-extract-loader?{plugins: ["sass-extract-js"]}!./assets/scss/ThemeVariables.scss');
 
 const store = configureStore();
 const render = () => {
@@ -14,7 +19,9 @@ const render = () => {
         <AppContainer>
             <CookiesProvider>
                 <Provider store={store}>
-                    <App history={history} />
+                    <ThemeProvider theme={theme}>
+                        <App history={history} />
+                    </ThemeProvider>
                 </Provider>
             </CookiesProvider>
         </AppContainer>,

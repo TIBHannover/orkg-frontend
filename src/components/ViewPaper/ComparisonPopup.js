@@ -23,7 +23,7 @@ const ComparisonBoxButton = styled(Button)`
 `;
 
 const ComparisonBox = styled.div`
-    background: #E86161;
+    background: ${props => props.theme.orkgPrimaryColor};
     border-radius:11px 11px 0 0;
     width:340px;
     min-height:390px;
