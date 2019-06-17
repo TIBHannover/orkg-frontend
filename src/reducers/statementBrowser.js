@@ -29,7 +29,7 @@ export default (state = initialState, action) => {
         case type.CREATE_RESOURCE: {
             let { payload } = action;
 
-            let newState = dotProp.set(state, `resources.byId`, ids => ({
+            let newState = dotProp.set(state, 'resources.byId', ids => ({
                 ...ids,
                 [payload.resourceId]: {
                     label: payload.label ? payload.label : '',
@@ -38,7 +38,7 @@ export default (state = initialState, action) => {
                 }
             }));
 
-            newState = dotProp.set(newState, `resources.allIds`, ids => [...ids, payload.resourceId]);
+            newState = dotProp.set(newState, 'resources.allIds', ids => [...ids, payload.resourceId]);
   
             return newState;
         }
@@ -54,7 +54,7 @@ export default (state = initialState, action) => {
             let { payload } = action;
             let newState = dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, propertyIds => [...propertyIds, payload.propertyId]);
             
-            newState = dotProp.set(newState, `properties.byId`, ids => ({
+            newState = dotProp.set(newState, 'properties.byId', ids => ({
                 ...ids,
                 [payload.propertyId]: {
                     label: payload.label ? payload.label : '',
@@ -64,7 +64,7 @@ export default (state = initialState, action) => {
                 }
             }));
 
-            newState = dotProp.set(newState, `properties.allIds`, ids => [...ids, payload.propertyId]);
+            newState = dotProp.set(newState, 'properties.allIds', ids => [...ids, payload.propertyId]);
   
             return newState;
         }
@@ -74,7 +74,7 @@ export default (state = initialState, action) => {
 
             let newState = dotProp.delete(state, `properties.byId.${payload.id}`);
 
-            let propertyIndex = dotProp.get(newState, `properties.allIds`).indexOf(payload.id);
+            let propertyIndex = dotProp.get(newState, 'properties.allIds').indexOf(payload.id);
             newState = dotProp.delete(newState, `properties.allIds.${propertyIndex}`);
 
             let resourceIndex = dotProp.get(newState, `resources.byId.${payload.resourceId}.propertyIds`).indexOf(payload.id);
@@ -90,7 +90,7 @@ export default (state = initialState, action) => {
 
             let newState = dotProp.set(state, `properties.byId.${payload.propertyId}.valueIds`, valueIds => [...valueIds, payload.valueId]);
 
-            newState = dotProp.set(newState, `values.byId`, ids => ({
+            newState = dotProp.set(newState, 'values.byId', ids => ({
                 ...ids,
                 [payload.valueId]: {
                     type: payload.type,
@@ -101,16 +101,16 @@ export default (state = initialState, action) => {
                 }
             }));
 
-            newState = dotProp.set(newState, `values.allIds`, ids => [...ids, payload.valueId]);
+            newState = dotProp.set(newState, 'values.allIds', ids => [...ids, payload.valueId]);
 
             // TODO: is the same as creating a resource in the contributions, so make a function 
             // add a new resource when a object value is created
 
             //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
             if (payload.type === 'object' && !state.resources.byId[payload.resourceId]) {
-                newState = dotProp.set(newState, `resources.allIds`, ids => [...ids, payload.resourceId]);
+                newState = dotProp.set(newState, 'resources.allIds', ids => [...ids, payload.resourceId]);
                 
-                newState = dotProp.set(newState, `resources.byId`, ids => ({
+                newState = dotProp.set(newState, 'resources.byId', ids => ({
                     ...ids,
                     [payload.resourceId]: {
                         existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
@@ -129,7 +129,7 @@ export default (state = initialState, action) => {
 
             let newState = dotProp.delete(state, `values.byId.${payload.id}`);
 
-            let valueIndex = dotProp.get(newState, `values.allIds`).indexOf(payload.id);
+            let valueIndex = dotProp.get(newState, 'values.allIds').indexOf(payload.id);
             newState = dotProp.delete(newState, `values.allIds.${valueIndex}`);
 
             let propertyIndex = dotProp.get(newState, `properties.byId.${payload.propertyId}.valueIds`).indexOf(payload.id);
@@ -153,7 +153,7 @@ export default (state = initialState, action) => {
             let { payload } = action;
             let resourceId = payload.resourceId ? payload.resourceId : null; //state.contributions.byId[state.selectedContribution].resourceId
 
-            let newState = dotProp.set(state, `resourceHistory.byId`, ids => ({
+            let newState = dotProp.set(state, 'resourceHistory.byId', ids => ({
                 ...ids,
                 [resourceId]: {
                     id: resourceId,
@@ -161,7 +161,7 @@ export default (state = initialState, action) => {
                 }
             }));
 
-            newState = dotProp.set(newState, `resourceHistory.allIds`, ids => [...ids, resourceId]);
+            newState = dotProp.set(newState, 'resourceHistory.allIds', ids => [...ids, resourceId]);
 
             return newState;
         }
@@ -229,12 +229,6 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 isFetchingStatements: false,
-            }
-        }
-
-        case '@@router/LOCATION_CHANGE': { //from connected-react-router, reset the wizard when the page is changed
-            return {
-                ...initialState
             }
         }
 

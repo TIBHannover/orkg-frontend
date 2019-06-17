@@ -9,6 +9,8 @@ import SimilarContributions from './SimilarContributions';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { CSSTransitionGroup } from 'react-transition-group'
+import AddToComparison from './AddToComparison';
+import ContentLoader from 'react-content-loader'
 
 const Title = styled.div`
     font-size:18px;
@@ -43,42 +45,74 @@ const AnimationContainer = styled.div`
 class Contributions extends Component {
     state = {
         selectedContribution: '',
+        loading: true,
     }
 
-    componentDidUpdate = () => {
-        if (this.props.selectedContribution === '' && this.props.contributions[0]) {
-            // only executed on first load, can't be placed in the contructor since loading contributions is async
-            this.handleSelectContribution(this.props.contributions[0]);
+    componentDidUpdate = (prevProps) => {
+        if (this.props.paperId !== prevProps.paperId) {
+            this.setState({ loading: true });
+        }
+        if (this.props.selectedContribution !== '' && this.props.selectedContribution !== this.state.selectedContribution) {
+            this.setState({ selectedContribution: this.props.selectedContribution }, () => {
+                this.handleSelectContribution(this.state.selectedContribution);
+            })
         }
     }
 
     handleSelectContribution = (contributionId) => {
+        this.setState({ loading: true });
         let contributionIsLoaded = this.props.resources.byId[contributionId] ? true : false;
         this.props.selectContribution({
             contributionId,
             contributionIsLoaded
-        })
+        });
+        this.setState({ loading: false });
     }
 
     render() {
-        let selectedContributionId = this.props.selectedContribution;
+        let selectedContributionId = this.state.selectedContribution;
 
         return (
             <div>
                 <Container>
                     <Row noGutters={true}>
                         <Col xs="3">
-                            <ul className={styles.contributionsList}>
-                                {this.props.contributions.map((contributionId, index) => {
-                                    return (
-                                        <li className={contributionId === selectedContributionId ? styles.activeContribution : ''} key={contributionId}>
-                                            <span className={styles.selectContribution} onClick={() => this.handleSelectContribution(contributionId)}>
-                                                Contribution {index + 1}
-                                            </span>
-                                        </li>
-                                    )
-                                })}
-                            </ul>
+                            {this.state.loading && (
+                                <div>
+                                    <ContentLoader
+                                        height={20}
+                                        width={100}
+                                        speed={2}
+                                        primaryColor="#E86161"
+                                        secondaryColor="#ecebeb"
+                                    >
+                                        <rect x="0" y="5" rx="0" ry="0" width={100} height="15" />
+                                    </ContentLoader>
+                                    <ContentLoader
+                                        height={40}
+                                        width={100}
+                                        speed={2}
+                                        primaryColor="#f3f3f3"
+                                        secondaryColor="#ecebeb"
+                                    >
+                                        <rect x="0" y="5" rx="0" ry="0" width={100} height="15" />
+                                        <rect x="0" y="25" rx="0" ry="0" width={100} height="15" />
+                                    </ContentLoader>
+                                </div>
+                            )}
+                            {!this.state.loading && (
+                                <ul className={styles.contributionsList}>
+                                    {this.props.contributions.map((contribution, index) => {
+                                        return (
+                                            <li className={contribution.id === selectedContributionId ? styles.activeContribution : ''} key={contribution.id}>
+                                                <Link to={`/paper/${this.props.paperId}/${contribution.id}`} className={styles.selectContribution}>
+                                                    {contribution.label}
+                                                </Link>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            )}
                         </Col>
                         <CSSTransitionGroup
                             transitionName="fadeIn"
@@ -89,27 +123,70 @@ class Contributions extends Component {
                         >
                             <AnimationContainer
                                 key={selectedContributionId}
-                                
                             >
-
                                 <div className={styles.contribution}>
+                                    <AddToComparison
+                                        contributionId={selectedContributionId}
+                                        paperId={this.props.paperId}
+                                        paperTitle={this.props.paperTitle}
+                                        contributionTitle="Contribution"
+                                    />
                                     <Form>
                                         <FormGroup>
                                             <Title style={{ marginTop: 0 }}>Research problems</Title>
-                                            {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].map((problem, index) => (
-                                                <span key={index}>
-                                                    <span className="btn btn-link p-0 border-0 align-baseline">{problem.label}</span> <br />
-                                                </span>
-                                            ))}
+                                            {this.state.loading && (
+                                                <div>
+                                                    <ContentLoader
+                                                        height={7}
+                                                        width={100}
+                                                        speed={2}
+                                                        primaryColor="#f3f3f3"
+                                                        secondaryColor="#ecebeb"
+                                                    >
+                                                        <rect x="0" y="0" width="40" height="3" />
+                                                        <rect x="0" y="4" width="40" height="3" />
+                                                    </ContentLoader>
+                                                </div>
+                                            )}
+                                            {!this.state.loading && (
+                                                <>
+                                                    {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].map((problem, index) => (
+                                                        <span key={index}>
+
+                                                            <Link to={`${process.env.PUBLIC_URL}/problem/${encodeURIComponent(problem.id)}`}>
+                                                                <span className="btn btn-link p-0 border-0 align-baseline">
+                                                                    {problem.label}
+                                                                </span>
+                                                            </Link>
+                                                            <br />
+                                                        </span>
+                                                    ))
+                                                    }
+                                                </>
+                                            )}
                                         </FormGroup>
 
                                         <FormGroup>
                                             <Title>Contribution data</Title>
-
-                                            <StatementBrowser
-                                                enableEdit={false}
-                                                openExistingResourcesInDialog={false}
-                                            />
+                                            {this.state.loading && (
+                                                <div>
+                                                    <ContentLoader
+                                                        height={6}
+                                                        width={100}
+                                                        speed={2}
+                                                        primaryColor="#f3f3f3"
+                                                        secondaryColor="#ecebeb"
+                                                    >
+                                                        <rect x="0" y="0" rx="2" ry="2" width="90" height="6" />
+                                                    </ContentLoader>
+                                                </div>
+                                            )}
+                                            {!this.state.loading && (
+                                                <StatementBrowser
+                                                    enableEdit={false}
+                                                    openExistingResourcesInDialog={false}
+                                                />
+                                            )}
                                         </FormGroup>
 
                                         <FormGroup>
@@ -119,8 +196,25 @@ class Contributions extends Component {
                                                     <span className="btn btn-link p-0 border-0 align-baseline" onClick={this.handleComparisonClick}>Show full comparison</span>
                                                 </Link>
                                             </Title>
+                                            {this.state.loading && (
+                                                <div>
+                                                    <ContentLoader
+                                                        height={10}
+                                                        width={100}
+                                                        speed={2}
+                                                        primaryColor="#f3f3f3"
+                                                        secondaryColor="#ecebeb"
+                                                    >
+                                                        <rect x="0" y="0" rx="2" ry="2" width="32" height="10" />
+                                                        <rect x="33" y="0" rx="2" ry="2" width="32" height="10" />
+                                                        <rect x="66" y="0" rx="2" ry="2" width="32" height="10" />
+                                                    </ContentLoader>
+                                                </div>
+                                            )}
+                                            {!this.state.loading && (
+                                                <SimilarContributions />
+                                            )}
 
-                                            <SimilarContributions />
                                         </FormGroup>
                                     </Form>
                                 </div>
@@ -141,12 +235,12 @@ Contributions.propTypes = {
     selectContribution: PropTypes.func.isRequired,
     contributions: PropTypes.array.isRequired,
     paperId: PropTypes.string.isRequired,
+    paperTitle: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
     researchProblems: state.viewPaper.researchProblems,
     resources: state.statementBrowser.resources,
-    selectedContribution: state.addPaper.selectedContribution,
 });
 
 const mapDispatchToProps = dispatch => ({

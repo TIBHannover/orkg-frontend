@@ -102,7 +102,7 @@ export const deleteContribution = (id) => dispatch => {
         }
     });
 
-    dispatch(selectContribution());
+    dispatch(selectContribution({id : null}));
 }
 
 export const selectContribution = (data) => dispatch => {
@@ -123,6 +123,13 @@ export const selectContribution = (data) => dispatch => {
         resourceId: data.resourceId,
         label: 'Main',
     }));
+}
+
+export const updateContributionLabel = (data) => dispatch => {
+    dispatch({
+        type: type.UPDATE_CONTRIBUTION_LABEL,
+        payload: data
+    })
 }
 
 export const updateResearchProblems = (data) => dispatch => {
@@ -177,7 +184,7 @@ export const saveAddPaper = (data) => {
         // contributions
         for (let contributionId of data.contributions.allIds) {
             let contribution = data.contributions.byId[contributionId];
-            let contributionResource = await network.createResource('contribution');
+            let contributionResource = await network.createResource(contribution.label);
             await network.createResourceStatement(paper.id, contributionPredicate, contributionResource.id);
 
             // set the id of the just created contribution for the related resource 
@@ -188,8 +195,13 @@ export const saveAddPaper = (data) => {
             // research problems
             if (contribution.researchProblems && contribution.researchProblems.length > 0) {
                 for (let researchProblem of contribution.researchProblems) {
-                    let researchProblemResource = await network.createResource(researchProblem);
-                    await network.createResourceStatement(contributionResource.id, researchProblemPredicate, researchProblemResource.id);
+                    // check if the research problem is already a resource
+                    if (researchProblem.hasOwnProperty('_class') && researchProblem._class === 'resource'){
+                        await network.createResourceStatement(contributionResource.id, researchProblemPredicate, researchProblem.id);
+                    }else{
+                        let researchProblemResource = await network.createResource(researchProblem.id);
+                        await network.createResourceStatement(contributionResource.id, researchProblemPredicate, researchProblemResource.id);
+                    }
                 }
             }
         }

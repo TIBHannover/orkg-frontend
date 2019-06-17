@@ -66,6 +66,7 @@ export default (state = initialState, action) => {
                     byId: {
                         [payload.id]: {
                             id: payload.id,
+                            label: `Contribution ${state.contributions.allIds.length + 1}`,
                             researchProblems: [],
                             resourceId: payload.resourceId,
                         }
@@ -141,7 +142,7 @@ export default (state = initialState, action) => {
             let { payload } = action;
 
             let contributionId;
-            if (payload.id === undefined) { // if no id is provided, select the first contribution (happens in case of contribution deletion)
+            if (!payload.id) { // if no id is provided, select the first contribution (happens in case of contribution deletion)
                 if (state.contributions.allIds.length === 0) { //if there are not contributions, dont select one
                     return state;
                 }
@@ -158,6 +159,12 @@ export default (state = initialState, action) => {
             };
         }
 
+        case type.UPDATE_CONTRIBUTION_LABEL: {
+            let { payload } = action;
+
+            return dotProp.set(state, `contributions.byId.${payload.contributionId}.label`, payload.label);
+        }
+        
         case type.UPDATE_RESEARCH_PROBLEMS: {
             let { payload } = action;
 

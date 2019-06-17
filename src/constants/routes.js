@@ -8,9 +8,10 @@ export default {
    ADD_PAPER: {
       GENERAL_DATA: '/add-paper'
    },
+   VIEW_PAPER_CONTRIBUTION: '/paper/:resourceId/:contributionId',
    VIEW_PAPER: '/paper/:resourceId',
    LICENSE: '/license',
    NOT_FOUND: '/404',
-   COMPARISON: '/comparison/:paperId/:contributionId',
+   COMPARISON: '/comparison/*',
    PAPERS: '/papers',
 }

@@ -6,14 +6,24 @@ import { Provider } from 'react-redux'
 import configureStore, { history } from './store'
 import { AppContainer } from 'react-hot-loader';
 import rootReducer from './reducers/rootReducer';
+import { CookiesProvider } from 'react-cookie';
+import { ThemeProvider } from 'styled-components';
+
+// Extract Sass variables into a JS object
+// eslint-disable-next-line import/no-webpack-loader-syntax
+const theme = require('sass-extract-loader?{plugins: ["sass-extract-js"]}!./assets/scss/ThemeVariables.scss');
 
 const store = configureStore();
 const render = () => {
     ReactDOM.render(
         <AppContainer>
-            <Provider store={store}>
-                <App history={history} />
-            </Provider>
+            <CookiesProvider>
+                <Provider store={store}>
+                    <ThemeProvider theme={theme}>
+                        <App history={history} />
+                    </ThemeProvider>
+                </Provider>
+            </CookiesProvider>
         </AppContainer>,
         document.getElementById('root')
     );

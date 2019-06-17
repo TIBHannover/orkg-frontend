@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import ResourceDetails, { descriptionSection } from './pages/ResourceDetails'
 import PredicateDetails from './pages/PredicateDetails'
+import ResearchProblem from './components/ResearchProblem/ResearchProblem'
+import ResearchField from './components/ResearchField/ResearchField'
 import Resources from './pages/Resources'
 import SearchResults from './pages/SearchResults'
 import AddResource from './pages/AddResource';
@@ -17,10 +19,11 @@ import Home from './components/Home/Home';
 import ViewPaper from './components/ViewPaper/ViewPaper';
 import License from './components/StaticPages/License';
 import NotFound from './components/StaticPages/NotFound';
-import Comparison from './components/Comparison';
+import Comparison from './components/Comparison/Comparison';
 import PropTypes from 'prop-types';
+import { withCookies } from 'react-cookie';
 
-export default class App extends Component {
+class App extends Component {
     render() {
         return (
             <ConnectedRouter history={this.props.history}>
@@ -31,6 +34,7 @@ export default class App extends Component {
                         <Route exact path={ROUTES.ADD_RESOURCE} component={AddResource} />
                         <Route exact path={ROUTES.PREDICATES} component={Predicates} />
                         <Route exact path={ROUTES.ADD_PAPER.GENERAL_DATA} component={AddPaper} />
+                        <Route exact path={ROUTES.VIEW_PAPER_CONTRIBUTION} component={ViewPaper} /> {/* TODO: slug for the paper title */}
                         <Route exact path={ROUTES.VIEW_PAPER} component={ViewPaper} /> {/* TODO: slug for the paper title */}
                         <Route exact path={ROUTES.LICENSE} component={License} />
                         <Route exact path={ROUTES.NOT_FOUND} component={NotFound} />
@@ -38,8 +42,8 @@ export default class App extends Component {
                         <Route exact path={ROUTES.PAPERS} component={Papers} />
 
                         {/* Legacy routes, only used for debugging now */}
-                        <Route 
-                            path={`/resource/:resourceId/:sectionName`}
+                        <Route
+                            path={'/resource/:resourceId/:sectionName'}
                             render={({ match }) => {
                                 const id = decodeURIComponent(match.params.resourceId);
                                 return (
@@ -49,22 +53,29 @@ export default class App extends Component {
                                 )
                             }}
                         />
-                        <Route 
-                            path={`/predicate/:predicateId`} 
+                        <Route
+                            path={'/predicate/:predicateId'}
                             render={({ match }) => (
                                 <PredicateDetails id={decodeURIComponent(match.params.predicateId)} />
                             )}
                         />
-                        <Route 
-                            path={`/search/:searchTerm`} 
+                        <Route
+                            path={'/problem/:researchProblemId'}
+                            component={ResearchProblem}
+                        />
+                        <Route
+                            path={'/search/:searchTerm'}
                             render={({ match }) => (
                                 <SearchResults term={decodeURIComponent(match.params.searchTerm)} />
                             )}
                         />
-
-                        <Redirect   
-                            from={`/resource/:resourceId`}
-                            to={`/resource/:resourceId/${descriptionSection}`} 
+                        <Route
+                            path={'/field/:researchFieldId'}
+                            component={ResearchField}
+                        />
+                        <Redirect
+                            from={'/resource/:resourceId'}
+                            to={`/resource/:resourceId/${descriptionSection}`}
                         />
                         {/* Don't add routes below this line */}
                         <Route component={NotFound} />
@@ -78,3 +89,5 @@ export default class App extends Component {
 App.propTypes = {
     history: PropTypes.object,
 };
+
+export default withCookies(App);

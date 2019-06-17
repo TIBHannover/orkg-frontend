@@ -8,6 +8,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.8.1",
     "@fortawesome/free-solid-svg-icons": "^5.7.2",
     "@fortawesome/react-fontawesome": "^0.1.4",
+    "array-move": "^2.1.0",
     "babel-preset-es2018": "^1.0.0",
     "bootstrap": "^4.1.3",
     "classnames": "^2.2.6",
@@ -17,7 +18,12 @@
     "flow-bin": "^0.95.1",
     "moment": "^2.24.0",
     "node-sass": "^4.11.0",
+    "query-string": "^6.7.0",
     "react": "^16.6.0",
+    "react-content-loader": "^4.2.1",
+    "react-contenteditable": "^3.2.6",
+    "react-cookie": "^4.0.0",
+    "react-csv": "^1.1.1",
     "react-dom": "^16.6.0",
     "react-hot-loader": "^4.8.2",
     "react-input-autosize": "^2.2.1",
@@ -25,6 +31,8 @@
     "react-redux": "^6.0.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.8",
+    "react-select": "^3.0.4",
+    "react-sortable-hoc": "^1.9.1",
     "react-split-pane": "^0.1.84",
     "react-tagsinput": "^3.19.0",
     "react-transition-group": "^1.2.1",
@@ -49,7 +57,10 @@
     "enzyme-adapter-react-16": "^1.12.1",
     "enzyme-to-json": "^3.3.5",
     "named-urls": "^1.4.0",
-    "react-test-renderer": "^16.8.6"
+    "react-test-renderer": "^16.8.6",
+    "sass-extract": "^2.1.0",
+    "sass-extract-js": "^0.4.0",
+    "sass-extract-loader": "^1.1.0"
   },
   "browserslist": [
     ">0.2%",
@@ -92,6 +103,10 @@
       ],
       "react/prop-types": [
         "error"
+      ],
+      "quotes": [
+        2,
+        "single"
       ]
     }
   }

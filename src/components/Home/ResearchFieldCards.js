@@ -3,7 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components/macro';
 import { getStatementsBySubject, getStatementsByObject } from '../../network';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
 

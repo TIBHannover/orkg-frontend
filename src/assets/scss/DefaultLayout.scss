@@ -54,7 +54,7 @@ body {
     }
 }
 
-//DATEPICKER PLUGIN
+// DATEPICKER PLUGIN
 .react-datepicker-wrapper {
     width: 100%;
 
@@ -62,3 +62,9 @@ body {
         width:100%;
     }
 }
+
+// REACT-SORTABLE-HOC
+.sortableHelper {
+    z-index: 99999;
+    border-radius: 0!important;
+ }

@@ -1,0 +1,33 @@
+/*.entityView input {
+    border: 1px solid #a2a9b1;
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+}
+
+.dropdown .dropdown-menu,
+.dropdown .dropdown-toggle {
+    display: block;
+    z-index: 1001;
+}
+
+.dropdown .overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.dropdown-menu hr {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.container.vertical-centered {
+    max-width: none;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}*/
