@@ -142,7 +142,7 @@ export default (state = initialState, action) => {
             let { payload } = action;
 
             let contributionId;
-            if (payload.id === undefined) { // if no id is provided, select the first contribution (happens in case of contribution deletion)
+            if (!payload.id) { // if no id is provided, select the first contribution (happens in case of contribution deletion)
                 if (state.contributions.allIds.length === 0) { //if there are not contributions, dont select one
                     return state;
                 }

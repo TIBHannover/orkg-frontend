@@ -102,7 +102,7 @@ export const deleteContribution = (id) => dispatch => {
         }
     });
 
-    dispatch(selectContribution());
+    dispatch(selectContribution({id : null}));
 }
 
 export const selectContribution = (data) => dispatch => {
