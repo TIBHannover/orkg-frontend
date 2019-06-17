@@ -72,6 +72,8 @@ class Contributions extends Component {
     render() {
         let selectedContributionId = this.state.selectedContribution;
 
+        console.log(this.props.contributions);
+
         return (
             <div>
                 <Container>
@@ -125,12 +127,14 @@ class Contributions extends Component {
                                 key={selectedContributionId}
                             >
                                 <div className={styles.contribution}>
-                                    <AddToComparison
-                                        contributionId={selectedContributionId}
-                                        paperId={this.props.paperId}
-                                        paperTitle={this.props.paperTitle}
-                                        contributionTitle="Contribution"
-                                    />
+                                    {!this.state.loading && (
+                                        <AddToComparison
+                                            contributionId={selectedContributionId}
+                                            paperId={this.props.paperId}
+                                            paperTitle={this.props.paperTitle}
+                                            contributionTitle={this.props.contributions.find(function (c) { return c.id === selectedContributionId; }).label}
+                                        />
+                                    )}
                                     <Form>
                                         <FormGroup>
                                             <Title style={{ marginTop: 0 }}>Research problems</Title>
