@@ -9,7 +9,6 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 class Share extends Component {
     render() {
-        console.log(this.props);
         return (
             <Modal isOpen={this.props.showDialog} toggle={this.props.toggle}>
                 <ModalHeader toggle={this.props.toggle}>Share link</ModalHeader>

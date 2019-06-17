@@ -16,6 +16,7 @@ import dotProp from 'dot-prop-immutable';
 import queryString from 'query-string';
 import SelectProperties from './SelectProperties.js';
 import Share from './Share.js';
+import GeneratePdf from './GeneratePdf.js';
 
 // TODO: component is too large, split into smaller componenets 
 // There is a lot is styling needed for this table, this it is using a column structure,
@@ -545,13 +546,14 @@ class Comparison extends Component {
                                     Export as CSV
                                 </CSVLink>
                                 : ''}
+                            <GeneratePdf id="comparisonTable" />
                         </DropdownMenu>
                     </Dropdown>
 
                     <Button color="darkblue" className="float-right mb-4 mt-4 " size="sm">Add to comparison</Button>
 
                     <div style={{ overflowX: 'auto', float: 'left', width: '100%', paddingTop: 10 }}>
-                        <Table className="mb-0" style={{ borderCollapse: 'collapse', tableLayout: 'fixed', height: 'max-content', width: '100%' }}>
+                        <Table id="comparisonTable" className="mb-0" style={{ borderCollapse: 'collapse', tableLayout: 'fixed', height: 'max-content', width: '100%' }}>
                             <tbody className="table-borderless">
                                 <tr className="table-borderless">
                                     <Properties><PropertiesInner className="first">Properties</PropertiesInner></Properties>
