@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { Modal, ModalHeader, ModalBody, Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSort, faClipboard } from '@fortawesome/free-regular-svg-icons';
+import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import Tooltip from '../Utils/Tooltip';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
@@ -19,12 +18,12 @@ class Share extends Component {
 
                     <InputGroup>
                         <Input
-                            
+                            value={this.props.url}
+                            disabled
                         />
                         <InputGroupAddon addonType="append">
                             <Tooltip message="Copy to clipboard" hideDefaultIcon>
-                                <CopyToClipboard text={'test'}>
-
+                                <CopyToClipboard text={this.props.url}>
                                     <Button
                                         color="primary"
                                         className="pl-3 pr-3"
@@ -46,6 +45,7 @@ class Share extends Component {
 Share.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
+    url: PropTypes.string.isRequired,
 }
 
 const mapStateToProps = state => ({

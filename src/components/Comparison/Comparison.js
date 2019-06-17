@@ -638,6 +638,7 @@ class Comparison extends Component {
                 <Share 
                     showDialog={this.state.showShareDialog}
                     toggle={() => this.toggle('showShareDialog')}
+                    url={window.location.href}
                 />
             </div>
         );
