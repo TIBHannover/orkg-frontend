@@ -71,9 +71,7 @@ class Contributions extends Component {
 
     render() {
         let selectedContributionId = this.state.selectedContribution;
-
-        console.log(this.props.contributions);
-
+        
         return (
             <div>
                 <Container>
