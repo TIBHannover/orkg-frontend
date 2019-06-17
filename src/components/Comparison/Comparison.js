@@ -15,6 +15,7 @@ import arrayMove from 'array-move';
 import dotProp from 'dot-prop-immutable';
 import queryString from 'query-string';
 import SelectProperties from './SelectProperties.js';
+import Share from './Share.js';
 
 // TODO: component is too large, split into smaller componenets 
 // There is a lot is styling needed for this table, this it is using a column structure,
@@ -136,6 +137,7 @@ class Comparison extends Component {
             dialogResourceId: null,
             dialogResourceLabel: null,
             showPropertiesDialog: false,
+            showShareDialog: false,
         }
 
     }
@@ -414,7 +416,7 @@ class Comparison extends Component {
         });
     }
 
-    toggle = () => {
+    toggleDropdown = () => {
         this.setState(prevState => ({
             dropdownOpen: !prevState.dropdownOpen
         }));
@@ -445,15 +447,9 @@ class Comparison extends Component {
         this.generateUrl(contributionIds.join('/'));
     }
 
-    toggleModal = () => {
+    toggle = (type) => {
         this.setState(prevState => ({
-            modal: !prevState.modal,
-        }));
-    }
-
-    togglePropertiesDialog = () => {
-        this.setState(prevState => ({
-            showPropertiesDialog: !prevState.showPropertiesDialog,
+            [type]: !prevState[type],
         }));
     }
 
@@ -529,12 +525,15 @@ class Comparison extends Component {
                         <span className="h6">{this.state.title}</span>
                     </h2>
 
-                    <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                    <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
                         <DropdownToggle color="darkblue" size="sm" className="float-right mb-4 mt-4 ml-1 pl-3 pr-3" >
                             <Icon icon={faEllipsisV} />
                         </DropdownToggle>
                         <DropdownMenu>
-                            <DropdownItem onClick={this.togglePropertiesDialog}>Select properties</DropdownItem>
+                            <DropdownItem onClick={() => this.toggle('showPropertiesDialog')}>Select properties</DropdownItem>
+                            <DropdownItem divider />
+                            <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
+                            <DropdownItem divider />
                             {this.state.csvData ?
                                 <CSVLink
                                     data={this.state.csvData}
@@ -621,7 +620,7 @@ class Comparison extends Component {
                 {this.state.modal &&
                     <StatementBrowserDialog
                         show={this.state.modal}
-                        toggleModal={this.toggleModal}
+                        toggleModal={() => this.toggle('modal')}
                         resourceId={this.state.dialogResourceId}
                         resourceLabel={this.state.dialogResourceLabel}
                     />
@@ -630,10 +629,15 @@ class Comparison extends Component {
                 <SelectProperties 
                     properties={this.state.properties}
                     showPropertiesDialog={this.state.showPropertiesDialog}
-                    togglePropertiesDialog={this.togglePropertiesDialog}
+                    togglePropertiesDialog={() => this.toggle('showPropertiesDialog')}
                     generateUrl={this.generateUrl}
                     toggleProperty={this.toggleProperty}
                     onSortEnd={this.onSortEnd}
+                />
+
+                <Share 
+                    showDialog={this.state.showShareDialog}
+                    toggle={() => this.toggle('showShareDialog')}
                 />
             </div>
         );
