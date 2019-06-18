@@ -4,6 +4,7 @@ import { getStatementsBySubject, getResource } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar, faBars } from '@fortawesome/free-solid-svg-icons';
+import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader'
 import Contributions from './Contributions';
 import { Link } from 'react-router-dom';
@@ -14,6 +15,7 @@ import ComparisonPopup from './ComparisonPopup';
 class ViewPaper extends Component {
     state = {
         loading: true,
+        loading_failed: false,
         id: null,
         title: '',
         authorNames: [],
@@ -101,66 +103,78 @@ class ViewPaper extends Component {
                 }, () => {
                     this.setState({ selectedContribution: this.props.match.params.contributionId ? this.props.match.params.contributionId : this.state.contributions[0].id });
                 });
-            })
+            }).catch(error => {
+                this.setState({ loading: false, loading_failed: true })
+            });
+        }).catch(error => {
+            this.setState({ loading: false, loading_failed: true })
         });
     }
 
     render() {
         return (
             <div>
-                <Container className="p-0">
-                    <h1 className="h4 mt-4 mb-4">View paper</h1>
-                </Container>
-                <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
-                    {this.state.loading && (
-                        <ContentLoader
-                            height={38}
-                            speed={2}
-                            primaryColor="#f3f3f3"
-                            secondaryColor="#ecebeb"
-                        >
-                            <rect x="0" y="10" width="350" height="12" />
-                            <rect x="0" y="28" rx="5" ry="5" width="30" height="8" />
-                            <rect x="35" y="28" rx="5" ry="5" width="30" height="8" />
-                            <rect x="70" y="28" rx="5" ry="5" width="30" height="8" />
-                            <rect x="105" y="28" rx="5" ry="5" width="30" height="8" />
-                        </ContentLoader>
-                    )}
+                {!this.state.loading && this.state.loading_failed && (
+                    <NotFound />
+                )}
+                {!this.state.loading_failed && (
+                    <>
+                        <Container className="p-0">
+                            <h1 className="h4 mt-4 mb-4">View paper</h1>
+                        </Container>
+                        <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
+                            {this.state.loading && (
+                                <ContentLoader
+                                    height={38}
+                                    speed={2}
+                                    primaryColor="#f3f3f3"
+                                    secondaryColor="#ecebeb"
+                                >
+                                    <rect x="0" y="10" width="350" height="12" />
+                                    <rect x="0" y="28" rx="5" ry="5" width="30" height="8" />
+                                    <rect x="35" y="28" rx="5" ry="5" width="30" height="8" />
+                                    <rect x="70" y="28" rx="5" ry="5" width="30" height="8" />
+                                    <rect x="105" y="28" rx="5" ry="5" width="30" height="8" />
+                                </ContentLoader>
+                            )}
+                            {!this.state.loading && !this.state.loading_failed && (
+                                <>
+                                    <h2 className="h4 mt-4 mb-3">{this.state.title}</h2>
 
-                    {!this.state.loading && (
-                        <>
-                            <h2 className="h4 mt-4 mb-3">{this.state.title}</h2>
-
-                            {/* TODO: change links of badges  */}
-                            <span className="badge badge-lightblue mr-2">
-                                <Icon icon={faCalendar} className="text-primary" /> {moment(this.state.publicationMonth, 'M').format('MMMM')} {this.state.publicationYear}
-                            </span>
-                            {this.state.researchField && (
-                                <Link to={`${process.env.PUBLIC_URL}/field/${encodeURIComponent(this.state.researchField.object.id)}`}>
+                                    {/* TODO: change links of badges  */}
                                     <span className="badge badge-lightblue mr-2">
-                                        <Icon icon={faBars} className="text-primary" /> {this.state.researchField.object.label}
+                                        <Icon icon={faCalendar} className="text-primary" /> {moment(this.state.publicationMonth, 'M').format('MMMM')} {this.state.publicationYear}
                                     </span>
-                                </Link>)
-                            }
-                            {this.state.authorNames.map((author, index) => (
-                                <span className="badge badge-lightblue mr-2" key={index}>
-                                    <Icon icon={faUser} className="text-primary" /> {author}
-                                </span>
-                            ))}
-                        </>
-                    )}
-                    <hr className="mt-5 mb-5" />
+                                    {this.state.researchField && (
+                                        <Link to={`${process.env.PUBLIC_URL}/field/${encodeURIComponent(this.state.researchField.object.id)}`}>
+                                            <span className="badge badge-lightblue mr-2">
+                                                <Icon icon={faBars} className="text-primary" /> {this.state.researchField.object.label}
+                                            </span>
+                                        </Link>)
+                                    }
+                                    {this.state.authorNames.map((author, index) => (
+                                        <span className="badge badge-lightblue mr-2" key={index}>
+                                            <Icon icon={faUser} className="text-primary" /> {author}
+                                        </span>
+                                    ))}
+                                </>
+                            )}
+                            {!this.state.loading_failed && (
+                                <>
+                                    <hr className="mt-5 mb-5" />
+                                    <Contributions
+                                        selectedContribution={this.state.selectedContribution}
+                                        contributions={this.state.contributions}
+                                        paperId={this.props.match.params.resourceId}
+                                        paperTitle={this.state.title}
+                                    />
 
-
-                    <Contributions
-                        selectedContribution={this.state.selectedContribution}
-                        contributions={this.state.contributions}
-                        paperId={this.props.match.params.resourceId}
-                        paperTitle={this.state.title}
-                    />
-
-                    <ComparisonPopup />
-                </Container>
+                                    <ComparisonPopup />
+                                </>
+                            )}
+                        </Container>
+                    </>
+                )}
             </div>
         );
     }
