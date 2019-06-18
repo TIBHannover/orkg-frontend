@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
-import { Container, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Container, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faTimes, faArrowCircleRight, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { CSVLink } from 'react-csv';
-import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
-import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
 import arrayMove from 'array-move';
 import dotProp from 'dot-prop-immutable';
 import queryString from 'query-string';
@@ -17,138 +13,13 @@ import SelectProperties from './SelectProperties.js';
 import Share from './Share.js';
 import GeneratePdf from './GeneratePdf.js';
 import { submitGetRequest, comparisonUrl } from '../../network';
-import capitalize from 'capitalize';
-import classNames from 'classnames';
+import ComparisonTable from './ComparisonTable.js';
 
 // TODO: component is too large, split into smaller componenets 
 // There is a lot is styling needed for this table, this it is using a column structure,
 // instead of the default HTML row structure
 // TODO: code is too nested (bad practice), need to be improved here
-const ScrollContainer = styled.div`
-    overflow-x: hidden; // auto is maybe a better UX, but hidden looks better :) 
-    float: left; 
-    width: 100%;
-    padding: 10px 0;
-    scroll-behavior: smooth;
 
-    &.overflowing-right {
-        box-shadow: inset -9px 0 5px -5px #d9d9d9;
-    }
-    &.overflowing-left {
-        box-shadow: inset 9px 0 5px -5px #d9d9d9;
-    }
-    &.overflowing-both {
-        box-shadow: inset 9px 0 5px -5px #d9d9d9, inset -9px 0 5px -5px #d9d9d9;
-    }
-`;
-const Row = styled.tr`
-    &:last-child td > div {
-        border-bottom:2px solid #CFCBCB;
-        border-radius:0 0 11px 11px;
-    }
-`;
-
-const Properties = styled.td`
-    padding-right:10px;
-    padding:0 10px!important;
-    margin:0;
-    display: table-cell;
-    height:100%;
-    width:250px;
-`;
-
-const PropertiesInner = styled.div`
-    background: #80869B;
-    height:100%;
-    color:#fff;
-    padding:10px;
-    border-bottom:2px solid #8B91A5!important;
-
-    &.first {
-        border-radius:11px 11px 0 0;
-    }
-
-    &.last {
-        border-radius:0 0 11px 11px;
-    }
-`;
-
-const Item = styled.td`
-    padding-right:10px;
-    padding: 0 10px!important;
-    margin:0;
-    display: table-cell;
-    height:100%;
-`;
-
-const ItemInner = styled.div`
-    padding:10px 5px;
-    border-left:2px solid #CFCBCB;
-    border-right:2px solid #CFCBCB;
-    border-bottom:2px solid #EDEBEB;
-    text-align:center;
-    height:100%;
-`;
-
-const ItemHeader = styled.td`
-    padding-right:10px;
-    min-height:50px;
-    padding: 0 10px!important;
-    margin:0;
-    display: table-cell;
-    height:100%;
-    width:250px;
-    position:relative;
-`;
-
-const ItemHeaderInner = styled.div`
-    padding:5px 10px;
-    background:#E86161;
-    border-radius:11px 11px 0 0;
-    color:#fff;
-    height:100%;
-
-    a {
-        color:#fff!important;
-    }
-`;
-
-const Contribution = styled.div`
-    color:#FFA5A5;
-    font-size:85%;
-`;
-
-const Delete = styled.div`
-    position:absolute;
-    top:-4px;
-    right:7px;
-    background:#FFA3A3;
-    border-radius:20px;
-    width:24px;
-    height:24px;
-    text-align:center;
-    color:#E86161;
-    cursor:pointer;
-`;
-const ScrollButton = styled.div`
-    border-radius:30px;
-    color: ${props => props.theme.darkblue};
-    width:30px;
-    height:30px;
-    font-size:27px;
-    cursor:pointer;
-    transition: 0.2s filter;
-
-    &.next {
-        float: right;
-    }
-    &.back {
-        float: left;
-    }
-    &:hover {
-        filter: brightness(85%);
-    }
-`;
 /*const BreadcrumbStyled = styled(Breadcrumb)`
     .breadcrumb {
         background:transparent;
@@ -169,26 +40,16 @@ class Comparison extends Component {
             contributions: [],
             dropdownOpen: false,
             properties: [],
-            data: [],
+            data: {},
             csvData: [],
-            redirect: null,
-            modal: false,
-            dialogResourceId: null,
-            dialogResourceLabel: null,
             showPropertiesDialog: false,
             showShareDialog: false,
-            containerScrollLeft: 0,
-            showNextButton: false,
-            showBackButton: false,
+            isLoading: false,
         }
-
-        this.scrollContainer = React.createRef();
-        this.scrollAmount = 500;
     }
 
     componentDidMount = () => {
         this.performComparison();
-        this.scrollContainer.current.addEventListener('scroll', this.handleScroll);
     }
 
     componentDidUpdate = (prevProps, prevState) => {
@@ -200,10 +61,6 @@ class Comparison extends Component {
         if (this.props.match.params !== prevProps.match.params) {
             this.performComparison();
         }
-    }
-
-    componentWillUnmount = () => {
-        this.scrollContainer.current.removeEventListener('scroll', this.handleScroll);
     }
 
     getContributionIdsFromUrl = () => {
@@ -256,6 +113,10 @@ class Comparison extends Component {
     }
 
     performComparison = async () => {
+        this.setState({
+            isLoading: true
+        });
+
         const contributionIds = this.getContributionIdsFromUrl();
         let comparisonData = await submitGetRequest(`${comparisonUrl}${contributionIds.join('/')}`);
 
@@ -267,12 +128,6 @@ class Comparison extends Component {
             if (contributionIds.includes(contribution.id)) {
                 contributions.push(contribution)
             }
-        }
-
-        if (comparisonData.contributions.length > 3) {
-            this.setState({
-                showNextButton: true,
-            });
         }
 
         const propertyIds = this.getPropertyIdsFromUrl();
@@ -306,12 +161,11 @@ class Comparison extends Component {
             });
         }
 
-        console.log(comparisonData.properties);
-
         this.setState({
             contributions: contributions,
             properties: comparisonData.properties,
             data: comparisonData.data,
+            isLoading: false,
         });
     }
 
@@ -319,14 +173,6 @@ class Comparison extends Component {
         this.setState(prevState => ({
             dropdownOpen: !prevState.dropdownOpen
         }));
-    }
-
-    openStatementBrowser = (id, label) => {
-        this.setState({
-            modal: true,
-            dialogResourceId: id,
-            dialogResourceLabel: label,
-        });
     }
 
     exportAsCsv = (e) => {
@@ -402,28 +248,7 @@ class Comparison extends Component {
         this.props.history.push(url + contributionIds + '?properties=' + propertyIds);
     }
 
-    scrollNext = () => {
-        this.scrollContainer.current.scrollLeft += this.scrollAmount
-    }
-    scrollBack = () => {
-        this.scrollContainer.current.scrollLeft -= this.scrollAmount
-    }
-    handleScroll = () => {
-        const { scrollWidth, offsetWidth, scrollLeft } = this.scrollContainer.current;
-
-        this.setState({
-            showBackButton: this.scrollContainer.current.scrollLeft !== 0,
-            showNextButton: offsetWidth + scrollLeft !== scrollWidth
-        });
-    }
-
     render() {
-        const scrollContainerClasses = classNames({
-            'overflowing-left': this.state.showBackButton,
-            'overflowing-right': this.state.showNextButton,
-            'overflowing-both': this.state.showBackButton && this.state.showNextButton 
-        });
-        
         return (
             <div>
                 <Container className="p-0 d-flex align-items-center">
@@ -446,119 +271,47 @@ class Comparison extends Component {
                         <span className="h6">{this.state.title}</span>
                     </h2>
 
-                    <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
-                        <DropdownToggle color="darkblue" size="sm" className="float-right mb-4 mt-4 ml-1 pl-3 pr-3" >
-                            <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
-                        </DropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem onClick={() => this.toggle('showPropertiesDialog')}>Select properties</DropdownItem>
-                            <DropdownItem divider />
-                            <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
-                            <DropdownItem divider />
-                            {this.state.csvData ?
-                                <CSVLink
-                                    data={this.state.csvData}
-                                    filename={'ORKG Contribution Comparison.csv'}
-                                    className="dropdown-item"
-                                    target="_blank"
-                                    onClick={this.exportAsCsv}
-                                >
-                                    Export as CSV
-                                </CSVLink>
-                                : ''}
-                            <GeneratePdf id="comparisonTable" />
-                        </DropdownMenu>
-                    </Dropdown>
+                    {!this.state.isLoading ? (
+                        <div>
+                            <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
+                                <DropdownToggle color="darkblue" size="sm" className="float-right mb-4 mt-4 ml-1 pl-3 pr-3" >
+                                    <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem onClick={() => this.toggle('showPropertiesDialog')}>Select properties</DropdownItem>
+                                    <DropdownItem divider />
+                                    <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
+                                    <DropdownItem divider />
+                                    {this.state.csvData ?
+                                        <CSVLink
+                                            data={this.state.csvData}
+                                            filename={'ORKG Contribution Comparison.csv'}
+                                            className="dropdown-item"
+                                            target="_blank"
+                                            onClick={this.exportAsCsv}
+                                        >
+                                            Export as CSV
+                                        </CSVLink>
+                                        : ''}
+                                    <GeneratePdf id="comparisonTable" />
+                                </DropdownMenu>
+                            </Dropdown>
 
-                    {/*<Button color="darkblue" className="float-right mb-4 mt-4 " size="sm">Add to comparison</Button>*/}
+                            {/*<Button color="darkblue" className="float-right mb-4 mt-4 " size="sm">Add to comparison</Button>*/}
 
-                    <ScrollContainer ref={this.scrollContainer} className={scrollContainerClasses}>
-                        <Table id="comparisonTable" className="mb-0" style={{ borderCollapse: 'collapse', tableLayout: 'fixed', height: 'max-content', width: '100%' }}>
-                            <tbody className="table-borderless">
-                                <tr className="table-borderless">
-                                    <Properties><PropertiesInner className="first">Properties</PropertiesInner></Properties>
+                            <ComparisonTable
+                                data={this.state.data}
+                                properties={this.state.properties}
+                                contributions={this.state.contributions}
+                                removeContribution={this.removeContribution}
+                            />
+                        </div>) 
+                        : 
+                            <div className="mt-3 mb-3 text-center float-left w-100"><Icon icon={faSpinner} spin /> Loading</div>
+                            /* TODO: make a nice loading view just like the research contribution page */
+                        }
 
-                                    {this.state.contributions.map((contribution, index) => {
-                                        return (
-                                            <ItemHeader key={`contribution${index}`}>
-                                                <ItemHeaderInner>
-                                                    <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: contribution.paperId })}>
-                                                        {contribution.title}
-                                                    </Link>
-                                                    <br />
-                                                    <Contribution>{contribution.contributionLabel}</Contribution>
-                                                </ItemHeaderInner>
-
-                                                {this.state.contributions.length > 2 &&
-                                                    <Delete onClick={() => this.removeContribution(contribution.id)}>
-                                                        <Icon icon={faTimes} />
-                                                    </Delete>}
-                                            </ItemHeader>
-                                        )
-                                    })}
-                                </tr>
-
-                                {this.state.properties.map((property, index) => {
-                                    if (!property.active) {
-                                        return null;
-                                    }
-
-                                    return (
-                                        <Row key={`row${index}`}>
-                                            <Properties>
-                                                <PropertiesInner>
-                                                    {/*For when the path is available: <Tooltip message={property.path} colorIcon={'#606679'}>*/}
-                                                    {capitalize(property.label)}
-                                                    {/*</Tooltip>*/}
-                                                </PropertiesInner>
-                                            </Properties>
-                                            {this.state.contributions.map((contribution, index2) => {
-                                                const data = this.state.data[property.id][index2];
-
-                                                return (
-                                                    <Item key={`data${index2}`}>
-                                                        <ItemInner>
-                                                            {data.map((date, index) => (
-                                                                Object.keys(date).length > 0 ?
-                                                                    date.type === 'resource' ? (
-                                                                        <span key={`value-${index}`}>
-                                                                            {index > 0 && <br />}
-                                                                            <span
-                                                                                className="btn-link"
-                                                                                onClick={() => this.openStatementBrowser(date.resourceId, date.label)}
-                                                                                style={{ cursor: 'pointer' }}
-                                                                            >
-                                                                                {date.label}
-                                                                            </span>
-                                                                        </span>
-                                                                    ) : date.label
-                                                                    : <span className="font-italic" key={`value-${index}`}>Empty</span>
-                                                            ))}
-                                                        </ItemInner>
-                                                    </Item>)
-                                            })}
-                                        </Row>
-                                    )
-                                })}
-                            </tbody>
-                        </Table>
-                    </ScrollContainer>
-                    {this.state.showBackButton &&
-                        <ScrollButton onClick={this.scrollBack} className="back"><Icon icon={faArrowCircleLeft} /></ScrollButton>
-                    }
-                    {this.state.showNextButton &&
-                        <ScrollButton onClick={this.scrollNext} className="next"><Icon icon={faArrowCircleRight} /></ScrollButton>
-                    }
                 </Container>
-
-                {this.state.modal &&
-                    <StatementBrowserDialog
-                        show={this.state.modal}
-                        toggleModal={() => this.toggle('modal')}
-                        resourceId={this.state.dialogResourceId}
-                        resourceLabel={this.state.dialogResourceLabel}
-                    />
-                }
 
                 <SelectProperties
                     properties={this.state.properties}
