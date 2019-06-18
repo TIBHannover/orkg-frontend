@@ -113,7 +113,7 @@ export const createResourceStatement = (subjectId, predicateId, objectId) => {
             'predicate_id': predicateId,
             'object': {
                 'id': objectId,
-                "_class": "resource"
+                '_class': 'resource'
             }
         });
 };
@@ -126,7 +126,7 @@ export const createLiteralStatement = (subjectId, predicateId, property) => {
             'predicate_id': predicateId,
             'object': {
                 'id': property,
-                "_class": "literal"
+                '_class': 'literal'
             }
         });
 };

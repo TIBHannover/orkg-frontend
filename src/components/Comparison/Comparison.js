@@ -10,7 +10,6 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
 import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
-import Tooltip from '../Utils/Tooltip.js';
 import arrayMove from 'array-move';
 import dotProp from 'dot-prop-immutable';
 import queryString from 'query-string';
@@ -23,6 +22,7 @@ import capitalize from 'capitalize';
 // TODO: component is too large, split into smaller componenets 
 // There is a lot is styling needed for this table, this it is using a column structure,
 // instead of the default HTML row structure
+// TODO: code is too nested (bad practice), need to be improved here
 const Row = styled.tr`
     &:last-child td > div {
         border-bottom:2px solid #CFCBCB;
@@ -211,7 +211,6 @@ class Comparison extends Component {
 
     performComparison = async () => {
         const contributionIds = this.getContributionIdsFromUrl();
-        const propertyIds = this.getPropertyIdsFromUrl();
         let comparisonData = await submitGetRequest(`${comparisonUrl}${contributionIds.join('/')}`);
 
         // mocking function to allow for deletion of contributions via the url
@@ -224,26 +223,38 @@ class Comparison extends Component {
             }
         }
 
+        const propertyIds = this.getPropertyIdsFromUrl();
+
         // if there are properties in the query string 
         if (propertyIds.length > 0) {
 
             // sort properties based on query string (is not presented in query string, sort at the bottom)
             // TODO: sort by label when is not active
-            comparisonData.properties.sort(function (a, b) {
+            comparisonData.properties.sort((a, b) => {
                 let index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
                 let index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
                 return index1 - index2;
-
-                //return propertyIds.indexOf(a.id) - propertyIds.indexOf(b.id);
             });
-
             // hide properties based on query string
             comparisonData.properties.forEach((property, index) => {
                 if (!propertyIds.includes(property.id)) {
                     comparisonData.properties[index].active = false;
+                } else {
+                    comparisonData.properties[index].active = true;
+                }
+            });
+        } else {
+            //no properties ids in the url, but the ones from the api still need to be sorted
+            comparisonData.properties.sort((a, b) => {
+                if (a.active === b.active) {
+                    return a.label.toLowerCase().localeCompare(b.label.toLowerCase());
+                } else {
+                    return !a.active ? 1 : -1;
                 }
             });
         }
+
+        console.log(comparisonData.properties);
 
         this.setState({
             contributions: contributions,
@@ -322,6 +333,7 @@ class Comparison extends Component {
                 queryString += property.id + ',';
             }
         });
+        queryString = queryString.slice(0, -1);
 
         return queryString;
     }
@@ -434,18 +446,20 @@ class Comparison extends Component {
                                                     <Item key={`data${index2}`}>
                                                         <ItemInner>
                                                             {data.map((date, index) => (
-                                                                date.type === 'resource' ? (
-                                                                    <span key={`value-${index}`}>
-                                                                        {index > 0 && <br />}
-                                                                        <span
-                                                                            className="btn-link"
-                                                                            onClick={() => this.openStatementBrowser(date.resourceId, date.label)}
-                                                                            style={{ cursor: 'pointer' }}
-                                                                        >
-                                                                            {date.label}
+                                                                Object.keys(date).length > 0 ?
+                                                                    date.type === 'resource' ? (
+                                                                        <span key={`value-${index}`}>
+                                                                            {index > 0 && <br />}
+                                                                            <span
+                                                                                className="btn-link"
+                                                                                onClick={() => this.openStatementBrowser(date.resourceId, date.label)}
+                                                                                style={{ cursor: 'pointer' }}
+                                                                            >
+                                                                                {date.label}
+                                                                            </span>
                                                                         </span>
-                                                                    </span>
-                                                                ) : date.label
+                                                                    ) : date.label
+                                                                    : <span className="font-italic" key={`value-${index}`}>Empty</span>
                                                             ))}
                                                         </ItemInner>
                                                     </Item>)
