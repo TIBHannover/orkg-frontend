@@ -17,6 +17,8 @@ import queryString from 'query-string';
 import SelectProperties from './SelectProperties.js';
 import Share from './Share.js';
 import GeneratePdf from './GeneratePdf.js';
+import { submitGetRequest, comparisonUrl } from '../../network';
+import capitalize from 'capitalize';
 
 // TODO: component is too large, split into smaller componenets 
 // There is a lot is styling needed for this table, this it is using a column structure,
@@ -170,7 +172,7 @@ class Comparison extends Component {
 
     getPropertyIdsFromUrl = () => {
         let ids = queryString.parse(this.props.location.search).properties;
-        
+
         if (!ids) {
             return [];
         }
@@ -207,213 +209,46 @@ class Comparison extends Component {
         });
     }
 
-    performComparison = () => {
+    performComparison = async () => {
         const contributionIds = this.getContributionIdsFromUrl();
         const propertyIds = this.getPropertyIdsFromUrl();
-
-        const apiMockingData = {
-            contributions:
-                [
-                    {
-                        id: 'R1026',
-                        paperId: 'R1022',
-                        title: 'Fifth',
-                        contributionLabel: 'Contribution 2'
-                    },
-                    {
-                        id: 'R3004',
-                        paperId: 'R3000',
-                        title: 'Research Directions for the Internet of Things',
-                        contributionLabel: 'Contribution 1'
-                    },
-                    {
-                        id: 'R1032',
-                        paperId: 'R1028',
-                        title: 'Research Directions for the Internet of Things',
-                        contributionLabel: 'Contribution 1'
-                    },
-                ],
-            properties:
-                [
-                    {
-                        id: 'P1',
-                        label: 'Algorithm',
-                        path: 'Approach > Method > ',
-                        active: true
-                    },
-                    {
-                        id: 'P2',
-                        label: 'Problem',
-                        path: 'Approach > ',
-                        active: true
-                    },
-                    {
-                        id: 'P3',
-                        label: 'Programming language',
-                        path: 'Approach > ',
-                        active: true
-                    },
-                    {
-                        id: 'P4',
-                        label: 'Stable',
-                        path: 'Approach > ',
-                        active: true
-                    },
-                    {
-                        id: 'P5',
-                        label: 'Best complexity',
-                        path: 'Approach > ',
-                        active: true
-                    },
-                    {
-                        id: 'P6',
-                        label: 'Worst complexity',
-                        path: 'Approach > ',
-                        active: true
-                    },
-                ],
-            data:
-            {
-                'P1': [
-                    {
-                        resourceId: 'R1',
-                        label: 'Merge sort',
-                        type: 'resource'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'Heap sort',
-                        type: 'resource'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'Bubble sort',
-                        type: 'resource'
-                    },
-                ],
-                'P2': [
-                    {
-                        resourceId: 'R1',
-                        label: 'Efficient sorting',
-                        type: 'resource'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'Efficient sorting',
-                        type: 'resource'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'Sorting',
-                        type: 'resource'
-                    },
-                ],
-                'P3': [
-                    {
-                        resourceId: 'R1',
-                        label: 'C++',
-                        type: 'resource'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: '',
-                        type: 'resource'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'Python',
-                        type: 'resource'
-                    },
-                ],
-                'P4': [
-                    {
-                        resourceId: 'R1',
-                        label: 'Y',
-                        type: 'literal'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'N',
-                        type: 'literal'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'N',
-                        type: 'literal'
-                    },
-                ],
-                'P5': [
-                    {
-                        resourceId: 'R1',
-                        label: 'n log n',
-                        type: 'literal'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'n',
-                        type: 'literal'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'n',
-                        type: 'literal'
-                    },
-                ],
-                'P6': [
-                    {
-                        resourceId: 'R1',
-                        label: 'n log n',
-                        type: 'literal'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'n log n',
-                        type: 'literal'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'n log n',
-                        type: 'literal'
-                    },
-                ],
-            }
-        };
+        let comparisonData = await submitGetRequest(`${comparisonUrl}${contributionIds.join('/')}`);
 
         // mocking function to allow for deletion of contributions via the url
         let contributions = [];
-        for (let i = 0; i < apiMockingData.contributions.length; i++) {
-            let contribution = apiMockingData.contributions[i];
+        for (let i = 0; i < comparisonData.contributions.length; i++) {
+            let contribution = comparisonData.contributions[i];
 
             if (contributionIds.includes(contribution.id)) {
                 contributions.push(contribution)
             }
         }
-        
+
         // if there are properties in the query string 
-        if (propertyIds.length > 0) { 
+        if (propertyIds.length > 0) {
 
             // sort properties based on query string (is not presented in query string, sort at the bottom)
             // TODO: sort by label when is not active
-            apiMockingData.properties.sort(function(a, b) {
+            comparisonData.properties.sort(function (a, b) {
                 let index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
                 let index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
                 return index1 - index2;
-                
+
                 //return propertyIds.indexOf(a.id) - propertyIds.indexOf(b.id);
             });
 
             // hide properties based on query string
-            apiMockingData.properties.forEach((property, index) => {
+            comparisonData.properties.forEach((property, index) => {
                 if (!propertyIds.includes(property.id)) {
-                    apiMockingData.properties[index].active = false;
+                    comparisonData.properties[index].active = false;
                 }
             });
         }
-        
+
         this.setState({
             contributions: contributions,
-            properties: apiMockingData.properties,
-            data: apiMockingData.data,
+            properties: comparisonData.properties,
+            data: comparisonData.data,
         });
     }
 
@@ -587,9 +422,9 @@ class Comparison extends Component {
                                         <Row key={`row${index}`}>
                                             <Properties>
                                                 <PropertiesInner>
-                                                    <Tooltip message={property.path} colorIcon={'#606679'}>
-                                                        {property.label}
-                                                    </Tooltip>
+                                                    {/*<Tooltip message={property.path} colorIcon={'#606679'}>*/}
+                                                    {capitalize(property.label)}
+                                                    {/*</Tooltip>*/}
                                                 </PropertiesInner>
                                             </Properties>
                                             {this.state.contributions.map((contribution, index2) => {
@@ -598,18 +433,22 @@ class Comparison extends Component {
                                                 return (
                                                     <Item key={`data${index2}`}>
                                                         <ItemInner>
-                                                            {data.type === 'resource' ?
-                                                                <span
-                                                                    className="btn-link"
-                                                                    onClick={() => this.openStatementBrowser(data.resourceId, data.label)}
-                                                                    style={{ cursor: 'pointer' }}
-                                                                >
-                                                                    {data.label}
-                                                                </span>
-                                                                : data.label}
+                                                            {data.map((date, index) => (
+                                                                date.type === 'resource' ? (
+                                                                    <span key={`value-${index}`}>
+                                                                        {index > 0 && <br />}
+                                                                        <span
+                                                                            className="btn-link"
+                                                                            onClick={() => this.openStatementBrowser(date.resourceId, date.label)}
+                                                                            style={{ cursor: 'pointer' }}
+                                                                        >
+                                                                            {date.label}
+                                                                        </span>
+                                                                    </span>
+                                                                ) : date.label
+                                                            ))}
                                                         </ItemInner>
-                                                    </Item>
-                                                )
+                                                    </Item>)
                                             })}
                                         </Row>
                                     )
@@ -628,7 +467,7 @@ class Comparison extends Component {
                     />
                 }
 
-                <SelectProperties 
+                <SelectProperties
                     properties={this.state.properties}
                     showPropertiesDialog={this.state.showPropertiesDialog}
                     togglePropertiesDialog={() => this.toggle('showPropertiesDialog')}
@@ -637,7 +476,7 @@ class Comparison extends Component {
                     onSortEnd={this.onSortEnd}
                 />
 
-                <Share 
+                <Share
                     showDialog={this.state.showShareDialog}
                     toggle={() => this.toggle('showShareDialog')}
                     url={window.location.href}

@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSort } from '@fortawesome/free-solid-svg-icons';
 import { SortableContainer, SortableElement, sortableHandle } from 'react-sortable-hoc';
+import capitalize from 'capitalize';
 
 const DragHandle = styled.span`
     cursor:move;
@@ -38,7 +39,7 @@ class SelectProperties extends Component {
             <CustomInput
                 type="checkbox"
                 id={`checkbox-${property.label}`}
-                label={property.label}
+                label={capitalize(property.label)}
                 className="flex-grow-1"
                 onChange={() => this.props.toggleProperty(property.id)}
                 checked={property.active}
