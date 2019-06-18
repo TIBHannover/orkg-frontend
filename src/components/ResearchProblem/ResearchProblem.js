@@ -115,14 +115,14 @@ class ResearchProblem extends Component {
                                     {this.state.contributions.map(
                                         (contribution) => {
                                             return (
-                                                <PaperCard 
-                                                paper={{id: contribution.papers[0].subject.id, title:contribution.papers[0].subject.label, ...contribution.papers[0].data}} 
-                                                contribution={{id: contribution.subject.id, title: contribution.subject.label}}
-                                                key={`pc${contribution.id}`} 
+                                                <PaperCard
+                                                    paper={{ id: contribution.papers[0].subject.id, title: contribution.papers[0].subject.label, ...contribution.papers[0].data }}
+                                                    contribution={{ id: contribution.subject.id, title: contribution.subject.label }}
+                                                    key={`pc${contribution.id}`}
                                                 />
                                             )
-                            }
-                        )}
+                                        }
+                                    )}
                                 </div>
                                 : (
                                     <div className="text-center mt-4 mb-4">

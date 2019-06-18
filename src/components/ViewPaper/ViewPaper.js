@@ -100,9 +100,12 @@ class ViewPaper extends Component {
                     researchField,
                     authorNames: authorNamesArray.reverse(), // statements are ordered desc, so first author is last => thus reverse
                     contributions: contributionArray.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
-                }, () => {
-                    this.setState({ selectedContribution: this.props.match.params.contributionId ? this.props.match.params.contributionId : this.state.contributions[0].id });
                 });
+            }).then(() => {
+                if (this.props.match.params.contributionId && !this.state.contributions.some((el) => { return el.id === this.props.match.params.contributionId; })) {
+                    throw new Error('Contribution not found');
+                }
+                this.setState({ selectedContribution: (this.props.match.params.contributionId && this.state.contributions.some((el) => { return el.id === this.props.match.params.contributionId; })) ? this.props.match.params.contributionId : this.state.contributions[0].id });
             }).catch(error => {
                 this.setState({ loading: false, loading_failed: true })
             });
