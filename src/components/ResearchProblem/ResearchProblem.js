@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { Container, Button } from 'reactstrap';
+import { Container, Button, Card, CardText, CardBody, CardHeader, CardFooter } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
-import { getStatementsByObject, getResource } from '../../network';
+import { getStatementsByObject, getResource, getStatementsBySubject } from '../../network';
+import ComparisonPopup from './../ViewPaper/ComparisonPopup';
+import PaperCard from '../PaperCard/PaperCard'
 import ROUTES from '../../constants/routes.js';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-
 import PropTypes from 'prop-types';
+
 
 class ResearchProblem extends Component {
 
@@ -29,20 +30,51 @@ class ResearchProblem extends Component {
         // Get the contributions that are on the research problem
         getStatementsByObject({
             id: this.props.match.params.researchProblemId,
-            limit: 4,
             order: 'desc',
         }).then((result) => {
             // Get the papers of each contribution
             var papers = result.map((contribution) => {
                 return getStatementsByObject({
                     id: contribution.subject.id,
-                    limit: 4,
                     order: 'desc',
-                }).then((result) => {
-                    contribution.papers = result;
-                    return contribution
+                }).then((papers) => {
+                    // Fetch the data of each paper
+                    var papers_data = papers.map((paper) => {
+                        return getStatementsBySubject(paper.subject.id).then((paperStatements) => {
+                            // publication year
+                            let publicationYear = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
+                            if (publicationYear.length > 0) {
+                                publicationYear = publicationYear[0].object.label
+                            }
+                            // publication month
+                            let publicationMonth = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
+                            if (publicationMonth.length > 0) {
+                                publicationMonth = publicationMonth[0].object.label
+                            }
+                            // authors
+                            let authors = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
+                            let authorNamesArray = [];
+                            if (authors.length > 0) {
+                                for (let author of authors) {
+                                    let authorName = author.object.label;
+                                    authorNamesArray.push(authorName);
+                                }
+                            }
+                            paper.data = {
+                                publicationYear,
+                                publicationMonth,
+                                authorNames: authorNamesArray.reverse(),
+                            }
+                            return paper;
+                        })
+                    });
+                    return Promise.all(papers_data).then((results) => {
+                        contribution.papers = results;
+                        return contribution
+                    })
                 });
             })
+
             Promise.all(papers).then((results) => {
                 this.setState({
                     contributions: results,
@@ -63,23 +95,31 @@ class ResearchProblem extends Component {
                 {!this.state.loading && (
                     <div>
                         <Container className="p-0">
-                            <h1 className="h4 mt-4 mb-4">View papers of <i>{this.state.researchProblem && this.state.researchProblem.label}</i> research problem</h1>
+                            <Card>
+                                <CardHeader>
+                                    <div className="float-right"><b>{this.state.contributions.length}</b> Contributions</div>
+                                    <h3 className="h4 mt-4 mb-4">{this.state.researchProblem && this.state.researchProblem.label}</h3>
+                                </CardHeader>
+                                <CardBody>
+                                    <CardText>
+                                        Description text
+                                    </CardText>
+                                </CardBody>
+                                <CardFooter>Some sub problems</CardFooter>
+                            </Card>
                         </Container>
-                        <Container className="box pt-4 pb-4 pl-5 pr-5">
+                        <br />
+                        <Container className={'p-0'}>
                             {this.state.contributions && this.state.contributions.length > 0 ?
-                                <ul className="list-group list-group-flush">
+                                <div>
                                     {this.state.contributions.map(
-                                        (resource) => {
+                                        (contribution) => {
                                             return (
-                                                <li className="list-group-item list-group-item-action" key={resource.id}>
-                                                    <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: resource.papers[0].subject.id })}>
-                                                        {`${resource.papers[0].subject.id}: ${resource.papers[0].subject.label}`}
-                                                    </Link>
-                                                </li>
+                                                <PaperCard contribution={contribution} key={`pc${contribution.id}`} />
                                             )
                                         }
                                     )}
-                                </ul>
+                                </div>
                                 : (
                                     <div className="text-center mt-4 mb-4">
                                         There are no articles for this research problem, yet.
@@ -93,6 +133,8 @@ class ResearchProblem extends Component {
                                     </div>
                                 )
                             }
+
+                            <ComparisonPopup />
                         </Container>
                     </div>
                 )}
@@ -106,7 +148,7 @@ ResearchProblem.propTypes = {
         params: PropTypes.shape({
             researchProblemId: PropTypes.string,
         }).isRequired,
-    }).isRequired,
+    }).isRequired
 }
 
 export default ResearchProblem;
