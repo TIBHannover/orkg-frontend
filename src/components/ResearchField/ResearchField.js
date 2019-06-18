@@ -17,10 +17,21 @@ class ResearchField extends Component {
             loading: true,
             researchField: null,
             papers: null,
+            parentResearchField: null
         };
     }
 
     componentDidMount() {
+        this.loadResearchFieldData();
+    }
+
+    componentDidUpdate = (prevProps) => {
+        if (this.props.match.params.researchFieldId !== prevProps.match.params.researchFieldId) {
+            this.loadResearchFieldData();
+        }
+    }
+
+    loadResearchFieldData() {
         // Get the research problem
         getResource(this.props.match.params.researchFieldId).then((result) => {
             this.setState({ researchField: result })
@@ -63,11 +74,12 @@ class ResearchField extends Component {
                         return paper;
                     })
                 });
-
+            let parentResearchField = result.find((statement) => statement.predicate.id === 'P36');
             return Promise.all(papers).then((papers) => {
                 this.setState({
                     papers: papers,
-                    loading: false
+                    loading: false,
+                    parentResearchField: parentResearchField
                 })
             })
         })
@@ -94,7 +106,15 @@ class ResearchField extends Component {
                                         Description text
                                     </CardText>
                                 </CardBody>
-                                <CardFooter>Some sub problems</CardFooter>
+                                {this.state.parentResearchField && (
+                                    <CardFooter>
+                                        Parent research field:
+                                    <Link className={'ml-2'} to={`${process.env.PUBLIC_URL}/field/${encodeURIComponent(this.state.parentResearchField.subject.id)}`}>
+                                            {this.state.parentResearchField.subject.label}
+                                        </Link>
+                                    </CardFooter>
+                                )}
+
                             </Card>
                         </Container>
                         <br />
