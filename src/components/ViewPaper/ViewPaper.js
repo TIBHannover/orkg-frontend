@@ -150,13 +150,13 @@ class ViewPaper extends Component {
                                     </span>
                                     {this.state.researchField && (
                                         <Link to={`${process.env.PUBLIC_URL}/field/${encodeURIComponent(this.state.researchField.object.id)}`}>
-                                            <span className="badge badge-lightblue mr-2">
+                                            <span className="badge badge-lightblue mr-2 mb-2">
                                                 <Icon icon={faBars} className="text-primary" /> {this.state.researchField.object.label}
                                             </span>
                                         </Link>)
                                     }
                                     {this.state.authorNames.map((author, index) => (
-                                        <span className="badge badge-lightblue mr-2" key={index}>
+                                        <span className="badge badge-lightblue mr-2 mb-2" key={index}>
                                             <Icon icon={faUser} className="text-primary" /> {author}
                                         </span>
                                     ))}
