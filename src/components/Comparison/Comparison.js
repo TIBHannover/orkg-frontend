@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faTimes, faArrowCircleRight, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
 import { CSVLink } from 'react-csv';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
@@ -18,11 +18,29 @@ import Share from './Share.js';
 import GeneratePdf from './GeneratePdf.js';
 import { submitGetRequest, comparisonUrl } from '../../network';
 import capitalize from 'capitalize';
+import classNames from 'classnames';
 
 // TODO: component is too large, split into smaller componenets 
 // There is a lot is styling needed for this table, this it is using a column structure,
 // instead of the default HTML row structure
 // TODO: code is too nested (bad practice), need to be improved here
+const ScrollContainer = styled.div`
+    overflow-x: hidden; // auto is maybe a better UX, but hidden looks better :) 
+    float: left; 
+    width: 100%;
+    padding: 10px 0;
+    scroll-behavior: smooth;
+
+    &.overflowing-right {
+        box-shadow: inset -9px 0 5px -5px #d9d9d9;
+    }
+    &.overflowing-left {
+        box-shadow: inset 9px 0 5px -5px #d9d9d9;
+    }
+    &.overflowing-both {
+        box-shadow: inset 9px 0 5px -5px #d9d9d9, inset -9px 0 5px -5px #d9d9d9;
+    }
+`;
 const Row = styled.tr`
     &:last-child td > div {
         border-bottom:2px solid #CFCBCB;
@@ -112,7 +130,25 @@ const Delete = styled.div`
     color:#E86161;
     cursor:pointer;
 `;
+const ScrollButton = styled.div`
+    border-radius:30px;
+    color: ${props => props.theme.darkblue};
+    width:30px;
+    height:30px;
+    font-size:27px;
+    cursor:pointer;
+    transition: 0.2s filter;
 
+    &.next {
+        float: right;
+    }
+    &.back {
+        float: left;
+    }
+    &:hover {
+        filter: brightness(85%);
+    }
+`;
 /*const BreadcrumbStyled = styled(Breadcrumb)`
     .breadcrumb {
         background:transparent;
@@ -141,12 +177,18 @@ class Comparison extends Component {
             dialogResourceLabel: null,
             showPropertiesDialog: false,
             showShareDialog: false,
+            containerScrollLeft: 0,
+            showNextButton: false,
+            showBackButton: false,
         }
 
+        this.scrollContainer = React.createRef();
+        this.scrollAmount = 500;
     }
 
     componentDidMount = () => {
         this.performComparison();
+        this.scrollContainer.current.addEventListener('scroll', this.handleScroll);
     }
 
     componentDidUpdate = (prevProps, prevState) => {
@@ -158,6 +200,10 @@ class Comparison extends Component {
         if (this.props.match.params !== prevProps.match.params) {
             this.performComparison();
         }
+    }
+
+    componentWillUnmount = () => {
+        this.scrollContainer.current.removeEventListener('scroll', this.handleScroll);
     }
 
     getContributionIdsFromUrl = () => {
@@ -221,6 +267,12 @@ class Comparison extends Component {
             if (contributionIds.includes(contribution.id)) {
                 contributions.push(contribution)
             }
+        }
+
+        if (comparisonData.contributions.length > 3) {
+            this.setState({
+                showNextButton: true,
+            });
         }
 
         const propertyIds = this.getPropertyIdsFromUrl();
@@ -350,7 +402,28 @@ class Comparison extends Component {
         this.props.history.push(url + contributionIds + '?properties=' + propertyIds);
     }
 
+    scrollNext = () => {
+        this.scrollContainer.current.scrollLeft += this.scrollAmount
+    }
+    scrollBack = () => {
+        this.scrollContainer.current.scrollLeft -= this.scrollAmount
+    }
+    handleScroll = () => {
+        const { scrollWidth, offsetWidth, scrollLeft } = this.scrollContainer.current;
+
+        this.setState({
+            showBackButton: this.scrollContainer.current.scrollLeft !== 0,
+            showNextButton: offsetWidth + scrollLeft !== scrollWidth
+        });
+    }
+
     render() {
+        const scrollContainerClasses = classNames({
+            'overflowing-left': this.state.showBackButton,
+            'overflowing-right': this.state.showNextButton,
+            'overflowing-both': this.state.showBackButton && this.state.showNextButton 
+        });
+        
         return (
             <div>
                 <Container className="p-0 d-flex align-items-center">
@@ -369,7 +442,7 @@ class Comparison extends Component {
 
                 <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
                     <h2 className="h4 mt-4 mb-3 float-left">
-                        Compare: <br />
+                        Compare<br />
                         <span className="h6">{this.state.title}</span>
                     </h2>
 
@@ -399,7 +472,7 @@ class Comparison extends Component {
 
                     {/*<Button color="darkblue" className="float-right mb-4 mt-4 " size="sm">Add to comparison</Button>*/}
 
-                    <div style={{ overflowX: 'auto', float: 'left', width: '100%', paddingTop: 10 }}>
+                    <ScrollContainer ref={this.scrollContainer} className={scrollContainerClasses}>
                         <Table id="comparisonTable" className="mb-0" style={{ borderCollapse: 'collapse', tableLayout: 'fixed', height: 'max-content', width: '100%' }}>
                             <tbody className="table-borderless">
                                 <tr className="table-borderless">
@@ -434,7 +507,7 @@ class Comparison extends Component {
                                         <Row key={`row${index}`}>
                                             <Properties>
                                                 <PropertiesInner>
-                                                    {/*<Tooltip message={property.path} colorIcon={'#606679'}>*/}
+                                                    {/*For when the path is available: <Tooltip message={property.path} colorIcon={'#606679'}>*/}
                                                     {capitalize(property.label)}
                                                     {/*</Tooltip>*/}
                                                 </PropertiesInner>
@@ -469,7 +542,13 @@ class Comparison extends Component {
                                 })}
                             </tbody>
                         </Table>
-                    </div>
+                    </ScrollContainer>
+                    {this.state.showBackButton &&
+                        <ScrollButton onClick={this.scrollBack} className="back"><Icon icon={faArrowCircleLeft} /></ScrollButton>
+                    }
+                    {this.state.showNextButton &&
+                        <ScrollButton onClick={this.scrollNext} className="next"><Icon icon={faArrowCircleRight} /></ScrollButton>
+                    }
                 </Container>
 
                 {this.state.modal &&
