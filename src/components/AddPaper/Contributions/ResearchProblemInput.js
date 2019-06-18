@@ -35,7 +35,7 @@ class ResearchProblemInput extends Component {
             )
             // Set them to the list of research problems and add the created options
             this.setState({
-                researchProblems: [...researchProblems, this.props.value.filter(({ id }) => !researchProblems.map(({ id }) => id).includes(id))],
+                researchProblems: [...researchProblems, ...this.props.value.filter(({ id }) => !researchProblems.map(({ id }) => id).includes(id))],
                 loading: false
             })
         })
