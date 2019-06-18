@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, /*Breadcrumb, BreadcrumbItem*/ } from 'reactstrap';
+import { Container, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -528,7 +528,7 @@ class Comparison extends Component {
 
                     <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
                         <DropdownToggle color="darkblue" size="sm" className="float-right mb-4 mt-4 ml-1 pl-3 pr-3" >
-                            <Icon icon={faEllipsisV} />
+                            <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
                         </DropdownToggle>
                         <DropdownMenu>
                             <DropdownItem onClick={() => this.toggle('showPropertiesDialog')}>Select properties</DropdownItem>
@@ -550,7 +550,7 @@ class Comparison extends Component {
                         </DropdownMenu>
                     </Dropdown>
 
-                    <Button color="darkblue" className="float-right mb-4 mt-4 " size="sm">Add to comparison</Button>
+                    {/*<Button color="darkblue" className="float-right mb-4 mt-4 " size="sm">Add to comparison</Button>*/}
 
                     <div style={{ overflowX: 'auto', float: 'left', width: '100%', paddingTop: 10 }}>
                         <Table id="comparisonTable" className="mb-0" style={{ borderCollapse: 'collapse', tableLayout: 'fixed', height: 'max-content', width: '100%' }}>
