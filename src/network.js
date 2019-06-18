@@ -4,6 +4,8 @@ export const predicatesUrl = `${url}predicates/`;
 export const statementsUrl = `${url}statements/`;
 export const literalsUrl = `${url}literals/`;
 export const crossrefUrl = process.env.REACT_APP_CROSSREF_URL;
+export const comparisonUrl = process.env.REACT_APP_SIMILARITY_SERVICE_URL;
+
 
 /**
  * Sends simple GET request to the URL.
@@ -111,7 +113,7 @@ export const createResourceStatement = (subjectId, predicateId, objectId) => {
             'predicate_id': predicateId,
             'object': {
                 'id': objectId,
-                "_class": "resource"
+                '_class': 'resource'
             }
         });
 };
@@ -124,7 +126,7 @@ export const createLiteralStatement = (subjectId, predicateId, property) => {
             'predicate_id': predicateId,
             'object': {
                 'id': property,
-                "_class": "literal"
+                '_class': 'literal'
             }
         });
 };

@@ -1,113 +1,24 @@
 import React, { Component } from 'react';
-import { Container, Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, /*Breadcrumb, BreadcrumbItem*/ } from 'reactstrap';
+import { Container, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { CSVLink } from 'react-csv';
-import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
-import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
-import Tooltip from '../Utils/Tooltip.js';
 import arrayMove from 'array-move';
 import dotProp from 'dot-prop-immutable';
 import queryString from 'query-string';
 import SelectProperties from './SelectProperties.js';
+import Share from './Share.js';
+import GeneratePdf from './GeneratePdf.js';
+import { submitGetRequest, comparisonUrl } from '../../network';
+import ComparisonTable from './ComparisonTable.js';
 
 // TODO: component is too large, split into smaller componenets 
 // There is a lot is styling needed for this table, this it is using a column structure,
 // instead of the default HTML row structure
-const Row = styled.tr`
-    &:last-child td > div {
-        border-bottom:2px solid #CFCBCB;
-        border-radius:0 0 11px 11px;
-    }
-`;
-
-const Properties = styled.td`
-    padding-right:10px;
-    padding:0 10px!important;
-    margin:0;
-    display: table-cell;
-    height:100%;
-    width:250px;
-`;
-
-const PropertiesInner = styled.div`
-    background: #80869B;
-    height:100%;
-    color:#fff;
-    padding:10px;
-    border-bottom:2px solid #8B91A5!important;
-
-    &.first {
-        border-radius:11px 11px 0 0;
-    }
-
-    &.last {
-        border-radius:0 0 11px 11px;
-    }
-`;
-
-const Item = styled.td`
-    padding-right:10px;
-    padding: 0 10px!important;
-    margin:0;
-    display: table-cell;
-    height:100%;
-`;
-
-const ItemInner = styled.div`
-    padding:10px 5px;
-    border-left:2px solid #CFCBCB;
-    border-right:2px solid #CFCBCB;
-    border-bottom:2px solid #EDEBEB;
-    text-align:center;
-    height:100%;
-`;
-
-const ItemHeader = styled.td`
-    padding-right:10px;
-    min-height:50px;
-    padding: 0 10px!important;
-    margin:0;
-    display: table-cell;
-    height:100%;
-    width:250px;
-    position:relative;
-`;
-
-const ItemHeaderInner = styled.div`
-    padding:5px 10px;
-    background:#E86161;
-    border-radius:11px 11px 0 0;
-    color:#fff;
-    height:100%;
-
-    a {
-        color:#fff!important;
-    }
-`;
-
-const Contribution = styled.div`
-    color:#FFA5A5;
-    font-size:85%;
-`;
-
-const Delete = styled.div`
-    position:absolute;
-    top:-4px;
-    right:7px;
-    background:#FFA3A3;
-    border-radius:20px;
-    width:24px;
-    height:24px;
-    text-align:center;
-    color:#E86161;
-    cursor:pointer;
-`;
+// TODO: code is too nested (bad practice), need to be improved here
 
 /*const BreadcrumbStyled = styled(Breadcrumb)`
     .breadcrumb {
@@ -129,15 +40,12 @@ class Comparison extends Component {
             contributions: [],
             dropdownOpen: false,
             properties: [],
-            data: [],
+            data: {},
             csvData: [],
-            redirect: null,
-            modal: false,
-            dialogResourceId: null,
-            dialogResourceLabel: null,
             showPropertiesDialog: false,
+            showShareDialog: false,
+            isLoading: false,
         }
-
     }
 
     componentDidMount = () => {
@@ -167,7 +75,7 @@ class Comparison extends Component {
 
     getPropertyIdsFromUrl = () => {
         let ids = queryString.parse(this.props.location.search).properties;
-        
+
         if (!ids) {
             return [];
         }
@@ -204,228 +112,67 @@ class Comparison extends Component {
         });
     }
 
-    performComparison = () => {
-        const contributionIds = this.getContributionIdsFromUrl();
-        const propertyIds = this.getPropertyIdsFromUrl();
+    performComparison = async () => {
+        this.setState({
+            isLoading: true
+        });
 
-        const apiMockingData = {
-            contributions:
-                [
-                    {
-                        id: 'R1026',
-                        paperId: 'R1022',
-                        title: 'Fifth',
-                        contributionLabel: 'Contribution 2'
-                    },
-                    {
-                        id: 'R3004',
-                        paperId: 'R3000',
-                        title: 'Research Directions for the Internet of Things',
-                        contributionLabel: 'Contribution 1'
-                    },
-                    {
-                        id: 'R1032',
-                        paperId: 'R1028',
-                        title: 'Research Directions for the Internet of Things',
-                        contributionLabel: 'Contribution 1'
-                    },
-                ],
-            properties:
-                [
-                    {
-                        id: 'P1',
-                        label: 'Algorithm',
-                        path: 'Approach > Method > ',
-                        active: true
-                    },
-                    {
-                        id: 'P2',
-                        label: 'Problem',
-                        path: 'Approach > ',
-                        active: true
-                    },
-                    {
-                        id: 'P3',
-                        label: 'Programming language',
-                        path: 'Approach > ',
-                        active: true
-                    },
-                    {
-                        id: 'P4',
-                        label: 'Stable',
-                        path: 'Approach > ',
-                        active: true
-                    },
-                    {
-                        id: 'P5',
-                        label: 'Best complexity',
-                        path: 'Approach > ',
-                        active: true
-                    },
-                    {
-                        id: 'P6',
-                        label: 'Worst complexity',
-                        path: 'Approach > ',
-                        active: true
-                    },
-                ],
-            data:
-            {
-                'P1': [
-                    {
-                        resourceId: 'R1',
-                        label: 'Merge sort',
-                        type: 'resource'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'Heap sort',
-                        type: 'resource'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'Bubble sort',
-                        type: 'resource'
-                    },
-                ],
-                'P2': [
-                    {
-                        resourceId: 'R1',
-                        label: 'Efficient sorting',
-                        type: 'resource'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'Efficient sorting',
-                        type: 'resource'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'Sorting',
-                        type: 'resource'
-                    },
-                ],
-                'P3': [
-                    {
-                        resourceId: 'R1',
-                        label: 'C++',
-                        type: 'resource'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: '',
-                        type: 'resource'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'Python',
-                        type: 'resource'
-                    },
-                ],
-                'P4': [
-                    {
-                        resourceId: 'R1',
-                        label: 'Y',
-                        type: 'literal'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'N',
-                        type: 'literal'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'N',
-                        type: 'literal'
-                    },
-                ],
-                'P5': [
-                    {
-                        resourceId: 'R1',
-                        label: 'n log n',
-                        type: 'literal'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'n',
-                        type: 'literal'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'n',
-                        type: 'literal'
-                    },
-                ],
-                'P6': [
-                    {
-                        resourceId: 'R1',
-                        label: 'n log n',
-                        type: 'literal'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'n log n',
-                        type: 'literal'
-                    },
-                    {
-                        resourceId: 'R1',
-                        label: 'n log n',
-                        type: 'literal'
-                    },
-                ],
-            }
-        };
+        const contributionIds = this.getContributionIdsFromUrl();
+        let comparisonData = await submitGetRequest(`${comparisonUrl}${contributionIds.join('/')}`);
 
         // mocking function to allow for deletion of contributions via the url
         let contributions = [];
-        for (let i = 0; i < apiMockingData.contributions.length; i++) {
-            let contribution = apiMockingData.contributions[i];
+        for (let i = 0; i < comparisonData.contributions.length; i++) {
+            let contribution = comparisonData.contributions[i];
 
             if (contributionIds.includes(contribution.id)) {
                 contributions.push(contribution)
             }
         }
-        
+
+        const propertyIds = this.getPropertyIdsFromUrl();
+
         // if there are properties in the query string 
-        if (propertyIds.length > 0) { 
+        if (propertyIds.length > 0) {
 
             // sort properties based on query string (is not presented in query string, sort at the bottom)
             // TODO: sort by label when is not active
-            apiMockingData.properties.sort(function(a, b) {
+            comparisonData.properties.sort((a, b) => {
                 let index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
                 let index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
                 return index1 - index2;
-                
-                //return propertyIds.indexOf(a.id) - propertyIds.indexOf(b.id);
             });
-
             // hide properties based on query string
-            apiMockingData.properties.forEach((property, index) => {
+            comparisonData.properties.forEach((property, index) => {
                 if (!propertyIds.includes(property.id)) {
-                    apiMockingData.properties[index].active = false;
+                    comparisonData.properties[index].active = false;
+                } else {
+                    comparisonData.properties[index].active = true;
+                }
+            });
+        } else {
+            //no properties ids in the url, but the ones from the api still need to be sorted
+            comparisonData.properties.sort((a, b) => {
+                if (a.active === b.active) {
+                    return a.label.toLowerCase().localeCompare(b.label.toLowerCase());
+                } else {
+                    return !a.active ? 1 : -1;
                 }
             });
         }
-        
+
         this.setState({
             contributions: contributions,
-            properties: apiMockingData.properties,
-            data: apiMockingData.data,
+            properties: comparisonData.properties,
+            data: comparisonData.data,
+            isLoading: false,
         });
     }
 
-    toggle = () => {
+    toggleDropdown = () => {
         this.setState(prevState => ({
             dropdownOpen: !prevState.dropdownOpen
         }));
-    }
-
-    openStatementBrowser = (id, label) => {
-        this.setState({
-            modal: true,
-            dialogResourceId: id,
-            dialogResourceLabel: label,
-        });
     }
 
     exportAsCsv = (e) => {
@@ -445,15 +192,9 @@ class Comparison extends Component {
         this.generateUrl(contributionIds.join('/'));
     }
 
-    toggleModal = () => {
+    toggle = (type) => {
         this.setState(prevState => ({
-            modal: !prevState.modal,
-        }));
-    }
-
-    togglePropertiesDialog = () => {
-        this.setState(prevState => ({
-            showPropertiesDialog: !prevState.showPropertiesDialog,
+            [type]: !prevState[type],
         }));
     }
 
@@ -490,6 +231,7 @@ class Comparison extends Component {
                 queryString += property.id + ',';
             }
         });
+        queryString = queryString.slice(0, -1);
 
         return queryString;
     }
@@ -525,115 +267,65 @@ class Comparison extends Component {
 
                 <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
                     <h2 className="h4 mt-4 mb-3 float-left">
-                        Compare: <br />
+                        Compare<br />
                         <span className="h6">{this.state.title}</span>
                     </h2>
 
-                    <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-                        <DropdownToggle color="darkblue" size="sm" className="float-right mb-4 mt-4 ml-1 pl-3 pr-3" >
-                            <Icon icon={faEllipsisV} />
-                        </DropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem onClick={this.togglePropertiesDialog}>Select properties</DropdownItem>
-                            {this.state.csvData ?
-                                <CSVLink
-                                    data={this.state.csvData}
-                                    filename={'ORKG Contribution Comparison.csv'}
-                                    className="dropdown-item"
-                                    target="_blank"
-                                    onClick={this.exportAsCsv}
-                                >
-                                    Export as CSV
-                                </CSVLink>
-                                : ''}
-                        </DropdownMenu>
-                    </Dropdown>
+                    {!this.state.isLoading ? (
+                        <div>
+                            <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
+                                <DropdownToggle color="darkblue" size="sm" className="float-right mb-4 mt-4 ml-1 pl-3 pr-3" >
+                                    <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem onClick={() => this.toggle('showPropertiesDialog')}>Select properties</DropdownItem>
+                                    <DropdownItem divider />
+                                    <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
+                                    <DropdownItem divider />
+                                    {this.state.csvData ?
+                                        <CSVLink
+                                            data={this.state.csvData}
+                                            filename={'ORKG Contribution Comparison.csv'}
+                                            className="dropdown-item"
+                                            target="_blank"
+                                            onClick={this.exportAsCsv}
+                                        >
+                                            Export as CSV
+                                        </CSVLink>
+                                        : ''}
+                                    <GeneratePdf id="comparisonTable" />
+                                </DropdownMenu>
+                            </Dropdown>
 
-                    <Button color="darkblue" className="float-right mb-4 mt-4 " size="sm">Add to comparison</Button>
+                            {/*<Button color="darkblue" className="float-right mb-4 mt-4 " size="sm">Add to comparison</Button>*/}
 
-                    <div style={{ overflowX: 'auto', float: 'left', width: '100%', paddingTop: 10 }}>
-                        <Table className="mb-0" style={{ borderCollapse: 'collapse', tableLayout: 'fixed', height: 'max-content', width: '100%' }}>
-                            <tbody className="table-borderless">
-                                <tr className="table-borderless">
-                                    <Properties><PropertiesInner className="first">Properties</PropertiesInner></Properties>
+                            <ComparisonTable
+                                data={this.state.data}
+                                properties={this.state.properties}
+                                contributions={this.state.contributions}
+                                removeContribution={this.removeContribution}
+                            />
+                        </div>) 
+                        : 
+                            <div className="mt-3 mb-3 text-center float-left w-100"><Icon icon={faSpinner} spin /> Loading</div>
+                            /* TODO: make a nice loading view just like the research contribution page */
+                        }
 
-                                    {this.state.contributions.map((contribution, index) => {
-                                        return (
-                                            <ItemHeader key={`contribution${index}`}>
-                                                <ItemHeaderInner>
-                                                    <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: contribution.paperId })}>
-                                                        {contribution.title}
-                                                    </Link>
-                                                    <br />
-                                                    <Contribution>{contribution.contributionLabel}</Contribution>
-                                                </ItemHeaderInner>
-
-                                                {this.state.contributions.length > 2 &&
-                                                    <Delete onClick={() => this.removeContribution(contribution.id)}>
-                                                        <Icon icon={faTimes} />
-                                                    </Delete>}
-                                            </ItemHeader>
-                                        )
-                                    })}
-                                </tr>
-
-                                {this.state.properties.map((property, index) => {
-                                    if (!property.active) {
-                                        return null;
-                                    }
-
-                                    return (
-                                        <Row key={`row${index}`}>
-                                            <Properties>
-                                                <PropertiesInner>
-                                                    <Tooltip message={property.path} colorIcon={'#606679'}>
-                                                        {property.label}
-                                                    </Tooltip>
-                                                </PropertiesInner>
-                                            </Properties>
-                                            {this.state.contributions.map((contribution, index2) => {
-                                                const data = this.state.data[property.id][index2];
-
-                                                return (
-                                                    <Item key={`data${index2}`}>
-                                                        <ItemInner>
-                                                            {data.type === 'resource' ?
-                                                                <span
-                                                                    className="btn-link"
-                                                                    onClick={() => this.openStatementBrowser(data.resourceId, data.label)}
-                                                                    style={{ cursor: 'pointer' }}
-                                                                >
-                                                                    {data.label}
-                                                                </span>
-                                                                : data.label}
-                                                        </ItemInner>
-                                                    </Item>
-                                                )
-                                            })}
-                                        </Row>
-                                    )
-                                })}
-                            </tbody>
-                        </Table>
-                    </div>
                 </Container>
 
-                {this.state.modal &&
-                    <StatementBrowserDialog
-                        show={this.state.modal}
-                        toggleModal={this.toggleModal}
-                        resourceId={this.state.dialogResourceId}
-                        resourceLabel={this.state.dialogResourceLabel}
-                    />
-                }
-
-                <SelectProperties 
+                <SelectProperties
                     properties={this.state.properties}
                     showPropertiesDialog={this.state.showPropertiesDialog}
-                    togglePropertiesDialog={this.togglePropertiesDialog}
+                    togglePropertiesDialog={() => this.toggle('showPropertiesDialog')}
                     generateUrl={this.generateUrl}
                     toggleProperty={this.toggleProperty}
                     onSortEnd={this.onSortEnd}
+                />
+
+                <Share
+                    showDialog={this.state.showShareDialog}
+                    toggle={() => this.toggle('showShareDialog')}
+                    url={window.location.href}
                 />
             </div>
         );
