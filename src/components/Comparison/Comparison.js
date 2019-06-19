@@ -95,7 +95,13 @@ class Comparison extends Component {
             let row = [contribution.title];
 
             for (let property of this.state.properties) {
-                row.push(this.state.data[property.id][i].label);
+                let value = '';
+                
+                for (let entry of this.state.data[property.id][i]) {
+                    value += entry.label
+                }
+                
+                row.push(value);
             }
             rows.push(row);
         }
