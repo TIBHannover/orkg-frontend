@@ -15,6 +15,7 @@ import GeneratePdf from './GeneratePdf.js';
 import { submitGetRequest, comparisonUrl } from '../../network';
 import ComparisonTable from './ComparisonTable.js';
 import ComparisonLoadingComponent from './ComparisonLoadingComponent';
+import NotFound from '../StaticPages/NotFound';
 
 // TODO: component is too large, split into smaller componenets 
 // There is a lot is styling needed for this table, this it is using a column structure,
@@ -46,6 +47,7 @@ class Comparison extends Component {
             showPropertiesDialog: false,
             showShareDialog: false,
             isLoading: false,
+            loading_failed: false,
         }
     }
 
@@ -113,61 +115,68 @@ class Comparison extends Component {
         });
     }
 
-    performComparison = async () => {
+    performComparison = () => {
         this.setState({
             isLoading: true
         });
 
         const contributionIds = this.getContributionIdsFromUrl();
-        let comparisonData = await submitGetRequest(`${comparisonUrl}${contributionIds.join('/')}`);
+        submitGetRequest(`${comparisonUrl}${contributionIds.join('/')}`).then((comparisonData) => {
+            // mocking function to allow for deletion of contributions via the url
+            let contributions = [];
+            for (let i = 0; i < comparisonData.contributions.length; i++) {
+                let contribution = comparisonData.contributions[i];
 
-        // mocking function to allow for deletion of contributions via the url
-        let contributions = [];
-        for (let i = 0; i < comparisonData.contributions.length; i++) {
-            let contribution = comparisonData.contributions[i];
-
-            if (contributionIds.includes(contribution.id)) {
-                contributions.push(contribution)
+                if (contributionIds.includes(contribution.id)) {
+                    contributions.push(contribution)
+                }
             }
-        }
 
-        const propertyIds = this.getPropertyIdsFromUrl();
+            const propertyIds = this.getPropertyIdsFromUrl();
 
-        // if there are properties in the query string 
-        if (propertyIds.length > 0) {
+            // if there are properties in the query string 
+            if (propertyIds.length > 0) {
 
-            // sort properties based on query string (is not presented in query string, sort at the bottom)
-            // TODO: sort by label when is not active
-            comparisonData.properties.sort((a, b) => {
-                let index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
-                let index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
-                return index1 - index2;
+                // sort properties based on query string (is not presented in query string, sort at the bottom)
+                // TODO: sort by label when is not active
+                comparisonData.properties.sort((a, b) => {
+                    let index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
+                    let index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
+                    return index1 - index2;
+                });
+                // hide properties based on query string
+                comparisonData.properties.forEach((property, index) => {
+                    if (!propertyIds.includes(property.id)) {
+                        comparisonData.properties[index].active = false;
+                    } else {
+                        comparisonData.properties[index].active = true;
+                    }
+                });
+            } else {
+                //no properties ids in the url, but the ones from the api still need to be sorted
+                comparisonData.properties.sort((a, b) => {
+                    if (a.active === b.active) {
+                        return a.label.toLowerCase().localeCompare(b.label.toLowerCase());
+                    } else {
+                        return !a.active ? 1 : -1;
+                    }
+                });
+            }
+
+            this.setState({
+                contributions: contributions,
+                properties: comparisonData.properties,
+                data: comparisonData.data,
+                isLoading: false,
             });
-            // hide properties based on query string
-            comparisonData.properties.forEach((property, index) => {
-                if (!propertyIds.includes(property.id)) {
-                    comparisonData.properties[index].active = false;
-                } else {
-                    comparisonData.properties[index].active = true;
-                }
+        }).catch((error) => {
+            this.setState({
+                loading_failed: true,
+                isLoading: false,
             });
-        } else {
-            //no properties ids in the url, but the ones from the api still need to be sorted
-            comparisonData.properties.sort((a, b) => {
-                if (a.active === b.active) {
-                    return a.label.toLowerCase().localeCompare(b.label.toLowerCase());
-                } else {
-                    return !a.active ? 1 : -1;
-                }
-            });
-        }
-
-        this.setState({
-            contributions: contributions,
-            properties: comparisonData.properties,
-            data: comparisonData.data,
-            isLoading: false,
         });
+
+
     }
 
     toggleDropdown = () => {
@@ -267,49 +276,56 @@ class Comparison extends Component {
                 </Container>
 
                 <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
-                    <h2 className="h4 mt-4 mb-3 float-left">
-                        Compare<br />
-                        <span className="h6">{this.state.title}</span>
-                    </h2>
+                    {!this.state.isLoading && this.state.loading_failed && (
+                        <NotFound />
+                    )}
+                    {!this.state.loading_failed && (
+                        <>
+                            <h2 className="h4 mt-4 mb-3 float-left">
+                                Compare<br />
+                                <span className="h6">{this.state.title}</span>
+                            </h2>
+                            {!this.state.isLoading ? (
+                                <div>
+                                    <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
+                                        <DropdownToggle color="darkblue" size="sm" className="float-right mb-4 mt-4 ml-1 pl-3 pr-3" >
+                                            <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
+                                        </DropdownToggle>
+                                        <DropdownMenu>
+                                            <DropdownItem onClick={() => this.toggle('showPropertiesDialog')}>Select properties</DropdownItem>
+                                            <DropdownItem divider />
+                                            <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
+                                            <DropdownItem divider />
+                                            {this.state.csvData ?
+                                                <CSVLink
+                                                    data={this.state.csvData}
+                                                    filename={'ORKG Contribution Comparison.csv'}
+                                                    className="dropdown-item"
+                                                    target="_blank"
+                                                    onClick={this.exportAsCsv}
+                                                >
+                                                    Export as CSV
+                                            </CSVLink>
+                                                : ''}
+                                            <GeneratePdf id="comparisonTable" />
+                                        </DropdownMenu>
+                                    </Dropdown>
 
-                    {!this.state.isLoading ? (
-                        <div>
-                            <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
-                                <DropdownToggle color="darkblue" size="sm" className="float-right mb-4 mt-4 ml-1 pl-3 pr-3" >
-                                    <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem onClick={() => this.toggle('showPropertiesDialog')}>Select properties</DropdownItem>
-                                    <DropdownItem divider />
-                                    <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
-                                    <DropdownItem divider />
-                                    {this.state.csvData ?
-                                        <CSVLink
-                                            data={this.state.csvData}
-                                            filename={'ORKG Contribution Comparison.csv'}
-                                            className="dropdown-item"
-                                            target="_blank"
-                                            onClick={this.exportAsCsv}
-                                        >
-                                            Export as CSV
-                                        </CSVLink>
-                                        : ''}
-                                    <GeneratePdf id="comparisonTable" />
-                                </DropdownMenu>
-                            </Dropdown>
+                                    {/*<Button color="darkblue" className="float-right mb-4 mt-4 " size="sm">Add to comparison</Button>*/}
 
-                            {/*<Button color="darkblue" className="float-right mb-4 mt-4 " size="sm">Add to comparison</Button>*/}
+                                    <ComparisonTable
+                                        data={this.state.data}
+                                        properties={this.state.properties}
+                                        contributions={this.state.contributions}
+                                        removeContribution={this.removeContribution}
+                                    />
+                                </div>)
+                                :
+                                <ComparisonLoadingComponent />
+                            }
+                        </>
+                    )}
 
-                            <ComparisonTable
-                                data={this.state.data}
-                                properties={this.state.properties}
-                                contributions={this.state.contributions}
-                                removeContribution={this.removeContribution}
-                            />
-                        </div>)
-                        :
-                        <ComparisonLoadingComponent />
-                    }
 
                 </Container>
 

@@ -20,11 +20,11 @@ export default class ComparisonLoadingComponent extends Component {
     render() {
         return (
             <div>
-                <div class="clearfix" />
-                <table class="mb-0 mt-3 table" cellspacing="0" cellpadding="0">
-                    <tbody class="table-borderless">
-                        <tr class="table-borderless">
-                            <td class="p-0" >
+                <div className="clearfix" />
+                <table className="mb-0 mt-3 table">
+                    <tbody className="table-borderless">
+                        <tr className="table-borderless">
+                            <td className="p-0" >
                                 <BorderTopRaduis>
                                     <ContentLoader
                                         height={20}
@@ -37,7 +37,7 @@ export default class ComparisonLoadingComponent extends Component {
                                     </ContentLoader>
                                 </BorderTopRaduis>
                             </td>
-                            <td class="p-0" >
+                            <td className="p-0" >
                                 <BorderTopRaduis>
                                     <ContentLoader
                                         height={20}
@@ -50,7 +50,7 @@ export default class ComparisonLoadingComponent extends Component {
                                     </ContentLoader>
                                 </BorderTopRaduis>
                             </td>
-                            <td class="p-0" >
+                            <td className="p-0" >
                                 <BorderTopRaduis>
                                     <ContentLoader
                                         height={20}
@@ -63,7 +63,7 @@ export default class ComparisonLoadingComponent extends Component {
                                     </ContentLoader>
                                 </BorderTopRaduis>
                             </td>
-                            <td class="p-0" >
+                            <td className="p-0" >
                                 <BorderTopRaduis>
                                     <ContentLoader
                                         height={20}
@@ -77,8 +77,8 @@ export default class ComparisonLoadingComponent extends Component {
                                 </BorderTopRaduis>
                             </td>
                         </tr>
-                        <tr class="table-borderless">
-                            <td class="p-0" >
+                        <tr className="table-borderless">
+                            <td className="p-0" >
                                 <BorderBottomRaduis>
                                     <ContentLoader
                                         height={60}
@@ -91,7 +91,7 @@ export default class ComparisonLoadingComponent extends Component {
                                     </ContentLoader>
                                 </BorderBottomRaduis>
                             </td>
-                            <td class="p-0" >
+                            <td className="p-0" >
                                 <BorderBottomRaduis>
                                     <ContentLoader
                                         height={60}
@@ -104,7 +104,7 @@ export default class ComparisonLoadingComponent extends Component {
                                     </ContentLoader>
                                 </BorderBottomRaduis>
                             </td>
-                            <td class="p-0" >
+                            <td className="p-0" >
                                 <BorderBottomRaduis>
                                     <ContentLoader
                                         height={60}
@@ -117,7 +117,7 @@ export default class ComparisonLoadingComponent extends Component {
                                     </ContentLoader>
                                 </BorderBottomRaduis>
                             </td>
-                            <td class="p-0" >
+                            <td className="p-0" >
                                 <BorderBottomRaduis>
                                     <ContentLoader
                                         height={60}
