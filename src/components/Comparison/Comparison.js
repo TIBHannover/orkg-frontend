@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Container, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Alert } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -14,11 +14,6 @@ import Share from './Share.js';
 import GeneratePdf from './GeneratePdf.js';
 import { submitGetRequest, comparisonUrl } from '../../network';
 import ComparisonTable from './ComparisonTable.js';
-
-// TODO: component is too large, split into smaller componenets 
-// There is a lot is styling needed for this table, this it is using a column structure,
-// instead of the default HTML row structure
-// TODO: code is too nested (bad practice), need to be improved here
 
 /*const BreadcrumbStyled = styled(Breadcrumb)`
     .breadcrumb {
@@ -58,7 +53,8 @@ class Comparison extends Component {
             this.generateMatrixOfComparison();
         }
 
-        if (this.props.match.params !== prevProps.match.params) {
+        // perform comparison again when contribution ids are removed 
+        if (this.props.match.params[0] && this.props.match.params[0].length !== prevProps.match.params[0].length) {
             this.performComparison();
         }
     }
@@ -249,6 +245,8 @@ class Comparison extends Component {
     }
 
     render() {
+        const contributionAmount = this.getContributionIdsFromUrl().length;
+
         return (
             <div>
                 <Container className="p-0 d-flex align-items-center">
@@ -271,46 +269,49 @@ class Comparison extends Component {
                         <span className="h6">{this.state.title}</span>
                     </h2>
 
-                    {!this.state.isLoading ? (
-                        <div>
-                            <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
-                                <DropdownToggle color="darkblue" size="sm" className="float-right mb-4 mt-4 ml-1 pl-3 pr-3" >
-                                    <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem onClick={() => this.toggle('showPropertiesDialog')}>Select properties</DropdownItem>
-                                    <DropdownItem divider />
-                                    <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
-                                    <DropdownItem divider />
-                                    {this.state.csvData ?
-                                        <CSVLink
-                                            data={this.state.csvData}
-                                            filename={'ORKG Contribution Comparison.csv'}
-                                            className="dropdown-item"
-                                            target="_blank"
-                                            onClick={this.exportAsCsv}
-                                        >
-                                            Export as CSV
-                                        </CSVLink>
-                                        : ''}
-                                    <GeneratePdf id="comparisonTable" />
-                                </DropdownMenu>
-                            </Dropdown>
+                    {contributionAmount > 1 ?
+                        !this.state.isLoading ? (
+                            <div>
+                                <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
+                                    <DropdownToggle color="darkblue" size="sm" className="float-right mb-4 mt-4 ml-1 pl-3 pr-3" >
+                                        <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DropdownItem onClick={() => this.toggle('showPropertiesDialog')}>Select properties</DropdownItem>
+                                        <DropdownItem divider />
+                                        <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
+                                        <DropdownItem divider />
+                                        {this.state.csvData ?
+                                            <CSVLink
+                                                data={this.state.csvData}
+                                                filename={'ORKG Contribution Comparison.csv'}
+                                                className="dropdown-item"
+                                                target="_blank"
+                                                onClick={this.exportAsCsv}
+                                            >
+                                                Export as CSV
+                                            </CSVLink>
+                                            : ''}
+                                        <GeneratePdf id="comparisonTable" />
+                                    </DropdownMenu>
+                                </Dropdown>
 
-                            {/*<Button color="darkblue" className="float-right mb-4 mt-4 " size="sm">Add to comparison</Button>*/}
+                                {/*<Button color="darkblue" className="float-right mb-4 mt-4 " size="sm">Add to comparison</Button>*/}
 
-                            <ComparisonTable
-                                data={this.state.data}
-                                properties={this.state.properties}
-                                contributions={this.state.contributions}
-                                removeContribution={this.removeContribution}
-                            />
-                        </div>) 
-                        : 
-                            <div className="mt-3 mb-3 text-center float-left w-100"><Icon icon={faSpinner} spin /> Loading</div>
-                            /* TODO: make a nice loading view just like the research contribution page */
-                        }
-
+                                <ComparisonTable
+                                    data={this.state.data}
+                                    properties={this.state.properties}
+                                    contributions={this.state.contributions}
+                                    removeContribution={this.removeContribution}
+                                />
+                            </div>)
+                            :
+                            <div className="mt-3 mb-3 text-center float-left w-100"><Icon icon={faSpinner} spin /> Loading</div> /* TODO: make a nice loading view just like the research contribution page */
+                        :
+                        <>
+                            <div className="clearfix" />
+                            <Alert color="info">Please select a minimum of two research contributions to compare on</Alert>
+                        </>}
                 </Container>
 
                 <SelectProperties
