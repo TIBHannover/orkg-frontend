@@ -208,6 +208,8 @@ export const saveAddPaper = (data) => {
 
         await saveStatements(data);
 
+        await network.setupSimilarity();
+
         dispatch({
             type: type.SAVE_ADD_PAPER,
             id: paper.id,
