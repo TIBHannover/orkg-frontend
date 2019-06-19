@@ -3,7 +3,7 @@ import { Container, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { CSVLink } from 'react-csv';
 import ROUTES from '../../constants/routes.js';
 import arrayMove from 'array-move';
@@ -14,6 +14,7 @@ import Share from './Share.js';
 import GeneratePdf from './GeneratePdf.js';
 import { submitGetRequest, comparisonUrl } from '../../network';
 import ComparisonTable from './ComparisonTable.js';
+import ComparisonLoadingComponent from './ComparisonLoadingComponent';
 
 // TODO: component is too large, split into smaller componenets 
 // There is a lot is styling needed for this table, this it is using a column structure,
@@ -305,11 +306,10 @@ class Comparison extends Component {
                                 contributions={this.state.contributions}
                                 removeContribution={this.removeContribution}
                             />
-                        </div>) 
-                        : 
-                            <div className="mt-3 mb-3 text-center float-left w-100"><Icon icon={faSpinner} spin /> Loading</div>
-                            /* TODO: make a nice loading view just like the research contribution page */
-                        }
+                        </div>)
+                        :
+                        <ComparisonLoadingComponent />
+                    }
 
                 </Container>
 
