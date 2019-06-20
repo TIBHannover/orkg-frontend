@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment'
 import PropTypes from 'prop-types';
 import ComparisonPopup from './ComparisonPopup';
+import { resetStatementBrowser } from '../../actions/statementBrowser';
 
 class ViewPaper extends Component {
     state = {
@@ -36,8 +37,11 @@ class ViewPaper extends Component {
     }
 
     loadPaperData = () => {
-        this.setState({ loading: true })
+        this.setState({ loading: true });
         const resourceId = this.props.match.params.resourceId;
+
+        this.props.resetStatementBrowser();
+
         getResource(resourceId).then((paperResource) => {
             getStatementsBySubject(resourceId).then((paperStatements) => {
                 // check if type is paper
@@ -190,6 +194,7 @@ ViewPaper.propTypes = {
             contributionId: PropTypes.string,
         }).isRequired,
     }).isRequired,
+    resetStatementBrowser: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
@@ -197,7 +202,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-
+    resetStatementBrowser: () => dispatch(resetStatementBrowser()),
 });
 
 export default connect(

@@ -129,7 +129,7 @@ class AddValue extends Component {
 
                             <InputGroupAddon addonType="append">
                                 <Button color="light" className={styles.valueActionButton} onClick={this.handleHideAddValue}>Cancel</Button>
-                                <Button color="light" className={styles.valueActionButton} onClick={this.handleAddValue}>Done</Button>
+                                <Button color="light" className={styles.valueActionButton} onClick={this.handleAddValue}>Create</Button>
                             </InputGroupAddon>
                         </InputGroup>
                         :

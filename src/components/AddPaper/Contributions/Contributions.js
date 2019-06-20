@@ -124,6 +124,7 @@ class Contributions extends Component {
                                     return (
                                         <li className={contributionId === this.props.selectedContribution ? styles.activeContribution : ''} key={contributionId}>
                                             <span className={styles.selectContribution} onClick={() => this.handleSelectContribution(contributionId)}>
+                                                {/* TODO: add the contenteditable into a seperate component */}
                                                 <ContentEditable
                                                     innerRef={(input) => { this.inputRefs[contribution] = input; }}
                                                     html={this.props.contributions.byId[contribution]['label']}
@@ -132,7 +133,7 @@ class Contributions extends Component {
                                                     tagName="span"
                                                     className={styles.contributionEditableLabel}
                                                     onPaste={this.pasteAsPlainText}
-                                                    onKeyDown={e => e.keyCode === 13 && e.target.blur()}  // Disable multiline Input
+                                                    onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
                                                     onBlur={(e) => this.toggleEditLabelContribution(contributionId)}
                                                     onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
                                                 />
