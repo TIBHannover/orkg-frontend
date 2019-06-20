@@ -64,7 +64,7 @@ class TableCell extends Component {
                                             <ValuePlugins>{date.label}</ValuePlugins>
                                         </span>
                                     </span>
-                                ) : <ValuePlugins>{date.label}</ValuePlugins>
+                                ) : <>{index > 0 && <br />}<ValuePlugins>{date.label}</ValuePlugins></>
                                 : <span className="font-italic" key={`value-${index}`}>Empty</span>
                         ))}
                     </ItemInner>
