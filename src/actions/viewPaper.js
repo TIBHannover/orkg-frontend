@@ -35,6 +35,7 @@ export const selectContribution = ({contributionId: id, contributionIsLoaded}) =
         increaseLevel: false,
         resourceId: id,
         label: 'Main',
+        resetLevel: true,
     }));
     
     dispatch({
