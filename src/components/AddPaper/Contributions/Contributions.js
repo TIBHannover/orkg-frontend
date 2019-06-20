@@ -124,6 +124,7 @@ class Contributions extends Component {
                                     return (
                                         <li className={contributionId === this.props.selectedContribution ? styles.activeContribution : ''} key={contributionId}>
                                             <span className={styles.selectContribution} onClick={() => this.handleSelectContribution(contributionId)}>
+                                                {/* TODO: add the contenteditable into a seperate component */}
                                                 <ContentEditable
                                                     innerRef={(input) => { this.inputRefs[contribution] = input; }}
                                                     html={this.props.contributions.byId[contribution]['label']}

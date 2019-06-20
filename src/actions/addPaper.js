@@ -122,6 +122,7 @@ export const selectContribution = (data) => dispatch => {
         increaseLevel: false,
         resourceId: data.resourceId,
         label: 'Main',
+        resetLevel: true,
     }));
 }
 

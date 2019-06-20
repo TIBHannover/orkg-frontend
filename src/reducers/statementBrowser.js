@@ -149,6 +149,13 @@ export default (state = initialState, action) => {
             };
         }
 
+        case type.RESET_LEVEL: {
+            return {
+                ...state,
+                level: 0,
+            };
+        }
+
         case type.ADD_RESOURCE_HISTORY: {
             let { payload } = action;
             let resourceId = payload.resourceId ? payload.resourceId : null; //state.contributions.byId[state.selectedContribution].resourceId

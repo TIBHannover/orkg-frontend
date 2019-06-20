@@ -104,6 +104,12 @@ export const selectResource = (data) => dispatch => { // use redux thunk for asy
     dispatch({
         type: type.CLEAR_SELECTED_PROPERTY
     });
+
+    if (data.resetLevel) {
+        dispatch({
+            type: type.RESET_LEVEL
+        });
+    }
 }
 
 // TODO: support literals (currently not working in backend)
