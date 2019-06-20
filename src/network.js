@@ -1,9 +1,12 @@
 export const url = process.env.REACT_APP_SERVER_URL;
+export const similaireServiceUrl = process.env.REACT_APP_SIMILARITY_SERVICE_URL;
 export const resourcesUrl = `${url}resources/`;
 export const predicatesUrl = `${url}predicates/`;
 export const statementsUrl = `${url}statements/`;
 export const literalsUrl = `${url}literals/`;
 export const crossrefUrl = process.env.REACT_APP_CROSSREF_URL;
+export const comparisonUrl = `${similaireServiceUrl}compare/`;
+export const similaireUrl = `${similaireServiceUrl}similar/`;
 
 /**
  * Sends simple GET request to the URL.
@@ -111,7 +114,7 @@ export const createResourceStatement = (subjectId, predicateId, objectId) => {
             'predicate_id': predicateId,
             'object': {
                 'id': objectId,
-                "_class": "resource"
+                '_class': 'resource'
             }
         });
 };
@@ -124,7 +127,7 @@ export const createLiteralStatement = (subjectId, predicateId, property) => {
             'predicate_id': predicateId,
             'object': {
                 'id': property,
-                "_class": "literal"
+                '_class': 'literal'
             }
         });
 };
@@ -179,4 +182,12 @@ export const getStatementsByObject = async ({id, order = 'asc', limit = null}) =
 
 export const getStatementsByPredicate = (id) => {
     return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/`);
+};
+
+export const getSimilaireContribution = (id) => {
+    return submitGetRequest(`${similaireUrl}${encodeURIComponent(id)}/`);
+};
+
+export const setupSimilarity = () => {
+    return fetch(`${similaireServiceUrl}internal/init`, { method: 'GET' })
 };

@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 
 class Contribution extends Component {
     handleResearchProblemsChange = (problemsArray) => {
+        problemsArray = problemsArray ? problemsArray : [];
         this.props.updateResearchProblems({
             problemsArray,
             contributionId: this.props.id,

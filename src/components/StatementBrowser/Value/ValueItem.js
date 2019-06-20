@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { selectResource, fetchStatementsForResource, deleteValue } from '../../../actions/statementBrowser';
 import PropTypes from 'prop-types';
 import StatementBrowserDialog from '../StatementBrowserDialog';
+import ValuePlugins from '../../ValuePlugins/ValuePlugins';
 
 class ValueItem extends Component {
     state = {
@@ -85,7 +86,7 @@ class ValueItem extends Component {
                 {!this.props.inline ?
                     <ListGroupItem className={styles.valueItem}>
                         <span className={labelClass} onClick={onClick}>
-                            {this.props.label}
+                            <ValuePlugins>{this.props.label}</ValuePlugins>
                             {existingResourceId && this.props.openExistingResourcesInDialog ?
                                 <span> <Icon icon={faExternalLinkAlt} /></span>
                                 : ''}

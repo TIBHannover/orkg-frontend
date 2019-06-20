@@ -1,7 +1,7 @@
 import * as type from './types.js';
 import { guid } from '../utils';
 import * as network from '../network';
-import {createResource, selectResource, createProperty} from './statementBrowser';
+import {createResource, selectResource} from './statementBrowser';
 
 export const updateGeneralData = (data) => dispatch => {
     dispatch({
@@ -73,7 +73,7 @@ export const prefillStatements = ({ researchField, resourceId }) => dispatch => 
     // TODO: when no match is found, look for the parent researchField
 
     // This data is only added for demo purposes 
-    if (researchField === 'R133') {
+    /*if (researchField === 'R133') {
         dispatch(createProperty({
             resourceId: resourceId,
             existingPredicateId: 'P63',
@@ -91,7 +91,7 @@ export const prefillStatements = ({ researchField, resourceId }) => dispatch => 
             existingPredicateId: 'P16',
             label: 'Implementation',
         }));
-    }
+    }*/
 }
 
 export const deleteContribution = (id) => dispatch => {
@@ -207,6 +207,8 @@ export const saveAddPaper = (data) => {
         }
 
         await saveStatements(data);
+
+        await network.setupSimilarity();
 
         dispatch({
             type: type.SAVE_ADD_PAPER,

@@ -105,8 +105,8 @@ class ComparisonPopup extends Component {
         const comparisonUrl = ROUTES.COMPARISON.replace('*', '') + ids; // with named-urls it is not possible to use wildcard URLs, so replace the asterisk
 
         return (
-            <Navbar fixed="bottom" className="p-0">
-                <Container>
+            <Navbar fixed="bottom" className="p-0 offset-8" style={{width: '340px'}}>
+                <Container >
                     {!this.state.showComparisonBox ?
                         <ComparisonBoxButton color="primary" className="ml-auto" onClick={this.toggleComparisonBox}>
                             <Badge color="primaryDarker" className="pl-2 pr-2">{contributionAmount}</Badge> {' '}

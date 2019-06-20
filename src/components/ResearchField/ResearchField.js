@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Container, Button } from 'reactstrap';
+import { Container, Button, Card, CardText, CardBody, CardHeader, CardFooter } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
-import { getStatementsByObject, getResource } from '../../network';
+import { getStatementsByObject, getResource, getStatementsBySubject } from '../../network';
 import ROUTES from '../../constants/routes.js';
+import PaperCard from '../PaperCard/PaperCard'
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
@@ -17,10 +17,21 @@ class ResearchField extends Component {
             loading: true,
             researchField: null,
             papers: null,
+            parentResearchField: null
         };
     }
 
     componentDidMount() {
+        this.loadResearchFieldData();
+    }
+
+    componentDidUpdate = (prevProps) => {
+        if (this.props.match.params.researchFieldId !== prevProps.match.params.researchFieldId) {
+            this.loadResearchFieldData();
+        }
+    }
+
+    loadResearchFieldData() {
         // Get the research problem
         getResource(this.props.match.params.researchFieldId).then((result) => {
             this.setState({ researchField: result })
@@ -32,10 +43,44 @@ class ResearchField extends Component {
             order: 'desc',
         }).then((result) => {
             // Papers
-            let papers = result.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
-            this.setState({
-                papers: papers,
-                loading: false
+            // Fetch the data of each paper
+            let papers = result.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD)
+                .map((paper) => {
+                    return getStatementsBySubject(paper.subject.id).then((paperStatements) => {
+                        // publication year
+                        let publicationYear = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
+                        if (publicationYear.length > 0) {
+                            publicationYear = publicationYear[0].object.label
+                        }
+                        // publication month
+                        let publicationMonth = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
+                        if (publicationMonth.length > 0) {
+                            publicationMonth = publicationMonth[0].object.label
+                        }
+                        // authors
+                        let authors = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
+                        let authorNamesArray = [];
+                        if (authors.length > 0) {
+                            for (let author of authors) {
+                                let authorName = author.object.label;
+                                authorNamesArray.push(authorName);
+                            }
+                        }
+                        paper.data = {
+                            publicationYear,
+                            publicationMonth,
+                            authorNames: authorNamesArray.reverse(),
+                        }
+                        return paper;
+                    })
+                });
+            let parentResearchField = result.find((statement) => statement.predicate.id === 'P36');
+            return Promise.all(papers).then((papers) => {
+                this.setState({
+                    papers: papers,
+                    loading: false,
+                    parentResearchField: parentResearchField
+                })
             })
         })
     }
@@ -50,22 +95,43 @@ class ResearchField extends Component {
                 )}
                 {!this.state.loading && (
                     <div>
-                        <Container className="p-0">
-                            <h1 className="h4 mt-4 mb-4">View papers of <i>{this.state.researchField && this.state.researchField.label}</i> research field</h1>
+                        <Container>
+                            <Card>
+                                <CardHeader>
+                                    <div className="float-right"><b>{this.state.papers.length}</b> Papers</div>
+                                    <h3 className="h4 mt-4 mb-4">{this.state.researchField && this.state.researchField.label}</h3>
+                                </CardHeader>
+                                <CardBody>
+                                    <CardText>
+                                        Description text
+                                    </CardText>
+                                </CardBody>
+                                {this.state.parentResearchField && (
+                                    <CardFooter>
+                                        Parent research field:
+                                    <Link className={'ml-2'} to={`${process.env.PUBLIC_URL}/field/${encodeURIComponent(this.state.parentResearchField.subject.id)}`}>
+                                            {this.state.parentResearchField.subject.label}
+                                        </Link>
+                                    </CardFooter>
+                                )}
+
+                            </Card>
                         </Container>
-                        <Container className="box pt-4 pb-4 pl-5 pr-5">
+                        <br />
+                        <Container>
                             {this.state.papers && this.state.papers.length > 0 ?
-                                <ul className="list-group list-group-flush">
+                                <div>
                                     {this.state.papers.map(
-                                        resource => (
-                                            <li className="list-group-item list-group-item-action" key={resource.id}>
-                                                <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: resource.subject.id })}>
-                                                    {`${resource.subject.id}: ${resource.subject.label}`}
-                                                </Link>
-                                            </li>
-                                        )
+                                        (resource) => {
+                                            return (
+                                                <PaperCard
+                                                    paper={{ id: resource.subject.id, title: resource.subject.label, ...resource.data }}
+                                                    key={`pc${resource.id}`}
+                                                />
+                                            )
+                                        }
                                     )}
-                                </ul>
+                                </div>
                                 : (
                                     <div className="text-center mt-4 mb-4">
                                         There are no articles for this research field, yet.

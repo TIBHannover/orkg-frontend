@@ -138,11 +138,13 @@ class Contributions extends Component {
                                                 />
                                                 {!this.state.editing[contribution] && (
                                                     <>
-                                                        <span className={`${styles.deleteContribution} float-right mr-1 ${contributionId !== this.props.selectedContribution && 'd-none'}`}>
-                                                            <Tooltip message="Delete contribution" hideDefaultIcon={true}>
-                                                                <Icon icon={faTrash} onClick={() => this.toggleDeleteContribution(contributionId)} />
-                                                            </Tooltip>
-                                                        </span>
+                                                        {this.props.contributions.allIds.length !== 1 && (
+                                                            <span className={`${styles.deleteContribution} float-right mr-1 ${contributionId !== this.props.selectedContribution && 'd-none'}`}>
+                                                                <Tooltip message="Delete contribution" hideDefaultIcon={true}>
+                                                                    <Icon icon={faTrash} onClick={() => this.toggleDeleteContribution(contributionId)} />
+                                                                </Tooltip>
+                                                            </span>
+                                                        )}
                                                         <span className={`${styles.deleteContribution} float-right mr-1 ${contributionId !== this.props.selectedContribution && 'd-none'}`}>
                                                             <Tooltip message="Edit the contribution label" hideDefaultIcon={true}>
                                                                 <Icon icon={faPen} onClick={(e) => this.toggleEditLabelContribution(contributionId, e)} />

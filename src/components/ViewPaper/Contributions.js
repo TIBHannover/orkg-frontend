@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { selectContribution } from '../../actions/viewPaper';
 import styles from '../AddPaper/Contributions/Contributions.module.scss';
 import StatementBrowser from '../StatementBrowser/Statements';
+import { getSimilaireContribution, getResource } from '../../network';
 import styled from 'styled-components';
 import SimilarContributions from './SimilarContributions';
 import PropTypes from 'prop-types';
@@ -46,6 +47,7 @@ class Contributions extends Component {
     state = {
         selectedContribution: '',
         loading: true,
+        similaireContributions: []
     }
 
     componentDidUpdate = (prevProps) => {
@@ -65,6 +67,20 @@ class Contributions extends Component {
         this.props.selectContribution({
             contributionId,
             contributionIsLoaded
+        });
+        getSimilaireContribution(this.state.selectedContribution).then((similaireContributions) => {
+            var similaireContributionsData = similaireContributions.map((paper) => {
+                // Fetch the data of each paper
+                return getResource(paper.paperId).then((paperResource) => {
+                    paper.title = paperResource.label;
+                    return paper;
+                })
+
+            });
+            Promise.all(similaireContributionsData).then((results) => {
+                this.setState({ similaireContributions: results })
+            })
+
         });
         this.setState({ loading: false });
     }
@@ -125,12 +141,14 @@ class Contributions extends Component {
                                 key={selectedContributionId}
                             >
                                 <div className={styles.contribution}>
-                                    <AddToComparison
-                                        contributionId={selectedContributionId}
-                                        paperId={this.props.paperId}
-                                        paperTitle={this.props.paperTitle}
-                                        contributionTitle="Contribution"
-                                    />
+                                    {!this.state.loading && (
+                                        <AddToComparison
+                                            contributionId={selectedContributionId}
+                                            paperId={this.props.paperId}
+                                            paperTitle={this.props.paperTitle}
+                                            contributionTitle={this.props.contributions.find(function (c) { return c.id === selectedContributionId; }).label}
+                                        />
+                                    )}
                                     <Form>
                                         <FormGroup>
                                             <Title style={{ marginTop: 0 }}>Research problems</Title>
@@ -192,9 +210,11 @@ class Contributions extends Component {
                                         <FormGroup>
                                             <Title>
                                                 Similar contributions
-                                                <Link to={`/comparison/${this.props.paperId}/${this.props.selectedContribution}`}>{/* TODO: use constants for URL */}
-                                                    <span className="btn btn-link p-0 border-0 align-baseline" onClick={this.handleComparisonClick}>Show full comparison</span>
-                                                </Link>
+                                                {this.state.similaireContributions.length > 0 && (
+                                                    <Link to={`/comparison/${this.state.similaireContributions.slice(0, 3).map(s => s.contributionId).join('/')}`}>{/* TODO: use constants for URL */}
+                                                        <span className="btn btn-link p-0 border-0 align-baseline">Show full comparison</span>
+                                                    </Link>
+                                                )}
                                             </Title>
                                             {this.state.loading && (
                                                 <div>
@@ -212,7 +232,7 @@ class Contributions extends Component {
                                                 </div>
                                             )}
                                             {!this.state.loading && (
-                                                <SimilarContributions />
+                                                <SimilarContributions similaireContributions={this.state.similaireContributions.slice(0, 3)} />
                                             )}
 
                                         </FormGroup>

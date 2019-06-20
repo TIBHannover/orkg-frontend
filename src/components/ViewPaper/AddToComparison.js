@@ -41,7 +41,7 @@ class AddToComparison extends Component {
             <div className="float-right">
                 <CustomInput
                     type="checkbox"
-                    id="addToComparsion"
+                    id={`addToComparsion${this.props.contributionId}`}
                     label="Add to comparison"
                     onChange={this.toggleCompare}
                     checked={this.props.comparison.allIds.includes(this.props.contributionId)}
