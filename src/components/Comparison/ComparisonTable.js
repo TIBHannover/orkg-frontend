@@ -215,7 +215,7 @@ class ComparisonTable extends Component {
                             </tr>
 
                             {this.props.properties.map((property, index) => {
-                                if (!property.active) {
+                                if (!property.active || !this.props.data[property.id]) {
                                     return null;
                                 }
 
