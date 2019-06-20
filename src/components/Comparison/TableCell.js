@@ -21,6 +21,12 @@ const ItemInner = styled.div`
     height:100%;
 `;
 
+
+const ItemInnerSeparator = styled.hr`
+    margin:5px auto;
+    width:50%;
+`;
+
 class TableCell extends Component {
     constructor(props) {
         super(props);
@@ -55,7 +61,7 @@ class TableCell extends Component {
                             Object.keys(date).length > 0 ?
                                 date.type === 'resource' ? (
                                     <span key={`value-${index}`}>
-                                        {index > 0 && <br />}
+                                        {index > 0 && <ItemInnerSeparator />}
                                         <span
                                             className="btn-link"
                                             onClick={() => this.openStatementBrowser(date.resourceId, date.label)}
@@ -64,7 +70,7 @@ class TableCell extends Component {
                                             <ValuePlugins>{date.label}</ValuePlugins>
                                         </span>
                                     </span>
-                                ) : <>{index > 0 && <br />}<ValuePlugins>{date.label}</ValuePlugins></>
+                                ) : <>{index > 0 && <ItemInnerSeparator />}<ValuePlugins>{date.label}</ValuePlugins></>
                                 : <span className="font-italic" key={`value-${index}`}>Empty</span>
                         ))}
                     </ItemInner>
