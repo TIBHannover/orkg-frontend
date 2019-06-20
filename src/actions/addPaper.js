@@ -73,7 +73,7 @@ export const prefillStatements = ({ researchField, resourceId }) => dispatch => 
     // TODO: when no match is found, look for the parent researchField
 
     // This data is only added for demo purposes 
-    if (researchField === 'R133') {
+    /*if (researchField === 'R133') {
         dispatch(createProperty({
             resourceId: resourceId,
             existingPredicateId: 'P63',
@@ -91,7 +91,7 @@ export const prefillStatements = ({ researchField, resourceId }) => dispatch => 
             existingPredicateId: 'P16',
             label: 'Implementation',
         }));
-    }
+    }*/
 }
 
 export const deleteContribution = (id) => dispatch => {

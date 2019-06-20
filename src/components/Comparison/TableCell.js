@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
+import ValuePlugins from '../ValuePlugins/ValuePlugins';
 
 const Item = styled.td`
     padding-right:10px;
@@ -60,10 +61,10 @@ class TableCell extends Component {
                                             onClick={() => this.openStatementBrowser(date.resourceId, date.label)}
                                             style={{ cursor: 'pointer' }}
                                         >
-                                            {date.label}
+                                            <ValuePlugins>{date.label}</ValuePlugins>
                                         </span>
                                     </span>
-                                ) : date.label
+                                ) : <ValuePlugins>{date.label}</ValuePlugins>
                                 : <span className="font-italic" key={`value-${index}`}>Empty</span>
                         ))}
                     </ItemInner>
