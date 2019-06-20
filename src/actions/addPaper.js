@@ -1,7 +1,7 @@
 import * as type from './types.js';
 import { guid } from '../utils';
 import * as network from '../network';
-import {createResource, selectResource, createProperty} from './statementBrowser';
+import {createResource, selectResource} from './statementBrowser';
 
 export const updateGeneralData = (data) => dispatch => {
     dispatch({

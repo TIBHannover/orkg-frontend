@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { compose } from 'redux';
 import Boolean from './Boolean/Boolean';
 
 class ValuePlugins extends Component {
