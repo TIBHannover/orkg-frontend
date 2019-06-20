@@ -198,7 +198,7 @@ class ComparisonTable extends Component {
                                     return (
                                         <ItemHeader key={`contribution${index}`}>
                                             <ItemHeaderInner>
-                                                <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: contribution.paperId })}>
+                                                <Link to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: contribution.paperId, contributionId: contribution.id})}>
                                                     {contribution.title}
                                                 </Link>
                                                 <br />

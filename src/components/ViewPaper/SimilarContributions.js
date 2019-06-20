@@ -30,7 +30,11 @@ const Card = styled(Link)`
     &:hover{
         color:${props => props.theme.orkgPrimaryColor};
         text-decoration:none;
-    }    
+    }  
+
+    &, &:active, &:focus{
+        outline: none;
+    }
 `;
 
 const Similarity = styled.span`
