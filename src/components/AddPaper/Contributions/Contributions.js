@@ -133,7 +133,7 @@ class Contributions extends Component {
                                                     tagName="span"
                                                     className={styles.contributionEditableLabel}
                                                     onPaste={this.pasteAsPlainText}
-                                                    onKeyDown={e => e.keyCode === 13 && e.target.blur()}  // Disable multiline Input
+                                                    onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
                                                     onBlur={(e) => this.toggleEditLabelContribution(contributionId)}
                                                     onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
                                                 />

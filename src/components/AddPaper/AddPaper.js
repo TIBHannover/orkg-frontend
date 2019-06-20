@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { CSSTransitionGroup } from 'react-transition-group'
 import PropTypes from 'prop-types';
+import { resetStatementBrowser } from '../../actions/statementBrowser';
 
 const AnimationContainer = styled.div`
     &.fadeIn-enter {
@@ -22,6 +23,10 @@ const AnimationContainer = styled.div`
 `;
 
 class AddPaper extends Component {
+    componentDidMount() {
+        this.props.resetStatementBrowser();
+    }
+
     render() {
         let { currentStep } = this.props;
         let currentStepDetails;
@@ -66,13 +71,19 @@ class AddPaper extends Component {
 }
 
 AddPaper.propTypes = {
-    currentStep: PropTypes.number.isRequired
+    currentStep: PropTypes.number.isRequired,
+    resetStatementBrowser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
     currentStep: state.addPaper.currentStep
 });
 
+const mapDispatchToProps = dispatch => ({
+    resetStatementBrowser: () => dispatch(resetStatementBrowser()),
+});
+
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(AddPaper);

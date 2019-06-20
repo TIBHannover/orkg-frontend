@@ -29,6 +29,12 @@ export const initializeWithoutContribution = (data) => dispatch => {
     }));
 }
 
+export const resetStatementBrowser = () => dispatch => {
+    dispatch({
+        type: type.RESET_STATEMENT_BROWSER,
+    })
+}
+
 export const togglePropertyCollapse = (id) => dispatch => {
     dispatch({
         type: type.TOGGLE_PROPERTY_COLLAPSE,

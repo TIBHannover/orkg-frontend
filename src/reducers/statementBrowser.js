@@ -239,6 +239,12 @@ export default (state = initialState, action) => {
             }
         }
 
+        case type.RESET_STATEMENT_BROWSER: {
+            return {
+                ...initialState
+            }
+        }
+
         default: {
             return state
         }
