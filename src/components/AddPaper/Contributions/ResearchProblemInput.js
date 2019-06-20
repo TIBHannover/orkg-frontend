@@ -67,9 +67,13 @@ class ResearchProblemInput extends Component {
                 paddingLeft: 0,
                 paddingRight: 0,
             }),
-            multiValue: (provided, state) => ({
+            multiValue: (provided) => ({
                 ...provided
             }),
+            menu: (provided) => ({
+                ...provided,
+                zIndex:10
+            })
         }
 
         const Menu = props => {
