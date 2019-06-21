@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Form, FormGroup } from 'reactstrap';
+import { Container, Row, Col, Form, FormGroup, Alert } from 'reactstrap';
 import { connect } from 'react-redux';
 import { selectContribution } from '../../actions/viewPaper';
 import styles from '../AddPaper/Contributions/Contributions.module.scss';
@@ -47,7 +47,9 @@ class Contributions extends Component {
     state = {
         selectedContribution: '',
         loading: true,
-        similaireContributions: []
+        similaireContributions: [],
+        isSimilaireContributionsLoading: true,
+        isSimilaireContributionsFailedLoading: false
     }
 
     componentDidUpdate = (prevProps) => {
@@ -62,7 +64,7 @@ class Contributions extends Component {
     }
 
     handleSelectContribution = (contributionId) => {
-        this.setState({ loading: true });
+        this.setState({ loading: true, isSimilaireContributionsLoading: true });
         let contributionIsLoaded = this.props.resources.byId[contributionId] ? true : false;
         this.props.selectContribution({
             contributionId,
@@ -78,9 +80,10 @@ class Contributions extends Component {
 
             });
             Promise.all(similaireContributionsData).then((results) => {
-                this.setState({ similaireContributions: results })
+                this.setState({ similaireContributions: results, isSimilaireContributionsLoading: false })
             })
-
+        }).catch((error) => {
+            this.setState({ isSimilaireContributionsLoading: false, isSimilaireContributionsFailedLoading: true })
         });
         this.setState({ loading: false });
     }
@@ -216,7 +219,7 @@ class Contributions extends Component {
                                                     </Link>
                                                 )}
                                             </Title>
-                                            {this.state.loading && (
+                                            {this.state.isSimilaireContributionsLoading && (
                                                 <div>
                                                     <ContentLoader
                                                         height={10}
@@ -231,8 +234,13 @@ class Contributions extends Component {
                                                     </ContentLoader>
                                                 </div>
                                             )}
-                                            {!this.state.loading && (
-                                                <SimilarContributions similaireContributions={this.state.similaireContributions.slice(0, 3)} />
+                                            {!this.state.isSimilaireContributionsLoading && (
+                                                <>
+                                                    {!this.state.isSimilaireContributionsFailedLoading ?
+                                                        <SimilarContributions similaireContributions={this.state.similaireContributions.slice(0, 3)} />
+                                                        : <Alert color="light">Failed to load similar contributions, please try again later!</Alert>
+                                                    }
+                                                </>
                                             )}
 
                                         </FormGroup>
