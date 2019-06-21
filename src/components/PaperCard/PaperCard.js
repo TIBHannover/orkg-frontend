@@ -37,11 +37,11 @@ class PaperCard extends Component {
                     <Col sm="9">
                         {this.props.contribution && (
                             <Link to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: this.props.paper.id, contributionId: this.props.contribution.id })}>
-                                {this.props.paper.title}
+                                {this.props.paper.title ? this.props.paper.title : <em>No title</em>}
                             </Link>)}
                         {!this.props.contribution && (
                             <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paper.id })}>
-                                {this.props.paper.title}
+                                {this.props.paper.title ? this.props.paper.title : <em>No title</em>}
                             </Link>)}
                         <br />
                         <small>

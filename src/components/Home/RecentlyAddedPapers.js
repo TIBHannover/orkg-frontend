@@ -65,7 +65,7 @@ class RecentlyAddedPapers extends Component {
                                     <ListGroupItem key={index} className="p-0 m-0 mb-4" style={{ border: 0 }}>
                                         <h5 className="h6">
                                             <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.paperItem.id })} style={{ color: 'inherit' }}>
-                                                {paper.paperItem.label}
+                                                {paper.paperItem.label ? paper.paperItem.label : <em>No title</em>}
                                             </Link>
                                         </h5>
 

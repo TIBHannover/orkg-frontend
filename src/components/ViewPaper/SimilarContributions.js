@@ -80,7 +80,7 @@ class SimilarContributions extends Component {
                                             </Similarity>
                                         </Col>
                                         <Col>
-                                            {contribution.title}
+                                            {contribution.title ? contribution.title : <em>No title</em>}
                                         </Col>
                                     </Row>
                                 </Card>
