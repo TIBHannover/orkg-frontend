@@ -146,7 +146,7 @@ class ViewPaper extends Component {
                             )}
                             {!this.state.loading && !this.state.loading_failed && (
                                 <>
-                                    <h2 className="h4 mt-4 mb-3">{this.state.title}</h2>
+                                    <h2 className="h4 mt-4 mb-3">{this.state.title ? this.state.title : <em>No title</em>}</h2>
 
                                     {/* TODO: change links of badges  */}
                                     <span className="badge badge-lightblue mr-2">
