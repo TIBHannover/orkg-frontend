@@ -69,6 +69,9 @@ class AutoComplete extends Component {
                             onClick={this.getNewItemClickHandler(value.trim())}
                         >
                             <em>Create new property: {value.trim()}</em>
+                            {responseJson.find(i => i.label.toLowerCase() === value.trim().toLowerCase()) &&
+                                <em className="float-right">This property exists already</em>
+                            }
                         </button>
                     </>
                 );
