@@ -4,6 +4,8 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import ROUTES from '../../constants/routes.js';
+import { Row, Col } from 'reactstrap';
+
 
 const CardContainer = styled.div`
     display: flex;
@@ -13,22 +15,25 @@ const Card = styled(Link)`
     border:2px;
     width:calc(33% - 5px);
     flex-grow:0;
-    border:2px solid #DFDFDF;
     margin:10px 10px 0 0;
     border-radius:11px;
-    background: #F7F7F7;
+    background: ${props => props.theme.darkblue};
     cursor:pointer;
     font-size:95%;
     padding:10px 5px;
     color:${props => props.theme.bodyColor};
     text-decoration:none;
+    color:#fff;
+    font-size:85%;
+    transition: 0.2s opacity;
 
     &:last-child {
         margin-right:0;
     }
     
     &:hover{
-        color:${props => props.theme.orkgPrimaryColor};
+        opacity:0.9;
+        color:#fff;
         text-decoration:none;
     }  
 
@@ -44,9 +49,11 @@ const Similarity = styled.span`
     display:block;
     float:left;
     text-align:center;
-    color:#E86161;
+    color:${props => props.theme.darkblueDarker};
     font-weight:700;
+   
     margin-right:10px;
+    height:100%;
 `;
 
 
@@ -66,8 +73,16 @@ class SimilarContributions extends Component {
                                     className="justify-content-center"
                                     role="button"
                                 >
-                                    <Similarity>{contribution.similarityPercentage}<br />%</Similarity>
-                                    {contribution.title}
+                                    <Row className="h-100">
+                                        <Col md={2} style={{marginRight:10}} >
+                                            <Similarity>
+                                                <span>{contribution.similarityPercentage === 100 ? 99 : contribution.similarityPercentage}<br />%</span>
+                                            </Similarity>
+                                        </Col>
+                                        <Col>
+                                            {contribution.title}
+                                        </Col>
+                                    </Row>
                                 </Card>
                             )
                         })}
