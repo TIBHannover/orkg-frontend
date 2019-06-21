@@ -6,8 +6,11 @@ $ORKG-border-width: 2px; // Width of border for buttons, inputs
 // Theme variables
 $primary: $ORKG-primary-color;
 $darkblue: #80869B;
+$darkblueDarker: darken($darkblue, 20%);
 //$secondary: #3C4C58;
 $light: #E6E6E6;
+$ultra-light-blue: #F8F9FB;
+$ultra-light-blue-darker: #DBDDE5;
 $body-bg: #E9EBF2;
 $body-color: #646464;
 $border-width: $ORKG-border-width;
@@ -17,7 +20,9 @@ $border-radius: $ORKG-border-radius;
 $theme-colors: (
     lightblue: $body-bg,
     darkblue: $darkblue,
+    darkblueDarker: $darkblueDarker,
     primaryDarker: darken($ORKG-primary-color, 20%),
+    
 );
 
 // Forms

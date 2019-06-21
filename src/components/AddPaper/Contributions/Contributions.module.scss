@@ -67,7 +67,8 @@
 .statementItem {
     padding: 0.5rem 0.75rem !important; //overwrite bootstrap
     cursor: pointer;
-    background-color: $input-bg !important;
+    background-color: $ultra-light-blue !important;
+    border-color: $ultra-light-blue-darker!important;
 
     > .statementItemIcon {
         font-size: 18px;
