@@ -213,11 +213,6 @@ class Contributions extends Component {
                                         <FormGroup>
                                             <Title>
                                                 Similar contributions
-                                                {this.state.similaireContributions.length > 0 && (
-                                                    <Link to={`/comparison/${this.state.similaireContributions.slice(0, 3).map(s => s.contributionId).join('/')}`}>{/* TODO: use constants for URL */}
-                                                        <span className="btn btn-link p-0 border-0 align-baseline">Show full comparison</span>
-                                                    </Link>
-                                                )}
                                             </Title>
                                             {this.state.isSimilaireContributionsLoading && (
                                                 <div>
@@ -242,7 +237,11 @@ class Contributions extends Component {
                                                     }
                                                 </>
                                             )}
-
+                                            {this.state.similaireContributions.length > 0 && (
+                                                <Link className="clearfix" to={`/comparison/${selectedContributionId}/${this.state.similaireContributions.slice(0, 3).map(s => s.contributionId).join('/')}`}>{/* TODO: use constants for URL */}
+                                                    <span style={{ margin: '7px 5px 0 0', fontSize: '95%' }} className="float-right btn btn-link p-0 border-0 align-baseline">Compare these contributions</span>
+                                                </Link>
+                                            )}
                                         </FormGroup>
                                     </Form>
                                 </div>
