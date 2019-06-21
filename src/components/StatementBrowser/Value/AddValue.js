@@ -17,8 +17,7 @@ class AddValue extends Component {
             dropdownValueTypeOpen: false,
             showAddValue: false,
             valueType: 'object',
-            objectValue: '',
-            literalValue: '',
+            inputValue: '',
         }
     }
 
@@ -37,8 +36,7 @@ class AddValue extends Component {
     handleHideAddValue = () => {
         this.setState({
             showAddValue: false,
-            literalValue: '',
-            objectValue: '',
+            inputValue: '',
             valueType: 'object',
         });
     }
@@ -51,7 +49,7 @@ class AddValue extends Component {
 
     handleInputChange = (e) => {
         this.setState({
-            [e.target.name]: e.target.value
+            inputValue: e.target.value.trim()
         });
     }
 
@@ -69,18 +67,12 @@ class AddValue extends Component {
 
     handleAddValue = () => {
         this.props.createValue({
-            label: this.state.valueType === 'object' ? this.state.objectValue : this.state.literalValue,
+            label: this.state.inputValue,
             type: this.state.valueType,
             propertyId: this.props.selectedProperty,
         });
 
         this.handleHideAddValue();
-    }
-
-    handleChangeObjectValue = (e) => {
-        this.setState({
-            objectValue: e.target.value.trim()
-        });
     }
 
     render() {
@@ -113,7 +105,8 @@ class AddValue extends Component {
                                         requestUrl={resourcesUrl}
                                         placeholder="Enter an object"
                                         onItemSelected={this.handlePropertySelect}
-                                        onInput={this.handleChangeObjectValue}
+                                        onInput={this.handleInputChange}
+                                        value={this.state.inputValue}
                                         disableBorderRadiusRight
                                         disableBorderRadiusLeft
                                     />
@@ -121,7 +114,7 @@ class AddValue extends Component {
                                     <Input bsSize="sm"
                                         placeholder="Enter a value"
                                         name="literalValue"
-                                        value={this.state.literalValue}
+                                        value={this.state.inputValue}
                                         onChange={this.handleInputChange}
                                     />
                                 )
