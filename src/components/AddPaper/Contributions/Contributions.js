@@ -3,12 +3,11 @@ import { Container, Row, Col, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../../Utils/Tooltip';
-import styles from './Contributions.module.scss';
+import { StyledContributionsList, StyledContentEditable} from './styled';
 import { connect } from 'react-redux';
 import { nextStep, previousStep, createContribution, deleteContribution, selectContribution, updateContributionLabel, saveAddPaper } from '../../../actions/addPaper';
 import Confirm from 'reactstrap-confirm';
 import Contribution from './Contribution';
-import ContentEditable from 'react-contenteditable'
 import { CSSTransitionGroup } from 'react-transition-group'
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -117,21 +116,20 @@ class Contributions extends Component {
                 <Container>
                     <Row noGutters={true}>
                         <Col xs="3">
-                            <ul className={styles.contributionsList}>
+                            <StyledContributionsList>
                                 {this.props.contributions.allIds.map((contribution, index) => {
                                     let contributionId = this.props.contributions.byId[contribution]['id'];
 
                                     return (
-                                        <li className={contributionId === this.props.selectedContribution ? styles.activeContribution : ''} key={contributionId}>
-                                            <span className={styles.selectContribution} onClick={() => this.handleSelectContribution(contributionId)}>
+                                        <li className={contributionId === this.props.selectedContribution ? 'activeContribution' : ''} key={contributionId}>
+                                            <span className={'selectContribution'} onClick={() => this.handleSelectContribution(contributionId)}>
                                                 {/* TODO: add the contenteditable into a seperate component */}
-                                                <ContentEditable
+                                                <StyledContentEditable
                                                     innerRef={(input) => { this.inputRefs[contribution] = input; }}
                                                     html={this.props.contributions.byId[contribution]['label']}
                                                     disabled={!this.state.editing[contribution]}
                                                     onChange={(e) => this.handleChange(contributionId, e)}
                                                     tagName="span"
-                                                    className={styles.contributionEditableLabel}
                                                     onPaste={this.pasteAsPlainText}
                                                     onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
                                                     onBlur={(e) => this.toggleEditLabelContribution(contributionId)}
@@ -140,13 +138,13 @@ class Contributions extends Component {
                                                 {!this.state.editing[contribution] && (
                                                     <>
                                                         {this.props.contributions.allIds.length !== 1 && (
-                                                            <span className={`${styles.deleteContribution} float-right mr-1 ${contributionId !== this.props.selectedContribution && 'd-none'}`}>
+                                                            <span className={`deleteContribution float-right mr-1 ${contributionId !== this.props.selectedContribution && 'd-none'}`}>
                                                                 <Tooltip message="Delete contribution" hideDefaultIcon={true}>
                                                                     <Icon icon={faTrash} onClick={() => this.toggleDeleteContribution(contributionId)} />
                                                                 </Tooltip>
                                                             </span>
                                                         )}
-                                                        <span className={`${styles.deleteContribution} float-right mr-1 ${contributionId !== this.props.selectedContribution && 'd-none'}`}>
+                                                        <span className={`deleteContribution float-right mr-1 ${contributionId !== this.props.selectedContribution && 'd-none'}`}>
                                                             <Tooltip message="Edit the contribution label" hideDefaultIcon={true}>
                                                                 <Icon icon={faPen} onClick={(e) => this.toggleEditLabelContribution(contributionId, e)} />
                                                             </Tooltip>
@@ -158,10 +156,10 @@ class Contributions extends Component {
                                     )
                                 })}
 
-                                <li className={`${styles.addContribution} text-primary`}>
+                                <li className={'addContribution text-primary'}>
                                     <span onClick={this.props.createContribution}>+ Add another contribution</span>
                                 </li>
-                            </ul>
+                            </StyledContributionsList>
                         </Col>
 
                         <CSSTransitionGroup

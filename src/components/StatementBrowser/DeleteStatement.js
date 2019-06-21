@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../Utils/Tooltip';
-import styles from '../AddPaper/Contributions/Contributions.module.scss';
 import { connect } from 'react-redux';
 import { deleteProperty } from '../../actions/statementBrowser';
 import Confirm from 'reactstrap-confirm';
@@ -28,7 +27,7 @@ class DeleteStatement extends Component {
     render() {
         return (
             <>
-                <span className={`${styles.deletePredicate} float-right mr-4`} onClick={this.toggleDeleteStatement}>
+                <span className={'deletePredicate float-right mr-4'} onClick={this.toggleDeleteStatement}>
                     <Tooltip message="Delete statement" hideDefaultIcon={true}>
                         <Icon icon={faTrash} /> Delete
                     </Tooltip>

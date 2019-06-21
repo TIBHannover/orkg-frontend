@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { resourcesUrl } from '../../../network';
-import { Input, InputGroup, InputGroupAddon, Button, ListGroupItem, DropdownToggle, DropdownMenu, InputGroupButtonDropdown, DropdownItem } from 'reactstrap';
+import { Input, InputGroup, InputGroupAddon, Button, DropdownToggle, DropdownMenu, InputGroupButtonDropdown } from 'reactstrap';
 import Tooltip from '../../Utils/Tooltip';
-import styles from '../../AddPaper/Contributions/Contributions.module.scss';
+import { StyledValueItem, StyledDropdownItem } from '../../AddPaper/Contributions/styled';
 import AutoComplete from '../AutoComplete';
 import { connect } from 'react-redux';
 import { createValue } from '../../../actions/statementBrowser';
@@ -78,24 +78,24 @@ class AddValue extends Component {
     render() {
         return (
             <>
-                <ListGroupItem className={styles.valueItem}>
+                <StyledValueItem>
                     {this.state.showAddValue ?
                         <InputGroup>
                             <InputGroupButtonDropdown addonType="prepend" isOpen={this.state.dropdownValueTypeOpen} toggle={this.toggleDropDownValueType}>
-                                <DropdownToggle caret color="primary" className={styles.valueTypeDropdown}>
+                                <DropdownToggle caret color="primary" className={'valueTypeDropdown'}>
                                     {this.state.valueType.charAt(0).toUpperCase() + this.state.valueType.slice(1)}
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                    <DropdownItem className={styles.dropdownItem} onClick={() => this.handleDropdownSelect('object')}>
+                                    <StyledDropdownItem onClick={() => this.handleDropdownSelect('object')}>
                                         <Tooltip message="Choose object to link this to an object, which can contain values on its own" >
                                             Object
                                         </Tooltip>
-                                    </DropdownItem>
-                                    <DropdownItem className={styles.dropdownItem} onClick={() => this.handleDropdownSelect('literal')}>
+                                    </StyledDropdownItem>
+                                    <StyledDropdownItem onClick={() => this.handleDropdownSelect('literal')}>
                                         <Tooltip message="Choose literal for values like numbers or plain text" >
                                             Literal
                                         </Tooltip>
-                                    </DropdownItem>
+                                    </StyledDropdownItem>
                                 </DropdownMenu>
                             </InputGroupButtonDropdown>
 
@@ -121,14 +121,14 @@ class AddValue extends Component {
                             }
 
                             <InputGroupAddon addonType="append">
-                                <Button color="light" className={styles.valueActionButton} onClick={this.handleHideAddValue}>Cancel</Button>
-                                <Button color="light" className={styles.valueActionButton} onClick={this.handleAddValue}>Create</Button>
+                                <Button color="light" className={'valueActionButton'} onClick={this.handleHideAddValue}>Cancel</Button>
+                                <Button color="light" className={'valueActionButton'} onClick={this.handleAddValue}>Create</Button>
                             </InputGroupAddon>
                         </InputGroup>
                         :
                         <span className="btn btn-link p-0" onClick={this.handleShowAddValue}>+ Add value</span>
                     }
-                </ListGroupItem>
+                </StyledValueItem>
             </>
 
         );

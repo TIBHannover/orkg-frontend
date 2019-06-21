@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import styles from './Contributions.module.scss';
+import { StyledResearchFieldsInputFormControl, StyledResearchFieldBrowser } from './styled';
 import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
 import { components } from 'react-select';
@@ -72,7 +72,7 @@ class ResearchProblemInput extends Component {
             }),
             menu: (provided) => ({
                 ...provided,
-                zIndex:10
+                zIndex: 10
             })
         }
 
@@ -99,7 +99,7 @@ class ResearchProblemInput extends Component {
 
         return (
             <>
-                <div className={`${styles.researchFieldsInput} form-control`} >
+                <StyledResearchFieldsInputFormControl>
                     <CreatableSelect
                         //value={this.state.researchProblems.filter(({ id }) => this.props.value.includes(id))}
                         value={this.props.value}
@@ -116,14 +116,14 @@ class ResearchProblemInput extends Component {
                         options={this.state.researchProblems}
                         openMenuOnClick={false}
                     />
-                </div >
+                </StyledResearchFieldsInputFormControl>
                 {this.state.problemBrowser && (
-                    <div className={`${styles.researchFieldBrowser} form-control`} >
-                        <button type="button" className={`close`} onClick={this.closeProblemBrowser}><span>×</span></button>
+                    <StyledResearchFieldBrowser>
+                        <button type="button" className={'close'} onClick={this.closeProblemBrowser}><span>×</span></button>
                         <>Problem browser :</><br />
                         <><b>ID</b> {this.state.problemBrowser.id}</><br />
                         <><b>Label</b> {this.state.problemBrowser.label}</>
-                    </div >)}
+                    </StyledResearchFieldBrowser>)}
             </>
         );
     }
