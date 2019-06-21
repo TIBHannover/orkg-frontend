@@ -70,12 +70,13 @@ class ResearchProblem extends Component {
                     });
                     return Promise.all(papers_data).then((results) => {
                         contribution.papers = results;
-                        return contribution
+                        return contribution.papers.length > 0 ? contribution : null
                     })
                 });
             })
 
             Promise.all(papers).then((results) => {
+                console.log(results);
                 this.setState({
                     contributions: results,
                     loading: false
@@ -115,11 +116,12 @@ class ResearchProblem extends Component {
                                     {this.state.contributions.map(
                                         (contribution) => {
                                             return (
-                                                <PaperCard
-                                                    paper={{ id: contribution.papers[0].subject.id, title: contribution.papers[0].subject.label, ...contribution.papers[0].data }}
-                                                    contribution={{ id: contribution.subject.id, title: contribution.subject.label }}
-                                                    key={`pc${contribution.id}`}
-                                                />
+                                                (contribution &&
+                                                    <PaperCard
+                                                        paper={{ id: contribution.papers[0].subject.id, title: contribution.papers[0].subject.label, ...contribution.papers[0].data }}
+                                                        contribution={{ id: contribution.subject.id, title: contribution.subject.label }}
+                                                        key={`pc${contribution.id}`}
+                                                    />)
                                             )
                                         }
                                     )}
