@@ -3,15 +3,11 @@ import { CustomInput } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withCookies } from 'react-cookie';
+import dotProp from 'dot-prop-immutable';
 import { compose } from 'redux';
 import { addToComparison, removeFromComparison, loadComparisonFromCookie } from '../../actions/viewPaper';
 
 class AddToComparison extends Component {
-    componentDidMount() {
-        if(this.props.comparison.allIds.length === 0 && this.props.cookies.get('comparison')) { // no comparing values found, sync with cookie
-            this.props.loadComparisonFromCookie(this.props.cookies.get('comparison'));
-        }
-    }
 
     componentDidUpdate(prevProps) {
         if (this.props.comparison !== prevProps.comparison) {
@@ -23,15 +19,27 @@ class AddToComparison extends Component {
         const { contributionId, comparison } = this.props;
         
         if (comparison.allIds.includes(contributionId)) {
+            // delete the contribution from cookies
+            let valueIndex = dotProp.get(this.props.comparison, 'allIds').indexOf(contributionId);
+            let newComparison = dotProp.delete(this.props.comparison, `allIds.${valueIndex}`)
+            newComparison = dotProp.delete(newComparison, `byId.${contributionId}`);
+            this.props.cookies.set('comparison', newComparison, { path: '/' });
+
             this.props.removeFromComparison(contributionId);
         } else {
+            let contributionData = {
+                paperId: this.props.paperId,
+                paperTitle: this.props.paperTitle,
+                contributionTitle: this.props.contributionTitle,
+            }
+            // add the contribution to cookies
+            let newComparison = dotProp.merge(this.props.comparison, `byId.${contributionId}`, contributionData);
+            newComparison = dotProp.merge(this.props.comparison, 'allIds', contributionId);
+            this.props.cookies.set('comparison', newComparison, { path: '/' });
+            
             this.props.addToComparison({
                 contributionId: contributionId,
-                contributionData: {
-                    paperId: this.props.paperId,
-                    paperTitle: this.props.paperTitle,
-                    contributionTitle: this.props.contributionTitle,
-                }
+                contributionData: contributionData
             });
         }
     }

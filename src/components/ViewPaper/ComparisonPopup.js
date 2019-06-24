@@ -8,11 +8,12 @@ import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronUp, faChevronDown, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
-import { removeFromComparison } from '../../actions/viewPaper';
+import { removeFromComparison, loadComparisonFromCookie } from '../../actions/viewPaper';
 import Tooltip from '../Utils/Tooltip';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
+import dotProp from 'dot-prop-immutable';
 
 const ComparisonBoxButton = styled(Button)`
     border-radius: 11px 11px 0 0 !important;
@@ -83,6 +84,19 @@ class ComparisonPopup extends Component {
         }
     }
 
+    componentDidMount() {
+        this.loadComparisonFromCookie();
+        this.intervalComparisonFromCookie = setInterval(this.loadComparisonFromCookie, 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.intervalComparisonFromCookie);
+    }
+    
+    loadComparisonFromCookie = () => {
+        this.props.loadComparisonFromCookie(this.props.cookies.get('comparison'));
+    }
+
     toggleComparisonBox = () => {
         this.setState(prevState => ({
             showComparisonBox: !prevState.showComparisonBox,
@@ -90,6 +104,12 @@ class ComparisonPopup extends Component {
     }
 
     removeFromComparison = (id) => {
+        // delete the contribution from cookies
+        let valueIndex = dotProp.get(this.props.comparison, 'allIds').indexOf(id);
+        let newComparison = dotProp.delete(this.props.comparison, `allIds.${valueIndex}`)
+        newComparison = dotProp.delete(newComparison, `byId.${id}`);
+        this.props.cookies.set('comparison', newComparison, { path: '/' });
+
         this.props.removeFromComparison(id);
     }
 
@@ -159,6 +179,7 @@ class ComparisonPopup extends Component {
 ComparisonPopup.propTypes = {
     comparison: PropTypes.object.isRequired,
     removeFromComparison: PropTypes.func.isRequired,
+    loadComparisonFromCookie: PropTypes.func.isRequired,
     cookies: PropTypes.object,
 };
 
@@ -168,6 +189,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     removeFromComparison: (data) => dispatch(removeFromComparison(data)),
+    loadComparisonFromCookie: (data) => dispatch(loadComparisonFromCookie(data)),
 });
 
 export default compose(
