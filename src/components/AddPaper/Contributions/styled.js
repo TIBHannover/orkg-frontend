@@ -65,9 +65,7 @@ export const StyledContentEditable = styled(ContentEditable)`
 `;
 
 /*researchFieldsInput*/
-export const StyledResearchFieldsInputFormControl = styled.div.attrs(props => ({
-    className: 'form-control',
-}))`
+export const StyledResearchFieldsInputFormControl = styled.div`
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     height: auto !important;
@@ -85,18 +83,14 @@ export const StyledResearchFieldsInputFormControl = styled.div.attrs(props => ({
 `;
 
 /*researchFieldBrowser*/
-export const StyledResearchFieldBrowser = styled.div.attrs(props => ({
-    className: 'form-control',
-}))`
+export const StyledResearchFieldBrowser = styled.div`
     margin: 5px auto;
     height: auto !important;
     cursor: text;
 `;
 
 /*statementItem*/
-export const StyledStatementItem = styled(ListGroupItem).attrs(props => ({
-    className: props.className || '',
-}))`
+export const StyledStatementItem = styled(ListGroupItem)`
     padding: 0.5rem 0.75rem !important;
     cursor: default;
     background-color: ${props => props.theme.ultraLightBlue} !important; 
@@ -144,9 +138,7 @@ export const StyledAddStatement = styled(InputGroup)`
 `;
 
 /*listGroupOpen*/
-export const StyledListGroupOpen = styled.div.attrs(props => ({
-    className: props.className || '',
-}))`
+export const StyledListGroupOpen = styled.div`
     border-left-width: ${props => props.theme.borderWidth};
     border-right-width: ${props => props.theme.borderWidth};
     border-left-style: solid;

@@ -99,7 +99,7 @@ class ResearchProblemInput extends Component {
 
         return (
             <>
-                <StyledResearchFieldsInputFormControl>
+                <StyledResearchFieldsInputFormControl className="form-control">
                     <CreatableSelect
                         //value={this.state.researchProblems.filter(({ id }) => this.props.value.includes(id))}
                         value={this.props.value}
@@ -118,7 +118,7 @@ class ResearchProblemInput extends Component {
                     />
                 </StyledResearchFieldsInputFormControl>
                 {this.state.problemBrowser && (
-                    <StyledResearchFieldBrowser>
+                    <StyledResearchFieldBrowser className="form-control">
                         <button type="button" className={'close'} onClick={this.closeProblemBrowser}><span>×</span></button>
                         <>Problem browser :</><br />
                         <><b>ID</b> {this.state.problemBrowser.id}</><br />
