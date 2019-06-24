@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { withCookies } from 'react-cookie';
 import dotProp from 'dot-prop-immutable';
 import { compose } from 'redux';
-import { addToComparison, removeFromComparison, loadComparisonFromCookie } from '../../actions/viewPaper';
+import { addToComparison, removeFromComparison } from '../../actions/viewPaper';
 
 class AddToComparison extends Component {
 
@@ -66,7 +66,6 @@ AddToComparison.propTypes = {
     contributionTitle: PropTypes.string.isRequired,
     addToComparison: PropTypes.func.isRequired,
     removeFromComparison: PropTypes.func.isRequired,
-    loadComparisonFromCookie: PropTypes.func.isRequired,
     comparison: PropTypes.object.isRequired,
     cookies: PropTypes.object,
 };
@@ -77,8 +76,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     addToComparison: (data) => dispatch(addToComparison(data)),
-    removeFromComparison: (data) => dispatch(removeFromComparison(data)),
-    loadComparisonFromCookie: (data) => dispatch(loadComparisonFromCookie(data)),
+    removeFromComparison: (data) => dispatch(removeFromComparison(data))
 });
 
 export default compose(

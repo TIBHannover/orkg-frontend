@@ -94,7 +94,9 @@ class ComparisonPopup extends Component {
     }
     
     loadComparisonFromCookie = () => {
-        this.props.loadComparisonFromCookie(this.props.cookies.get('comparison'));
+        if(this.props.cookies.get('comparison') && JSON.stringify(this.props.comparison.allIds) !== JSON.stringify(this.props.cookies.get('comparison').allIds)){
+            this.props.loadComparisonFromCookie(this.props.cookies.get('comparison'));
+        }
     }
 
     toggleComparisonBox = () => {
