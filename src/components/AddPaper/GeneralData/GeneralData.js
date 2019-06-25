@@ -156,6 +156,7 @@ class GeneralData extends Component {
     }
 
     handleAuthorsChange(tags) {
+        tags = tags ? tags : [];
         this.setState({
             paperAuthors: tags
         });

@@ -55,7 +55,7 @@ class AuthorsInput extends Component {
                 background: 'inherit',
                 boxShadow: state.isFocused ? 0 : 0,
                 border: 0,
-                padding: '2px 5px'
+                padding: '0 5px'
             }),
             menu: (provided) => ({
                 ...provided,
@@ -64,15 +64,13 @@ class AuthorsInput extends Component {
             multiValueLabel: (provided) => ({
                 ...provided,
                 color: '#fff',
-                padding: '0',
+                padding: '0'
             }),
             multiValue: (provided) => ({
                 ...provided,
                 backgroundColor: this.props.theme.orkgPrimaryColor,
                 borderRadius: '999px',
-                border: `1px solid ${this.props.theme.orkgPrimaryColor}`,
                 color: '#fff',
-                padding: '0',
                 margin: '0 0 2px 2px',
                 fontSize: '90%',
             }),
@@ -81,6 +79,11 @@ class AuthorsInput extends Component {
                 padding: '0',
                 margin: '0 0 0 2px'
             }),
+            multiValueRemove: (provided) => ({
+                ...provided,
+                borderRadius: '0 999px 999px 0',
+                marginLeft: '2px',
+            })
         }
 
         return (
