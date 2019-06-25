@@ -49,7 +49,7 @@ class AddValue extends Component {
 
     handleInputChange = (e) => {
         this.setState({
-            inputValue: e.target.value.trim()
+            inputValue: e.target.value
         });
     }
 
