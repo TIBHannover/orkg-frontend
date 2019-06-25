@@ -56,6 +56,17 @@ class ResearchProblemInput extends Component {
         this.setState({ problemBrowser: null });
     }
 
+    onKeyDown = (event) => {
+        switch (event.keyCode) {
+            case 13: // ENTER
+                event.target.value.trim()==='' && event.preventDefault();
+                break;
+            default: {
+                break;
+            }
+        }
+    }
+
     render() {
 
         const customStyles = {
@@ -114,6 +125,7 @@ class ResearchProblemInput extends Component {
                         styles={customStyles}
                         components={{ Menu, MultiValueLabel }}
                         options={this.state.researchProblems}
+                        onKeyDown={this.onKeyDown}
                         openMenuOnClick={false}
                     />
                 </StyledResearchFieldsInputFormControl>
