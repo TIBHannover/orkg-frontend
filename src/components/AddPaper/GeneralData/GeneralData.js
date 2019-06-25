@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { range } from '../../../utils';
 import Tooltip from '../../Utils/Tooltip';
-import TagsInput from '../../Utils/TagsInput';
+import AuthorsInput from '../../Utils/AuthorsInput';
 import FormValidator from '../../Utils/FormValidator';
 import { connect } from 'react-redux';
 import { updateGeneralData, nextStep } from '../../../actions/addPaper';
@@ -98,14 +98,17 @@ class GeneralData extends Component {
 
         try {
             const responseJson = await submitGetRequest(crossrefUrl + this.state.doi);
-            console.log(responseJson);
 
             let paperTitle = '', paperAuthors = [], paperPublicationMonth = 0, paperPublicationYear = 0;
 
             try {
                 paperTitle = responseJson.message.title[0];
                 paperAuthors = responseJson.message.author.map((author, index) => {
-                    return author.given + ' ' + author.family;
+                    const newAuthor = {
+                        label: author.given + ' ' + author.family,
+                        id: author.given + ' ' + author.family,
+                    };
+                    return newAuthor;
                 });
                 paperPublicationMonth = responseJson.message.created['date-parts'][0][1];
                 paperPublicationYear = responseJson.message.created['date-parts'][0][0];
@@ -247,8 +250,9 @@ class GeneralData extends Component {
                                                     <tr>
                                                         <td>
                                                             <strong>Authors:</strong> {this.state.paperAuthors.map((author, index) => (
-                                                                <span key={index}>{this.state.paperAuthors.length > index + 1 ? author + ', ' : author}</span>
-                                                            ))}
+                                                                <span key={index}>{this.state.paperAuthors.length > index + 1 ? author.label + ', ' : author.label}</span>
+                                                            )
+                                                            )}
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -277,7 +281,7 @@ class GeneralData extends Component {
                                             <Label for="paperAuthors">
                                                 <Tooltip message="The author or authors of the paper. Enter both the first and last name">Paper authors</Tooltip>
                                             </Label>
-                                            <TagsInput handler={this.handleAuthorsChange} value={this.state.paperAuthors} />
+                                            <AuthorsInput handler={this.handleAuthorsChange} value={this.state.paperAuthors} />
                                         </FormGroup>
                                     </Col>
                                     <Col md={6} className="pl-3">
@@ -289,8 +293,8 @@ class GeneralData extends Component {
                                                 <Col md={6} >
                                                     <Input type="select" name="paperPublicationMonth" aria-label="Select publication month" value={this.state.paperPublicationMonth} onChange={this.handleMonthChange}>
                                                         {moment.months().map((el, index) => {
-                                                            return <option value={index+1} key={index+1}>{el}</option>
-                                                        }) }
+                                                            return <option value={index + 1} key={index + 1}>{el}</option>
+                                                        })}
                                                     </Input>
                                                 </Col>
                                                 <Col md={6} >

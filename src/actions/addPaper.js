@@ -167,8 +167,13 @@ export const saveAddPaper = (data) => {
 
         // authors
         for (let author of data.authors) {
-            let authorResource = await network.createResource(author);
-            await network.createResourceStatement(paper.id, authorPredicate, authorResource.id);
+            // check if the author is already a resource
+            if (author.hasOwnProperty('_class') && author._class === 'resource'){
+                await network.createResourceStatement(paper.id, authorPredicate, author.id);
+            }else{
+                let authorResource = await network.createResource(author.label);
+                await network.createResourceStatement(paper.id, authorPredicate, authorResource.id);
+            }
         }
 
         // publication month

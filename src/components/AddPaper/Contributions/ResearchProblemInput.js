@@ -5,11 +5,6 @@ import CreatableSelect from 'react-select/creatable';
 import { components } from 'react-select';
 import { getStatementsByPredicate } from '../../../network';
 
-/**
- * Functional stateless component (still have to decide on whether this should be standard or use the regular class structure)
- * TODO: consistency: try to replace some of the classes via props of TagsInputReact, instead of different render methods 
- */
-
 
 class ResearchProblemInput extends Component {
 
