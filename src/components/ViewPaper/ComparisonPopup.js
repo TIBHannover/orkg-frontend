@@ -13,7 +13,6 @@ import Tooltip from '../Utils/Tooltip';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
-import dotProp from 'dot-prop-immutable';
 
 const ComparisonBoxButton = styled(Button)`
     border-radius: 11px 11px 0 0 !important;
@@ -106,12 +105,6 @@ class ComparisonPopup extends Component {
     }
 
     removeFromComparison = (id) => {
-        // delete the contribution from cookies
-        let valueIndex = dotProp.get(this.props.comparison, 'allIds').indexOf(id);
-        let newComparison = dotProp.delete(this.props.comparison, `allIds.${valueIndex}`)
-        newComparison = dotProp.delete(newComparison, `byId.${id}`);
-        this.props.cookies.set('comparison', newComparison, { path: '/' });
-
         this.props.removeFromComparison(id);
     }
 

@@ -3,43 +3,24 @@ import { CustomInput } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withCookies } from 'react-cookie';
-import dotProp from 'dot-prop-immutable';
 import { compose } from 'redux';
 import { addToComparison, removeFromComparison } from '../../actions/viewPaper';
 
 class AddToComparison extends Component {
 
-    componentDidUpdate(prevProps) {
-        if (this.props.comparison !== prevProps.comparison) {
-            this.props.cookies.set('comparison', this.props.comparison, { path: '/' });
-        }
-    }
-
     toggleCompare = () => {
         const { contributionId, comparison } = this.props;
-        
-        if (comparison.allIds.includes(contributionId)) {
-            // delete the contribution from cookies
-            let valueIndex = dotProp.get(this.props.comparison, 'allIds').indexOf(contributionId);
-            let newComparison = dotProp.delete(this.props.comparison, `allIds.${valueIndex}`)
-            newComparison = dotProp.delete(newComparison, `byId.${contributionId}`);
-            this.props.cookies.set('comparison', newComparison, { path: '/' });
 
+        if (comparison.allIds.includes(contributionId)) {
             this.props.removeFromComparison(contributionId);
         } else {
-            let contributionData = {
-                paperId: this.props.paperId,
-                paperTitle: this.props.paperTitle,
-                contributionTitle: this.props.contributionTitle,
-            }
-            // add the contribution to cookies
-            let newComparison = dotProp.merge(this.props.comparison, `byId.${contributionId}`, contributionData);
-            newComparison = dotProp.merge(this.props.comparison, 'allIds', contributionId);
-            this.props.cookies.set('comparison', newComparison, { path: '/' });
-            
             this.props.addToComparison({
                 contributionId: contributionId,
-                contributionData: contributionData
+                contributionData: {
+                    paperId: this.props.paperId,
+                    paperTitle: this.props.paperTitle,
+                    contributionTitle: this.props.contributionTitle,
+                }
             });
         }
     }
