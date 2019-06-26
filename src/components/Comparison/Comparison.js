@@ -382,7 +382,7 @@ class Comparison extends Component {
                     data={this.state.csvData} 
                     showDialog={this.state.showLatexDialog}
                     toggle={() => this.toggle('showLatexDialog')}
-                    transpose={true}
+                    transpose={!this.state.transpose}
                 />
             </div>
         );
