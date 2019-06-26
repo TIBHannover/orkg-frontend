@@ -30,7 +30,7 @@ const ScrollContainer = styled.div`
 `;
 
 const Row = styled.tr`
-    &:last-child td > div {
+    &:last-child td > div:first-child {
         border-bottom:2px solid #CFCBCB;
         border-radius:0 0 11px 11px;
     }
@@ -43,14 +43,19 @@ const Properties = styled.td`
     display: table-cell;
     height:100%;
     width:250px;
+    position:relative;
 `;
 
 const PropertiesInner = styled.div`
-    background: #80869B;
+    background: ${props => props.transpose ? '#E86161' : '#80869B'};
     height:100%;
     color:#fff;
     padding:10px;
-    border-bottom:2px solid #8B91A5!important;
+    border-bottom: ${props => props.transpose ? '2px solid #fff!important' : '2px solid #8B91A5!important'};
+
+    a {
+        color:#fff!important;
+    }
 
     &.first {
         border-radius:11px 11px 0 0;
@@ -74,7 +79,7 @@ const ItemHeader = styled.td`
 
 const ItemHeaderInner = styled.div`
     padding:5px 10px;
-    background:#E86161;
+    background: ${props => !props.transpose ? '#E86161' : '#80869B'};
     border-radius:11px 11px 0 0;
     color:#fff;
     height:100%;
@@ -100,6 +105,10 @@ const Delete = styled.div`
     text-align:center;
     color:#E86161;
     cursor:pointer;
+
+    &:hover{
+        background:#FFF;
+    }
 `;
 
 const ScrollButton = styled.div`
@@ -144,10 +153,17 @@ class ComparisonTable extends Component {
         this.defaultNextButtonState();
     }
 
-    componentDidUpdate = (prevProps) => {
-        if (this.props.contributions !== prevProps.contributions && this.props.contributions.length > 3) {
-            this.defaultNextButtonState();
+    componentDidUpdate = (prevProps, prevState) => {
+        if (!this.props.transpose) {
+            if (this.props.contributions !== prevProps.contributions && this.props.contributions.length > 3) {
+                this.defaultNextButtonState();
+            }
+        } else {
+            if (this.props.transpose !== prevProps.transpose && this.props.properties.filter(property => property.active).length > 3) {
+                this.defaultNextButtonState();
+            }
         }
+
     }
 
     componentWillUnmount = () => {
@@ -155,10 +171,18 @@ class ComparisonTable extends Component {
     }
 
     defaultNextButtonState = () => {
-        if (this.props.contributions.length > 3) {
-            this.setState({
-                showNextButton: true,
-            });
+        if (!this.props.transpose) {
+            if (this.props.contributions.length > 3) {
+                this.setState({
+                    showNextButton: true,
+                });
+            }
+        }else{
+            if (this.props.properties.filter(property => property.active).length > 3) {
+                this.setState({
+                    showNextButton: true,
+                });
+            }
         }
     }
 
@@ -194,27 +218,46 @@ class ComparisonTable extends Component {
                             <tr className="table-borderless">
                                 <Properties><PropertiesInner className="first">Properties</PropertiesInner></Properties>
 
-                                {this.props.contributions.map((contribution, index) => {
-                                    return (
-                                        <ItemHeader key={`contribution${index}`}>
-                                            <ItemHeaderInner>
-                                                <Link to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: contribution.paperId, contributionId: contribution.id})}>
-                                                    {contribution.title ? contribution.title : <em>No title</em>}
-                                                </Link>
-                                                <br />
-                                                <Contribution>{contribution.contributionLabel}</Contribution>
-                                            </ItemHeaderInner>
+                                {!this.props.transpose &&
+                                    this.props.contributions.map((contribution, index) => {
+                                        return (
+                                            <ItemHeader key={`contribution${index}`}>
+                                                <ItemHeaderInner>
+                                                    <Link to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: contribution.paperId, contributionId: contribution.id })}>
+                                                        {contribution.title ? contribution.title : <em>No title</em>}
+                                                    </Link>
+                                                    <br />
+                                                    <Contribution>{contribution.contributionLabel}</Contribution>
+                                                </ItemHeaderInner>
 
-                                            {this.props.contributions.length > 2 &&
-                                                <Delete onClick={() => this.props.removeContribution(contribution.id)}>
-                                                    <Icon icon={faTimes} />
-                                                </Delete>}
-                                        </ItemHeader>
-                                    )
-                                })}
+                                                {this.props.contributions.length > 2 &&
+                                                    <Delete onClick={() => this.props.removeContribution(contribution.id)}>
+                                                        <Icon icon={faTimes} />
+                                                    </Delete>}
+                                            </ItemHeader>
+                                        )
+                                    })
+                                }
+                                {this.props.transpose &&
+                                    this.props.properties.map((property, index) => {
+                                        if (!property.active || !this.props.data[property.id]) {
+                                            return null;
+                                        }
+
+                                        return (
+                                            <ItemHeader key={`property${index}`}>
+                                                <ItemHeaderInner transpose={this.props.transpose}>
+                                                    {/*For when the path is available: <Tooltip message={property.path} colorIcon={'#606679'}>*/}
+                                                    {capitalize(property.label)}
+                                                    {/*</Tooltip>*/}
+                                                </ItemHeaderInner>
+                                            </ItemHeader>
+                                        )
+                                    })
+                                }
                             </tr>
 
-                            {this.props.properties.map((property, index) => {
+                            {!this.props.transpose && this.props.properties.map((property, index) => {
                                 if (!property.active || !this.props.data[property.id]) {
                                     return null;
                                 }
@@ -233,7 +276,7 @@ class ComparisonTable extends Component {
 
                                             return (
                                                 <TableCell
-                                                    key={index2}
+                                                    key={`cell${index}${index2}`}
                                                     data={data}
                                                 />
                                             )
@@ -241,6 +284,44 @@ class ComparisonTable extends Component {
                                     </Row>
                                 )
                             })}
+                            {this.props.transpose && this.props.contributions.map((contribution, index) => {
+                                return (
+                                    <Row key={`row${index}`}>
+                                        <Properties>
+                                            <PropertiesInner transpose={this.props.transpose}>
+                                                <Link to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: contribution.paperId, contributionId: contribution.id })}>
+                                                    {contribution.title ? contribution.title : <em>No title</em>}
+                                                </Link>
+                                                <br />
+                                                <Contribution>{contribution.contributionLabel}</Contribution>
+                                            </PropertiesInner>
+
+                                            {this.props.contributions.length > 2 &&
+                                                <Delete onClick={() => this.props.removeContribution(contribution.id)}>
+                                                    <Icon icon={faTimes} />
+                                                </Delete>}
+                                        </Properties>
+
+
+                                        {this.props.properties.map((property, index2) => {
+                                            const data = this.props.data[property.id][index];
+
+                                            if (!property.active || !this.props.data[property.id]) {
+                                                return null;
+                                            }
+
+                                            return (
+                                                <TableCell
+                                                    key={`cell${index2}${index}`}
+                                                    data={data}
+                                                />
+                                            )
+                                        }
+                                        )}
+                                    </Row>
+                                )
+                            })
+                            }
                         </tbody>
                     </Table>
                 </ScrollContainer>
@@ -261,6 +342,7 @@ ComparisonTable.propTypes = {
     data: PropTypes.object.isRequired,
     properties: PropTypes.array.isRequired,
     removeContribution: PropTypes.func.isRequired,
+    transpose: PropTypes.bool.isRequired,
 }
 
 export default ComparisonTable;
