@@ -42,18 +42,20 @@ class ExportToLatex extends Component {
 
         let res = [];
         let transposedData;
-
-        if (this.props.transpose) {
+        let newTitles = null;
+        if (!this.props.transpose) {     
             transposedData = this.props.data[0].map((col, i) => this.props.data.map(row => row[i]));
 
             if (this.state.replaceTitles) {
-                let newTitles = ['Title'];
+                newTitles = ['Title'];
+                let conTitles = ['Title'];
                 transposedData[0].forEach((title, i) => {
                     if (i > 0) {
-                        newTitles.push(` \\cite{${this.props.contributions[i - 1].paperId}}`);
+                        newTitles.push(` \\cite{${this.props.contributions[i - 1].paperId}} `); 
+                        conTitles.push(`${this.props.contributions[i - 1].id}`)    
                     }
                 });
-                transposedData[0] = newTitles;
+                transposedData[0] = conTitles
             }
 
             transposedData.forEach((contribution, i) => {
@@ -80,12 +82,21 @@ class ExportToLatex extends Component {
             });
         }
 
-        let latexTable = MakeLatex(res, {
-            'digits': 2,
-        });
+        let latexTable;
+        if (newTitles) {
+            latexTable = MakeLatex(res, {
+                'digits': 2,
+                'colnames': newTitles,
+            });
+        }else{
+            latexTable = MakeLatex(res, {
+                'digits': 2
+            });
+        }
+        
 
         // remove the hline for the header when the table is transposed 
-        if (this.props.transpose) {
+        if (!this.props.transpose) {
             latexTable = latexTable.replace(String.fromCharCode(92) + 'hline', '');
         }
 
@@ -164,8 +175,12 @@ class ExportToLatex extends Component {
 
         Promise.all(contributions).then((contributions) => {
             let res = [];
+            let paperIds = [];
             contributions.forEach((contribution, i) => {
-                res.push(contribution.bibtex);
+                if(!paperIds.includes(contribution.paperId)){
+                    paperIds.push(contribution.paperId);
+                    res.push(contribution.bibtex);
+                }
             });
             this.setState({ bibTexReferences: res.join('\n'), bibtexReferencesLoading: false });
         });
@@ -189,7 +204,7 @@ class ExportToLatex extends Component {
         if (this.props.showDialog) {
             latexTable = this.generateLatex();
         }
-
+        
         return (
             <Modal isOpen={this.props.showDialog} toggle={this.props.toggle} size="lg">
                 <ModalHeader toggle={this.props.toggle}>LaTeX export</ModalHeader>
