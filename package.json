@@ -19,6 +19,7 @@
     "flow-bin": "^0.95.1",
     "html2canvas": "^1.0.0-alpha.12",
     "jspdf": "^1.5.3",
+    "make-latex": "^0.1.0",
     "moment": "^2.24.0",
     "node-sass": "^4.11.0",
     "query-string": "^6.7.0",

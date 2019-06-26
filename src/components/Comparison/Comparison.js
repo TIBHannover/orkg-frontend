@@ -16,6 +16,7 @@ import { submitGetRequest, comparisonUrl } from '../../network';
 import ComparisonTable from './ComparisonTable.js';
 import ComparisonLoadingComponent from './ComparisonLoadingComponent';
 import NotFound from '../StaticPages/NotFound';
+import ExportToLatex from './ExportToLatex.js';
 
 /*const BreadcrumbStyled = styled(Breadcrumb)`
     .breadcrumb {
@@ -41,6 +42,7 @@ class Comparison extends Component {
             csvData: [],
             showPropertiesDialog: false,
             showShareDialog: false,
+            showLatexDialog: false,
             isLoading: false,
             loading_failed: false,
         }
@@ -302,6 +304,7 @@ class Comparison extends Component {
                                                 <DropdownItem divider />
                                                 <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
                                                 <DropdownItem divider />
+                                                <DropdownItem onClick={() => this.toggle('showLatexDialog')}>Export as LaTeX</DropdownItem>
                                                 {this.state.csvData ?
                                                     <CSVLink
                                                         data={this.state.csvData}
@@ -350,6 +353,13 @@ class Comparison extends Component {
                     showDialog={this.state.showShareDialog}
                     toggle={() => this.toggle('showShareDialog')}
                     url={window.location.href}
+                />
+
+                <ExportToLatex 
+                    data={this.state.csvData} 
+                    showDialog={this.state.showLatexDialog}
+                    toggle={() => this.toggle('showLatexDialog')}
+                    transpose={true}
                 />
             </div>
         );
