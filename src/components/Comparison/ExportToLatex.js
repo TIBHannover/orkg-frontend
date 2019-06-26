@@ -8,7 +8,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { CustomInput } from 'reactstrap';
 import Tooltip from '../Utils/Tooltip';
-import { getStatementsBySubject } from '../../network';
+import { getStatementsBySubject, crossrefUrl } from '../../network';
 
 const Textarea = styled(Input)`
     font-family: 'Courier New';
@@ -50,7 +50,7 @@ class ExportToLatex extends Component {
                 let newTitles = ['Title'];
                 transposedData[0].forEach((title, i) => {
                     if (i > 0) {
-                        newTitles.push(` \\cite{${this.props.contributions[i-1].paperId}}`);
+                        newTitles.push(` \\cite{${this.props.contributions[i - 1].paperId}}`);
                     }
                 });
                 transposedData[0] = newTitles;
@@ -71,7 +71,7 @@ class ExportToLatex extends Component {
                     let con = {};
                     contribution.forEach((item, j) => {
                         if (this.state.replaceTitles && j === 0) {
-                            item = ` \\cite{${this.props.contributions[i-1].paperId}}`;
+                            item = ` \\cite{${this.props.contributions[i - 1].paperId}}`;
                         }
                         con[this.props.data[0][j]] = item;
                     });
@@ -92,6 +92,29 @@ class ExportToLatex extends Component {
         return latexTable;
     }
 
+    parsePaperStatements = (paperStatements) => {
+        // publication year
+        let publicationYear = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
+
+        if (publicationYear.length > 0) {
+            publicationYear = publicationYear[0].object.label
+        }
+
+        // authors
+        let authors = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
+
+        let authorNamesArray = [];
+
+        if (authors.length > 0) {
+            for (let author of authors) {
+                let authorName = author.object.label;
+                authorNamesArray.push(authorName);
+            }
+        }
+
+        return {authorNames: authorNamesArray.reverse(), publicationYear}
+    }
+
     generateBibTex = () => {
         this.setState({ bibtexReferencesLoading: true });
         if (this.props.contributions.length === 0) {
@@ -101,28 +124,39 @@ class ExportToLatex extends Component {
         let contributions = this.props.contributions.map((contribution) => {
             // Fetch the data of each contribution
             return getStatementsBySubject(contribution.paperId).then((paperStatements) => {
-                // publication year
-                let publicationYear = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
-
-                if (publicationYear.length > 0) {
-                    publicationYear = publicationYear[0].object.label
-                }
-
-                // authors
-                let authors = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
-
-                let authorNamesArray = [];
-
-                if (authors.length > 0) {
-                    for (let author of authors) {
-                        let authorName = author.object.label;
-                        authorNamesArray.push(authorName);
+                let publicationDOI = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
+                if (publicationDOI.length > 0) {
+                    publicationDOI = publicationDOI[0].object.label
+                    if (publicationDOI !== '') {
+                        // Fetch the bibtex from crossRef
+                        return new Promise(
+                            (resolve, reject) => {
+                                fetch(crossrefUrl + publicationDOI + '/transform/application/x-bibtex', { method: 'GET' })
+                                    .then((response) => {
+                                        if (!response.ok) {
+                                            reject({
+                                                error: new Error(`Error response. (${response.status}) ${response.statusText}`),
+                                                statusCode: response.status,
+                                                statusText: response.statusText,
+                                            });
+                                        } else {
+                                            return resolve(response.text());
+                                        }
+                                    })
+                            }
+                        ).then((response) => {
+                            let refID = response.substring(response.indexOf("{") + 1, response.indexOf(","));
+                            contribution.bibtex = response.replace(refID, contribution.paperId)
+                            return contribution;
+                        }).catch(() =>{
+                            let contributionData = this.parsePaperStatements(paperStatements);
+                            contribution.bibtex = `@article{${contribution.paperId},\n author={${contributionData.authorNames.join(',')}},\n title={${contribution.title}},\n year={${contributionData.publicationYear}}\n}`
+                            return contribution;
+                        });
                     }
                 }
-                contribution.paper = {
-                    publicationYear,
-                    authorNames: authorNamesArray.reverse(), // statements are ordered desc, so first author is last => thus reverse
-                }
+                let contributionData = this.parsePaperStatements(paperStatements);
+                contribution.bibtex = `@article{${contribution.paperId},\n author={${contributionData.authorNames.join(',')}},\n title={${contribution.title}},\n year={${contributionData.publicationYear}}\n}`
                 return contribution;
             })
 
@@ -131,7 +165,7 @@ class ExportToLatex extends Component {
         Promise.all(contributions).then((contributions) => {
             let res = [];
             contributions.forEach((contribution, i) => {
-                res.push(`@article{${contribution.paperId},\n author={${contribution.paper.authorNames.join(',')}},\n title={${contribution.title}},\n year={${contribution.paper.publicationYear}}\n}`);
+                res.push(contribution.bibtex);
             });
             this.setState({ bibTexReferences: res.join('\n'), bibtexReferencesLoading: false });
         });
