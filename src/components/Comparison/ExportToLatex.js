@@ -8,6 +8,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { CustomInput } from 'reactstrap';
 import Tooltip from '../Utils/Tooltip';
+import { getStatementsBySubject } from '../../network';
 
 const Textarea = styled(Input)`
     font-family: 'Courier New';
@@ -15,11 +16,23 @@ const Textarea = styled(Input)`
 `;
 
 class ExportToLatex extends Component {
-    state = {
-        latexTable: '',
-        selectedTab: 'table',
-        bibtexReferences: 'Person1...Person2...',
-        replaceTitles: false,
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            latexTable: '',
+            selectedTab: 'table',
+            bibtexReferences: '',
+            bibtexReferencesLoading: true,
+            replaceTitles: false,
+        }
+    }
+
+    componentDidUpdate = (prevProps) => {
+        if (this.props.contributions !== prevProps.contributions) {
+            this.generateBibTex();
+        }
     }
 
     generateLatex = () => {
@@ -37,7 +50,7 @@ class ExportToLatex extends Component {
                 let newTitles = ['Title'];
                 transposedData[0].forEach((title, i) => {
                     if (i > 0) {
-                        newTitles.push(`Paper [${i}]`);
+                        newTitles.push(` \\cite{${this.props.contributions[i-1].paperId}}`);
                     }
                 });
                 transposedData[0] = newTitles;
@@ -58,7 +71,7 @@ class ExportToLatex extends Component {
                     let con = {};
                     contribution.forEach((item, j) => {
                         if (this.state.replaceTitles && j === 0) {
-                            item = `Paper [${i}]`;
+                            item = ` \\cite{${this.props.contributions[i-1].paperId}}`;
                         }
                         con[this.props.data[0][j]] = item;
                     });
@@ -77,6 +90,51 @@ class ExportToLatex extends Component {
         }
 
         return latexTable;
+    }
+
+    generateBibTex = () => {
+        this.setState({ bibtexReferencesLoading: true });
+        if (this.props.contributions.length === 0) {
+            this.setState({ bibtexReferences: '', bibtexReferencesLoading: false });
+            return '';
+        }
+        let contributions = this.props.contributions.map((contribution) => {
+            // Fetch the data of each contribution
+            return getStatementsBySubject(contribution.paperId).then((paperStatements) => {
+                // publication year
+                let publicationYear = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
+
+                if (publicationYear.length > 0) {
+                    publicationYear = publicationYear[0].object.label
+                }
+
+                // authors
+                let authors = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
+
+                let authorNamesArray = [];
+
+                if (authors.length > 0) {
+                    for (let author of authors) {
+                        let authorName = author.object.label;
+                        authorNamesArray.push(authorName);
+                    }
+                }
+                contribution.paper = {
+                    publicationYear,
+                    authorNames: authorNamesArray.reverse(), // statements are ordered desc, so first author is last => thus reverse
+                }
+                return contribution;
+            })
+
+        });
+
+        Promise.all(contributions).then((contributions) => {
+            let res = [];
+            contributions.forEach((contribution, i) => {
+                res.push(`@article{${contribution.paperId},\n author={${contribution.paper.authorNames.join(',')}},\n title={${contribution.title}},\n year={${contribution.paper.publicationYear}}\n}`);
+            });
+            this.setState({ bibTexReferences: res.join('\n'), bibtexReferencesLoading: false });
+        });
     }
 
     selectTab = (tab) => {
@@ -143,10 +201,10 @@ class ExportToLatex extends Component {
                     {this.state.selectedTab === 'references' &&
                         <>
                             <p>
-                                <Textarea type="textarea" value={this.state.bibtexReferences} disabled rows="15" />
+                                <Textarea type="textarea" value={!this.state.bibtexReferencesLoading ? this.state.bibTexReferences : 'Loading...'} disabled rows="15" />
                             </p>
 
-                            <CopyToClipboard text={this.state.bibtexReferences}>
+                            <CopyToClipboard text={!this.state.bibtexReferencesLoading ? this.state.bibTexReferences : 'Loading...'}>
                                 <Button
                                     color="primary"
                                     className="pl-3 pr-3 float-right"
@@ -164,6 +222,7 @@ class ExportToLatex extends Component {
 
 ExportToLatex.propTypes = {
     data: PropTypes.array.isRequired,
+    contributions: PropTypes.array.isRequired,
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     transpose: PropTypes.bool.isRequired,
