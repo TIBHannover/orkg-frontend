@@ -99,7 +99,9 @@ class Comparison extends Component {
         let header = ['Title'];
 
         for (let property of this.state.properties) {
+            if (property.active) {
             header.push(property.label);
+        }
         }
 
         let rows = [];
@@ -109,6 +111,7 @@ class Comparison extends Component {
             let row = [contribution.title];
 
             for (let property of this.state.properties) {
+                if (property.active) {
                 let value = '';
                 if (this.state.data[property.id]) {
                     for (let entry of this.state.data[property.id][i]) {
@@ -116,6 +119,7 @@ class Comparison extends Component {
                     }
                     row.push(value);
                 }
+            }
             }
             rows.push(row);
         }
@@ -243,6 +247,7 @@ class Comparison extends Component {
         });
 
         this.setState(newState, () => {
+            this.generateMatrixOfComparison();
             this.generateUrl();
         });
     }
@@ -380,9 +385,10 @@ class Comparison extends Component {
 
                 <ExportToLatex 
                     data={this.state.csvData} 
+                    contributions={this.state.contributions}
                     showDialog={this.state.showLatexDialog}
                     toggle={() => this.toggle('showLatexDialog')}
-                    transpose={!this.state.transpose}
+                    transpose={this.state.transpose}
                 />
             </div>
         );

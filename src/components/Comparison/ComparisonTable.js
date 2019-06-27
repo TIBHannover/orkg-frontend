@@ -216,7 +216,7 @@ class ComparisonTable extends Component {
                     <Table id="comparisonTable" className="mb-0" style={{ borderCollapse: 'collapse', tableLayout: 'fixed', height: 'max-content', width: '100%' }}>
                         <tbody className="table-borderless">
                             <tr className="table-borderless">
-                                <Properties><PropertiesInner className="first">Properties</PropertiesInner></Properties>
+                                <Properties><PropertiesInner transpose={this.props.transpose} className="first">Properties</PropertiesInner></Properties>
 
                                 {!this.props.transpose &&
                                     this.props.contributions.map((contribution, index) => {
