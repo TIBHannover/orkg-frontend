@@ -43,6 +43,8 @@ class ExportToLatex extends Component {
         let res = [];
         let transposedData;
         let newTitles = null;
+        let nbColumns = 0;
+
         if (!this.props.transpose) {     
             transposedData = this.props.data[0].map((col, i) => this.props.data.map(row => row[i]));
 
@@ -67,6 +69,8 @@ class ExportToLatex extends Component {
                     res.push(con);
                 }
             });
+
+            nbColumns = Object.keys(res[0]).length;
         } else {
             this.props.data.forEach((contribution, i) => {
                 if (i > 0) {
@@ -80,24 +84,22 @@ class ExportToLatex extends Component {
                     res.push(con);
                 }
             });
+            nbColumns = this.props.data[0].length 
         }
 
         let latexTable;
+ 
         if (newTitles) {
             latexTable = MakeLatex(res, {
                 'digits': 2,
                 'colnames': newTitles,
+                'spec' : `|${Array(nbColumns).fill('c').join('|')}|`
             });
         }else{
             latexTable = MakeLatex(res, {
-                'digits': 2
+                'digits': 2,
+                'spec' : `|${Array(nbColumns).fill('c').join('|')}|`
             });
-        }
-        
-
-        // remove the hline for the header when the table is transposed 
-        if (!this.props.transpose) {
-            latexTable = latexTable.replace(String.fromCharCode(92) + 'hline', '');
         }
 
         return latexTable;
