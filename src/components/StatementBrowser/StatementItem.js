@@ -32,6 +32,7 @@ class StatementItem extends Component {
         const listGroupClass = classNames({
             'statementActive': isCollapsed,
             'statementItem': true,
+            'selectable': true,
             'rounded-bottom': this.props.isLastItem && !isCollapsed && !this.props.enableEdit,
         });
 

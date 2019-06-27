@@ -96,6 +96,10 @@ export const StyledStatementItem = styled(ListGroupItem)`
     background-color: ${props => props.theme.ultraLightBlue} !important; 
     border-color: ${props => props.theme.ultraLightBlueDarker} !important; 
 
+    &.selectable {
+        cursor: pointer;
+    }
+
     & > .statementItemIcon {
         font-size: 18px;
         margin-top: 3px;
