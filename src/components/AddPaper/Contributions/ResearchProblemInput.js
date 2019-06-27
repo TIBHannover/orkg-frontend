@@ -56,6 +56,17 @@ class ResearchProblemInput extends Component {
         this.setState({ problemBrowser: null });
     }
 
+    onKeyDown = (event) => {
+        switch (event.keyCode) {
+            case 13: // ENTER
+                event.target.value.trim()==='' && event.preventDefault();
+                break;
+            default: {
+                break;
+            }
+        }
+    }
+
     render() {
 
         const customStyles = {
@@ -72,7 +83,7 @@ class ResearchProblemInput extends Component {
             }),
             menu: (provided) => ({
                 ...provided,
-                zIndex:10
+                zIndex: 10
             })
         }
 
@@ -114,12 +125,13 @@ class ResearchProblemInput extends Component {
                         styles={customStyles}
                         components={{ Menu, MultiValueLabel }}
                         options={this.state.researchProblems}
+                        onKeyDown={this.onKeyDown}
                         openMenuOnClick={false}
                     />
                 </div >
                 {this.state.problemBrowser && (
                     <div className={`${styles.researchFieldBrowser} form-control`} >
-                        <button type="button" className={`close`} onClick={this.closeProblemBrowser}><span>×</span></button>
+                        <button type="button" className={'close'} onClick={this.closeProblemBrowser}><span>×</span></button>
                         <>Problem browser :</><br />
                         <><b>ID</b> {this.state.problemBrowser.id}</><br />
                         <><b>Label</b> {this.state.problemBrowser.label}</>

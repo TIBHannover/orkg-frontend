@@ -76,7 +76,7 @@ class SimilarContributions extends Component {
                                     <Row className="h-100">
                                         <Col md={2} style={{marginRight:10}} >
                                             <Similarity>
-                                                <span>{contribution.similarityPercentage === 100 ? 99 : contribution.similarityPercentage}<br />%</span>
+                                                <span>{parseInt(contribution.similarityPercentage) === 1 ? 99 : parseInt(contribution.similarityPercentage*100)}<br />%</span>
                                             </Similarity>
                                         </Col>
                                         <Col>

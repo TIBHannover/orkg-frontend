@@ -58,6 +58,7 @@ class AutoComplete extends Component {
                     </button>
                 )).slice(0, maxValues);
 
+                const propertyExists = responseJson.find(i => i.label.toLowerCase() === value.trim().toLowerCase())
                 const lastItem = this.props.onNewItemSelected && (
                     <>
                         {menuItemsJsx.length > 0 && <HrStyled />}
@@ -66,9 +67,14 @@ class AutoComplete extends Component {
                             id="new"
                             key="new"
                             className="dropdown-item"
-                            onClick={this.getNewItemClickHandler(value.trim())}
+                            onClick={!propertyExists ? this.getNewItemClickHandler(value.trim()) : null }
                         >
-                            <em>Create new property: {value.trim()}</em>
+                            {!propertyExists &&
+                                <em>Create new property: {value.trim()}</em>
+                            }
+                            {propertyExists &&
+                                <em>Property: {value.trim()} <em className="float-right">This property exists already</em></em>
+                            }
                         </button>
                     </>
                 );

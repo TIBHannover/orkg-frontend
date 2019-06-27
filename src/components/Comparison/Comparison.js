@@ -16,6 +16,7 @@ import { submitGetRequest, comparisonUrl } from '../../network';
 import ComparisonTable from './ComparisonTable.js';
 import ComparisonLoadingComponent from './ComparisonLoadingComponent';
 import NotFound from '../StaticPages/NotFound';
+import ExportToLatex from './ExportToLatex.js';
 
 /*const BreadcrumbStyled = styled(Breadcrumb)`
     .breadcrumb {
@@ -32,6 +33,7 @@ class Comparison extends Component {
         super(props);
 
         this.state = {
+            transpose: false,
             title: '',
             authorNames: [],
             contributions: [],
@@ -41,6 +43,7 @@ class Comparison extends Component {
             csvData: [],
             showPropertiesDialog: false,
             showShareDialog: false,
+            showLatexDialog: false,
             isLoading: false,
             loading_failed: false,
         }
@@ -82,6 +85,14 @@ class Comparison extends Component {
         ids = ids.filter(n => n); //filter out empty elements
 
         return ids;
+    }
+
+    getTransposeOptionFromUrl = () => {
+        let transpose = queryString.parse(this.props.location.search).transpose;
+        if (!transpose || !['true', '1'].includes(transpose)) {
+            return false;
+        }
+        return true;
     }
 
     generateMatrixOfComparison = () => {
@@ -169,6 +180,7 @@ class Comparison extends Component {
                 contributions: contributions,
                 properties: comparisonData.properties,
                 data: comparisonData.data,
+                transpose: this.getTransposeOptionFromUrl(),
                 isLoading: false,
             });
         }).catch((error) => {
@@ -235,6 +247,14 @@ class Comparison extends Component {
         });
     }
 
+    toggleTranpose = () => {
+        this.setState(prevState => ({
+            'transpose': !prevState.transpose,
+        }), () => {
+            this.generateUrl();
+        });
+    }
+
     propertiesToQueryString = () => {
         let queryString = '';
 
@@ -248,16 +268,18 @@ class Comparison extends Component {
         return queryString;
     }
 
-    generateUrl = (contributionIds, propertyIds) => {
+    generateUrl = (contributionIds, propertyIds, transpose) => {
         if (!contributionIds) {
             contributionIds = this.getContributionIdsFromUrl().join('/');
         }
         if (!propertyIds) {
             propertyIds = this.propertiesToQueryString();
         }
-
+        if (!transpose) {
+            transpose = this.state.transpose;
+        }
         let url = ROUTES.COMPARISON.replace('*', '');
-        this.props.history.push(url + contributionIds + '?properties=' + propertyIds);
+        this.props.history.push(url + contributionIds + '?properties=' + propertyIds + '&transpose=' + transpose);
     }
 
     render() {
@@ -300,8 +322,11 @@ class Comparison extends Component {
                                             <DropdownMenu>
                                                 <DropdownItem onClick={() => this.toggle('showPropertiesDialog')}>Select properties</DropdownItem>
                                                 <DropdownItem divider />
+                                                <DropdownItem onClick={() => this.toggleTranpose()}>Transpose table</DropdownItem>
+                                                <DropdownItem divider />
                                                 <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
                                                 <DropdownItem divider />
+                                                <DropdownItem onClick={() => this.toggle('showLatexDialog')}>Export as LaTeX</DropdownItem>
                                                 {this.state.csvData ?
                                                     <CSVLink
                                                         data={this.state.csvData}
@@ -324,6 +349,7 @@ class Comparison extends Component {
                                             properties={this.state.properties}
                                             contributions={this.state.contributions}
                                             removeContribution={this.removeContribution}
+                                            transpose={this.state.transpose}
                                         />
                                     </div>)
                                     :
@@ -350,6 +376,13 @@ class Comparison extends Component {
                     showDialog={this.state.showShareDialog}
                     toggle={() => this.toggle('showShareDialog')}
                     url={window.location.href}
+                />
+
+                <ExportToLatex 
+                    data={this.state.csvData} 
+                    showDialog={this.state.showLatexDialog}
+                    toggle={() => this.toggle('showLatexDialog')}
+                    transpose={!this.state.transpose}
                 />
             </div>
         );
