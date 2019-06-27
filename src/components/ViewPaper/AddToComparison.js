@@ -4,24 +4,13 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withCookies } from 'react-cookie';
 import { compose } from 'redux';
-import { addToComparison, removeFromComparison, loadComparisonFromCookie } from '../../actions/viewPaper';
+import { addToComparison, removeFromComparison } from '../../actions/viewPaper';
 
 class AddToComparison extends Component {
-    componentDidMount() {
-        if(this.props.comparison.allIds.length === 0 && this.props.cookies.get('comparison')) { // no comparing values found, sync with cookie
-            this.props.loadComparisonFromCookie(this.props.cookies.get('comparison'));
-        }
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.comparison !== prevProps.comparison) {
-            this.props.cookies.set('comparison', this.props.comparison, { path: '/' });
-        }
-    }
 
     toggleCompare = () => {
         const { contributionId, comparison } = this.props;
-        
+
         if (comparison.allIds.includes(contributionId)) {
             this.props.removeFromComparison(contributionId);
         } else {
@@ -58,7 +47,6 @@ AddToComparison.propTypes = {
     contributionTitle: PropTypes.string.isRequired,
     addToComparison: PropTypes.func.isRequired,
     removeFromComparison: PropTypes.func.isRequired,
-    loadComparisonFromCookie: PropTypes.func.isRequired,
     comparison: PropTypes.object.isRequired,
     cookies: PropTypes.object,
 };
@@ -69,8 +57,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     addToComparison: (data) => dispatch(addToComparison(data)),
-    removeFromComparison: (data) => dispatch(removeFromComparison(data)),
-    loadComparisonFromCookie: (data) => dispatch(loadComparisonFromCookie(data)),
+    removeFromComparison: (data) => dispatch(removeFromComparison(data))
 });
 
 export default compose(

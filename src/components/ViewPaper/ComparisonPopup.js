@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronUp, faChevronDown, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
-import { removeFromComparison } from '../../actions/viewPaper';
+import { removeFromComparison, loadComparisonFromCookie } from '../../actions/viewPaper';
 import Tooltip from '../Utils/Tooltip';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
@@ -80,6 +80,21 @@ class ComparisonPopup extends Component {
 
         this.state = {
             showComparisonBox: false,
+        }
+    }
+
+    componentDidMount() {
+        this.loadComparisonFromCookie();
+        this.intervalComparisonFromCookie = setInterval(this.loadComparisonFromCookie, 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.intervalComparisonFromCookie);
+    }
+    
+    loadComparisonFromCookie = () => {
+        if(this.props.cookies.get('comparison') && JSON.stringify(this.props.comparison.allIds) !== JSON.stringify(this.props.cookies.get('comparison').allIds)){
+            this.props.loadComparisonFromCookie(this.props.cookies.get('comparison'));
         }
     }
 
@@ -159,6 +174,7 @@ class ComparisonPopup extends Component {
 ComparisonPopup.propTypes = {
     comparison: PropTypes.object.isRequired,
     removeFromComparison: PropTypes.func.isRequired,
+    loadComparisonFromCookie: PropTypes.func.isRequired,
     cookies: PropTypes.object,
 };
 
@@ -168,6 +184,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     removeFromComparison: (data) => dispatch(removeFromComparison(data)),
+    loadComparisonFromCookie: (data) => dispatch(loadComparisonFromCookie(data)),
 });
 
 export default compose(

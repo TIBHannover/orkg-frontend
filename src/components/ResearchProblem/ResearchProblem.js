@@ -76,7 +76,6 @@ class ResearchProblem extends Component {
             })
 
             Promise.all(papers).then((results) => {
-                console.log(results);
                 this.setState({
                     contributions: results,
                     loading: false
