@@ -8,6 +8,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { CustomInput } from 'reactstrap';
 import Tooltip from '../Utils/Tooltip';
+import { timeoutPromise } from '../../utils';
 import { getStatementsBySubject, crossrefUrl } from '../../network';
 
 const Textarea = styled(Input)`
@@ -45,7 +46,7 @@ class ExportToLatex extends Component {
         let newTitles = null;
         let nbColumns = 0;
 
-        if (!this.props.transpose) {     
+        if (!this.props.transpose) {
             transposedData = this.props.data[0].map((col, i) => this.props.data.map(row => row[i]));
 
             if (this.state.replaceTitles) {
@@ -53,8 +54,8 @@ class ExportToLatex extends Component {
                 let conTitles = ['Title'];
                 transposedData[0].forEach((title, i) => {
                     if (i > 0) {
-                        newTitles.push(` \\cite{${this.props.contributions[i - 1].paperId}} `); 
-                        conTitles.push(`${this.props.contributions[i - 1].id}`)    
+                        newTitles.push(` \\cite{${this.props.contributions[i - 1].paperId}} `);
+                        conTitles.push(`${this.props.contributions[i - 1].id}`)
                     }
                 });
                 transposedData[0] = conTitles
@@ -64,7 +65,7 @@ class ExportToLatex extends Component {
                 if (i > 0) {
                     let con = {};
                     contribution.forEach((item, j) => {
-                        con[transposedData[0][j]] = item;
+                        con[transposedData[0][j]] = item !== 'undefined' ? item : '-';
                     });
                     res.push(con);
                 }
@@ -79,26 +80,26 @@ class ExportToLatex extends Component {
                         if (this.state.replaceTitles && j === 0) {
                             item = ` \\cite{${this.props.contributions[i - 1].paperId}}`;
                         }
-                        con[this.props.data[0][j]] = item;
+                        con[this.props.data[0][j]] = item !== 'undefined' ? item : '-';
                     });
                     res.push(con);
                 }
             });
-            nbColumns = this.props.data[0].length 
+            nbColumns = this.props.data[0].length
         }
 
         let latexTable;
- 
+
         if (newTitles) {
             latexTable = MakeLatex(res, {
                 'digits': 2,
                 'colnames': newTitles,
-                'spec' : `|${Array(nbColumns).fill('c').join('|')}|`
+                'spec': `|${Array(nbColumns).fill('c').join('|')}|`
             });
-        }else{
+        } else {
             latexTable = MakeLatex(res, {
                 'digits': 2,
-                'spec' : `|${Array(nbColumns).fill('c').join('|')}|`
+                'spec': `|${Array(nbColumns).fill('c').join('|')}|`
             });
         }
 
@@ -125,7 +126,7 @@ class ExportToLatex extends Component {
             }
         }
 
-        return {authorNames: authorNamesArray.reverse(), publicationYear}
+        return { authorNames: authorNamesArray.reverse(), publicationYear }
     }
 
     generateBibTex = () => {
@@ -141,31 +142,24 @@ class ExportToLatex extends Component {
                 if (publicationDOI.length > 0) {
                     publicationDOI = publicationDOI[0].object.label
                     if (publicationDOI !== '') {
-                        // Fetch the bibtex from crossRef
-                        return new Promise(
-                            (resolve, reject) => {
-                                fetch(crossrefUrl + publicationDOI + '/transform/application/x-bibtex', { method: 'GET' })
-                                    .then((response) => {
-                                        if (!response.ok) {
-                                            reject({
-                                                error: new Error(`Error response. (${response.status}) ${response.statusText}`),
-                                                statusCode: response.status,
-                                                statusText: response.statusText,
-                                            });
-                                        } else {
-                                            return resolve(response.text());
-                                        }
-                                    })
-                            }
-                        ).then((response) => {
-                            let refID = response.substring(response.indexOf("{") + 1, response.indexOf(","));
-                            contribution.bibtex = response.replace(refID, contribution.paperId)
-                            return contribution;
-                        }).catch(() =>{
-                            let contributionData = this.parsePaperStatements(paperStatements);
-                            contribution.bibtex = `@article{${contribution.paperId},\n author={${contributionData.authorNames.join(',')}},\n title={${contribution.title}},\n year={${contributionData.publicationYear}}\n}`
-                            return contribution;
-                        });
+                        // Fetch the bibtex from crossRef for 4 seconds
+                        return timeoutPromise(4000,
+                            fetch(crossrefUrl + publicationDOI + '/transform/application/x-bibtex', { method: 'GET' }))
+                            .then((response, reject) => {
+                                if (!response.ok) {
+                                    reject(new Error('CrossRef error'));
+                                } else {
+                                    return response.text();
+                                }
+                            }).then((response) => {
+                                let refID = response.substring(response.indexOf("{") + 1, response.indexOf(","));
+                                contribution.bibtex = response.replace(refID, contribution.paperId)
+                                return contribution;
+                            }).catch(() => {
+                                let contributionData = this.parsePaperStatements(paperStatements);
+                                contribution.bibtex = `@article{${contribution.paperId},\n author={${contributionData.authorNames.join(',')}},\n title={${contribution.title}},\n year={${contributionData.publicationYear}}\n}`
+                                return contribution;
+                            });
                     }
                 }
                 let contributionData = this.parsePaperStatements(paperStatements);
@@ -179,7 +173,7 @@ class ExportToLatex extends Component {
             let res = [];
             let paperIds = [];
             contributions.forEach((contribution, i) => {
-                if(!paperIds.includes(contribution.paperId)){
+                if (!paperIds.includes(contribution.paperId)) {
                     paperIds.push(contribution.paperId);
                     res.push(contribution.bibtex);
                 }
@@ -206,7 +200,7 @@ class ExportToLatex extends Component {
         if (this.props.showDialog) {
             latexTable = this.generateLatex();
         }
-        
+
         return (
             <Modal isOpen={this.props.showDialog} toggle={this.props.toggle} size="lg">
                 <ModalHeader toggle={this.props.toggle}>LaTeX export</ModalHeader>

@@ -71,3 +71,21 @@ export const guid = () => {
 export const range = (start, end) => {
     return [...Array(1 + end - start).keys()].map(v => start + v)
 }
+
+export function timeoutPromise(ms, promise) {
+    return new Promise((resolve, reject) => {
+        const timeoutId = setTimeout(() => {
+            reject(new Error('Promise timeout'))
+        }, ms);
+        promise.then(
+            (res) => {
+                clearTimeout(timeoutId);
+                resolve(res);
+            },
+            (err) => {
+                clearTimeout(timeoutId);
+                reject(err);
+            }
+        );
+    })
+}
