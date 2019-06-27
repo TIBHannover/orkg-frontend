@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, ModalHeader, ModalBody, Input, Button, Nav, NavItem, NavLink } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, Input, Button, Nav, NavItem, NavLink, Tooltip as ReactstrapTooltip } from 'reactstrap';
 import PropTypes from 'prop-types';
 import MakeLatex from 'make-latex';
 import styled from 'styled-components';
@@ -27,6 +27,8 @@ class ExportToLatex extends Component {
             bibtexReferences: '',
             bibtexReferencesLoading: true,
             replaceTitles: false,
+            showTooltipCopiedBibtex: false,
+            showTooltipCopiedLatex:false
         }
     }
 
@@ -194,6 +196,14 @@ class ExportToLatex extends Component {
         }));
     }
 
+    toggleTooltip = (e, type) => {
+        if (e && e.type !== 'mouseover') {
+            this.setState(prevState => ({
+                [type]: !prevState[type],
+            }));
+        }
+    }
+
     render() {
         let latexTable;
 
@@ -233,15 +243,20 @@ class ExportToLatex extends Component {
                                 </Tooltip>
                             </div>
 
-                            <CopyToClipboard text={latexTable}>
+                            <CopyToClipboard id="copyToClipboardLatex" text={latexTable} onCopy={() => { this.setState({ showTooltipCopiedLatex: true }); }}>
                                 <Button
                                     color="primary"
                                     className="pl-3 pr-3 float-right"
                                     size="sm"
+
                                 >
                                     <Icon icon={faClipboard} /> Copy to clipboard {/* TODO: show a success message after copy */}
                                 </Button>
+
                             </CopyToClipboard>
+                            <ReactstrapTooltip placement="top" target="copyToClipboardLatex" trigger={'hover'} toggle={(e) => this.toggleTooltip(e, 'showTooltipCopiedLatex')} isOpen={this.state.showTooltipCopiedLatex}>
+                                Copied!
+                            </ReactstrapTooltip>
                         </>}
                     {this.state.selectedTab === 'references' &&
                         <>
@@ -249,7 +264,7 @@ class ExportToLatex extends Component {
                                 <Textarea type="textarea" value={!this.state.bibtexReferencesLoading ? this.state.bibTexReferences : 'Loading...'} disabled rows="15" />
                             </p>
 
-                            <CopyToClipboard text={!this.state.bibtexReferencesLoading ? this.state.bibTexReferences : 'Loading...'}>
+                            <CopyToClipboard id="copyToClipboardBibtex" text={!this.state.bibtexReferencesLoading ? this.state.bibTexReferences : 'Loading...'} onCopy={() => { this.setState({ showTooltipCopiedBibtex: true }); }}>
                                 <Button
                                     color="primary"
                                     className="pl-3 pr-3 float-right"
@@ -258,6 +273,9 @@ class ExportToLatex extends Component {
                                     <Icon icon={faClipboard} /> Copy to clipboard {/* TODO: show a success message after copy */}
                                 </Button>
                             </CopyToClipboard>
+                            <ReactstrapTooltip placement="top" target="copyToClipboardBibtex" trigger={'hover'} toggle={(e) => this.toggleTooltip(e, 'showTooltipCopiedBibtex')} isOpen={this.state.showTooltipCopiedBibtex}>
+                                Copied!
+                            </ReactstrapTooltip>
                         </>}
                 </ModalBody>
             </Modal>
