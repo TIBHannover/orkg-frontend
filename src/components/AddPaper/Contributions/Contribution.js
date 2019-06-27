@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Form, FormGroup, Label } from 'reactstrap';
 import Tooltip from '../../Utils/Tooltip';
 import ResearchProblemInput from './ResearchProblemInput';
-import styles from './Contributions.module.scss';
+import { StyledContribution } from './styled';
 import StatementBrowser from '../../StatementBrowser/Statements';
 import { connect } from 'react-redux';
 import { updateResearchProblems } from '../../../actions/addPaper';
@@ -19,7 +19,7 @@ class Contribution extends Component {
 
     render() {
         return (
-            <div className={styles.contribution}>
+            <StyledContribution>
                 <Form>
                     <FormGroup>
                         <Label>
@@ -32,13 +32,13 @@ class Contribution extends Component {
                             <Tooltip message="Provide details about this contribution by making statements. Some suggestions are already displayed, you can use this when it is useful, or delete it when it is not">Contribution data</Tooltip>
                         </Label>
 
-                        <StatementBrowser 
+                        <StatementBrowser
                             enableEdit={true}
                             openExistingResourcesInDialog={true}
                         />
                     </FormGroup>
                 </Form>
-            </div>
+            </StyledContribution>
         );
     }
 }

@@ -1,14 +1,9 @@
 import React, { Component, Fragment } from 'react';
-import styles from './Contributions.module.scss';
+import { StyledResearchFieldsInputFormControl, StyledResearchFieldBrowser } from './styled';
 import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
 import { components } from 'react-select';
 import { getStatementsByPredicate } from '../../../network';
-
-/**
- * Functional stateless component (still have to decide on whether this should be standard or use the regular class structure)
- * TODO: consistency: try to replace some of the classes via props of TagsInputReact, instead of different render methods 
- */
 
 
 class ResearchProblemInput extends Component {
@@ -110,7 +105,7 @@ class ResearchProblemInput extends Component {
 
         return (
             <>
-                <div className={`${styles.researchFieldsInput} form-control`} >
+                <StyledResearchFieldsInputFormControl className="form-control">
                     <CreatableSelect
                         //value={this.state.researchProblems.filter(({ id }) => this.props.value.includes(id))}
                         value={this.props.value}
@@ -128,14 +123,14 @@ class ResearchProblemInput extends Component {
                         onKeyDown={this.onKeyDown}
                         openMenuOnClick={false}
                     />
-                </div >
+                </StyledResearchFieldsInputFormControl>
                 {this.state.problemBrowser && (
-                    <div className={`${styles.researchFieldBrowser} form-control`} >
+                    <StyledResearchFieldBrowser className="form-control">
                         <button type="button" className={'close'} onClick={this.closeProblemBrowser}><span>×</span></button>
                         <>Problem browser :</><br />
                         <><b>ID</b> {this.state.problemBrowser.id}</><br />
                         <><b>Label</b> {this.state.problemBrowser.label}</>
-                    </div >)}
+                    </StyledResearchFieldBrowser>)}
             </>
         );
     }

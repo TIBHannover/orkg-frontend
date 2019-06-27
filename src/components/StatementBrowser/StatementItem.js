@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { ListGroup, ListGroupItem, Collapse } from 'reactstrap';
+import { ListGroup, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
-import styles from '../AddPaper/Contributions/Contributions.module.scss';
+import { StyledStatementItem, StyledListGroupOpen } from '../AddPaper/Contributions/styled';
 import classNames from 'classnames';
 import ValueItem from './Value/ValueItem';
 import AddValue from './Value/AddValue';
@@ -30,20 +30,20 @@ class StatementItem extends Component {
         const isCollapsed = this.props.selectedProperty === this.props.id;
 
         const listGroupClass = classNames({
-            [styles.statementActive]: isCollapsed,
-            [styles.statementItem]: true,
+            'statementActive': isCollapsed,
+            'statementItem': true,
+            'selectable': true,
             'rounded-bottom': this.props.isLastItem && !isCollapsed && !this.props.enableEdit,
         });
 
         const chevronClass = classNames({
-            [styles.statementItemIcon]: true,
-            [styles.open]: isCollapsed,
+            'statementItemIcon': true,
+            'open': isCollapsed,
             'float-right': true,
         });
 
         const openBoxClass = classNames({
-            [styles.listGroupOpen]: true,
-            [styles.listGroupOpenBorderBottom]: this.props.isLastItem && !this.props.enableEdit,
+            'listGroupOpenBorderBottom': this.props.isLastItem && !this.props.enableEdit,
             'rounded-bottom': this.props.isLastItem && !this.props.enableEdit,
         });
 
@@ -51,9 +51,9 @@ class StatementItem extends Component {
 
         return (
             <>
-                <ListGroupItem active={isCollapsed} onClick={() => this.props.togglePropertyCollapse(this.props.id)} className={listGroupClass}>
+                <StyledStatementItem active={isCollapsed} onClick={() => this.props.togglePropertyCollapse(this.props.id)} className={listGroupClass}>
                     {this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1)}
-                    
+
                     {valueIds.length === 1 && !isCollapsed ?
                         <>
                             : {' '}
@@ -77,14 +77,14 @@ class StatementItem extends Component {
 
                     {!this.props.isExistingProperty ?
                         <DeleteStatement id={this.props.id} /> : ''}
-                </ListGroupItem>
+                </StyledStatementItem>
 
                 <Collapse isOpen={isCollapsed}>
-                    <div className={openBoxClass}>
+                    <StyledListGroupOpen className={openBoxClass}>
                         <ListGroup flush>
                             {valueIds.map((valueId, index) => {
                                 let value = this.props.values.byId[valueId];
-                                
+
                                 return (
                                     <ValueItem
                                         key={index}
@@ -103,7 +103,7 @@ class StatementItem extends Component {
                                 <AddValue />
                             ) : ''}
                         </ListGroup>
-                    </div>
+                    </StyledListGroupOpen>
                 </Collapse>
             </>
         );
@@ -126,7 +126,7 @@ StatementItem.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        selectedProperty: state.statementBrowser.selectedProperty, 
+        selectedProperty: state.statementBrowser.selectedProperty,
         properties: state.statementBrowser.properties,
         values: state.statementBrowser.values,
     }

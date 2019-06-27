@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { predicatesUrl } from '../../network';
-import { InputGroup, InputGroupAddon, Button, ListGroupItem, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import styles from '../AddPaper/Contributions/Contributions.module.scss';
+import { InputGroupAddon, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { StyledStatementItem, StyledAddStatement } from '../AddPaper/Contributions/styled';
 import AutoComplete from './AutoComplete';
 import { connect } from 'react-redux';
 import { createProperty } from '../../actions/statementBrowser';
@@ -74,29 +74,29 @@ class AddStatement extends Component {
     render() {
         return (
             <>
-                <ListGroupItem className={`${styles.statementItem} ${styles.statementItemInput}`}>
+                <StyledStatementItem>
                     {this.state.showAddStatement ?
-                        <InputGroup className={`${styles.addStatement}`}>
-                            <AutoComplete 
+                        <StyledAddStatement>
+                            <AutoComplete
                                 requestUrl={predicatesUrl}
                                 placeholder="Enter a property"
                                 onItemSelected={this.handlePropertySelect}
                                 onNewItemSelected={this.toggleConfirmNewProperty}
                                 onKeyUp={() => { }}
-                                disableBorderRadiusRight 
+                                disableBorderRadiusRight
                             />
 
                             <InputGroupAddon addonType="append">
-                                <Button color="light" className={styles.addStatementActionButton} onClick={this.handleHideAddStatement}>Cancel</Button>
+                                <Button color="light" className={'addStatementActionButton'} onClick={this.handleHideAddStatement}>Cancel</Button>
                             </InputGroupAddon>
 
-                        </InputGroup>
+                        </StyledAddStatement>
                         :
                         <span className="btn btn-link p-0 border-0 align-baseline" onClick={this.handleShowAddStatement}>
                             + Add property
                         </span>
                     }
-                </ListGroupItem>
+                </StyledStatementItem>
 
                 <Modal isOpen={this.state.confirmNewPropertyModal} toggle={this.toggleConfirmNewProperty}>
                     <ModalHeader toggle={this.toggleConfirmNewProperty}>Are you sure you need a new property?</ModalHeader>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { ListGroup, ListGroupItem } from 'reactstrap';
-import styles from '../AddPaper/Contributions/Contributions.module.scss';
+import { ListGroup } from 'reactstrap';
+import { StyledLevelBox, StyledStatementItem } from '../AddPaper/Contributions/styled';
 import StatementItem from './StatementItem';
 import AddStatement from './AddStatement';
 import { connect } from 'react-redux';
@@ -32,7 +32,7 @@ class Statements extends Component {
         let propertyIds = Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource ? this.props.resources.byId[this.props.selectedResource].propertyIds : [];
 
         return (
-            <ListGroup className={styles.listGroupEnlarge}>
+            <ListGroup className={'listGroupEnlarge'}>
                 {!this.props.isFetchingStatements ? (
                     propertyIds.length > 0 ? (
                         propertyIds.map((propertyId, index) => {
@@ -51,11 +51,11 @@ class Statements extends Component {
                                 />
                             )
                         }))
-                        : <ListGroupItem className={styles.statementItem} style={{ cursor: 'default' }}>No values</ListGroupItem>
+                        : <StyledStatementItem >No values</StyledStatementItem>
                 ) : (
-                        <ListGroupItem className={styles.statementItem} style={{ cursor: 'default' }}>
+                        <StyledStatementItem>
                             <Icon icon={faSpinner} spin /> Loading
-                        </ListGroupItem>
+                        </StyledStatementItem>
                     )}
 
                 {this.props.enableEdit ? <AddStatement /> : ''}
@@ -65,10 +65,10 @@ class Statements extends Component {
 
     addLevel = (level, maxLevel) => {
         return maxLevel !== 0 ? (
-            <div className={styles.levelBox}>
+            <StyledLevelBox>
                 {maxLevel !== level + 1 && this.addLevel(level + 1, maxLevel)}
                 {maxLevel === level + 1 && this.statements()}
-            </div>
+            </StyledLevelBox>
         ) : this.statements();
     }
 

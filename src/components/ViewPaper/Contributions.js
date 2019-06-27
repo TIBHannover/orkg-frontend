@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Container, Row, Col, Form, FormGroup, Alert } from 'reactstrap';
 import { connect } from 'react-redux';
 import { selectContribution } from '../../actions/viewPaper';
-import styles from '../AddPaper/Contributions/Contributions.module.scss';
+import { StyledContribution, StyledContributionsList } from '../AddPaper/Contributions/styled';
 import StatementBrowser from '../StatementBrowser/Statements';
 import { getSimilaireContribution, getResource } from '../../network';
 import styled from 'styled-components';
@@ -120,17 +120,17 @@ class Contributions extends Component {
                                 </div>
                             )}
                             {!this.state.loading && (
-                                <ul className={styles.contributionsList}>
+                                <StyledContributionsList>
                                     {this.props.contributions.map((contribution, index) => {
                                         return (
-                                            <li className={contribution.id === selectedContributionId ? styles.activeContribution : ''} key={contribution.id}>
-                                                <Link to={`/paper/${this.props.paperId}/${contribution.id}`} className={styles.selectContribution}>
+                                            <li className={contribution.id === selectedContributionId ? 'activeContribution' : ''} key={contribution.id}>
+                                                <Link to={`/paper/${this.props.paperId}/${contribution.id}`} className={'selectContribution'}>
                                                     {contribution.label}
                                                 </Link>
                                             </li>
                                         )
                                     })}
-                                </ul>
+                                </StyledContributionsList>
                             )}
                         </Col>
                         <CSSTransitionGroup
@@ -143,7 +143,7 @@ class Contributions extends Component {
                             <AnimationContainer
                                 key={selectedContributionId}
                             >
-                                <div className={styles.contribution}>
+                                <StyledContribution>
                                     {!this.state.loading && (
                                         <AddToComparison
                                             contributionId={selectedContributionId}
@@ -244,7 +244,7 @@ class Contributions extends Component {
                                             )}
                                         </FormGroup>
                                     </Form>
-                                </div>
+                                </StyledContribution>
 
                             </AnimationContainer>
                         </CSSTransitionGroup>

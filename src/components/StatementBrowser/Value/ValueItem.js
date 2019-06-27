@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { ListGroupItem } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../../Utils/Tooltip';
-import styles from '../../AddPaper/Contributions/Contributions.module.scss';
+import { StyledValueItem } from '../../AddPaper/Contributions/styled';
 import classNames from 'classnames';
 import Confirm from 'reactstrap-confirm';
 import { connect } from 'react-redux';
@@ -69,7 +68,7 @@ class ValueItem extends Component {
 
     render() {
         const labelClass = classNames({
-            [styles.objectLink]: this.props.type === 'object'
+            'objectLink': this.props.type === 'object'
         });
 
         let resource = this.props.resources.byId[this.props.resourceId];
@@ -84,7 +83,7 @@ class ValueItem extends Component {
         return (
             <>
                 {!this.props.inline ?
-                    <ListGroupItem className={styles.valueItem}>
+                    <StyledValueItem>
                         <span className={labelClass} onClick={onClick}>
                             <ValuePlugins>{this.props.label}</ValuePlugins>
                             {existingResourceId && this.props.openExistingResourcesInDialog ?
@@ -92,12 +91,12 @@ class ValueItem extends Component {
                                 : ''}
                         </span>
                         {!this.props.existingStatement ?
-                            <span className={`${styles.deleteValue} float-right`} onClick={this.toggleDeleteContribution}>
+                            <span className={'deleteValue float-right'} onClick={this.toggleDeleteContribution}>
                                 <Tooltip message="Delete value" hideDefaultIcon={true}>
                                     <Icon icon={faTrash} /> Delete
                                 </Tooltip>
                             </span> : ''}
-                    </ListGroupItem>
+                    </StyledValueItem>
                     :
                     this.props.type === 'object' ?
                         <Tooltip message="Open resource" hideDefaultIcon>
