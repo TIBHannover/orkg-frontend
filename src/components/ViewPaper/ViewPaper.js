@@ -152,7 +152,7 @@ class ViewPaper extends Component {
                                     <span className="badge badge-lightblue mr-2">
                                         <Icon icon={faCalendar} className="text-primary" /> {moment(this.state.publicationMonth, 'M').format('MMMM')} {this.state.publicationYear}
                                     </span>
-                                    {this.state.researchField && (
+                                    {this.state.researchField && this.state.researchField.object && (
                                         <Link to={`${process.env.PUBLIC_URL}/field/${encodeURIComponent(this.state.researchField.object.id)}`}>
                                             <span className="badge badge-lightblue mr-2 mb-2">
                                                 <Icon icon={faBars} className="text-primary" /> {this.state.researchField.object.label}
