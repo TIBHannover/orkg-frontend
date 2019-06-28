@@ -10,6 +10,8 @@ import { CustomInput } from 'reactstrap';
 import Tooltip from '../Utils/Tooltip';
 import { timeoutPromise } from '../../utils';
 import { getStatementsBySubject, crossrefUrl } from '../../network';
+import moment from 'moment';
+
 
 const Textarea = styled(Input)`
     font-family: 'Courier New';
@@ -91,19 +93,20 @@ class ExportToLatex extends Component {
         }
 
         let latexTable;
+        let maleLatexOptions = {
+            'digits': 2,
+            'spec': `|${Array(nbColumns).fill('c').join('|')}|`,
+            'captionPlacement': 'top',
+            'caption': 'This comparison table is built using ORKG \\protect \\footnotemark',
+        }
 
         if (newTitles) {
-            latexTable = MakeLatex(res, {
-                'digits': 2,
-                'colnames': newTitles,
-                'spec': `|${Array(nbColumns).fill('c').join('|')}|`
-            });
-        } else {
-            latexTable = MakeLatex(res, {
-                'digits': 2,
-                'spec': `|${Array(nbColumns).fill('c').join('|')}|`
-            });
+            maleLatexOptions.colnames = newTitles;
         }
+
+        latexTable = MakeLatex(res, maleLatexOptions);
+        // AA footnote of ORKG link
+        latexTable += `\n\\footnotetext{${this.props.url} [accessed ${moment().format('YYYY MMM DD')}]}`;
 
         return latexTable;
     }
@@ -289,6 +292,7 @@ ExportToLatex.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     transpose: PropTypes.bool.isRequired,
+    url: PropTypes.string.isRequired,
 }
 
 export default ExportToLatex;

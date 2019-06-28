@@ -389,6 +389,7 @@ class Comparison extends Component {
                     showDialog={this.state.showLatexDialog}
                     toggle={() => this.toggle('showLatexDialog')}
                     transpose={this.state.transpose}
+                    url={window.location.href}
                 />
             </div>
         );
