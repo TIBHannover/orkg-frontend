@@ -324,12 +324,11 @@ class Comparison extends Component {
                                                 <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
                                             </DropdownToggle>
                                             <DropdownMenu>
+                                                <DropdownItem header>Customize</DropdownItem>
                                                 <DropdownItem onClick={() => this.toggle('showPropertiesDialog')}>Select properties</DropdownItem>
-                                                <DropdownItem divider />
                                                 <DropdownItem onClick={() => this.toggleTranpose()}>Transpose table</DropdownItem>
                                                 <DropdownItem divider />
-                                                <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
-                                                <DropdownItem divider />
+                                                <DropdownItem header>Export</DropdownItem>
                                                 <DropdownItem onClick={() => this.toggle('showLatexDialog')}>Export as LaTeX</DropdownItem>
                                                 {this.state.csvData ?
                                                     <CSVLink
@@ -343,6 +342,8 @@ class Comparison extends Component {
                                                     </CSVLink>
                                                     : ''}
                                                 <GeneratePdf id="comparisonTable" />
+                                                <DropdownItem divider />
+                                                <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
                                             </DropdownMenu>
                                         </Dropdown>
 
