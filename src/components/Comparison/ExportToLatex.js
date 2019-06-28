@@ -10,6 +10,8 @@ import { CustomInput } from 'reactstrap';
 import Tooltip from '../Utils/Tooltip';
 import { timeoutPromise } from '../../utils';
 import { getStatementsBySubject, crossrefUrl } from '../../network';
+import moment from 'moment';
+
 
 const Textarea = styled(Input)`
     font-family: 'Courier New';
@@ -28,7 +30,7 @@ class ExportToLatex extends Component {
             bibtexReferencesLoading: true,
             replaceTitles: false,
             showTooltipCopiedBibtex: false,
-            showTooltipCopiedLatex:false
+            showTooltipCopiedLatex: false
         }
     }
 
@@ -91,20 +93,22 @@ class ExportToLatex extends Component {
         }
 
         let latexTable;
-
-        if (newTitles) {
-            latexTable = MakeLatex(res, {
-                'digits': 2,
-                'colnames': newTitles,
-                'spec': `|${Array(nbColumns).fill('c').join('|')}|`
-            });
-        } else {
-            latexTable = MakeLatex(res, {
-                'digits': 2,
-                'spec': `|${Array(nbColumns).fill('c').join('|')}|`
-            });
+        let maleLatexOptions = {
+            'digits': 2,
+            'spec': `|${Array(nbColumns).fill('c').join('|')}|`,
+            'captionPlacement': 'top',
+            'caption': 'This comparison table is built using ORKG \\protect \\footnotemark',
         }
 
+        if (newTitles) {
+            maleLatexOptions.colnames = newTitles;
+        }
+
+        latexTable = MakeLatex(res, maleLatexOptions);
+        // Add footnote of ORKG link
+        // TODO: include customization parameters in the URL
+        let url = this.props.location.origin+this.props.location.pathname
+        latexTable += `\n\\footnotetext{${url} [accessed ${moment().format('YYYY MMM DD')}]}`;
         return latexTable;
     }
 
@@ -154,7 +158,7 @@ class ExportToLatex extends Component {
                                     return response.text();
                                 }
                             }).then((response) => {
-                                let refID = response.substring(response.indexOf("{") + 1, response.indexOf(","));
+                                let refID = response.substring(response.indexOf('{') + 1, response.indexOf(','));
                                 contribution.bibtex = response.replace(refID, contribution.paperId)
                                 return contribution;
                             }).catch(() => {
@@ -289,6 +293,7 @@ ExportToLatex.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     transpose: PropTypes.bool.isRequired,
+    location: PropTypes.object.isRequired,
 }
 
 export default ExportToLatex;

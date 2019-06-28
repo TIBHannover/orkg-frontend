@@ -114,9 +114,8 @@ class Comparison extends Component {
                 if (property.active) {
                 let value = '';
                 if (this.state.data[property.id]) {
-                    for (let entry of this.state.data[property.id][i]) {
-                        value += entry.label
-                    }
+                    // separate labels with comma
+                    value = this.state.data[property.id][i].map(entry => entry.label).join(', ')
                     row.push(value);
                 }
             }
@@ -389,6 +388,7 @@ class Comparison extends Component {
                     showDialog={this.state.showLatexDialog}
                     toggle={() => this.toggle('showLatexDialog')}
                     transpose={this.state.transpose}
+                    location={window.location}
                 />
             </div>
         );
