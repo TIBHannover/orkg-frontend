@@ -30,7 +30,7 @@ class ExportToLatex extends Component {
             bibtexReferencesLoading: true,
             replaceTitles: false,
             showTooltipCopiedBibtex: false,
-            showTooltipCopiedLatex:false
+            showTooltipCopiedLatex: false
         }
     }
 
@@ -105,9 +105,10 @@ class ExportToLatex extends Component {
         }
 
         latexTable = MakeLatex(res, maleLatexOptions);
-        // AA footnote of ORKG link
-        latexTable += `\n\\footnotetext{${this.props.url} [accessed ${moment().format('YYYY MMM DD')}]}`;
-
+        // Add footnote of ORKG link
+        // TODO: include customization parameters in the URL
+        let url = this.props.location.origin+this.props.location.pathname
+        latexTable += `\n\\footnotetext{${url} [accessed ${moment().format('YYYY MMM DD')}]}`;
         return latexTable;
     }
 
@@ -157,7 +158,7 @@ class ExportToLatex extends Component {
                                     return response.text();
                                 }
                             }).then((response) => {
-                                let refID = response.substring(response.indexOf("{") + 1, response.indexOf(","));
+                                let refID = response.substring(response.indexOf('{') + 1, response.indexOf(','));
                                 contribution.bibtex = response.replace(refID, contribution.paperId)
                                 return contribution;
                             }).catch(() => {
@@ -292,7 +293,7 @@ ExportToLatex.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     transpose: PropTypes.bool.isRequired,
-    url: PropTypes.string.isRequired,
+    location: PropTypes.object.isRequired,
 }
 
 export default ExportToLatex;
