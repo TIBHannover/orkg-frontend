@@ -1,14 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ShortRecord from '../components/statements/ShortRecord';
-import {submitGetRequest, url} from '../network';
+import PropTypes from 'prop-types';
+import { submitGetRequest, url } from '../network';
 import { Container } from 'reactstrap';
 
-export default class SearchResults extends Component {
-    state = {
-        resources: null,
-        predicates: null,
-        error: null,
-    };
+class SearchResults extends Component {
+
 
     constructor(props) {
         super(props);
@@ -17,6 +14,12 @@ export default class SearchResults extends Component {
         this.findPredicates = this.findPredicates.bind(this);
     }
 
+    state = {
+        resources: null,
+        predicates: null,
+        error: null,
+    };
+
     async componentWillMount() {
         await this.findResources();
         await this.findPredicates();
@@ -24,7 +27,7 @@ export default class SearchResults extends Component {
 
     findResources = async () => {
         try {
-            const responseJson = await submitGetRequest(`${url}resources/?q=${this.props.term}`);
+            const responseJson = await submitGetRequest(`${url}resources/?q=${this.props.match.params.searchTerm}`);
 
             this.setState({
                 resources: responseJson,
@@ -41,7 +44,7 @@ export default class SearchResults extends Component {
 
     findPredicates = async () => {
         try {
-            const responseJson = await submitGetRequest(`${url}predicates/?q=${this.props.term}`);
+            const responseJson = await submitGetRequest(`${url}predicates/?q=${this.props.match.params.searchTerm}`);
 
             this.setState({
                 predicates: responseJson,
@@ -67,30 +70,34 @@ export default class SearchResults extends Component {
 
         if (resourcesResultsPresent) {
             const resources = this.state.resources.map(
-                resource => <ShortRecord key={resource.id} header={resource.label}
-                            href={`${process.env.PUBLIC_URL}/resource/${encodeURIComponent(resource.id)}`}>
-                    </ShortRecord>
+                resource => (
+                    <ShortRecord key={resource.id} header={resource.label}
+                        href={`${process.env.PUBLIC_URL}/resource/${encodeURIComponent(resource.id)}`}
+                    />)
             );
             if (resources.length > 0) {
-                body1 =
-                <div>
+                body1 = (
                     <div>
-                        <span><u>Resources</u> related to: <b>{this.props.term}</b></span>
+                        <div>
+                            <span><u>Resources</u> related to: <b>{this.props.match.params.searchTerm}</b></span>
+                        </div>
+                        {resources}
                     </div>
-                    {resources}
-                </div>;
+                );
             } else {
                 body1 = <div> <span>No <b>resources</b> found that match your search query</span> </div>;
             }
         }
         if (predicatesResultsPresent) {
             const predicates = this.state.predicates.map(
-                predicate => <ShortRecord key={predicate.id} header={predicate.label}
-                        href={`${process.env.PUBLIC_URL}/predicate/${encodeURIComponent(predicate.id)}`}>
-                        </ShortRecord>
+                predicate => (
+                    <ShortRecord key={predicate.id} header={predicate.label}
+                        href={`${process.env.PUBLIC_URL}/predicate/${encodeURIComponent(predicate.id)}`}
+                    />
+                )
             );
             if (predicates.length > 0) {
-                body2 = <div> <div> <span><u>Predicates</u> related to: <b>{this.props.term}</b></span> </div> {predicates} </div>;
+                body2 = <div> <div> <span><u>Predicates</u> related to: <b>{this.props.match.params.searchTerm}</b></span> </div> {predicates} </div>;
             } else {
                 body2 = <div> <span>No <b>predicates</b> found that match your search query</span> </div>;
             }
@@ -103,3 +110,14 @@ export default class SearchResults extends Component {
     }
 
 }
+
+
+SearchResults.propTypes = {
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            searchTerm: PropTypes.string.isRequired,
+        }).isRequired,
+    }).isRequired,
+};
+
+export default SearchResults;
