@@ -1,11 +1,12 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import NewStatementsSection from '../components/statements/new/NewStatementsSection';
 import StatementGroupCard from '../components/statements/existing/StatementGroupCard';
-import {resourcesUrl, statementsUrl, submitGetRequest} from '../network';
-import {groupByObjectWithId} from '../utils';
+import { resourcesUrl, statementsUrl, submitGetRequest } from '../network';
+import { groupByObjectWithId } from '../utils';
 import './ResourceDetails.css';
 import EditableHeader from '../components/EditableHeader';
 import { Container } from 'reactstrap';
+import PropTypes from 'prop-types';
 
 export const descriptionSection = 'description';
 export const implementationSection = 'implementation';
@@ -14,7 +15,7 @@ export const miscSection = 'misc';
 
 // const sections = [descriptionSection, implementationSection, evaluationSection, miscSection];
 
-export default class ResourceDetails extends Component {
+class ResourceDetails extends Component {
 
     state = {
         allStatements: null,
@@ -25,15 +26,16 @@ export default class ResourceDetails extends Component {
         objectMap: {},
     };
 
-    initialState = this.state;
+
     async componentWillMount() {
         await this.findResource();
         await this.findAllStatements();
     }
+    initialState = this.state;
 
     findResource = async () => {
         try {
-            const responseJson = await submitGetRequest(resourcesUrl + encodeURIComponent(this.props.id));
+            const responseJson = await submitGetRequest(resourcesUrl + encodeURIComponent(this.props.match.params.resourceId));
             this.setState({
                 title: responseJson.label,
             });
@@ -83,14 +85,14 @@ export default class ResourceDetails extends Component {
     };
 
     handleHeaderChange = (event) => {
-        this.setState({title: event.value});
+        this.setState({ title: event.value });
     };
 
     render() {
-        const id = this.props.id;
+        const id = this.props.match.params.resourceId;
         const resultsPresent = this.state.error || (this.state.allStatements);
-        const labelId = "http://www.w3.org/2000/01/rdf-schema#label";
-        const abstractId = "http://orkg.tib.eu/ontology/abstract";
+        const labelId = 'http://www.w3.org/2000/01/rdf-schema#label';
+        const abstractId = 'http://orkg.tib.eu/ontology/abstract';
 
         if (this.state.error) {
             return <p><strong>Error:</strong> {this.state.error} </p>;
@@ -99,35 +101,38 @@ export default class ResourceDetails extends Component {
         if (resultsPresent) {
             const titleText = this.state.title;
             const titleJsx = titleText && <EditableHeader {...this.props} value={titleText}
-                    onChange={this.handleHeaderChange}/>;
+                onChange={this.handleHeaderChange} />;
 
             const abstractText = this.state.allStatements.find((statement) => statement.subject.id === id
-                    && statement.predicate.id === abstractId);
+                && statement.predicate.id === abstractId);
             const abstractJsx = abstractText && <div>{abstractText.object.id}</div>;
 
-            const groupingProperty = "predicate";
+            const groupingProperty = 'predicate';
             const statements = this.state.allStatements.filter((statement) => statement.subject.id === id
-                    && statement.predicate.id !== labelId && statement.predicate.id !== abstractId);
+                && statement.predicate.id !== labelId && statement.predicate.id !== abstractId);
             const groupedStatements = groupByObjectWithId(statements, groupingProperty);
             const statementGroupJsxs = groupedStatements.map(
                 statementGroup => {
                     if (statementGroup.length > 0) {
                         const propertyId = statementGroup[0][groupingProperty].id;
                         const propertyLabel = statementGroup[0][groupingProperty].label;
-                        return <StatementGroupCard href={`${process.env.PUBLIC_URL}/predicate/${encodeURIComponent(propertyId)}`}
+                        return (
+                            <StatementGroupCard href={`${process.env.PUBLIC_URL}/predicate/${encodeURIComponent(propertyId)}`}
                                 key={propertyId}
                                 label={this.state.predicateMap[propertyId] || propertyLabel}
                                 onUpdate={this.reset}
                                 statementGroup={statementGroup}
                                 getStatementText={this.getStatementText}
-                                setStatementText={this.setStatementText}/>
+                                setStatementText={this.setStatementText}
+                            />
+                        )
                     } else {
                         return null;
                     }
                 }
             );
 
-            const newStatementsSectionJsx = <NewStatementsSection subjectId={id} onUpdate={this.reset}/>;
+            const newStatementsSectionJsx = <NewStatementsSection subjectId={id} onUpdate={this.reset} />;
             // const sectionName = this.props.sectionName;
             // const navigationButtons = <Nav tag="div">
             //     <NavLink href={descriptionSection} disabled={sectionName === descriptionSection}>
@@ -154,16 +159,30 @@ export default class ResourceDetails extends Component {
             //     </NavLink>
             // </Nav>;
 
-            return <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix"><div className="entityView-main">
-                {titleJsx}
-                {abstractJsx}
-                {/*{navigationButtons}*/}
-                {statementGroupJsxs}
-                {newStatementsSectionJsx}
-                {/*{bottomNavigationButtons}*/}
-            </div></Container>;
+            return (
+                <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">
+                    <div className="entityView-main">
+                        {titleJsx}
+                        {abstractJsx}
+                        {/*{navigationButtons}*/}
+                        {statementGroupJsxs}
+                        {newStatementsSectionJsx}
+                        {/*{bottomNavigationButtons}*/}
+                    </div>
+                </Container>
+            );
         } else {
             return null;
         }
     }
 }
+
+ResourceDetails.propTypes = {
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            resourceId: PropTypes.string.isRequired,
+        }).isRequired,
+    }).isRequired,
+};
+
+export default ResourceDetails;

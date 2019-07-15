@@ -10,8 +10,13 @@ export default {
    },
    VIEW_PAPER_CONTRIBUTION: '/paper/:resourceId/:contributionId',
    VIEW_PAPER: '/paper/:resourceId',
-   LICENSE: '/license',
-   NOT_FOUND: '/404',
    COMPARISON: '/comparison/*',
    PAPERS: '/papers',
+   RESEARCH_PROBLEM: '/problem/:researchProblemId',
+   RESEARCH_FIELD: '/field/:researchFieldId',
+   LICENSE: '/license',
+   /* Legacy routes, only used for debugging now */
+   RESSOURCE_DETAILS: '/resource/:resourceId/:sectionName',
+   PREDICATE_DETAILS: '/predicate/:predicateId',
+   SEARCH: '/search/:searchTerm',
 }
