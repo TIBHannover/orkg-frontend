@@ -111,7 +111,7 @@ class Contributions extends Component {
 
         return (
             <div>
-                <h2 className="h4 mt-4 mb-5"><Tooltip message="Specify research contributions that this paper makes in the area of the research field. Normally, A contribution should indicate the new findings with contrast to the existing works, and coupled with reference to the research problem.">Specify research contributions</Tooltip></h2>
+                <h2 className="h4 mt-4 mb-5"><Tooltip message="Specify the research contributions that this paper makes. A paper can have multiple contributions and each contribution addresses at least one research problem">Specify research contributions</Tooltip></h2>
 
                 <Container>
                     <Row noGutters={true}>
