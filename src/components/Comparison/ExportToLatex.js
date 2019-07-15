@@ -8,8 +8,8 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { CustomInput } from 'reactstrap';
 import Tooltip from '../Utils/Tooltip';
-import { timeoutPromise } from '../../utils';
-import { getStatementsBySubject, crossrefUrl } from '../../network';
+import { getStatementsBySubject } from '../../network';
+import Cite from 'citation-js';
 import moment from 'moment';
 
 
@@ -97,7 +97,7 @@ class ExportToLatex extends Component {
             'digits': 2,
             'spec': `|${Array(nbColumns).fill('c').join('|')}|`,
             'captionPlacement': 'top',
-            'caption': 'This comparison table is built using ORKG \\protect \\footnotemark',
+            'caption': 'This comparison table is built using ORKG \\protect \\cite{Auer2018Towards} \\protect \\footnotemark',
         }
 
         if (newTitles) {
@@ -107,7 +107,7 @@ class ExportToLatex extends Component {
         latexTable = MakeLatex(res, maleLatexOptions);
         // Add footnote of ORKG link
         // TODO: include customization parameters in the URL
-        let url = this.props.location.origin+this.props.location.pathname
+        let url = this.props.location.origin + this.props.location.pathname
         latexTable += `\n\\footnotetext{${url} [accessed ${moment().format('YYYY MMM DD')}]}`;
         return latexTable;
     }
@@ -135,6 +135,17 @@ class ExportToLatex extends Component {
         return { authorNames: authorNamesArray.reverse(), publicationYear }
     }
 
+    createCiteBibtex = (contribution, paperStatements) => {
+        let contributionData = this.parsePaperStatements(paperStatements);
+        let ref = new Cite({
+            id: contribution.paperId,
+            title: contribution.title,
+            author: contributionData.authorNames.map(a => ({ 'literal': a })),
+            issued: { 'date-parts': [[contributionData.publicationYear]] }
+        })
+        return ref
+    }
+
     generateBibTex = () => {
         this.setState({ bibtexReferencesLoading: true });
         if (this.props.contributions.length === 0) {
@@ -148,40 +159,42 @@ class ExportToLatex extends Component {
                 if (publicationDOI.length > 0) {
                     publicationDOI = publicationDOI[0].object.label
                     if (publicationDOI !== '') {
-                        // Fetch the bibtex from crossRef for 4 seconds
-                        return timeoutPromise(4000,
-                            fetch(crossrefUrl + publicationDOI + '/transform/application/x-bibtex', { method: 'GET' }))
-                            .then((response, reject) => {
-                                if (!response.ok) {
-                                    reject(new Error('CrossRef error'));
-                                } else {
-                                    return response.text();
-                                }
-                            }).then((response) => {
-                                let refID = response.substring(response.indexOf('{') + 1, response.indexOf(','));
-                                contribution.bibtex = response.replace(refID, contribution.paperId)
-                                return contribution;
-                            }).catch(() => {
-                                let contributionData = this.parsePaperStatements(paperStatements);
-                                contribution.bibtex = `@article{${contribution.paperId},\n author={${contributionData.authorNames.join(',')}},\n title={${contribution.title}},\n year={${contributionData.publicationYear}}\n}`
-                                return contribution;
-                            });
+                        return Cite.async(publicationDOI).catch(() => {
+                            return this.createCiteBibtex(contribution, paperStatements);
+                        }).then((data) => {
+                            contribution.bibtex = data;
+                            return contribution;
+                        })
                     }
                 }
-                let contributionData = this.parsePaperStatements(paperStatements);
-                contribution.bibtex = `@article{${contribution.paperId},\n author={${contributionData.authorNames.join(',')}},\n title={${contribution.title}},\n year={${contributionData.publicationYear}}\n}`
+                contribution.bibtex = this.createCiteBibtex(contribution, paperStatements);
                 return contribution;
             })
 
         });
-
-        Promise.all(contributions).then((contributions) => {
+        let orkgCitation = Cite.async('10.5281/zenodo.1157185').then()
+        Promise.all([...contributions, orkgCitation]).then((contributions) => {
             let res = [];
             let paperIds = [];
+            let bibtexOptions = {
+                output: {
+                    type: 'string',
+                    style: 'bibtex'
+                }
+            };
             contributions.forEach((contribution, i) => {
-                if (!paperIds.includes(contribution.paperId)) {
-                    paperIds.push(contribution.paperId);
-                    res.push(contribution.bibtex);
+                if (contribution.paperId) {
+                    if (!paperIds.includes(contribution.paperId)) {
+                        paperIds.push(contribution.paperId);
+                        contribution.bibtex.options(bibtexOptions);
+                        contribution.bibtex = contribution.bibtex.get();
+                        let refID = contribution.bibtex.substring(contribution.bibtex.indexOf('{') + 1, contribution.bibtex.indexOf(','));
+                        contribution.bibtex = contribution.bibtex.replace(refID, contribution.paperId)
+                        res.push(contribution.bibtex);
+                    }
+                } else {
+                    contribution.options(bibtexOptions);
+                    res.push(contribution.get());
                 }
             });
             this.setState({ bibTexReferences: res.join('\n'), bibtexReferencesLoading: false });
