@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Container, Button, Card, CardText, CardBody, CardHeader, CardFooter } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { getStatementsByObject, getResource, getStatementsBySubject } from '../../network';
+import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
 import PaperCard from '../PaperCard/PaperCard'
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -109,7 +110,7 @@ class ResearchField extends Component {
                                 {this.state.parentResearchField && (
                                     <CardFooter>
                                         Parent research field:
-                                    <Link className={'ml-2'} to={`${process.env.PUBLIC_URL}/field/${encodeURIComponent(this.state.parentResearchField.subject.id)}`}>
+                                        <Link className={'ml-2'} to={reverse(ROUTES.RESEARCH_FIELD, {researchFieldId: this.state.parentResearchField.subject.id})} >
                                             {this.state.parentResearchField.subject.label}
                                         </Link>
                                     </CardFooter>

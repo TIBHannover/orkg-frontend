@@ -8,6 +8,8 @@ import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader'
 import Contributions from './Contributions';
 import { Link } from 'react-router-dom';
+import { reverse } from 'named-urls';
+import ROUTES from '../../constants/routes';
 import moment from 'moment'
 import PropTypes from 'prop-types';
 import ComparisonPopup from './ComparisonPopup';
@@ -153,7 +155,7 @@ class ViewPaper extends Component {
                                         <Icon icon={faCalendar} className="text-primary" /> {moment(this.state.publicationMonth, 'M').format('MMMM')} {this.state.publicationYear}
                                     </span>
                                     {this.state.researchField && this.state.researchField.object && (
-                                        <Link to={`${process.env.PUBLIC_URL}/field/${encodeURIComponent(this.state.researchField.object.id)}`}>
+                                        <Link to={reverse(ROUTES.RESEARCH_FIELD, {researchFieldId: this.state.researchField.object.id})} >
                                             <span className="badge badge-lightblue mr-2 mb-2">
                                                 <Icon icon={faBars} className="text-primary" /> {this.state.researchField.object.label}
                                             </span>
