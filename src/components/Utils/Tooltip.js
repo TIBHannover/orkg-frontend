@@ -25,7 +25,10 @@ class Tooltip extends React.Component {
     }
 
     render() {  
-        const style = this.props.colorIcon ? { color: this.props.colorIcon } : {};
+        const style = {
+            fontSize: '1rem',
+            color: this.props.colorIcon ? this.props.colorIcon : 'initial',
+        }
         const className = !this.props.colorIcon ? 'text-primary' : '';
 
         return (

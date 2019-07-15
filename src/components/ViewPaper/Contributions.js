@@ -10,6 +10,8 @@ import SimilarContributions from './SimilarContributions';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { CSSTransitionGroup } from 'react-transition-group'
+import { reverse } from 'named-urls';
+import ROUTES from '../../constants/routes';
 import AddToComparison from './AddToComparison';
 import ContentLoader from 'react-content-loader'
 
@@ -124,7 +126,7 @@ class Contributions extends Component {
                                     {this.props.contributions.map((contribution, index) => {
                                         return (
                                             <li className={contribution.id === selectedContributionId ? 'activeContribution' : ''} key={contribution.id}>
-                                                <Link to={`/paper/${this.props.paperId}/${contribution.id}`} className={'selectContribution'}>
+                                                <Link to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId : this.props.paperId, contributionId : contribution.id})} className={'selectContribution'}>
                                                     {contribution.label}
                                                 </Link>
                                             </li>
@@ -173,8 +175,7 @@ class Contributions extends Component {
                                                 <>
                                                     {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].map((problem, index) => (
                                                         <span key={index}>
-
-                                                            <Link to={`${process.env.PUBLIC_URL}/problem/${encodeURIComponent(problem.id)}`}>
+                                                            <Link to={reverse(ROUTES.RESEARCH_PROBLEM, {researchProblemId : problem.id})}>
                                                                 <span className="btn btn-link p-0 border-0 align-baseline">
                                                                     {problem.label}
                                                                 </span>
@@ -233,7 +234,7 @@ class Contributions extends Component {
                                                 <>
                                                     {!this.state.isSimilaireContributionsFailedLoading ?
                                                         <SimilarContributions similaireContributions={this.state.similaireContributions.slice(0, 3)} />
-                                                        : <Alert color="light">Failed to load similar contributions, please try again later!</Alert>
+                                                        : <Alert color="light">Failed to connect to the similarity service, please try again later</Alert>
                                                     }
                                                 </>
                                             )}

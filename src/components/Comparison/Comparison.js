@@ -15,8 +15,8 @@ import GeneratePdf from './GeneratePdf.js';
 import { submitGetRequest, comparisonUrl } from '../../network';
 import ComparisonTable from './ComparisonTable.js';
 import ComparisonLoadingComponent from './ComparisonLoadingComponent';
-import NotFound from '../StaticPages/NotFound';
 import ExportToLatex from './ExportToLatex.js';
+import { Link } from 'react-router-dom';
 
 /*const BreadcrumbStyled = styled(Breadcrumb)`
     .breadcrumb {
@@ -45,7 +45,7 @@ class Comparison extends Component {
             showShareDialog: false,
             showLatexDialog: false,
             isLoading: false,
-            loading_failed: false,
+            loadingFailed: false,
         }
     }
 
@@ -188,7 +188,7 @@ class Comparison extends Component {
             });
         }).catch((error) => {
             this.setState({
-                loading_failed: true,
+                loadingFailed: true,
                 isLoading: false,
             });
         });
@@ -286,6 +286,10 @@ class Comparison extends Component {
         this.props.history.push(url + contributionIds + '?properties=' + propertyIds + '&transpose=' + transpose);
     }
 
+    handleGoBack = () => {
+        this.props.history.goBack();
+    }
+
     render() {
         const contributionAmount = this.getContributionIdsFromUrl().length;
 
@@ -305,11 +309,15 @@ class Comparison extends Component {
                     }*/}
                 </Container>
 
-                <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
-                    {!this.state.isLoading && this.state.loading_failed && (
-                        <NotFound />
+                <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix">
+                    {!this.state.isLoading && this.state.loadingFailed && (
+                        <div>
+                            <Alert color="danger">
+                                <strong>Error.</strong> The comparison service is unreachable. Please come back later and try again. <span className="btn-link" style={{cursor:'pointer'}} onClick={this.handleGoBack}>Go back</span> or <Link to={ROUTES.HOME}>go to the homepage</Link>.
+                            </Alert>
+                        </div>
                     )}
-                    {!this.state.loading_failed && (
+                    {!this.state.loadingFailed && (
                         <>
                             <h2 className="h4 mt-4 mb-3 float-left">
                                 Compare<br />
