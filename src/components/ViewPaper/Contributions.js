@@ -233,7 +233,7 @@ class Contributions extends Component {
                                                 <>
                                                     {!this.state.isSimilaireContributionsFailedLoading ?
                                                         <SimilarContributions similaireContributions={this.state.similaireContributions.slice(0, 3)} />
-                                                        : <Alert color="light">Failed to load similar contributions, please try again later!</Alert>
+                                                        : <Alert color="light">Failed to connect to the similarity service, please try again later</Alert>
                                                     }
                                                 </>
                                             )}
