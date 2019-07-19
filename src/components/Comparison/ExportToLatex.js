@@ -33,16 +33,22 @@ class ExportToLatex extends Component {
             bibtexReferencesLoading: true,
             replaceTitles: false,
             includeFootnote: false,
+            shortLink: null,
             showTooltipCopiedBibtex: false,
             showTooltipCopiedLatex: false
         }
     }
 
     componentDidUpdate = (prevProps, prevState) => {
+        if (this.props.location.href !== prevProps.location.href) {
+            this.setState({ shortLink: null });
+        }
         if (this.props.contributions !== prevProps.contributions) {
+            this.setState({ shortLink: null });
             this.generateBibTex();
         }
         if (this.props.showDialog === true && this.props.showDialog !== prevProps.showDialog) {
+            this.setState({ shortLink: null });
             this.generateLatex();
         }
     }
@@ -125,19 +131,26 @@ class ExportToLatex extends Component {
 
             // Add a persistent link to this page as a footnote
             if (this.state.includeFootnote) {
-                createShortLink({
-                    long_url: this.props.location.href,
-                    contributions: this.props.contributions.map(c => c.id),
-                    properties: this.props.properties.filter(p => p.active).map(p => p.id),
-                    transpose: this.props.transpose,
-                }).catch((e) => {
-                    console.log(e);
-                    latexTable += `\n\\footnotetext{${this.props.location.href}} [accessed ${moment().format('YYYY MMM DD')}]}`;
+                if(!this.state.shortLink){
+                    createShortLink({
+                        long_url: this.props.location.href,
+                        contributions: this.props.contributions.map(c => c.id),
+                        properties: this.props.properties.filter(p => p.active).map(p => p.id),
+                        transpose: this.props.transpose,
+                    }).catch((e) => {
+                        console.log(e);
+                        latexTable += `\n\\footnotetext{${this.props.location.href}} [accessed ${moment().format('YYYY MMM DD')}]}`;
+                        this.setState({ latexTable: latexTable, latexTableLoading: false });
+                    }).then((data) => {
+                        let shortLink = `${this.props.location.protocol}//${this.props.location.host}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
+                        latexTable += `\n\\footnotetext{${shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
+                        this.setState({ shortLink: shortLink, latexTable: latexTable, latexTableLoading: false });
+                    })
+                }else{
+                    latexTable += `\n\\footnotetext{${this.state.shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
                     this.setState({ latexTable: latexTable, latexTableLoading: false });
-                }).then((data) => {
-                    latexTable += `\n\\footnotetext{${this.props.location.protocol}//${this.props.location.host}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })} [accessed ${moment().format('YYYY MMM DD')}]}`;
-                    this.setState({ latexTable: latexTable, latexTableLoading: false });
-                })
+                }
+                
             } else {
                 this.setState({ latexTable: latexTable, latexTableLoading: false });
             }
