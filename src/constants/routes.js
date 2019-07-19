@@ -10,6 +10,7 @@ export default {
    },
    VIEW_PAPER_CONTRIBUTION: '/paper/:resourceId/:contributionId',
    VIEW_PAPER: '/paper/:resourceId',
+   COMPARISON_SHORTLINK: '/c/:shortCode',
    COMPARISON: '/comparison/*',
    PAPERS: '/papers',
    RESEARCH_PROBLEM: '/problem/:researchProblemId',

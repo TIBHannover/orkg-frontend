@@ -394,6 +394,7 @@ class Comparison extends Component {
                 <ExportToLatex 
                     data={this.state.csvData} 
                     contributions={this.state.contributions}
+                    properties={this.state.properties}
                     showDialog={this.state.showLatexDialog}
                     toggle={() => this.toggle('showLatexDialog')}
                     transpose={this.state.transpose}

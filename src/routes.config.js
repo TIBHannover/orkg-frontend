@@ -16,6 +16,7 @@ import ViewPaper from './components/ViewPaper/ViewPaper';
 import License from './components/StaticPages/License';
 import NotFound from './components/StaticPages/NotFound';
 import Comparison from './components/Comparison/Comparison';
+import RedirectShortLinks from './components/Comparison/RedirectShortLinks';
 
 
 const routes = [
@@ -54,6 +55,11 @@ const routes = [
         path: ROUTES.VIEW_PAPER,
         exact: true,
         component: ViewPaper
+    },
+    {
+        path: ROUTES.COMPARISON_SHORTLINK,
+        exact: true,
+        component: RedirectShortLinks
     },
     {
         path: ROUTES.COMPARISON,

@@ -3,12 +3,14 @@ import { Modal, ModalHeader, ModalBody, Input, Button, Nav, NavItem, NavLink, To
 import PropTypes from 'prop-types';
 import MakeLatex from 'make-latex';
 import styled from 'styled-components';
+import { reverse } from 'named-urls';
+import ROUTES from '../../constants/routes.js';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { CustomInput } from 'reactstrap';
 import Tooltip from '../Utils/Tooltip';
-import { getStatementsBySubject } from '../../network';
+import { getStatementsBySubject, createShortLink } from '../../network';
 import Cite from 'citation-js';
 import moment from 'moment';
 
@@ -25,22 +27,29 @@ class ExportToLatex extends Component {
 
         this.state = {
             latexTable: '',
+            latexTableLoading: true,
             selectedTab: 'table',
             bibtexReferences: '',
             bibtexReferencesLoading: true,
             replaceTitles: false,
+            includeFootnote: false,
             showTooltipCopiedBibtex: false,
             showTooltipCopiedLatex: false
         }
     }
 
-    componentDidUpdate = (prevProps) => {
+    componentDidUpdate = (prevProps, prevState) => {
         if (this.props.contributions !== prevProps.contributions) {
             this.generateBibTex();
+        }
+        if (this.props.showDialog === true && this.props.showDialog !== prevProps.showDialog) {
+            this.generateLatex();
         }
     }
 
     generateLatex = () => {
+        this.setState({ latexTableLoading: true });
+
         if (this.props.data.length === 0) {
             return '';
         }
@@ -75,7 +84,7 @@ class ExportToLatex extends Component {
                 }
             });
 
-            nbColumns = Object.keys(res[0]).length;
+            nbColumns = res.length > 0 ? Object.keys(res[0]).length : 0;
         } else {
             this.props.data.forEach((contribution, i) => {
                 if (i > 0) {
@@ -93,23 +102,51 @@ class ExportToLatex extends Component {
         }
 
         let latexTable;
-        let maleLatexOptions = {
-            'digits': 2,
-            'spec': `|${Array(nbColumns).fill('c').join('|')}|`,
-            'captionPlacement': 'top',
-            'caption': 'This comparison table is built using ORKG \\protect \\cite{Auer2018Towards} \\protect \\footnotemark',
+
+
+        if (res.length > 0) {
+            let caption = 'This comparison table is built using ORKG \\protect \\cite{Auer2018Towards}'
+            if (this.state.includeFootnote) {
+                caption += ' \\protect \\footnotemark';
+            }
+
+            let makeLatexOptions = {
+                'digits': 2,
+                'spec': `|${Array(nbColumns).fill('c').join('|')}|`,
+                'captionPlacement': 'top',
+                'caption': caption,
+            }
+
+            if (newTitles) {
+                makeLatexOptions.colnames = newTitles;
+            }
+
+            latexTable = MakeLatex(res, makeLatexOptions);
+
+            // Add a persistent link to this page as a footnote
+            if (this.state.includeFootnote) {
+                createShortLink({
+                    long_url: this.props.location.href,
+                    contributions: this.props.contributions.map(c => c.id),
+                    properties: this.props.properties.filter(p => p.active).map(p => p.id),
+                    transpose: this.props.transpose,
+                }).catch((e) => {
+                    console.log(e);
+                    latexTable += `\n\\footnotetext{${this.props.location.href}} [accessed ${moment().format('YYYY MMM DD')}]}`;
+                    this.setState({ latexTable: latexTable, latexTableLoading: false });
+                }).then((data) => {
+                    latexTable += `\n\\footnotetext{${this.props.location.protocol}//${this.props.location.host}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })} [accessed ${moment().format('YYYY MMM DD')}]}`;
+                    this.setState({ latexTable: latexTable, latexTableLoading: false });
+                })
+            } else {
+                this.setState({ latexTable: latexTable, latexTableLoading: false });
+            }
+        } else {
+            latexTable = 'The current comparison table doesn\'t contain any pieces of information to export. Please re-try with different options.'
+            this.setState({ latexTable: latexTable, latexTableLoading: false });
         }
 
-        if (newTitles) {
-            maleLatexOptions.colnames = newTitles;
-        }
 
-        latexTable = MakeLatex(res, maleLatexOptions);
-        // Add footnote of ORKG link
-        // TODO: include customization parameters in the URL
-        let url = this.props.location.origin + this.props.location.pathname
-        latexTable += `\n\\footnotetext{${url} [accessed ${moment().format('YYYY MMM DD')}]}`;
-        return latexTable;
     }
 
     parsePaperStatements = (paperStatements) => {
@@ -209,8 +246,8 @@ class ExportToLatex extends Component {
 
     toggleCheckbox = (type) => {
         this.setState(prevState => ({
-            replaceTitles: !prevState.replaceTitles,
-        }));
+            [type]: !prevState[type],
+        }), () => { this.generateLatex(); });
     }
 
     toggleTooltip = (e, type) => {
@@ -222,11 +259,6 @@ class ExportToLatex extends Component {
     }
 
     render() {
-        let latexTable;
-
-        if (this.props.showDialog) {
-            latexTable = this.generateLatex();
-        }
 
         return (
             <Modal isOpen={this.props.showDialog} toggle={this.props.toggle} size="lg">
@@ -244,7 +276,7 @@ class ExportToLatex extends Component {
                     {this.state.selectedTab === 'table' &&
                         <>
                             <p>
-                                <Textarea type="textarea" value={latexTable} disabled rows="15" />
+                                <Textarea type="textarea" value={!this.state.latexTableLoading ? this.state.latexTable : 'Loading...'} disabled rows="15" />
                             </p>
 
                             <div className="float-left mt-1">
@@ -254,13 +286,22 @@ class ExportToLatex extends Component {
                                         type="checkbox"
                                         id={'replaceTitles'}
                                         label="Replace contribution titles by reference "
-                                        onChange={this.toggleCheckbox}
+                                        onChange={() => this.toggleCheckbox('replaceTitles')}
                                         checked={this.state.replaceTitles}
                                     />{'. '}
                                 </Tooltip>
+                                <br />
+                                <CustomInput
+                                    className="float-left"
+                                    type="checkbox"
+                                    id={'includeFootnote'}
+                                    label="Include a persistent link to this page as a footnote "
+                                    onChange={() => this.toggleCheckbox('includeFootnote')}
+                                    checked={this.state.includeFootnote}
+                                />{'. '}
                             </div>
 
-                            <CopyToClipboard id="copyToClipboardLatex" text={latexTable} onCopy={() => { this.setState({ showTooltipCopiedLatex: true }); }}>
+                            <CopyToClipboard id="copyToClipboardLatex" text={this.state.latexTable} onCopy={() => { this.setState({ showTooltipCopiedLatex: true }); }}>
                                 <Button
                                     color="primary"
                                     className="pl-3 pr-3 float-right"
@@ -303,6 +344,7 @@ class ExportToLatex extends Component {
 ExportToLatex.propTypes = {
     data: PropTypes.array.isRequired,
     contributions: PropTypes.array.isRequired,
+    properties: PropTypes.array.isRequired,
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     transpose: PropTypes.bool.isRequired,
