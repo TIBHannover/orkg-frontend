@@ -1,11 +1,12 @@
 export const url = process.env.REACT_APP_SERVER_URL;
 export const similaireServiceUrl = process.env.REACT_APP_SIMILARITY_SERVICE_URL;
+export const annotationServiceUrl = process.env.REACT_APP_ANNOTATION_SERVICE_URL;
 export const resourcesUrl = `${url}resources/`;
 export const predicatesUrl = `${url}predicates/`;
 export const statementsUrl = `${url}statements/`;
 export const literalsUrl = `${url}literals/`;
 export const crossrefUrl = process.env.REACT_APP_CROSSREF_URL;
-export const arxivUrl = process.env.REACT_APP_ARXIV_ULR;
+export const arxivUrl = process.env.REACT_APP_ARXIV_URL;
 export const comparisonUrl = `${similaireServiceUrl}compare/`;
 export const similaireUrl = `${similaireServiceUrl}similar/`;
 
@@ -191,4 +192,8 @@ export const getSimilaireContribution = (id) => {
 
 export const setupSimilarity = () => {
     return fetch(`${similaireServiceUrl}internal/init`, { method: 'GET' })
+};
+
+export const getAnnotations = (abstract) => {
+    return submitGetRequest(`${annotationServiceUrl}api?text2annotate=${encodeURIComponent(abstract)}`);
 };
