@@ -4,6 +4,7 @@ import ProgressBar from './ProgressBar';
 import GeneralData from './GeneralData/GeneralData';
 import ResearchField from './ResearchField/ResearchField';
 import Contributions from './Contributions/Contributions';
+import Abstract from './Abstract/Abstract';
 import Finish from './Finish/Finish';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -40,10 +41,13 @@ class AddPaper extends Component {
                 currentStepDetails = <AnimationContainer key={2}><ResearchField /></AnimationContainer>
                 break;
             case 3:
-                currentStepDetails = <AnimationContainer key={3}><Contributions /></AnimationContainer>
+                currentStepDetails = <AnimationContainer key={3}><Abstract /></AnimationContainer>
                 break;
             case 4:
-                currentStepDetails = <AnimationContainer key={4}><Finish /></AnimationContainer>
+                currentStepDetails = <AnimationContainer key={4}><Contributions /></AnimationContainer>
+                break;
+            case 5:
+                currentStepDetails = <AnimationContainer key={5}><Finish /></AnimationContainer>
                 break;
         }
 

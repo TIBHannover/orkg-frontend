@@ -40,6 +40,7 @@
     "react-select": "^3.0.4",
     "react-sortable-hoc": "^1.9.1",
     "react-split-pane": "^0.1.84",
+    "react-textarea-autosize": "^7.1.0",
     "react-transition-group": "^1.2.1",
     "reactstrap": "^7.1.0",
     "reactstrap-confirm": "^1.0.4",

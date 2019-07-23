@@ -179,7 +179,7 @@ class Contributions extends Component {
                 </Container>
 
                 <hr className="mt-5 mb-3" />
-                <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Next step</Button>
+                <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Finish</Button>
                 <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>Previous step</Button>
             </div>
         );

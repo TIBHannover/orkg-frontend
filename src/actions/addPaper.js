@@ -29,6 +29,13 @@ export const updateResearchField = (data) => dispatch => {
     })
 }
 
+export const updateAbstract = (data) => dispatch => {
+    dispatch({
+        type: type.UPDATE_ABSTRACT,
+        payload: data,
+    })
+}
+
 export const createContribution = ({ selectAfterCreation = false, prefillStatements: performPrefill = false, researchField = null }) => dispatch => {
     let newResourceId = guid();
     let newContributionId = guid();

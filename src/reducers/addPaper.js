@@ -7,6 +7,7 @@ const initialState = {
     currentStep: 1,
     title: '',
     authors: [],
+    abstract: '',
     publicationMonth: 1,
     publicationYear: 2000,
     doi: '',
@@ -56,6 +57,15 @@ export default (state = initialState, action) => {
                 ...state,
                 researchFields: payload.researchFields,
                 selectedResearchField: payload.selectedResearchField,
+            };
+        }
+
+        case type.UPDATE_ABSTRACT: {
+            let { payload } = action;
+
+            return {
+                ...state,
+                abstract: payload,
             };
         }
 

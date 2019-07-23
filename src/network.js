@@ -5,6 +5,7 @@ export const predicatesUrl = `${url}predicates/`;
 export const statementsUrl = `${url}statements/`;
 export const literalsUrl = `${url}literals/`;
 export const crossrefUrl = process.env.REACT_APP_CROSSREF_URL;
+export const arxivUrl = process.env.REACT_APP_ARXIV_ULR;
 export const comparisonUrl = `${similaireServiceUrl}compare/`;
 export const similaireUrl = `${similaireServiceUrl}similar/`;
 
