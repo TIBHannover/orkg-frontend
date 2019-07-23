@@ -103,7 +103,7 @@ class ResearchField extends Component {
                                 <Textarea 
                                     id="paperAbstract"
                                     className="form-control pl-2 pr-2" 
-                                    minRows="5" 
+                                    minRows={5}
                                     value={this.props.abstract} 
                                     onChange={this.handleChange} 
                                 />
