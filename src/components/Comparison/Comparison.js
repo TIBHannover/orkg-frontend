@@ -34,6 +34,7 @@ class Comparison extends Component {
 
         this.state = {
             transpose: false,
+            response_hash: null,
             title: '',
             authorNames: [],
             contributions: [],
@@ -95,13 +96,21 @@ class Comparison extends Component {
         return true;
     }
 
+    getResonseHashFromUrl = () => {
+        let response_hash = queryString.parse(this.props.location.search).response_hash;
+        if (response_hash) {
+            return response_hash;
+        }
+        return null;
+    }
+
     generateMatrixOfComparison = () => {
         let header = ['Title'];
 
         for (let property of this.state.properties) {
             if (property.active) {
-            header.push(property.label);
-        }
+                header.push(property.label);
+            }
         }
 
         let rows = [];
@@ -112,13 +121,13 @@ class Comparison extends Component {
 
             for (let property of this.state.properties) {
                 if (property.active) {
-                let value = '';
-                if (this.state.data[property.id]) {
-                    // separate labels with comma
-                    value = this.state.data[property.id][i].map(entry => entry.label).join(', ')
-                    row.push(value);
+                    let value = '';
+                    if (this.state.data[property.id]) {
+                        // separate labels with comma
+                        value = this.state.data[property.id][i].map(entry => entry.label).join(', ')
+                        row.push(value);
+                    }
                 }
-            }
             }
             rows.push(row);
         }
@@ -136,8 +145,9 @@ class Comparison extends Component {
             isLoading: true
         });
 
+        let response_hash = this.getResonseHashFromUrl();
         const contributionIds = this.getContributionIdsFromUrl();
-        submitGetRequest(`${comparisonUrl}${contributionIds.join('/')}`).then((comparisonData) => {
+        submitGetRequest(`${comparisonUrl}${contributionIds.join('/')}${response_hash ? '?response_hash=' + response_hash : ''}`).then((comparisonData) => {
             // mocking function to allow for deletion of contributions via the url
             let contributions = [];
             for (let i = 0; i < comparisonData.contributions.length; i++) {
@@ -183,6 +193,7 @@ class Comparison extends Component {
                 contributions: contributions,
                 properties: comparisonData.properties,
                 data: comparisonData.data,
+                response_hash: comparisonData.response_hash ? comparisonData.response_hash : response_hash,
                 transpose: this.getTransposeOptionFromUrl(),
                 isLoading: false,
             });
@@ -313,7 +324,7 @@ class Comparison extends Component {
                     {!this.state.isLoading && this.state.loadingFailed && (
                         <div>
                             <Alert color="danger">
-                                <strong>Error.</strong> The comparison service is unreachable. Please come back later and try again. <span className="btn-link" style={{cursor:'pointer'}} onClick={this.handleGoBack}>Go back</span> or <Link to={ROUTES.HOME}>go to the homepage</Link>.
+                                <strong>Error.</strong> The comparison service is unreachable. Please come back later and try again. <span className="btn-link" style={{ cursor: 'pointer' }} onClick={this.handleGoBack}>Go back</span> or <Link to={ROUTES.HOME}>go to the homepage</Link>.
                             </Alert>
                         </div>
                     )}
@@ -389,16 +400,18 @@ class Comparison extends Component {
                     showDialog={this.state.showShareDialog}
                     toggle={() => this.toggle('showShareDialog')}
                     url={window.location.href}
+                    response_hash={this.state.response_hash}
                 />
 
-                <ExportToLatex 
-                    data={this.state.csvData} 
+                <ExportToLatex
+                    data={this.state.csvData}
                     contributions={this.state.contributions}
                     properties={this.state.properties}
                     showDialog={this.state.showLatexDialog}
                     toggle={() => this.toggle('showLatexDialog')}
                     transpose={this.state.transpose}
                     location={window.location}
+                    response_hash={this.state.response_hash}
                 />
             </div>
         );

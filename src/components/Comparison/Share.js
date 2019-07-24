@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
+import queryString from 'query-string';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -26,21 +27,24 @@ class Share extends Component {
     }
 
     componentDidMount() {
-        this.setState({ link: this.props.url });
+        let link = queryString.parse(this.props.url).response_hash ? this.props.url : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
+        this.setState({ link:link });
     }
 
     componentDidUpdate = (prevProps) => {
-        if (this.props.url !== prevProps.url) {
-            this.setState({ link: this.props.url, shortLink: null });
+        if (this.props.url !== prevProps.url || this.props.response_hash !== prevProps.response_hash) {
+            let link = queryString.parse(this.props.url).response_hash ? this.props.url : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
+            this.setState({ link: link, shortLink: null });
         }
     }
 
     generateShortLink = () => {
         this.setState({ shortLinkIsLoading: true, shortLinkIsFailed: false });
+        let link = queryString.parse(this.props.url).response_hash ? this.props.url : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
         createShortLink({
-            long_url: this.props.url
+            long_url: link
         }).catch(() => {
-            this.setState({ shortLink: null, link: this.props.url, shortLinkIsLoading: false, shortLinkIsFailed: true });
+            this.setState({ shortLink: null, link: link, shortLinkIsLoading: false, shortLinkIsFailed: true });
         }).then((data) => {
             let shortLink = `${window.location.protocol}//${window.location.host}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`
             this.setState({ link: shortLink, shortLink: shortLink, shortLinkIsLoading: false, shortLinkIsFailed: false });
@@ -55,7 +59,8 @@ class Share extends Component {
                 this.setState({ shareShortLink: true }, () => { this.generateShortLink(); })
             }
         } else {
-            this.setState({ shareShortLink: false, link: this.props.url, shortLinkIsFailed: false })
+            let link = queryString.parse(this.props.url).response_hash ? this.props.url : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
+            this.setState({ shareShortLink: false, link: link, shortLinkIsFailed: false })
         }
     }
 
@@ -115,6 +120,7 @@ Share.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     url: PropTypes.string.isRequired,
+    response_hash: PropTypes.string,
 }
 
 const mapStateToProps = state => ({

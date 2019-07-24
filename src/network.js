@@ -193,9 +193,9 @@ export const setupSimilarity = () => {
 };
 
 export const createShortLink = (data) => {
-    return submitPostRequest(`${similaireUrl}/shortener`, { 'Content-Type': 'application/json' }, data);
+    return submitPostRequest(`${similaireServiceUrl}shortener/`, { 'Content-Type': 'application/json' }, data);
 };
 
 export const getLongLink = (shortCode) => {
-    return submitGetRequest(`${similaireUrl}/shortener/${encodeURIComponent(shortCode)}`);
+    return submitGetRequest(`${similaireServiceUrl}shortener/${encodeURIComponent(shortCode)}`);
 };

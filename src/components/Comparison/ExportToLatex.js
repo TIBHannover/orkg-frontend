@@ -10,6 +10,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { CustomInput } from 'reactstrap';
 import Tooltip from '../Utils/Tooltip';
+import queryString from 'query-string';
 import { getStatementsBySubject, createShortLink } from '../../network';
 import Cite from 'citation-js';
 import moment from 'moment';
@@ -132,14 +133,16 @@ class ExportToLatex extends Component {
             // Add a persistent link to this page as a footnote
             if (this.state.includeFootnote) {
                 if(!this.state.shortLink){
+                    let link = queryString.parse(this.props.location.search).response_hash ? this.props.location.href : this.props.location.href + `${this.props.location.href.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
                     createShortLink({
-                        long_url: this.props.location.href,
+                        long_url: link,
+                        response_hash: this.props.response_hash,
                         contributions: this.props.contributions.map(c => c.id),
                         properties: this.props.properties.filter(p => p.active).map(p => p.id),
                         transpose: this.props.transpose,
                     }).catch((e) => {
                         console.log(e);
-                        latexTable += `\n\\footnotetext{${this.props.location.href}} [accessed ${moment().format('YYYY MMM DD')}]}`;
+                        latexTable += `\n\\footnotetext{${link}} [accessed ${moment().format('YYYY MMM DD')}]}`;
                         this.setState({ latexTable: latexTable, latexTableLoading: false });
                     }).then((data) => {
                         let shortLink = `${this.props.location.protocol}//${this.props.location.host}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
@@ -362,6 +365,7 @@ ExportToLatex.propTypes = {
     toggle: PropTypes.func.isRequired,
     transpose: PropTypes.bool.isRequired,
     location: PropTypes.object.isRequired,
+    response_hash: PropTypes.string,
 }
 
 export default ExportToLatex;
