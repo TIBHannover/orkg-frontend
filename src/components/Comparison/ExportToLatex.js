@@ -132,7 +132,7 @@ class ExportToLatex extends Component {
 
             // Add a persistent link to this page as a footnote
             if (this.state.includeFootnote) {
-                if(!this.state.shortLink){
+                if (!this.state.shortLink) {
                     let link = queryString.parse(this.props.location.search).response_hash ? this.props.location.href : this.props.location.href + `${this.props.location.href.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
                     createShortLink({
                         long_url: link,
@@ -149,11 +149,11 @@ class ExportToLatex extends Component {
                         latexTable += `\n\\footnotetext{${shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
                         this.setState({ shortLink: shortLink, latexTable: latexTable, latexTableLoading: false });
                     })
-                }else{
+                } else {
                     latexTable += `\n\\footnotetext{${this.state.shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
                     this.setState({ latexTable: latexTable, latexTableLoading: false });
                 }
-                
+
             } else {
                 this.setState({ latexTable: latexTable, latexTableLoading: false });
             }
@@ -189,13 +189,21 @@ class ExportToLatex extends Component {
     }
 
     createCiteBibtex = (contribution, paperStatements) => {
-        let contributionData = this.parsePaperStatements(paperStatements);
-        let ref = new Cite({
-            id: contribution.paperId,
-            title: contribution.title,
-            author: contributionData.authorNames.map(a => ({ 'literal': a })),
-            issued: { 'date-parts': [[contributionData.publicationYear]] }
-        })
+        let ref
+        if (paperStatements) {
+            let contributionData = this.parsePaperStatements(paperStatements);
+            ref = new Cite({
+                id: contribution.paperId,
+                title: contribution.title,
+                author: contributionData.authorNames.map(a => ({ 'literal': a })),
+                issued: { 'date-parts': [[contributionData.publicationYear]] }
+            })
+        } else {
+            ref = new Cite({
+                id: contribution.paperId,
+                title: contribution.title
+            })
+        }
         return ref
     }
 
@@ -222,11 +230,14 @@ class ExportToLatex extends Component {
                 }
                 contribution.bibtex = this.createCiteBibtex(contribution, paperStatements);
                 return contribution;
+            }).catch((error) => {
+                contribution.bibtex = this.createCiteBibtex(contribution, null);
+                return contribution;
             })
 
         });
         let orkgCitation = Cite.async('10.5281/zenodo.1157185').then()
-        Promise.all([...contributions, orkgCitation]).then((contributions) => {
+        return Promise.all([...contributions, orkgCitation]).then((contributions) => {
             let res = [];
             let paperIds = [];
             let bibtexOptions = {
