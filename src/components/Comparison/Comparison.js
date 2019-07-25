@@ -153,7 +153,7 @@ class Comparison extends Component {
         let response_hash = this.getResonseHashFromUrl();
         const contributionIds = this.getContributionIdsFromUrl(this.props.location);
 
-        submitGetRequest(`${comparisonUrl}${this.props.location.search}${response_hash ? '&response_hash=' + response_hash : ''}`).then((comparisonData) => {
+        submitGetRequest(`${comparisonUrl}${this.props.location.search}`).then((comparisonData) => {
             // mocking function to allow for deletion of contributions via the url
             let contributions = [];
             for (let i = 0; i < comparisonData.contributions.length; i++) {
