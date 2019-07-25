@@ -193,6 +193,9 @@ export const saveAddPaper = (data) => {
             let contributionResource = await network.createResource(contribution.label);
             await network.createResourceStatement(paper.id, contributionPredicate, contributionResource.id);
 
+            // index contribution for similarity
+            network.indexContribution(contributionResource.id);
+
             // set the id of the just created contribution for the related resource 
             data.resources.byId[contribution.resourceId].existingResourceId = contributionResource.id;
             data.resources.byId[contribution.resourceId].partOfContribution = true;
@@ -213,8 +216,6 @@ export const saveAddPaper = (data) => {
         }
 
         await saveStatements(data);
-
-        network.setupSimilarity();
 
         dispatch({
             type: type.SAVE_ADD_PAPER,

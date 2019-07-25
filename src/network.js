@@ -188,6 +188,6 @@ export const getSimilaireContribution = (id) => {
     return submitGetRequest(`${similaireUrl}${encodeURIComponent(id)}/`);
 };
 
-export const setupSimilarity = () => {
-    return fetch(`${similaireServiceUrl}internal/init`, { method: 'GET' })
+export const indexContribution = (contribution_id) => {
+    return fetch(`${similaireServiceUrl}internal/index/${encodeURIComponent(contribution_id)}/`, { method: 'GET' })
 };
