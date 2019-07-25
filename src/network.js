@@ -161,8 +161,8 @@ export const getStatementsBySubject = (id) => {
     return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/`);
 };
 
-export const getStatementsByObject = async ({id, order = 'asc', limit = null}) => {
-    let statements= await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/`);
+export const getStatementsByObject = async ({ id, order = 'asc', limit = null }) => {
+    let statements = await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/`);
 
     // TODO: replace sorting and limit by backend functionalities when ready
     statements.sort((a, b) => {
@@ -190,4 +190,12 @@ export const getSimilaireContribution = (id) => {
 
 export const indexContribution = (contribution_id) => {
     return fetch(`${similaireServiceUrl}internal/index/${encodeURIComponent(contribution_id)}/`, { method: 'GET' })
+};
+
+export const createShortLink = (data) => {
+    return submitPostRequest(`${similaireServiceUrl}shortener/`, { 'Content-Type': 'application/json' }, data);
+};
+
+export const getLongLink = (shortCode) => {
+    return submitGetRequest(`${similaireServiceUrl}shortener/${encodeURIComponent(shortCode)}`);
 };

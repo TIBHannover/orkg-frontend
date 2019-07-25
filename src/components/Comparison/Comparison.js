@@ -1,22 +1,23 @@
+import { Alert, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import React, { Component } from 'react';
-import { Container, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Alert } from 'reactstrap';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { comparisonUrl, submitGetRequest } from '../../network';
+
 import { CSVLink } from 'react-csv';
+import ComparisonLoadingComponent from './ComparisonLoadingComponent';
+import ComparisonTable from './ComparisonTable.js';
+import ExportToLatex from './ExportToLatex.js';
+import GeneratePdf from './GeneratePdf.js';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import ROUTES from '../../constants/routes.js';
-import arrayMove from 'array-move';
-import dotProp from 'dot-prop-immutable';
-import queryString from 'query-string';
 import SelectProperties from './SelectProperties.js';
 import Share from './Share.js';
-import GeneratePdf from './GeneratePdf.js';
-import { submitGetRequest, comparisonUrl } from '../../network';
-import ComparisonTable from './ComparisonTable.js';
-import ComparisonLoadingComponent from './ComparisonLoadingComponent';
-import ExportToLatex from './ExportToLatex.js';
-import { Link } from 'react-router-dom';
+import arrayMove from 'array-move';
+import { connect } from 'react-redux';
+import dotProp from 'dot-prop-immutable';
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import queryString from 'query-string';
 
 /*const BreadcrumbStyled = styled(Breadcrumb)`
     .breadcrumb {
@@ -34,6 +35,7 @@ class Comparison extends Component {
 
         this.state = {
             transpose: false,
+            response_hash: null,
             title: '',
             authorNames: [],
             contributions: [],
@@ -59,20 +61,24 @@ class Comparison extends Component {
             this.generateMatrixOfComparison();
         }
 
+        let prevContributions = this.getContributionIdsFromUrl(prevProps.location)
+        let currentContributions = this.getContributionIdsFromUrl(this.props.location)
         // perform comparison again when contribution ids are removed 
-        if (this.props.match.params[0] && this.props.match.params[0].length !== prevProps.match.params[0].length) {
+        if ((prevContributions.length !== currentContributions.length) || !currentContributions.every( e => prevContributions.includes(e))) {
             this.performComparison();
         }
     }
 
-    getContributionIdsFromUrl = () => {
-        let ids = this.props.match.params[0];
-
+    getContributionIdsFromUrl = (location) => {
+        let ids = queryString.parse(location.search, { arrayFormat: 'comma' }).contributions;
         if (!ids) {
             return [];
         }
-
-        return ids.split('/');
+        if (typeof ids === 'string' || ids instanceof String) {
+            return [ids];
+        }
+        ids = ids.filter(n => n); //filter out empty elementsids
+        return ids;
     }
 
     getPropertyIdsFromUrl = () => {
@@ -95,13 +101,21 @@ class Comparison extends Component {
         return true;
     }
 
+    getResonseHashFromUrl = () => {
+        let response_hash = queryString.parse(this.props.location.search).response_hash;
+        if (response_hash) {
+            return response_hash;
+        }
+        return null;
+    }
+
     generateMatrixOfComparison = () => {
         let header = ['Title'];
 
         for (let property of this.state.properties) {
             if (property.active) {
-            header.push(property.label);
-        }
+                header.push(property.label);
+            }
         }
 
         let rows = [];
@@ -112,13 +126,13 @@ class Comparison extends Component {
 
             for (let property of this.state.properties) {
                 if (property.active) {
-                let value = '';
-                if (this.state.data[property.id]) {
-                    // separate labels with comma
-                    value = this.state.data[property.id][i].map(entry => entry.label).join(', ')
-                    row.push(value);
+                    let value = '';
+                    if (this.state.data[property.id]) {
+                        // separate labels with comma
+                        value = this.state.data[property.id][i].map(entry => entry.label).join(', ')
+                        row.push(value);
+                    }
                 }
-            }
             }
             rows.push(row);
         }
@@ -136,8 +150,10 @@ class Comparison extends Component {
             isLoading: true
         });
 
-        const contributionIds = this.getContributionIdsFromUrl();
-        submitGetRequest(`${comparisonUrl}${contributionIds.join('/')}`).then((comparisonData) => {
+        let response_hash = this.getResonseHashFromUrl();
+        const contributionIds = this.getContributionIdsFromUrl(this.props.location);
+
+        submitGetRequest(`${comparisonUrl}${this.props.location.search}`).then((comparisonData) => {
             // mocking function to allow for deletion of contributions via the url
             let contributions = [];
             for (let i = 0; i < comparisonData.contributions.length; i++) {
@@ -183,6 +199,7 @@ class Comparison extends Component {
                 contributions: contributions,
                 properties: comparisonData.properties,
                 data: comparisonData.data,
+                response_hash: comparisonData.response_hash ? comparisonData.response_hash : response_hash,
                 transpose: this.getTransposeOptionFromUrl(),
                 isLoading: false,
             });
@@ -209,14 +226,14 @@ class Comparison extends Component {
     }
 
     removeContribution = (contributionId) => {
-        let contributionIds = this.getContributionIdsFromUrl();
+        let contributionIds = this.getContributionIdsFromUrl(this.props.location);
         let index = contributionIds.indexOf(contributionId);
 
         if (index > -1) {
             contributionIds.splice(index, 1);
         }
 
-        this.generateUrl(contributionIds.join('/'));
+        this.generateUrl(contributionIds.join(','));
     }
 
     toggle = (type) => {
@@ -274,7 +291,7 @@ class Comparison extends Component {
 
     generateUrl = (contributionIds, propertyIds, transpose) => {
         if (!contributionIds) {
-            contributionIds = this.getContributionIdsFromUrl().join('/');
+            contributionIds = this.getContributionIdsFromUrl(this.props.location).join(',');
         }
         if (!propertyIds) {
             propertyIds = this.propertiesToQueryString();
@@ -282,8 +299,7 @@ class Comparison extends Component {
         if (!transpose) {
             transpose = this.state.transpose;
         }
-        let url = ROUTES.COMPARISON.replace('*', '');
-        this.props.history.push(url + contributionIds + '?properties=' + propertyIds + '&transpose=' + transpose);
+        this.props.history.push(ROUTES.COMPARISON + '?contributions=' + contributionIds + '&properties=' + propertyIds + '&transpose=' + transpose);
     }
 
     handleGoBack = () => {
@@ -291,7 +307,7 @@ class Comparison extends Component {
     }
 
     render() {
-        const contributionAmount = this.getContributionIdsFromUrl().length;
+        const contributionAmount = this.getContributionIdsFromUrl(this.props.location).length;
 
         return (
             <div>
@@ -313,7 +329,7 @@ class Comparison extends Component {
                     {!this.state.isLoading && this.state.loadingFailed && (
                         <div>
                             <Alert color="danger">
-                                <strong>Error.</strong> The comparison service is unreachable. Please come back later and try again. <span className="btn-link" style={{cursor:'pointer'}} onClick={this.handleGoBack}>Go back</span> or <Link to={ROUTES.HOME}>go to the homepage</Link>.
+                                <strong>Error.</strong> The comparison service is unreachable. Please come back later and try again. <span className="btn-link" style={{ cursor: 'pointer' }} onClick={this.handleGoBack}>Go back</span> or <Link to={ROUTES.HOME}>go to the homepage</Link>.
                             </Alert>
                         </div>
                     )}
@@ -389,15 +405,18 @@ class Comparison extends Component {
                     showDialog={this.state.showShareDialog}
                     toggle={() => this.toggle('showShareDialog')}
                     url={window.location.href}
+                    response_hash={this.state.response_hash}
                 />
 
-                <ExportToLatex 
-                    data={this.state.csvData} 
+                <ExportToLatex
+                    data={this.state.csvData}
                     contributions={this.state.contributions}
+                    properties={this.state.properties}
                     showDialog={this.state.showLatexDialog}
                     toggle={() => this.toggle('showLatexDialog')}
                     transpose={this.state.transpose}
                     location={window.location}
+                    response_hash={this.state.response_hash}
                 />
             </div>
         );
