@@ -71,7 +71,7 @@ const routes = [
         path: ROUTES.COMPARISON+'*',
         exact: true,
         // eslint-disable-next-line react/prop-types
-        component: ({ match }) => <Redirect to={`${ROUTES.COMPARISON}?contributions=${match.params[0].replace('/',',')}`} />
+        component: ({ match, location }) => <Redirect to={`${ROUTES.COMPARISON}?contributions=${match.params[0].split('/').join(',')}${location.search ? '&'+(location.search.charAt(0) === '?' ? location.search.substr(1) : location.search) : ''}`} />
     },
     {
         path: ROUTES.PAPERS,
