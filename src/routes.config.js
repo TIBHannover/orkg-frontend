@@ -1,22 +1,23 @@
-import React from 'react';
-import ROUTES from './constants/routes.js';
-import { Redirect } from 'react-router-dom';
 import ResourceDetails, { descriptionSection } from './pages/ResourceDetails'
-import PredicateDetails from './pages/PredicateDetails'
-import ResearchProblem from './components/ResearchProblem/ResearchProblem'
-import ResearchField from './components/ResearchField/ResearchField'
-import Resources from './pages/Resources'
-import SearchResults from './pages/SearchResults'
-import AddResource from './pages/AddResource';
-import Predicates from './pages/Predicates';
-import Papers from './pages/Papers';
+
 import AddPaper from './components/AddPaper/AddPaper'
+import AddResource from './pages/AddResource';
+import Comparison from './components/Comparison/Comparison';
 import Home from './components/Home/Home';
-import ViewPaper from './components/ViewPaper/ViewPaper';
 import License from './components/StaticPages/License';
 import NotFound from './components/StaticPages/NotFound';
-import Comparison from './components/Comparison/Comparison';
-
+import Papers from './pages/Papers';
+import PredicateDetails from './pages/PredicateDetails'
+import Predicates from './pages/Predicates';
+import ROUTES from './constants/routes.js';
+import React from 'react';
+import { Redirect } from 'react-router-dom';
+import RedirectShortLinks from './components/Comparison/RedirectShortLinks';
+import ResearchField from './components/ResearchField/ResearchField'
+import ResearchProblem from './components/ResearchProblem/ResearchProblem'
+import Resources from './pages/Resources'
+import SearchResults from './pages/SearchResults'
+import ViewPaper from './components/ViewPaper/ViewPaper';
 
 const routes = [
     {
@@ -56,9 +57,21 @@ const routes = [
         component: ViewPaper
     },
     {
+        path: ROUTES.COMPARISON_SHORTLINK,
+        exact: true,
+        component: RedirectShortLinks
+    },
+    {
         path: ROUTES.COMPARISON,
         exact: true,
         component: Comparison
+    },
+    {
+        /* TODO: Remove this route (it's temporarily backward compatibility for moving contributions ids from view args to query string) */
+        path: ROUTES.COMPARISON+'*',
+        exact: true,
+        // eslint-disable-next-line react/prop-types
+        component: ({ match, location }) => <Redirect to={`${ROUTES.COMPARISON}?contributions=${match.params[0].split('/').join(',')}${location.search ? '&'+(location.search.charAt(0) === '?' ? location.search.substr(1) : location.search) : ''}`} />
     },
     {
         path: ROUTES.PAPERS,

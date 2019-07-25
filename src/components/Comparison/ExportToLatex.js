@@ -1,17 +1,20 @@
+import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, Tooltip as ReactstrapTooltip } from 'reactstrap';
 import React, { Component } from 'react';
-import { Modal, ModalHeader, ModalBody, Input, Button, Nav, NavItem, NavLink, Tooltip as ReactstrapTooltip } from 'reactstrap';
-import PropTypes from 'prop-types';
-import MakeLatex from 'make-latex';
-import styled from 'styled-components';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { CustomInput } from 'reactstrap';
-import Tooltip from '../Utils/Tooltip';
-import { timeoutPromise } from '../../utils';
-import { getStatementsBySubject, crossrefUrl } from '../../network';
-import moment from 'moment';
+import { createShortLink, getStatementsBySubject } from '../../network';
 
+import Cite from 'citation-js';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { CustomInput } from 'reactstrap';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import MakeLatex from 'make-latex';
+import PropTypes from 'prop-types';
+import ROUTES from '../../constants/routes.js';
+import Tooltip from '../Utils/Tooltip';
+import { faClipboard } from '@fortawesome/free-regular-svg-icons';
+import moment from 'moment';
+import queryString from 'query-string';
+import { reverse } from 'named-urls';
+import styled from 'styled-components';
 
 const Textarea = styled(Input)`
     font-family: 'Courier New';
@@ -24,23 +27,36 @@ class ExportToLatex extends Component {
         super(props);
 
         this.state = {
-            latexTable: '',
-            selectedTab: 'table',
-            bibtexReferences: '',
+            latexTableLoading: true,
             bibtexReferencesLoading: true,
+            selectedTab: 'table',
+            latexTable: '',
+            bibtexReferences: '',
             replaceTitles: false,
+            includeFootnote: false,
+            shortLink: null,
             showTooltipCopiedBibtex: false,
-            showTooltipCopiedLatex: false
+            showTooltipCopiedLatex: false,
         }
     }
 
-    componentDidUpdate = (prevProps) => {
+    componentDidUpdate = (prevProps, prevState) => {
+        if (this.props.location.href !== prevProps.location.href) {
+            this.setState({ shortLink: null });
+        }
         if (this.props.contributions !== prevProps.contributions) {
+            this.setState({ shortLink: null });
             this.generateBibTex();
+        }
+        if (this.props.showDialog === true && this.props.showDialog !== prevProps.showDialog) {
+            this.setState({ shortLink: null });
+            this.generateLatex();
         }
     }
 
     generateLatex = () => {
+        this.setState({ latexTableLoading: true });
+
         if (this.props.data.length === 0) {
             return '';
         }
@@ -75,7 +91,7 @@ class ExportToLatex extends Component {
                 }
             });
 
-            nbColumns = Object.keys(res[0]).length;
+            nbColumns = res.length > 0 ? Object.keys(res[0]).length : 0;
         } else {
             this.props.data.forEach((contribution, i) => {
                 if (i > 0) {
@@ -93,23 +109,60 @@ class ExportToLatex extends Component {
         }
 
         let latexTable;
-        let maleLatexOptions = {
-            'digits': 2,
-            'spec': `|${Array(nbColumns).fill('c').join('|')}|`,
-            'captionPlacement': 'top',
-            'caption': 'This comparison table is built using ORKG \\protect \\footnotemark',
+
+
+        if (res.length > 0) {
+            let caption = 'This comparison table is built using ORKG \\protect \\cite{Auer2018Towards}'
+            if (this.state.includeFootnote) {
+                caption += ' \\protect \\footnotemark';
+            }
+
+            let makeLatexOptions = {
+                'digits': 2,
+                'spec': `|${Array(nbColumns).fill('c').join('|')}|`,
+                'captionPlacement': 'top',
+                'caption': caption,
+            }
+
+            if (newTitles) {
+                makeLatexOptions.colnames = newTitles;
+            }
+
+            latexTable = MakeLatex(res, makeLatexOptions);
+
+            // Add a persistent link to this page as a footnote
+            if (this.state.includeFootnote) {
+                if (!this.state.shortLink) {
+                    let link = queryString.parse(this.props.location.search).response_hash ? this.props.location.href : this.props.location.href + `${this.props.location.href.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
+                    createShortLink({
+                        long_url: link,
+                        response_hash: this.props.response_hash,
+                        contributions: this.props.contributions.map(c => c.id),
+                        properties: this.props.properties.filter(p => p.active).map(p => p.id),
+                        transpose: this.props.transpose,
+                    }).catch((e) => {
+                        console.log(e);
+                        latexTable += `\n\\footnotetext{${link}} [accessed ${moment().format('YYYY MMM DD')}]}`;
+                        this.setState({ latexTable: latexTable, latexTableLoading: false });
+                    }).then((data) => {
+                        let shortLink = `${this.props.location.protocol}//${this.props.location.host}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
+                        latexTable += `\n\\footnotetext{${shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
+                        this.setState({ shortLink: shortLink, latexTable: latexTable, latexTableLoading: false });
+                    })
+                } else {
+                    latexTable += `\n\\footnotetext{${this.state.shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
+                    this.setState({ latexTable: latexTable, latexTableLoading: false });
+                }
+
+            } else {
+                this.setState({ latexTable: latexTable, latexTableLoading: false });
+            }
+        } else {
+            latexTable = 'The current comparison table doesn\'t contain any pieces of information to export. Please re-try with different options.'
+            this.setState({ latexTable: latexTable, latexTableLoading: false });
         }
 
-        if (newTitles) {
-            maleLatexOptions.colnames = newTitles;
-        }
 
-        latexTable = MakeLatex(res, maleLatexOptions);
-        // Add footnote of ORKG link
-        // TODO: include customization parameters in the URL
-        let url = this.props.location.origin+this.props.location.pathname
-        latexTable += `\n\\footnotetext{${url} [accessed ${moment().format('YYYY MMM DD')}]}`;
-        return latexTable;
     }
 
     parsePaperStatements = (paperStatements) => {
@@ -135,6 +188,25 @@ class ExportToLatex extends Component {
         return { authorNames: authorNamesArray.reverse(), publicationYear }
     }
 
+    createCiteBibtex = (contribution, paperStatements) => {
+        let ref
+        if (paperStatements) {
+            let contributionData = this.parsePaperStatements(paperStatements);
+            ref = new Cite({
+                id: contribution.paperId,
+                title: contribution.title,
+                author: contributionData.authorNames.map(a => ({ 'literal': a })),
+                issued: { 'date-parts': [[contributionData.publicationYear]] }
+            })
+        } else {
+            ref = new Cite({
+                id: contribution.paperId,
+                title: contribution.title
+            })
+        }
+        return ref
+    }
+
     generateBibTex = () => {
         this.setState({ bibtexReferencesLoading: true });
         if (this.props.contributions.length === 0) {
@@ -148,40 +220,45 @@ class ExportToLatex extends Component {
                 if (publicationDOI.length > 0) {
                     publicationDOI = publicationDOI[0].object.label
                     if (publicationDOI !== '') {
-                        // Fetch the bibtex from crossRef for 4 seconds
-                        return timeoutPromise(4000,
-                            fetch(crossrefUrl + publicationDOI + '/transform/application/x-bibtex', { method: 'GET' }))
-                            .then((response, reject) => {
-                                if (!response.ok) {
-                                    reject(new Error('CrossRef error'));
-                                } else {
-                                    return response.text();
-                                }
-                            }).then((response) => {
-                                let refID = response.substring(response.indexOf('{') + 1, response.indexOf(','));
-                                contribution.bibtex = response.replace(refID, contribution.paperId)
-                                return contribution;
-                            }).catch(() => {
-                                let contributionData = this.parsePaperStatements(paperStatements);
-                                contribution.bibtex = `@article{${contribution.paperId},\n author={${contributionData.authorNames.join(',')}},\n title={${contribution.title}},\n year={${contributionData.publicationYear}}\n}`
-                                return contribution;
-                            });
+                        return Cite.async(publicationDOI).catch(() => {
+                            return this.createCiteBibtex(contribution, paperStatements);
+                        }).then((data) => {
+                            contribution.bibtex = data;
+                            return contribution;
+                        })
                     }
                 }
-                let contributionData = this.parsePaperStatements(paperStatements);
-                contribution.bibtex = `@article{${contribution.paperId},\n author={${contributionData.authorNames.join(',')}},\n title={${contribution.title}},\n year={${contributionData.publicationYear}}\n}`
+                contribution.bibtex = this.createCiteBibtex(contribution, paperStatements);
+                return contribution;
+            }).catch((error) => {
+                contribution.bibtex = this.createCiteBibtex(contribution, null);
                 return contribution;
             })
 
         });
-
-        Promise.all(contributions).then((contributions) => {
+        let orkgCitation = Cite.async('10.5281/zenodo.1157185').then()
+        return Promise.all([...contributions, orkgCitation]).then((contributions) => {
             let res = [];
             let paperIds = [];
+            let bibtexOptions = {
+                output: {
+                    type: 'string',
+                    style: 'bibtex'
+                }
+            };
             contributions.forEach((contribution, i) => {
-                if (!paperIds.includes(contribution.paperId)) {
-                    paperIds.push(contribution.paperId);
-                    res.push(contribution.bibtex);
+                if (contribution.paperId) {
+                    if (!paperIds.includes(contribution.paperId)) {
+                        paperIds.push(contribution.paperId);
+                        contribution.bibtex.options(bibtexOptions);
+                        contribution.bibtex = contribution.bibtex.get();
+                        let refID = contribution.bibtex.substring(contribution.bibtex.indexOf('{') + 1, contribution.bibtex.indexOf(','));
+                        contribution.bibtex = contribution.bibtex.replace(refID, contribution.paperId)
+                        res.push(contribution.bibtex);
+                    }
+                } else {
+                    contribution.options(bibtexOptions);
+                    res.push(contribution.get());
                 }
             });
             this.setState({ bibTexReferences: res.join('\n'), bibtexReferencesLoading: false });
@@ -196,8 +273,8 @@ class ExportToLatex extends Component {
 
     toggleCheckbox = (type) => {
         this.setState(prevState => ({
-            replaceTitles: !prevState.replaceTitles,
-        }));
+            [type]: !prevState[type],
+        }), () => { this.generateLatex(); });
     }
 
     toggleTooltip = (e, type) => {
@@ -209,11 +286,6 @@ class ExportToLatex extends Component {
     }
 
     render() {
-        let latexTable;
-
-        if (this.props.showDialog) {
-            latexTable = this.generateLatex();
-        }
 
         return (
             <Modal isOpen={this.props.showDialog} toggle={this.props.toggle} size="lg">
@@ -231,7 +303,7 @@ class ExportToLatex extends Component {
                     {this.state.selectedTab === 'table' &&
                         <>
                             <p>
-                                <Textarea type="textarea" value={latexTable} disabled rows="15" />
+                                <Textarea type="textarea" value={!this.state.latexTableLoading ? this.state.latexTable : 'Loading...'} disabled rows="15" />
                             </p>
 
                             <div className="float-left mt-1">
@@ -241,13 +313,22 @@ class ExportToLatex extends Component {
                                         type="checkbox"
                                         id={'replaceTitles'}
                                         label="Replace contribution titles by reference "
-                                        onChange={this.toggleCheckbox}
+                                        onChange={() => this.toggleCheckbox('replaceTitles')}
                                         checked={this.state.replaceTitles}
                                     />{'. '}
                                 </Tooltip>
+                                <br />
+                                <CustomInput
+                                    className="float-left"
+                                    type="checkbox"
+                                    id={'includeFootnote'}
+                                    label="Include a persistent link to this page as a footnote "
+                                    onChange={() => this.toggleCheckbox('includeFootnote')}
+                                    checked={this.state.includeFootnote}
+                                />{'. '}
                             </div>
 
-                            <CopyToClipboard id="copyToClipboardLatex" text={latexTable} onCopy={() => { this.setState({ showTooltipCopiedLatex: true }); }}>
+                            <CopyToClipboard id="copyToClipboardLatex" text={this.state.latexTable} onCopy={() => { this.setState({ showTooltipCopiedLatex: true }); }}>
                                 <Button
                                     color="primary"
                                     className="pl-3 pr-3 float-right"
@@ -290,10 +371,12 @@ class ExportToLatex extends Component {
 ExportToLatex.propTypes = {
     data: PropTypes.array.isRequired,
     contributions: PropTypes.array.isRequired,
+    properties: PropTypes.array.isRequired,
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     transpose: PropTypes.bool.isRequired,
     location: PropTypes.object.isRequired,
+    response_hash: PropTypes.string,
 }
 
 export default ExportToLatex;

@@ -1,19 +1,20 @@
+import { Alert, Col, Container, Form, FormGroup, Row } from 'reactstrap';
 import React, { Component } from 'react';
-import { Container, Row, Col, Form, FormGroup, Alert } from 'reactstrap';
-import { connect } from 'react-redux';
-import { selectContribution } from '../../actions/viewPaper';
 import { StyledContribution, StyledContributionsList } from '../AddPaper/Contributions/styled';
-import StatementBrowser from '../StatementBrowser/Statements';
-import { getSimilaireContribution, getResource } from '../../network';
-import styled from 'styled-components';
-import SimilarContributions from './SimilarContributions';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { CSSTransitionGroup } from 'react-transition-group'
-import { reverse } from 'named-urls';
-import ROUTES from '../../constants/routes';
+import { getResource, getSimilaireContribution } from '../../network';
+
 import AddToComparison from './AddToComparison';
+import { CSSTransitionGroup } from 'react-transition-group'
 import ContentLoader from 'react-content-loader'
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import ROUTES from '../../constants/routes';
+import SimilarContributions from './SimilarContributions';
+import StatementBrowser from '../StatementBrowser/Statements';
+import { connect } from 'react-redux';
+import { reverse } from 'named-urls';
+import { selectContribution } from '../../actions/viewPaper';
+import styled from 'styled-components';
 
 const Title = styled.div`
     font-size:18px;
@@ -239,7 +240,7 @@ class Contributions extends Component {
                                                 </>
                                             )}
                                             {this.state.similaireContributions.length > 0 && (
-                                                <Link className="clearfix" to={`/comparison/${selectedContributionId}/${this.state.similaireContributions.slice(0, 3).map(s => s.contributionId).join('/')}`}>{/* TODO: use constants for URL */}
+                                                <Link className="clearfix" to={`${ROUTES.COMPARISON}?contributions=${selectedContributionId},${this.state.similaireContributions.slice(0, 3).map(s => s.contributionId).join(',')}`}>{/* TODO: use constants for URL */}
                                                     <span style={{ margin: '7px 5px 0 0', fontSize: '95%' }} className="float-right btn btn-link p-0 border-0 align-baseline">Compare these contributions</span>
                                                 </Link>
                                             )}
