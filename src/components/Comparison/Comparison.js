@@ -1,22 +1,23 @@
+import { Alert, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import React, { Component } from 'react';
-import { Container, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Alert } from 'reactstrap';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { comparisonUrl, submitGetRequest } from '../../network';
+
 import { CSVLink } from 'react-csv';
+import ComparisonLoadingComponent from './ComparisonLoadingComponent';
+import ComparisonTable from './ComparisonTable.js';
+import ExportToLatex from './ExportToLatex.js';
+import GeneratePdf from './GeneratePdf.js';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import ROUTES from '../../constants/routes.js';
-import arrayMove from 'array-move';
-import dotProp from 'dot-prop-immutable';
-import queryString from 'query-string';
 import SelectProperties from './SelectProperties.js';
 import Share from './Share.js';
-import GeneratePdf from './GeneratePdf.js';
-import { submitGetRequest, comparisonUrl } from '../../network';
-import ComparisonTable from './ComparisonTable.js';
-import ComparisonLoadingComponent from './ComparisonLoadingComponent';
-import ExportToLatex from './ExportToLatex.js';
-import { Link } from 'react-router-dom';
+import arrayMove from 'array-move';
+import { connect } from 'react-redux';
+import dotProp from 'dot-prop-immutable';
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import queryString from 'query-string';
 
 /*const BreadcrumbStyled = styled(Breadcrumb)`
     .breadcrumb {
@@ -60,20 +61,24 @@ class Comparison extends Component {
             this.generateMatrixOfComparison();
         }
 
+        let prevContributions = this.getContributionIdsFromUrl(prevProps.location)
+        let currentContributions = this.getContributionIdsFromUrl(this.props.location)
         // perform comparison again when contribution ids are removed 
-        if (this.props.match.params[0] && this.props.match.params[0].length !== prevProps.match.params[0].length) {
+        if ((prevContributions.length !== currentContributions.length) || !currentContributions.every( e => prevContributions.includes(e))) {
             this.performComparison();
         }
     }
 
-    getContributionIdsFromUrl = () => {
-        let ids = this.props.match.params[0];
-
+    getContributionIdsFromUrl = (location) => {
+        let ids = queryString.parse(location.search, { arrayFormat: 'comma' }).contributions;
         if (!ids) {
             return [];
         }
-
-        return ids.split('/');
+        if (typeof ids === 'string' || ids instanceof String) {
+            return [ids];
+        }
+        ids = ids.filter(n => n); //filter out empty elementsids
+        return ids;
     }
 
     getPropertyIdsFromUrl = () => {
@@ -146,8 +151,9 @@ class Comparison extends Component {
         });
 
         let response_hash = this.getResonseHashFromUrl();
-        const contributionIds = this.getContributionIdsFromUrl();
-        submitGetRequest(`${comparisonUrl}${contributionIds.join('/')}${response_hash ? '?response_hash=' + response_hash : ''}`).then((comparisonData) => {
+        const contributionIds = this.getContributionIdsFromUrl(this.props.location);
+
+        submitGetRequest(`${comparisonUrl}${this.props.location.search}${response_hash ? '&response_hash=' + response_hash : ''}`).then((comparisonData) => {
             // mocking function to allow for deletion of contributions via the url
             let contributions = [];
             for (let i = 0; i < comparisonData.contributions.length; i++) {
@@ -220,14 +226,14 @@ class Comparison extends Component {
     }
 
     removeContribution = (contributionId) => {
-        let contributionIds = this.getContributionIdsFromUrl();
+        let contributionIds = this.getContributionIdsFromUrl(this.props.location);
         let index = contributionIds.indexOf(contributionId);
 
         if (index > -1) {
             contributionIds.splice(index, 1);
         }
 
-        this.generateUrl(contributionIds.join('/'));
+        this.generateUrl(contributionIds.join(','));
     }
 
     toggle = (type) => {
@@ -285,7 +291,7 @@ class Comparison extends Component {
 
     generateUrl = (contributionIds, propertyIds, transpose) => {
         if (!contributionIds) {
-            contributionIds = this.getContributionIdsFromUrl().join('/');
+            contributionIds = this.getContributionIdsFromUrl(this.props.location).join(',');
         }
         if (!propertyIds) {
             propertyIds = this.propertiesToQueryString();
@@ -293,8 +299,7 @@ class Comparison extends Component {
         if (!transpose) {
             transpose = this.state.transpose;
         }
-        let url = ROUTES.COMPARISON.replace('*', '');
-        this.props.history.push(url + contributionIds + '?properties=' + propertyIds + '&transpose=' + transpose);
+        this.props.history.push(ROUTES.COMPARISON + '?contributions=' + contributionIds + '&properties=' + propertyIds + '&transpose=' + transpose);
     }
 
     handleGoBack = () => {
@@ -302,7 +307,7 @@ class Comparison extends Component {
     }
 
     render() {
-        const contributionAmount = this.getContributionIdsFromUrl().length;
+        const contributionAmount = this.getContributionIdsFromUrl(this.props.location).length;
 
         return (
             <div>

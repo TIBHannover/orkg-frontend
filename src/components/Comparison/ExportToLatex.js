@@ -1,20 +1,20 @@
+import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, Tooltip as ReactstrapTooltip } from 'reactstrap';
 import React, { Component } from 'react';
-import { Modal, ModalHeader, ModalBody, Input, Button, Nav, NavItem, NavLink, Tooltip as ReactstrapTooltip } from 'reactstrap';
-import PropTypes from 'prop-types';
-import MakeLatex from 'make-latex';
-import styled from 'styled-components';
-import { reverse } from 'named-urls';
-import ROUTES from '../../constants/routes.js';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { CustomInput } from 'reactstrap';
-import Tooltip from '../Utils/Tooltip';
-import queryString from 'query-string';
-import { getStatementsBySubject, createShortLink } from '../../network';
-import Cite from 'citation-js';
-import moment from 'moment';
+import { createShortLink, getStatementsBySubject } from '../../network';
 
+import Cite from 'citation-js';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { CustomInput } from 'reactstrap';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import MakeLatex from 'make-latex';
+import PropTypes from 'prop-types';
+import ROUTES from '../../constants/routes.js';
+import Tooltip from '../Utils/Tooltip';
+import { faClipboard } from '@fortawesome/free-regular-svg-icons';
+import moment from 'moment';
+import queryString from 'query-string';
+import { reverse } from 'named-urls';
+import styled from 'styled-components';
 
 const Textarea = styled(Input)`
     font-family: 'Courier New';
@@ -27,16 +27,16 @@ class ExportToLatex extends Component {
         super(props);
 
         this.state = {
-            latexTable: '',
             latexTableLoading: true,
-            selectedTab: 'table',
-            bibtexReferences: '',
             bibtexReferencesLoading: true,
+            selectedTab: 'table',
+            latexTable: '',
+            bibtexReferences: '',
             replaceTitles: false,
             includeFootnote: false,
             shortLink: null,
             showTooltipCopiedBibtex: false,
-            showTooltipCopiedLatex: false
+            showTooltipCopiedLatex: false,
         }
     }
 
