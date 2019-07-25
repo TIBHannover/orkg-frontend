@@ -192,10 +192,11 @@ class ExportToLatex extends Component {
         let ref
         if (paperStatements) {
             let contributionData = this.parsePaperStatements(paperStatements);
+            let authors = contributionData.authorNames.map(a => ({ 'literal': a }))
             ref = new Cite({
                 id: contribution.paperId,
                 title: contribution.title,
-                author: contributionData.authorNames.map(a => ({ 'literal': a })),
+                author: authors.length > 0 ? authors : null,
                 issued: { 'date-parts': [[contributionData.publicationYear]] }
             })
         } else {
