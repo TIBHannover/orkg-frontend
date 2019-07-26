@@ -1,7 +1,9 @@
-import * as type from './types.js';
-import { guid } from '../utils';
 import * as network from '../network';
+import * as type from './types.js';
+
 import {createResource, selectResource} from './statementBrowser';
+
+import { guid } from '../utils';
 
 export const updateGeneralData = (data) => dispatch => {
     dispatch({
@@ -187,14 +189,14 @@ export const saveAddPaper = (data) => {
         // research field
         await network.createResourceStatement(paper.id, researchFieldPredicate, data.selectedResearchField);
 
+        let contributionIds = [];
         // contributions
         for (let contributionId of data.contributions.allIds) {
             let contribution = data.contributions.byId[contributionId];
             let contributionResource = await network.createResource(contribution.label);
             await network.createResourceStatement(paper.id, contributionPredicate, contributionResource.id);
 
-            // index contribution for similarity
-            network.indexContribution(contributionResource.id);
+            contributionIds.push(contributionResource.id);
 
             // set the id of the just created contribution for the related resource 
             data.resources.byId[contribution.resourceId].existingResourceId = contributionResource.id;
@@ -217,6 +219,11 @@ export const saveAddPaper = (data) => {
 
         await saveStatements(data);
 
+        for (let contributionId of contributionIds){
+            // index contribution for similarity
+            network.indexContribution(contributionId);
+        }
+        
         dispatch({
             type: type.SAVE_ADD_PAPER,
             id: paper.id,
