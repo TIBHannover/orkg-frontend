@@ -68,10 +68,10 @@ class TableCell extends Component {
                                             onClick={() => this.openStatementBrowser(date.resourceId, date.label)}
                                             style={{ cursor: 'pointer' }}
                                         >
-                                            <ValuePlugins>{date.label}</ValuePlugins>
+                                            <ValuePlugins type={'resource'}>{date.label}</ValuePlugins>
                                         </span>
                                     </span>
-                                ) : <>{index > 0 && <ItemInnerSeparator />}<ValuePlugins>{date.label}</ValuePlugins></>
+                                ) : <>{index > 0 && <ItemInnerSeparator />}<ValuePlugins type={'literal'}>{date.label}</ValuePlugins></>
                                 : <span className="font-italic" key={`value-${index}`}>Empty</span>
                         ))}
                     </ItemInner>
