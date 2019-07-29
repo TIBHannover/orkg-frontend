@@ -6,10 +6,10 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTimes, faArrowCircleRight, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import ROUTES from '../../constants/routes.js';
+import ROUTES from '../../constants/routes';
 import capitalize from 'capitalize';
 import classNames from 'classnames';
-import TableCell from './TableCell.js';
+import TableCell from './TableCell';
 
 const ScrollContainer = styled.div`
     overflow-x: hidden; // auto is maybe a better UX, but hidden looks better :) 

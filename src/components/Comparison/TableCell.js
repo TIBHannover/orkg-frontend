@@ -71,7 +71,11 @@ class TableCell extends Component {
                                             <ValuePlugins type={'resource'}>{date.label}</ValuePlugins>
                                         </span>
                                     </span>
-                                ) : <>{index > 0 && <ItemInnerSeparator />}<ValuePlugins type={'literal'}>{date.label}</ValuePlugins></>
+                                ) : (
+                                        <span key={`value-${index}`}>
+                                            {index > 0 && <ItemInnerSeparator />}<ValuePlugins type={'literal'}>{date.label}</ValuePlugins>
+                                        </span>
+                                    )
                                 : <span className="font-italic" key={`value-${index}`}>Empty</span>
                         ))}
                     </ItemInner>
