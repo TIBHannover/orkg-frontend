@@ -19,6 +19,7 @@ const ItemInner = styled.div`
     border-bottom:2px solid #EDEBEB;
     text-align:center;
     height:100%;
+    word-wrap: break-word;
 `;
 
 
