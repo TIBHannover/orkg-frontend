@@ -31,6 +31,7 @@
     "react-copy-to-clipboard": "^5.0.1",
     "react-csv": "^1.1.1",
     "react-dom": "^16.6.0",
+    "react-gravatar": "^2.6.3",
     "react-hot-loader": "^4.8.2",
     "react-input-autosize": "^2.2.1",
     "react-notifications": "^1.4.3",
