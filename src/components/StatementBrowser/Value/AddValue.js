@@ -75,6 +75,23 @@ class AddValue extends Component {
         this.handleHideAddValue();
     }
 
+    getNewResources = () => {
+        let resourceList = [];
+
+        for (let key in this.props.newResources) {
+            let resource = this.props.newResources[key];
+            
+            if (!resource.existingResourceId) {
+                resourceList.push({
+                    id: resource.id,
+                    label: resource.label,
+                })
+            }
+        }
+
+        return resourceList;
+    }
+
     render() {
         return (
             <>
@@ -107,6 +124,7 @@ class AddValue extends Component {
                                         onItemSelected={this.handlePropertySelect}
                                         onInput={this.handleInputChange}
                                         value={this.state.inputValue}
+                                        additionalData={this.getNewResources()}
                                         disableBorderRadiusRight
                                         disableBorderRadiusLeft
                                     />
@@ -138,11 +156,13 @@ class AddValue extends Component {
 AddValue.propTypes = {
     createValue: PropTypes.func.isRequired,
     selectedProperty: PropTypes.string.isRequired,
+    newResources: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => {
     return {
         selectedProperty: state.statementBrowser.selectedProperty,
+        newResources: state.statementBrowser.resources.byId
     }
 };
 

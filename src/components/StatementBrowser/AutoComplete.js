@@ -74,7 +74,7 @@ class AutoComplete extends Component {
 
                 let responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value) + queryParams);
                 responseJson = await this.IdMatch(value, responseJson);
-
+                console.log(this.props.additionalData);
                 if (this.props.additionalData && this.props.additionalData.length > 0) {
                     let newProperties = this.props.additionalData;
                     newProperties = newProperties.filter(({ label }) => label.includes(value)); // ensure the label of the new property contains the search value
