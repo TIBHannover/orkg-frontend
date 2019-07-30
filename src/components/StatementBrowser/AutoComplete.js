@@ -26,7 +26,29 @@ class AutoComplete extends Component {
         dropdownMenuJsx: null,
     };
 
-    // TODO: add timer, so that the request is not sent on every keystroke.
+    exactMatch = async (value, responseJson) => {
+        if (value.startsWith('#')) {
+            const valueWithoutHashtag = value.substr(1);
+
+            if (valueWithoutHashtag.length > 0) {
+                let responseJsonExact;
+
+                try {
+                    responseJsonExact = await submitGetRequest(this.props.requestUrl + encodeURIComponent(valueWithoutHashtag));
+                } catch (err) {
+                    responseJsonExact = null;
+                }
+                
+                if (responseJsonExact) {
+                    responseJson.unshift(responseJsonExact);
+                }
+            }
+        }
+        
+        return responseJson;
+    }
+
+    // TODO: add timer 
     handleChange = async (event) => {
         const maxValues = 6;
         const value = event.target.value;
@@ -43,7 +65,9 @@ class AutoComplete extends Component {
 
         if (value && value.length >= 0) {
             try {
-                const responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value));
+                let responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value));
+                
+                responseJson = await this.exactMatch(value, responseJson);
 
                 const menuItemsJsx = responseJson.map((item) => (
                     <button
@@ -67,7 +91,7 @@ class AutoComplete extends Component {
                             id="new"
                             key="new"
                             className="dropdown-item"
-                            onClick={!propertyExists ? this.getNewItemClickHandler(value.trim()) : null }
+                            onClick={!propertyExists ? this.getNewItemClickHandler(value.trim()) : null}
                         >
                             {!propertyExists &&
                                 <em>Create new property: {value.trim()}</em>
