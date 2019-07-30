@@ -74,13 +74,19 @@ class AutoComplete extends Component {
 
                 let responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value) + queryParams);
                 responseJson = await this.IdMatch(value, responseJson);
-                
 
-                const menuItemsJsx = responseJson.map((item) => (
+                if (this.props.additionalData && this.props.additionalData.length > 0) {
+                    let newProperties = this.props.additionalData;
+                    newProperties = newProperties.filter(({ label }) => label.includes(value)); // ensure the label of the new property contains the search value
+
+                    responseJson.unshift(...newProperties);
+                }
+
+                const menuItemsJsx = responseJson.map((item, index) => (
                     <button
                         type="button"
                         id={item.id}
-                        key={item.id}
+                        key={item.id ? item.id : index}
                         className="dropdown-item"
                         onClick={this.handleItemClick}
                         style={{ whiteSpace: 'normal' }}
@@ -190,6 +196,7 @@ AutoComplete.propTypes = {
     requestUrl: PropTypes.string.isRequired,
     placeholder: PropTypes.string.isRequired,
     onItemSelected: PropTypes.func.isRequired,
+    additionalData: PropTypes.array,
     onNewItemSelected: PropTypes.func,
     onKeyUp: PropTypes.func,
     disableBorderRadiusRight: PropTypes.bool,

@@ -71,6 +71,23 @@ class AddStatement extends Component {
         });
     }
 
+    getNewProperties = () => {
+        let propertyList = [];
+
+        for (let key in this.props.newProperties) {
+            let property = this.props.newProperties[key];
+            
+            if (!property.existingPredicateId) {
+                propertyList.push({
+                    id: null,
+                    label: property.label,
+                })
+            }
+        }
+
+        return propertyList;
+    }
+
     render() {
         return (
             <>
@@ -83,6 +100,7 @@ class AddStatement extends Component {
                                 onItemSelected={this.handlePropertySelect}
                                 onNewItemSelected={this.toggleConfirmNewProperty}
                                 onKeyUp={() => { }}
+                                additionalData={this.getNewProperties()}
                                 disableBorderRadiusRight
                             />
 
@@ -116,11 +134,13 @@ class AddStatement extends Component {
 AddStatement.propTypes = {
     createProperty: PropTypes.func.isRequired,
     selectedResource: PropTypes.string.isRequired,
+    newProperties: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => {
     return {
         selectedResource: state.statementBrowser.selectedResource,
+        newProperties: state.statementBrowser.properties.byId
     }
 };
 
