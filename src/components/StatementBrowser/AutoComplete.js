@@ -26,7 +26,7 @@ class AutoComplete extends Component {
         dropdownMenuJsx: null,
     };
 
-    exactMatch = async (value, responseJson) => {
+    IdMatch = async (value, responseJson) => {
         if (value.startsWith('#')) {
             const valueWithoutHashtag = value.substr(1);
 
@@ -44,14 +44,14 @@ class AutoComplete extends Component {
                 }
             }
         }
-        
+
         return responseJson;
     }
 
     // TODO: add timer 
     handleChange = async (event) => {
         const maxValues = 6;
-        const value = event.target.value;
+        let value = event.target.value;
 
         if (this.state.selectedItemId) {
             this.props.onItemSelected(null);
@@ -65,9 +65,16 @@ class AutoComplete extends Component {
 
         if (value && value.length >= 0) {
             try {
-                let responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value));
+                let queryParams = '';
+
+                if (value.startsWith('"') && value.endsWith('"') && value.length > 2) {
+                    value = value.substring(1, value.length - 1);
+                    queryParams = '&exact=true';
+                }
+
+                let responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value) + queryParams);
+                responseJson = await this.IdMatch(value, responseJson);
                 
-                responseJson = await this.exactMatch(value, responseJson);
 
                 const menuItemsJsx = responseJson.map((item) => (
                     <button
