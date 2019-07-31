@@ -195,5 +195,5 @@ export const setupSimilarity = () => {
 };
 
 export const getAnnotations = (abstract) => {
-    return submitGetRequest(`${annotationServiceUrl}api?text2annotate=${encodeURIComponent(abstract)}`);
+    return submitGetRequest(`${annotationServiceUrl}annotator?text2annotate=${encodeURIComponent(abstract)}`);
 };
