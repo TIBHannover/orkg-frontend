@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Tooltip as ReactstrapTooltip } from 'reactstrap';
 import PropTypes from 'prop-types';
 import rangy from 'rangy';
-import CreatableSelect from 'react-select/creatable';
+import { predicatesUrl, submitGetRequest } from '../../../network';
+import AsyncCreatableSelect from 'react-select/async-creatable';
 
 function getAllIndexes(arr, val) {
   var indexes = [],
@@ -27,6 +28,72 @@ class AbstractAnnotator extends Component {
   componentWillUnmount() {
     this.annotatorRef.current.removeEventListener('mouseup', this.handleMouseUp);
   }
+
+  IdMatch = async (value, responseJson) => {
+    if (value.startsWith('#')) {
+      const valueWithoutHashtag = value.substr(1);
+
+      if (valueWithoutHashtag.length > 0) {
+        let responseJsonExact;
+
+        try {
+          responseJsonExact = await submitGetRequest(
+            predicatesUrl + encodeURIComponent(valueWithoutHashtag),
+          );
+        } catch (err) {
+          responseJsonExact = null;
+        }
+
+        if (responseJsonExact) {
+          responseJson.unshift(responseJsonExact);
+        }
+      }
+    }
+
+    return responseJson;
+  };
+
+  loadOptions = async (value) => {
+    try {
+      let queryParams = '';
+
+      if (value.startsWith('"') && value.endsWith('"') && value.length > 2) {
+        value = value.substring(1, value.length - 1);
+        queryParams = '&exact=true';
+      }
+
+      let responseJson = await submitGetRequest(
+        predicatesUrl + '?q=' + encodeURIComponent(value) + queryParams,
+      );
+      responseJson = await this.IdMatch(value, responseJson);
+
+      if (this.props.annotationClasseOptions && this.props.annotationClasseOptions.length > 0) {
+        let newProperties = this.props.annotationClasseOptions;
+        newProperties = newProperties.filter(({ label }) => label.includes(value)); // ensure the label of the new property contains the search value
+
+        responseJson.unshift(...newProperties);
+      }
+
+      if (responseJson.length > this.maxResults) {
+        responseJson = responseJson.slice(0, this.maxResults);
+      }
+
+      let options = [];
+
+      responseJson.map((item) =>
+        options.push({
+          label: item.label,
+          id: item.id,
+        }),
+      );
+
+      return options;
+    } catch (err) {
+      console.error(err);
+
+      return [];
+    }
+  };
 
   renderCharNode(charIndex) {
     return (
@@ -111,17 +178,19 @@ class AbstractAnnotator extends Component {
           toggle={(e) => this.props.toggleTooltip(range)}
           isOpen={this.props.toolTips[range.id]}
         >
-          <CreatableSelect
-            value={this.props.annotationClasseOptions.filter(
-              ({ label }) => this.props.annotationClasses[range.id] === label,
-            )}
-            onChange={(e, a) => this.props.handleChangeAnnotationClass(e, a, range)}
+          <AsyncCreatableSelect
+            loadOptions={this.loadOptions}
+            value={{
+              label: this.props.annotationClasses[range.id],
+              id: this.props.annotationClasses[range.id],
+            }}
             getOptionLabel={({ label }) => label}
-            getOptionValue={({ value }) => value}
-            key={({ value }) => value}
-            options={this.props.annotationClasseOptions}
+            getOptionValue={({ id }) => id}
+            onChange={(e, a) => this.props.handleChangeAnnotationClass(e, a, range)}
+            key={(value) => value}
+            cacheOptions
+            defaultOptions
             isClearable
-            onCreateOption={(e) => this.props.handleCreateClass(e, range)}
             placeholder="Select or Type something..."
             styles={customStyles}
           />
@@ -208,7 +277,6 @@ AbstractAnnotator.propTypes = {
   annotationClasseOptions: PropTypes.array,
   annotationClasses: PropTypes.object,
   handleChangeAnnotationClass: PropTypes.func,
-  handleCreateClass: PropTypes.func,
   onCreateAnnotation: PropTypes.func,
   toggleTooltip: PropTypes.func,
 };

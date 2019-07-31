@@ -20,10 +20,10 @@ class Annotation extends Component {
     this.state = {
       isAnnotationLoading: false,
       classeOptions: [
-        { value: 'process', label: 'Process' },
-        { value: 'data', label: 'Data' },
-        { value: 'material', label: 'Material' },
-        { value: 'method', label: 'Method' },
+        { id: 'process', label: 'Process' },
+        { id: 'data', label: 'Data' },
+        { id: 'material', label: 'Material' },
+        { id: 'method', label: 'Method' },
       ],
       isLoading: false,
       showError: false,
@@ -85,11 +85,20 @@ class Annotation extends Component {
   };
 
   handleChangeAnnotationClass = (selectedOption, { action }, range) => {
-    if (action !== 'clear') {
+    if (action === 'select-option') {
       this.setState({
         rangeClasses: { ...this.state.rangeClasses, [range.id]: selectedOption.label },
       });
-    } else {
+    } else if (action === 'create-option') {
+      const newOption = {
+        label: selectedOption.label,
+        value: selectedOption.label,
+      };
+      this.setState({
+        classeOptions: [...this.state.classeOptions, newOption],
+        rangeClasses: { ...this.state.rangeClasses, [range.id]: selectedOption.value },
+      });
+    } else if (action === 'clear') {
       this.removeAnnotation(range);
     }
   };
@@ -103,17 +112,6 @@ class Annotation extends Component {
     let r = this.state.rangeClasses;
     delete r[range.id];
     this.setState({ ranges: filtered, toolTips: t, rangeClasses: r });
-  };
-
-  handleCreateClass = (inputValue, range) => {
-    const newOption = {
-      label: inputValue,
-      value: inputValue,
-    };
-    this.setState({
-      classeOptions: [...this.state.classeOptions, newOption],
-      rangeClasses: { ...this.state.rangeClasses, [range.id]: inputValue },
-    });
   };
 
   onCreateAnnotation = (range) => {
@@ -226,9 +224,9 @@ class Annotation extends Component {
                 {!this.state.isAnnotationLoading && (
                   <div>
                     {this.state.rangeClasses &&
-                      this.state.classeOptions.map((c) => {
+                      [...new Set(Object.values(this.state.rangeClasses))].map((c) => {
                         let color = '#0052CC';
-                        switch (c.label) {
+                        switch (c) {
                           case 'Process':
                             color = '#7fa2ff';
                             break;
@@ -242,16 +240,17 @@ class Annotation extends Component {
                             color = '#D2B8E5';
                             break;
                           default:
-                            color = '#0052CC';
+                            color = '#ffb7b7';
                         }
                         //
                         return (
-                          <Badge key={c.label} style={{ background: color }}>
-                            {c.label}{' '}
-                            {
-                              Object.values(this.state.rangeClasses).filter((rc) => rc === c.label)
-                                .length
-                            }
+                          <Badge
+                            className={'mr-2'}
+                            key={c.label}
+                            style={{ color: '#333', background: color }}
+                          >
+                            {c}{' '}
+                            {Object.values(this.state.rangeClasses).filter((rc) => rc === c).length}
                           </Badge>
                         );
                       })}
@@ -262,7 +261,6 @@ class Annotation extends Component {
                       toolTips={this.state.toolTips}
                       annotationClasseOptions={this.state.classeOptions}
                       annotationClasses={this.state.rangeClasses}
-                      handleCreateClass={this.handleCreateClass}
                       handleChangeAnnotationClass={this.handleChangeAnnotationClass}
                       onCreateAnnotation={this.onCreateAnnotation}
                       toggleTooltip={this.toggleTooltip}
