@@ -102,6 +102,7 @@ class AddStatement extends Component {
                                 onKeyUp={() => { }}
                                 additionalData={this.getNewProperties()}
                                 disableBorderRadiusRight
+                                allowCreate
                             />
 
                             <InputGroupAddon addonType="append">
