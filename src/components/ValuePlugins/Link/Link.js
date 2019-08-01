@@ -21,7 +21,7 @@ class Link extends Component {
         }
 
         if (this.props.type === 'literal' && labelToText.match(this.supportedValues)) {
-            return <a href={labelToText} target="_blank" rel="noopener noreferrer">{labelToText} <Icon icon={faExternalLinkAlt} /></a>
+            return <a href={(labelToText.indexOf('://') === -1 ) ? 'http://' + labelToText : labelToText} target="_blank" rel="noopener noreferrer">{labelToText} <Icon icon={faExternalLinkAlt} /></a>
         } else {
             return label;
         }
