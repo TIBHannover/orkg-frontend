@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import { Button, Alert, Card, CardBody, Label, Badge } from 'reactstrap';
 import { arxivUrl } from '../../../network';
 import { connect } from 'react-redux';
-import { updateAbstract, nextStep, previousStep } from '../../../actions/addPaper';
+import {
+  updateAbstract,
+  nextStep,
+  previousStep,
+  createContribution,
+} from '../../../actions/addPaper';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import AbstractAnnotator from './AbstractAnnotator';
@@ -10,6 +15,8 @@ import { getAnnotations } from '../../../network';
 import PropTypes from 'prop-types';
 import Textarea from 'react-textarea-autosize';
 import Tooltip from '../../Utils/Tooltip';
+import dotProp from 'dot-prop-immutable';
+import { guid } from '../../../utils';
 
 class Annotation extends Component {
   constructor(props) {
@@ -29,10 +36,8 @@ class Annotation extends Component {
       showError: false,
       changeAbstract: false,
       loading: false,
-      ranges: [],
+      ranges: {},
       idIndex: 1,
-      toolTips: {},
-      rangeClasses: {},
       tooltipOpen: false,
     };
   }
@@ -41,16 +46,6 @@ class Annotation extends Component {
     this.fetchAbstract();
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
-    /*
-    if (
-      JSON.stringify(this.state.toolTips) !== JSON.stringify(prevState.toolTips) ||
-      JSON.stringify(this.state.rangeClasses) !== JSON.stringify(prevState.rangeClasses)
-    ) {
-      //this.highlightableRef.current.forceUpdate();
-    }*/
-  };
-
   getAnnotation = () => {
     this.setState({ isAnnotationLoading: true });
     return getAnnotations(this.props.abstract)
@@ -58,75 +53,66 @@ class Annotation extends Component {
         this.setState({ isAnnotationLoading: false });
       })
       .then((data) => {
-        let rangeClasses = {};
         let annotated = [];
-        let ranges = [];
+        let ranges = {};
         if (data.entities) {
-          ranges = data.entities
+          data.entities
             .map((entity) => {
               let text = data.text.substring(entity[2][0][0], entity[2][0][1]);
-              rangeClasses[entity[0]] = entity[1];
               if (annotated.indexOf(text.toLowerCase()) < 0) {
                 annotated.push(text.toLowerCase());
-                return {
+                ranges[entity[0]] = {
                   id: entity[0],
                   text: text,
                   start: entity[2][0][0],
                   end: entity[2][0][1],
-                };
+                  tooltip: false,
+                  class: { id: entity[1], label: entity[1] },
+                }
+                return ranges[entity[0]]
               } else {
                 return null;
               }
             })
             .filter((r) => r);
         }
-        this.setState({ rangeClasses, ranges, isAnnotationLoading: false });
+        this.setState({ ranges : ranges, isAnnotationLoading: false });
       });
   };
 
   handleChangeAnnotationClass = (selectedOption, { action }, range) => {
     if (action === 'select-option') {
-      this.setState({
-        rangeClasses: { ...this.state.rangeClasses, [range.id]: selectedOption.label },
-      });
+      let state = dotProp.set(this.state, `ranges.${[range.id]}.class`, { id: selectedOption.id, label: selectedOption.label })
+      this.setState(state);
     } else if (action === 'create-option') {
       const newOption = {
         label: selectedOption.label,
-        value: selectedOption.label,
+        id: selectedOption.label,
       };
-      this.setState({
-        classeOptions: [...this.state.classeOptions, newOption],
-        rangeClasses: { ...this.state.rangeClasses, [range.id]: selectedOption.value },
-      });
+      let state = dotProp.set(this.state, `ranges.${[range.id]}.class`, { id: selectedOption.id, label: selectedOption.label })
+      this.setState(state);
+      this.setState({classeOptions: [...this.state.classeOptions, newOption]});
     } else if (action === 'clear') {
       this.removeAnnotation(range);
     }
   };
 
   removeAnnotation = (range) => {
-    var filtered = this.state.ranges.filter(function(value, index, arr) {
-      return value.id !== range.id;
-    });
-    let t = this.state.toolTips;
-    delete t[range.id];
-    let r = this.state.rangeClasses;
-    delete r[range.id];
-    this.setState({ ranges: filtered, toolTips: t, rangeClasses: r });
+    let filtered = this.state.ranges;
+    delete filtered[range.id];
+    this.setState({ ranges: filtered });
   };
 
   onCreateAnnotation = (range) => {
     this.setState({
       idIndex: this.state.idIndex + 1,
-      ranges: [...this.state.ranges, range],
-      toolTips: { ...this.state.toolTips, [range.id]: false },
-      rangeClasses: { ...this.state.rangeClasses, [range.id]: this.state.classeOptions[0].label },
+      ranges: {...this.state.ranges, [range.id]: range}
     });
   };
 
   toggleTooltip = (range) => {
-    this.setState({
-      toolTips: { ...this.state.toolTips, [range.id]: !this.state.toolTips[range.id] },
-    });
+    let state = dotProp.set(this.state, `ranges.${[range.id]}.tooltip`, v => !v)
+    this.setState(state);
   };
 
   fetchAbstract = async () => {
@@ -174,6 +160,58 @@ class Annotation extends Component {
 
   handleNextClick = () => {
     //TODO: add the annotated words as statements for the next step
+
+    let classesID = {};
+    let createdProperties = {};
+    let statements = {'properties': [], values : [] };
+    let rangesIDs = Object.keys(this.state.ranges)
+    if(rangesIDs.length > 0){
+      rangesIDs.map(rID => {
+        let range = this.state.ranges[rID];
+        let propertyId;
+        let predicateId = null;
+
+        if (range.class.id !== range.class.label){
+         //existing predicate
+          predicateId = range.class.id;
+          propertyId = range.class.id;
+        } else {
+          if (classesID[range.class.id]) {
+            propertyId = classesID[range.class.id];
+          } else {
+            let pID = guid();
+            classesID[range.class.id] = pID;
+            propertyId = pID;
+          }
+        }
+        if (!createdProperties[propertyId]) {
+          statements['properties'].push({
+            propertyId: propertyId,
+            existingPredicateId: predicateId,
+            label: range.class.label,
+          })
+          createdProperties[propertyId] = propertyId;
+        }
+
+        statements['values'].push({
+          label: range.text,
+          type: 'object',
+          propertyId: propertyId,
+        })
+        return null;
+      })
+    }
+
+    if (this.props.contributions.allIds.length === 0) {
+      this.props.createContribution({
+        selectAfterCreation: true,
+        prefillStatements: true,
+        statements: statements,
+      });
+    }
+
+    //TODO: add the annotated words as statements in a specific contribution
+
     this.props.nextStep();
   };
 
@@ -191,6 +229,7 @@ class Annotation extends Component {
   };
 
   render() {
+    let rangesClasses = [...new Set(Object.values(this.state.ranges).map((r) => r.class.label))];
     return (
       <div>
         <h2 className="h4 mt-4 mb-3">Abstract annotation</h2>
@@ -223,44 +262,48 @@ class Annotation extends Component {
                 )}
                 {!this.state.isAnnotationLoading && (
                   <div>
-                    {this.state.rangeClasses &&
-                      [...new Set(Object.values(this.state.rangeClasses))].map((c) => {
-                        let color = '#0052CC';
-                        switch (c) {
-                          case 'Process':
-                            color = '#7fa2ff';
-                            break;
-                          case 'Data':
-                            color = '#5FA97F';
-                            break;
-                          case 'Material':
-                            color = '#EAB0A2';
-                            break;
-                          case 'Method':
-                            color = '#D2B8E5';
-                            break;
-                          default:
-                            color = '#ffb7b7';
-                        }
-                        //
-                        return (
-                          <Badge
-                            className={'mr-2'}
-                            key={c.label}
-                            style={{ color: '#333', background: color }}
-                          >
-                            {c}{' '}
-                            {Object.values(this.state.rangeClasses).filter((rc) => rc === c).length}
-                          </Badge>
-                        );
-                      })}
+                    {rangesClasses.length > 0 &&
+                      rangesClasses.map(
+                        (c) => {
+                          let color = '#0052CC';
+                          switch (c) {
+                            case 'Process':
+                              color = '#7fa2ff';
+                              break;
+                            case 'Data':
+                              color = '#5FA97F';
+                              break;
+                            case 'Material':
+                              color = '#EAB0A2';
+                              break;
+                            case 'Method':
+                              color = '#D2B8E5';
+                              break;
+                            default:
+                              color = '#ffb7b7';
+                          }
+                          //
+                          return (
+                            <Badge
+                              className={'mr-2'}
+                              key={`c${c}`}
+                              style={{ color: '#333', background: color }}
+                            >
+                              {c}{' '}
+                              {
+                                Object.values(this.state.ranges)
+                                  .map((r) => r.class.label)
+                                  .filter((rc) => rc === c).length
+                              }
+                            </Badge>
+                          );
+                        },
+                      )}
                     <AbstractAnnotator
                       ranges={this.state.ranges}
                       abstract={this.props.abstract}
                       rangesIdIndex={this.state.idIndex}
-                      toolTips={this.state.toolTips}
                       annotationClasseOptions={this.state.classeOptions}
-                      annotationClasses={this.state.rangeClasses}
                       handleChangeAnnotationClass={this.handleChangeAnnotationClass}
                       onCreateAnnotation={this.onCreateAnnotation}
                       toggleTooltip={this.toggleTooltip}
@@ -310,18 +353,23 @@ Annotation.propTypes = {
   updateAbstract: PropTypes.func.isRequired,
   abstract: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  selectedContribution: PropTypes.string.isRequired,
+  contributions: PropTypes.object.isRequired,
+  createContribution: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  selectedResearchField: state.addPaper.selectedResearchField,
+  selectedContribution: state.addPaper.selectedContribution,
   title: state.addPaper.title,
   abstract: state.addPaper.abstract,
+  contributions: state.addPaper.contributions,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   updateAbstract: (data) => dispatch(updateAbstract(data)),
   nextStep: () => dispatch(nextStep()),
   previousStep: () => dispatch(previousStep()),
+  createContribution: (data) => dispatch(createContribution(data)),
 });
 
 export default connect(

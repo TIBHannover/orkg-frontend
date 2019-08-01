@@ -106,7 +106,7 @@ class AbstractAnnotator extends Component {
   getRange(charPosition) {
     return (
       this.props.ranges &&
-      this.props.ranges.find((range) => charPosition >= range.start && charPosition <= range.end)
+      Object.values(this.props.ranges).find((range) => charPosition >= range.start && charPosition <= range.end)
     );
   }
 
@@ -146,8 +146,8 @@ class AbstractAnnotator extends Component {
       }),
     };
 
-    let color = '#0052CC';
-    switch (this.props.annotationClasses[range.id]) {
+    let color = '#ffb7b7';
+    switch (this.props.ranges[range.id].class.label) {
       case 'Process':
         color = '#7fa2ff';
         break;
@@ -161,7 +161,7 @@ class AbstractAnnotator extends Component {
         color = '#D2B8E5';
         break;
       default:
-        color = '#0052CC';
+        color = '#ffb7b7';
     }
 
     return (
@@ -176,13 +176,13 @@ class AbstractAnnotator extends Component {
           className={'annotation-tooltip'}
           innerClassName={'annotation-tooltip-inner'}
           toggle={(e) => this.props.toggleTooltip(range)}
-          isOpen={this.props.toolTips[range.id]}
+          isOpen={range.tooltip}
         >
           <AsyncCreatableSelect
             loadOptions={this.loadOptions}
             value={{
-              label: this.props.annotationClasses[range.id],
-              id: this.props.annotationClasses[range.id],
+              label: this.props.ranges[range.id].class.label,
+              id: this.props.ranges[range.id].class.id,
             }}
             getOptionLabel={({ label }) => label}
             getOptionValue={({ id }) => id}
@@ -252,7 +252,8 @@ class AbstractAnnotator extends Component {
       start: start,
       end: end,
       text: text,
-      toolTips: false,
+      tooltip: false,
+      class: {}
     };
     this.props.onCreateAnnotation(range);
     window.getSelection().empty();
@@ -270,12 +271,10 @@ class AbstractAnnotator extends Component {
 }
 
 AbstractAnnotator.propTypes = {
-  ranges: PropTypes.array,
+  ranges: PropTypes.object,
   abstract: PropTypes.string,
   rangesIdIndex: PropTypes.number,
-  toolTips: PropTypes.object,
   annotationClasseOptions: PropTypes.array,
-  annotationClasses: PropTypes.object,
   handleChangeAnnotationClass: PropTypes.func,
   onCreateAnnotation: PropTypes.func,
   toggleTooltip: PropTypes.func,
