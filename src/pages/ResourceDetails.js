@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import NewStatementsSection from '../components/statements/new/NewStatementsSection';
 import StatementGroupCard from '../components/statements/existing/StatementGroupCard';
-import { resourcesUrl, statementsUrl, submitGetRequest } from '../network';
+import { resourcesUrl, statementsUrl, submitGetRequest, getStatementsBySubject } from '../network';
 import { groupByObjectWithId } from '../utils';
 import './ResourceDetails.css';
 import EditableHeader from '../components/EditableHeader';
@@ -50,7 +50,7 @@ class ResourceDetails extends Component {
 
     findAllStatements = async () => {
         try {
-            const responseJson = await submitGetRequest(statementsUrl);
+            const responseJson = await getStatementsBySubject(this.props.match.params.resourceId);
 
             this.setState({
                 allStatements: responseJson,
