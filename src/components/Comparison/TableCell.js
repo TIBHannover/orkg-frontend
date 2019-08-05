@@ -19,6 +19,7 @@ const ItemInner = styled.div`
     border-bottom:2px solid #EDEBEB;
     text-align:center;
     height:100%;
+    word-wrap: break-word;
 `;
 
 
@@ -67,10 +68,14 @@ class TableCell extends Component {
                                             onClick={() => this.openStatementBrowser(date.resourceId, date.label)}
                                             style={{ cursor: 'pointer' }}
                                         >
-                                            <ValuePlugins>{date.label}</ValuePlugins>
+                                            <ValuePlugins type={'resource'}>{date.label}</ValuePlugins>
                                         </span>
                                     </span>
-                                ) : <>{index > 0 && <ItemInnerSeparator />}<ValuePlugins>{date.label}</ValuePlugins></>
+                                ) : (
+                                        <span key={`value-${index}`}>
+                                            {index > 0 && <ItemInnerSeparator />}<ValuePlugins type={'literal'}>{date.label}</ValuePlugins>
+                                        </span>
+                                    )
                                 : <span className="font-italic" key={`value-${index}`}>Empty</span>
                         ))}
                     </ItemInner>
