@@ -117,35 +117,55 @@ class GeneralData extends Component {
 
     await Cite.async(this.state.entry)
       .catch((e) => {
-        let validation = this.validator.setError({
-          field: 'entry',
-          message: e.message,
-        });
-
+        let validation;
+        switch (e.message) {
+          case 'This format is not supported or recognized':
+            validation = this.validator.setError({
+              field: 'entry',
+              message:
+                'This format is not supported or recognized. Please enter a valid DOI or Bibtex or select \'Manually\' to enter the paper details yourself',
+            });
+            break;
+          case 'Server responded with status code 404':
+            validation = this.validator.setError({
+              field: 'entry',
+              message: 'No paper has been found',
+            });
+            break;
+          default:
+            validation = this.validator.setError({
+              field: 'entry',
+              message: 'An error occurred, reload the page and try again',
+            });
+            break;
+        }
         this.setState({
           isFetching: false,
+          paperTitle: this.state.entry, // Probably the user entered a paper title
           validation,
         });
+        return null;
       })
       .then((paper) => {
         if (paper) {
           let paperTitle = '',
             paperAuthors = [],
-            paperPublicationMonth = 0,
-            paperPublicationYear = 0,
+            paperPublicationMonth = null,
+            paperPublicationYear = null,
             doi = '';
           try {
             paperTitle = paper.data[0].title;
             paperAuthors = paper.data[0].author.map((author, index) => {
+              let fullname = [author.given, author.family].join(' ').trim();
               const newAuthor = {
-                label: author.given + ' ' + author.family,
-                id: author.given + ' ' + author.family,
+                label: fullname,
+                id: fullname,
               };
               return newAuthor;
             });
             paperPublicationMonth = paper.data[0].issued['date-parts'][0][1];
             paperPublicationYear = paper.data[0].issued['date-parts'][0][0];
-            doi = paper.data[0].doi;
+            doi = paper.data[0].DOI;
           } catch (e) {
             console.log('Error setting paper data: ', e);
           }
@@ -339,7 +359,9 @@ class GeneralData extends Component {
                                 <tr>
                                   <td>
                                     <strong>Publication date:</strong>{' '}
-                                    {moment(this.state.paperPublicationMonth, 'M').format('MMMM')}{' '}
+                                    {this.state.paperPublicationMonth
+                                      ? moment(this.state.paperPublicationMonth, 'M').format('MMMM')
+                                      : ''}{' '}
                                     {this.state.paperPublicationYear}
                                   </td>
                                 </tr>
