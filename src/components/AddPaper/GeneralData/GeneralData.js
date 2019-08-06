@@ -289,7 +289,6 @@ class GeneralData extends Component {
                             name="entry"
                             id="paperDoi"
                             className={entryFieldClasses}
-                            placeholder="Enter a DOI or Bibtex"
                             value={this.state.entry}
                             onChange={this.handleInputChange}
                           />
