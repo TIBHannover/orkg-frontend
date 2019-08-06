@@ -6,8 +6,13 @@ import ResearchFieldCards from './ResearchFieldCards';
 import RecentlyAddedPapers from './RecentlyAddedPapers';
 
 class Home extends Component {
-    render() {
-        let showWarning = process.env.REACT_APP_SERVER_URL.includes('labs.tib.eu');
+
+  componentDidMount = () => {
+    document.title = 'Open Research Knowledge Graph'
+  }
+
+  render = () => {
+    const showWarning = process.env.REACT_APP_SERVER_URL.includes('labs.tib.eu');
 
         return (
             <div>

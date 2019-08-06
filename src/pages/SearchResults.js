@@ -18,11 +18,15 @@ class SearchResults extends Component {
         resources: null,
         predicates: null,
         error: null,
-    };
+    }; 
 
     async componentWillMount() {
         await this.findResources();
         await this.findPredicates();
+    }
+
+    componentDidMount = () => {
+        document.title = `Search result : ${this.props.match.params.searchTerm} - ORKG`
     }
 
     findResources = async () => {
