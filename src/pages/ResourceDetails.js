@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import NewStatementsSection from '../components/statements/new/NewStatementsSection';
 import StatementGroupCard from '../components/statements/existing/StatementGroupCard';
-import { resourcesUrl, statementsUrl, submitGetRequest, getStatementsBySubject } from '../network';
+import { resourcesUrl, submitGetRequest, getStatementsBySubject } from '../network';
 import { groupByObjectWithId } from '../utils';
 import './ResourceDetails.css';
 import EditableHeader from '../components/EditableHeader';
