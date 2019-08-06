@@ -3,6 +3,10 @@ import { Container } from 'reactstrap';
 
 class License extends Component {
 
+    componentDidMount = () => {
+        document.title = 'License - ORKG'
+    }
+
     render() {
         return (
             <div>
