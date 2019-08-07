@@ -65,7 +65,7 @@ class Annotation extends Component {
                   id: entity[0],
                   text: text,
                   start: entity[2][0][0],
-                  end: entity[2][0][1],
+                  end: entity[2][0][1]-1,
                   tooltip: false,
                   class: { id: entity[1], label: entity[1] },
                 }
