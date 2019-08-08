@@ -246,6 +246,7 @@ class AbstractAnnotator extends Component {
     // Find index of all occurrences of selected text in the abstract
     var pos = getAllIndexes(this.props.abstract, text);
     // Get the closest number out of occurrences positions
+    if (pos === []) {return null;}
     var closest = pos.reduce(function(prev, curr) {
       return Math.abs(curr - start) < Math.abs(prev - start) ? curr : prev;
     });
