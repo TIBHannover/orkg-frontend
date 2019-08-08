@@ -30,6 +30,7 @@ class Abstract extends Component {
 
     this.state = {
       isAnnotationLoading: false,
+      isAnnotationFailedLoading: false,
       classeOptions: [
         { id: 'process', label: 'Process' },
         { id: 'data', label: 'Data' },
@@ -54,13 +55,10 @@ class Abstract extends Component {
   getAnnotation = () => {
     this.setState({ isAnnotationLoading: true });
     return getAnnotations(this.props.abstract)
-      .catch((error) => {
-        this.setState({ isAnnotationLoading: false });
-      })
       .then((data) => {
         let annotated = [];
         let ranges = {};
-        if (data.entities) {
+        if (data && data.entities) {
           data.entities
             .map((entity) => {
               let text = data.text.substring(entity[2][0][0], entity[2][0][1]);
@@ -82,7 +80,15 @@ class Abstract extends Component {
             })
             .filter((r) => r);
         }
-        this.setState({ ranges: ranges, isAnnotationLoading: false });
+        this.setState({
+          ranges: ranges,
+          isAnnotationLoading: false,
+          isSimilaireContributionsLoading: true,
+        });
+      })
+      .catch(() => {
+        this.setState({ isAnnotationLoading: false, isAnnotationFailedLoading: true });
+        return null;
       });
   };
 
@@ -251,10 +257,18 @@ class Abstract extends Component {
       <div>
         <h2 className="h4 mt-4 mb-3">Abstract annotation</h2>
 
-        {this.props.abstract && !this.state.changeAbstract && (
-          <Alert color="info">
-            <strong>Info:</strong> we automatically annotated the abstract for you. Please remove
-            any incorrect annotations
+        {this.props.abstract &&
+          !this.state.changeAbstract &&
+          !this.state.isAnnotationFailedLoading && (
+            <Alert color="info">
+              <strong>Info:</strong> we automatically annotated the abstract for you. Please remove
+              any incorrect annotations
+            </Alert>
+          )}
+
+        {!this.state.isAnnotationLoading && this.state.isAnnotationFailedLoading && (
+          <Alert color="light">
+            Failed to connect to the annotation service, please try again later
           </Alert>
         )}
 
@@ -277,6 +291,7 @@ class Abstract extends Component {
                     <h2 className="h5">Loading annotations...</h2>
                   </div>
                 )}
+
                 {!this.state.isAnnotationLoading && (
                   <div>
                     {rangesClasses.length > 0 &&
@@ -344,57 +359,60 @@ class Abstract extends Component {
         <Button color="light" className="mb-2 mt-1" onClick={this.handleChangeAbstract}>
           {this.state.changeAbstract ? 'Annotate abstract' : 'Change abstract'}
         </Button>
-        <div className={'col-3 float-right'}>
-          <div className={'mt-4'}>
-            <Range
-              step={0.025}
-              min={0}
-              max={1}
-              values={this.state.uncertaintyThreshold}
-              onChange={(values) => this.setState({ uncertaintyThreshold: values })}
-              renderTrack={({ props, children }) => (
-                <div
-                  {...props}
-                  style={{
-                    ...props.style,
-                    height: '6px',
-                    width: '100%',
-                    background: getTrackBackground({
-                      values: this.state.uncertaintyThreshold,
-                      colors: [
-                        this.props.theme.orkgPrimaryColor,
-                        this.props.theme.ultraLightBlueDarker,
-                      ],
-                      min: 0,
-                      max: 1,
-                    }),
-                  }}
-                >
-                  {children}
-                </div>
-              )}
-              renderThumb={({ props }) => (
-                <div
-                  {...props}
-                  style={{
-                    ...props.style,
-                    height: '20px',
-                    width: '20px',
-                    borderRadius: '4px',
-                    backgroundColor: '#FFF',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    boxShadow: '0px 2px 6px #AAA',
-                  }}
-                />
-              )}
-            />
-            <div className={'mt-2 text-center'}>
-              Uncertainty {this.state.uncertaintyThreshold[0].toFixed(2)}
+        {!this.state.isAnnotationLoading && !this.state.isAnnotationFailedLoading && (
+          <div className={'col-3 float-right'}>
+            <div className={'mt-4'}>
+              <Range
+                step={0.025}
+                min={0}
+                max={1}
+                values={this.state.uncertaintyThreshold}
+                onChange={(values) => this.setState({ uncertaintyThreshold: values })}
+                renderTrack={({ props, children }) => (
+                  <div
+                    {...props}
+                    style={{
+                      ...props.style,
+                      height: '6px',
+                      width: '100%',
+                      background: getTrackBackground({
+                        values: this.state.uncertaintyThreshold,
+                        colors: [
+                          this.props.theme.orkgPrimaryColor,
+                          this.props.theme.ultraLightBlueDarker,
+                        ],
+                        min: 0,
+                        max: 1,
+                      }),
+                    }}
+                  >
+                    {children}
+                  </div>
+                )}
+                renderThumb={({ props }) => (
+                  <div
+                    {...props}
+                    style={{
+                      ...props.style,
+                      height: '20px',
+                      width: '20px',
+                      borderRadius: '4px',
+                      backgroundColor: '#FFF',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      boxShadow: '0px 2px 6px #AAA',
+                    }}
+                  />
+                )}
+              />
+              <div className={'mt-2 text-center'}>
+                Uncertainty {this.state.uncertaintyThreshold[0].toFixed(2)}
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
         <hr className="mt-5 mb-3" />
 
         <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>
