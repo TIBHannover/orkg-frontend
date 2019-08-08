@@ -16,9 +16,13 @@ import PropTypes from 'prop-types';
 import Textarea from 'react-textarea-autosize';
 import Tooltip from '../../Utils/Tooltip';
 import dotProp from 'dot-prop-immutable';
+import { compose } from 'redux';
 import { guid } from '../../../utils';
+import { withTheme } from 'styled-components';
+import { Range, getTrackBackground } from 'react-range';
+import toArray from 'lodash/toArray';
 
-class Annotation extends Component {
+class Abstract extends Component {
   constructor(props) {
     super(props);
 
@@ -39,6 +43,7 @@ class Annotation extends Component {
       ranges: {},
       idIndex: 1,
       tooltipOpen: false,
+      uncertaintyThreshold: [0.8],
     };
   }
 
@@ -65,33 +70,40 @@ class Annotation extends Component {
                   id: entity[0],
                   text: text,
                   start: entity[2][0][0],
-                  end: entity[2][0][1]-1,
+                  end: entity[2][0][1] - 1,
+                  uncertainty: entity[3],
                   tooltip: false,
                   class: { id: entity[1], label: entity[1] },
-                }
-                return ranges[entity[0]]
+                };
+                return ranges[entity[0]];
               } else {
                 return null;
               }
             })
             .filter((r) => r);
         }
-        this.setState({ ranges : ranges, isAnnotationLoading: false });
+        this.setState({ ranges: ranges, isAnnotationLoading: false });
       });
   };
 
   handleChangeAnnotationClass = (selectedOption, { action }, range) => {
     if (action === 'select-option') {
-      let state = dotProp.set(this.state, `ranges.${[range.id]}.class`, { id: selectedOption.id, label: selectedOption.label })
+      let state = dotProp.set(this.state, `ranges.${[range.id]}.class`, {
+        id: selectedOption.id,
+        label: selectedOption.label,
+      });
       this.setState(state);
     } else if (action === 'create-option') {
       const newOption = {
         label: selectedOption.label,
         id: selectedOption.label,
       };
-      let state = dotProp.set(this.state, `ranges.${[range.id]}.class`, { id: selectedOption.id, label: selectedOption.label })
+      let state = dotProp.set(this.state, `ranges.${[range.id]}.class`, {
+        id: selectedOption.id,
+        label: selectedOption.label,
+      });
       this.setState(state);
-      this.setState({classeOptions: [...this.state.classeOptions, newOption]});
+      this.setState({ classeOptions: [...this.state.classeOptions, newOption] });
     } else if (action === 'clear') {
       this.removeAnnotation(range);
     }
@@ -106,12 +118,12 @@ class Annotation extends Component {
   onCreateAnnotation = (range) => {
     this.setState({
       idIndex: this.state.idIndex + 1,
-      ranges: {...this.state.ranges, [range.id]: range}
+      ranges: { ...this.state.ranges, [range.id]: range },
     });
   };
 
   toggleTooltip = (range) => {
-    let state = dotProp.set(this.state, `ranges.${[range.id]}.tooltip`, v => !v)
+    let state = dotProp.set(this.state, `ranges.${[range.id]}.tooltip`, (v) => !v);
     this.setState(state);
   };
 
@@ -163,43 +175,45 @@ class Annotation extends Component {
 
     let classesID = {};
     let createdProperties = {};
-    let statements = {'properties': [], values : [] };
-    let rangesIDs = Object.keys(this.state.ranges)
-    if(rangesIDs.length > 0){
-      rangesIDs.map(rID => {
+    let statements = { properties: [], values: [] };
+    let rangesIDs = Object.keys(this.state.ranges);
+    if (rangesIDs.length > 0) {
+      rangesIDs.map((rID) => {
         let range = this.state.ranges[rID];
         let propertyId;
         let predicateId = null;
 
-        if (range.class.id !== range.class.label){
-         //existing predicate
-          predicateId = range.class.id;
-          propertyId = range.class.id;
-        } else {
-          if (classesID[range.class.id]) {
-            propertyId = classesID[range.class.id];
+        if (range.uncertainty <= this.state.uncertaintyThreshold) {
+          if (range.class.id !== range.class.label) {
+            //existing predicate
+            predicateId = range.class.id;
+            propertyId = range.class.id;
           } else {
-            let pID = guid();
-            classesID[range.class.id] = pID;
-            propertyId = pID;
+            if (classesID[range.class.id]) {
+              propertyId = classesID[range.class.id];
+            } else {
+              let pID = guid();
+              classesID[range.class.id] = pID;
+              propertyId = pID;
+            }
           }
-        }
-        if (!createdProperties[propertyId]) {
-          statements['properties'].push({
-            propertyId: propertyId,
-            existingPredicateId: predicateId,
-            label: range.class.label,
-          })
-          createdProperties[propertyId] = propertyId;
-        }
+          if (!createdProperties[propertyId]) {
+            statements['properties'].push({
+              propertyId: propertyId,
+              existingPredicateId: predicateId,
+              label: range.class.label,
+            });
+            createdProperties[propertyId] = propertyId;
+          }
 
-        statements['values'].push({
-          label: range.text,
-          type: 'object',
-          propertyId: propertyId,
-        })
+          statements['values'].push({
+            label: range.text,
+            type: 'object',
+            propertyId: propertyId,
+          });
+        }
         return null;
-      })
+      });
     }
 
     if (this.props.contributions.allIds.length === 0) {
@@ -229,7 +243,10 @@ class Annotation extends Component {
   };
 
   render() {
-    let rangesClasses = [...new Set(Object.values(this.state.ranges).map((r) => r.class.label))];
+    let rangeArray = toArray(this.state.ranges).filter(
+      (r) => r.uncertainty <= this.state.uncertaintyThreshold,
+    );
+    let rangesClasses = [...new Set(rangeArray.map((r) => r.class.label))];
     return (
       <div>
         <h2 className="h4 mt-4 mb-3">Abstract annotation</h2>
@@ -263,46 +280,40 @@ class Annotation extends Component {
                 {!this.state.isAnnotationLoading && (
                   <div>
                     {rangesClasses.length > 0 &&
-                      rangesClasses.map(
-                        (c) => {
-                          let color = '#0052CC';
-                          switch (c) {
-                            case 'Process':
-                              color = '#7fa2ff';
-                              break;
-                            case 'Data':
-                              color = '#5FA97F';
-                              break;
-                            case 'Material':
-                              color = '#EAB0A2';
-                              break;
-                            case 'Method':
-                              color = '#D2B8E5';
-                              break;
-                            default:
-                              color = '#ffb7b7';
-                          }
-                          //
-                          return (
-                            <Badge
-                              className={'mr-2'}
-                              key={`c${c}`}
-                              style={{ color: '#333', background: color }}
-                            >
-                              {c}{' '}
-                              {
-                                Object.values(this.state.ranges)
-                                  .map((r) => r.class.label)
-                                  .filter((rc) => rc === c).length
-                              }
-                            </Badge>
-                          );
-                        },
-                      )}
+                      rangesClasses.map((c) => {
+                        let color = '#0052CC';
+                        switch (c) {
+                          case 'Process':
+                            color = '#7fa2ff';
+                            break;
+                          case 'Data':
+                            color = '#5FA97F';
+                            break;
+                          case 'Material':
+                            color = '#EAB0A2';
+                            break;
+                          case 'Method':
+                            color = '#D2B8E5';
+                            break;
+                          default:
+                            color = '#ffb7b7';
+                        }
+                        //
+                        return (
+                          <Badge
+                            className={'mr-2'}
+                            key={`c${c}`}
+                            style={{ color: '#333', background: color }}
+                          >
+                            {c} {rangeArray.filter((rc) => rc.class.label === c).length}
+                          </Badge>
+                        );
+                      })}
                     <AbstractAnnotator
                       ranges={this.state.ranges}
                       abstract={this.props.abstract}
                       rangesIdIndex={this.state.idIndex}
+                      uncertaintyThreshold={this.state.uncertaintyThreshold[0]}
                       annotationClasseOptions={this.state.classeOptions}
                       handleChangeAnnotationClass={this.handleChangeAnnotationClass}
                       onCreateAnnotation={this.onCreateAnnotation}
@@ -333,7 +344,57 @@ class Annotation extends Component {
         <Button color="light" className="mb-2 mt-1" onClick={this.handleChangeAbstract}>
           {this.state.changeAbstract ? 'Annotate abstract' : 'Change abstract'}
         </Button>
-
+        <div className={'col-3 float-right'}>
+          <div className={'mt-4'}>
+            <Range
+              step={0.025}
+              min={0}
+              max={1}
+              values={this.state.uncertaintyThreshold}
+              onChange={(values) => this.setState({ uncertaintyThreshold: values })}
+              renderTrack={({ props, children }) => (
+                <div
+                  {...props}
+                  style={{
+                    ...props.style,
+                    height: '6px',
+                    width: '100%',
+                    background: getTrackBackground({
+                      values: this.state.uncertaintyThreshold,
+                      colors: [
+                        this.props.theme.orkgPrimaryColor,
+                        this.props.theme.ultraLightBlueDarker,
+                      ],
+                      min: 0,
+                      max: 1,
+                    }),
+                  }}
+                >
+                  {children}
+                </div>
+              )}
+              renderThumb={({ props }) => (
+                <div
+                  {...props}
+                  style={{
+                    ...props.style,
+                    height: '20px',
+                    width: '20px',
+                    borderRadius: '4px',
+                    backgroundColor: '#FFF',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    boxShadow: '0px 2px 6px #AAA',
+                  }}
+                />
+              )}
+            />
+            <div className={'mt-2 text-center'}>
+              Uncertainty {this.state.uncertaintyThreshold[0].toFixed(2)}
+            </div>
+          </div>
+        </div>
         <hr className="mt-5 mb-3" />
 
         <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>
@@ -347,7 +408,7 @@ class Annotation extends Component {
   }
 }
 
-Annotation.propTypes = {
+Abstract.propTypes = {
   nextStep: PropTypes.func.isRequired,
   previousStep: PropTypes.func.isRequired,
   updateAbstract: PropTypes.func.isRequired,
@@ -356,6 +417,7 @@ Annotation.propTypes = {
   selectedContribution: PropTypes.string.isRequired,
   contributions: PropTypes.object.isRequired,
   createContribution: PropTypes.func.isRequired,
+  theme: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -372,7 +434,10 @@ const mapDispatchToProps = (dispatch) => ({
   createContribution: (data) => dispatch(createContribution(data)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Annotation);
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
+  withTheme,
+)(Abstract);

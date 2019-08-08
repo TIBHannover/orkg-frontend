@@ -106,97 +106,103 @@ class AbstractAnnotator extends Component {
   getRange(charPosition) {
     return (
       this.props.ranges &&
-      Object.values(this.props.ranges).find((range) => charPosition >= range.start && charPosition <= range.end)
+      Object.values(this.props.ranges).find(
+        (range) => charPosition >= range.start && charPosition <= range.end,
+      )
     );
   }
 
   tooltipRenderer = (lettersNode, range) => {
-    const customStyles = {
-      control: (provided, state) => ({
-        ...provided,
-        background: 'inherit',
-        boxShadow: state.isFocused ? 0 : 0,
-        border: 0,
-        paddingLeft: 0,
-        paddingRight: 0,
-        width: '250px',
-        color: '#fff',
-      }),
-      placeholder: (provided) => ({
-        ...provided,
-        color: '#fff',
-      }),
-      singleValue: (provided) => ({
-        ...provided,
-        color: '#fff',
-      }),
-      input: (provided) => ({
-        ...provided,
-        color: '#fff',
-      }),
-      menu: (provided) => ({
-        ...provided,
-        zIndex: 10,
-      }),
-      menuList: (provided) => ({
-        ...provided,
-        backgroundColor: '#fff',
-        opacity: 1,
-        color: '#000',
-      }),
-    };
+    if (range.uncertainty <= this.props.uncertaintyThreshold) {
+      const customStyles = {
+        control: (provided, state) => ({
+          ...provided,
+          background: 'inherit',
+          boxShadow: state.isFocused ? 0 : 0,
+          border: 0,
+          paddingLeft: 0,
+          paddingRight: 0,
+          width: '250px',
+          color: '#fff',
+        }),
+        placeholder: (provided) => ({
+          ...provided,
+          color: '#fff',
+        }),
+        singleValue: (provided) => ({
+          ...provided,
+          color: '#fff',
+        }),
+        input: (provided) => ({
+          ...provided,
+          color: '#fff',
+        }),
+        menu: (provided) => ({
+          ...provided,
+          zIndex: 10,
+        }),
+        menuList: (provided) => ({
+          ...provided,
+          backgroundColor: '#fff',
+          opacity: 1,
+          color: '#000',
+        }),
+      };
 
-    let color = '#ffb7b7';
-    switch (this.props.ranges[range.id].class.label) {
-      case 'Process':
-        color = '#7fa2ff';
-        break;
-      case 'Data':
-        color = '#5FA97F';
-        break;
-      case 'Material':
-        color = '#EAB0A2';
-        break;
-      case 'Method':
-        color = '#D2B8E5';
-        break;
-      default:
-        color = '#ffb7b7';
-    }
+      let color = '#ffb7b7';
+      switch (this.props.ranges[range.id].class.label) {
+        case 'Process':
+          color = '#7fa2ff';
+          break;
+        case 'Data':
+          color = '#5FA97F';
+          break;
+        case 'Material':
+          color = '#EAB0A2';
+          break;
+        case 'Method':
+          color = '#D2B8E5';
+          break;
+        default:
+          color = '#ffb7b7';
+      }
 
-    return (
-      <span key={`${range.id}`}>
-        <span style={{ backgroundColor: color, color: 'black' }} id={`CR${range.id}`}>
-          {lettersNode}
+      return (
+        <span key={`${range.id}`}>
+          <span style={{ backgroundColor: color, color: 'black' }} id={`CR${range.id}`}>
+            {lettersNode}
+          </span>
+          <ReactstrapTooltip
+            placement="top"
+            autohide={false}
+            target={`CR${range.id}`}
+            className={'annotation-tooltip'}
+            innerClassName={'annotation-tooltip-inner'}
+            toggle={(e) => this.props.toggleTooltip(range)}
+            isOpen={range.tooltip}
+          >
+            <AsyncCreatableSelect
+              loadOptions={this.loadOptions}
+              value={{
+                label: this.props.ranges[range.id].class.label,
+                id: this.props.ranges[range.id].class.id,
+              }}
+              getOptionLabel={({ label }) => label}
+              getOptionValue={({ id }) => id}
+              onChange={(e, a) => this.props.handleChangeAnnotationClass(e, a, range)}
+              key={(value) => value}
+              cacheOptions
+              defaultOptions
+              isClearable
+              placeholder="Select or Type something..."
+              styles={customStyles}
+            />
+          </ReactstrapTooltip>
         </span>
-        <ReactstrapTooltip
-          placement="top"
-          autohide={false}
-          target={`CR${range.id}`}
-          className={'annotation-tooltip'}
-          innerClassName={'annotation-tooltip-inner'}
-          toggle={(e) => this.props.toggleTooltip(range)}
-          isOpen={range.tooltip}
-        >
-          <AsyncCreatableSelect
-            loadOptions={this.loadOptions}
-            value={{
-              label: this.props.ranges[range.id].class.label,
-              id: this.props.ranges[range.id].class.id,
-            }}
-            getOptionLabel={({ label }) => label}
-            getOptionValue={({ id }) => id}
-            onChange={(e, a) => this.props.handleChangeAnnotationClass(e, a, range)}
-            key={(value) => value}
-            cacheOptions
-            defaultOptions
-            isClearable
-            placeholder="Select or Type something..."
-            styles={customStyles}
-          />
-        </ReactstrapTooltip>
-      </span>
-    );
+      );
+    } else {
+      return lettersNode;
+    }
   };
 
   getAnnotatedText() {
@@ -253,7 +259,8 @@ class AbstractAnnotator extends Component {
       end: end,
       text: text,
       tooltip: false,
-      class: {}
+      class: {},
+      uncertainty: 0,
     };
     this.props.onCreateAnnotation(range);
     window.getSelection().empty();
@@ -278,6 +285,7 @@ AbstractAnnotator.propTypes = {
   handleChangeAnnotationClass: PropTypes.func,
   onCreateAnnotation: PropTypes.func,
   toggleTooltip: PropTypes.func,
+  uncertaintyThreshold: PropTypes.number,
 };
 
 export default AbstractAnnotator;
