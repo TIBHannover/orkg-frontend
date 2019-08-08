@@ -15,6 +15,8 @@ class AutoComplete extends Component {
     state = {
         selectedItemId: null,
         dropdownMenuJsx: null,
+        inputValue: '',
+        defaultOptions: [],
     };
 
     IdMatch = async (value, responseJson) => {
@@ -29,7 +31,7 @@ class AutoComplete extends Component {
                 } catch (err) {
                     responseJsonExact = null;
                 }
-                
+
                 if (responseJsonExact) {
                     responseJson.unshift(responseJsonExact);
                 }
@@ -39,8 +41,12 @@ class AutoComplete extends Component {
         return responseJson;
     }
 
-    loadOptions = async (value) => {
+    loadOptions = async (value) => { 
         try {
+            if (value === '' || value.trim() === '') {
+                return [];
+            }
+
             let queryParams = '';
 
             if (value.startsWith('"') && value.endsWith('"') && value.length > 2) {
@@ -77,6 +83,17 @@ class AutoComplete extends Component {
         }
     }
 
+    // this fixes a problem (or a bug by design) from react-select
+    // options were lost after bluring and then focusing the select menu 
+    // probably because the inputvalue is controlled by this component 
+    loadDefaultOptions = async inputValue => {
+        const defaultOptions = await this.loadOptions(inputValue)
+        
+        this.setState({
+            defaultOptions 
+        });
+    };
+
     noResults = (value) => {
         return value.inputValue !== '' ? 'No results found' : 'Start typing to find results';
     }
@@ -87,8 +104,22 @@ class AutoComplete extends Component {
                 id: selected.id,
                 value: selected.label,
             });
-        } else if(action.action === 'create-option') {
+        } else if (action.action === 'create-option') {
             this.props.onNewItemSelected && this.props.onNewItemSelected(selected.label);
+        }
+    }
+
+    handleInputChange = (inputValue, action) => {
+        if (action.action === 'input-change') {
+            this.setState({
+                inputValue
+            });
+            
+            if (this.props.onInput) {
+                this.props.onInput(null, inputValue);
+            }
+        } else if (action.action === 'menu-close') {
+            this.loadDefaultOptions(this.state.inputValue);
         }
     }
 
@@ -138,12 +169,14 @@ class AutoComplete extends Component {
                     loadOptions={this.loadOptions}
                     noOptionsMessage={this.noResults}
                     onChange={this.handleChange}
-                    value=""
+                    onInputChange={this.handleInputChange}
+                    inputValue={this.state.inputValue}
                     styles={this.customStyles}
                     className="form-control-sm form-control"
                     placeholder={this.props.placeholder}
                     autoFocus
                     cacheOptions
+                    defaultOptions={this.state.defaultOptions}
                 />
             </span>
         );

@@ -47,9 +47,11 @@ class AddValue extends Component {
         });
     }
 
-    handleInputChange = (e) => {
+    handleInputChange = (e, value) => {
+        let inputValue = e ? e.target.value : value;
+
         this.setState({
-            inputValue: e.target.value
+            inputValue
         });
     }
 
