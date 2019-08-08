@@ -1,6 +1,6 @@
+import * as network from '../network';
 import * as type from './types.js';
 import { guid } from '../utils';
-import * as network from '../network';
 import { createResource, selectResource, createProperty, createValue } from './statementBrowser';
 
 export const updateGeneralData = (data) => (dispatch) => {
@@ -36,11 +36,7 @@ export const updateAbstract = (data) => (dispatch) => {
   });
 };
 
-export const createContribution = ({
-  selectAfterCreation = false,
-  prefillStatements: performPrefill = false,
-  statements = null,
-}) => (dispatch) => {
+export const createContribution = ({ selectAfterCreation = false, prefillStatements: performPrefill = false, statements = null }) => (dispatch) => {
   let newResourceId = guid();
   let newContributionId = guid();
 
@@ -87,7 +83,6 @@ export const createContribution = ({
 };
 
 export const prefillStatements = ({ statements, resourceId }) => (dispatch) => {
-
   // properties
   for (let property of statements.properties) {
     dispatch(
@@ -225,21 +220,16 @@ export const saveAddPaper = (data) => {
     await network.createResourceStatement(paper.id, publicationYearPredicate, publicationYear.id);
 
     // research field
-    await network.createResourceStatement(
-      paper.id,
-      researchFieldPredicate,
-      data.selectedResearchField,
-    );
+    await network.createResourceStatement(paper.id, researchFieldPredicate, data.selectedResearchField);
 
+    let contributionIds = [];
     // contributions
     for (let contributionId of data.contributions.allIds) {
       let contribution = data.contributions.byId[contributionId];
       let contributionResource = await network.createResource(contribution.label);
-      await network.createResourceStatement(
-        paper.id,
-        contributionPredicate,
-        contributionResource.id,
-      );
+      await network.createResourceStatement(paper.id, contributionPredicate, contributionResource.id);
+
+      contributionIds.push(contributionResource.id);
 
       // set the id of the just created contribution for the related resource
       data.resources.byId[contribution.resourceId].existingResourceId = contributionResource.id;
@@ -250,18 +240,10 @@ export const saveAddPaper = (data) => {
         for (let researchProblem of contribution.researchProblems) {
           // check if the research problem is already a resource
           if (researchProblem.hasOwnProperty('_class') && researchProblem._class === 'resource') {
-            await network.createResourceStatement(
-              contributionResource.id,
-              researchProblemPredicate,
-              researchProblem.id,
-            );
+            await network.createResourceStatement(contributionResource.id, researchProblemPredicate, researchProblem.id);
           } else {
             let researchProblemResource = await network.createResource(researchProblem.id);
-            await network.createResourceStatement(
-              contributionResource.id,
-              researchProblemPredicate,
-              researchProblemResource.id,
-            );
+            await network.createResourceStatement(contributionResource.id, researchProblemPredicate, researchProblemResource.id);
           }
         }
       }
@@ -269,7 +251,10 @@ export const saveAddPaper = (data) => {
 
     await saveStatements(data);
 
-    network.setupSimilarity();
+    for (let contributionId of contributionIds) {
+      // index contribution for similarity
+      network.indexContribution(contributionId);
+    }
 
     dispatch({
       type: type.SAVE_ADD_PAPER,

@@ -1,18 +1,19 @@
+import { Badge, Button, Container, Navbar } from 'reactstrap';
 import React, { Component } from 'react';
-import { Navbar, Container, Button, Badge } from 'reactstrap';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { withCookies } from 'react-cookie';
-import { compose } from 'redux';
-import styled from 'styled-components';
+import { faChevronDown, faChevronUp, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { loadComparisonFromCookie, removeFromComparison } from '../../actions/viewPaper';
+
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faChevronUp, faChevronDown, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { faFile } from '@fortawesome/free-regular-svg-icons';
-import { removeFromComparison, loadComparisonFromCookie } from '../../actions/viewPaper';
-import Tooltip from '../Utils/Tooltip';
 import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
+import PropTypes from 'prop-types';
 import ROUTES from '../../constants/routes.js';
+import Tooltip from '../Utils/Tooltip';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { faFile } from '@fortawesome/free-regular-svg-icons';
+import { reverse } from 'named-urls';
+import styled from 'styled-components';
+import { withCookies } from 'react-cookie';
 
 const ComparisonBoxButton = styled(Button)`
     border-radius: 11px 11px 0 0 !important;
@@ -116,8 +117,8 @@ class ComparisonPopup extends Component {
         }
 
         const contributionAmount = allIds.length;
-        const ids = allIds.join('/');
-        const comparisonUrl = ROUTES.COMPARISON.replace('*', '') + ids; // with named-urls it is not possible to use wildcard URLs, so replace the asterisk
+        const ids = allIds.join(',');
+        const comparisonUrl = ROUTES.COMPARISON + '?contributions=' + ids; // with named-urls it is not possible to use wildcard URLs, so replace the asterisk
 
         return (
             <Navbar fixed="bottom" className="p-0 offset-8" style={{width: '340px'}}>

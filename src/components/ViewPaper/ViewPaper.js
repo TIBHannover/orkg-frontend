@@ -97,6 +97,9 @@ class ViewPaper extends Component {
                     }
                 }
 
+                // Set document title
+                document.title = `${paperResource.label} - ORKG`
+
                 this.setState({
                     loading: false,
                     id: this.props.match.params.resourceId,

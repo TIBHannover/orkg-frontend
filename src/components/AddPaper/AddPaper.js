@@ -25,6 +25,9 @@ const AnimationContainer = styled.div`
 
 class AddPaper extends Component {
     componentDidMount() {
+        // Set document title
+        document.title = 'Add paper - ORKG'
+
         this.props.resetStatementBrowser();
     }
 
