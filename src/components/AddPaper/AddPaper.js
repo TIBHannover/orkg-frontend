@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
-import { Container } from 'reactstrap';
+import { Container, Dropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'reactstrap';
 import ProgressBar from './ProgressBar';
 import GeneralData from './GeneralData/GeneralData';
 import ResearchField from './ResearchField/ResearchField';
 import Contributions from './Contributions/Contributions';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import Finish from './Finish/Finish';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { CSSTransitionGroup } from 'react-transition-group'
 import PropTypes from 'prop-types';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
+import GraphViewModal from '../ViewPaper/GraphViewModal';
 
 const AnimationContainer = styled.div`
     &.fadeIn-enter {
@@ -23,11 +26,27 @@ const AnimationContainer = styled.div`
 `;
 
 class AddPaper extends Component {
+    state = {
+        dropdownOpen: false,
+    }
+
     componentDidMount() {
         // Set document title
         document.title = 'Add paper - ORKG'
 
         this.props.resetStatementBrowser();
+    }
+
+    toggleDropdown = () => {
+        this.setState(prevState => ({
+            dropdownOpen: !prevState.dropdownOpen
+        }));
+    }
+
+    toggle = (type) => {
+        this.setState(prevState => ({
+            [type]: !prevState[type],
+        }));
     }
 
     render() {
@@ -53,7 +72,18 @@ class AddPaper extends Component {
         return (
             <div>
                 <Container className="p-0">
-                    <h1 className="h4 mt-4 mb-4">Add paper</h1>
+                    <h1 className="h4 mt-4 mb-4 float-left">Add paper</h1>
+
+                    <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4 float-right" style={{ marginLeft: 'auto' }}>
+                        <DropdownToggle color="darkblue" size="sm" >
+                            {/*<span className="mr-2">Options</span>*/}<Icon icon={faEllipsisV} />
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            <DropdownItem onClick={() => this.toggle('showGraphModal')}>Show graph visualization</DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+                    
+                    <div className="clearfix" />
                 </Container>
                 <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
                     <ProgressBar currentStep={currentStep} />
@@ -68,6 +98,12 @@ class AddPaper extends Component {
                         {currentStepDetails}
                     </CSSTransitionGroup>
                 </Container>
+
+                <GraphViewModal 
+                    showDialog={this.state.showGraphModal} 
+                    toggle={() => this.toggle('showGraphModal')} 
+                    //paperId={this.props.match.params.resourceId}
+                />
             </div>
         );
     }
