@@ -233,15 +233,18 @@ export const saveAddPaper = (data) => {
 
 // Maybe this function needs to be resursive
 export const saveStatements = async (data) => {
+    let newProperties = {};
+    let newResources = {};
+
     if (data.resources.byId) {
-        //for (let [key, resource] of Object.entries(data.resources.byId)) {
         for (let resourceIdArray of data.resources.allIds) { // the order matters here, since it is an hierarch, the object doesn't provide a reliable order (so use the array)
             let resource = data.resources.byId[resourceIdArray];
             let resourceId;
-
+        
             if (!resource.existingResourceId) {
                 resourceId = await network.createResource(resource.label);
                 resourceId = resourceId.id;
+                data.resources.byId[resourceIdArray].existingResourceId = resourceId;
             } else {
                 resourceId = resource.existingResourceId;
             }
@@ -253,9 +256,13 @@ export const saveStatements = async (data) => {
 
                     let predicateId;
 
-                    if (!property.existingPredicateId) {
+                    if (!property.existingPredicateId && !newProperties[property.label]) {
                         predicateId = await network.createPredicate(property.label);
                         predicateId = predicateId.id;
+
+                        newProperties[property.label] = predicateId; // add to the newProperties object, so the ID can be used for other new labels
+                    } else if (newProperties[property.label]) {
+                        predicateId = newProperties[property.label];
                     } else {
                         predicateId = property.existingPredicateId;
                     }
@@ -277,6 +284,9 @@ export const saveStatements = async (data) => {
                                     newValueId = await network.createResource(value.label);
                                     newValueId = newValueId.id;
                                     data.resources.byId[value.resourceId].existingResourceId = newValueId;
+                                    newResources[value.resourceId] = newValueId;
+                                } else if(newResources[value.resourceId]) {
+                                    newValueId = newResources[value.resourceId];
                                 } else {
                                     newValueId = value.resourceId;
                                 }
