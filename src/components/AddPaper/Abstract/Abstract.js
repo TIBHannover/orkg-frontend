@@ -43,7 +43,6 @@ class Abstract extends Component {
       loading: false,
       ranges: {},
       idIndex: 1,
-      tooltipOpen: false,
       uncertaintyThreshold: [0.8],
     };
   }
@@ -70,7 +69,6 @@ class Abstract extends Component {
                   start: entity[2][0][0],
                   end: entity[2][0][1] - 1,
                   uncertainty: entity[3],
-                  tooltip: false,
                   class: { id: entity[1], label: entity[1] },
                 };
                 return ranges[entity[0]];
@@ -128,10 +126,7 @@ class Abstract extends Component {
     });
   };
 
-  toggleTooltip = (range) => {
-    let state = dotProp.set(this.state, `ranges.${[range.id]}.tooltip`, (v) => !v);
-    this.setState(state);
-  };
+  
 
   fetchAbstract = async () => {
     if (!this.props.abstract) {
