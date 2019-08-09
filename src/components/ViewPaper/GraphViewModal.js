@@ -5,25 +5,28 @@ import PropTypes from 'prop-types';
 import Graph from 'react-graph-vis';
 import { Modal, ModalHeader, ModalBody, Input, Form, FormGroup, Label } from 'reactstrap';
 import uniqBy from 'lodash/uniqBy';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import 'vis/dist/vis-network.min.css';
 
 class GraphView extends Component {
-
     state = {
         nodes: [],
         edges: [],
         statements: [],
         depth: 5,
-    }
+        isLoadingStatements: false,
+    };
 
     componentDidUpdate = (prevProps, prevState) => {
         // load statements again if depth is changed
         if (prevState.depth !== this.state.depth) {
             this.loadStatements();
         }
-    }
+    };
 
     loadStatements = async () => {
+        this.setState({ isLoadingStatements: true });
         if (this.props.paperId) {
             let statements = await this.getResourceAndStatements(this.props.paperId, 0, []);
             let nodes = [];
@@ -39,7 +42,7 @@ class GraphView extends Component {
                 edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label });
             }
 
-            // remove duplicate nodes 
+            // remove duplicate nodes
             nodes = uniqBy(nodes, 'id');
 
             this.setState({
@@ -49,7 +52,8 @@ class GraphView extends Component {
         } else {
             this.visualizeAddPaper();
         }
-    }
+        this.setState({ isLoadingStatements: false });
+    };
 
     // Code is not very organized, structure can be improved
     visualizeAddPaper = () => {
@@ -111,8 +115,8 @@ class GraphView extends Component {
         this.setState({
             nodes,
             edges,
-        })
-    }
+        });
+    };
 
     addPaperStatementsToGraph = (resourceId, nodes, edges) => {
         let statementBrowser = this.props.statementBrowser;
@@ -142,8 +146,8 @@ class GraphView extends Component {
         return {
             nodes,
             edges,
-        }
-    }
+        };
+    };
 
     handleDepthChange = (event) => {
         this.setState({ depth: event.target.value });
@@ -169,7 +173,7 @@ class GraphView extends Component {
         } else {
             return list;
         }
-    }
+    };
 
     render() {
         const graph = {
@@ -182,29 +186,29 @@ class GraphView extends Component {
                 color: '#80869B',
                 font: {
                     color: '#fff',
-                }
+                },
             },
 
             layout: {
                 hierarchical: {
                     direction: 'LR',
                     sortMethod: 'directed',
-                    levelSeparation: 300
-                }
+                    levelSeparation: 300,
+                },
             },
             physics: {
                 hierarchicalRepulsion: {
-                    nodeDistance: 140
+                    nodeDistance: 140,
                 },
                 barnesHut: {
-                    avoidOverlap: 1
+                    avoidOverlap: 1,
                 },
             },
             edges: {
                 color: '#000000',
-                smooth: false
+                smooth: false,
             },
-            height: '700px'
+            height: '700px',
         };
 
         /*const events = {
@@ -216,19 +220,32 @@ class GraphView extends Component {
             <Modal isOpen={this.props.showDialog} toggle={this.props.toggle} size="lg" onOpened={this.loadStatements} style={{ maxWidth: '90%' }}>
                 <ModalHeader toggle={this.props.toggle}>Paper graph visualization</ModalHeader>
                 <ModalBody>
-                    {this.props.paperId &&
+                    {this.props.paperId && (
                         <Form>
                             <FormGroup className="d-flex" style={{ marginBottom: -40, position: 'absolute', zIndex: '999' }}>
-                                <Label for="depth" className="align-self-center mb-0 mr-2">Depth</Label>
+                                <Label for="depth" className="align-self-center mb-0 mr-2">
+                                    Depth
+                                </Label>
                                 <Input type="number" name="select" id="depth" onChange={this.handleDepthChange} value={this.state.depth} style={{ width: 60 }} min="1" max="25" />
                             </FormGroup>
-                        </Form>}
-
-                    <Graph
-                        graph={graph}
-                        options={options}
-                    //events={events}
-                    />
+                        </Form>
+                    )}
+                    {!this.state.isLoadingStatements && (
+                        <Graph
+                            graph={graph}
+                            options={options}
+                            //events={events}
+                        />
+                    )}
+                    {this.state.isLoadingStatements && (
+                        <div className="text-center text-primary mt-4 mb-4">
+                            <span style={{ fontSize: 80 }}>
+                                <Icon icon={faSpinner} spin />
+                            </span>
+                            <br />
+                            <h2 className="h5">Loading graph...</h2>
+                        </div>
+                    )}
                 </ModalBody>
             </Modal>
         );
@@ -241,13 +258,11 @@ GraphView.propTypes = {
     addPaper: PropTypes.object.isRequired,
     statementBrowser: PropTypes.object.isRequired,
     paperId: PropTypes.string,
-}
+};
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     addPaper: state.addPaper,
     statementBrowser: state.statementBrowser,
 });
 
-export default connect(
-    mapStateToProps,
-)(GraphView);
+export default connect(mapStateToProps)(GraphView);
