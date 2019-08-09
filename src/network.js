@@ -7,6 +7,7 @@ export const literalsUrl = `${url}literals/`;
 export const crossrefUrl = process.env.REACT_APP_CROSSREF_URL;
 export const comparisonUrl = `${similaireServiceUrl}compare/`;
 export const similaireUrl = `${similaireServiceUrl}similar/`;
+export const authenticationUrl = process.env.REACT_APP_AUTHENTICATION_URL;
 
 /**
  * Sends simple GET request to the URL.
@@ -199,3 +200,33 @@ export const createShortLink = (data) => {
 export const getLongLink = (shortCode) => {
     return submitGetRequest(`${similaireServiceUrl}shortener/${encodeURIComponent(shortCode)}`);
 };
+
+export const signInWithEmailAndPassword = (email, password) => {
+    const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic b3Jnay1jbGllbnQ6c2VjcmV0',
+    };
+
+    const data = {
+        username: email,
+        grant_type: 'password',
+        client_id: 'orkg-client',
+        password
+    }
+
+    return submitPostRequest(`${authenticationUrl}oath/token`, headers, data);
+}
+
+export const registerWithEmailAndPassword = (email, password, name) => {
+    const headers = {
+        'Content-Type': 'application/json',
+    };
+
+    const data = {
+        username: email,
+        password,
+        matching_password: password, //TODO: do we want a confirm password in the UI, or leave it like this?
+    }
+
+    return submitPostRequest(`${authenticationUrl}auth/register`, headers, data);
+}

@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { openAuthDialog, toggleAuthDialog, updateAuth } from '../../actions/auth';
+import { signInWithEmailAndPassword } from '../../network';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 class SignIn extends Component {
   constructor(props) {
@@ -11,19 +14,31 @@ class SignIn extends Component {
     this.state = {
       email: '',
       password: '',
+      loading: false,
     };
   }
 
-  handleInputChange(e) {
+  handleInputChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value,
     });
   }
 
-  signInWithEmailAndPassword = () =>
+  signIn = async () => {
+    this.setState({
+      loading: true,
+    });
+
+    let token = await signInWithEmailAndPassword(this.state.email, this.state.password);
+
+    this.setState({
+      loading: false,
+    });
+
     Promise.all([this.props.updateAuth({ user: { displayName: 'John Doe', id: 1 } })]).then(() => {
       this.props.toggleAuthDialog();
     });
+  }
 
   render() {
     return (
@@ -65,12 +80,13 @@ class SignIn extends Component {
           <Button
             color="primary"
             onClick={() => {
-              this.signInWithEmailAndPassword();
+              this.signIn();
             }}
             className="mt-4 mb-2"
             block
+            disabled={this.state.loading}
           >
-            Sign in
+            {!this.state.loading ? 'Sign in' : <span><Icon icon={faSpinner} spin /> Loading</span>}
           </Button>
         </Form>
       </>

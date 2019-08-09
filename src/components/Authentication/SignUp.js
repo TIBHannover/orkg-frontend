@@ -4,6 +4,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { toggleAuthDialog, updateAuth } from '../../actions/auth';
+import { registerWithEmailAndPassword } from '../../network';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 class SignUp extends Component {
   constructor(props) {
@@ -13,6 +16,7 @@ class SignUp extends Component {
       name: '',
       email: '',
       password: '',
+      loading: false,
     };
   }
 
@@ -22,7 +26,17 @@ class SignUp extends Component {
     });
   }
 
-  signUp = () => {
+  signUp = async () => {
+    this.setState({
+      loading: true,
+    });
+
+    await registerWithEmailAndPassword(this.state.email, this.state.password, this.state.name);
+
+    this.setState({
+      loading: false,
+    });
+
     this.props.updateAuth({ user: { displayName: 'John Doe', email: '', id: 1 } });
     this.props.toggleAuthDialog();
   };
@@ -71,8 +85,9 @@ class SignUp extends Component {
             }}
             className="mt-4 mb-2"
             block
+            disabled={this.state.loading}
           >
-            Sign up
+            {!this.state.loading ? 'Sign up' : <span><Icon icon={faSpinner} spin /> Loading</span>}
           </Button>
         </Form>
       </>
