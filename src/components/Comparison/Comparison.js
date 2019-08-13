@@ -53,6 +53,7 @@ class Comparison extends Component {
 
     componentDidMount = () => {
         this.performComparison();
+        document.title = 'Comparison - ORKG'
     }
 
     componentDidUpdate = (prevProps, prevState) => {

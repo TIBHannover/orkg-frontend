@@ -175,6 +175,7 @@ export const StyledLevelBox = styled.div`
         margin-top: -2px;
         margin-right: -2px;
         margin-bottom: -2px;
+        display:block;
     }
 `;
 

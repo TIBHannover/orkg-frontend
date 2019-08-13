@@ -36,6 +36,7 @@ class ResearchField extends Component {
         // Get the research problem
         getResource(this.props.match.params.researchFieldId).then((result) => {
             this.setState({ researchField: result })
+            document.title = `${this.state.researchField.label} - ORKG`
         });
         // Get the statements that contains the research field as an object
         getStatementsByObject({
