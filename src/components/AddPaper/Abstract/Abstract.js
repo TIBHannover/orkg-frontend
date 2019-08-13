@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Alert, Card, CardBody, Label, Badge } from 'reactstrap';
-import { arxivUrl } from '../../../network';
+import { arxivUrl, semanticScholarUrl, submitGetRequest, getAnnotations } from '../../../network';
 import { connect } from 'react-redux';
 import {
   updateAbstract,
@@ -11,7 +11,6 @@ import {
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import AbstractAnnotator from './AbstractAnnotator';
-import { getAnnotations } from '../../../network';
 import PropTypes from 'prop-types';
 import Textarea from 'react-textarea-autosize';
 import Tooltip from '../../Utils/Tooltip';
@@ -31,6 +30,7 @@ class Abstract extends Component {
     this.state = {
       isAnnotationLoading: false,
       isAnnotationFailedLoading: false,
+      isAbstractFailedLoading:false,
       classeOptions: [
         { id: 'process', label: 'Process' },
         { id: 'data', label: 'Data' },
@@ -126,46 +126,52 @@ class Abstract extends Component {
     });
   };
 
-  
-
   fetchAbstract = async () => {
     if (!this.props.abstract) {
       if (!this.props.title) {
         this.setState({
           changeAbstract: true,
         });
-
         return;
       }
       this.setState({
         loading: true,
       });
 
-      const titleEncoded = encodeURIComponent(this.props.title).replace(/%20/g, '+');
-      const apiCall = arxivUrl + '?search_query=ti:' + titleEncoded;
-
-      fetch(apiCall, { method: 'GET' })
-        .then((response) => response.text())
-        .then((str) => new window.DOMParser().parseFromString(str, 'text/xml')) // parse the text as xml
-        .then((xmlDoc) => {
-          // get the abstract from the xml doc
-          if (xmlDoc.getElementsByTagName('entry') && xmlDoc.getElementsByTagName('entry')[0]) {
-            return xmlDoc.getElementsByTagName('entry')[0].getElementsByTagName('summary')[0]
-              .innerHTML;
-          }
-          return '';
-        })
-        .then((abstract) => {
+      let DOI = this.props.doi.substring(this.props.doi.indexOf('10.'));
+      return submitGetRequest(semanticScholarUrl+DOI).then((data, reject)=>{
+        if(!data.abstract){
+          return reject;
+        }
+        return data.abstract;
+      }).catch(()=>{
+        const titleEncoded = encodeURIComponent(this.props.title).replace(/%20/g, '+');
+        const apiCall = arxivUrl + '?search_query=ti:' + titleEncoded;
+        return fetch(apiCall, { method: 'GET' })
+          .then((response) => response.text())
+          .then((str) => new window.DOMParser().parseFromString(str, 'text/xml')) // parse the text as xml
+          .then((xmlDoc) => {
+            // get the abstract from the xml doc
+            if (xmlDoc.getElementsByTagName('entry') && xmlDoc.getElementsByTagName('entry')[0]) {
+              return xmlDoc.getElementsByTagName('entry')[0].getElementsByTagName('summary')[0]
+                .innerHTML;
+            }
+            return '';
+          })
+      }).then((abstract) => {
           // remove line breaks from the abstract
           abstract = abstract.replace(/(\r\n|\n|\r)/gm, ' ');
-
+          
           this.setState({
             loading: false,
           });
           this.props.updateAbstract(abstract);
           this.getAnnotation();
         })
-        .catch();
+        .catch(() => { 
+          this.handleChangeAbstract();
+          this.setState({ isAbstractFailedLoading: true, loading: false });
+        });
     } else {
       this.getAnnotation();
     }
@@ -266,6 +272,11 @@ class Abstract extends Component {
             Failed to connect to the annotation service, please try again later
           </Alert>
         )}
+        {!this.state.loading && this.state.isAbstractFailedLoading && (
+          <Alert color="light">
+            We couldn't fetch the abstract of the paper, please enter it manually or skip this step.
+          </Alert>
+        )}
 
         <Card>
           <CardBody>
@@ -354,7 +365,7 @@ class Abstract extends Component {
         <Button color="light" className="mb-2 mt-1" onClick={this.handleChangeAbstract}>
           {this.state.changeAbstract ? 'Annotate abstract' : 'Change abstract'}
         </Button>
-        {!this.state.isAnnotationLoading && !this.state.isAnnotationFailedLoading && (
+        {!this.state.isAnnotationLoading && !this.state.isAnnotationFailedLoading && toArray(this.state.ranges).length > 0 && (
           <div className={'col-3 float-right'}>
             <div className={'mt-4'}>
               <Range
@@ -427,6 +438,7 @@ Abstract.propTypes = {
   updateAbstract: PropTypes.func.isRequired,
   abstract: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  doi: PropTypes.string,
   selectedContribution: PropTypes.string.isRequired,
   contributions: PropTypes.object.isRequired,
   createContribution: PropTypes.func.isRequired,
@@ -436,6 +448,7 @@ Abstract.propTypes = {
 const mapStateToProps = (state) => ({
   selectedContribution: state.addPaper.selectedContribution,
   title: state.addPaper.title,
+  doi: state.addPaper.doi,
   abstract: state.addPaper.abstract,
   contributions: state.addPaper.contributions,
 });

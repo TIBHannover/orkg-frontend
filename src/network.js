@@ -7,6 +7,7 @@ export const statementsUrl = `${url}statements/`;
 export const literalsUrl = `${url}literals/`;
 export const crossrefUrl = process.env.REACT_APP_CROSSREF_URL;
 export const arxivUrl = process.env.REACT_APP_ARXIV_URL;
+export const semanticScholarUrl = process.env.REACT_APP_SEMANTICSCHOLAR_URL;
 export const comparisonUrl = `${similaireServiceUrl}compare/`;
 export const similaireUrl = `${similaireServiceUrl}similar/`;
 
