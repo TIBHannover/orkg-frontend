@@ -20,7 +20,7 @@ class SignUp extends Component {
     };
   }
 
-  handleInputChange(e) {
+  handleInputChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value,
     });
@@ -31,10 +31,13 @@ class SignUp extends Component {
       loading: true,
     });
 
-    await registerWithEmailAndPassword(this.state.email, this.state.password, this.state.name);
-
-    this.setState({
-      loading: false,
+    registerWithEmailAndPassword(this.state.email, this.state.password, this.state.name).then(
+      ()=>{
+        this.setState({loading: false,});
+      }
+    ).catch((e)=> {
+      console.log(e);
+      this.setState({loading: false,});
     });
 
     this.props.updateAuth({ user: { displayName: 'John Doe', email: '', id: 1 } });

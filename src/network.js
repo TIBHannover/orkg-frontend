@@ -214,7 +214,7 @@ export const signInWithEmailAndPassword = (email, password) => {
         password
     }
 
-    return submitPostRequest(`${authenticationUrl}oath/token`, headers, data);
+    return submitPostRequest(`${authenticationUrl}auth/token`, headers, data);
 }
 
 export const registerWithEmailAndPassword = (email, password, name) => {
@@ -223,7 +223,8 @@ export const registerWithEmailAndPassword = (email, password, name) => {
     };
 
     const data = {
-        username: email,
+        username: name,
+        email: email,
         password,
         matching_password: password, //TODO: do we want a confirm password in the UI, or leave it like this?
     }
