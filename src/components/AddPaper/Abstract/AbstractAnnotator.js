@@ -103,11 +103,7 @@ class AbstractAnnotator extends Component {
     }
 
     tooltipRenderer = (lettersNode, range) => {
-        if (range.uncertainty <= this.props.uncertaintyThreshold) {
-            return <AnnotationTootip loadOptions={this.loadOptions} key={`${range.id}`} range={range} lettersNode={lettersNode} handleChangeAnnotationClass={this.props.handleChangeAnnotationClass} />;
-        } else {
-            return lettersNode;
-        }
+        return <AnnotationTootip loadOptions={this.loadOptions} key={`${range.id}`} range={range} lettersNode={lettersNode} handleChangeAnnotationClass={this.props.handleChangeAnnotationClass} />;
     };
 
     getAnnotatedText() {
@@ -115,7 +111,7 @@ class AbstractAnnotator extends Component {
         for (let charPosition = 0; charPosition < this.props.abstract.length; charPosition++) {
             const range = this.getRange(charPosition);
             const charNode = this.renderCharNode(charPosition);
-            if (!range) {
+            if (!range || range.uncertainty > this.props.uncertaintyThreshold) {
                 annotatedText.push(charNode);
                 continue;
             }

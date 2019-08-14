@@ -326,7 +326,7 @@ class Abstract extends Component {
                             key={`c${c}`}
                             style={{ color: '#333', background: color }}
                           >
-                            {c} {rangeArray.filter((rc) => rc.class.label === c).length}
+                            {c ? c : 'Unlabeled'} {rangeArray.filter((rc) => rc.class.label === c).length}
                           </Badge>
                         );
                       })}
