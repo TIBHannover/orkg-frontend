@@ -178,42 +178,72 @@ class Abstract extends Component {
     }
   };
 
+  getExistingPredicateId = (property) => {
+    if (this.props.properties.allIds.length>0){
+      let p = this.props.properties.allIds.filter(
+        (pId) => (this.props.properties.byId[pId].label === property.label),
+      );
+      if (p.length>0){ // Property Already exists 
+        return p[0];
+      }
+    }
+    return false;
+  }
+
+  getExistingRange = (range) => {
+    if (this.props.properties.allIds.length>0){
+      let p = this.props.properties.allIds.filter(
+        (pId) => (this.props.properties.byId[pId].label === range.class.label),
+      );
+      if (p.length>0){ // Property Already exists 
+        // Check value
+        let v = this.props.properties.byId[p[0]].valueIds.filter((id)=> {
+          if (this.props.values.byId[id].label === range.text){
+            return id;
+          }else{
+            return false;
+          }
+        })
+        if (v.length>0){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+    
   handleNextClick = () => {
     //TODO: add the annotated words as statements for the next step
-
     let classesID = {};
     let createdProperties = {};
     let statements = { properties: [], values: [] };
-    let rangesIDs = Object.keys(this.state.ranges);
-    if (rangesIDs.length > 0) {
-      rangesIDs.map((rID) => {
-        let range = this.state.ranges[rID];
+    let rangesArray = toArray(this.state.ranges).filter(
+      (r) => r.uncertainty <= this.state.uncertaintyThreshold,
+    );
+    if (rangesArray.length > 0) {
+      rangesArray.map((range) => {
         let propertyId;
-        let predicateId = null;
-
-        if (range.uncertainty <= this.state.uncertaintyThreshold) {
-          if (range.class.id !== range.class.label) {
-            //existing predicate
-            predicateId = range.class.id;
-            propertyId = range.class.id;
+        if (!this.getExistingRange(range)){
+          if (classesID[range.class.id]) {
+            propertyId = classesID[range.class.id];
           } else {
-            if (classesID[range.class.id]) {
-              propertyId = classesID[range.class.id];
-            } else {
-              let pID = guid();
-              classesID[range.class.id] = pID;
-              propertyId = pID;
-            }
+            let pID = guid();
+            classesID[range.class.id] = pID;
+            propertyId = pID;
           }
           if (!createdProperties[propertyId]) {
-            statements['properties'].push({
-              propertyId: propertyId,
-              existingPredicateId: predicateId,
-              label: range.class.label,
-            });
+            let existingPredicateId = this.getExistingPredicateId(range.class);
+            if (!existingPredicateId){
+              statements['properties'].push({
+                propertyId: propertyId,
+                existingPredicateId: (range.class.id.toLowerCase() !== range.class.label.toLowerCase()) ? range.class.id : null,
+                label: range.class.label,
+              });
+            }else{
+              propertyId = existingPredicateId
+            }
             createdProperties[propertyId] = propertyId;
           }
-
           statements['values'].push({
             label: range.text,
             type: 'object',
@@ -223,7 +253,6 @@ class Abstract extends Component {
         return null;
       });
     }
-
     if (this.props.contributions.allIds.length === 0) {
       this.props.createContribution({
         selectAfterCreation: true,
@@ -234,7 +263,6 @@ class Abstract extends Component {
       // Add the statements to the first contribution
       this.props.prefillStatements({ statements, resourceId : this.props.contributions.byId[this.props.contributions.allIds[0]].resourceId });
     }
-
     //TODO: add the annotated words as statements in a specific contribution
 
     this.props.nextStep();
@@ -452,6 +480,9 @@ Abstract.propTypes = {
   createContribution: PropTypes.func.isRequired,
   prefillStatements: PropTypes.func.isRequired,
   theme: PropTypes.object.isRequired,
+  resources: PropTypes.object.isRequired,
+  properties: PropTypes.object.isRequired,
+  values: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -460,6 +491,9 @@ const mapStateToProps = (state) => ({
   doi: state.addPaper.doi,
   abstract: state.addPaper.abstract,
   contributions: state.addPaper.contributions,
+  resources: state.statementBrowser.resources,
+  properties: state.statementBrowser.properties,
+  values: state.statementBrowser.values,
 });
 
 const mapDispatchToProps = (dispatch) => ({
