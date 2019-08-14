@@ -7,6 +7,7 @@ import {
   nextStep,
   previousStep,
   createContribution,
+  prefillStatements
 } from '../../../actions/addPaper';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -229,6 +230,9 @@ class Abstract extends Component {
         prefillStatements: true,
         statements: statements,
       });
+    }else{
+      // Add the statements to the first contribution
+      this.props.prefillStatements({ statements, resourceId : this.props.contributions.byId[this.props.contributions.allIds[0]].resourceId });
     }
 
     //TODO: add the annotated words as statements in a specific contribution
@@ -446,6 +450,7 @@ Abstract.propTypes = {
   selectedContribution: PropTypes.string.isRequired,
   contributions: PropTypes.object.isRequired,
   createContribution: PropTypes.func.isRequired,
+  prefillStatements: PropTypes.func.isRequired,
   theme: PropTypes.object.isRequired,
 };
 
@@ -462,6 +467,7 @@ const mapDispatchToProps = (dispatch) => ({
   nextStep: () => dispatch(nextStep()),
   previousStep: () => dispatch(previousStep()),
   createContribution: (data) => dispatch(createContribution(data)),
+  prefillStatements: (data) => dispatch(prefillStatements(data)),
 });
 
 export default compose(
