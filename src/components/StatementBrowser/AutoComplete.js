@@ -1,155 +1,183 @@
 import React, { Component } from 'react';
 import { submitGetRequest } from '../../network';
-import { Input } from 'reactstrap';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-
-const DropdownMenuStyled = styled.div`
-    display: block!important;
-    z-index: 1001!important;
-`;
-
-const HrStyled = styled.hr`
-    margin-top: 0;
-    margin-bottom: 0;
-`;
+import AsyncSelect from 'react-select/async';
+import AsyncCreatableSelect from 'react-select/async-creatable';
 
 class AutoComplete extends Component {
     constructor(props) {
         super(props);
 
         this.state.value = this.props.value || '';
+        this.maxResults = 100;
     }
 
     state = {
         selectedItemId: null,
         dropdownMenuJsx: null,
+        inputValue: '',
+        defaultOptions: [],
     };
 
-    // TODO: add timer, so that the request is not sent on every keystroke.
-    handleChange = async (event) => {
-        const maxValues = 6;
-        const value = event.target.value;
+    IdMatch = async (value, responseJson) => {
+        if (value.startsWith('#')) {
+            const valueWithoutHashtag = value.substr(1);
 
-        if (this.state.selectedItemId) {
-            this.props.onItemSelected(null);
-        }
-        this.setState({
-            value: value,
-            selectedItemId: null,
-        });
+            if (valueWithoutHashtag.length > 0) {
+                let responseJsonExact;
 
-        this.props.onInput && this.props.onInput(event);
-
-        if (value && value.length >= 0) {
-            try {
-                const responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value));
-
-                const menuItemsJsx = responseJson.map((item) => (
-                    <button
-                        type="button"
-                        id={item.id}
-                        key={item.id}
-                        className="dropdown-item"
-                        onClick={this.handleItemClick}
-                        style={{ whiteSpace: 'normal' }}
-                    >
-                        {item.label}
-                    </button>
-                )).slice(0, maxValues);
-
-                const propertyExists = responseJson.find(i => i.label.toLowerCase() === value.trim().toLowerCase())
-                const lastItem = this.props.onNewItemSelected && (
-                    <>
-                        {menuItemsJsx.length > 0 && <HrStyled />}
-                        <button
-                            type="button"
-                            id="new"
-                            key="new"
-                            className="dropdown-item"
-                            onClick={!propertyExists ? this.getNewItemClickHandler(value.trim()) : null }
-                        >
-                            {!propertyExists &&
-                                <em>Create new property: {value.trim()}</em>
-                            }
-                            {propertyExists &&
-                                <em>Property: {value.trim()} <em className="float-right">This property exists already</em></em>
-                            }
-                        </button>
-                    </>
-                );
-
-                const completeMenuItemsJsx = lastItem ? [...menuItemsJsx, lastItem] : menuItemsJsx;
-
-                if (completeMenuItemsJsx.length > 0) {
-                    this.setState({
-                        dropdownMenuJsx: <DropdownMenuStyled className="dropdown-menu" style={{ width: '100%' }}>{completeMenuItemsJsx}</DropdownMenuStyled>,
-                    });
-                } else {
-                    this.hideDropdownMenu();
+                try {
+                    responseJsonExact = await submitGetRequest(this.props.requestUrl + encodeURIComponent(valueWithoutHashtag));
+                } catch (err) {
+                    responseJsonExact = null;
                 }
-            } catch (err) {
-                console.error(err);
-            }
-        } else {
-            this.hideDropdownMenu();
-        }
-    };
 
-    getNewItemClickHandler = (value) => {
-        return () => {
-            if (this.props.hideAfterSelection) {
-                this.hideDropdownMenu();
+                if (responseJsonExact) {
+                    responseJson.unshift(responseJsonExact);
+                }
             }
-            this.props.onNewItemSelected && this.props.onNewItemSelected(value);
-            return false;
         }
-    };
 
-    handleItemClick = (event) => {
+        return responseJson;
+    }
+
+    loadOptions = async (value) => { 
+        try {
+            if (value === '' || value.trim() === '') {
+                return [];
+            }
+
+            let queryParams = '';
+
+            if (value.startsWith('"') && value.endsWith('"') && value.length > 2) {
+                value = value.substring(1, value.length - 1);
+                queryParams = '&exact=true';
+            }
+
+            let responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value) + queryParams);
+            responseJson = await this.IdMatch(value, responseJson);
+
+            if (this.props.additionalData && this.props.additionalData.length > 0) {
+                let newProperties = this.props.additionalData;
+                newProperties = newProperties.filter(({ label }) => label.includes(value)); // ensure the label of the new property contains the search value
+
+                responseJson.unshift(...newProperties);
+            }
+
+            if (responseJson.length > this.maxResults) {
+                responseJson = responseJson.slice(0, this.maxResults);
+            }
+
+            let options = [];
+
+            responseJson.map((item) => options.push({
+                label: item.label,
+                id: item.id
+            }));
+
+            return options;
+        } catch (err) {
+            console.error(err);
+
+            return [];
+        }
+    }
+
+    // this fixes a problem (or a bug by design) from react-select
+    // options were lost after bluring and then focusing the select menu 
+    // probably because the inputvalue is controlled by this component 
+    loadDefaultOptions = async inputValue => {
+        const defaultOptions = await this.loadOptions(inputValue)
+        
         this.setState({
-            value: event.target.innerText,
-            selectedItemId: event.target.id,
+            defaultOptions 
         });
-        this.hideDropdownMenu();
-        this.props.onItemSelected({
-            id: event.target.id,
-            value: event.target.innerText,
-        });
-        return false;
     };
 
-    hideDropdownMenu = () => {
-        this.setState({ dropdownMenuJsx: null });
-    };
+    noResults = (value) => {
+        return value.inputValue !== '' ? 'No results found' : 'Start typing to find results';
+    }
+
+    handleChange = (selected, action) => {
+        if (action.action === 'select-option') {
+            this.props.onItemSelected({
+                id: selected.id,
+                value: selected.label,
+            });
+        } else if (action.action === 'create-option') {
+            this.props.onNewItemSelected && this.props.onNewItemSelected(selected.label);
+        }
+    }
+
+    handleInputChange = (inputValue, action) => {
+        if (action.action === 'input-change') {
+            this.setState({
+                inputValue
+            });
+            
+            if (this.props.onInput) {
+                this.props.onInput(null, inputValue);
+            }
+        } else if (action.action === 'menu-close') {
+            this.loadDefaultOptions(this.state.inputValue);
+        }
+    }
 
     render() {
-        let inputStyle = {};
-
-        // disable border radius when is used in a button group (since there is a 
-        // span around the dropdown, disabling using :first-child doesn't work)
-        if (this.props.disableBorderRadiusLeft) {
-            inputStyle.borderTopLeftRadius = 0;
-            inputStyle.borderBottomLeftRadius = 0;
+        this.customStyles = {
+            control: (provided, state) => ({
+                ...provided,
+                background: 'inherit',
+                boxShadow: state.isFocused ? 0 : 0,
+                border: 0,
+                paddingLeft: 0,
+                paddingRight: 0,
+                cursor: 'text',
+                minHeight: 'initial',
+                borderRadius: 'inherit',
+            }),
+            container: (provided) => ({
+                ...provided,
+                padding: 0,
+                height: 'auto',
+                borderTopLeftRadius: this.props.disableBorderRadiusLeft ? 0 : undefined,
+                borderBottomLeftRadius: this.props.disableBorderRadiusLeft ? 0 : undefined,
+                borderTopRightRadius: this.props.disableBorderRadiusRight ? 0 : undefined,
+                borderBottomRightRadius: this.props.disableBorderRadiusRight ? 0 : undefined,
+                background: '#fff',
+            }),
+            menu: (provided) => ({
+                ...provided,
+                zIndex: 10
+            }),
+            dropdownIndicator: (provided) => ({
+                ...provided,
+                padding: 4,
+                cursor: 'pointer',
+            }),
+            option: (provided) => ({
+                ...provided,
+                cursor: 'pointer',
+            })
         }
 
-        if (this.props.disableBorderRadiusRight) {
-            inputStyle.borderTopRightRadius = 0;
-            inputStyle.borderBottomRightRadius = 0;
-        }
+        const Select = this.props.allowCreate ? AsyncCreatableSelect : AsyncSelect;
 
         return (
             <span className="dropdown" style={{ flex: '1 1 auto' }}>
-                <Input bsSize="sm"
-                    autoFocus={true}
-                    placeholder={this.props.placeholder}
-                    value={this.state.value}
+                <Select
+                    loadOptions={this.loadOptions}
+                    noOptionsMessage={this.noResults}
                     onChange={this.handleChange}
-                    onKeyUp={this.props.onKeyUp}
-                    style={inputStyle}
+                    onInputChange={this.handleInputChange}
+                    inputValue={this.state.inputValue}
+                    styles={this.customStyles}
+                    className="form-control-sm form-control"
+                    placeholder={this.props.placeholder}
+                    autoFocus
+                    cacheOptions
+                    defaultOptions={this.state.defaultOptions}
                 />
-
-                {this.state.dropdownMenuJsx}
             </span>
         );
     }
@@ -159,6 +187,8 @@ AutoComplete.propTypes = {
     requestUrl: PropTypes.string.isRequired,
     placeholder: PropTypes.string.isRequired,
     onItemSelected: PropTypes.func.isRequired,
+    allowCreate: PropTypes.bool,
+    additionalData: PropTypes.array,
     onNewItemSelected: PropTypes.func,
     onKeyUp: PropTypes.func,
     disableBorderRadiusRight: PropTypes.bool,

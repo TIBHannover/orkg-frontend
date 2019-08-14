@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Container } from 'reactstrap';
+import { Container, Dropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'reactstrap';
 import { getStatementsBySubject, getResource } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faBars } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faCalendar, faBars, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader'
 import Contributions from './Contributions';
@@ -14,6 +14,7 @@ import moment from 'moment'
 import PropTypes from 'prop-types';
 import ComparisonPopup from './ComparisonPopup';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
+import GraphViewModal from './GraphViewModal';
 
 class ViewPaper extends Component {
     state = {
@@ -23,7 +24,9 @@ class ViewPaper extends Component {
         title: '',
         authorNames: [],
         contributions: [],
-        selectedContribution: ''
+        selectedContribution: '',
+        dropdownOpen: false,
+        showGraphModal: false,
     }
 
     componentDidMount() {
@@ -123,6 +126,18 @@ class ViewPaper extends Component {
         });
     }
 
+    toggle = (type) => {
+        this.setState(prevState => ({
+            [type]: !prevState[type],
+        }));
+    }
+
+    toggleDropdown = () => {
+        this.setState(prevState => ({
+            dropdownOpen: !prevState.dropdownOpen
+        }));
+    }
+
     render() {
         return (
             <div>
@@ -151,14 +166,27 @@ class ViewPaper extends Component {
                             )}
                             {!this.state.loading && !this.state.loading_failed && (
                                 <>
-                                    <h2 className="h4 mt-4 mb-3">{this.state.title ? this.state.title : <em>No title</em>}</h2>
+                                    <div className="d-flex">
+                                        <h2 className="h4 mt-4 mb-3">{this.state.title ? this.state.title : <em>No title</em>}</h2>
+
+                                        <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4" style={{ marginLeft: 'auto'}}>
+                                            <DropdownToggle color="darkblue" size="sm" >
+                                                <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
+                                            </DropdownToggle>
+                                            <DropdownMenu>
+                                                <DropdownItem onClick={() => this.toggle('showGraphModal')}>Show graph visualization</DropdownItem>
+                                            </DropdownMenu>
+                                        </Dropdown>
+                                    </div>
+
+                                    <div className="clearfix" />
 
                                     {/* TODO: change links of badges  */}
                                     <span className="badge badge-lightblue mr-2">
                                         <Icon icon={faCalendar} className="text-primary" /> {moment(this.state.publicationMonth, 'M').format('MMMM')} {this.state.publicationYear}
                                     </span>
                                     {this.state.researchField && this.state.researchField.object && (
-                                        <Link to={reverse(ROUTES.RESEARCH_FIELD, {researchFieldId: this.state.researchField.object.id})} >
+                                        <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.researchField.object.id })} >
                                             <span className="badge badge-lightblue mr-2 mb-2">
                                                 <Icon icon={faBars} className="text-primary" /> {this.state.researchField.object.label}
                                             </span>
@@ -173,7 +201,7 @@ class ViewPaper extends Component {
                             )}
                             {!this.state.loading_failed && (
                                 <>
-                                    <hr className="mt-5 mb-5" />
+                                    <hr className="mt-4 mb-5" />
                                     <Contributions
                                         selectedContribution={this.state.selectedContribution}
                                         contributions={this.state.contributions}
@@ -187,6 +215,12 @@ class ViewPaper extends Component {
                         </Container>
                     </>
                 )}
+
+                <GraphViewModal 
+                    showDialog={this.state.showGraphModal} 
+                    toggle={() => this.toggle('showGraphModal')} 
+                    paperId={this.props.match.params.resourceId}
+                />
             </div>
         );
     }
