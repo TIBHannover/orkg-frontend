@@ -256,7 +256,11 @@ class Abstract extends Component {
     let rangesClasses = [...new Set(rangeArray.map((r) => r.class.label))];
     return (
       <div>
-        <h2 className="h4 mt-4 mb-3">Abstract annotation</h2>
+        <h2 className="h4 mt-4 mb-3 clearfix">Abstract annotation
+        <Button outline color="primary" className="float-right" onClick={this.props.nextStep}>
+          Skip this step
+        </Button>
+        </h2>
 
         {this.props.abstract &&
           !this.state.changeAbstract &&
@@ -346,7 +350,7 @@ class Abstract extends Component {
             ) : (
               <div>
                 <Label for="paperAbstract">
-                  <Tooltip message="Enter the paper abstract to get automatically generated concepts for you paper. You can skip this step by clicking the 'Next step' button">
+                  <Tooltip message="Enter the paper abstract to get automatically generated concepts for you paper.">
                     Enter the paper abstract
                   </Tooltip>
                 </Label>

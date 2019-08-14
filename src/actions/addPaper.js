@@ -72,7 +72,7 @@ export const createContribution = ({ selectAfterCreation = false, prefillStateme
         });*/
   }
 
-  if (performPrefill) {
+  if (performPrefill && statements) {
     dispatch(
       prefillStatements({
         statements,
