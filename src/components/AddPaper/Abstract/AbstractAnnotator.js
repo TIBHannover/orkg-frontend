@@ -103,7 +103,13 @@ class AbstractAnnotator extends Component {
     }
 
     tooltipRenderer = (lettersNode, range) => {
-        return <AnnotationTootip loadOptions={this.loadOptions} key={`${range.id}`} range={range} lettersNode={lettersNode} handleChangeAnnotationClass={this.props.handleChangeAnnotationClass} />;
+        return (<AnnotationTootip 
+                    loadOptions={this.loadOptions} 
+                    key={`${range.id}`} range={range} 
+                    lettersNode={lettersNode} 
+                    handleChangeAnnotationClass={this.props.handleChangeAnnotationClass} 
+                    handleValidateAnnotation={this.props.handleValidateAnnotation}
+                />);
     };
 
     getAnnotatedText() {
@@ -187,6 +193,7 @@ AbstractAnnotator.propTypes = {
     rangesIdIndex: PropTypes.number,
     annotationClasseOptions: PropTypes.array,
     handleChangeAnnotationClass: PropTypes.func,
+    handleValidateAnnotation: PropTypes.func,
     onCreateAnnotation: PropTypes.func,
     uncertaintyThreshold: PropTypes.number,
 };

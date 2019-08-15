@@ -97,6 +97,7 @@ class Abstract extends Component {
         id: selectedOption.id,
         label: selectedOption.label,
       });
+      state = dotProp.set(state, `ranges.${[range.id]}.uncertainty`, 0);
       this.setState(state);
     } else if (action === 'create-option') {
       const newOption = {
@@ -107,6 +108,7 @@ class Abstract extends Component {
         id: selectedOption.id,
         label: selectedOption.label,
       });
+      state = dotProp.set(state, `ranges.${[range.id]}.uncertainty`, 0);
       this.setState(state);
       this.setState({ classeOptions: [...this.state.classeOptions, newOption] });
     } else if (action === 'clear') {
@@ -114,7 +116,14 @@ class Abstract extends Component {
     }
   };
 
+  handleValidateAnnotation = (range_id) => {
+    //TODO: Save this action to collect data for the annotation model
+    let state = dotProp.set(this.state, `ranges.${[range_id]}.uncertainty`, 0);
+    this.setState(state);
+  }
+
   removeAnnotation = (range) => {
+    //TODO: Save this action to collect data for the annotation model
     let filtered = this.state.ranges;
     delete filtered[range.id];
     this.setState({ ranges: filtered });
@@ -373,6 +382,7 @@ class Abstract extends Component {
                       uncertaintyThreshold={this.state.uncertaintyThreshold[0]}
                       annotationClasseOptions={this.state.classeOptions}
                       handleChangeAnnotationClass={this.handleChangeAnnotationClass}
+                      handleValidateAnnotation={this.handleValidateAnnotation}
                       onCreateAnnotation={this.onCreateAnnotation}
                       toggleTooltip={this.toggleTooltip}
                     />
