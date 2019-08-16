@@ -36,6 +36,43 @@ export const updateAbstract = (data) => (dispatch) => {
   });
 };
 
+export const createAnnotation = (data) => (dispatch) => {
+  dispatch({
+    type: type.CREATE_ANNOTATION,
+    payload: {
+      id: guid(),
+      ...data,
+    }
+  });
+};
+
+export const removeAnnotation = (data) => (dispatch) => {
+  dispatch({
+    type: type.REMOVE_ANNOTATION,
+    payload: data,
+  });
+};
+
+export const validateAnnotation = (data) => (dispatch) => {
+  dispatch({
+    type: type.VALIDATE_ANNOTATION,
+    payload: data,
+  });
+};
+
+export const updateAnnotationClass = (data) => (dispatch) => {
+  dispatch({
+    type: type.UPDATE_ANNOTATION_CLASS,
+    payload: data,
+  });
+};
+
+export const clearAnnotations = () => (dispatch) => {
+  dispatch({
+    type: type.CLEAR_ANNOTATIONS
+  });
+};
+
 export const createContribution = ({ selectAfterCreation = false, prefillStatements: performPrefill = false, statements = null }) => (dispatch) => {
   let newResourceId = guid();
   let newContributionId = guid();

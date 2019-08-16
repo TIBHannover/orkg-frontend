@@ -7,7 +7,9 @@ import {
   nextStep,
   previousStep,
   createContribution,
-  prefillStatements
+  prefillStatements,
+  createAnnotation,
+  clearAnnotations
 } from '../../../actions/addPaper';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -15,7 +17,6 @@ import AbstractAnnotator from './AbstractAnnotator';
 import PropTypes from 'prop-types';
 import Textarea from 'react-textarea-autosize';
 import Tooltip from '../../Utils/Tooltip';
-import dotProp from 'dot-prop-immutable';
 import { compose } from 'redux';
 import { guid } from '../../../utils';
 import { withTheme } from 'styled-components';
@@ -26,25 +27,15 @@ class Abstract extends Component {
   constructor(props) {
     super(props);
 
-    this.highlightableRef = React.createRef();
-
     this.state = {
+      isAbstractLoading:false,
+      isAbstractFailedLoading:false,
       isAnnotationLoading: false,
       isAnnotationFailedLoading: false,
-      isAbstractFailedLoading:false,
-      classeOptions: [
-        { id: 'process', label: 'Process' },
-        { id: 'data', label: 'Data' },
-        { id: 'material', label: 'Material' },
-        { id: 'method', label: 'Method' },
-      ],
-      isLoading: false,
+      annotationError: null,
       showError: false,
       changeAbstract: false,
-      loading: false,
-      ranges: {},
-      idIndex: 1,
-      uncertaintyThreshold: [0.8],
+      uncertaintyThreshold: [0.5],
     };
   }
 
@@ -65,7 +56,6 @@ class Abstract extends Component {
               if (annotated.indexOf(text.toLowerCase()) < 0) {
                 annotated.push(text.toLowerCase());
                 ranges[entity[0]] = {
-                  id: entity[0],
                   text: text,
                   start: entity[2][0][0],
                   end: entity[2][0][1] - 1,
@@ -79,61 +69,25 @@ class Abstract extends Component {
             })
             .filter((r) => r);
         }
+        //Clear annotations
+        this.props.clearAnnotations();
+        toArray(ranges).map((range) => {
+          return this.props.createAnnotation(range)
+        }
+        );
         this.setState({
-          ranges: ranges,
           isAnnotationLoading: false,
           isSimilaireContributionsLoading: true,
         });
       })
-      .catch(() => {
-        this.setState({ isAnnotationLoading: false, isAnnotationFailedLoading: true });
+      .catch((e) => {
+        if (e.statusCode===422){
+          this.setState({ annotationError: 'Failed to annotate the abstract, please change the abstract and try again', isAnnotationLoading: false, isAnnotationFailedLoading: true });
+        }else{
+          this.setState({ annotationError: null, isAnnotationLoading: false, isAnnotationFailedLoading: true });
+        }
         return null;
       });
-  };
-
-  handleChangeAnnotationClass = (selectedOption, { action }, range) => {
-    if (action === 'select-option') {
-      let state = dotProp.set(this.state, `ranges.${[range.id]}.class`, {
-        id: selectedOption.id,
-        label: selectedOption.label,
-      });
-      state = dotProp.set(state, `ranges.${[range.id]}.uncertainty`, 0);
-      this.setState(state);
-    } else if (action === 'create-option') {
-      const newOption = {
-        label: selectedOption.label,
-        id: selectedOption.label,
-      };
-      let state = dotProp.set(this.state, `ranges.${[range.id]}.class`, {
-        id: selectedOption.id,
-        label: selectedOption.label,
-      });
-      state = dotProp.set(state, `ranges.${[range.id]}.uncertainty`, 0);
-      this.setState(state);
-      this.setState({ classeOptions: [...this.state.classeOptions, newOption] });
-    } else if (action === 'clear') {
-      this.removeAnnotation(range);
-    }
-  };
-
-  handleValidateAnnotation = (range_id) => {
-    //TODO: Save this action to collect data for the annotation model
-    let state = dotProp.set(this.state, `ranges.${[range_id]}.uncertainty`, 0);
-    this.setState(state);
-  }
-
-  removeAnnotation = (range) => {
-    //TODO: Save this action to collect data for the annotation model
-    let filtered = this.state.ranges;
-    delete filtered[range.id];
-    this.setState({ ranges: filtered });
-  };
-
-  onCreateAnnotation = (range) => {
-    this.setState({
-      idIndex: this.state.idIndex + 1,
-      ranges: { ...this.state.ranges, [range.id]: range },
-    });
   };
 
   fetchAbstract = async () => {
@@ -145,7 +99,7 @@ class Abstract extends Component {
         return;
       }
       this.setState({
-        loading: true,
+        isAbstractLoading: true,
       });
 
       let DOI = this.props.doi.substring(this.props.doi.indexOf('10.'));
@@ -160,27 +114,27 @@ class Abstract extends Component {
         return fetch(apiCall, { method: 'GET' })
           .then((response) => response.text())
           .then((str) => new window.DOMParser().parseFromString(str, 'text/xml')) // parse the text as xml
-          .then((xmlDoc) => {
+          .then((xmlDoc, reject) => {
             // get the abstract from the xml doc
             if (xmlDoc.getElementsByTagName('entry') && xmlDoc.getElementsByTagName('entry')[0]) {
               return xmlDoc.getElementsByTagName('entry')[0].getElementsByTagName('summary')[0]
                 .innerHTML;
             }
-            return '';
+            return reject;
           })
       }).then((abstract) => {
           // remove line breaks from the abstract
           abstract = abstract.replace(/(\r\n|\n|\r)/gm, ' ');
           
           this.setState({
-            loading: false,
+            isAbstractLoading: false,
           });
           this.props.updateAbstract(abstract);
           this.getAnnotation();
         })
         .catch(() => { 
           this.handleChangeAbstract();
-          this.setState({ isAbstractFailedLoading: true, loading: false });
+          this.setState({ isAbstractFailedLoading: true, isAbstractLoading: false });
         });
     } else {
       this.getAnnotation();
@@ -226,13 +180,13 @@ class Abstract extends Component {
     let classesID = {};
     let createdProperties = {};
     let statements = { properties: [], values: [] };
-    let rangesArray = toArray(this.state.ranges).filter(
+    let rangesArray = toArray(this.props.ranges).filter(
       (r) => r.uncertainty <= this.state.uncertaintyThreshold,
     );
     if (rangesArray.length > 0) {
       rangesArray.map((range) => {
         let propertyId;
-        if (!this.getExistingRange(range)){
+        if (!this.getExistingRange(range) && range.class.id){
           if (classesID[range.class.id]) {
             propertyId = classesID[range.class.id];
           } else {
@@ -291,8 +245,8 @@ class Abstract extends Component {
   };
 
   render() {
-    let rangeArray = toArray(this.state.ranges).filter(
-      (r) => r.uncertainty <= this.state.uncertaintyThreshold,
+    let rangeArray = toArray(this.props.ranges).filter(
+      (r) => (r.uncertainty <= this.state.uncertaintyThreshold)
     );
     let rangesClasses = [...new Set(rangeArray.map((r) => r.class.label))];
     return (
@@ -305,6 +259,7 @@ class Abstract extends Component {
 
         {this.props.abstract &&
           !this.state.changeAbstract &&
+          !this.state.isAnnotationLoading && 
           !this.state.isAnnotationFailedLoading && (
             <Alert color="info">
               <strong>Info:</strong> we automatically annotated the abstract for you. Please remove
@@ -312,12 +267,13 @@ class Abstract extends Component {
             </Alert>
           )}
 
-        {!this.state.isAnnotationLoading && this.state.isAnnotationFailedLoading && (
+        {!this.state.changeAbstract && !this.state.isAnnotationLoading && this.state.isAnnotationFailedLoading && (
           <Alert color="light">
-            Failed to connect to the annotation service, please try again later
+            {this.state.annotationError? this.state.annotationError : 'Failed to connect to the annotation service, please try again later'}
           </Alert>
         )}
-        {!this.state.loading && this.state.isAbstractFailedLoading && (
+
+        {this.state.changeAbstract && !this.state.isAbstractLoading && this.state.isAbstractFailedLoading && (
           <Alert color="light">
             We couldn't fetch the abstract of the paper, please enter it manually or skip this step.
           </Alert>
@@ -325,25 +281,20 @@ class Abstract extends Component {
 
         <Card>
           <CardBody>
-            {this.state.loading && (
-              <div className="text-center" style={{ fontSize: 30 }}>
-                <Icon icon={faSpinner} spin />
+            {(this.state.isAbstractLoading || this.state.isAnnotationLoading) && (
+              <div className="text-center text-primary">
+                <span style={{ fontSize: 80 }}>
+                  <Icon icon={faSpinner} spin />
+                </span>
+                <br />
+                <h2 className="h5">{this.state.isAbstractLoading ? 'Loading abstract...': 'Loading annotations...'}</h2>
               </div>
             )}
 
+
             {!this.state.changeAbstract ? (
               <div className="pl-2 pr-2">
-                {this.state.isAnnotationLoading && (
-                  <div className="text-center text-primary">
-                    <span style={{ fontSize: 80 }}>
-                      <Icon icon={faSpinner} spin />
-                    </span>
-                    <br />
-                    <h2 className="h5">Loading annotations...</h2>
-                  </div>
-                )}
-
-                {!this.state.isAnnotationLoading && (
+                {!this.state.isAbstractLoading && !this.state.isAnnotationLoading && (
                   <div>
                     {rangesClasses.length > 0 &&
                       rangesClasses.map((c) => {
@@ -376,15 +327,7 @@ class Abstract extends Component {
                         );
                       })}
                     <AbstractAnnotator
-                      ranges={this.state.ranges}
-                      abstract={this.props.abstract}
-                      rangesIdIndex={this.state.idIndex}
                       uncertaintyThreshold={this.state.uncertaintyThreshold[0]}
-                      annotationClasseOptions={this.state.classeOptions}
-                      handleChangeAnnotationClass={this.handleChangeAnnotationClass}
-                      handleValidateAnnotation={this.handleValidateAnnotation}
-                      onCreateAnnotation={this.onCreateAnnotation}
-                      toggleTooltip={this.toggleTooltip}
                     />
                   </div>
                 )}
@@ -411,7 +354,7 @@ class Abstract extends Component {
         <Button color="light" className="mb-2 mt-1" onClick={this.handleChangeAbstract}>
           {this.state.changeAbstract ? 'Annotate abstract' : 'Change abstract'}
         </Button>
-        {!this.state.isAnnotationLoading && !this.state.isAnnotationFailedLoading && toArray(this.state.ranges).length > 0 && (
+        {!this.state.isAnnotationLoading && !this.state.isAnnotationFailedLoading && toArray(this.props.ranges).length > 0 && (
           <div className={'col-3 float-right'}>
             <div className={'mt-4'}>
               <Range
@@ -483,12 +426,15 @@ Abstract.propTypes = {
   previousStep: PropTypes.func.isRequired,
   updateAbstract: PropTypes.func.isRequired,
   abstract: PropTypes.string.isRequired,
+  ranges: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
   doi: PropTypes.string,
   selectedContribution: PropTypes.string.isRequired,
   contributions: PropTypes.object.isRequired,
   createContribution: PropTypes.func.isRequired,
   prefillStatements: PropTypes.func.isRequired,
+  createAnnotation: PropTypes.func.isRequired,
+  clearAnnotations: PropTypes.func.isRequired,
   theme: PropTypes.object.isRequired,
   resources: PropTypes.object.isRequired,
   properties: PropTypes.object.isRequired,
@@ -500,6 +446,7 @@ const mapStateToProps = (state) => ({
   title: state.addPaper.title,
   doi: state.addPaper.doi,
   abstract: state.addPaper.abstract,
+  ranges: state.addPaper.ranges,
   contributions: state.addPaper.contributions,
   resources: state.statementBrowser.resources,
   properties: state.statementBrowser.properties,
@@ -512,6 +459,8 @@ const mapDispatchToProps = (dispatch) => ({
   previousStep: () => dispatch(previousStep()),
   createContribution: (data) => dispatch(createContribution(data)),
   prefillStatements: (data) => dispatch(prefillStatements(data)),
+  createAnnotation: (data) => dispatch(createAnnotation(data)),
+  clearAnnotations: () => dispatch(clearAnnotations()),
 });
 
 export default compose(
