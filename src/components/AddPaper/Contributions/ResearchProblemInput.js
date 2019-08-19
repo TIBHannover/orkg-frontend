@@ -124,7 +124,7 @@ class ResearchProblemInput extends Component {
                         openMenuOnClick={false}
                     />
                 </StyledResearchFieldsInputFormControl>
-                {this.state.problemBrowser && (
+                {false && (
                     <StyledResearchFieldBrowser className="form-control">
                         <button type="button" className={'close'} onClick={this.closeProblemBrowser}><span>×</span></button>
                         <>Problem browser :</><br />
