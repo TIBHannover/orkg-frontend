@@ -248,13 +248,17 @@ export const saveAddPaper = (data) => {
       }
     }
 
-    // publication month
-    let publicationMonth = await network.createResource(data.publicationMonth);
-    await network.createResourceStatement(paper.id, publicationMonthPredicate, publicationMonth.id);
-
-    // publication year
-    let publicationYear = await network.createResource(data.publicationYear);
-    await network.createResourceStatement(paper.id, publicationYearPredicate, publicationYear.id);
+    if (data.publicationMonth){
+      // publication month
+      let publicationMonth = await network.createResource(data.publicationMonth);
+      await network.createResourceStatement(paper.id, publicationMonthPredicate, publicationMonth.id);
+    }
+    
+    if (data.publicationYear){
+      // publication year
+      let publicationYear = await network.createResource(data.publicationYear);
+      await network.createResourceStatement(paper.id, publicationYearPredicate, publicationYear.id);
+    }
 
     // research field
     await network.createResourceStatement(paper.id, researchFieldPredicate, data.selectedResearchField);
