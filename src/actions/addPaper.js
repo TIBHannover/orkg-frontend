@@ -243,8 +243,10 @@ export const saveAddPaper = (data) => {
       if (author.hasOwnProperty('_class') && author._class === 'resource') {
         await network.createResourceStatement(paper.id, authorPredicate, author.id);
       } else {
-        let authorResource = await network.createResource(author.label);
-        await network.createResourceStatement(paper.id, authorPredicate, authorResource.id);
+        if(author.label){
+          let authorResource = await network.createResource(author.label);
+          await network.createResourceStatement(paper.id, authorPredicate, authorResource.id);
+        }
       }
     }
 
