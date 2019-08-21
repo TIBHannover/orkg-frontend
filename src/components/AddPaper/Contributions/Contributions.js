@@ -12,6 +12,7 @@ import { CSSTransitionGroup } from 'react-transition-group'
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
+
 const AnimationContainer = styled.div`
     transition: 0.3s background-color,  0.3s border-color;
 
@@ -116,7 +117,7 @@ class Contributions extends Component {
                 <Container>
                     <Row noGutters={true}>
                         <Col xs="3">
-                            <StyledContributionsList>
+                            <StyledContributionsList id="contributionsList">
                                 {this.props.contributions.allIds.map((contribution, index) => {
                                     let contributionId = this.props.contributions.byId[contribution]['id'];
 
@@ -179,7 +180,7 @@ class Contributions extends Component {
                 </Container>
 
                 <hr className="mt-5 mb-3" />
-                <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Next step</Button>
+                <Button id="goToFinishStep" color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Next step</Button>
                 <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>Previous step</Button>
             </div>
         );

@@ -24,6 +24,18 @@ export const previousStep = () => dispatch => {
     })
 }
 
+export const closeTour = () => dispatch => {
+    dispatch({
+        type: type.CLOSE_TOUR,
+    })
+}
+
+export const openTour = () => dispatch => {
+    dispatch({
+        type: type.OPEN_TOUR,
+    })
+}
+
 export const updateResearchField = (data) => dispatch => {
     dispatch({
         type: type.UPDATE_RESEARCH_FIELD,

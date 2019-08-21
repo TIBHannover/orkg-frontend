@@ -116,7 +116,7 @@ class ResearchField extends Component {
                 <CardDeck>
                     {this.props.researchFields.length > 0 && this.props.researchFields.map((fields, level) => {
                         return fields.length > 0 ? (
-                            <FieldSelector key={level}>
+                            <FieldSelector className="fieldSelector" key={level}>
                                 <ListGroup flush>
                                     <CSSTransitionGroup
                                         transitionName="fadeIn"

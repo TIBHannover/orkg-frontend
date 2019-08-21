@@ -4,6 +4,7 @@ import dotProp from 'dot-prop-immutable';
 
 // TODO: for now this reducer is rather large, maybe split up later in smaller chunks (addPaper and statementBrowser reducer)
 const initialState = {
+    isTourOpen: false,
     currentStep: 1,
     title: '',
     authors: [],
@@ -50,6 +51,20 @@ export default (state = initialState, action) => {
         return {
             ...state,
             currentStep: state.currentStep - 1,
+        };
+    }
+
+    case type.CLOSE_TOUR: {
+        return {
+            ...state,
+            isTourOpen: false,
+        };
+    }
+
+    case type.OPEN_TOUR: {
+        return {
+            ...state,
+            isTourOpen: true,
         };
     }
 

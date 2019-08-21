@@ -247,7 +247,7 @@ class GeneralData extends Component {
           <div>
               <h2 className="h4 mt-4">General paper data</h2>
 
-              <ButtonGroup className="float-right" style={{ marginTop: '-30px' }}>
+              <ButtonGroup id="entryOptions" className="float-right" style={{ marginTop: '-30px' }}>
                   <Button
                       size="sm"
                       color={this.state.dataEntry === 'doi' ? 'primary' : 'light'}
@@ -285,7 +285,7 @@ class GeneralData extends Component {
                             Bibtex
                                               </Tooltip>
                                           </Label>
-                                          <InputGroup>
+                                          <InputGroup id="doiInputGroup">
                                               <StyledTextareaAutosize
                                                   type="text"
                                                   name="entry"
