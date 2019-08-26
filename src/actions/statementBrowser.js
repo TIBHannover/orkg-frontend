@@ -174,6 +174,7 @@ export const fetchStatementsForResource = (data) => {
                                 propertyId: propertyId,
                                 label: statement.object.label,
                                 type: statement.object._class === 'literal' ? 'literal' : 'object', // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
+                                classes: statement.object.classes ? statement.object.classes : [],
                                 isExistingValue: true,
                                 existingStatement: true,
                             }));

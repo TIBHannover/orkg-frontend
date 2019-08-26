@@ -4,6 +4,7 @@ export const resourcesUrl = `${url}resources/`;
 export const predicatesUrl = `${url}predicates/`;
 export const statementsUrl = `${url}statements/`;
 export const literalsUrl = `${url}literals/`;
+export const classesUrl = `${url}classes/`;
 export const crossrefUrl = process.env.REACT_APP_CROSSREF_URL;
 export const comparisonUrl = `${similaireServiceUrl}compare/`;
 export const similaireUrl = `${similaireServiceUrl}similar/`;
@@ -198,4 +199,8 @@ export const createShortLink = (data) => {
 
 export const getLongLink = (shortCode) => {
     return submitGetRequest(`${similaireServiceUrl}shortener/${encodeURIComponent(shortCode)}`);
+};
+
+export const getAllClasses = () => {
+    return submitGetRequest(classesUrl);
 };
