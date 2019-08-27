@@ -67,10 +67,19 @@ class RDFDataCube extends Component {
                             // Dimensions
                             let os_d = observationStatements.filter((statement) => statement.predicate.label in sDimensions);
                             let ob = {
-                                data: { id: observation.subject.id, rlabel: observation.subject.label, label: os_m[0].object.label },
-                                field: [os_m.map(o_m => o_m.predicate.label)],
+                                // OLAP table data is in the format data[pointIndex][fieldIndex], sort by predicate label is to keep same order in Table fields
+                                data: [...os_m
+                                    .sort((first, second) => first.predicate.label > second.predicate.label)
+                                    .map(o_m => {
+                                        return {
+                                            id: observation.subject.id,
+                                            rlabel: observation.subject.label,
+                                            label: o_m.object.label
+                                        }
+                                    }
+                                    )],
                                 point: [...os_d.map(o_d => o_d.object.id)],
-                                point_label: os_d.map(o_d => { return { id: o_d.object.id, label: o_d.object.label } }), // Ressource labels
+                                point_label: os_d.map(o_d => { return { id: o_d.object.id, label: o_d.object.label, type: o_d.object._class } }), // Ressource labels
                             }
                             return ob;
                         })
@@ -79,9 +88,9 @@ class RDFDataCube extends Component {
                     return Promise.all(observations_data).then((observations) => {
                         const table = new CUBE.model.Table({
                             dimensions: Object.keys(sDimensions),
-                            fields: Object.keys(sMeasures),
+                            fields: Object.keys(sMeasures).sort(),
                             points: observations.map((o) => o.point),
-                            data: observations.map((o) => [o.data])
+                            data: observations.map((o) => o.data)
                         })
                         // Ressoruces labels
                         resources = Object.assign({}, ...(observations.map((o) => o.point_label).flat(1).map(item => ({ [item.id]: item }))))
@@ -107,8 +116,10 @@ class RDFDataCube extends Component {
     }
 
     handleCellClick = (ressource) => {
-        this.props.handleResourceClick(ressource)
-        this.props.toggleModal();
+        if (ressource.type !== 'literal') {
+            this.props.handleResourceClick(ressource)
+            this.props.toggleModal();
+        }
     }
 
     render() {
