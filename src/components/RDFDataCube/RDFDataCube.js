@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Modal, ModalHeader, ModalBody, Alert } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { getStatementsBySubject, getStatementsByObject, getAllClasses } from '../../network';
 import ReactTable from 'react-table';
 import CUBE from 'olap-cube';
 import 'react-table/react-table.css'
+import { CSVLink } from 'react-csv';
 import PropTypes from 'prop-types';
 
 class RDFDataCube extends Component {
@@ -16,6 +17,7 @@ class RDFDataCube extends Component {
         this.state = {
             isDatacubeLoading: true,
             isDatacubeFailedLoading: false,
+            dropdownOpen: false,
             datacube: {},
             resources: {},
             dimensions: {},
@@ -26,6 +28,18 @@ class RDFDataCube extends Component {
 
     componentDidMount() {
         this.loadDataCube();
+    }
+
+    toggleDropdown = () => {
+        this.setState(prevState => ({
+            dropdownOpen: !prevState.dropdownOpen
+        }));
+    }
+
+    exportAsCsv = (e) => {
+        this.setState({
+            dropdownOpen: false,
+        })
     }
 
     loadDataCube = async () => {
@@ -48,10 +62,12 @@ class RDFDataCube extends Component {
                 // Get Dimensions and Measures
                 let sDimensions = cso.filter(s => s.classes.includes(classes['qb:DimensionProperty']));
                 let sMeasures = cso.filter(s => s.classes.includes(classes['qb:MeasureProperty']));
+                let sAttributes = cso.filter(s => s.classes.includes(classes['qb:AttributeProperty']));
                 sDimensions = Object.assign({}, ...(sDimensions.map(item => ({ [item.id]: item }))));
                 sMeasures = Object.assign({}, ...(sMeasures.map(item => ({ [item.id]: item }))));
-                return { sMeasures, sDimensions };
-            }).then(({ sMeasures, sDimensions }) => {
+                sAttributes = Object.assign({}, ...(sAttributes.map(item => ({ [item.id]: item }))));
+                return { sMeasures, sDimensions, sAttributes };
+            }).then(({ sMeasures, sDimensions, sAttributes }) => {
                 // Observations (fetch statements of the dataset ressource by object)
                 getStatementsByObject({
                     id: this.props.resourceId,
@@ -169,9 +185,31 @@ class RDFDataCube extends Component {
                                 {(state, makeTable, instance) => {
                                     return (
                                         <>
-                                            <p>
+                                            <div className="clearfix">
                                                 {`Showing ${state.sortedData.length} observations ${state.sortedData.length !== this.state.datacube.rows.length ? `(filtered from ${this.state.datacube.rows.length} total observations)` : ''} :`}
-                                            </p>
+                                                <Dropdown className="float-right mb-2" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
+                                                    <DropdownToggle color="darkblue" size="sm">
+                                                        <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
+                                                    </DropdownToggle>
+                                                    <DropdownMenu>
+                                                        <DropdownItem header>Export</DropdownItem>
+                                                        {state.sortedData.length > 0 ?
+                                                            <CSVLink
+                                                                headers={
+                                                                    this.state.datacube.header.map(h => { return { label: columns[h].label, key: h + '.label' } })
+                                                                }
+                                                                data={state.sortedData}
+                                                                filename={this.props.resourceLabel + '.csv'}
+                                                                className="dropdown-item"
+                                                                target="_blank"
+                                                                onClick={this.exportAsCsv}
+                                                            >
+                                                                Export as CSV
+                                                            </CSVLink>
+                                                            : ''}
+                                                    </DropdownMenu>
+                                                </Dropdown>
+                                            </div>
                                             {makeTable()}
                                         </>);
                                 }}
