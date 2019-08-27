@@ -3,6 +3,7 @@ import { ListGroup, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { StyledStatementItem, StyledListGroupOpen } from '../AddPaper/Contributions/styled';
+import { getResource } from '../../network';
 import classNames from 'classnames';
 import ValueItem from './Value/ValueItem';
 import AddValue from './Value/AddValue';
@@ -17,7 +18,22 @@ class StatementItem extends Component {
 
         this.state = {
             deleteContributionModal: false,
+            predicateLabel: null
         };
+    }
+
+    componentDidMount() {
+        if (this.props.predicateLabel.match(new RegExp('^R[0-9]*$'))) {
+            getResource(this.props.predicateLabel)
+                .catch((e) => {
+                    console.log(e);
+                    this.setState({ predicateLabel: this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1) })
+                }).then((r) => {
+                    this.setState({ predicateLabel: `${r.label.charAt(0).toUpperCase() + r.label.slice(1)} (${this.props.predicateLabel})` })
+                })
+        } else {
+            this.setState({ predicateLabel: this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1) })
+        }
     }
 
     toggleDeleteContribution = () => {
@@ -52,7 +68,7 @@ class StatementItem extends Component {
         return (
             <>
                 <StyledStatementItem active={isCollapsed} onClick={() => this.props.togglePropertyCollapse(this.props.id)} className={listGroupClass}>
-                    {this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1)}
+                    {this.state.predicateLabel}
                     {valueIds.length === 1 && !isCollapsed ? (
                         <>
                             :{' '}
