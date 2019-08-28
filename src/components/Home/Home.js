@@ -7,12 +7,13 @@ import RecentlyAddedPapers from './RecentlyAddedPapers';
 
 class Home extends Component {
 
-  componentDidMount = () => {
-    document.title = 'Open Research Knowledge Graph'
-  }
+    componentDidMount = () => {
+        document.title = 'Open Research Knowledge Graph'
+    }
 
-  render = () => {
-    const showWarning = process.env.REACT_APP_SERVER_URL.includes('labs.tib.eu');
+    render = () => {
+        const showWarning = process.env.REACT_APP_SERVER_URL.includes('labs.tib.eu');
+        const showMouseflowWarning = process.env.REACT_APP_MOUSEFLOW_WEBSITE_ID ? true : false;
 
         return (
             <div>
@@ -20,9 +21,19 @@ class Home extends Component {
                     <h1 className="h4 mt-4 mb-4">Homepage</h1>
                 </Container>
                 <Container className="box pt-4 pb-4 pl-5 pr-5">
-                    {showWarning &&
+                    {(showWarning || showMouseflowWarning) &&
                         <Alert color="info">
-                            <strong>Warning:</strong> the ORKG is currently in an alpha stage. Data you enter in the system can be deleted without any notice.
+                            {showWarning &&
+                                <p className="p-0 m-0">
+                                    <strong>Warning: </strong> The ORKG is currently in an alpha stage. Data you enter in the system can be deleted without any notice.
+                                </p>
+                            }
+                            {showMouseflowWarning &&
+                                <p className="p-0 m-0">
+                                    <strong>Notice: </strong> The ORKG is using a third party analytics tool that is fully compliant with the GDPR. We collect this data anonymously for experimental purpose to enhance the user interface. If you do not wish to be tracked, follow this link:
+                                    <a target="_blank" rel="noopener noreferrer" href={'https://mouseflow.com/opt-out/'}>Opt Out <Icon size="sm" icon={faExternalLinkAlt} /></a>.
+                                </p>
+                            }
                         </Alert>
                     }
                     <Icon icon={faInfoCircle} className="text-primary" /> The <strong>Open Research Knowledge Graph</strong> - or - ORKG aims to describe research papers and contributions in a structured manner. With ORKG research contributions become findable and comparable. In order to add your own research, or to contribute,

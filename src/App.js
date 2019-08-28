@@ -10,6 +10,22 @@ import PropTypes from 'prop-types';
 import { withCookies } from 'react-cookie';
 
 class App extends Component {
+
+    componentDidMount() {
+        // Listen for changes to the current location.
+        this.unlisten = this.props.history.listen((location, action) => {
+            // The _mfq object is the entry point for all communication with the Mouseflow tracking script.
+            // We push a key-value pair into this array each time the routing changes.
+            window._mfq = window._mfq || [];
+            window._mfq.push(['newPageView', location.pathname]);
+        });
+    }
+
+    componentWillUnmount() {
+        // Unlisten when the component lifecycle ends.
+        this.unlisten();
+    }
+
     render() {
         return (
             <ConnectedRouter history={this.props.history}>

@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="theme-color" content="#000000">
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="theme-color" content="#000000" />
         <!--
           manifest.json provides metadata used when your web app is added to the
           homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
         -->
-        <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-        <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+        <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+        <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
         <!--
           Notice the use of %PUBLIC_URL% in the tags above.
           It will be replaced with the URL of the `public` folder during the build.
@@ -19,7 +19,7 @@
           work correctly both with client-side routing and a non-root public URL.
           Learn how to configure a non-root public URL by running `npm run build`.
         -->
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
         <title>Open Research Knowledge Graph</title>
     </head>
     <body>
@@ -38,5 +38,18 @@
             To begin the development, run `npm start` or `yarn start`.
             To create a production bundle, use `npm run build` or `yarn build`.
         -->
+        <script type="text/javascript">
+            const mouseflow_wid = '%REACT_APP_MOUSEFLOW_WEBSITE_ID%';
+            if (mouseflow_wid && !mouseflow_wid.includes('REACT_APP_MOUSEFLOW_WEBSITE_ID')) {
+                window._mfq = window._mfq || [];
+                (function() {
+                    var mf = document.createElement('script');
+                    mf.type = 'text/javascript';
+                    mf.async = true;
+                    mf.src = '//cdn.mouseflow.com/projects/' + mouseflow_wid + '.js';
+                    document.getElementsByTagName('head')[0].appendChild(mf);
+                })();
+            }
+        </script>
     </body>
 </html>
