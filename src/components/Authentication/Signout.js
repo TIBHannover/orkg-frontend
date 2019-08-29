@@ -5,11 +5,14 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ROUTES from '../../constants/routes';
+import { Cookies } from 'react-cookie';
 import { openAuthDialog, resetAuth } from '../../actions/auth';
 
 class Signout extends Component {
   componentDidMount() {
     this.props.resetAuth();
+    const cookies = new Cookies();
+    cookies.remove('token');
   }
 
   render() {

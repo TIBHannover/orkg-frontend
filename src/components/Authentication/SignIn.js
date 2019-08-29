@@ -1,4 +1,4 @@
-import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -6,6 +6,8 @@ import { openAuthDialog, toggleAuthDialog, updateAuth } from '../../actions/auth
 import { signInWithEmailAndPassword } from '../../network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { Cookies } from 'react-cookie';
+const cookies = new Cookies();
 
 class SignIn extends Component {
   constructor(props) {
@@ -15,6 +17,7 @@ class SignIn extends Component {
       email: '',
       password: '',
       loading: false,
+      errors: null
     };
   }
 
@@ -29,14 +32,16 @@ class SignIn extends Component {
       loading: true,
     });
 
-    let token = await signInWithEmailAndPassword(this.state.email, this.state.password);
-
-    this.setState({
-      loading: false,
-    });
-
-    Promise.all([this.props.updateAuth({ user: { displayName: 'John Doe', id: 1 } })]).then(() => {
-      this.props.toggleAuthDialog();
+    signInWithEmailAndPassword(this.state.email, this.state.password, this.state.name).then(
+      (token) => {
+        cookies.set('token', token.access_token, { path: '/' });
+        this.props.toggleAuthDialog();
+        this.setState({ loading: false });
+        window.location.reload();
+      }
+    ).catch((e) => {
+      console.log(e);
+      this.setState({ loading: false, errors: e.error_description ? e.error_description : 'Something went wrong, please try again.' });
     });
   }
 
@@ -44,6 +49,11 @@ class SignIn extends Component {
     return (
       <>
         <Form className="pl-3 pr-3 pt-2">
+          {this.state.errors && (
+            <Alert color="danger">
+              {this.state.errors}
+            </Alert>)
+          }
           <FormGroup>
             <Label for="Email">Email address</Label>
             <Input

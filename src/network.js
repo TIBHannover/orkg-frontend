@@ -1,3 +1,4 @@
+import { Cookies } from 'react-cookie';
 export const url = process.env.REACT_APP_SERVER_URL;
 export const similaireServiceUrl = process.env.REACT_APP_SIMILARITY_SERVICE_URL;
 export const resourcesUrl = `${url}resources/`;
@@ -17,9 +18,17 @@ export const submitGetRequest = (url) => {
         throw new Error('Cannot submit GET request. URL is null or undefined.');
     }
 
+    const cookies = new Cookies();
+    let token = cookies.get('token') ? cookies.get('token') : null;
+
     return new Promise(
         (resolve, reject) => {
-            fetch(url, { method: 'GET' })
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
                 .then((response) => {
                     if (!response.ok) {
                         reject({
@@ -46,9 +55,16 @@ const submitPostRequest = (url, headers, data) => {
         throw new Error('Cannot submit POST request. URL is null or undefined.');
     }
 
+    const cookies = new Cookies();
+    let token = cookies.get('token') ? cookies.get('token') : null;
+
+    let myHeaders = new Headers(headers);
+    myHeaders.append('Authorization', `Bearer ${token}`);
+
+
     return new Promise(
         (resolve, reject) => {
-            fetch(url, { method: 'POST', headers: headers, body: JSON.stringify(data) })
+            fetch(url, { method: 'POST', headers: myHeaders, body: JSON.stringify(data) })
                 .then((response) => {
                     if (!response.ok) {
                         reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
@@ -71,9 +87,14 @@ const submitPutRequest = (url, headers, data) => {
         throw new Error('Cannot submit PUT request. URL is null or undefined.');
     }
 
+    const cookies = new Cookies();
+    let token = cookies.get('token') ? cookies.get('token') : null;
+    let myHeaders = new Headers(headers);
+    myHeaders.append('Authorization', `Bearer ${token}`);
+
     return new Promise(
         (resolve, reject) => {
-            fetch(url, { method: 'PUT', headers: headers, body: JSON.stringify(data) })
+            fetch(url, { method: 'PUT', headers: myHeaders, body: JSON.stringify(data) })
                 .then((response) => {
                     if (!response.ok) {
                         reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
@@ -204,7 +225,7 @@ export const getLongLink = (shortCode) => {
 export const signInWithEmailAndPassword = (email, password) => {
     const headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Basic b3Jnay1jbGllbnQ6c2VjcmV0',
+        'Authorization': 'Basic b3JrZy1jbGllbnQ6c2VjcmV0',
     };
 
     const data = {
@@ -214,7 +235,27 @@ export const signInWithEmailAndPassword = (email, password) => {
         password
     }
 
-    return submitPostRequest(`${authenticationUrl}auth/token`, headers, data);
+    const formBody = Object.keys(data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])).join('&');
+
+    return new Promise(
+        (resolve, reject) => {
+            fetch(`${authenticationUrl}oauth/token`, {
+                headers: headers,
+                method: 'POST',
+                body: formBody,
+            })
+                .then(response => response.json())
+                .then(json => {
+                    if (json.error === 'invalid_grant') {
+                        return reject(json)
+                    }
+                    else {
+                        return resolve(json)
+                    }
+                }).catch(error =>
+                    Promise.reject(error)
+                )
+        });
 }
 
 export const registerWithEmailAndPassword = (email, password, name) => {

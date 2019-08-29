@@ -18,6 +18,7 @@ import {
 import styled from 'styled-components';
 import { Link, NavLink as RouterNavLink } from 'react-router-dom';
 import React, { Component } from 'react';
+import { Cookies } from 'react-cookie';
 import { faSortDown, faUser } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -30,7 +31,7 @@ import ROUTES from '../../../constants/routes';
 import SearchForm from './SearchForm';
 import { reverse } from 'named-urls';
 
-import { openAuthDialog } from '../../../actions/auth';
+import { openAuthDialog, updateAuth } from '../../../actions/auth';
 
 const StyledGravatar = styled(Gravatar)`
   border: 3px solid ${(props) => props.theme.avatarBorderColor};
@@ -71,6 +72,14 @@ class Header extends Component {
       dropdownOpen: false,
       userTooltipOpen: false,
     };
+  }
+
+  componentDidMount() {
+    const cookies = new Cookies();
+    let token = cookies.get('token') ? cookies.get('token') : null;
+    if (token && !this.props.user) {
+      this.props.updateAuth({ user: { displayName: 'John Doe', id: 1, token: token } })
+    }
   }
 
   toggle() {
@@ -209,10 +218,12 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   openAuthDialog: (action) => dispatch(openAuthDialog(action)),
+  updateAuth: (data) => dispatch(updateAuth(data)),
 });
 
 Header.propTypes = {
   openAuthDialog: PropTypes.func.isRequired,
+  updateAuth: PropTypes.func.isRequired,
   user: PropTypes.object,
 };
 
