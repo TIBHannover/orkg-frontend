@@ -22,6 +22,7 @@ class RDFDataCube extends Component {
             resources: {},
             dimensions: {},
             measures: {},
+            attributes: {},
             displayedData: []
         };
     }
@@ -82,6 +83,8 @@ class RDFDataCube extends Component {
                             let os_m = observationStatements.filter((statement) => statement.predicate.label in sMeasures);
                             // Dimensions
                             let os_d = observationStatements.filter((statement) => statement.predicate.label in sDimensions);
+                            // Attributes
+                            let os_a = observationStatements.filter((statement) => statement.predicate.label in sAttributes);
                             let ob = {
                                 // OLAP table data is in the format data[pointIndex][fieldIndex], sort by predicate label is to keep same order in Table fields
                                 data: [...os_m
@@ -94,8 +97,14 @@ class RDFDataCube extends Component {
                                         }
                                     }
                                     )],
-                                point: [...os_d.map(o_d => o_d.object.id)],
-                                point_label: os_d.map(o_d => { return { id: o_d.object.id, label: o_d.object.label, type: o_d.object._class } }), // Ressource labels
+                                point: [ // sort by predicate label because statements are not ordered by default
+                                    ...os_d.sort((first, second) => first.predicate.label > second.predicate.label).map(o_d => o_d.object.id),
+                                    ...os_a.sort((first, second) => first.predicate.label > second.predicate.label).map(o_a => o_a.object.id)
+                                ],
+                                point_label: [
+                                    ...os_d.map(o_d => { return { id: o_d.object.id, label: o_d.object.label, type: o_d.object._class } }),
+                                    ...os_a.map(o_a => { return { id: o_a.object.id, label: o_a.object.label, type: o_a.object._class } })
+                                ], // Ressource labels
                             }
                             return ob;
                         })
@@ -103,14 +112,17 @@ class RDFDataCube extends Component {
 
                     return Promise.all(observations_data).then((observations) => {
                         const table = new CUBE.model.Table({
-                            dimensions: Object.keys(sDimensions),
+                            dimensions: [...Object.keys(sDimensions).sort(), ...Object.keys(sAttributes).sort()],
                             fields: Object.keys(sMeasures).sort(),
                             points: observations.map((o) => o.point),
                             data: observations.map((o) => o.data)
                         })
+
+                        //const onlyFebruary = (point) => point[2] === 'R1415'
+                        //table = table.dice(onlyFebruary)
                         // Ressoruces labels
                         resources = Object.assign({}, ...(observations.map((o) => o.point_label).flat(1).map(item => ({ [item.id]: item }))))
-                        this.setState({ measures: sMeasures, dimensions: sDimensions, datacube: table, resources: resources, isDatacubeLoading: false, isDatacubeFailedLoading: false });
+                        this.setState({ measures: sMeasures, dimensions: sDimensions, attributes: sAttributes, datacube: table, resources: resources, isDatacubeLoading: false, isDatacubeFailedLoading: false });
                     })
                 });
             }).catch(e => {
@@ -142,7 +154,7 @@ class RDFDataCube extends Component {
 
         let columns = {}
         if (!this.state.isDatacubeLoading) {
-            columns = { ...this.state.measures, ...this.state.dimensions }
+            columns = { ...this.state.measures, ...this.state.dimensions, ...this.state.attributes }
         }
 
         return (
@@ -153,7 +165,7 @@ class RDFDataCube extends Component {
                     {!this.state.isDatacubeLoading && (
                         <>
                             <ReactTable
-                                pageSize={10}
+                                defaultPageSize={10}
                                 filterable={true}
                                 className="-striped -highlight"
                                 defaultFilterMethod={(filter, row) => { return String(row[filter.id].label).startsWith(filter.value) }}
