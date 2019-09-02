@@ -3,7 +3,7 @@ import { Container, Row, Col, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../../Utils/Tooltip';
-import { StyledContributionsList, StyledContentEditable} from './styled';
+import { StyledContributionsList, StyledContentEditable } from './styled';
 import { connect } from 'react-redux';
 import { nextStep, previousStep, createContribution, deleteContribution, selectContribution, updateContributionLabel, saveAddPaper } from '../../../actions/addPaper';
 import Confirm from 'reactstrap-confirm';
@@ -180,7 +180,7 @@ class Contributions extends Component {
                 </Container>
 
                 <hr className="mt-5 mb-3" />
-                <Button id="goToFinishStep" color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Next step</Button>
+                <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Finish</Button>
                 <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>Previous step</Button>
             </div>
         );

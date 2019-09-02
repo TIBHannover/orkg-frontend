@@ -8,6 +8,7 @@ const initialState = {
     currentStep: 1,
     title: '',
     authors: [],
+    abstract: '',
     publicationMonth: 1,
     publicationYear: 2000,
     entry: '',
@@ -17,6 +18,7 @@ const initialState = {
     selectedResearchField: '',
     selectedContribution: '',
     paperNewResourceId: null,
+    ranges:{},
     contributions: {
         byId: {},
         allIds: [],
@@ -75,6 +77,53 @@ export default (state = initialState, action) => {
             ...state,
             researchFields: payload.researchFields,
             selectedResearchField: payload.selectedResearchField,
+        };
+    }
+
+    case type.UPDATE_ABSTRACT: {
+        let { payload } = action;
+
+        return {
+            ...state,
+            abstract: payload,
+        };
+    }
+
+    case type.CREATE_ANNOTATION: {
+        let { payload } = action;
+        return {
+            ...dotProp.set(state, `ranges.${payload.id}`, payload)
+        };
+    }
+
+    case type.REMOVE_ANNOTATION: {
+        let { payload } = action;
+        return {
+            ...dotProp.delete(state, `ranges.${[payload.id]}`),
+        };
+    }
+
+    case type.VALIDATE_ANNOTATION: {
+        let { payload } = action;
+        return {
+            ...dotProp.set(state, `ranges.${payload}.uncertainty`, 0),
+        };
+    }
+
+    case type.UPDATE_ANNOTATION_CLASS: {
+        let { payload } = action;
+        let newstate = dotProp.set(state, `ranges.${[payload.range.id]}.class`, {
+            id: payload.selectedOption.id,
+            label: payload.selectedOption.label,
+        });
+        return {
+            ...dotProp.set(newstate, `ranges.${[payload.range.id]}.uncertainty`, 0)
+        };
+    }
+
+    case type.CLEAR_ANNOTATIONS: {
+        return {
+            ...dotProp.set(state, 'ranges', {})
         };
     }
 

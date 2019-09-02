@@ -30,6 +30,8 @@ const ScrollContainer = styled.div`
 `;
 
 const Row = styled.tr`
+    height:100%;
+    
     &:last-child td > div:first-child {
         border-bottom:2px solid #CFCBCB;
         border-radius:0 0 11px 11px;

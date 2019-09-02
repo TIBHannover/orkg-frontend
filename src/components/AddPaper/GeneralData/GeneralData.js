@@ -157,6 +157,9 @@ class GeneralData extends Component {
                       paperTitle = paper.data[0].title;
                       paperAuthors = paper.data[0].author.map((author, index) => {
                           let fullname = [author.given, author.family].join(' ').trim();
+                          if (!fullname) {
+                            fullname = author.literal ? author.literal : '';
+                          }
                           const newAuthor = {
                               label: fullname,
                               id: fullname,

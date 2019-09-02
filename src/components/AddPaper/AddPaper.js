@@ -5,6 +5,7 @@ import ProgressBar from './ProgressBar';
 import GeneralData from './GeneralData/GeneralData';
 import ResearchField from './ResearchField/ResearchField';
 import Contributions from './Contributions/Contributions';
+import Abstract from './Abstract/Abstract';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faInfo } from '@fortawesome/free-solid-svg-icons';
 import Finish from './Finish/Finish';
@@ -118,18 +119,13 @@ class AddPaper extends Component {
                 );
                 break;
             case 3:
-                currentStepDetails = (
-                    <AnimationContainer key={3}>
-                        <Contributions />
-                    </AnimationContainer>
-                );
+                currentStepDetails = <AnimationContainer key={3}><Abstract /></AnimationContainer>
                 break;
             case 4:
-                currentStepDetails = (
-                    <AnimationContainer key={4}>
-                        <Finish />
-                    </AnimationContainer>
-                );
+                currentStepDetails = <AnimationContainer key={4}><Contributions /></AnimationContainer>
+                break;
+            case 5:
+                currentStepDetails = <AnimationContainer key={5}><Finish /></AnimationContainer>
                 break;
         }
 
@@ -163,7 +159,7 @@ class AddPaper extends Component {
                 <GraphViewModal
                     showDialog={this.state.showGraphModal}
                     toggle={() => this.toggle('showGraphModal')}
-                    //paperId={this.props.match.params.resourceId}
+                //paperId={this.props.match.params.resourceId}
                 />
 
                 <Help>
