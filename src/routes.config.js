@@ -18,6 +18,7 @@ import ResearchProblem from './components/ResearchProblem/ResearchProblem'
 import Resources from './pages/Resources'
 import SearchResults from './pages/SearchResults'
 import ViewPaper from './components/ViewPaper/ViewPaper';
+import TpdlExperiment from './components/Experiments/Tpdl';
 
 const routes = [
     {
@@ -108,6 +109,10 @@ const routes = [
         exact: true,
         // eslint-disable-next-line react/prop-types
         component: ({ match }) => <Redirect to={`/resource/${match.params.resourceId}/${descriptionSection}`} />
+    },
+    {
+        path: ROUTES.TPDL,
+        component: TpdlExperiment
     },
     /* Don't add routes below this line */
     {
