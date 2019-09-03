@@ -20,4 +20,5 @@ export default {
    RESSOURCE_DETAILS: '/resource/:resourceId/:sectionName',
    PREDICATE_DETAILS: '/predicate/:predicateId',
    SEARCH: '/search/:searchTerm',
+   TPDL: '/tpdl',
 }
