@@ -3,14 +3,21 @@ import { Container, Row, Col, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../../Utils/Tooltip';
-import { StyledContributionsList, StyledContentEditable} from './styled';
+import { StyledContributionsList, StyledContentEditable } from './styled';
 import { connect } from 'react-redux';
-import { nextStep, previousStep, createContribution, deleteContribution, selectContribution, updateContributionLabel, saveAddPaper } from '../../../actions/addPaper';
+import { compose } from 'redux';
+import {
+    nextStep, previousStep, createContribution, deleteContribution,
+    selectContribution, updateContributionLabel, saveAddPaper
+} from '../../../actions/addPaper';
 import Confirm from 'reactstrap-confirm';
 import Contribution from './Contribution';
 import { CSSTransitionGroup } from 'react-transition-group'
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
+import { withCookies } from 'react-cookie';
 import PropTypes from 'prop-types';
+
+
 
 const AnimationContainer = styled.div`
     transition: 0.3s background-color,  0.3s border-color;
@@ -116,7 +123,7 @@ class Contributions extends Component {
                 <Container>
                     <Row noGutters={true}>
                         <Col xs="3">
-                            <StyledContributionsList>
+                            <StyledContributionsList id="contributionsList">
                                 {this.props.contributions.allIds.map((contribution, index) => {
                                     let contributionId = this.props.contributions.byId[contribution]['id'];
 
@@ -179,7 +186,7 @@ class Contributions extends Component {
                 </Container>
 
                 <hr className="mt-5 mb-3" />
-                <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Next step</Button>
+                <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Finish</Button>
                 <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>Previous step</Button>
             </div>
         );
@@ -205,6 +212,7 @@ Contributions.propTypes = {
     selectContribution: PropTypes.func.isRequired,
     updateContributionLabel: PropTypes.func.isRequired,
     saveAddPaper: PropTypes.func.isRequired,
+    theme: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -233,7 +241,11 @@ const mapDispatchToProps = dispatch => ({
     saveAddPaper: (data) => dispatch(saveAddPaper(data)),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps,
+    ),
+    withTheme,
+    withCookies
 )(Contributions);

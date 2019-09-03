@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import { Button, Card, ListGroup, ListGroupItem, CardDeck } from 'reactstrap';
 import { getStatementsBySubject } from '../../../network';
 import { connect } from 'react-redux';
-import { updateResearchField, nextStep, previousStep } from '../../../actions/addPaper';
+import { compose } from 'redux';
+import { updateResearchField, nextStep, previousStep, openTour, closeTour, updateTourCurrentStep } from '../../../actions/addPaper';
 import { CSSTransitionGroup } from 'react-transition-group'
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
+import { withCookies, Cookies } from 'react-cookie';
 import PropTypes from 'prop-types';
+import Tour from 'reactour';
 
 const ListGroupItemStyled = styled(ListGroupItem)`
     transition: 0.3s background-color,  0.3s border-color;
@@ -41,6 +44,13 @@ class ResearchField extends Component {
 
         this.state = {
             showError: false,
+        }
+
+        // check if a cookie of take a tour exist 
+        if (this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 1
+            && !this.props.cookies.get('showedReaseachFiled')) {
+            this.props.openTour();
+            this.props.cookies.set('showedReaseachFiled', true);
         }
     }
 
@@ -105,8 +115,16 @@ class ResearchField extends Component {
         this.getFields(fieldId, currentLevel + 1);
     }
 
+    requestCloseTour = () => {
+        if (this.props.cookies.get('taketourClosed')) {
+            this.props.closeTour();
+        } else {
+            this.setState({ isClosed: true });
+        }
+    };
+
     render() {
-        let errorMessageClasses = 'text-danger mt-2';
+        let errorMessageClasses = 'text-danger mt-2 pl-2';
         errorMessageClasses += !this.state.showError ? ' d-none' : '';
 
         return (
@@ -116,7 +134,7 @@ class ResearchField extends Component {
                 <CardDeck>
                     {this.props.researchFields.length > 0 && this.props.researchFields.map((fields, level) => {
                         return fields.length > 0 ? (
-                            <FieldSelector key={level}>
+                            <FieldSelector className="fieldSelector" key={level}>
                                 <ListGroup flush>
                                     <CSSTransitionGroup
                                         transitionName="fadeIn"
@@ -140,7 +158,7 @@ class ResearchField extends Component {
                         ) : ''
                     })}
                 </CardDeck>
-                <p className={errorMessageClasses}>Please select the research field</p>
+                <p className={errorMessageClasses} style={{ borderLeft: '4px red solid' }}>Please select the research field</p>
 
                 <hr className="mt-5 mb-3" />
                 {/*<strong>Selected research field</strong> <br />
@@ -148,6 +166,22 @@ class ResearchField extends Component {
 
                 <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Next step</Button>
                 <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>Previous step</Button>
+                <Tour
+                    steps={[
+                        {
+                            selector: '.fieldSelector',
+                            content: 'Select the most appropriate research field for the paper. The research field can be selected from a hierarchical structure of fields and their subfields.',
+                            style: { borderTop: '4px solid #E86161' },
+                        },
+                    ]}
+                    showNumber={false}
+                    accentColor={this.props.theme.orkgPrimaryColor}
+                    rounded={10}
+                    onRequestClose={this.requestCloseTour}
+                    isOpen={this.props.isTourOpen}
+                    startAt={0}
+                    getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); }}
+                />
             </div>
         );
     }
@@ -159,20 +193,36 @@ ResearchField.propTypes = {
     updateResearchField: PropTypes.func.isRequired,
     nextStep: PropTypes.func.isRequired,
     previousStep: PropTypes.func.isRequired,
+    theme: PropTypes.object.isRequired,
+    cookies: PropTypes.instanceOf(Cookies).isRequired,
+    openTour: PropTypes.func.isRequired,
+    closeTour: PropTypes.func.isRequired,
+    updateTourCurrentStep: PropTypes.func.isRequired,
+    isTourOpen: PropTypes.bool.isRequired,
+    tourCurrentStep: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
     selectedResearchField: state.addPaper.selectedResearchField,
     researchFields: state.addPaper.researchFields,
+    isTourOpen: state.addPaper.isTourOpen,
+    tourCurrentStep: state.addPaper.tourCurrentStep,
 });
 
 const mapDispatchToProps = dispatch => ({
     updateResearchField: (data) => dispatch(updateResearchField(data)),
     nextStep: () => dispatch(nextStep()),
     previousStep: () => dispatch(previousStep()),
+    updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
+    openTour: () => dispatch(openTour()),
+    closeTour: () => dispatch(closeTour()),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps,
+    ),
+    withTheme,
+    withCookies
 )(ResearchField);
