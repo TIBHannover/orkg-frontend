@@ -7,8 +7,9 @@ import ResearchField from './ResearchField/ResearchField';
 import Contributions from './Contributions/Contributions';
 import Abstract from './Abstract/Abstract';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faInfo } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import Finish from './Finish/Finish';
+import { withCookies } from 'react-cookie';
 import { connect } from 'react-redux';
 import styled, { withTheme } from 'styled-components';
 import { CSSTransitionGroup } from 'react-transition-group';
@@ -16,8 +17,6 @@ import PropTypes from 'prop-types';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import { openTour, closeTour } from '../../actions/addPaper';
 import GraphViewModal from '../ViewPaper/GraphViewModal';
-import getSteps from './TakeTourSteps';
-import Tour from 'reactour';
 
 const Help = styled.div`
     box-sizing: border-box;
@@ -67,9 +66,14 @@ const AnimationContainer = styled.div`
 `;
 
 class AddPaper extends Component {
-    state = {
-        dropdownOpen: false,
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            showGraphModal: false,
+            dropdownOpen: false,
+        };
+    }
 
     componentDidMount() {
         // Set document title
@@ -169,19 +173,11 @@ class AddPaper extends Component {
                             this.toggleTour();
                         }}
                         id="helpIcon"
-                        icon={faInfo}
+                        icon={faQuestion}
                     />
                 </Help>
 
-                <Tour
-                    steps={getSteps(currentStep)}
-                    showNumber={false}
-                    accentColor={this.props.theme.orkgPrimaryColor}
-                    rounded={10}
-                    onRequestClose={this.props.closeTour}
-                    isOpen={this.props.isTourOpen}
-                    startAt={0}
-                />
+
             </div>
         );
     }
@@ -193,7 +189,7 @@ AddPaper.propTypes = {
     resetStatementBrowser: PropTypes.func.isRequired,
     openTour: PropTypes.func.isRequired,
     closeTour: PropTypes.func.isRequired,
-    theme: PropTypes.object.isRequired,
+    theme: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -213,4 +209,5 @@ export default compose(
         mapDispatchToProps,
     ),
     withTheme,
+    withCookies
 )(AddPaper);
