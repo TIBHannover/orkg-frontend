@@ -250,6 +250,7 @@ class AbstractAnnotator extends Component {
                                 </div>
                             ),
                             style: { borderTop: '4px solid #E86161' },
+                            position: 'right',
                         },
                         {
                             selector: '#uncertaintyOption',

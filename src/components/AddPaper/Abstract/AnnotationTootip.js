@@ -13,7 +13,7 @@ class AnnotationTootip extends Component {
 
         this.state = {
             showTooltip: false,
-            isValidatorHover:false
+            isValidatorHover: false
         };
     }
 
@@ -66,19 +66,18 @@ class AnnotationTootip extends Component {
                 <>
                     <components.ClearIndicator {...props} />
                     <components.IndicatorSeparator {...props} />
-                    <div 
-                        title={props.getValue()[0].uncertainty === 0 ? 'This annotation is validated' : 'Validate this annotation'} 
-                        onMouseEnter={this.onMouseEnter} 
-                        onMouseLeave={this.onMouseLeave} 
-                        onClick={() => this.props.handleValidateAnnotation(props.getValue()[0].range_id)} 
+                    <div
+                        title={props.getValue()[0].uncertainty === 0 ? 'This annotation is validated' : 'Validate this annotation'}
+                        onMouseEnter={this.onMouseEnter}
+                        onMouseLeave={this.onMouseLeave}
+                        onClick={() => this.props.handleValidateAnnotation(props.getValue()[0].range_id)}
                         style={props.getStyles('clearIndicator', props)}
                     >
-                        {(this.state.isValidatorHover || props.getValue()[0].uncertainty === 0) && <Icon color={props.getValue()[0].uncertainty === 0 ? 'green' : this.props.theme.orkgPrimaryColor } style={{ margin: '0px 5px' }} icon={faCheck} />}
-                        {!this.state.isValidatorHover && props.getValue()[0].uncertainty !== 0 && <span>{props.getValue()[0].uncertainty.toFixed(3)}</span>}
+                        <Icon color={props.getValue()[0].uncertainty === 0 ? 'green' : this.props.theme.orkgPrimaryColor} style={{ margin: '0px 5px' }} icon={faCheck} />
                     </div>
                 </>
             );
-          };
+        };
 
         let color = '#ffb7b7';
         switch (this.props.range.class.label) {
@@ -110,7 +109,7 @@ class AnnotationTootip extends Component {
                             label: this.props.range.class.label,
                             id: this.props.range.class.id,
                             uncertainty: this.props.range.uncertainty,
-                            range_id:this.props.range.id,
+                            range_id: this.props.range.id,
                         }}
                         getOptionLabel={({ label }) => label}
                         getOptionValue={({ id }) => id}
@@ -122,7 +121,7 @@ class AnnotationTootip extends Component {
                         openMenuOnClick={false}
                         placeholder="Select or Type something..."
                         styles={customStyles}
-                        components={{ ClearIndicator : ClearAndValidatorIndicator }}
+                        components={{ ClearIndicator: ClearAndValidatorIndicator }}
                     />
                 </ReactstrapTooltip>
             </span>
