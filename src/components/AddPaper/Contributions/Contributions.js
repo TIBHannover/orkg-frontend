@@ -8,15 +8,15 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import {
     nextStep, previousStep, createContribution, deleteContribution,
-    openTour, closeTour, updateTourCurrentStep, selectContribution, updateContributionLabel, saveAddPaper
+    selectContribution, updateContributionLabel, saveAddPaper
 } from '../../../actions/addPaper';
 import Confirm from 'reactstrap-confirm';
 import Contribution from './Contribution';
 import { CSSTransitionGroup } from 'react-transition-group'
 import styled, { withTheme } from 'styled-components';
-import { withCookies, Cookies } from 'react-cookie';
+import { withCookies } from 'react-cookie';
 import PropTypes from 'prop-types';
-import Tour from 'reactour';
+
 
 
 const AnimationContainer = styled.div`
