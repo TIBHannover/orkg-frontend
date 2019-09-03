@@ -28,8 +28,8 @@ class Abstract extends Component {
     super(props);
 
     this.state = {
-      isAbstractLoading:false,
-      isAbstractFailedLoading:false,
+      isAbstractLoading: false,
+      isAbstractFailedLoading: false,
       isAnnotationLoading: false,
       isAnnotationFailedLoading: false,
       annotationError: null,
@@ -81,9 +81,9 @@ class Abstract extends Component {
         });
       })
       .catch((e) => {
-        if (e.statusCode===422){
+        if (e.statusCode === 422) {
           this.setState({ annotationError: 'Failed to annotate the abstract, please change the abstract and try again', isAnnotationLoading: false, isAnnotationFailedLoading: true });
-        }else{
+        } else {
           this.setState({ annotationError: null, isAnnotationLoading: false, isAnnotationFailedLoading: true });
         }
         return null;
@@ -103,12 +103,12 @@ class Abstract extends Component {
       });
 
       let DOI = this.props.doi.substring(this.props.doi.indexOf('10.'));
-      return submitGetRequest(semanticScholarUrl+DOI).then((data, reject)=>{
-        if(!data.abstract){
+      return submitGetRequest(semanticScholarUrl + DOI).then((data, reject) => {
+        if (!data.abstract) {
           return reject;
         }
         return data.abstract;
-      }).catch(()=>{
+      }).catch(() => {
         const titleEncoded = encodeURIComponent(this.props.title).replace(/%20/g, '+');
         const apiCall = arxivUrl + '?search_query=ti:' + titleEncoded;
         return fetch(apiCall, { method: 'GET' })
@@ -123,16 +123,16 @@ class Abstract extends Component {
             return reject;
           })
       }).then((abstract) => {
-          // remove line breaks from the abstract
-          abstract = abstract.replace(/(\r\n|\n|\r)/gm, ' ');
-          
-          this.setState({
-            isAbstractLoading: false,
-          });
-          this.props.updateAbstract(abstract);
-          this.getAnnotation();
-        })
-        .catch(() => { 
+        // remove line breaks from the abstract
+        abstract = abstract.replace(/(\r\n|\n|\r)/gm, ' ');
+
+        this.setState({
+          isAbstractLoading: false,
+        });
+        this.props.updateAbstract(abstract);
+        this.getAnnotation();
+      })
+        .catch(() => {
           this.handleChangeAbstract();
           this.setState({ isAbstractFailedLoading: true, isAbstractLoading: false });
         });
@@ -142,11 +142,11 @@ class Abstract extends Component {
   };
 
   getExistingPredicateId = (property) => {
-    if (this.props.properties.allIds.length>0){
+    if (this.props.properties.allIds.length > 0) {
       let p = this.props.properties.allIds.filter(
         (pId) => (this.props.properties.byId[pId].label === property.label),
       );
-      if (p.length>0){ // Property Already exists 
+      if (p.length > 0) { // Property Already exists 
         return p[0];
       }
     }
@@ -154,27 +154,27 @@ class Abstract extends Component {
   }
 
   getExistingRange = (range) => {
-    if (this.props.properties.allIds.length>0){
+    if (this.props.properties.allIds.length > 0) {
       let p = this.props.properties.allIds.filter(
         (pId) => (this.props.properties.byId[pId].label === range.class.label),
       );
-      if (p.length>0){ // Property Already exists 
+      if (p.length > 0) { // Property Already exists 
         // Check value
-        let v = this.props.properties.byId[p[0]].valueIds.filter((id)=> {
-          if (this.props.values.byId[id].label === range.text){
+        let v = this.props.properties.byId[p[0]].valueIds.filter((id) => {
+          if (this.props.values.byId[id].label === range.text) {
             return id;
-          }else{
+          } else {
             return false;
           }
         })
-        if (v.length>0){
+        if (v.length > 0) {
           return true;
         }
       }
     }
     return false;
   }
-    
+
   handleNextClick = () => {
     //TODO: add the annotated words as statements for the next step
     let classesID = {};
@@ -186,7 +186,7 @@ class Abstract extends Component {
     if (rangesArray.length > 0) {
       rangesArray.map((range) => {
         let propertyId;
-        if (!this.getExistingRange(range) && range.class.id){
+        if (!this.getExistingRange(range) && range.class.id) {
           if (classesID[range.class.id]) {
             propertyId = classesID[range.class.id];
           } else {
@@ -196,13 +196,13 @@ class Abstract extends Component {
           }
           if (!createdProperties[propertyId]) {
             let existingPredicateId = this.getExistingPredicateId(range.class);
-            if (!existingPredicateId){
+            if (!existingPredicateId) {
               statements['properties'].push({
                 propertyId: propertyId,
                 existingPredicateId: (range.class.id.toLowerCase() !== range.class.label.toLowerCase()) ? range.class.id : null,
                 label: range.class.label,
               });
-            }else{
+            } else {
               propertyId = existingPredicateId
             }
             createdProperties[propertyId] = propertyId;
@@ -222,9 +222,9 @@ class Abstract extends Component {
         prefillStatements: true,
         statements: statements,
       });
-    }else{
+    } else {
       // Add the statements to the first contribution
-      this.props.prefillStatements({ statements, resourceId : this.props.contributions.byId[this.props.contributions.allIds[0]].resourceId });
+      this.props.prefillStatements({ statements, resourceId: this.props.contributions.byId[this.props.contributions.allIds[0]].resourceId });
     }
     //TODO: add the annotated words as statements in a specific contribution
 
@@ -252,14 +252,14 @@ class Abstract extends Component {
     return (
       <div>
         <h2 className="h4 mt-4 mb-3 clearfix">Abstract annotation
-        <Button outline color="primary" className="float-right" onClick={this.props.nextStep}>
-          Skip this step
+        <Button id="skipStepButton" outline color="primary" className="float-right" onClick={this.props.nextStep}>
+            Skip this step
         </Button>
         </h2>
 
         {this.props.abstract &&
           !this.state.changeAbstract &&
-          !this.state.isAnnotationLoading && 
+          !this.state.isAnnotationLoading &&
           !this.state.isAnnotationFailedLoading && (
             <Alert color="info">
               <strong>Info:</strong> we automatically annotated the abstract for you. Please remove
@@ -269,7 +269,7 @@ class Abstract extends Component {
 
         {!this.state.changeAbstract && !this.state.isAnnotationLoading && this.state.isAnnotationFailedLoading && (
           <Alert color="light">
-            {this.state.annotationError? this.state.annotationError : 'Failed to connect to the annotation service, please try again later'}
+            {this.state.annotationError ? this.state.annotationError : 'Failed to connect to the annotation service, please try again later'}
           </Alert>
         )}
 
@@ -287,7 +287,7 @@ class Abstract extends Component {
                   <Icon icon={faSpinner} spin />
                 </span>
                 <br />
-                <h2 className="h5">{this.state.isAbstractLoading ? 'Loading abstract...': 'Loading annotations...'}</h2>
+                <h2 className="h5">{this.state.isAbstractLoading ? 'Loading abstract...' : 'Loading annotations...'}</h2>
               </div>
             )}
 
@@ -296,36 +296,38 @@ class Abstract extends Component {
               <div className="pl-2 pr-2">
                 {!this.state.isAbstractLoading && !this.state.isAnnotationLoading && (
                   <div>
-                    {rangesClasses.length > 0 &&
-                      rangesClasses.map((c) => {
-                        let color = '#0052CC';
-                        switch (c) {
-                          case 'Process':
-                            color = '#7fa2ff';
-                            break;
-                          case 'Data':
-                            color = '#5FA97F';
-                            break;
-                          case 'Material':
-                            color = '#EAB0A2';
-                            break;
-                          case 'Method':
-                            color = '#D2B8E5';
-                            break;
-                          default:
-                            color = '#ffb7b7';
-                        }
-                        //
-                        return (
-                          <Badge
-                            className={'mr-2'}
-                            key={`c${c}`}
-                            style={{ color: '#333', background: color }}
-                          >
-                            {c ? c : 'Unlabeled'} {rangeArray.filter((rc) => rc.class.label === c).length}
-                          </Badge>
-                        );
-                      })}
+                    <div id="annotationBadges">
+                      {rangesClasses.length > 0 &&
+                        rangesClasses.map((c) => {
+                          let color = '#0052CC';
+                          switch (c) {
+                            case 'Process':
+                              color = '#7fa2ff';
+                              break;
+                            case 'Data':
+                              color = '#5FA97F';
+                              break;
+                            case 'Material':
+                              color = '#EAB0A2';
+                              break;
+                            case 'Method':
+                              color = '#D2B8E5';
+                              break;
+                            default:
+                              color = '#ffb7b7';
+                          }
+                          //
+                          return (
+                            <Badge
+                              className={'mr-2'}
+                              key={`c${c}`}
+                              style={{ color: '#333', background: color }}
+                            >
+                              {c ? c : 'Unlabeled'} {rangeArray.filter((rc) => rc.class.label === c).length}
+                            </Badge>
+                          );
+                        })}
+                    </div>
                     <AbstractAnnotator
                       uncertaintyThreshold={this.state.uncertaintyThreshold[0]}
                     />
@@ -333,21 +335,21 @@ class Abstract extends Component {
                 )}
               </div>
             ) : (
-              <div>
-                <Label for="paperAbstract">
-                  <Tooltip message="Enter the paper abstract to get automatically generated concepts for you paper.">
-                    Enter the paper abstract
-                  </Tooltip>
-                </Label>
-                <Textarea
-                  id="paperAbstract"
-                  className="form-control pl-2 pr-2"
-                  minRows={5}
-                  value={this.props.abstract}
-                  onChange={this.handleChange}
-                />
-              </div>
-            )}
+                <div>
+                  <Label for="paperAbstract">
+                    <Tooltip message="Enter the paper abstract to get automatically generated concepts for you paper.">
+                      Enter the paper abstract
+                    </Tooltip>
+                  </Label>
+                  <Textarea
+                    id="paperAbstract"
+                    className="form-control pl-2 pr-2"
+                    minRows={5}
+                    value={this.props.abstract}
+                    onChange={this.handleChange}
+                  />
+                </div>
+              )}
           </CardBody>
         </Card>
 
@@ -356,7 +358,7 @@ class Abstract extends Component {
         </Button>
         {!this.state.isAnnotationLoading && !this.state.isAnnotationFailedLoading && toArray(this.props.ranges).length > 0 && (
           <div className={'col-3 float-right'}>
-            <div className={'mt-4'}>
+            <div id="uncertaintyOption" className={'mt-4'}>
               <Range
                 step={0.025}
                 min={0}

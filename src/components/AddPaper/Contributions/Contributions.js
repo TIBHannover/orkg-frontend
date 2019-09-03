@@ -40,13 +40,6 @@ class Contributions extends Component {
             editing: {}
         };
         this.inputRefs = {}
-
-        // check if a cookie of take a tour exist 
-        if (this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 0 && !this.props.cookies.get('showedContributions')) {
-            this.props.openTour();
-            this.props.cookies.set('showedContributions', true);
-        }
-
     }
 
     componentDidMount() {
@@ -118,14 +111,6 @@ class Contributions extends Component {
             label: e.target.value,
             contributionId: contributionId,
         });
-    };
-
-    requestCloseTour = () => {
-        if (this.props.cookies.get('taketourClosed')) {
-            this.props.closeTour();
-        } else {
-            this.setState({ isClosed: true });
-        }
     };
 
     render() {
@@ -203,32 +188,6 @@ class Contributions extends Component {
                 <hr className="mt-5 mb-3" />
                 <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Finish</Button>
                 <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>Previous step</Button>
-                <Tour
-                    steps={[
-                        {
-                            selector: '#researchProblemFormControl',
-                            content: 'Specify the research problem that this contribution addresses.',
-                            style: { borderTop: '4px solid #E86161' },
-                        },
-                        {
-                            selector: '#contributionsList',
-                            content: ' You can enter multiple contributions, and you can specify a name for each contribution. It\'s just a handy label.',
-                            style: { borderTop: '4px solid #E86161' },
-                        },
-                        {
-                            selector: '.listGroupEnlarge',
-                            content: 'Contribution data can be added here. This data is added in a property value structure.',
-                            style: { borderTop: '4px solid #E86161' },
-                        },
-                    ]}
-                    showNumber={false}
-                    accentColor={this.props.theme.orkgPrimaryColor}
-                    rounded={10}
-                    onRequestClose={this.requestCloseTour}
-                    isOpen={this.props.isTourOpen}
-                    startAt={0}
-                    getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); }}
-                />
             </div>
         );
     }
@@ -254,12 +213,6 @@ Contributions.propTypes = {
     updateContributionLabel: PropTypes.func.isRequired,
     saveAddPaper: PropTypes.func.isRequired,
     theme: PropTypes.object.isRequired,
-    cookies: PropTypes.instanceOf(Cookies).isRequired,
-    openTour: PropTypes.func.isRequired,
-    closeTour: PropTypes.func.isRequired,
-    updateTourCurrentStep: PropTypes.func.isRequired,
-    isTourOpen: PropTypes.bool.isRequired,
-    tourCurrentStep: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -275,8 +228,6 @@ const mapStateToProps = state => {
         resources: state.statementBrowser.resources,
         properties: state.statementBrowser.properties,
         values: state.statementBrowser.values,
-        isTourOpen: state.addPaper.isTourOpen,
-        tourCurrentStep: state.addPaper.tourCurrentStep,
     }
 };
 
@@ -288,9 +239,6 @@ const mapDispatchToProps = dispatch => ({
     selectContribution: (id) => dispatch(selectContribution(id)),
     updateContributionLabel: (data) => dispatch(updateContributionLabel(data)),
     saveAddPaper: (data) => dispatch(saveAddPaper(data)),
-    updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
-    openTour: () => dispatch(openTour()),
-    closeTour: () => dispatch(closeTour()),
 });
 
 export default compose(

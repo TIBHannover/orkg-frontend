@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import rangy from 'rangy';
+import { compose } from 'redux';
 import { predicatesUrl, submitGetRequest } from '../../../network';
 import { connect } from 'react-redux';
+import { withCookies, Cookies } from 'react-cookie';
+import { withTheme } from 'styled-components';
 import AnnotationTootip from './AnnotationTootip';
 import {
     createAnnotation,
     updateAnnotationClass,
     removeAnnotation,
     validateAnnotation,
-  } from '../../../actions/addPaper';
+    openTour, closeTour, updateTourCurrentStep
+} from '../../../actions/addPaper';
+import Tour from 'reactour';
 
 function getAllIndexes(arr, val) {
     var indexes = [],
@@ -28,12 +33,19 @@ class AbstractAnnotator extends Component {
 
         this.state = {
             classeOptions: [
-              { id: 'process', label: 'Process' },
-              { id: 'data', label: 'Data' },
-              { id: 'material', label: 'Material' },
-              { id: 'method', label: 'Method' },
+                { id: 'process', label: 'Process' },
+                { id: 'data', label: 'Data' },
+                { id: 'material', label: 'Material' },
+                { id: 'method', label: 'Method' },
             ],
-          };
+        };
+
+        // check if a cookie of take a tour exist 
+        if (this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 1
+            && !this.props.cookies.get('showedAbstract')) {
+            this.props.openTour();
+            this.props.cookies.set('showedAbstract', true);
+        }
     }
 
     componentDidMount() {
@@ -119,13 +131,13 @@ class AbstractAnnotator extends Component {
     }
 
     tooltipRenderer = (lettersNode, range) => {
-        return (<AnnotationTootip 
-                    loadOptions={this.loadOptions} 
-                    key={`${range.id}`} range={range} 
-                    lettersNode={lettersNode} 
-                    handleChangeAnnotationClass={this.handleChangeAnnotationClass} 
-                    handleValidateAnnotation={this.props.validateAnnotation}
-                />);
+        return (<AnnotationTootip
+            loadOptions={this.loadOptions}
+            key={`${range.id}`} range={range}
+            lettersNode={lettersNode}
+            handleChangeAnnotationClass={this.handleChangeAnnotationClass}
+            handleValidateAnnotation={this.props.validateAnnotation}
+        />);
     };
 
     getAnnotatedText() {
@@ -150,18 +162,18 @@ class AbstractAnnotator extends Component {
 
     handleChangeAnnotationClass = (selectedOption, { action }, range) => {
         if (action === 'select-option') {
-          this.props.updateAnnotationClass({range, selectedOption});
+            this.props.updateAnnotationClass({ range, selectedOption });
         } else if (action === 'create-option') {
-          const newOption = {
-            label: selectedOption.label,
-            id: selectedOption.label,
-          };
-          this.props.updateAnnotationClass({range, selectedOption});
-          this.setState({ classeOptions: [...this.state.classeOptions, newOption] });
+            const newOption = {
+                label: selectedOption.label,
+                id: selectedOption.label,
+            };
+            this.props.updateAnnotationClass({ range, selectedOption });
+            this.setState({ classeOptions: [...this.state.classeOptions, newOption] });
         } else if (action === 'clear') {
-          this.props.removeAnnotation(range);
+            this.props.removeAnnotation(range);
         }
-      };
+    };
 
     handleMouseUp = () => {
         var sel = rangy.getSelection(this.annotatorRef.current);
@@ -187,7 +199,7 @@ class AbstractAnnotator extends Component {
         if (pos === []) {
             return null;
         }
-        var closest = pos.reduce(function(prev, curr) {
+        var closest = pos.reduce(function (prev, curr) {
             return Math.abs(curr - start) < Math.abs(prev - start) ? curr : prev;
         });
         // Update position of selection
@@ -198,18 +210,71 @@ class AbstractAnnotator extends Component {
             start: start,
             end: end,
             text: text,
-            class: {id :null, label: null},
+            class: { id: null, label: null },
             uncertainty: 0,
         };
         this.props.createAnnotation(range);
         window.getSelection().empty();
     };
 
+    requestCloseTour = () => {
+        if (this.props.cookies.get('taketourClosed')) {
+            this.props.closeTour();
+        } else {
+            this.setState({ isClosed: true });
+        }
+    };
+
     render() {
         const annotatedText = this.getAnnotatedText();
         return (
-            <div className={'mt-4'} style={{ lineHeight: '2.5em' }} ref={this.annotatorRef}>
-                {annotatedText}
+            <div>
+                <div id="annotatedText" className={'mt-4'} style={{ lineHeight: '2.5em' }} ref={this.annotatorRef}>
+                    {annotatedText}
+                </div>
+                <Tour
+                    steps={[
+                        {
+                            selector: '#annotatedText',
+                            content: ({ goTo }) => (
+                                <div>
+                                    This an automatically annotated abstract. Feel free to edit and add new annotation by highlighting the text.<br />
+                                    When you hover on one of the annotations, you get this 4 options in a tooltip: <br />
+                                    <img src={require('../../../assets/img/annotationTooltip.png')} alt="" className="img-responsive" /><br />
+                                    <ol>
+                                        <li>Change the annotation label.</li>
+                                        <li>Remove the annotation.</li>
+                                        <li>Confirm the annotation : the number represents the level of uncertainty attached to this annotation.</li>
+                                        <li>Show the list of label options.</li>
+                                    </ol>
+                                </div>
+                            ),
+                            style: { borderTop: '4px solid #E86161' },
+                        },
+                        {
+                            selector: '#uncertaintyOption',
+                            content: 'Here you can adjust the uncertainty value, that means at which level you accept the automatic annotations. Only the shown annotations will be used in the create the contribution data in the next step.',
+                            style: { borderTop: '4px solid #E86161' },
+                        },
+                        {
+                            selector: '#annotationBadges',
+                            content: 'Here you can see the annotation labels that we found in your abstract. Those labels will be used as properties in the contribution data.',
+                            style: { borderTop: '4px solid #E86161' },
+                        },
+                        {
+                            selector: '#skipStepButton',
+                            content: 'You can skip this step, if you feel that the automatic annotations are not relevant or you don\'t want to use this feature to create the knowledge graph.',
+                            style: { borderTop: '4px solid #E86161' },
+                        },
+                    ]}
+                    showNumber={false}
+                    accentColor={this.props.theme.orkgPrimaryColor}
+                    rounded={10}
+                    onRequestClose={this.requestCloseTour}
+                    isOpen={this.props.isTourOpen}
+                    startAt={0}
+                    getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); console.log(curr) }}
+                />
             </div>
         );
     }
@@ -224,12 +289,21 @@ AbstractAnnotator.propTypes = {
     validateAnnotation: PropTypes.func.isRequired,
     updateAnnotationClass: PropTypes.func.isRequired,
     uncertaintyThreshold: PropTypes.number,
+    theme: PropTypes.object.isRequired,
+    cookies: PropTypes.instanceOf(Cookies).isRequired,
+    openTour: PropTypes.func.isRequired,
+    closeTour: PropTypes.func.isRequired,
+    updateTourCurrentStep: PropTypes.func.isRequired,
+    isTourOpen: PropTypes.bool.isRequired,
+    tourCurrentStep: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
     abstract: state.addPaper.abstract,
     ranges: state.addPaper.ranges,
     rangeIdIndex: state.addPaper.rangeIdIndex,
+    isTourOpen: state.addPaper.isTourOpen,
+    tourCurrentStep: state.addPaper.tourCurrentStep,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -237,10 +311,16 @@ const mapDispatchToProps = (dispatch) => ({
     validateAnnotation: (data) => dispatch(validateAnnotation(data)),
     removeAnnotation: (data) => dispatch(removeAnnotation(data)),
     updateAnnotationClass: (data) => dispatch(updateAnnotationClass(data)),
+    updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
+    openTour: () => dispatch(openTour()),
+    closeTour: () => dispatch(closeTour()),
 });
 
-export default
+export default compose(
     connect(
-      mapStateToProps,
-      mapDispatchToProps,
-    )(AbstractAnnotator);
+        mapStateToProps,
+        mapDispatchToProps,
+    ),
+    withTheme,
+    withCookies
+)(AbstractAnnotator);
