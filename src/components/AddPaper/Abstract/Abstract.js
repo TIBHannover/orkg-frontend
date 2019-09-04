@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Alert, Card, CardBody, Label, Badge } from 'reactstrap';
-import { arxivUrl, semanticScholarUrl, submitGetRequest, getAnnotations } from '../../../network';
+import { arxivUrl, semanticScholarUrl, submitGetRequest, getAnnotations, createPredicate, predicatesUrl } from '../../../network';
 import { connect } from 'react-redux';
 import {
   updateAbstract,
@@ -35,12 +35,38 @@ class Abstract extends Component {
       annotationError: null,
       showError: false,
       changeAbstract: false,
+      classOptions: [],
       uncertaintyThreshold: [0.5],
     };
   }
 
   componentDidMount() {
+    this.loadClassOptions();
     this.fetchAbstract();
+  }
+
+  loadClassOptions() {
+    // Fetch the predicates used in the NLP model
+    let classeOptions = ['Process', 'Data', 'Material', 'Method'];
+    let nLPPredicates = classeOptions.map((classOption) => {
+      return submitGetRequest(predicatesUrl + '?q=' + classOption + '&exact=true').then(predicates => {
+        if (predicates.length > 0) {
+          return predicates[0]; // Use the first predicate that match the label
+        } else {
+          return createPredicate(classOption) // Create the predicate if it doesn't exist
+        }
+      })
+    })
+    let options = [];
+    Promise.all(nLPPredicates).then((results) => {
+      results.map((item) =>
+        options.push({
+          label: item.label,
+          id: item.id,
+        }),
+      );
+    })
+    this.setState({ classOptions: options });
   }
 
   getAnnotation = () => {
@@ -55,12 +81,19 @@ class Abstract extends Component {
               let text = data.text.substring(entity[2][0][0], entity[2][0][1]);
               if (annotated.indexOf(text.toLowerCase()) < 0) {
                 annotated.push(text.toLowerCase());
+                // Predicate label entity[1]
+                let rangeClass = this.state.classOptions.filter(c => c.label.toLowerCase() === entity[1].toLowerCase())
+                if (rangeClass.length > 0) {
+                  rangeClass = rangeClass[0];
+                } else {
+                  rangeClass = { id: entity[1], label: entity[1] }
+                }
                 ranges[entity[0]] = {
                   text: text,
                   start: entity[2][0][0],
                   end: entity[2][0][1] - 1,
                   uncertainty: entity[3],
-                  class: { id: entity[1], label: entity[1] },
+                  class: rangeClass,
                 };
                 return ranges[entity[0]];
               } else {
@@ -330,6 +363,7 @@ class Abstract extends Component {
                     </div>
                     <AbstractAnnotator
                       uncertaintyThreshold={this.state.uncertaintyThreshold[0]}
+                      classOptions={this.state.classOptions}
                     />
                   </div>
                 )}

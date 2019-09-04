@@ -32,12 +32,7 @@ class AbstractAnnotator extends Component {
         this.annotatorRef = React.createRef();
 
         this.state = {
-            classeOptions: [
-                { id: 'process', label: 'Process' },
-                { id: 'data', label: 'Data' },
-                { id: 'material', label: 'Material' },
-                { id: 'method', label: 'Method' },
-            ],
+            defaultOptions: [],
         };
 
         // check if a cookie of take a tour exist 
@@ -50,6 +45,7 @@ class AbstractAnnotator extends Component {
 
     componentDidMount() {
         this.annotatorRef.current.addEventListener('mouseup', this.handleMouseUp);
+        this.setState({ defaultOptions: this.props.classOptions });
     }
 
     componentWillUnmount() {
@@ -80,6 +76,10 @@ class AbstractAnnotator extends Component {
 
     loadOptions = async (value) => {
         try {
+            if (value === '' || value.trim() === '') {
+                return [];
+            }
+
             let queryParams = '';
 
             if (value.startsWith('"') && value.endsWith('"') && value.length > 2) {
@@ -90,8 +90,8 @@ class AbstractAnnotator extends Component {
             let responseJson = await submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(value) + queryParams);
             responseJson = await this.IdMatch(value, responseJson);
 
-            if (this.state.classeOptions && this.state.classeOptions.length > 0) {
-                let newProperties = this.state.classeOptions;
+            if (this.state.defaultOptions && this.state.defaultOptions.length > 0) {
+                let newProperties = this.state.defaultOptions;
                 newProperties = newProperties.filter(({ label }) => label.includes(value)); // ensure the label of the new property contains the search value
 
                 responseJson.unshift(...newProperties);
@@ -131,13 +131,16 @@ class AbstractAnnotator extends Component {
     }
 
     tooltipRenderer = (lettersNode, range) => {
-        return (<AnnotationTootip
-            loadOptions={this.loadOptions}
-            key={`${range.id}`} range={range}
-            lettersNode={lettersNode}
-            handleChangeAnnotationClass={this.handleChangeAnnotationClass}
-            handleValidateAnnotation={this.props.validateAnnotation}
-        />);
+        return (
+            <AnnotationTootip
+                loadOptions={this.loadOptions}
+                key={`${range.id}`}
+                range={range}
+                lettersNode={lettersNode}
+                handleChangeAnnotationClass={this.handleChangeAnnotationClass}
+                handleValidateAnnotation={this.props.validateAnnotation}
+                defaultOptions={this.state.defaultOptions}
+            />);
     };
 
     getAnnotatedText() {
@@ -169,7 +172,7 @@ class AbstractAnnotator extends Component {
                 id: selectedOption.label,
             };
             this.props.updateAnnotationClass({ range, selectedOption });
-            this.setState({ classeOptions: [...this.state.classeOptions, newOption] });
+            this.setState({ defaultOptions: [...this.state.defaultOptions, newOption] });
         } else if (action === 'clear') {
             this.props.removeAnnotation(range);
         }
@@ -274,7 +277,7 @@ class AbstractAnnotator extends Component {
                     onRequestClose={this.requestCloseTour}
                     isOpen={this.props.isTourOpen}
                     startAt={0}
-                    getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); console.log(curr) }}
+                    getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); }}
                 />
             </div>
         );
@@ -290,6 +293,7 @@ AbstractAnnotator.propTypes = {
     validateAnnotation: PropTypes.func.isRequired,
     updateAnnotationClass: PropTypes.func.isRequired,
     uncertaintyThreshold: PropTypes.number,
+    classOptions: PropTypes.array.isRequired,
     theme: PropTypes.object.isRequired,
     cookies: PropTypes.instanceOf(Cookies).isRequired,
     openTour: PropTypes.func.isRequired,

@@ -116,7 +116,7 @@ class AnnotationTootip extends Component {
                         onChange={(e, a) => this.props.handleChangeAnnotationClass(e, a, this.props.range)}
                         key={(value) => value}
                         cacheOptions
-                        defaultOptions
+                        defaultOptions={this.props.defaultOptions}
                         isClearable
                         openMenuOnClick={false}
                         placeholder="Select or Type something..."
@@ -136,6 +136,7 @@ AnnotationTootip.propTypes = {
     handleValidateAnnotation: PropTypes.func,
     loadOptions: PropTypes.func,
     theme: PropTypes.object.isRequired,
+    defaultOptions: PropTypes.array.isRequired,
 };
 
 
