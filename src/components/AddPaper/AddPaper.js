@@ -7,7 +7,7 @@ import ResearchField from './ResearchField/ResearchField';
 import Contributions from './Contributions/Contributions';
 import Abstract from './Abstract/Abstract';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faQuestion } from '@fortawesome/free-solid-svg-icons';
+import { faQuestion, faBars } from '@fortawesome/free-solid-svg-icons';
 import Finish from './Finish/Finish';
 import { withCookies } from 'react-cookie';
 import { connect } from 'react-redux';
@@ -140,8 +140,7 @@ class AddPaper extends Component {
 
                     <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4 float-right" style={{ marginLeft: 'auto' }}>
                         <DropdownToggle color="darkblue" size="sm">
-                            {/*<span className="mr-2">Options</span>*/}
-                            <Icon icon={faEllipsisV} />
+                            <Icon icon={faBars} className="mr-2" /> Options
                         </DropdownToggle>
                         <DropdownMenu>
                             <DropdownItem onClick={() => this.toggle('showGraphModal')}>Show graph visualization</DropdownItem>

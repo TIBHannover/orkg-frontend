@@ -3,11 +3,17 @@ import { Container } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from '../../constants/routes.js';
 import FlyerImage from '../../assets/img/flyer.png';
+import { Cookies } from 'react-cookie';
 
 class Tpdl extends Component {
 
     componentDidMount = () => {
-        document.title = 'Open Research Knowledge Graph - TPDL experiment'
+        document.title = 'Open Research Knowledge Graph - TPDL experiment';
+        const cookies = new Cookies();
+
+        if (!cookies.get('tpdlExperiment')) {
+            cookies.set('tpdlExperiment', true);
+        }
     }
 
     render = () => {
