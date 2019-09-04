@@ -127,7 +127,7 @@ class AbstractAnnotator extends Component {
     }
 
     getRange(charPosition) {
-        return this.props.ranges && Object.values(this.props.ranges).find((range) => (charPosition >= range.start) && (charPosition <= range.end) && (range.uncertainty <= this.props.uncertaintyThreshold));
+        return this.props.ranges && Object.values(this.props.ranges).find((range) => (charPosition >= range.start) && (charPosition <= range.end) && (range.certainty >= this.props.certaintyThreshold));
     }
 
     tooltipRenderer = (lettersNode, range) => {
@@ -214,7 +214,7 @@ class AbstractAnnotator extends Component {
             end: end,
             text: text,
             class: { id: null, label: null },
-            uncertainty: 0,
+            certainty: 1,
         };
         this.props.createAnnotation(range);
         window.getSelection().empty();
@@ -247,7 +247,7 @@ class AbstractAnnotator extends Component {
                                     <ol>
                                         <li>Change the annotation label.</li>
                                         <li>Remove the annotation.</li>
-                                        <li>Confirm the annotation : the number represents the level of uncertainty attached to this annotation.</li>
+                                        <li>Confirm the annotation : the number represents the level of certainty attached to this annotation.</li>
                                         <li>Show the list of label options.</li>
                                     </ol>
                                 </div>
@@ -256,8 +256,8 @@ class AbstractAnnotator extends Component {
                             position: 'right',
                         },
                         {
-                            selector: '#uncertaintyOption',
-                            content: 'Here you can adjust the uncertainty value, that means at which level you accept the automatic annotations. Only the shown annotations will be used in the create the contribution data in the next step.',
+                            selector: '#certaintyOption',
+                            content: 'Here you can adjust the certainty value, that means at which level you accept the automatic annotations. Only the shown annotations will be used in the create the contribution data in the next step.',
                             style: { borderTop: '4px solid #E86161' },
                         },
                         {
@@ -292,7 +292,7 @@ AbstractAnnotator.propTypes = {
     removeAnnotation: PropTypes.func.isRequired,
     validateAnnotation: PropTypes.func.isRequired,
     updateAnnotationClass: PropTypes.func.isRequired,
-    uncertaintyThreshold: PropTypes.number,
+    certaintyThreshold: PropTypes.number,
     classOptions: PropTypes.array.isRequired,
     theme: PropTypes.object.isRequired,
     cookies: PropTypes.instanceOf(Cookies).isRequired,

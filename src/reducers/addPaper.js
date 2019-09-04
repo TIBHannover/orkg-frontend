@@ -125,7 +125,7 @@ export default (state = initialState, action) => {
         case type.VALIDATE_ANNOTATION: {
             let { payload } = action;
             return {
-                ...dotProp.set(state, `ranges.${payload}.uncertainty`, 0),
+                ...dotProp.set(state, `ranges.${payload}.certainty`, 1),
             };
         }
 
@@ -136,7 +136,7 @@ export default (state = initialState, action) => {
                 label: payload.selectedOption.label,
             });
             return {
-                ...dotProp.set(newstate, `ranges.${[payload.range.id]}.uncertainty`, 0)
+                ...dotProp.set(newstate, `ranges.${[payload.range.id]}.certainty`, 1)
             };
         }
 
