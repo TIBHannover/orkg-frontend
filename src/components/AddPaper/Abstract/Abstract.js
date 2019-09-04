@@ -392,7 +392,7 @@ class Abstract extends Component {
         </Button>
         {!this.state.isAnnotationLoading && !this.state.isAnnotationFailedLoading && toArray(this.props.ranges).length > 0 && (
           <div className={'col-3 float-right'}>
-            <div id="certaintyOption" className={'mt-4'}>
+            <div className={'mt-4'}>
               <Range
                 step={0.025}
                 min={0}
@@ -438,7 +438,9 @@ class Abstract extends Component {
                 )}
               />
               <div className={'mt-2 text-center'}>
-                Certainty {this.state.certaintyThreshold[0].toFixed(2)}
+                <Tooltip message="Here you can adjust the certainty value, that means at which level you accept the confidence ratio of automatic annotations. Only the shown annotations will be used to create the contribution data in the next step.">
+                  Certainty {this.state.certaintyThreshold[0].toFixed(2)}
+                </Tooltip>
               </div>
             </div>
           </div>

@@ -15,6 +15,7 @@ import {
     openTour, closeTour, updateTourCurrentStep
 } from '../../../actions/addPaper';
 import Tour from 'reactour';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 
 function getAllIndexes(arr, val) {
     var indexes = [],
@@ -51,6 +52,9 @@ class AbstractAnnotator extends Component {
     componentWillUnmount() {
         this.annotatorRef.current.removeEventListener('mouseup', this.handleMouseUp);
     }
+
+    disableBody = target => disableBodyScroll(target)
+    enableBody = target => enableBodyScroll(target)
 
     IdMatch = async (value, responseJson) => {
         if (value.startsWith('#')) {
@@ -236,6 +240,8 @@ class AbstractAnnotator extends Component {
                     {annotatedText}
                 </div>
                 <Tour
+                    onAfterOpen={this.disableBody}
+                    onBeforeClose={this.enableBody}
                     steps={[
                         {
                             selector: '#annotatedText',
@@ -254,11 +260,6 @@ class AbstractAnnotator extends Component {
                             ),
                             style: { borderTop: '4px solid #E86161' },
                             position: 'right',
-                        },
-                        {
-                            selector: '#certaintyOption',
-                            content: 'Here you can adjust the certainty value, that means at which level you accept the automatic annotations. Only the shown annotations will be used in the create the contribution data in the next step.',
-                            style: { borderTop: '4px solid #E86161' },
                         },
                         {
                             selector: '#annotationBadges',
