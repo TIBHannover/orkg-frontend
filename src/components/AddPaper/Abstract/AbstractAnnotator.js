@@ -15,7 +15,7 @@ import {
     openTour, closeTour, updateTourCurrentStep
 } from '../../../actions/addPaper';
 import Tour from 'reactour';
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 function getAllIndexes(arr, val) {
     var indexes = [],
@@ -37,7 +37,7 @@ class AbstractAnnotator extends Component {
         };
 
         // check if a cookie of take a tour exist 
-        if (this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 1
+        if (this.props.cookies && this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 1
             && !this.props.cookies.get('showedAbstract')) {
             this.props.openTour();
             this.props.cookies.set('showedAbstract', true);
@@ -51,6 +51,7 @@ class AbstractAnnotator extends Component {
 
     componentWillUnmount() {
         this.annotatorRef.current.removeEventListener('mouseup', this.handleMouseUp);
+        clearAllBodyScrollLocks();
     }
 
     disableBody = target => disableBodyScroll(target)
@@ -260,25 +261,18 @@ class AbstractAnnotator extends Component {
                             ),
                             style: { borderTop: '4px solid #E86161' },
                             position: 'right',
-                        },
-                        {
-                            selector: '#annotationBadges',
-                            content: 'Here you can see the annotation labels that we found in your abstract. Those labels will be used as properties in the contribution data.',
-                            style: { borderTop: '4px solid #E86161' },
-                        },
-                        {
-                            selector: '#skipStepButton',
-                            content: 'You can skip this step, if you feel that the automatic annotations are not relevant or you don\'t want to use this feature to create the knowledge graph.',
-                            style: { borderTop: '4px solid #E86161' },
-                        },
+                        }
                     ]}
                     showNumber={false}
                     accentColor={this.props.theme.orkgPrimaryColor}
                     rounded={10}
                     onRequestClose={this.requestCloseTour}
                     isOpen={this.props.isTourOpen}
-                    startAt={0}
+                    startAt={this.props.tourStartAt}
                     getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); }}
+                    disableInteraction={true}
+                    showButtons={false}
+                    showNavigation={false}
                     maskClassName="reactourMask"
                 />
             </div>
@@ -303,6 +297,7 @@ AbstractAnnotator.propTypes = {
     updateTourCurrentStep: PropTypes.func.isRequired,
     isTourOpen: PropTypes.bool.isRequired,
     tourCurrentStep: PropTypes.number.isRequired,
+    tourStartAt: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -311,6 +306,7 @@ const mapStateToProps = (state) => ({
     rangeIdIndex: state.addPaper.rangeIdIndex,
     isTourOpen: state.addPaper.isTourOpen,
     tourCurrentStep: state.addPaper.tourCurrentStep,
+    tourStartAt: state.addPaper.tourStartAt,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -319,7 +315,7 @@ const mapDispatchToProps = (dispatch) => ({
     removeAnnotation: (data) => dispatch(removeAnnotation(data)),
     updateAnnotationClass: (data) => dispatch(updateAnnotationClass(data)),
     updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
-    openTour: () => dispatch(openTour()),
+    openTour: (data) => dispatch(openTour(data)),
     closeTour: () => dispatch(closeTour()),
 });
 

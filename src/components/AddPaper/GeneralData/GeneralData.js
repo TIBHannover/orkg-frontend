@@ -19,6 +19,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import Cite from 'citation-js';
 import Tour from 'reactour';
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 const Container = styled.div`
   &.fadeIn-enter {
@@ -81,11 +82,18 @@ class GeneralData extends Component {
         };
 
         // Hide the tour if a cookie 'taketour' exist 
-        if (this.props.cookies.get('taketour')) {
+        if (this.props.cookies && this.props.cookies.get('taketour')) {
             this.state.isFirstVisit = false;
             this.props.closeTour();
         }
     }
+
+    componentWillUnmount() {
+        clearAllBodyScrollLocks();
+    }
+
+    disableBody = target => disableBodyScroll(target)
+    enableBody = target => enableBodyScroll(target)
 
     //TODO this logic should be placed inside an action creator
     handleLookupClick = async () => {
@@ -316,7 +324,7 @@ class GeneralData extends Component {
                                         <Form className="mt-4" onSubmit={this.submitHandler}>
                                             <FormGroup>
                                                 <Label for="paperDoi">
-                                                    <Tooltip message={<span>Automatically fetch the details of your paper by providing a DOI or a BibTeX entry. <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>
+                                                    <Tooltip message={<span>Automatically fetch the details of your paper by providing a DOI or a BibTeX entry. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>
                                                         Paper DOI or BibTeX
                                                     </Tooltip>
                                                 </Label>
@@ -506,6 +514,8 @@ class GeneralData extends Component {
                 </Button>
                 {!this.state.showHelpButton && (
                     <Tour
+                        onAfterOpen={this.disableBody}
+                        onBeforeClose={this.enableBody}
                         steps={[
                             {
                                 selector: '#doiInputGroup',
@@ -523,7 +533,7 @@ class GeneralData extends Component {
                         rounded={10}
                         onRequestClose={this.requestCloseTour}
                         isOpen={this.props.isTourOpen}
-                        startAt={0}
+                        startAt={this.props.tourStartAt}
                         getCurrentStep={curr => this.props.updateTourCurrentStep(curr)}
                         maskClassName="reactourMask"
                     />
@@ -571,6 +581,7 @@ GeneralData.propTypes = {
     closeTour: PropTypes.func.isRequired,
     updateTourCurrentStep: PropTypes.func.isRequired,
     isTourOpen: PropTypes.bool.isRequired,
+    tourStartAt: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -583,13 +594,14 @@ const mapStateToProps = (state) => ({
     publicationYear: state.addPaper.publicationYear,
     isTourOpen: state.addPaper.isTourOpen,
     tourCurrentStep: state.addPaper.tourCurrentStep,
+    tourStartAt: state.addPaper.tourStartAt,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     updateGeneralData: (data) => dispatch(updateGeneralData(data)),
     updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
     nextStep: () => dispatch(nextStep()),
-    openTour: () => dispatch(openTour()),
+    openTour: (data) => dispatch(openTour(data)),
     closeTour: () => dispatch(closeTour()),
 });
 
