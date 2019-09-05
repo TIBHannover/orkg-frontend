@@ -275,6 +275,7 @@ class AbstractAnnotator extends Component {
                     isOpen={this.props.isTourOpen}
                     startAt={0}
                     getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); console.log(curr) }}
+                    maskClassName="reactourMask"
                 />
             </div>
         );

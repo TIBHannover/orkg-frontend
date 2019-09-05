@@ -9,6 +9,7 @@ import styled, { withTheme } from 'styled-components';
 import { withCookies, Cookies } from 'react-cookie';
 import PropTypes from 'prop-types';
 import Tour from 'reactour';
+import Tooltip from '../../Utils/Tooltip';
 
 const ListGroupItemStyled = styled(ListGroupItem)`
     transition: 0.3s background-color,  0.3s border-color;
@@ -123,13 +124,17 @@ class ResearchField extends Component {
         }
     };
 
+    handleLearnMore = (step) => {
+        this.props.openTour(step);
+    }
+
     render() {
         let errorMessageClasses = 'text-danger mt-2 pl-2';
         errorMessageClasses += !this.state.showError ? ' d-none' : '';
 
         return (
             <div>
-                <h2 className="h4 mt-4 mb-5">Select the research field</h2>
+                <h2 className="h4 mt-4 mb-5"><Tooltip message={<span>Select the more appropriate research field for the paper. <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>Select the research field</Tooltip></h2>
 
                 <CardDeck>
                     {this.props.researchFields.length > 0 && this.props.researchFields.map((fields, level) => {
@@ -181,6 +186,7 @@ class ResearchField extends Component {
                     isOpen={this.props.isTourOpen}
                     startAt={0}
                     getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); }}
+                    maskClassName="reactourMask"
                 />
             </div>
         );

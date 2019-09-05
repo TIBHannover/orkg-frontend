@@ -8,7 +8,8 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import {
     nextStep, previousStep, createContribution, deleteContribution,
-    selectContribution, updateContributionLabel, saveAddPaper
+    selectContribution, updateContributionLabel, saveAddPaper, openTour, 
+    updateTourCurrentStep
 } from '../../../actions/addPaper';
 import Confirm from 'reactstrap-confirm';
 import Contribution from './Contribution';
@@ -113,12 +114,16 @@ class Contributions extends Component {
         });
     };
 
+    handleLearnMore = (step) => {
+        this.props.openTour(step);
+    }
+
     render() {
         let selectedResourceId = this.props.selectedContribution;
 
         return (
             <div>
-                <h2 className="h4 mt-4 mb-5"><Tooltip message="Specify the research contributions that this paper makes. A paper can have multiple contributions and each contribution addresses at least one research problem">Specify research contributions</Tooltip></h2>
+                <h2 className="h4 mt-4 mb-5"><Tooltip message={<span>Specify the research contributions that this paper makes. A paper can have multiple contributions and each contribution addresses at least one research problem. <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => this.handleLearnMore(1)}>Learn more</span></span>}>Specify research contributions</Tooltip></h2>
 
                 <Container>
                     <Row noGutters={true}>
@@ -213,6 +218,8 @@ Contributions.propTypes = {
     updateContributionLabel: PropTypes.func.isRequired,
     saveAddPaper: PropTypes.func.isRequired,
     theme: PropTypes.object.isRequired,
+    openTour: PropTypes.func.isRequired,
+    updateTourCurrentStep: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -239,6 +246,8 @@ const mapDispatchToProps = dispatch => ({
     selectContribution: (id) => dispatch(selectContribution(id)),
     updateContributionLabel: (data) => dispatch(updateContributionLabel(data)),
     saveAddPaper: (data) => dispatch(saveAddPaper(data)),
+    openTour: (data) => dispatch(openTour(data)),
+    updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
 });
 
 export default compose(

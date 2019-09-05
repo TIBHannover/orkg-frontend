@@ -42,9 +42,12 @@ export const closeTour = () => dispatch => {
   })
 }
 
-export const openTour = () => dispatch => {
+export const openTour = (step) => dispatch => {
   dispatch({
     type: type.OPEN_TOUR,
+    payload: {
+      step: step ? step : 0,
+    },
   })
 }
 
