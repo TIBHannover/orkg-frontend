@@ -44,7 +44,7 @@ class Abstract extends Component {
     };
 
     // check if a cookie of take a tour exist 
-    if (this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 1
+    if (this.props.cookies && this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 1
       && !this.props.cookies.get('showedAbstract')) {
       this.props.openTour(0);
       this.props.cookies.set('showedAbstract', true);
@@ -52,6 +52,7 @@ class Abstract extends Component {
   }
 
   componentDidMount() {
+
     this.loadClassOptions();
     this.fetchAbstract();
   }

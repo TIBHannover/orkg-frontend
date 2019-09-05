@@ -49,7 +49,7 @@ class ResearchField extends Component {
         }
 
         // check if a cookie of take a tour exist 
-        if (this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 1
+        if (this.props.cookies && this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 1
             && !this.props.cookies.get('showedReaseachFiled')) {
             this.props.openTour();
             this.props.cookies.set('showedReaseachFiled', true);

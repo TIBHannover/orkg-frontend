@@ -82,7 +82,7 @@ class GeneralData extends Component {
         };
 
         // Hide the tour if a cookie 'taketour' exist 
-        if (this.props.cookies.get('taketour')) {
+        if (this.props.cookies && this.props.cookies.get('taketour')) {
             this.state.isFirstVisit = false;
             this.props.closeTour();
         }

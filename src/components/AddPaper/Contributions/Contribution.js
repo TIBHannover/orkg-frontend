@@ -17,7 +17,7 @@ class Contribution extends Component {
 
     componentDidMount() {
         // check if a cookie of take a tour exist 
-        if (this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 3 && !this.props.cookies.get('showedContributions')) {
+        if (this.props.cookies && this.props.cookies.get('taketour') === 'take' && !this.props.cookies.get('showedContributions')) {
             this.props.openTour();
             this.props.cookies.set('showedContributions', true);
         }
@@ -56,13 +56,13 @@ class Contribution extends Component {
                 <Form>
                     <FormGroup>
                         <Label>
-                            <Tooltip message={<span>Specify the research problems that this contribution addresses. Normally, a research problem consists of very few words (around 2 or 3). <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>Research problems</Tooltip>
+                            <Tooltip message={<span>Specify the research problems that this contribution addresses. Normally, a research problem consists of very few words (around 2 or 3). <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>Research problems</Tooltip>
                         </Label>
                         <ResearchProblemInput handler={this.handleResearchProblemsChange} value={this.props.researchProblems} />
                     </FormGroup>
                     <FormGroup>
                         <Label>
-                            <Tooltip message={<span>Provide details about this contribution by making statements. Some suggestions are already displayed, you can use this when it is useful, or delete it when it is not. <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => this.handleLearnMore(2)}>Learn more</span></span>}>Contribution data</Tooltip>
+                            <Tooltip message={<span>Provide details about this contribution by making statements. Some suggestions are already displayed, you can use this when it is useful, or delete it when it is not. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(2)}>Learn more</span></span>}>Contribution data</Tooltip>
                         </Label>
 
                         <StatementBrowser
