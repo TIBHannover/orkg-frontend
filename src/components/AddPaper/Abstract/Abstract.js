@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Alert, Card, CardBody, Label, Badge } from 'reactstrap';
-import { arxivUrl, semanticScholarUrl, submitGetRequest, getAnnotations } from '../../../network';
+import { arxivUrl, semanticScholarUrl, submitGetRequest, getAnnotations, createPredicate, predicatesUrl } from '../../../network';
 import { connect } from 'react-redux';
 import {
   updateAbstract,
@@ -35,12 +35,38 @@ class Abstract extends Component {
       annotationError: null,
       showError: false,
       changeAbstract: false,
-      uncertaintyThreshold: [0.5],
+      classOptions: [],
+      certaintyThreshold: [0.8],
     };
   }
 
   componentDidMount() {
+    this.loadClassOptions();
     this.fetchAbstract();
+  }
+
+  loadClassOptions() {
+    // Fetch the predicates used in the NLP model
+    let classeOptions = ['Process', 'Data', 'Material', 'Method'];
+    let nLPPredicates = classeOptions.map((classOption) => {
+      return submitGetRequest(predicatesUrl + '?q=' + classOption + '&exact=true').then(predicates => {
+        if (predicates.length > 0) {
+          return predicates[0]; // Use the first predicate that match the label
+        } else {
+          return createPredicate(classOption) // Create the predicate if it doesn't exist
+        }
+      })
+    })
+    let options = [];
+    Promise.all(nLPPredicates).then((results) => {
+      results.map((item) =>
+        options.push({
+          label: item.label,
+          id: item.id,
+        }),
+      );
+    })
+    this.setState({ classOptions: options });
   }
 
   getAnnotation = () => {
@@ -55,12 +81,19 @@ class Abstract extends Component {
               let text = data.text.substring(entity[2][0][0], entity[2][0][1]);
               if (annotated.indexOf(text.toLowerCase()) < 0) {
                 annotated.push(text.toLowerCase());
+                // Predicate label entity[1]
+                let rangeClass = this.state.classOptions.filter(c => c.label.toLowerCase() === entity[1].toLowerCase())
+                if (rangeClass.length > 0) {
+                  rangeClass = rangeClass[0];
+                } else {
+                  rangeClass = { id: entity[1], label: entity[1] }
+                }
                 ranges[entity[0]] = {
                   text: text,
                   start: entity[2][0][0],
                   end: entity[2][0][1] - 1,
-                  uncertainty: entity[3],
-                  class: { id: entity[1], label: entity[1] },
+                  certainty: entity[3],
+                  class: rangeClass,
                 };
                 return ranges[entity[0]];
               } else {
@@ -181,7 +214,7 @@ class Abstract extends Component {
     let createdProperties = {};
     let statements = { properties: [], values: [] };
     let rangesArray = toArray(this.props.ranges).filter(
-      (r) => r.uncertainty <= this.state.uncertaintyThreshold,
+      (r) => r.certainty >= this.state.certaintyThreshold,
     );
     if (rangesArray.length > 0) {
       rangesArray.map((range) => {
@@ -246,7 +279,7 @@ class Abstract extends Component {
 
   render() {
     let rangeArray = toArray(this.props.ranges).filter(
-      (r) => (r.uncertainty <= this.state.uncertaintyThreshold)
+      (r) => (r.certainty >= this.state.certaintyThreshold)
     );
     let rangesClasses = [...new Set(rangeArray.map((r) => r.class.label))];
     return (
@@ -329,7 +362,8 @@ class Abstract extends Component {
                         })}
                     </div>
                     <AbstractAnnotator
-                      uncertaintyThreshold={this.state.uncertaintyThreshold[0]}
+                      certaintyThreshold={this.state.certaintyThreshold[0]}
+                      classOptions={this.state.classOptions}
                     />
                   </div>
                 )}
@@ -358,13 +392,13 @@ class Abstract extends Component {
         </Button>
         {!this.state.isAnnotationLoading && !this.state.isAnnotationFailedLoading && toArray(this.props.ranges).length > 0 && (
           <div className={'col-3 float-right'}>
-            <div id="uncertaintyOption" className={'mt-4'}>
+            <div className={'mt-4'}>
               <Range
                 step={0.025}
                 min={0}
                 max={1}
-                values={this.state.uncertaintyThreshold}
-                onChange={(values) => this.setState({ uncertaintyThreshold: values })}
+                values={this.state.certaintyThreshold}
+                onChange={(values) => this.setState({ certaintyThreshold: values })}
                 renderTrack={({ props, children }) => (
                   <div
                     {...props}
@@ -373,7 +407,7 @@ class Abstract extends Component {
                       height: '6px',
                       width: '100%',
                       background: getTrackBackground({
-                        values: this.state.uncertaintyThreshold,
+                        values: this.state.certaintyThreshold,
                         colors: [
                           this.props.theme.orkgPrimaryColor,
                           this.props.theme.ultraLightBlueDarker,
@@ -404,7 +438,9 @@ class Abstract extends Component {
                 )}
               />
               <div className={'mt-2 text-center'}>
-                Uncertainty {this.state.uncertaintyThreshold[0].toFixed(2)}
+                <Tooltip message="Here you can adjust the certainty value, that means at which level you accept the confidence ratio of automatic annotations. Only the shown annotations will be used to create the contribution data in the next step.">
+                  Certainty {this.state.certaintyThreshold[0].toFixed(2)}
+                </Tooltip>
               </div>
             </div>
           </div>

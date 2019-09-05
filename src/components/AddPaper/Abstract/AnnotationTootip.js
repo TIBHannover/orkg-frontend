@@ -67,13 +67,13 @@ class AnnotationTootip extends Component {
                     <components.ClearIndicator {...props} />
                     <components.IndicatorSeparator {...props} />
                     <div
-                        title={props.getValue()[0].uncertainty === 0 ? 'This annotation is validated' : 'Validate this annotation'}
+                        title={props.getValue()[0].certainty === 1 ? 'This annotation is validated' : 'Validate this annotation'}
                         onMouseEnter={this.onMouseEnter}
                         onMouseLeave={this.onMouseLeave}
                         onClick={() => this.props.handleValidateAnnotation(props.getValue()[0].range_id)}
                         style={props.getStyles('clearIndicator', props)}
                     >
-                        <Icon color={props.getValue()[0].uncertainty === 0 ? 'green' : this.props.theme.orkgPrimaryColor} style={{ margin: '0px 5px' }} icon={faCheck} />
+                        <Icon color={props.getValue()[0].certainty === 1 ? 'green' : this.props.theme.orkgPrimaryColor} style={{ margin: '0px 5px' }} icon={faCheck} />
                     </div>
                 </>
             );
@@ -108,7 +108,7 @@ class AnnotationTootip extends Component {
                         value={{
                             label: this.props.range.class.label,
                             id: this.props.range.class.id,
-                            uncertainty: this.props.range.uncertainty,
+                            certainty: this.props.range.certainty,
                             range_id: this.props.range.id,
                         }}
                         getOptionLabel={({ label }) => label}
@@ -116,7 +116,7 @@ class AnnotationTootip extends Component {
                         onChange={(e, a) => this.props.handleChangeAnnotationClass(e, a, this.props.range)}
                         key={(value) => value}
                         cacheOptions
-                        defaultOptions
+                        defaultOptions={this.props.defaultOptions}
                         isClearable
                         openMenuOnClick={false}
                         placeholder="Select or Type something..."
@@ -136,6 +136,7 @@ AnnotationTootip.propTypes = {
     handleValidateAnnotation: PropTypes.func,
     loadOptions: PropTypes.func,
     theme: PropTypes.object.isRequired,
+    defaultOptions: PropTypes.array.isRequired,
 };
 
 

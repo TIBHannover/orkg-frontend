@@ -15,6 +15,7 @@ import {
     openTour, closeTour, updateTourCurrentStep
 } from '../../../actions/addPaper';
 import Tour from 'reactour';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 
 function getAllIndexes(arr, val) {
     var indexes = [],
@@ -32,12 +33,7 @@ class AbstractAnnotator extends Component {
         this.annotatorRef = React.createRef();
 
         this.state = {
-            classeOptions: [
-                { id: 'process', label: 'Process' },
-                { id: 'data', label: 'Data' },
-                { id: 'material', label: 'Material' },
-                { id: 'method', label: 'Method' },
-            ],
+            defaultOptions: [],
         };
 
         // check if a cookie of take a tour exist 
@@ -50,11 +46,15 @@ class AbstractAnnotator extends Component {
 
     componentDidMount() {
         this.annotatorRef.current.addEventListener('mouseup', this.handleMouseUp);
+        this.setState({ defaultOptions: this.props.classOptions });
     }
 
     componentWillUnmount() {
         this.annotatorRef.current.removeEventListener('mouseup', this.handleMouseUp);
     }
+
+    disableBody = target => disableBodyScroll(target)
+    enableBody = target => enableBodyScroll(target)
 
     IdMatch = async (value, responseJson) => {
         if (value.startsWith('#')) {
@@ -80,6 +80,10 @@ class AbstractAnnotator extends Component {
 
     loadOptions = async (value) => {
         try {
+            if (value === '' || value.trim() === '') {
+                return [];
+            }
+
             let queryParams = '';
 
             if (value.startsWith('"') && value.endsWith('"') && value.length > 2) {
@@ -90,8 +94,8 @@ class AbstractAnnotator extends Component {
             let responseJson = await submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(value) + queryParams);
             responseJson = await this.IdMatch(value, responseJson);
 
-            if (this.state.classeOptions && this.state.classeOptions.length > 0) {
-                let newProperties = this.state.classeOptions;
+            if (this.state.defaultOptions && this.state.defaultOptions.length > 0) {
+                let newProperties = this.state.defaultOptions;
                 newProperties = newProperties.filter(({ label }) => label.includes(value)); // ensure the label of the new property contains the search value
 
                 responseJson.unshift(...newProperties);
@@ -127,17 +131,20 @@ class AbstractAnnotator extends Component {
     }
 
     getRange(charPosition) {
-        return this.props.ranges && Object.values(this.props.ranges).find((range) => (charPosition >= range.start) && (charPosition <= range.end) && (range.uncertainty <= this.props.uncertaintyThreshold));
+        return this.props.ranges && Object.values(this.props.ranges).find((range) => (charPosition >= range.start) && (charPosition <= range.end) && (range.certainty >= this.props.certaintyThreshold));
     }
 
     tooltipRenderer = (lettersNode, range) => {
-        return (<AnnotationTootip
-            loadOptions={this.loadOptions}
-            key={`${range.id}`} range={range}
-            lettersNode={lettersNode}
-            handleChangeAnnotationClass={this.handleChangeAnnotationClass}
-            handleValidateAnnotation={this.props.validateAnnotation}
-        />);
+        return (
+            <AnnotationTootip
+                loadOptions={this.loadOptions}
+                key={`${range.id}`}
+                range={range}
+                lettersNode={lettersNode}
+                handleChangeAnnotationClass={this.handleChangeAnnotationClass}
+                handleValidateAnnotation={this.props.validateAnnotation}
+                defaultOptions={this.state.defaultOptions}
+            />);
     };
 
     getAnnotatedText() {
@@ -169,7 +176,7 @@ class AbstractAnnotator extends Component {
                 id: selectedOption.label,
             };
             this.props.updateAnnotationClass({ range, selectedOption });
-            this.setState({ classeOptions: [...this.state.classeOptions, newOption] });
+            this.setState({ defaultOptions: [...this.state.defaultOptions, newOption] });
         } else if (action === 'clear') {
             this.props.removeAnnotation(range);
         }
@@ -211,7 +218,7 @@ class AbstractAnnotator extends Component {
             end: end,
             text: text,
             class: { id: null, label: null },
-            uncertainty: 0,
+            certainty: 1,
         };
         this.props.createAnnotation(range);
         window.getSelection().empty();
@@ -233,6 +240,8 @@ class AbstractAnnotator extends Component {
                     {annotatedText}
                 </div>
                 <Tour
+                    onAfterOpen={this.disableBody}
+                    onBeforeClose={this.enableBody}
                     steps={[
                         {
                             selector: '#annotatedText',
@@ -244,18 +253,13 @@ class AbstractAnnotator extends Component {
                                     <ol>
                                         <li>Change the annotation label.</li>
                                         <li>Remove the annotation.</li>
-                                        <li>Confirm the annotation : the number represents the level of uncertainty attached to this annotation.</li>
+                                        <li>Confirm the annotation : the number represents the level of certainty attached to this annotation.</li>
                                         <li>Show the list of label options.</li>
                                     </ol>
                                 </div>
                             ),
                             style: { borderTop: '4px solid #E86161' },
                             position: 'right',
-                        },
-                        {
-                            selector: '#uncertaintyOption',
-                            content: 'Here you can adjust the uncertainty value, that means at which level you accept the automatic annotations. Only the shown annotations will be used in the create the contribution data in the next step.',
-                            style: { borderTop: '4px solid #E86161' },
                         },
                         {
                             selector: '#annotationBadges',
@@ -274,7 +278,7 @@ class AbstractAnnotator extends Component {
                     onRequestClose={this.requestCloseTour}
                     isOpen={this.props.isTourOpen}
                     startAt={0}
-                    getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); console.log(curr) }}
+                    getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); }}
                     maskClassName="reactourMask"
                 />
             </div>
@@ -290,7 +294,8 @@ AbstractAnnotator.propTypes = {
     removeAnnotation: PropTypes.func.isRequired,
     validateAnnotation: PropTypes.func.isRequired,
     updateAnnotationClass: PropTypes.func.isRequired,
-    uncertaintyThreshold: PropTypes.number,
+    certaintyThreshold: PropTypes.number,
+    classOptions: PropTypes.array.isRequired,
     theme: PropTypes.object.isRequired,
     cookies: PropTypes.instanceOf(Cookies).isRequired,
     openTour: PropTypes.func.isRequired,

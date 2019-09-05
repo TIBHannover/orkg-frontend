@@ -15,8 +15,6 @@ import { updateGeneralData, nextStep, openTour, closeTour, updateTourCurrentStep
 import { CSSTransitionGroup } from 'react-transition-group';
 import { withCookies, Cookies } from 'react-cookie';
 import styled, { withTheme } from 'styled-components';
-import TextareaAutosize from 'react-autosize-textarea';
-import classNames from 'classnames';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import Cite from 'citation-js';
@@ -49,12 +47,6 @@ const Container = styled.div`
   &.slideDown-leave.slideDown-leave-active {
     display: none;
   }
-`;
-
-const StyledTextareaAutosize = styled(TextareaAutosize)`
-  border-radius: 12px !important;
-  border-top-right-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
 `;
 
 class GeneralData extends Component {
@@ -276,10 +268,6 @@ class GeneralData extends Component {
     }
 
     render() {
-        const entryFieldClasses = classNames({
-            'form-control': true,
-            'is-invalid': this.state.validation.entry.isInvalid,
-        });
 
         return (
             <div>
@@ -333,13 +321,14 @@ class GeneralData extends Component {
                                                     </Tooltip>
                                                 </Label>
                                                 <InputGroup id="doiInputGroup">
-                                                    <StyledTextareaAutosize
+                                                    <Input
                                                         type="text"
                                                         name="entry"
                                                         id="paperDoi"
-                                                        className={entryFieldClasses}
                                                         value={this.state.entry}
                                                         onChange={this.handleInputChange}
+                                                        invalid={this.state.validation.entry.isInvalid}
+                                                        onKeyPress={(target) => { target.charCode === 13 && this.handleLookupClick(); }}
                                                     />
                                                     <FormFeedback className="order-1">
                                                         {this.state.validation.entry.message}
