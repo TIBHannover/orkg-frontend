@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPen, faLock } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../../Utils/Tooltip';
 import { StyledContributionsList, StyledContentEditable } from './styled';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import {
     nextStep, previousStep, createContribution, deleteContribution,
-    selectContribution, updateContributionLabel, saveAddPaper, openTour, 
+    selectContribution, updateContributionLabel, saveAddPaper, openTour,
     updateTourCurrentStep
 } from '../../../actions/addPaper';
 import Confirm from 'reactstrap-confirm';
@@ -54,21 +54,40 @@ class Contributions extends Component {
         }
     }
 
-    handleNextClick = () => {
-        // save add paper 
-        this.props.saveAddPaper({
-            title: this.props.title,
-            authors: this.props.authors,
-            publicationMonth: this.props.publicationMonth,
-            publicationYear: this.props.publicationYear,
-            doi: this.props.doi,
-            selectedResearchField: this.props.selectedResearchField,
-            contributions: this.props.contributions,
-            resources: this.props.resources,
-            properties: this.props.properties,
-            values: this.props.values,
+    handleNextClick = async () => {
+        let result = await Confirm({
+            title: (
+                <div>
+                    <Icon icon={faLock} size="lg" className={'mr-2'} />
+                    Are you sure you want to save the paper?
+                </div>
+            ),
+            message: (
+                <div>
+                    The entered data will be locked after the paper is saved.<br />
+                    That means you cannot edit the paper after it's saved.
+                </div>
+            ),
+            confirmText: 'Save and lock',
+            cancelColor: 'light'
         });
-        this.props.nextStep();
+        //
+        if (result) {
+            // save add paper 
+            this.props.saveAddPaper({
+                title: this.props.title,
+                authors: this.props.authors,
+                publicationMonth: this.props.publicationMonth,
+                publicationYear: this.props.publicationYear,
+                doi: this.props.doi,
+                selectedResearchField: this.props.selectedResearchField,
+                contributions: this.props.contributions,
+                resources: this.props.resources,
+                properties: this.props.properties,
+                values: this.props.values,
+            });
+            this.props.nextStep();
+        }
     }
 
     toggleDeleteContribution = async (id) => {
@@ -123,7 +142,7 @@ class Contributions extends Component {
 
         return (
             <div>
-                <h2 className="h4 mt-4 mb-5"><Tooltip message={<span>Specify the research contributions that this paper makes. A paper can have multiple contributions and each contribution addresses at least one research problem. <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => this.handleLearnMore(1)}>Learn more</span></span>}>Specify research contributions</Tooltip></h2>
+                <h2 className="h4 mt-4 mb-5"><Tooltip message={<span>Specify the research contributions that this paper makes. A paper can have multiple contributions and each contribution addresses at least one research problem. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(1)}>Learn more</span></span>}>Specify research contributions</Tooltip></h2>
 
                 <Container>
                     <Row noGutters={true}>
