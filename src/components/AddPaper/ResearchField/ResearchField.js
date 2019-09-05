@@ -170,7 +170,7 @@ class ResearchField extends Component {
                     steps={[
                         {
                             selector: '.fieldSelector',
-                            content: 'Select the most appropriate research field for the paper. The research field can be selected from a hierarchical structure of fields and their subfields.',
+                            content: 'Select a close research field to the paper from the list. The research field can be selected from a hierarchical structure of fields and their subfields.',
                             style: { borderTop: '4px solid #E86161' },
                         },
                     ]}
