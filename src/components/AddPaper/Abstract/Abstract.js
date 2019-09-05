@@ -329,7 +329,12 @@ class Abstract extends Component {
               <div className="pl-2 pr-2">
                 {!this.state.isAbstractLoading && !this.state.isAnnotationLoading && (
                   <div>
+
                     <div id="annotationBadges">
+                      <Tooltip className={'mr-2'} message="Annotation labels are the properties that will be used in the contribution data.">
+                        Annotation labels
+                      </Tooltip>
+                      <span className={'mr-1 ml-1'} />
                       {rangesClasses.length > 0 &&
                         rangesClasses.map((c) => {
                           let color = '#0052CC';
@@ -356,7 +361,7 @@ class Abstract extends Component {
                               key={`c${c}`}
                               style={{ color: '#333', background: color }}
                             >
-                              {c ? c : 'Unlabeled'} {rangeArray.filter((rc) => rc.class.label === c).length}
+                              {c ? c : 'Unlabeled'} <Badge pill color="secondary">{rangeArray.filter((rc) => rc.class.label === c).length}</Badge>
                             </Badge>
                           );
                         })}
