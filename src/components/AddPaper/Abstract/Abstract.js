@@ -9,8 +9,10 @@ import {
   createContribution,
   prefillStatements,
   createAnnotation,
-  clearAnnotations
+  clearAnnotations,
+  openTour, closeTour, updateTourCurrentStep
 } from '../../../actions/addPaper';
+import { withCookies, Cookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import AbstractAnnotator from './AbstractAnnotator';
@@ -21,7 +23,9 @@ import { compose } from 'redux';
 import { guid } from '../../../utils';
 import { withTheme } from 'styled-components';
 import { Range, getTrackBackground } from 'react-range';
+import Tour from 'reactour';
 import toArray from 'lodash/toArray';
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 class Abstract extends Component {
   constructor(props) {
@@ -38,12 +42,26 @@ class Abstract extends Component {
       classOptions: [],
       certaintyThreshold: [0.8],
     };
+
+    // check if a cookie of take a tour exist 
+    if (this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 1
+      && !this.props.cookies.get('showedAbstract')) {
+      this.props.openTour(0);
+      this.props.cookies.set('showedAbstract', true);
+    }
   }
 
   componentDidMount() {
     this.loadClassOptions();
     this.fetchAbstract();
   }
+
+  componentWillUnmount() {
+    clearAllBodyScrollLocks();
+  }
+
+  disableBody = target => disableBodyScroll(target)
+  enableBody = target => enableBodyScroll(target)
 
   loadClassOptions() {
     // Fetch the predicates used in the NLP model
@@ -277,6 +295,14 @@ class Abstract extends Component {
     this.props.updateAbstract(event.target.value);
   };
 
+  requestCloseTour = () => {
+    if (this.props.cookies.get('taketourClosed')) {
+      this.props.closeTour();
+    } else {
+      this.setState({ isClosed: true });
+    }
+  };
+
   render() {
     let rangeArray = toArray(this.props.ranges).filter(
       (r) => (r.certainty >= this.state.certaintyThreshold)
@@ -387,6 +413,32 @@ class Abstract extends Component {
                     value={this.props.abstract}
                     onChange={this.handleChange}
                   />
+                  <Tour
+                    onAfterOpen={this.disableBody}
+                    onBeforeClose={this.enableBody}
+                    steps={[
+                      {
+                        selector: '#paperAbstract',
+                        content: ({ goTo }) => (
+                          <div>
+                            Enter the paper abstract to get automatically generated concepts for you paper.
+                          </div>
+                        ),
+                        style: { borderTop: '4px solid #E86161' },
+                        position: 'right',
+                      }
+                    ]}
+                    showNumber={false}
+                    accentColor={this.props.theme.orkgPrimaryColor}
+                    rounded={10}
+                    onRequestClose={this.requestCloseTour}
+                    isOpen={this.props.isTourOpen}
+                    startAt={0}
+                    getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); }}
+                    showButtons={false}
+                    showNavigation={false}
+                    maskClassName="reactourMask"
+                  />
                 </div>
               )}
           </CardBody>
@@ -482,6 +534,13 @@ Abstract.propTypes = {
   resources: PropTypes.object.isRequired,
   properties: PropTypes.object.isRequired,
   values: PropTypes.object.isRequired,
+  cookies: PropTypes.instanceOf(Cookies).isRequired,
+  openTour: PropTypes.func.isRequired,
+  closeTour: PropTypes.func.isRequired,
+  updateTourCurrentStep: PropTypes.func.isRequired,
+  isTourOpen: PropTypes.bool.isRequired,
+  tourCurrentStep: PropTypes.number.isRequired,
+  tourStartAt: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -494,6 +553,9 @@ const mapStateToProps = (state) => ({
   resources: state.statementBrowser.resources,
   properties: state.statementBrowser.properties,
   values: state.statementBrowser.values,
+  isTourOpen: state.addPaper.isTourOpen,
+  tourCurrentStep: state.addPaper.tourCurrentStep,
+  tourStartAt: state.addPaper.tourStartAt,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -504,6 +566,9 @@ const mapDispatchToProps = (dispatch) => ({
   prefillStatements: (data) => dispatch(prefillStatements(data)),
   createAnnotation: (data) => dispatch(createAnnotation(data)),
   clearAnnotations: () => dispatch(clearAnnotations()),
+  updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
+  openTour: (data) => dispatch(openTour(data)),
+  closeTour: () => dispatch(closeTour()),
 });
 
 export default compose(
@@ -512,4 +577,5 @@ export default compose(
     mapDispatchToProps,
   ),
   withTheme,
+  withCookies
 )(Abstract);

@@ -142,7 +142,7 @@ class ResearchField extends Component {
 
         return (
             <div>
-                <h2 className="h4 mt-4 mb-5"><Tooltip message={<span>Select the more appropriate research field for the paper. <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>Select the research field</Tooltip></h2>
+                <h2 className="h4 mt-4 mb-5"><Tooltip message={<span>Select the more appropriate research field for the paper. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>Select the research field</Tooltip></h2>
 
                 <CardDeck>
                     {this.props.researchFields.length > 0 && this.props.researchFields.map((fields, level) => {
@@ -194,7 +194,7 @@ class ResearchField extends Component {
                     rounded={10}
                     onRequestClose={this.requestCloseTour}
                     isOpen={this.props.isTourOpen}
-                    startAt={0}
+                    startAt={this.props.tourStartAt}
                     getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); }}
                     showButtons={false}
                     showNavigation={false}
@@ -218,6 +218,7 @@ ResearchField.propTypes = {
     updateTourCurrentStep: PropTypes.func.isRequired,
     isTourOpen: PropTypes.bool.isRequired,
     tourCurrentStep: PropTypes.number.isRequired,
+    tourStartAt: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -225,6 +226,7 @@ const mapStateToProps = state => ({
     researchFields: state.addPaper.researchFields,
     isTourOpen: state.addPaper.isTourOpen,
     tourCurrentStep: state.addPaper.tourCurrentStep,
+    tourStartAt: state.addPaper.tourStartAt,
 });
 
 const mapDispatchToProps = dispatch => ({

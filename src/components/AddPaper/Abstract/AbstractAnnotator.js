@@ -268,7 +268,7 @@ class AbstractAnnotator extends Component {
                     rounded={10}
                     onRequestClose={this.requestCloseTour}
                     isOpen={this.props.isTourOpen}
-                    startAt={0}
+                    startAt={this.props.tourStartAt}
                     getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); }}
                     disableInteraction={true}
                     showButtons={false}
@@ -297,6 +297,7 @@ AbstractAnnotator.propTypes = {
     updateTourCurrentStep: PropTypes.func.isRequired,
     isTourOpen: PropTypes.bool.isRequired,
     tourCurrentStep: PropTypes.number.isRequired,
+    tourStartAt: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -305,6 +306,7 @@ const mapStateToProps = (state) => ({
     rangeIdIndex: state.addPaper.rangeIdIndex,
     isTourOpen: state.addPaper.isTourOpen,
     tourCurrentStep: state.addPaper.tourCurrentStep,
+    tourStartAt: state.addPaper.tourStartAt,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -313,7 +315,7 @@ const mapDispatchToProps = (dispatch) => ({
     removeAnnotation: (data) => dispatch(removeAnnotation(data)),
     updateAnnotationClass: (data) => dispatch(updateAnnotationClass(data)),
     updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
-    openTour: () => dispatch(openTour()),
+    openTour: (data) => dispatch(openTour(data)),
     closeTour: () => dispatch(closeTour()),
 });
 

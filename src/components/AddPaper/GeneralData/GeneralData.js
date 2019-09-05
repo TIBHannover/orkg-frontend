@@ -324,7 +324,7 @@ class GeneralData extends Component {
                                         <Form className="mt-4" onSubmit={this.submitHandler}>
                                             <FormGroup>
                                                 <Label for="paperDoi">
-                                                    <Tooltip message={<span>Automatically fetch the details of your paper by providing a DOI or a BibTeX entry. <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>
+                                                    <Tooltip message={<span>Automatically fetch the details of your paper by providing a DOI or a BibTeX entry. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>
                                                         Paper DOI or BibTeX
                                                     </Tooltip>
                                                 </Label>
@@ -533,7 +533,7 @@ class GeneralData extends Component {
                         rounded={10}
                         onRequestClose={this.requestCloseTour}
                         isOpen={this.props.isTourOpen}
-                        startAt={0}
+                        startAt={this.props.tourStartAt}
                         getCurrentStep={curr => this.props.updateTourCurrentStep(curr)}
                         maskClassName="reactourMask"
                     />
@@ -581,6 +581,7 @@ GeneralData.propTypes = {
     closeTour: PropTypes.func.isRequired,
     updateTourCurrentStep: PropTypes.func.isRequired,
     isTourOpen: PropTypes.bool.isRequired,
+    tourStartAt: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -593,6 +594,7 @@ const mapStateToProps = (state) => ({
     publicationYear: state.addPaper.publicationYear,
     isTourOpen: state.addPaper.isTourOpen,
     tourCurrentStep: state.addPaper.tourCurrentStep,
+    tourStartAt: state.addPaper.tourStartAt,
 });
 
 const mapDispatchToProps = (dispatch) => ({
