@@ -56,13 +56,13 @@ class Contribution extends Component {
                 <Form>
                     <FormGroup>
                         <Label>
-                            <Tooltip message={<span>Specify the research problems that this contribution addresses. Normally, a research problem consists of very few words (around 2 or 3). <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>Research problems</Tooltip>
+                            <Tooltip message={<span>Specify the research problems that this contribution addresses. <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>Research problems</Tooltip>
                         </Label>
                         <ResearchProblemInput handler={this.handleResearchProblemsChange} value={this.props.researchProblems} />
                     </FormGroup>
                     <FormGroup>
                         <Label>
-                            <Tooltip message={<span>Provide details about this contribution by making statements. Some suggestions are already displayed, you can use this when it is useful, or delete it when it is not. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(2)}>Learn more</span></span>}>Contribution data</Tooltip>
+                            <Tooltip message={<span>Provide details about this contribution by making statements. <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => this.handleLearnMore(2)}>Learn more</span></span>}>Contribution data</Tooltip>
                         </Label>
 
                         <StatementBrowser
@@ -77,17 +77,27 @@ class Contribution extends Component {
                     steps={[
                         {
                             selector: '#researchProblemFormControl',
-                            content: 'Specify the research problem that this contribution addresses.',
+                            content: 
+                                <span>
+                                    Specify the research problem that this contribution addresses. Normally, a research problem consists of <strong>very few words</strong> (around 2 or 3). 
+                                    <br /><br />
+                                    Examples of research problems:
+                                    <ul>
+                                        <li>Named entity recognition</li>
+                                        <li>HCI performance evaluations</li>
+                                        <li>Triple store benchmarking</li>
+                                    </ul>
+                                </span>,
                             style: { borderTop: '4px solid #E86161' },
                         },
                         {
                             selector: '#contributionsList',
-                            content: ' You can enter multiple contributions, and you can specify a name for each contribution. It\'s just a handy label.',
+                            content: <span>You can enter multiple contributions, and you can specify a name for each contribution. It's just a handy label. <br /><br />Some papers only have one research contribution, while others have multiple. If you are not sure about this, it is fine to just use one contribution.</span>,
                             style: { borderTop: '4px solid #E86161' },
                         },
                         {
                             selector: '.listGroupEnlarge',
-                            content: 'Contribution data can be added here. This data is added in a property value structure.',
+                            content: <span>Entering contribution data is the most important part of adding a paper (this part takes around 10/20 minutes). In this section you enter the data relevant to your paper. The challenge here is to capture the most important aspects of your paper and to represent this here. <br /><br />The data is entered in a <strong>property and value </strong> structure. First you choose a property (e.g. method) and afterwards you add a value to this property (e.g. semi-structured interviews). <br /><br /></span>,
                             style: { borderTop: '4px solid #E86161' },
                         },
                     ]}

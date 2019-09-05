@@ -23,7 +23,7 @@ class Tpdl extends Component {
                     <h1 className="h4 mt-4 mb-4">TPDL experiment</h1>
                 </Container>
 
-                <Container className="box pt-4 pb-4 pl-5 pr-5">
+                <Container className="box pt-4 pb-4 pl-5 pr-5" style={{lineHeight:1.7}}>
                     <img
                         src={FlyerImage}
                         class="pl-3 float-right"
@@ -33,12 +33,12 @@ class Tpdl extends Component {
 
                     <p>Thank you for your interest in this Open Research Knowledge Graph (ORKG) experiment. The goal of the ORKG is to describe research papers and contributions as structured data. More specifically, in this experiment we ask you to add a paper to the ORKG. Every participant has the chance to win one of the three Amazon gift cards worth 50 euro!</p>
 
-                    <h3 className="mt-4">How to participate</h3>
+                    <h3 className="mt-4">What to do</h3>
 
                     <ol>
-                        <li>Choose a paper you want to add to the ORKG (for example the paper you submitted during this conference)</li>
-                        <li>Follow the four-step wizard to add your paper (use the red "Add paper" button at the top, or <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>click here to add your paper</Link>)</li>
-                        <li>After adding your paper, fill out the <a href="https://forms.gle/mCQE4L6cN8DEjZpi8" target="_blank" rel="noopener noreferrer">online evaluation form</a></li>
+                        <li>Choose a paper you want to add to the ORKG (for example the paper you submitted during this conference)<br /><i>Estimated time: 1 minute</i></li>
+                        <li>Follow the four-step wizard to add your paper (use the red "Add paper" button at the top, or <Link to={ROUTES.ADD_PAPER.GENERAL_DATA} target="_blank">click here to add your paper</Link>)<br /><i>Estimated time: 10 to 20 minutes</i></li>
+                        <li>After adding your paper, fill out the <a href="https://forms.gle/mCQE4L6cN8DEjZpi8" target="_blank" rel="noopener noreferrer">online evaluation form</a><br /><i>Estimated time: 5 minutes</i></li>
                     </ol>
 
                     <h3 className="mt-4">Rules and terms</h3>

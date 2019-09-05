@@ -18,7 +18,8 @@ class Finish extends Component {
                         <Icon icon={faSpinner} spin />
                     </span>
                     <br />
-                    <h2 className="h5">Loading...</h2>
+                    <h2 className="h5">Loading... <br /><br /> This might take a while, sit back and relax</h2> <br />
+                    
                 </div>
             )
         } else {
