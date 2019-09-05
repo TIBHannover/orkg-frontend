@@ -273,6 +273,7 @@ class AbstractAnnotator extends Component {
                     disableInteraction={true}
                     showButtons={false}
                     showNavigation={false}
+                    maskClassName="reactourMask"
                 />
             </div>
         );

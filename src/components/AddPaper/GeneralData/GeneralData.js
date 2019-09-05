@@ -263,6 +263,10 @@ class GeneralData extends Component {
         e.preventDefault();
     };
 
+    handleLearnMore = (step) => {
+        this.props.openTour(step);
+    }
+
     render() {
 
         return (
@@ -270,12 +274,11 @@ class GeneralData extends Component {
                 <h2 className="h4 mt-4">General paper data</h2>
 
                 <Modal isOpen={this.state.isFirstVisit} toggle={() => this.toggle('isFirstVisit')}>
-                    <ModalHeader toggle={() => this.toggle('isFirstVisit')}>Welcome to ORKG Add a paper wizard</ModalHeader>
+                    <ModalHeader toggle={() => this.toggle('isFirstVisit')}>A very warm welcome</ModalHeader>
                     <ModalBody>
-                        Great to have you on board!<br />
-                        We would love to help you get started, we've added a guided tour that covers all steps to make your paper a part of the Open Research Knowledge Graph.<br />
-                        This tour covers most of ORKG add a paper wizard, so it's quite extensive. You can stop the tour at any time by clicking the 'Skip'-button.
-                        Can we show you around?
+                        <p>Great to have you on board! </p>
+                        <p>We would love to help you to get started. We've added a guided tour that covers all necessary steps to add your paper to the Open Research Knowledge Graph. You can stop the tour at any time by clicking the 'Skip'-button.</p>
+                        <p>Can we show you around?</p>
                     </ModalBody>
                     <ModalFooter>
                         <Button color="light" onClick={this.handleSkipTour}>Skip</Button>
@@ -313,12 +316,8 @@ class GeneralData extends Component {
                                         <Form className="mt-4" onSubmit={this.submitHandler}>
                                             <FormGroup>
                                                 <Label for="paperDoi">
-                                                    <Tooltip message="Digital Object Identifier or DOI is a persistent identifier or handle used to uniquely identify objects">
-                                                        Paper DOI
-                                                    </Tooltip>
-                                                    <span className={'mr-1 ml-1'}> or</span>
-                                                    <Tooltip message="A BibTeX entry consists of the type, a citation-key and a number of tags which define various characteristics of the paper.">
-                                                        Bibtex
+                                                    <Tooltip message={<span>Automatically fetch the details of your paper by providing a DOI or a BibTeX entry. <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>
+                                                        Paper DOI or BibTeX
                                                     </Tooltip>
                                                 </Label>
                                                 <InputGroup id="doiInputGroup">
@@ -515,7 +514,7 @@ class GeneralData extends Component {
                             },
                             {
                                 selector: '#entryOptions',
-                                content: 'In case you don\'t have the DOI, you can enter the general paper data "Manually".',
+                                content: 'In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button on the right.',
                                 style: { borderTop: '4px solid #E86161' },
                             }
                         ]}
@@ -526,6 +525,7 @@ class GeneralData extends Component {
                         isOpen={this.props.isTourOpen}
                         startAt={0}
                         getCurrentStep={curr => this.props.updateTourCurrentStep(curr)}
+                        maskClassName="reactourMask"
                     />
                 )}
                 {this.state.showHelpButton && (
@@ -545,6 +545,7 @@ class GeneralData extends Component {
                         startAt={0}
                         showButtons={false}
                         showNavigation={false}
+                        maskClassName="reactourMask"
                     />
                 )}
 

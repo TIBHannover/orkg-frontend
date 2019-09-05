@@ -75,6 +75,10 @@ class ResearchProblemInput extends Component {
             this.setState({
                 inputValue
             });
+        } else if (val.action === 'set-value') {
+            this.setState({
+                inputValue: '',
+            });
         }
     }
 

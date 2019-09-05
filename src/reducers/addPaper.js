@@ -3,11 +3,11 @@ import merge from 'lodash/merge';
 import dotProp from 'dot-prop-immutable';
 import { Cookies } from 'react-cookie';
 
-// TODO: for now this reducer is rather large, maybe split up later in smaller chunks (addPaper and statementBrowser reducer)
 const initialState = {
     isTourOpen: false,
     currentStep: 1,
     tourCurrentStep: 1,
+    tourStartAt: 0,
     title: '',
     authors: [],
     abstract: '',
@@ -83,9 +83,12 @@ export default (state = initialState, action) => {
         }
 
         case type.OPEN_TOUR: {
+            let { payload } = action;
+            
             return {
                 ...state,
                 isTourOpen: true,
+                tourStartAt: payload.step ? payload.step : 0,
             };
         }
 

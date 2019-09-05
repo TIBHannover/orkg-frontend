@@ -38,19 +38,23 @@ class Contribution extends Component {
         });
     }
 
+    handleLearnMore = (step) => {
+        this.props.openTour(step);
+    }
+
     render() {
         return (
             <StyledContribution>
                 <Form>
                     <FormGroup>
                         <Label>
-                            <Tooltip message="Specify the research problems that this contribution addresses. Normally, a research problem consists of very few words (around 2 or 3)">Research problems</Tooltip>
+                            <Tooltip message={<span>Specify the research problems that this contribution addresses. Normally, a research problem consists of very few words (around 2 or 3). <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>Research problems</Tooltip>
                         </Label>
                         <ResearchProblemInput handler={this.handleResearchProblemsChange} value={this.props.researchProblems} />
                     </FormGroup>
                     <FormGroup>
                         <Label>
-                            <Tooltip message="Provide details about this contribution by making statements. Some suggestions are already displayed, you can use this when it is useful, or delete it when it is not">Contribution data</Tooltip>
+                            <Tooltip message={<span>Provide details about this contribution by making statements. Some suggestions are already displayed, you can use this when it is useful, or delete it when it is not. <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => this.handleLearnMore(2)}>Learn more</span></span>}>Contribution data</Tooltip>
                         </Label>
 
                         <StatementBrowser
@@ -82,7 +86,8 @@ class Contribution extends Component {
                     rounded={10}
                     onRequestClose={this.requestCloseTour}
                     isOpen={this.props.isTourOpen}
-                    startAt={0}
+                    startAt={this.props.tourStartAt}
+                    maskClassName="reactourMask"
                 />
             </StyledContribution>
         );
@@ -100,6 +105,7 @@ Contribution.propTypes = {
     updateTourCurrentStep: PropTypes.func.isRequired,
     isTourOpen: PropTypes.bool.isRequired,
     tourCurrentStep: PropTypes.number.isRequired,
+    tourStartAt: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -107,13 +113,14 @@ const mapStateToProps = (state, ownProps) => {
         researchProblems: state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].researchProblems : [],
         isTourOpen: state.addPaper.isTourOpen,
         tourCurrentStep: state.addPaper.tourCurrentStep,
+        tourStartAt: state.addPaper.tourStartAt,
     }
 };
 
 const mapDispatchToProps = dispatch => ({
     updateResearchProblems: (data) => dispatch(updateResearchProblems(data)),
     updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
-    openTour: () => dispatch(openTour()),
+    openTour: (data) => dispatch(openTour(data)),
     closeTour: () => dispatch(closeTour()),
 });
 

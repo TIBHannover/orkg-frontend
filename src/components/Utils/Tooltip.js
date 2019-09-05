@@ -38,8 +38,9 @@ class Tooltip extends React.Component {
                 </span>
 
                 <ReactstrapTooltip 
-                    delay={{show:0,hide:0}} 
+                    delay={{show:0,hide:250}} 
                     placement="top" 
+                    autohide={false} 
                     isOpen={this.state.tooltipOpen} 
                     target={this.id} 
                     toggle={this.toggle}
