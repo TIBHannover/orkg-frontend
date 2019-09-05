@@ -10,6 +10,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import PropTypes from 'prop-types';
 import Tour from 'reactour';
 import Tooltip from '../../Utils/Tooltip';
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 const ListGroupItemStyled = styled(ListGroupItem)`
     transition: 0.3s background-color,  0.3s border-color;
@@ -61,6 +62,13 @@ class ResearchField extends Component {
             this.getFields(process.env.REACT_APP_RESEARCH_FIELD_MAIN, 0);
         }
     }
+
+    componentWillUnmount() {
+        clearAllBodyScrollLocks();
+    }
+
+    disableBody = target => disableBodyScroll(target)
+    enableBody = target => enableBodyScroll(target)
 
     handleNextClick = () => {
         // TODO validation: check if a research field is selected
@@ -172,6 +180,8 @@ class ResearchField extends Component {
                 <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Next step</Button>
                 <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>Previous step</Button>
                 <Tour
+                    onAfterOpen={this.disableBody}
+                    onBeforeClose={this.enableBody}
                     steps={[
                         {
                             selector: '.fieldSelector',
@@ -186,6 +196,8 @@ class ResearchField extends Component {
                     isOpen={this.props.isTourOpen}
                     startAt={0}
                     getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); }}
+                    showButtons={false}
+                    showNavigation={false}
                     maskClassName="reactourMask"
                 />
             </div>
@@ -220,7 +232,7 @@ const mapDispatchToProps = dispatch => ({
     nextStep: () => dispatch(nextStep()),
     previousStep: () => dispatch(previousStep()),
     updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
-    openTour: () => dispatch(openTour()),
+    openTour: (data) => dispatch(openTour(data)),
     closeTour: () => dispatch(closeTour()),
 });
 

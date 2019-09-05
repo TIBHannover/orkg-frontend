@@ -11,6 +11,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import { withTheme } from 'styled-components';
 import PropTypes from 'prop-types';
 import Tour from 'reactour';
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 class Contribution extends Component {
 
@@ -21,6 +22,13 @@ class Contribution extends Component {
             this.props.cookies.set('showedContributions', true);
         }
     }
+
+    componentWillUnmount() {
+        clearAllBodyScrollLocks();
+    }
+
+    disableBody = target => disableBodyScroll(target)
+    enableBody = target => enableBodyScroll(target)
 
     requestCloseTour = () => {
         if (this.props.cookies.get('taketourClosed')) {
@@ -64,6 +72,8 @@ class Contribution extends Component {
                     </FormGroup>
                 </Form>
                 <Tour
+                    onAfterOpen={this.disableBody}
+                    onBeforeClose={this.enableBody}
                     steps={[
                         {
                             selector: '#researchProblemFormControl',

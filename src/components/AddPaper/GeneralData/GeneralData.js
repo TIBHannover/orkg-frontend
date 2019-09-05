@@ -19,6 +19,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import Cite from 'citation-js';
 import Tour from 'reactour';
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 const Container = styled.div`
   &.fadeIn-enter {
@@ -86,6 +87,13 @@ class GeneralData extends Component {
             this.props.closeTour();
         }
     }
+
+    componentWillUnmount() {
+        clearAllBodyScrollLocks();
+    }
+
+    disableBody = target => disableBodyScroll(target)
+    enableBody = target => enableBodyScroll(target)
 
     //TODO this logic should be placed inside an action creator
     handleLookupClick = async () => {
@@ -506,6 +514,8 @@ class GeneralData extends Component {
                 </Button>
                 {!this.state.showHelpButton && (
                     <Tour
+                        onAfterOpen={this.disableBody}
+                        onBeforeClose={this.enableBody}
                         steps={[
                             {
                                 selector: '#doiInputGroup',
@@ -589,7 +599,7 @@ const mapDispatchToProps = (dispatch) => ({
     updateGeneralData: (data) => dispatch(updateGeneralData(data)),
     updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
     nextStep: () => dispatch(nextStep()),
-    openTour: () => dispatch(openTour()),
+    openTour: (data) => dispatch(openTour(data)),
     closeTour: () => dispatch(closeTour()),
 });
 
