@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import registerServiceWorker from './registerServiceWorker';
+import { unregister } from './registerServiceWorker';
 import { Provider } from 'react-redux'
 import configureStore, { history } from './store'
 import { AppContainer } from 'react-hot-loader';
@@ -30,7 +30,7 @@ const render = () => {
 }
 
 render();
-registerServiceWorker();
+unregister();
 
 // Hot reloading components and reducers
 if (module.hot) {
