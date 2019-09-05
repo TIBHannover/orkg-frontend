@@ -395,7 +395,7 @@ class Abstract extends Component {
         <Button color="light" className="mb-2 mt-1" onClick={this.handleChangeAbstract}>
           {this.state.changeAbstract ? 'Annotate abstract' : 'Change abstract'}
         </Button>
-        {!this.state.isAnnotationLoading && !this.state.isAnnotationFailedLoading && toArray(this.props.ranges).length > 0 && (
+        {!this.state.isAbstractLoading && !this.state.isAnnotationLoading && !this.state.isAnnotationFailedLoading && toArray(this.props.ranges).length > 0 && (
           <div className={'col-3 float-right'}>
             <div className={'mt-4'}>
               <Range
