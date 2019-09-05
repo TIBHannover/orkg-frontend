@@ -88,6 +88,40 @@ class AddStatement extends Component {
         return propertyList;
     }
 
+    getDefaultProperties = () => {
+        return [
+            {
+                label: 'Has evaluation',
+                id: 'HAS_EVALUATION'
+            },
+            {
+                label: 'Has approach',
+                id: 'HAS_APPROACH'
+            },
+            {
+                label: 'Has method',
+                id: 'HAS_METHOD'
+            },
+            {
+                label: 'Has implementation',
+                id: 'HAS_IMPLEMENTATION'
+            },
+            {
+                label: 'Has result',
+                id: 'HAS_RESULTS'
+            },
+            {
+                label: 'Has value',
+                id: 'HAS_VALUE'
+            }
+            ,
+            {
+                label: 'Has metric',
+                id: 'HAS_METRIC'
+            }
+        ]
+    }
+
     render() {
         return (
             <>
@@ -96,19 +130,19 @@ class AddStatement extends Component {
                         <StyledAddStatement>
                             <AutoComplete
                                 requestUrl={predicatesUrl}
-                                placeholder="Enter a property"
+                                placeholder="Select or type to enter a property"
                                 onItemSelected={this.handlePropertySelect}
                                 onNewItemSelected={this.toggleConfirmNewProperty}
                                 onKeyUp={() => { }}
                                 additionalData={this.getNewProperties()}
                                 disableBorderRadiusRight
                                 allowCreate
+                                defaultOptions={this.getDefaultProperties()}
                             />
 
                             <InputGroupAddon addonType="append">
                                 <Button color="light" className={'addStatementActionButton'} onClick={this.handleHideAddStatement}>Cancel</Button>
                             </InputGroupAddon>
-
                         </StyledAddStatement>
                         :
                         <span className="btn btn-link p-0 border-0 align-baseline" onClick={this.handleShowAddStatement}>

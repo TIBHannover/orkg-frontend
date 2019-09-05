@@ -16,7 +16,7 @@ class AutoComplete extends Component {
         selectedItemId: null,
         dropdownMenuJsx: null,
         inputValue: '',
-        defaultOptions: [],
+        defaultOptions: this.props.defaultOptions ? this.props.defaultOptions : [],
     };
 
     IdMatch = async (value, responseJson) => {
@@ -44,7 +44,7 @@ class AutoComplete extends Component {
     loadOptions = async (value) => { 
         try {
             if (value === '' || value.trim() === '') {
-                return [];
+                return this.props.defaultOptions ? this.props.defaultOptions : [];
             }
 
             let queryParams = '';
@@ -188,6 +188,7 @@ AutoComplete.propTypes = {
     placeholder: PropTypes.string.isRequired,
     onItemSelected: PropTypes.func.isRequired,
     allowCreate: PropTypes.bool,
+    defaultOptions: PropTypes.array,
     additionalData: PropTypes.array,
     onNewItemSelected: PropTypes.func,
     onKeyUp: PropTypes.func,
