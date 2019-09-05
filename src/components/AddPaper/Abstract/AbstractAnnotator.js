@@ -40,7 +40,7 @@ class AbstractAnnotator extends Component {
         if (this.props.cookies && this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 1
             && !this.props.cookies.get('showedAbstract')) {
             this.props.openTour();
-            this.props.cookies.set('showedAbstract', true);
+            this.props.cookies.set('showedAbstract', true, { path: '/', maxAge: 604800 });
         }
     }
 

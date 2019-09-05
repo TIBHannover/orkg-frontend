@@ -74,7 +74,7 @@ export default (state = initialState, action) => {
                     isTourOpen: false,
                 };
             } else {
-                cookies.set('taketourClosed', true)
+                cookies.set('taketourClosed', true, { path: '/', maxAge: 604800 })
                 return {
                     ...state,
                     isTourOpen: false,
@@ -84,7 +84,7 @@ export default (state = initialState, action) => {
 
         case type.OPEN_TOUR: {
             let { payload } = action;
-            
+
             return {
                 ...state,
                 isTourOpen: true,

@@ -12,7 +12,7 @@ class Tpdl extends Component {
         const cookies = new Cookies();
 
         if (!cookies.get('tpdlExperiment')) {
-            cookies.set('tpdlExperiment', true);
+            cookies.set('tpdlExperiment', true, { path: '/', maxAge: 604800 });
         }
     }
 

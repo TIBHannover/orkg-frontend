@@ -52,7 +52,7 @@ class ResearchField extends Component {
         if (this.props.cookies && this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 1
             && !this.props.cookies.get('showedReaseachFiled')) {
             this.props.openTour();
-            this.props.cookies.set('showedReaseachFiled', true);
+            this.props.cookies.set('showedReaseachFiled', true, { path: '/', maxAge: 604800 });
         }
     }
 
