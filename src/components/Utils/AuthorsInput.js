@@ -4,7 +4,6 @@ import CreatableSelect from 'react-select/creatable';
 import { StyledAuthorsInputFormControl } from './styled'
 import { withTheme } from 'styled-components'
 import PropTypes from 'prop-types';
-import { getStatementsByPredicate } from '../../network';
 
 
 class AuthorsInput extends Component {
@@ -14,26 +13,8 @@ class AuthorsInput extends Component {
 
         this.state = {
             authors: [],
+            inputValue: '',
         }
-    }
-
-    componentDidMount() {
-        // Get the statements that contains the has a author as a predicate
-        getStatementsByPredicate(process.env.REACT_APP_PREDICATES_HAS_AUTHOR).then((result) => {
-            // Get the authors without duplicates
-            var authors = result.map((contribution) => {
-                return contribution.object
-            }).filter((author, index, self) =>
-                index === self.findIndex((t) => (
-                    t.id === author.id && t.label === author.label
-                ))
-            )
-            // Set them to the list of authors and add the created options
-            this.setState({
-                authors: [...authors, ...this.props.value.filter(({ id }) => !authors.map(({ id }) => id).includes(id))],
-                loading: false
-            })
-        })
     }
 
     handleCreate = (inputValue) => {
@@ -46,6 +27,25 @@ class AuthorsInput extends Component {
         });
         this.props.handler([...this.props.value, newOption])
     };
+
+    onInputChange = (inputValue, val) => {
+        if (val.action === 'input-blur') {
+            if (this.state.inputValue !== '') {
+                this.handleCreate(this.state.inputValue); //inputvalue is not provided on blur, so use the state value
+            }
+            this.setState({
+                inputValue: '',
+            });
+        } else if (val.action === 'input-change') {
+            this.setState({
+                inputValue
+            });
+        } else if (val.action === 'set-value') {
+            this.setState({
+                inputValue: '',
+            });
+        }
+    }
 
     render() {
 
@@ -94,11 +94,15 @@ class AuthorsInput extends Component {
                     key={({ id }) => id}
                     value={this.props.value}
                     onChange={this.props.handler}
+                    onCreateOption={this.handleCreate}
+                    onInputChange={this.onInputChange}
+                    inputValue={this.state.inputValue}
                     isClearable
                     isMulti
                     styles={customStyles}
-                    onCreateOption={this.handleCreate}
-                    options={this.state.authors}
+                    placeholder={'Type an author fullname ...'}
+                    noOptionsMessage={() => 'Enter both the first and last name.'}
+                    formatCreateLabel={userInput => `Add the author : "${userInput}"`}
                 />
             </StyledAuthorsInputFormControl>
         );

@@ -209,7 +209,7 @@ class ViewPaper extends Component {
 
                                     {/* TODO: change links of badges  */}
                                     <span className="badge badge-lightblue mr-2">
-                                        <Icon icon={faCalendar} className="text-primary" /> {moment(this.state.publicationMonth, 'M').format('MMMM')} {this.state.publicationYear}
+                                        <Icon icon={faCalendar} className="text-primary" /> {this.state.publicationMonth && this.state.publicationMonth.length > 0 && moment(this.state.publicationMonth, 'M').format('MMMM')} {this.state.publicationYear}
                                     </span>
                                     {this.state.researchField && this.state.researchField.object && (
                                         <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.researchField.object.id })} >
