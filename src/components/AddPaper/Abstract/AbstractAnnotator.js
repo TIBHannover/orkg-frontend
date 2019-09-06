@@ -176,7 +176,7 @@ class AbstractAnnotator extends Component {
                 label: selectedOption.label,
                 id: selectedOption.label,
             };
-            this.props.updateAnnotationClass({ range, selectedOption });
+            this.props.updateAnnotationClass({ range, selectedOption: newOption });
             this.setState({ defaultOptions: [...this.state.defaultOptions, newOption] });
         } else if (action === 'clear') {
             this.props.removeAnnotation(range);

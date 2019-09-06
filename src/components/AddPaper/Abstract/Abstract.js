@@ -64,7 +64,7 @@ class Abstract extends Component {
   disableBody = target => disableBodyScroll(target)
   enableBody = target => enableBodyScroll(target)
 
-  loadClassOptions() {
+  loadClassOptions = () => {
     // Fetch the predicates used in the NLP model
     let classeOptions = ['Process', 'Data', 'Material', 'Method'];
     let nLPPredicates = classeOptions.map((classOption) => {
