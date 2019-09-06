@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Alert, Card, CardBody, Label, Badge } from 'reactstrap';
-import { arxivUrl, semanticScholarUrl, submitGetRequest, getAnnotations, createPredicate, predicatesUrl } from '../../../network';
+import { Button, Alert, Card, CardBody, Label, Badge, FormFeedback } from 'reactstrap';
+import { semanticScholarUrl, submitGetRequest, getAnnotations, createPredicate, predicatesUrl } from '../../../network';
 import { connect } from 'react-redux';
 import {
   updateAbstract,
@@ -41,6 +41,7 @@ class Abstract extends Component {
       changeAbstract: false,
       classOptions: [],
       certaintyThreshold: [0.8],
+      validation: true,
     };
 
     // check if a cookie of take a tour exist 
@@ -52,7 +53,6 @@ class Abstract extends Component {
   }
 
   componentDidMount() {
-
     this.loadClassOptions();
     this.fetchAbstract();
   }
@@ -270,10 +270,15 @@ class Abstract extends Component {
 
   handleChangeAbstract = () => {
     if (this.state.changeAbstract) {
+      if (this.props.abstract.replace(/^\s+|\s+$/g, '') === '' || this.props.abstract.replace(/^\s+|\s+$/g, '').split(' ').length <= 1) {
+        this.setState({ validation: false });
+        return;
+      }
       this.getAnnotation();
     }
     this.setState((prevState) => ({
       changeAbstract: !prevState.changeAbstract,
+      validation: true
     }));
   };
 
@@ -306,10 +311,17 @@ class Abstract extends Component {
           !this.state.changeAbstract &&
           !this.state.isAnnotationLoading &&
           !this.state.isAnnotationFailedLoading && (
-            <Alert color="info">
-              <strong>Info:</strong> we automatically annotated the abstract for you. Please remove
-              any incorrect annotations
-            </Alert>
+            <div>
+              {rangesClasses.length > 0 &&
+                <Alert color="info">
+                  <strong>Info:</strong> we automatically annotated the abstract for you. Please remove
+                  any incorrect annotations
+                </Alert>}
+              {rangesClasses.length === 0 &&
+                <Alert color="info">
+                  <strong>Info:</strong> we could not find any concepts on the abstract. Please insert more text in the abstract.
+                </Alert>}
+            </div>
           )}
 
         {!this.state.changeAbstract && !this.state.isAnnotationLoading && this.state.isAnnotationFailedLoading && (
@@ -394,11 +406,16 @@ class Abstract extends Component {
                   </Label>
                   <Textarea
                     id="paperAbstract"
-                    className="form-control pl-2 pr-2"
+                    className={`form-control pl-2 pr-2 ${!this.state.validation ? 'is-invalid' : ''}`}
                     minRows={5}
                     value={this.props.abstract}
                     onChange={this.handleChange}
                   />
+                  {!this.state.validation &&
+                    <FormFeedback className="order-1">
+                      Please enter the abstract or skip this step.
+                    </FormFeedback>
+                  }
                   <Tour
                     onAfterOpen={this.disableBody}
                     onBeforeClose={this.enableBody}
@@ -430,64 +447,65 @@ class Abstract extends Component {
           </CardBody>
         </Card>
 
-        <Button color="light" className="mb-2 mt-1" onClick={this.handleChangeAbstract}>
+        <Button color="light" className="mb-2 mt-2" onClick={this.handleChangeAbstract}>
           {this.state.changeAbstract ? 'Annotate abstract' : 'Change abstract'}
         </Button>
-        {!this.state.isAbstractLoading && !this.state.isAnnotationLoading && !this.state.isAnnotationFailedLoading && toArray(this.props.ranges).length > 0 && (
-          <div className={'col-3 float-right'}>
-            <div className={'mt-4'}>
-              <Range
-                step={0.025}
-                min={0}
-                max={1}
-                values={this.state.certaintyThreshold}
-                onChange={(values) => this.setState({ certaintyThreshold: values })}
-                renderTrack={({ props, children }) => (
-                  <div
-                    {...props}
-                    style={{
-                      ...props.style,
-                      height: '6px',
-                      width: '100%',
-                      background: getTrackBackground({
-                        values: this.state.certaintyThreshold,
-                        colors: [
-                          this.props.theme.orkgPrimaryColor,
-                          this.props.theme.ultraLightBlueDarker,
-                        ],
-                        min: 0,
-                        max: 1,
-                      }),
-                    }}
-                  >
-                    {children}
-                  </div>
-                )}
-                renderThumb={({ props }) => (
-                  <div
-                    {...props}
-                    style={{
-                      ...props.style,
-                      height: '20px',
-                      width: '20px',
-                      borderRadius: '4px',
-                      backgroundColor: '#FFF',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      boxShadow: '0px 2px 6px #AAA',
-                    }}
-                  />
-                )}
-              />
-              <div className={'mt-2 text-center'}>
-                <Tooltip message="Here you can adjust the certainty value, that means at which level you accept the confidence ratio of automatic annotations. Only the shown annotations will be used to create the contribution data in the next step.">
-                  Certainty {this.state.certaintyThreshold[0].toFixed(2)}
-                </Tooltip>
+        {!this.state.changeAbstract && !this.state.isAbstractLoading && !this.state.isAnnotationLoading &&
+          !this.state.isAnnotationFailedLoading && toArray(this.props.ranges).length > 0 && (
+            <div className={'col-3 float-right'}>
+              <div className={'mt-4'}>
+                <Range
+                  step={0.025}
+                  min={0}
+                  max={1}
+                  values={this.state.certaintyThreshold}
+                  onChange={(values) => this.setState({ certaintyThreshold: values })}
+                  renderTrack={({ props, children }) => (
+                    <div
+                      {...props}
+                      style={{
+                        ...props.style,
+                        height: '6px',
+                        width: '100%',
+                        background: getTrackBackground({
+                          values: this.state.certaintyThreshold,
+                          colors: [
+                            this.props.theme.orkgPrimaryColor,
+                            this.props.theme.ultraLightBlueDarker,
+                          ],
+                          min: 0,
+                          max: 1,
+                        }),
+                      }}
+                    >
+                      {children}
+                    </div>
+                  )}
+                  renderThumb={({ props }) => (
+                    <div
+                      {...props}
+                      style={{
+                        ...props.style,
+                        height: '20px',
+                        width: '20px',
+                        borderRadius: '4px',
+                        backgroundColor: '#FFF',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        boxShadow: '0px 2px 6px #AAA',
+                      }}
+                    />
+                  )}
+                />
+                <div className={'mt-2 text-center'}>
+                  <Tooltip message="Here you can adjust the certainty value, that means at which level you accept the confidence ratio of automatic annotations. Only the shown annotations will be used to create the contribution data in the next step.">
+                    Certainty {this.state.certaintyThreshold[0].toFixed(2)}
+                  </Tooltip>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
         <hr className="mt-5 mb-3" />
 
