@@ -144,7 +144,8 @@ class Abstract extends Component {
 
   fetchAbstract = async () => {
     if (!this.props.abstract) {
-      if (!this.props.title) {
+      let DOI = this.props.doi.substring(this.props.doi.indexOf('10.'));
+      if (!this.props.title || !DOI) {
         this.setState({
           changeAbstract: true,
         });
@@ -153,8 +154,6 @@ class Abstract extends Component {
       this.setState({
         isAbstractLoading: true,
       });
-
-      let DOI = this.props.doi.substring(this.props.doi.indexOf('10.'));
       return submitGetRequest(semanticScholarUrl + DOI).then((data, reject) => {
         if (!data.abstract) {
           return reject;
