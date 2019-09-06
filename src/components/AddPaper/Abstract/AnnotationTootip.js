@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { Tooltip as ReactstrapTooltip } from 'reactstrap';
 import AsyncCreatableSelect from 'react-select/async-creatable';
-import { components } from 'react-select';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { withTheme } from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -61,24 +58,6 @@ class AnnotationTootip extends Component {
             }),
         };
 
-        const ClearAndValidatorIndicator = props => {
-            return (
-                <>
-                    <components.ClearIndicator {...props} />
-                    <components.IndicatorSeparator {...props} />
-                    <div
-                        title={props.getValue()[0].certainty === 1 ? 'This annotation is validated' : 'Validate this annotation'}
-                        onMouseEnter={this.onMouseEnter}
-                        onMouseLeave={this.onMouseLeave}
-                        onClick={() => this.props.handleValidateAnnotation(props.getValue()[0].range_id)}
-                        style={props.getStyles('clearIndicator', props)}
-                    >
-                        <Icon color={props.getValue()[0].certainty === 1 ? 'green' : this.props.theme.orkgPrimaryColor} style={{ margin: '0px 5px' }} icon={faCheck} />
-                    </div>
-                </>
-            );
-        };
-
         let color = '#ffb7b7';
         switch (this.props.range.class.label) {
             case 'Process':
@@ -121,7 +100,6 @@ class AnnotationTootip extends Component {
                         openMenuOnClick={false}
                         placeholder="Select or Type something..."
                         styles={customStyles}
-                        components={{ ClearIndicator: ClearAndValidatorIndicator }}
                     />
                 </ReactstrapTooltip>
             </span>

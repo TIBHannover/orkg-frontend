@@ -249,12 +249,11 @@ class AbstractAnnotator extends Component {
                             content: ({ goTo }) => (
                                 <div>
                                     This an automatically annotated abstract. Feel free to edit and add new annotation by highlighting the text.<br />
-                                    When you hover on one of the annotations, you get this 4 options in a tooltip: <br />
+                                    When you hover on one of the annotations, you get this 3 options in a tooltip: <br />
                                     <img src={require('../../../assets/img/annotationTooltip.png')} alt="" className="img-responsive" /><br />
                                     <ol>
                                         <li>Change the annotation label.</li>
                                         <li>Remove the annotation.</li>
-                                        <li>Confirm the annotation : the number represents the level of certainty attached to this annotation.</li>
                                         <li>Show the list of label options.</li>
                                     </ol>
                                 </div>
