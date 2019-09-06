@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Card, CardText, CardBody, CardHeader, CardFooter } from 'reactstrap';
+import { Container, Button, Card, CardText, CardBody, CardHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { getStatementsByObject, getResource, getStatementsBySubject } from '../../network';
 import ComparisonPopup from './../ViewPaper/ComparisonPopup';
@@ -50,6 +50,8 @@ class ResearchProblem extends Component {
                             let publicationMonth = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
                             if (publicationMonth.length > 0) {
                                 publicationMonth = publicationMonth[0].object.label
+                            } else {
+                                publicationMonth = ''
                             }
                             // authors
                             let authors = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
