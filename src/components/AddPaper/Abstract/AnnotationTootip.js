@@ -98,7 +98,7 @@ class AnnotationTootip extends Component {
                         defaultOptions={this.props.defaultOptions}
                         isClearable
                         openMenuOnClick={false}
-                        placeholder="Select or Type something..."
+                        placeholder="Select or type something..."
                         styles={customStyles}
                     />
                 </ReactstrapTooltip>
