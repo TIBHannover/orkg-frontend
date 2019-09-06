@@ -46,7 +46,7 @@ class Tpdl extends Component {
                     <ul>
                         <li>The paper must be added <strong>from the 9th of September until the 16th of September</strong> 2019</li>
                         <li>Out of all valid submissions, winners will be randomly chosen</li>
-                        <li>The winners will receive an email before the 20th of September 2019</li>
+                        <li>The winners will receive an email before the 25th of September 2019</li>
                         <li>Both adding a paper and filling out the evaluation form are required to have a valid submission</li>
                         <li>Only participants who provided their email address in the evaluation form are eligible to win</li>
                         <li>Participants related to the ORKG project in any way are excluded and cannot win a gift card</li>
