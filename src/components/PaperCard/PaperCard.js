@@ -47,7 +47,7 @@ class PaperCard extends Component {
                         <small>
                             <Icon size={'sm'} icon={faUser} /> {this.props.paper.authorNames.join(', ')} -
                             <i>
-                                {` ${moment(this.props.paper.publicationMonth, 'M').format('MMMM')} ${this.props.paper.publicationYear} `}
+                                {this.props.paper.publicationMonth && this.props.paper.publicationMonth.length > 0 && moment(this.props.paper.publicationMonth, 'M').format('MMMM')} {this.props.paper.publicationYear}
                             </i>
                         </small>
                     </Col>

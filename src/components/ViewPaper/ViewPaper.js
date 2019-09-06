@@ -169,7 +169,7 @@ class ViewPaper extends Component {
                                     <div className="d-flex">
                                         <h2 className="h4 mt-4 mb-3">{this.state.title ? this.state.title : <em>No title</em>}</h2>
 
-                                        <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4" style={{ marginLeft: 'auto'}}>
+                                        <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4" style={{ marginLeft: 'auto' }}>
                                             <DropdownToggle color="darkblue" size="sm" >
                                                 <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
                                             </DropdownToggle>
@@ -183,7 +183,7 @@ class ViewPaper extends Component {
 
                                     {/* TODO: change links of badges  */}
                                     <span className="badge badge-lightblue mr-2">
-                                        <Icon icon={faCalendar} className="text-primary" /> {moment(this.state.publicationMonth, 'M').format('MMMM')} {this.state.publicationYear}
+                                        <Icon icon={faCalendar} className="text-primary" /> {this.state.publicationMonth && this.state.publicationMonth.length > 0 && moment(this.state.publicationMonth, 'M').format('MMMM')} {this.state.publicationYear}
                                     </span>
                                     {this.state.researchField && this.state.researchField.object && (
                                         <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.researchField.object.id })} >
@@ -216,9 +216,9 @@ class ViewPaper extends Component {
                     </>
                 )}
 
-                <GraphViewModal 
-                    showDialog={this.state.showGraphModal} 
-                    toggle={() => this.toggle('showGraphModal')} 
+                <GraphViewModal
+                    showDialog={this.state.showGraphModal}
+                    toggle={() => this.toggle('showGraphModal')}
                     paperId={this.props.match.params.resourceId}
                 />
             </div>
