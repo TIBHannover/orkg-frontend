@@ -160,20 +160,6 @@ class Abstract extends Component {
           return reject;
         }
         return data.abstract;
-      }).catch(() => {
-        const titleEncoded = encodeURIComponent(this.props.title).replace(/%20/g, '+');
-        const apiCall = arxivUrl + '?search_query=ti:' + titleEncoded;
-        return fetch(apiCall, { method: 'GET' })
-          .then((response) => response.text())
-          .then((str) => new window.DOMParser().parseFromString(str, 'text/xml')) // parse the text as xml
-          .then((xmlDoc, reject) => {
-            // get the abstract from the xml doc
-            if (xmlDoc.getElementsByTagName('entry') && xmlDoc.getElementsByTagName('entry')[0]) {
-              return xmlDoc.getElementsByTagName('entry')[0].getElementsByTagName('summary')[0]
-                .innerHTML;
-            }
-            return reject;
-          })
       }).then((abstract) => {
         // remove line breaks from the abstract
         abstract = abstract.replace(/(\r\n|\n|\r)/gm, ' ');
@@ -183,11 +169,10 @@ class Abstract extends Component {
         });
         this.props.updateAbstract(abstract);
         this.getAnnotation();
-      })
-        .catch(() => {
-          this.handleChangeAbstract();
-          this.setState({ isAbstractFailedLoading: true, isAbstractLoading: false });
-        });
+      }).catch(() => {
+        this.handleChangeAbstract();
+        this.setState({ isAbstractFailedLoading: true, isAbstractLoading: false });
+      });
     } else {
       this.getAnnotation();
     }
