@@ -31,6 +31,8 @@ export default class Resources extends Component {
                     let publicationMonth = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
                     if (publicationMonth.length > 0) {
                         publicationMonth = publicationMonth[0].object.label
+                    } else {
+                        publicationMonth = ''
                     }
                     // authors
                     let authors = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);

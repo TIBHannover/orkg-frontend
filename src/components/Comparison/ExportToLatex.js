@@ -145,7 +145,7 @@ class ExportToLatex extends Component {
                         latexTable += `\n\\footnotetext{${link}} [accessed ${moment().format('YYYY MMM DD')}]}`;
                         this.setState({ latexTable: latexTable, latexTableLoading: false });
                     }).then((data) => {
-                        let shortLink = `${this.props.location.protocol}//${this.props.location.host}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
+                        let shortLink = `${this.props.location.protocol}//${window.location.host}${window.location.pathname.replace(ROUTES.COMPARISON,'')}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
                         latexTable += `\n\\footnotetext{${shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
                         this.setState({ shortLink: shortLink, latexTable: latexTable, latexTableLoading: false });
                     })

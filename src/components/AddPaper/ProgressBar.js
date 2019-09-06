@@ -86,12 +86,12 @@ class ProgressBar extends Component {
                         <div style={{ ...lineStyle, ...styleSelectedThree }} />
                         <div style={{ ...lineStyle, ...lineLeftStyle, ...styleSelectedFour }} />
                         <div style={{ ...numberStyle, ...styleSelectedThree }}>3</div>
-                        <div style={textStyle}>Contributions</div>
+                        <div style={textStyle}>Abstract</div>
                     </div>
                     <div style={labelStyle}>
                         <div style={{ ...lineStyle, ...styleSelectedFour }} />
                         <div style={{ ...numberStyle, ...styleSelectedFour }}>4</div>
-                        <div style={textStyle}>Finish</div>
+                        <div style={textStyle}>Contributions</div>
                     </div>
 
                 </div>
