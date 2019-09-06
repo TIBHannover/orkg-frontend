@@ -29,9 +29,11 @@ const Help = styled.div`
     padding: 0;
     bottom: 24px;
     right: 24px;
+    color: '#80869b';
 `;
 
 const HelpIcon = styled(Icon)`
+    vertical-align: middle;
     height: 56px;
     width: 56px;
     z-index: 9999;
@@ -165,15 +167,15 @@ class AddPaper extends Component {
                 //paperId={this.props.match.params.resourceId}
                 />
 
-                <Help>
+                <Help onClick={() => {
+                    this.toggleTour();
+                }} id="helpIcon"
+                >
                     <HelpIcon
                         style={{ padding: '12px', height: '48px', width: '48px' }}
-                        onClick={() => {
-                            this.toggleTour();
-                        }}
-                        id="helpIcon"
                         icon={faQuestion}
                     />
+                    <div style={{ cursor: 'pointer', display: 'inline-block', marginLeft: '8px', fontWeight: 'bold', lineHeight: '56px', fontSize: 'large' }}>Help</div>
                 </Help>
 
 

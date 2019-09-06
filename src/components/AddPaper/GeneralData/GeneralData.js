@@ -285,12 +285,12 @@ class GeneralData extends Component {
                     <ModalHeader toggle={() => this.toggle('isFirstVisit')}>A very warm welcome</ModalHeader>
                     <ModalBody>
                         <p>Great to have you on board! </p>
-                        <p>We would love to help you to get started. We've added a guided tour that covers all necessary steps to add your paper to the Open Research Knowledge Graph. You can stop the tour at any time by clicking the 'Skip'-button.</p>
+                        <p>We would love to help you to get started. We've added a guided tour that covers all necessary steps to add your paper to the Open Research Knowledge Graph.</p>
                         <p>Can we show you around?</p>
                     </ModalBody>
                     <ModalFooter>
                         <Button color="light" onClick={this.handleSkipTour}>Skip</Button>
-                        <Button color="primary" onClick={this.takeTour}>Start a tour</Button>{' '}
+                        <Button color="primary" onClick={this.takeTour}>Show me how</Button>{' '}
                     </ModalFooter>
                 </Modal>
 

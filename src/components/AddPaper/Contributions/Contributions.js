@@ -58,14 +58,13 @@ class Contributions extends Component {
         let result = await Confirm({
             title: (
                 <div>
-                    <Icon icon={faLock} size="lg" className={'mr-2'} />
-                    Are you sure you want to save the paper?
+                    <Icon icon={faLock} className={'mr-2'} />
+                    Are you sure you want to save this paper?
                 </div>
             ),
             message: (
                 <div>
-                    The entered data will be locked after the paper is saved.<br />
-                    That means you cannot edit the paper after it's saved.
+                    You will no longer be able to edit this paper once it's saved!<br />
                 </div>
             ),
             confirmText: 'Save and lock',
