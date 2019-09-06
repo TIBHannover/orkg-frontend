@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPen, faLock } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../../Utils/Tooltip';
 import { StyledContributionsList, StyledContentEditable } from './styled';
 import { connect } from 'react-redux';
@@ -58,7 +58,6 @@ class Contributions extends Component {
         let result = await Confirm({
             title: (
                 <div>
-                    <Icon icon={faLock} className={'mr-2'} />
                     Are you sure you want to save this paper?
                 </div>
             ),

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Dropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'reactstrap';
+import { Container, Button } from 'reactstrap';
 import { compose } from 'redux';
 import ProgressBar from './ProgressBar';
 import GeneralData from './GeneralData/GeneralData';
@@ -7,7 +7,7 @@ import ResearchField from './ResearchField/ResearchField';
 import Contributions from './Contributions/Contributions';
 import Abstract from './Abstract/Abstract';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faQuestion, faBars } from '@fortawesome/free-solid-svg-icons';
+import { faQuestion, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
 import Finish from './Finish/Finish';
 import { withCookies } from 'react-cookie';
 import { connect } from 'react-redux';
@@ -140,14 +140,24 @@ class AddPaper extends Component {
                 <Container className="p-0">
                     <h1 className="h4 mt-4 mb-4 float-left">Add paper</h1>
 
-                    <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4 float-right" style={{ marginLeft: 'auto' }}>
+                    {/*<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4 float-right" style={{ marginLeft: 'auto' }}>
                         <DropdownToggle color="darkblue" size="sm">
                             <Icon icon={faBars} className="mr-2" /> Options
                         </DropdownToggle>
                         <DropdownMenu>
                             <DropdownItem onClick={() => this.toggle('showGraphModal')}>Show graph visualization</DropdownItem>
                         </DropdownMenu>
-                    </Dropdown>
+                    </Dropdown>*/}
+
+                        <Button 
+                            color="darkblue" 
+                            size="sm" 
+                            className="mb-4 mt-4 float-right" 
+                            style={{ marginLeft: 'auto' }} 
+                            onClick={() => this.toggle('showGraphModal')}
+                        >
+                            <Icon icon={faProjectDiagram} className="mr-1" /> View graph
+                        </Button>
 
                     <div className="clearfix" />
                 </Container>

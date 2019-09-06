@@ -50,6 +50,7 @@ class Tpdl extends Component {
                         <li>Both adding a paper and filling out the evaluation form are required to have a valid submission</li>
                         <li>Only participants who provided their email address in the evaluation form are eligible to win</li>
                         <li>Participants related to the ORKG project in any way are excluded and cannot win a gift card</li>
+                        <li>For this experiment mouse tracking is enabled, you can disable this by visiting the home page</li>
                     </ul>
 
                     <div className="clearfix" />
