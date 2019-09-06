@@ -3,6 +3,7 @@ import { ListGroup, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { StyledStatementItem, StyledListGroupOpen } from '../AddPaper/Contributions/styled';
+import { getResource } from '../../network';
 import classNames from 'classnames';
 import ValueItem from './Value/ValueItem';
 import AddValue from './Value/AddValue';
@@ -17,33 +18,48 @@ class StatementItem extends Component {
 
         this.state = {
             deleteContributionModal: false,
+            predicateLabel: null
+        };
+    }
+
+    componentDidMount() {
+        if (this.props.predicateLabel.match(new RegExp('^R[0-9]*$'))) {
+            getResource(this.props.predicateLabel)
+                .catch((e) => {
+                    console.log(e);
+                    this.setState({ predicateLabel: this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1) })
+                }).then((r) => {
+                    this.setState({ predicateLabel: `${r.label.charAt(0).toUpperCase() + r.label.slice(1)} (${this.props.predicateLabel})` })
+                })
+        } else {
+            this.setState({ predicateLabel: this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1) })
         }
     }
 
     toggleDeleteContribution = () => {
-        this.setState(prevState => ({
-            deleteContributionModal: !prevState.deleteContributionModal
+        this.setState((prevState) => ({
+            deleteContributionModal: !prevState.deleteContributionModal,
         }));
-    }
+    };
 
     render() {
         const isCollapsed = this.props.selectedProperty === this.props.id;
 
         const listGroupClass = classNames({
-            'statementActive': isCollapsed,
-            'statementItem': true,
-            'selectable': true,
+            statementActive: isCollapsed,
+            statementItem: true,
+            selectable: true,
             'rounded-bottom': this.props.isLastItem && !isCollapsed && !this.props.enableEdit,
         });
 
         const chevronClass = classNames({
-            'statementItemIcon': true,
-            'open': isCollapsed,
+            statementItemIcon: true,
+            open: isCollapsed,
             'float-right': true,
         });
 
         const openBoxClass = classNames({
-            'listGroupOpenBorderBottom': this.props.isLastItem && !this.props.enableEdit,
+            listGroupOpenBorderBottom: this.props.isLastItem && !this.props.enableEdit,
             'rounded-bottom': this.props.isLastItem && !this.props.enableEdit,
         });
 
@@ -52,16 +68,16 @@ class StatementItem extends Component {
         return (
             <>
                 <StyledStatementItem active={isCollapsed} onClick={() => this.props.togglePropertyCollapse(this.props.id)} className={listGroupClass}>
-                    {this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1)}
-
-                    {valueIds.length === 1 && !isCollapsed ?
+                    {this.state.predicateLabel}
+                    {valueIds.length === 1 && !isCollapsed ? (
                         <>
-                            : {' '}
+                            :{' '}
                             <em className="text-muted">
                                 <ValueItem
                                     label={this.props.values.byId[valueIds[0]].label}
                                     id={valueIds[0]}
                                     type={this.props.values.byId[valueIds[0]].type}
+                                    classes={this.props.values.byId[valueIds[0]].classes}
                                     resourceId={this.props.values.byId[valueIds[0]].resourceId}
                                     propertyId={this.props.id}
                                     existingStatement={this.props.values.byId[valueIds[0]].existingStatement}
@@ -69,14 +85,14 @@ class StatementItem extends Component {
                                 />
                             </em>
                         </>
-                        : valueIds.length > 1 && !isCollapsed ?
-                            <>: <em className="text-muted">{valueIds.length} values</em></>
-                            : ''}
-
-                    <Icon icon={isCollapsed ? faChevronCircleUp : faChevronCircleDown} className={chevronClass} />{' '}
-
-                    {!this.props.isExistingProperty ?
-                        <DeleteStatement id={this.props.id} /> : ''}
+                    ) : valueIds.length > 1 && !isCollapsed ? (
+                        <>
+                            : <em className="text-muted">{valueIds.length} values</em>
+                        </>
+                    ) : (
+                                ''
+                            )}
+                    <Icon icon={isCollapsed ? faChevronCircleUp : faChevronCircleDown} className={chevronClass} /> {!this.props.isExistingProperty ? <DeleteStatement id={this.props.id} /> : ''}
                 </StyledStatementItem>
 
                 <Collapse isOpen={isCollapsed}>
@@ -91,17 +107,16 @@ class StatementItem extends Component {
                                         label={value.label}
                                         id={valueId}
                                         type={value.type}
+                                        classes={value.classes}
                                         resourceId={value.resourceId}
                                         propertyId={this.props.id}
                                         existingStatement={value.existingStatement}
                                         openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                                     />
-                                )
+                                );
                             })}
 
-                            {this.props.enableEdit ? (
-                                <AddValue />
-                            ) : ''}
+                            {this.props.enableEdit ? <AddValue /> : ''}
                         </ListGroup>
                     </StyledListGroupOpen>
                 </Collapse>
@@ -124,19 +139,19 @@ StatementItem.propTypes = {
     openExistingResourcesInDialog: PropTypes.bool,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
         selectedProperty: state.statementBrowser.selectedProperty,
         properties: state.statementBrowser.properties,
         values: state.statementBrowser.values,
-    }
+    };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
     togglePropertyCollapse: (id) => dispatch(togglePropertyCollapse(id)),
 });
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(StatementItem);

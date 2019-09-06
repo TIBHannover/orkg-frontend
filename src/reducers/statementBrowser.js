@@ -39,7 +39,7 @@ export default (state = initialState, action) => {
             }));
 
             newState = dotProp.set(newState, 'resources.allIds', ids => [...ids, payload.resourceId]);
-  
+
             return newState;
         }
 
@@ -53,7 +53,7 @@ export default (state = initialState, action) => {
         case type.CREATE_PROPERTY: {
             let { payload } = action;
             let newState = dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, propertyIds => [...propertyIds, payload.propertyId]);
-            
+
             newState = dotProp.set(newState, 'properties.byId', ids => ({
                 ...ids,
                 [payload.propertyId]: {
@@ -65,7 +65,7 @@ export default (state = initialState, action) => {
             }));
 
             newState = dotProp.set(newState, 'properties.allIds', ids => [...ids, payload.propertyId]);
-  
+
             return newState;
         }
 
@@ -81,7 +81,7 @@ export default (state = initialState, action) => {
             newState = dotProp.delete(newState, `resources.byId.${payload.resourceId}.propertyIds.${resourceIndex}`);
 
             // TODO: maybe also delete related values, so it becomes easier to make the API call later?
-            
+
             return newState;
         }
 
@@ -94,6 +94,7 @@ export default (state = initialState, action) => {
                 ...ids,
                 [payload.valueId]: {
                     type: payload.type,
+                    classes: payload.classes ? payload.classes : [],
                     label: payload.label ? payload.label : '',
                     resourceId: payload.resourceId ? payload.resourceId : null,
                     isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
@@ -109,18 +110,18 @@ export default (state = initialState, action) => {
             //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
             if (payload.type === 'object' && !state.resources.byId[payload.resourceId]) {
                 newState = dotProp.set(newState, 'resources.allIds', ids => [...ids, payload.resourceId]);
-                
+
                 newState = dotProp.set(newState, 'resources.byId', ids => ({
                     ...ids,
                     [payload.resourceId]: {
                         existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
                         id: payload.resourceId,
-                        label: payload.label, 
+                        label: payload.label,
                         propertyIds: [],
                     }
                 }));
             }
-  
+
             return newState;
         }
 
@@ -134,7 +135,7 @@ export default (state = initialState, action) => {
 
             let propertyIndex = dotProp.get(newState, `properties.byId.${payload.propertyId}.valueIds`).indexOf(payload.id);
             newState = dotProp.delete(newState, `properties.byId.${payload.propertyId}.valueIds.${propertyIndex}`);
-            
+
             return newState;
         }
 
@@ -212,9 +213,9 @@ export default (state = initialState, action) => {
                 ...state,
             }
         }
-        
+
         case type.SET_STATEMENT_IS_FECHTED: {
-            let { resourceId } = action; 
+            let { resourceId } = action;
 
             let newState = dotProp.set(state, `resources.byId.${resourceId}.isFechted`, true);
 
