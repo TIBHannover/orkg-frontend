@@ -97,14 +97,13 @@ class ValueItem extends Component {
                                 </Tooltip>
                             </span> : ''}
                     </StyledValueItem>
-                    :
-                    this.props.type === 'object' ?
+                    : this.props.label}
+                    
+                    {/*this.props.type === 'object' ?
                         <Tooltip message="Open resource" hideDefaultIcon>
-                            <span onClick={this.handleResourceClick}>{this.props.label}</span> {/* TODO: fix warning for unmounted component (caused by event for expanding box) */}
+                            <span onClick={this.handleResourceClick}>{this.props.label}</span>
                         </Tooltip>
-                        :
-                        this.props.label
-                }
+                        :*/}
 
                 {this.state.modal ?
                     <StatementBrowserDialog

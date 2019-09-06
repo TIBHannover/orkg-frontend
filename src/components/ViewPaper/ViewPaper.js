@@ -172,7 +172,7 @@ class ViewPaper extends Component {
                             )}
                             {!this.state.loading && !this.state.loading_failed && (
                                 <>
-                                    {comingFromWizard ?
+                                    {comingFromWizard ? // We can remove this when the TPDL 2019 experiment is over 
                                         this.props.cookies && this.props.cookies.get('tpdlExperiment') ?
                                             <Alert color="info">
                                                 Thank you for adding a paper! Please <a href="https://forms.gle/WpEJ9dvuTz95skW96" target="_blank" rel="noopener noreferrer">fill out the online evaluation form</a> to finish the experiment.
