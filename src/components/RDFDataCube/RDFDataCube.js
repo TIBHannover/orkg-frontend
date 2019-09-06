@@ -70,12 +70,13 @@ class RDFDataCube extends Component {
                 return { sMeasures, sDimensions, sAttributes };
             }).then(({ sMeasures, sDimensions, sAttributes }) => {
                 // Observations (fetch statements of the dataset ressource by object)
+
                 getStatementsByObject({
                     id: this.props.resourceId,
                     order: 'desc',
                 }).then((statements) => {
                     // Filter observations
-                    let observations = statements.filter((statement) => (statement.predicate.label === 'dataSet' && statement.subject.classes.includes(classes['qb:Observation'])))
+                    let observations = statements.filter((statement) => (statement.predicate.label.toLowerCase() === 'dataset' && statement.subject.classes.includes(classes['qb:Observation'])))
                     // Fetch the data of each observation
                     var observations_data = observations.map((observation) => {
                         return getStatementsBySubject(observation.subject.id).then((observationStatements) => {
