@@ -30,7 +30,7 @@ class Home extends Component {
                             }
                             {showMouseflowWarning &&
                                 <p className="p-0 m-0">
-                                    <strong>Notice: </strong> The ORKG is using a third party analytics tool that is fully compliant with the GDPR. We collect this data anonymously for experimental purpose to enhance the user interface. If you do not wish to be tracked, follow this link:
+                                    <strong>Notice: </strong> The ORKG is using a third party analytics tool that is fully compliant with the GDPR. We collect this data anonymously for experimental purpose to enhance the user interface. If you do not wish to be tracked, follow this link:{' '}
                                     <a target="_blank" rel="noopener noreferrer" href={'https://mouseflow.com/opt-out/'}>Opt Out <Icon size="sm" icon={faExternalLinkAlt} /></a>.
                                 </p>
                             }

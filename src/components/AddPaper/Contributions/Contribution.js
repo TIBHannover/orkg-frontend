@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, FormGroup, Label } from 'reactstrap';
+import { Form, FormGroup, Label, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import Tooltip from '../../Utils/Tooltip';
 import ResearchProblemInput from './ResearchProblemInput';
 import { StyledContribution } from './styled';
@@ -12,8 +12,14 @@ import { withTheme } from 'styled-components';
 import PropTypes from 'prop-types';
 import Tour from 'reactour';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
 class Contribution extends Component {
+
+    state = {
+        showVideoDialog: false,
+    }
 
     componentDidMount() {
         // check if a cookie of take a tour exist 
@@ -50,19 +56,26 @@ class Contribution extends Component {
         this.props.openTour(step);
     }
 
+    toggleVideoDialog = () => {
+        this.props.closeTour();
+        this.setState(prevState => ({
+            showVideoDialog: !prevState.showVideoDialog,
+        }));
+    }
+
     render() {
         return (
             <StyledContribution>
                 <Form>
                     <FormGroup>
                         <Label>
-                            <Tooltip message={<span>Specify the research problems that this contribution addresses. <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>Research problems</Tooltip>
+                            <Tooltip message={<span>Specify the research problems that this contribution addresses. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>Research problems</Tooltip>
                         </Label>
                         <ResearchProblemInput handler={this.handleResearchProblemsChange} value={this.props.researchProblems} />
                     </FormGroup>
                     <FormGroup>
                         <Label>
-                            <Tooltip message={<span>Provide details about this contribution by making statements. <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => this.handleLearnMore(2)}>Learn more</span></span>}>Contribution data</Tooltip>
+                            <Tooltip message={<span>Provide details about this contribution by making statements. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(2)}>Learn more</span></span>}>Contribution data</Tooltip>
                         </Label>
 
                         <StatementBrowser
@@ -77,9 +90,9 @@ class Contribution extends Component {
                     steps={[
                         {
                             selector: '#researchProblemFormControl',
-                            content: 
+                            content:
                                 <span>
-                                    Specify the research problem that this contribution addresses. Normally, a research problem consists of <strong>very few words</strong> (around 2 or 3). 
+                                    Specify the research problem that this contribution addresses. Normally, a research problem consists of <strong>very few words</strong> (around 2 or 3).
                                     <br /><br />
                                     Examples of research problems:
                                     <ul>
@@ -97,7 +110,7 @@ class Contribution extends Component {
                         },
                         {
                             selector: '.listGroupEnlarge',
-                            content: <span>Entering contribution data is the most important part of adding a paper (this part takes around 10/20 minutes). In this section you enter the data relevant to your paper. The challenge here is to capture the most important aspects of your paper and to represent this here. <br /><br />The data is entered in a <strong>property and value </strong> structure. First you choose a property (e.g. method) and afterwards you add a value to this property (e.g. semi-structured interviews). <br /><br /></span>,
+                            content: <span>Entering contribution data is the most important part of adding a paper (this part takes around 10-20 minutes). In this section you enter the data relevant to your paper. The challenge here is to capture the most important aspects of your paper and to represent this here. <br /><br />The data is entered in a <strong>property and value </strong> structure. First you choose a property (e.g. method) and afterwards you add a value to this property (e.g. semi-structured interviews). <br /><br /><span className="btn btn-link p-0" onClick={this.toggleVideoDialog}>Open example video</span></span>,
                             style: { borderTop: '4px solid #E86161' },
                         },
                     ]}
@@ -109,6 +122,15 @@ class Contribution extends Component {
                     startAt={this.props.tourStartAt}
                     maskClassName="reactourMask"
                 />
+
+                <Modal isOpen={this.state.showVideoDialog} toggle={this.toggleVideoDialog} size="lg">
+                    <ModalHeader toggle={this.toggleVideoDialog}>How to add contribution data</ModalHeader>
+                    <ModalBody>
+                        <iframe width="100%" height="480" src="https://www.youtube.com/embed/BhI-gngCl0k?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="ORKG - How to add contribution data" />
+                        <hr />
+                        <a href="https://labs.tib.eu/orkg/paper/R1020" target="_blank" rel="noopener noreferrer">View paper that has been used in this example <Icon size="sm" icon={faExternalLinkAlt} /></a>
+                    </ModalBody>
+                </Modal>
             </StyledContribution>
         );
     }
