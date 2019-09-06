@@ -31,7 +31,7 @@ class Finish extends Component {
                     <br />
                     <h2 className="h5">Paper has been added successfully</h2>
                     <br />
-                    <Link to={reverse(ROUTES.VIEW_PAPER, {resourceId: this.props.paperNewResourceId})}>
+                    <Link to={reverse(ROUTES.VIEW_PAPER, {resourceId: this.props.paperNewResourceId}) + '?comingFromWizard=true'}>
                         <Button color="primary" className="mb-4">View paper</Button>
                     </Link>
                 </div>
