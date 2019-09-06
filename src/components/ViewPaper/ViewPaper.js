@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Container, Dropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'reactstrap';
+import { Container, Button, Alert } from 'reactstrap';
 import { getStatementsBySubject, getResource } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faBars, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faCalendar, faBars, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader'
 import Contributions from './Contributions';
@@ -15,6 +15,9 @@ import PropTypes from 'prop-types';
 import ComparisonPopup from './ComparisonPopup';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import GraphViewModal from './GraphViewModal';
+import { withCookies, Cookies } from 'react-cookie';
+import { compose } from 'redux';
+import queryString from 'query-string';
 
 class ViewPaper extends Component {
     state = {
@@ -139,6 +142,9 @@ class ViewPaper extends Component {
     }
 
     render() {
+        let comingFromWizard = queryString.parse(this.props.location.search);
+        comingFromWizard = comingFromWizard ? comingFromWizard.comingFromWizard === 'true' : false;
+
         return (
             <div>
                 {!this.state.loading && this.state.loading_failed && (
@@ -166,24 +172,44 @@ class ViewPaper extends Component {
                             )}
                             {!this.state.loading && !this.state.loading_failed && (
                                 <>
+                                    {comingFromWizard ? // We can remove this when the TPDL 2019 experiment is over 
+                                        this.props.cookies && this.props.cookies.get('tpdlExperiment') ?
+                                            <Alert color="info">
+                                                Thank you for adding a paper! Please <a href="https://forms.gle/WpEJ9dvuTz95skW96" target="_blank" rel="noopener noreferrer">fill out the online evaluation form</a> to finish the experiment.
+                                            </Alert>
+                                            :
+                                            <Alert color="info">
+                                                Help us to improve the ORKG and <a href="https://forms.gle/AgcUXuiuQzexqZmr6" target="_blank" rel="noopener noreferrer">fill out the online evaluation form</a>. Thank you!
+                                            </Alert>
+                                        : ''}
                                     <div className="d-flex">
                                         <h2 className="h4 mt-4 mb-3">{this.state.title ? this.state.title : <em>No title</em>}</h2>
 
-                                        <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4" style={{ marginLeft: 'auto'}}>
+                                        {/*<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4" style={{ marginLeft: 'auto' }}>
                                             <DropdownToggle color="darkblue" size="sm" >
-                                                <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
+                                                <span className="mr-2">View</span> <Icon icon={faEllipsisV} />
                                             </DropdownToggle>
                                             <DropdownMenu>
                                                 <DropdownItem onClick={() => this.toggle('showGraphModal')}>Show graph visualization</DropdownItem>
                                             </DropdownMenu>
-                                        </Dropdown>
+                                        </Dropdown>*/}
+
+                                        <Button
+                                            color="darkblue"
+                                            size="sm"
+                                            className="mb-4 mt-4 float-right"
+                                            style={{ marginLeft: 'auto' }}
+                                            onClick={() => this.toggle('showGraphModal')}
+                                        >
+                                            <Icon icon={faProjectDiagram} className="mr-1" /> View graph
+                                        </Button>
                                     </div>
 
                                     <div className="clearfix" />
 
                                     {/* TODO: change links of badges  */}
                                     <span className="badge badge-lightblue mr-2">
-                                        <Icon icon={faCalendar} className="text-primary" /> {moment(this.state.publicationMonth, 'M').format('MMMM')} {this.state.publicationYear}
+                                        <Icon icon={faCalendar} className="text-primary" /> {this.state.publicationMonth && this.state.publicationMonth.length > 0 && moment(this.state.publicationMonth, 'M').format('MMMM')} {this.state.publicationYear}
                                     </span>
                                     {this.state.researchField && this.state.researchField.object && (
                                         <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.researchField.object.id })} >
@@ -216,9 +242,9 @@ class ViewPaper extends Component {
                     </>
                 )}
 
-                <GraphViewModal 
-                    showDialog={this.state.showGraphModal} 
-                    toggle={() => this.toggle('showGraphModal')} 
+                <GraphViewModal
+                    showDialog={this.state.showGraphModal}
+                    toggle={() => this.toggle('showGraphModal')}
                     paperId={this.props.match.params.resourceId}
                 />
             </div>
@@ -234,6 +260,8 @@ ViewPaper.propTypes = {
         }).isRequired,
     }).isRequired,
     resetStatementBrowser: PropTypes.func.isRequired,
+    cookies: PropTypes.instanceOf(Cookies).isRequired,
+    location: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
@@ -244,7 +272,10 @@ const mapDispatchToProps = dispatch => ({
     resetStatementBrowser: () => dispatch(resetStatementBrowser()),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    ),
+    withCookies
 )(ViewPaper);

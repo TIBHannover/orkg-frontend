@@ -2,10 +2,15 @@ import React, { Component } from 'react';
 import { Button, Card, ListGroup, ListGroupItem, CardDeck } from 'reactstrap';
 import { getStatementsBySubject } from '../../../network';
 import { connect } from 'react-redux';
-import { updateResearchField, nextStep, previousStep } from '../../../actions/addPaper';
+import { compose } from 'redux';
+import { updateResearchField, nextStep, previousStep, openTour, closeTour, updateTourCurrentStep } from '../../../actions/addPaper';
 import { CSSTransitionGroup } from 'react-transition-group'
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
+import { withCookies, Cookies } from 'react-cookie';
 import PropTypes from 'prop-types';
+import Tour from 'reactour';
+import Tooltip from '../../Utils/Tooltip';
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 const ListGroupItemStyled = styled(ListGroupItem)`
     transition: 0.3s background-color,  0.3s border-color;
@@ -42,6 +47,13 @@ class ResearchField extends Component {
         this.state = {
             showError: false,
         }
+
+        // check if a cookie of take a tour exist 
+        if (this.props.cookies && this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 1
+            && !this.props.cookies.get('showedReaseachFiled')) {
+            this.props.openTour();
+            this.props.cookies.set('showedReaseachFiled', true, { path: '/', maxAge: 604800 });
+        }
     }
 
     componentDidMount() {
@@ -50,6 +62,13 @@ class ResearchField extends Component {
             this.getFields(process.env.REACT_APP_RESEARCH_FIELD_MAIN, 0);
         }
     }
+
+    componentWillUnmount() {
+        clearAllBodyScrollLocks();
+    }
+
+    disableBody = target => disableBodyScroll(target)
+    enableBody = target => enableBodyScroll(target)
 
     handleNextClick = () => {
         // TODO validation: check if a research field is selected
@@ -105,18 +124,30 @@ class ResearchField extends Component {
         this.getFields(fieldId, currentLevel + 1);
     }
 
+    requestCloseTour = () => {
+        if (this.props.cookies.get('taketourClosed')) {
+            this.props.closeTour();
+        } else {
+            this.setState({ isClosed: true });
+        }
+    };
+
+    handleLearnMore = (step) => {
+        this.props.openTour(step);
+    }
+
     render() {
-        let errorMessageClasses = 'text-danger mt-2';
+        let errorMessageClasses = 'text-danger mt-2 pl-2';
         errorMessageClasses += !this.state.showError ? ' d-none' : '';
 
         return (
             <div>
-                <h2 className="h4 mt-4 mb-5">Select the research field</h2>
+                <h2 className="h4 mt-4 mb-5"><Tooltip message={<span>Select the more appropriate research field for the paper. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>Select the research field</Tooltip></h2>
 
                 <CardDeck>
                     {this.props.researchFields.length > 0 && this.props.researchFields.map((fields, level) => {
                         return fields.length > 0 ? (
-                            <FieldSelector key={level}>
+                            <FieldSelector className="fieldSelector" key={level}>
                                 <ListGroup flush>
                                     <CSSTransitionGroup
                                         transitionName="fadeIn"
@@ -140,7 +171,7 @@ class ResearchField extends Component {
                         ) : ''
                     })}
                 </CardDeck>
-                <p className={errorMessageClasses}>Please select the research field</p>
+                <p className={errorMessageClasses} style={{ borderLeft: '4px red solid' }}>Please select the research field</p>
 
                 <hr className="mt-5 mb-3" />
                 {/*<strong>Selected research field</strong> <br />
@@ -148,6 +179,27 @@ class ResearchField extends Component {
 
                 <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Next step</Button>
                 <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>Previous step</Button>
+                <Tour
+                    onAfterOpen={this.disableBody}
+                    onBeforeClose={this.enableBody}
+                    steps={[
+                        {
+                            selector: '.fieldSelector',
+                            content: 'Select a close research field to the paper from the list. The research field can be selected from a hierarchical structure of fields and their subfields.',
+                            style: { borderTop: '4px solid #E86161' },
+                        },
+                    ]}
+                    showNumber={false}
+                    accentColor={this.props.theme.orkgPrimaryColor}
+                    rounded={10}
+                    onRequestClose={this.requestCloseTour}
+                    isOpen={this.props.isTourOpen}
+                    startAt={this.props.tourStartAt}
+                    getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); }}
+                    showButtons={false}
+                    showNavigation={false}
+                    maskClassName="reactourMask"
+                />
             </div>
         );
     }
@@ -159,20 +211,38 @@ ResearchField.propTypes = {
     updateResearchField: PropTypes.func.isRequired,
     nextStep: PropTypes.func.isRequired,
     previousStep: PropTypes.func.isRequired,
+    theme: PropTypes.object.isRequired,
+    cookies: PropTypes.instanceOf(Cookies).isRequired,
+    openTour: PropTypes.func.isRequired,
+    closeTour: PropTypes.func.isRequired,
+    updateTourCurrentStep: PropTypes.func.isRequired,
+    isTourOpen: PropTypes.bool.isRequired,
+    tourCurrentStep: PropTypes.number.isRequired,
+    tourStartAt: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
     selectedResearchField: state.addPaper.selectedResearchField,
     researchFields: state.addPaper.researchFields,
+    isTourOpen: state.addPaper.isTourOpen,
+    tourCurrentStep: state.addPaper.tourCurrentStep,
+    tourStartAt: state.addPaper.tourStartAt,
 });
 
 const mapDispatchToProps = dispatch => ({
     updateResearchField: (data) => dispatch(updateResearchField(data)),
     nextStep: () => dispatch(nextStep()),
     previousStep: () => dispatch(previousStep()),
+    updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
+    openTour: (data) => dispatch(openTour(data)),
+    closeTour: () => dispatch(closeTour()),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps,
+    ),
+    withTheme,
+    withCookies
 )(ResearchField);

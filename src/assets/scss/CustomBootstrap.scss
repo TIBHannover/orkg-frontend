@@ -9,3 +9,12 @@
 .badge-lightblue {
     color:#5c6873; // it is not possible using theme variables to set the text color 
 }
+
+.annotation-tooltip.show {
+    opacity: 1 !important; 
+}
+
+.annotation-tooltip-inner {
+    max-width: none !important; 
+    opacity: 1 !important; 
+}

@@ -14,6 +14,7 @@ class ResearchProblemInput extends Component {
         this.state = {
             researchProblems: [],
             problemBrowser: null,
+            inputValue: '',
         }
     }
 
@@ -62,6 +63,25 @@ class ResearchProblemInput extends Component {
         }
     }
 
+    onInputChange = (inputValue, val) => {
+        if (val.action === 'input-blur') {
+            if (this.state.inputValue !== '') {
+                this.handleCreate(this.state.inputValue); //inputvalue is not provided on blur, so use the state value
+            }
+            this.setState({
+                inputValue: '',
+            });
+        } else if (val.action === 'input-change') {
+            this.setState({
+                inputValue
+            });
+        } else if (val.action === 'set-value') {
+            this.setState({
+                inputValue: '',
+            });
+        }
+    }
+
     render() {
 
         const customStyles = {
@@ -105,7 +125,7 @@ class ResearchProblemInput extends Component {
 
         return (
             <>
-                <StyledResearchFieldsInputFormControl className="form-control">
+                <StyledResearchFieldsInputFormControl id="researchProblemFormControl" className="form-control">
                     <CreatableSelect
                         //value={this.state.researchProblems.filter(({ id }) => this.props.value.includes(id))}
                         value={this.props.value}
@@ -116,12 +136,14 @@ class ResearchProblemInput extends Component {
                         isMulti
                         onChange={this.props.handler}
                         onCreateOption={this.handleCreate}
-                        placeholder="Select or Type something..."
+                        placeholder="Select or type something..."
                         styles={customStyles}
                         components={{ Menu, MultiValueLabel }}
                         options={this.state.researchProblems}
                         onKeyDown={this.onKeyDown}
                         openMenuOnClick={false}
+                        onInputChange={this.onInputChange}
+                        inputValue={this.state.inputValue}
                     />
                 </StyledResearchFieldsInputFormControl>
                 {false && (

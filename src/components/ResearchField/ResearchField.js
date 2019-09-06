@@ -58,6 +58,8 @@ class ResearchField extends Component {
                         let publicationMonth = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
                         if (publicationMonth.length > 0) {
                             publicationMonth = publicationMonth[0].object.label
+                        } else {
+                            publicationMonth = ''
                         }
                         // authors
                         let authors = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
@@ -105,13 +107,13 @@ class ResearchField extends Component {
                                 </CardHeader>
                                 <CardBody>
                                     <CardText>
-                                        Description text
+                                        List of papers in <i>{this.state.researchField && this.state.researchField.label}</i> research field
                                     </CardText>
                                 </CardBody>
                                 {this.state.parentResearchField && (
                                     <CardFooter>
                                         Parent research field:
-                                        <Link className={'ml-2'} to={reverse(ROUTES.RESEARCH_FIELD, {researchFieldId: this.state.parentResearchField.subject.id})} >
+                                        <Link className={'ml-2'} to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.parentResearchField.subject.id })} >
                                             {this.state.parentResearchField.subject.label}
                                         </Link>
                                     </CardFooter>
