@@ -105,13 +105,13 @@ class ResearchField extends Component {
                                 </CardHeader>
                                 <CardBody>
                                     <CardText>
-                                        Description text
+                                        List of papers in <i>{this.state.researchField && this.state.researchField.label}</i> research field
                                     </CardText>
                                 </CardBody>
                                 {this.state.parentResearchField && (
                                     <CardFooter>
                                         Parent research field:
-                                        <Link className={'ml-2'} to={reverse(ROUTES.RESEARCH_FIELD, {researchFieldId: this.state.parentResearchField.subject.id})} >
+                                        <Link className={'ml-2'} to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.parentResearchField.subject.id })} >
                                             {this.state.parentResearchField.subject.label}
                                         </Link>
                                     </CardFooter>
