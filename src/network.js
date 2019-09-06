@@ -199,7 +199,7 @@ export const getSimilaireContribution = (id) => {
 
 export const getAnnotations = (abstract) => {
   return submitGetRequest(
-    `${annotationServiceUrl}annotator?text2annotate=${encodeURIComponent(abstract)}`,
+    `${annotationServiceUrl}annotator/?text2annotate=${encodeURIComponent(abstract)}`,
   );
 };
 
@@ -218,7 +218,7 @@ export const createShortLink = (data) => {
 };
 
 export const getLongLink = (shortCode) => {
-  return submitGetRequest(`${similaireServiceUrl}shortener/${encodeURIComponent(shortCode)}`);
+  return submitGetRequest(`${similaireServiceUrl}shortener/${encodeURIComponent(shortCode)}/`);
 };
 
 export const getAllClasses = () => {
