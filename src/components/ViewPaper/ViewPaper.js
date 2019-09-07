@@ -92,6 +92,14 @@ class ViewPaper extends Component {
                     }
                 }
 
+                // DOI
+                let publicationDOI = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
+                if (publicationDOI.length > 0) {
+                    publicationDOI = publicationDOI[0].object.label;
+                } else {
+                    publicationDOI = null;
+                }
+
                 // contributions
                 let contributions = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION);
 
@@ -113,6 +121,7 @@ class ViewPaper extends Component {
                     publicationYear,
                     publicationMonth,
                     researchField,
+                    publicationDOI: publicationDOI,
                     authorNames: authorNamesArray.reverse(), // statements are ordered desc, so first author is last => thus reverse
                     contributions: contributionArray.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
                 });
@@ -223,6 +232,8 @@ class ViewPaper extends Component {
                                             <Icon icon={faUser} className="text-primary" /> {author}
                                         </span>
                                     ))}
+                                    <br />
+                                    {this.state.publicationDOI && <div style={{ textAlign: 'right' }}><small >DOI : <i>{this.state.publicationDOI}</i></small></div>}
                                 </>
                             )}
                             {!this.state.loading_failed && (

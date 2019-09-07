@@ -112,18 +112,22 @@ class RDFDataCube extends Component {
                     });
 
                     return Promise.all(observations_data).then((observations) => {
-                        const table = new CUBE.model.Table({
-                            dimensions: [...Object.keys(sDimensions).sort(), ...Object.keys(sAttributes).sort()],
-                            fields: Object.keys(sMeasures).sort(),
-                            points: observations.map((o) => o.point),
-                            data: observations.map((o) => o.data)
-                        })
-
-                        //const onlyFebruary = (point) => point[2] === 'R1415'
-                        //table = table.dice(onlyFebruary)
-                        // Ressoruces labels
-                        resources = Object.assign({}, ...(observations.map((o) => o.point_label).flat(1).map(item => ({ [item.id]: item }))))
-                        this.setState({ measures: sMeasures, dimensions: sDimensions, attributes: sAttributes, datacube: table, resources: resources, isDatacubeLoading: false, isDatacubeFailedLoading: false });
+                        try {
+                            const table = new CUBE.model.Table({
+                                dimensions: [...Object.keys(sDimensions).sort(), ...Object.keys(sAttributes).sort()],
+                                fields: Object.keys(sMeasures).sort(),
+                                points: observations.map((o) => o.point),
+                                data: observations.map((o) => o.data)
+                            })
+                            //const onlyFebruary = (point) => point[2] === 'R1415'
+                            //table = table.dice(onlyFebruary)
+                            // Ressoruces labels
+                            resources = Object.assign({}, ...(observations.map((o) => o.point_label).flat(1).map(item => ({ [item.id]: item }))))
+                            this.setState({ measures: sMeasures, dimensions: sDimensions, attributes: sAttributes, datacube: table, resources: resources, isDatacubeLoading: false, isDatacubeFailedLoading: false });
+                        }
+                        catch (error) {
+                            this.setState({ isDatacubeLoading: false, isDatacubeFailedLoading: true });
+                        }
                     })
                 });
             }).catch(e => {
