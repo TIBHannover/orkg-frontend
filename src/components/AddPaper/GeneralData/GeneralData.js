@@ -92,8 +92,8 @@ class GeneralData extends Component {
         clearAllBodyScrollLocks();
     }
 
-    disableBody = target => disableBodyScroll(target)
-    enableBody = target => enableBodyScroll(target)
+    disableBody = target => disableBodyScroll()
+    enableBody = target => enableBodyScroll()
 
     //TODO this logic should be placed inside an action creator
     handleLookupClick = async () => {
@@ -235,6 +235,7 @@ class GeneralData extends Component {
     };
 
     requestCloseTour = () => {
+        this.enableBody();
         if (this.props.cookies.get('taketourClosed')) {
             this.props.closeTour();
         } else {
@@ -540,6 +541,8 @@ class GeneralData extends Component {
                 )}
                 {this.state.showHelpButton && (
                     <Tour
+                        onAfterOpen={this.disableBody}
+                        onBeforeClose={this.enableBody}
                         steps={[
                             {
                                 selector: '#helpIcon',
@@ -550,7 +553,7 @@ class GeneralData extends Component {
                         showNumber={false}
                         accentColor={this.props.theme.orkgPrimaryColor}
                         rounded={10}
-                        onRequestClose={() => { this.props.closeTour(); this.setState({ showHelpButton: false }); }}
+                        onRequestClose={() => { this.enableBody(); this.props.closeTour(); this.setState({ showHelpButton: false }); }}
                         isOpen={this.state.showHelpButton}
                         startAt={0}
                         showButtons={false}

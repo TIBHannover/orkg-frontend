@@ -37,6 +37,7 @@ class Contribution extends Component {
     enableBody = target => enableBodyScroll(target)
 
     requestCloseTour = () => {
+        this.enableBody();
         if (this.props.cookies.get('taketourClosed')) {
             this.props.closeTour();
         } else {

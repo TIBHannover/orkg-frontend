@@ -125,6 +125,7 @@ class ResearchField extends Component {
     }
 
     requestCloseTour = () => {
+        this.enableBody();
         if (this.props.cookies.get('taketourClosed')) {
             this.props.closeTour();
         } else {
