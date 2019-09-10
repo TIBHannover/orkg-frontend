@@ -22,7 +22,18 @@ class StatementItem extends Component {
         };
     }
 
+
     componentDidMount() {
+        this.getPredicateLabel();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.predicateLabel !== prevProps.predicateLabel) {
+            this.getPredicateLabel();
+        }
+    }
+
+    getPredicateLabel = () => {
         if (this.props.predicateLabel.match(new RegExp('^R[0-9]*$'))) {
             getResource(this.props.predicateLabel)
                 .catch((e) => {
