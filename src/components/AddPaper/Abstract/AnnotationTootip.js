@@ -73,7 +73,7 @@ class AnnotationTootip extends Component {
                         }}
                         getOptionLabel={({ label }) => label}
                         getOptionValue={({ id }) => id}
-                        onChange={(e, a) => this.props.handleChangeAnnotationClass(e, a, this.props.range)}
+                        onChange={(e, a) => { this.props.handleChangeAnnotationClass(e, a, this.props.range); this.toggleTooltip(); }}
                         key={(value) => value}
                         cacheOptions
                         defaultOptions={this.props.defaultOptions}
