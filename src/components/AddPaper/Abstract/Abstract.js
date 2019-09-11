@@ -40,7 +40,7 @@ class Abstract extends Component {
       showError: false,
       changeAbstract: false,
       classOptions: [],
-      certaintyThreshold: [0.8],
+      certaintyThreshold: [0.5],
       validation: true,
     };
 
