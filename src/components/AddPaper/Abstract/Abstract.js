@@ -27,6 +27,8 @@ import Tour from 'reactour';
 import toArray from 'lodash/toArray';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import randomcolor from 'randomcolor';
+import capitalize from 'capitalize';
+
 
 class Abstract extends Component {
   constructor(props) {
@@ -387,7 +389,7 @@ class Abstract extends Component {
                               key={`c${c}`}
                               style={{ marginBottom: '4px', color: '#333', background: this.getClassColor(c) }}
                             >
-                              {c ? c : 'Unlabeled'} <Badge pill color="secondary">{rangeArray.filter((rc) => rc.class.label === c).length}</Badge>
+                              {c ? capitalize(c) : 'Unlabeled'} <Badge pill color="secondary">{rangeArray.filter((rc) => rc.class.label === c).length}</Badge>
                             </Badge>
                           );
                         })}
