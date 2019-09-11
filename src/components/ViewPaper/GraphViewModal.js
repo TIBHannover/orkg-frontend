@@ -7,7 +7,6 @@ import { Modal, ModalHeader, ModalBody, Input, Form, FormGroup, Label } from 're
 import uniqBy from 'lodash/uniqBy';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import 'vis/dist/vis-network.min.css';
 
 class GraphView extends Component {
     state = {
@@ -234,7 +233,7 @@ class GraphView extends Component {
                         <Graph
                             graph={graph}
                             options={options}
-                            //events={events}
+                        //events={events}
                         />
                     )}
                     {this.state.isLoadingStatements && (
