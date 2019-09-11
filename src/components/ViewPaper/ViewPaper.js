@@ -23,6 +23,7 @@ class ViewPaper extends Component {
     state = {
         loading: true,
         loading_failed: false,
+        unfoundContribution: false,
         id: null,
         title: '',
         authorNames: [],
@@ -125,13 +126,22 @@ class ViewPaper extends Component {
                     authorNames: authorNamesArray.reverse(), // statements are ordered desc, so first author is last => thus reverse
                     contributions: contributionArray.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
                 });
-            }).then(() => {
+            }).then((e) => {
                 if (this.props.match.params.contributionId && !this.state.contributions.some((el) => { return el.id === this.props.match.params.contributionId; })) {
                     throw new Error('Contribution not found');
                 }
-                this.setState({ selectedContribution: (this.props.match.params.contributionId && this.state.contributions.some((el) => { return el.id === this.props.match.params.contributionId; })) ? this.props.match.params.contributionId : this.state.contributions[0].id });
+                if (this.state.contributions[0]) {
+                    this.setState({ selectedContribution: (this.props.match.params.contributionId && this.state.contributions.some((el) => { return el.id === this.props.match.params.contributionId; })) ? this.props.match.params.contributionId : this.state.contributions[0].id });
+                } else {
+                    throw new Error('No Contribution found');
+                }
             }).catch(error => {
-                this.setState({ loading: false, loading_failed: true })
+                if (error.message === 'No Contribution found') {
+                    this.setState({ unfoundContribution: true, loading: false, loading_failed: false })
+                }
+                else {
+                    this.setState({ loading: false, loading_failed: true })
+                }
             });
         }).catch(error => {
             this.setState({ loading: false, loading_failed: true })
@@ -236,7 +246,7 @@ class ViewPaper extends Component {
                                     {this.state.publicationDOI && <div style={{ textAlign: 'right' }}><small >DOI : <i>{this.state.publicationDOI}</i></small></div>}
                                 </>
                             )}
-                            {!this.state.loading_failed && (
+                            {!this.state.loading_failed && !this.state.unfoundContribution && (
                                 <>
                                     <hr className="mt-4 mb-5" />
                                     <Contributions
@@ -247,6 +257,14 @@ class ViewPaper extends Component {
                                     />
 
                                     <ComparisonPopup />
+                                </>
+                            )}
+                            {!this.state.loading_failed && this.state.unfoundContribution && (
+                                <>
+                                    <hr className="mt-4 mb-5" />
+                                    <Alert color="danger">
+                                        Failed to load contributions.
+                                    </Alert>
                                 </>
                             )}
                         </Container>
