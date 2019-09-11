@@ -79,6 +79,7 @@ class GeneralData extends Component {
             paperPublicationMonth: this.props.publicationMonth,
             paperPublicationYear: this.props.publicationYear,
             validation: this.validator.valid(),
+            errors: null
         };
 
         // Hide the tour if a cookie 'taketour' exist 
@@ -141,8 +142,8 @@ class GeneralData extends Component {
                 }
                 this.setState({
                     isFetching: false,
-                    paperTitle: this.state.entry, // Probably the user entered a paper title
                     validation,
+                    errors: null
                 });
                 return null;
             })
@@ -181,6 +182,7 @@ class GeneralData extends Component {
                         paperPublicationMonth,
                         paperPublicationYear,
                         doi: doi,
+                        errors: null
                     });
                 }
             });
@@ -245,6 +247,8 @@ class GeneralData extends Component {
 
     handleNextClick = () => {
         // TODO do some sort of validation, before proceeding to the next step
+        let errors = [];
+
         let {
             paperTitle,
             paperAuthors,
@@ -255,17 +259,25 @@ class GeneralData extends Component {
             showLookupTable,
         } = this.state;
 
-        this.props.updateGeneralData({
-            title: paperTitle,
-            authors: paperAuthors,
-            publicationMonth: paperPublicationMonth,
-            publicationYear: paperPublicationYear,
-            doi: doi,
-            entry: entry,
-            showLookupTable: showLookupTable
-        });
+        if (!paperTitle || paperTitle.trim().length < 1) {
+            errors.push('Please enter the title of your paper or click on "Lookup" if you entered the doi.');
+        }
 
-        this.props.nextStep();
+        if (errors.length === 0) {
+            this.props.updateGeneralData({
+                title: paperTitle,
+                authors: paperAuthors,
+                publicationMonth: paperPublicationMonth,
+                publicationYear: paperPublicationYear,
+                doi: doi,
+                entry: entry,
+                showLookupTable: showLookupTable
+            });
+            this.props.nextStep();
+        }
+        else {
+            this.setState({ errors: errors })
+        }
     };
 
     submitHandler = (e) => {
@@ -504,7 +516,13 @@ class GeneralData extends Component {
                     })()}
                 </CSSTransitionGroup>
                 <hr className="mt-5 mb-3" />
-
+                {this.state.errors && this.state.errors.length > 0 &&
+                    <ul className="float-left mb-4 text-danger">
+                        {this.state.errors.map(e => {
+                            return <li>{e}</li>
+                        })}
+                    </ul>
+                }
                 <Button
                     color="primary"
                     className="float-right mb-4"
