@@ -26,6 +26,7 @@ import { Range, getTrackBackground } from 'react-range';
 import Tour from 'reactour';
 import toArray from 'lodash/toArray';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+import randomcolor from 'randomcolor';
 
 class Abstract extends Component {
   constructor(props) {
@@ -40,6 +41,12 @@ class Abstract extends Component {
       showError: false,
       changeAbstract: false,
       classOptions: [],
+      classColors: {
+        'process': '#7fa2ff',
+        'data': '	#9df28a',
+        'material': '#EAB0A2',
+        'method': '#D2B8E5',
+      },
       certaintyThreshold: [0.5],
       validation: true,
     };
@@ -294,6 +301,19 @@ class Abstract extends Component {
     }
   };
 
+  getClassColor = (rangeClass) => {
+    if (!rangeClass) {
+      return '#ffb7b7';
+    }
+    if (this.state.classColors[rangeClass.toLowerCase()]) {
+      return this.state.classColors[rangeClass.toLowerCase()];
+    } else {
+      let newColor = randomcolor({ luminosity: 'light', seed: rangeClass.toLowerCase() });
+      this.setState({ classColors: { ...this.state.classColors, [rangeClass.toLowerCase()]: newColor } });
+      return newColor;
+    }
+  }
+
   render() {
     let rangeArray = toArray(this.props.ranges).filter(
       (r) => (r.certainty >= this.state.certaintyThreshold)
@@ -361,29 +381,11 @@ class Abstract extends Component {
                       <span className={'mr-1 ml-1'} />
                       {rangesClasses.length > 0 &&
                         rangesClasses.map((c) => {
-                          let color = '#0052CC';
-                          switch (c) {
-                            case 'Process':
-                              color = '#7fa2ff';
-                              break;
-                            case 'Data':
-                              color = '#5FA97F';
-                              break;
-                            case 'Material':
-                              color = '#EAB0A2';
-                              break;
-                            case 'Method':
-                              color = '#D2B8E5';
-                              break;
-                            default:
-                              color = '#ffb7b7';
-                          }
-                          //
                           return (
                             <Badge
                               className={'mr-2'}
                               key={`c${c}`}
-                              style={{ color: '#333', background: color }}
+                              style={{ marginBottom: '4px', color: '#333', background: this.getClassColor(c) }}
                             >
                               {c ? c : 'Unlabeled'} <Badge pill color="secondary">{rangeArray.filter((rc) => rc.class.label === c).length}</Badge>
                             </Badge>
@@ -393,6 +395,7 @@ class Abstract extends Component {
                     <AbstractAnnotator
                       certaintyThreshold={this.state.certaintyThreshold[0]}
                       classOptions={this.state.classOptions}
+                      getClassColor={this.getClassColor}
                     />
                   </div>
                 )}

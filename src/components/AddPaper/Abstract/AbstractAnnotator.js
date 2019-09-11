@@ -145,6 +145,7 @@ class AbstractAnnotator extends Component {
                 handleChangeAnnotationClass={this.handleChangeAnnotationClass}
                 handleValidateAnnotation={this.props.validateAnnotation}
                 defaultOptions={this.state.defaultOptions}
+                getClassColor={this.props.getClassColor}
             />);
     };
 
@@ -290,6 +291,7 @@ AbstractAnnotator.propTypes = {
     updateAnnotationClass: PropTypes.func.isRequired,
     certaintyThreshold: PropTypes.number,
     classOptions: PropTypes.array.isRequired,
+    getClassColor: PropTypes.func.isRequired,
     theme: PropTypes.object.isRequired,
     cookies: PropTypes.instanceOf(Cookies).isRequired,
     openTour: PropTypes.func.isRequired,

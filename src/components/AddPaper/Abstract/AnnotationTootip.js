@@ -57,28 +57,9 @@ class AnnotationTootip extends Component {
                 color: '#000',
             }),
         };
-
-        let color = '#ffb7b7';
-        switch (this.props.range.class.label) {
-            case 'Process':
-                color = '#7fa2ff';
-                break;
-            case 'Data':
-                color = '#5FA97F';
-                break;
-            case 'Material':
-                color = '#EAB0A2';
-                break;
-            case 'Method':
-                color = '#D2B8E5';
-                break;
-            default:
-                color = '#ffb7b7';
-        }
-
         return (
             <span>
-                <span style={{ backgroundColor: color, color: 'black' }} id={`CR${this.props.range.id}`}>
+                <span style={{ backgroundColor: this.props.getClassColor(this.props.range.class.label), color: 'black' }} id={`CR${this.props.range.id}`}>
                     {this.props.lettersNode}
                 </span>
                 <ReactstrapTooltip placement="top" autohide={false} target={`CR${this.props.range.id}`} className={'annotation-tooltip'} innerClassName={'annotation-tooltip-inner'} toggle={(e) => this.toggleTooltip()} isOpen={this.state.showTooltip}>
@@ -113,6 +94,7 @@ AnnotationTootip.propTypes = {
     handleChangeAnnotationClass: PropTypes.func,
     handleValidateAnnotation: PropTypes.func,
     loadOptions: PropTypes.func,
+    getClassColor: PropTypes.func.isRequired,
     theme: PropTypes.object.isRequired,
     defaultOptions: PropTypes.array.isRequired,
 };
