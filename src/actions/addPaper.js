@@ -256,8 +256,10 @@ export const saveAddPaper = (data) => {
     await network.createResourceStatement(paper.id, isAPredicate, paperResource);
 
     // DOI
-    let doi = await network.createLiteral(data.doi);
-    await network.createLiteralStatement(paper.id, doiPredicate, doi.id);
+    if (data.doi) {
+      let doi = await network.createLiteral(data.doi);
+      await network.createLiteralStatement(paper.id, doiPredicate, doi.id);
+    }
 
     // authors
     for (let author of data.authors) {
