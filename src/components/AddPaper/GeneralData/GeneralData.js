@@ -105,7 +105,7 @@ class GeneralData extends Component {
 
         this.lookup.current.blur();
 
-        let validation = this.validator.validate({ entry: this.state.entry });
+        let validation = this.validator.validate({ entry: this.state.entry.trim() });
         this.setState({ validation });
 
         if (!validation.isValid) {
@@ -116,7 +116,7 @@ class GeneralData extends Component {
             isFetching: true,
         });
 
-        await Cite.async(this.state.entry)
+        await Cite.async(this.state.entry.trim())
             .catch((e) => {
                 let validation;
                 switch (e.message) {
