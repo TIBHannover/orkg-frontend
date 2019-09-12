@@ -153,7 +153,12 @@ class Abstract extends Component {
 
   fetchAbstract = async () => {
     if (!this.props.abstract) {
-      let DOI = this.props.doi.substring(this.props.doi.indexOf('10.'));
+      let DOI;
+      try {
+        DOI = this.props.doi.substring(this.props.doi.indexOf('10.'));
+      } catch{
+        DOI = false
+      }
       if (!this.props.title || !DOI) {
         this.setState({
           changeAbstract: true,

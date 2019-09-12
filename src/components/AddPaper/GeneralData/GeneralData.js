@@ -169,7 +169,7 @@ class GeneralData extends Component {
                         });
                         paperPublicationMonth = paper.data[0].issued['date-parts'][0][1];
                         paperPublicationYear = paper.data[0].issued['date-parts'][0][0];
-                        doi = paper.data[0].DOI;
+                        doi = paper.data[0].DOI ? paper.data[0].DOI : '';
                     } catch (e) {
                         console.log('Error setting paper data: ', e);
                     }
