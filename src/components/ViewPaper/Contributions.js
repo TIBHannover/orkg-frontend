@@ -127,7 +127,7 @@ class Contributions extends Component {
                                     {this.props.contributions.map((contribution, index) => {
                                         return (
                                             <li className={contribution.id === selectedContributionId ? 'activeContribution' : ''} key={contribution.id}>
-                                                <Link to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId : this.props.paperId, contributionId : contribution.id})} className={'selectContribution'}>
+                                                <Link to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: this.props.paperId, contributionId: contribution.id })} className={'selectContribution'}>
                                                     {contribution.label}
                                                 </Link>
                                             </li>
@@ -176,8 +176,8 @@ class Contributions extends Component {
                                                 <>
                                                     {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].map((problem, index) => (
                                                         <span key={index}>
-                                                            <Link to={reverse(ROUTES.RESEARCH_PROBLEM, {researchProblemId : problem.id})}>
-                                                                <span className="btn btn-link p-0 border-0 align-baseline">
+                                                            <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>
+                                                                <span style={{ whiteSpace: 'normal', textAlign: 'left' }} className="btn btn-link p-0 border-0 align-baseline">
                                                                     {problem.label}
                                                                 </span>
                                                             </Link>
