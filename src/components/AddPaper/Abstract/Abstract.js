@@ -14,7 +14,7 @@ import {
 } from '../../../actions/addPaper';
 import { withCookies, Cookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import AbstractAnnotator from './AbstractAnnotator';
 import PropTypes from 'prop-types';
 import Textarea from 'react-textarea-autosize';
@@ -509,8 +509,9 @@ class Abstract extends Component {
                   )}
                 />
                 <div className={'mt-2 text-center'}>
-                  <Tooltip message="Here you can adjust the certainty value, that means at which level you accept the confidence ratio of automatic annotations. Only the shown annotations will be used to create the contribution data in the next step.">
-                    Certainty {this.state.certaintyThreshold[0].toFixed(2)}
+                  <span className={'mr-2'}>Certainty {this.state.certaintyThreshold[0].toFixed(2)}</span>
+                  <Tooltip trigger={'click'} hideDefaultIcon={true} message="Here you can adjust the certainty value, that means at which level you accept the confidence ratio of automatic annotations. Only the shown annotations will be used to create the contribution data in the next step.">
+                    <Icon style={{ cursor: 'pointer' }} className={'text-primary'} icon={faQuestionCircle} />
                   </Tooltip>
                 </div>
               </div>
