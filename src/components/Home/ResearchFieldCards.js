@@ -64,6 +64,11 @@ class ResearchFieldCards extends Component {
                     });
                 });
 
+                // sort research fields alphabetically
+                researchFields = researchFields.sort((a, b) => {
+                    return a.label.localeCompare(b.label);
+                });
+
                 this.setState({
                     researchFields,
                     error: '',
