@@ -481,6 +481,9 @@ class GeneralData extends Component {
                                                                     value={this.state.paperPublicationMonth}
                                                                     onChange={this.handleMonthChange}
                                                                 >
+                                                                    <option value="" key="">
+                                                                        Month
+                                                                    </option>
                                                                     {moment.months().map((el, index) => {
                                                                         return (
                                                                             <option value={index + 1} key={index + 1}>
@@ -498,6 +501,9 @@ class GeneralData extends Component {
                                                                     value={this.state.paperPublicationYear}
                                                                     onChange={this.handleInputChange}
                                                                 >
+                                                                    <option value="" key="">
+                                                                        Year
+                                                                    </option>
                                                                     {range(1900, moment().year())
                                                                         .reverse()
                                                                         .map((year) => (
