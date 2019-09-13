@@ -85,6 +85,11 @@
         "not ie < 9",
         "not op_mini all"
     ],
+    "babelMacros": {
+        "styledComponents": {
+            "pure": true
+        }
+    },
     "eslintConfig": {
         "extends": "react-app",
         "rules": {
