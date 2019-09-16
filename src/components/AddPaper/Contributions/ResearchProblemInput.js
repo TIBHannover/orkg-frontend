@@ -55,7 +55,7 @@ class ResearchProblemInput extends Component {
     onKeyDown = (event) => {
         switch (event.keyCode) {
             case 13: // ENTER
-                event.target.value.trim()==='' && event.preventDefault();
+                event.target.value.trim() === '' && event.preventDefault();
                 break;
             default: {
                 break;
@@ -99,6 +99,10 @@ class ResearchProblemInput extends Component {
             menu: (provided) => ({
                 ...provided,
                 zIndex: 10
+            }),
+            multiValueLabel: (provided) => ({
+                ...provided,
+                whiteSpace: 'normal'
             })
         }
 
