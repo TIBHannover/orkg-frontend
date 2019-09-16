@@ -102,7 +102,15 @@ class ResearchProblemInput extends Component {
             }),
             multiValueLabel: (provided) => ({
                 ...provided,
-                whiteSpace: 'normal'
+                whiteSpace: 'normal',
+            }),
+            option: (provided) => ({
+                ...provided,
+                whiteSpace: 'normal',
+            }),
+            input: (provided) => ({
+                ...provided,
+                whiteSpace: 'normal',
             })
         }
 
@@ -150,13 +158,15 @@ class ResearchProblemInput extends Component {
                         inputValue={this.state.inputValue}
                     />
                 </StyledResearchFieldsInputFormControl>
-                {false && (
-                    <StyledResearchFieldBrowser className="form-control">
-                        <button type="button" className={'close'} onClick={this.closeProblemBrowser}><span>×</span></button>
-                        <>Problem browser :</><br />
-                        <><b>ID</b> {this.state.problemBrowser.id}</><br />
-                        <><b>Label</b> {this.state.problemBrowser.label}</>
-                    </StyledResearchFieldBrowser>)}
+                {
+                    false && (
+                        <StyledResearchFieldBrowser className="form-control">
+                            <button type="button" className={'close'} onClick={this.closeProblemBrowser}><span>×</span></button>
+                            <>Problem browser :</><br />
+                            <><b>ID</b> {this.state.problemBrowser.id}</><br />
+                            <><b>Label</b> {this.state.problemBrowser.label}</>
+                        </StyledResearchFieldBrowser>)
+                }
             </>
         );
     }

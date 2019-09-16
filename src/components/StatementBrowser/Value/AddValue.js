@@ -82,7 +82,7 @@ class AddValue extends Component {
 
         for (let key in this.props.newResources) {
             let resource = this.props.newResources[key];
-            
+
             if (!resource.existingResourceId) {
                 resourceList.push({
                     id: resource.id,
@@ -131,7 +131,7 @@ class AddValue extends Component {
                                         disableBorderRadiusLeft
                                     />
                                 ) : (
-                                    <Input bsSize="sm"
+                                    <Input
                                         placeholder="Enter a value"
                                         name="literalValue"
                                         value={this.state.inputValue}

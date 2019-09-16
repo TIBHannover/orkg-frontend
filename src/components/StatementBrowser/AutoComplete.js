@@ -3,6 +3,16 @@ import { submitGetRequest } from '../../network';
 import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';
+import styled from 'styled-components';
+
+const StyledAutoCompleteInputFormControl = styled.div`
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    height: auto !important;
+    min-height: calc(1.8125rem + 4px);
+    cursor: text;
+    padding: 0 !important;
+`;
 
 class AutoComplete extends Component {
     constructor(props) {
@@ -41,7 +51,7 @@ class AutoComplete extends Component {
         return responseJson;
     }
 
-    loadOptions = async (value) => { 
+    loadOptions = async (value) => {
         try {
             if (value === '' || value.trim() === '') {
                 return this.props.defaultOptions ? this.props.defaultOptions : [];
@@ -88,9 +98,9 @@ class AutoComplete extends Component {
     // probably because the inputvalue is controlled by this component 
     loadDefaultOptions = async inputValue => {
         const defaultOptions = await this.loadOptions(inputValue)
-        
+
         this.setState({
-            defaultOptions 
+            defaultOptions
         });
     };
 
@@ -114,7 +124,7 @@ class AutoComplete extends Component {
             this.setState({
                 inputValue
             });
-            
+
             if (this.props.onInput) {
                 this.props.onInput(null, inputValue);
             }
@@ -140,31 +150,27 @@ class AutoComplete extends Component {
                 ...provided,
                 padding: 0,
                 height: 'auto',
-                borderTopLeftRadius: this.props.disableBorderRadiusLeft ? 0 : undefined,
-                borderBottomLeftRadius: this.props.disableBorderRadiusLeft ? 0 : undefined,
-                borderTopRightRadius: this.props.disableBorderRadiusRight ? 0 : undefined,
-                borderBottomRightRadius: this.props.disableBorderRadiusRight ? 0 : undefined,
+                borderTopLeftRadius: this.props.disableBorderRadiusLeft ? 0 : 'inherit',
+                borderBottomLeftRadius: this.props.disableBorderRadiusLeft ? 0 : 'inherit',
+                borderTopRightRadius: this.props.disableBorderRadiusRight ? 0 : 'inherit',
+                borderBottomRightRadius: this.props.disableBorderRadiusRight ? 0 : 'inherit',
                 background: '#fff',
             }),
             menu: (provided) => ({
                 ...provided,
                 zIndex: 10
             }),
-            dropdownIndicator: (provided) => ({
-                ...provided,
-                padding: 4,
-                cursor: 'pointer',
-            }),
             option: (provided) => ({
                 ...provided,
                 cursor: 'pointer',
-            })
+                whiteSpace: 'normal',
+            }),
         }
 
         const Select = this.props.allowCreate ? AsyncCreatableSelect : AsyncSelect;
 
         return (
-            <span className="dropdown" style={{ flex: '1 1 auto' }}>
+            <StyledAutoCompleteInputFormControl className="form-control" >
                 <Select
                     loadOptions={this.loadOptions}
                     noOptionsMessage={this.noResults}
@@ -172,13 +178,12 @@ class AutoComplete extends Component {
                     onInputChange={this.handleInputChange}
                     inputValue={this.state.inputValue}
                     styles={this.customStyles}
-                    className="form-control-sm form-control"
                     placeholder={this.props.placeholder}
                     autoFocus
                     cacheOptions
                     defaultOptions={this.state.defaultOptions}
                 />
-            </span>
+            </StyledAutoCompleteInputFormControl>
         );
     }
 }
