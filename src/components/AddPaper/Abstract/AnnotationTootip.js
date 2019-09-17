@@ -1,26 +1,15 @@
 import React, { Component } from 'react';
-import { Tooltip as ReactstrapTooltip } from 'reactstrap';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { withTheme } from 'styled-components';
 import PropTypes from 'prop-types';
+import Tippy from '@tippy.js/react'
 
 class AnnotationTootip extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            showTooltip: false,
-            isValidatorHover: false
-        };
+        this.tippyInstance = React.createRef();
     }
-
-    toggleTooltip = () => {
-        this.setState({ showTooltip: !this.state.showTooltip });
-    };
-
-    onMouseLeave = () => this.setState({ isValidatorHover: false });
-
-    onMouseEnter = () => this.setState({ isValidatorHover: true });
 
     render() {
         const customStyles = {
@@ -59,31 +48,38 @@ class AnnotationTootip extends Component {
         };
         return (
             <span>
-                <span style={{ backgroundColor: this.props.getClassColor(this.props.range.class.label), color: 'black' }} id={`CR${this.props.range.id}`}>
-                    {this.props.lettersNode}
-                </span>
-                <ReactstrapTooltip placement="top" autohide={false} target={`CR${this.props.range.id}`} className={'annotation-tooltip'} innerClassName={'annotation-tooltip-inner'} toggle={(e) => this.toggleTooltip()} isOpen={this.state.showTooltip}>
-                    <AsyncCreatableSelect
-                        loadOptions={this.props.loadOptions}
-                        value={{
-                            label: this.props.range.class.label,
-                            id: this.props.range.class.id,
-                            certainty: this.props.range.certainty,
-                            range_id: this.props.range.id,
-                        }}
-                        getOptionLabel={({ label }) => label}
-                        getOptionValue={({ id }) => id}
-                        onChange={(e, a) => { this.props.handleChangeAnnotationClass(e, a, this.props.range); this.toggleTooltip(); }}
-                        key={(value) => value}
-                        cacheOptions
-                        defaultOptions={this.props.defaultOptions}
-                        isClearable
-                        openMenuOnClick={false}
-                        placeholder="Select or type something..."
-                        styles={customStyles}
-                    />
-                </ReactstrapTooltip>
-            </span>
+                <Tippy
+                    placement={'top'}
+                    followCursor={true}
+                    arrow={true}
+                    interactive={true}
+                    onCreate={instance => (this.tippyInstance.current = instance)}
+                    content={
+                        <AsyncCreatableSelect
+                            loadOptions={this.props.loadOptions}
+                            value={{
+                                label: this.props.range.class.label,
+                                id: this.props.range.class.id,
+                                certainty: this.props.range.certainty,
+                                range_id: this.props.range.id,
+                            }}
+                            getOptionLabel={({ label }) => label}
+                            getOptionValue={({ id }) => id}
+                            onChange={(e, a) => { this.props.handleChangeAnnotationClass(e, a, this.props.range); this.tippyInstance.current.hide(); }}
+                            key={(value) => value}
+                            cacheOptions
+                            defaultOptions={this.props.defaultOptions}
+                            isClearable
+                            openMenuOnClick={false}
+                            placeholder="Select or type something..."
+                            styles={customStyles}
+                        />}
+                >
+                    <span style={{ backgroundColor: this.props.getClassColor(this.props.range.class.label), color: 'black' }} id={`CR${this.props.range.id}`}>
+                        {this.props.lettersNode}
+                    </span>
+                </Tippy>
+            </span >
         );
     }
 }
