@@ -37,7 +37,7 @@
         "react-csv": "^1.1.1",
         "react-dom": "^16.9.0",
         "react-graph-vis": "github:crubier/react-graph-vis#pull/74/head",
-        "react-hot-loader": "^4.8.2",
+        "react-hot-loader": "^4.12.13",
         "react-input-autosize": "^2.2.1",
         "react-notifications": "^1.4.3",
         "react-range": "^1.2.0",
