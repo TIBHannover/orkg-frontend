@@ -52,7 +52,7 @@
         "react-textarea-autosize": "^7.1.0",
         "react-transition-group": "^1.2.1",
         "reactour": "^1.15.0",
-        "reactstrap": "^7.1.0",
+        "reactstrap": "^8.0.1",
         "reactstrap-confirm": "^1.1.0",
         "redux": "^4.0.4",
         "redux-thunk": "^2.3.0",
