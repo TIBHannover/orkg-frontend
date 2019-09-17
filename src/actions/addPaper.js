@@ -22,6 +22,12 @@ export const previousStep = () => (dispatch) => {
   });
 };
 
+export const blockNavigation = () => (dispatch) => {
+  dispatch({
+    type: type.ADD_PAPER_BLOCK_NAVIGATION,
+  });
+};
+
 export const updateResearchField = (data) => (dispatch) => {
   dispatch({
     type: type.UPDATE_RESEARCH_FIELD,
@@ -326,6 +332,10 @@ export const saveAddPaper = (data) => {
     dispatch({
       type: type.SAVE_ADD_PAPER,
       id: paper.id,
+    });
+
+    dispatch({
+      type: type.ADD_PAPER_UNBLOCK_NAVIGATION
     });
   };
 };

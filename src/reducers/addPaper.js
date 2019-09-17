@@ -6,6 +6,7 @@ import { Cookies } from 'react-cookie';
 const initialState = {
     isTourOpen: false,
     currentStep: 1,
+    shouldBlockNavigation: false,
     tourCurrentStep: 1,
     tourStartAt: 0,
     title: '',
@@ -55,6 +56,20 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 currentStep: state.currentStep - 1,
+            };
+        }
+
+        case type.ADD_PAPER_BLOCK_NAVIGATION: {
+            return {
+                ...state,
+                shouldBlockNavigation: true,
+            };
+        }
+
+        case type.ADD_PAPER_UNBLOCK_NAVIGATION: {
+            return {
+                ...state,
+                shouldBlockNavigation: false,
             };
         }
 
