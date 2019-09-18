@@ -25,7 +25,7 @@ class DefaultLayout extends Component {
             <div className="body">
                 <ToastContainer
                     position="top-right"
-                    autoClose={popupDelay}
+                    autoClose={parseInt(popupDelay)}
                     hideProgressBar
                     transition={Slide}
                 />
