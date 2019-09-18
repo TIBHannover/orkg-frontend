@@ -218,8 +218,14 @@ class Contributions extends Component {
 Contributions.propTypes = {
     title: PropTypes.string.isRequired,
     authors: PropTypes.array.isRequired,
-    publicationMonth: PropTypes.number.isRequired,
-    publicationYear: PropTypes.number.isRequired,
+    publicationMonth: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ]).isRequired,
+    publicationYear: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ]).isRequired,
     doi: PropTypes.string.isRequired,
     selectedResearchField: PropTypes.string.isRequired,
     contributions: PropTypes.object.isRequired,
