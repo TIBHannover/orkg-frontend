@@ -12,15 +12,15 @@ class SearchResults extends Component {
 
         this.findResources = this.findResources.bind(this);
         this.findPredicates = this.findPredicates.bind(this);
+
+        this.state = {
+            resources: null,
+            predicates: null,
+            error: null,
+        };
     }
 
-    state = {
-        resources: null,
-        predicates: null,
-        error: null,
-    }; 
-
-    async componentWillMount() {
+    async componentDidMount() {
         await this.findResources();
         await this.findPredicates();
     }
