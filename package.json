@@ -4,9 +4,9 @@
     "private": true,
     "homepage": "/orkg",
     "dependencies": {
-        "@fortawesome/fontawesome-svg-core": "^1.2.22",
-        "@fortawesome/free-regular-svg-icons": "^5.10.2",
-        "@fortawesome/free-solid-svg-icons": "^5.10.2",
+        "@fortawesome/fontawesome-svg-core": "^1.2.24",
+        "@fortawesome/free-regular-svg-icons": "^5.11.1",
+        "@fortawesome/free-solid-svg-icons": "^5.11.1",
         "@fortawesome/react-fontawesome": "^0.1.4",
         "array-move": "^2.1.0",
         "babel-preset-es2018": "^1.0.0",
