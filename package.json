@@ -19,7 +19,7 @@
         "detect-browser": "^4.7.0",
         "dot-prop-immutable": "^1.5.0",
         "flow-bin": "^0.95.1",
-        "html2canvas": "^1.0.0-rc.3",
+        "html2canvas": "1.0.0-alpha.12",
         "jspdf": "^1.5.3",
         "make-latex": "^0.1.0",
         "moment": "^2.24.0",
