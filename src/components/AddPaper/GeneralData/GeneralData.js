@@ -105,7 +105,7 @@ class GeneralData extends Component {
 
         this.lookup.current.blur();
 
-        let validation = this.validator.validate({ entry: this.state.entry });
+        let validation = this.validator.validate({ entry: this.state.entry.trim() });
         this.setState({ validation });
 
         if (!validation.isValid) {
@@ -116,7 +116,7 @@ class GeneralData extends Component {
             isFetching: true,
         });
 
-        await Cite.async(this.state.entry)
+        await Cite.async(this.state.entry.trim())
             .catch((e) => {
                 let validation;
                 switch (e.message) {
@@ -169,7 +169,7 @@ class GeneralData extends Component {
                         });
                         paperPublicationMonth = paper.data[0].issued['date-parts'][0][1];
                         paperPublicationYear = paper.data[0].issued['date-parts'][0][0];
-                        doi = paper.data[0].DOI;
+                        doi = paper.data[0].DOI ? paper.data[0].DOI : '';
                     } catch (e) {
                         console.log('Error setting paper data: ', e);
                     }
@@ -484,6 +484,9 @@ class GeneralData extends Component {
                                                                     value={this.state.paperPublicationMonth}
                                                                     onChange={this.handleMonthChange}
                                                                 >
+                                                                    <option value="" key="">
+                                                                        Month
+                                                                    </option>
                                                                     {moment.months().map((el, index) => {
                                                                         return (
                                                                             <option value={index + 1} key={index + 1}>
@@ -501,6 +504,9 @@ class GeneralData extends Component {
                                                                     value={this.state.paperPublicationYear}
                                                                     onChange={this.handleInputChange}
                                                                 >
+                                                                    <option value="" key="">
+                                                                        Year
+                                                                    </option>
                                                                     {range(1900, moment().year())
                                                                         .reverse()
                                                                         .map((year) => (
@@ -594,8 +600,14 @@ GeneralData.propTypes = {
     doi: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     authors: PropTypes.array.isRequired,
-    publicationMonth: PropTypes.number.isRequired,
-    publicationYear: PropTypes.number.isRequired,
+    publicationMonth: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ]).isRequired,
+    publicationYear: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ]).isRequired,
     showLookupTable: PropTypes.bool.isRequired,
     updateGeneralData: PropTypes.func.isRequired,
     nextStep: PropTypes.func.isRequired,

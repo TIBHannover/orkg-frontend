@@ -55,7 +55,7 @@ class ResearchProblemInput extends Component {
     onKeyDown = (event) => {
         switch (event.keyCode) {
             case 13: // ENTER
-                event.target.value.trim()==='' && event.preventDefault();
+                event.target.value.trim() === '' && event.preventDefault();
                 break;
             default: {
                 break;
@@ -99,6 +99,18 @@ class ResearchProblemInput extends Component {
             menu: (provided) => ({
                 ...provided,
                 zIndex: 10
+            }),
+            multiValueLabel: (provided) => ({
+                ...provided,
+                whiteSpace: 'normal',
+            }),
+            option: (provided) => ({
+                ...provided,
+                whiteSpace: 'normal',
+            }),
+            input: (provided) => ({
+                ...provided,
+                whiteSpace: 'normal',
             })
         }
 
@@ -146,13 +158,15 @@ class ResearchProblemInput extends Component {
                         inputValue={this.state.inputValue}
                     />
                 </StyledResearchFieldsInputFormControl>
-                {false && (
-                    <StyledResearchFieldBrowser className="form-control">
-                        <button type="button" className={'close'} onClick={this.closeProblemBrowser}><span>×</span></button>
-                        <>Problem browser :</><br />
-                        <><b>ID</b> {this.state.problemBrowser.id}</><br />
-                        <><b>Label</b> {this.state.problemBrowser.label}</>
-                    </StyledResearchFieldBrowser>)}
+                {
+                    false && (
+                        <StyledResearchFieldBrowser className="form-control">
+                            <button type="button" className={'close'} onClick={this.closeProblemBrowser}><span>×</span></button>
+                            <>Problem browser :</><br />
+                            <><b>ID</b> {this.state.problemBrowser.id}</><br />
+                            <><b>Label</b> {this.state.problemBrowser.label}</>
+                        </StyledResearchFieldBrowser>)
+                }
             </>
         );
     }

@@ -14,7 +14,7 @@ import {
 } from '../../../actions/addPaper';
 import { withCookies, Cookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import AbstractAnnotator from './AbstractAnnotator';
 import PropTypes from 'prop-types';
 import Textarea from 'react-textarea-autosize';
@@ -53,6 +53,13 @@ class Abstract extends Component {
       validation: true,
     };
 
+    this.automaticAnnotationConcepts = [
+      { label: 'Process', description: 'Natural phenomenon, or independent/dependent activities.E.g., growing(Bio), cured(MS), flooding(ES).' },
+      { label: 'Data', description: 'The data themselves, or quantitative or qualitative characteristics of entities. E.g., rotational energy (Eng), tensile strength (MS), the Chern character (Mat).' },
+      { label: 'Material', description: 'A physical or digital entity used for scientific experiments. E.g., soil (Agr), the moon (Ast), the set (Mat).' },
+      { label: 'Method', description: 'A commonly used procedure that acts on entities. E.g., powder X-ray (Che), the PRAM analysis (CS), magnetoencephalography (Med).' }
+    ];
+
     // check if a cookie of take a tour exist 
     if (this.props.cookies && this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 1
       && !this.props.cookies.get('showedAbstract')) {
@@ -75,9 +82,8 @@ class Abstract extends Component {
 
   loadClassOptions = () => {
     // Fetch the predicates used in the NLP model
-    let classeOptions = ['Process', 'Data', 'Material', 'Method'];
-    let nLPPredicates = classeOptions.map((classOption) => {
-      return submitGetRequest(predicatesUrl + '?q=' + classOption + '&exact=true').then(predicates => {
+    let nLPPredicates = this.automaticAnnotationConcepts.map((classOption) => {
+      return submitGetRequest(predicatesUrl + '?q=' + classOption.label + '&exact=true').then(predicates => {
         if (predicates.length > 0) {
           return predicates[0]; // Use the first predicate that match the label
         } else {
@@ -153,7 +159,12 @@ class Abstract extends Component {
 
   fetchAbstract = async () => {
     if (!this.props.abstract) {
-      let DOI = this.props.doi.substring(this.props.doi.indexOf('10.'));
+      let DOI;
+      try {
+        DOI = this.props.doi.substring(this.props.doi.indexOf('10.'));
+      } catch{
+        DOI = false
+      }
       if (!this.props.title || !DOI) {
         this.setState({
           changeAbstract: true,
@@ -383,15 +394,30 @@ class Abstract extends Component {
                       <span className={'mr-1 ml-1'} />
                       {rangesClasses.length > 0 &&
                         rangesClasses.map((c) => {
-                          return (
-                            <Badge
-                              className={'mr-2'}
-                              key={`c${c}`}
-                              style={{ marginBottom: '4px', color: '#333', background: this.getClassColor(c) }}
-                            >
-                              {c ? capitalize(c) : 'Unlabeled'} <Badge pill color="secondary">{rangeArray.filter((rc) => rc.class.label === c).length}</Badge>
-                            </Badge>
-                          );
+                          let aconcept = c ? this.automaticAnnotationConcepts.filter(function (e) { return e.label.toLowerCase() === c.toLowerCase(); }) : []
+                          if (c && aconcept.length > 0) {
+                            return (
+                              <Tooltip hideDefaultIcon={true} message={aconcept[0].description}>
+                                <Badge
+                                  className={'mr-2'}
+                                  key={`c${c}`}
+                                  style={{ cursor: 'pointer', marginBottom: '4px', color: '#333', background: this.getClassColor(c) }}
+                                >
+                                  {c ? capitalize(c) : 'Unlabeled'} <Badge pill color="secondary">{rangeArray.filter((rc) => rc.class.label === c).length}</Badge>
+                                </Badge>
+                              </Tooltip>
+                            );
+                          } else {
+                            return (
+                              <Badge
+                                className={'mr-2'}
+                                key={`c${c}`}
+                                style={{ marginBottom: '4px', color: '#333', background: this.getClassColor(c) }}
+                              >
+                                {c ? capitalize(c) : 'Unlabeled'} <Badge pill color="secondary">{rangeArray.filter((rc) => rc.class.label === c).length}</Badge>
+                              </Badge>
+                            );
+                          }
                         })}
                     </div>
                     <AbstractAnnotator
@@ -504,8 +530,9 @@ class Abstract extends Component {
                   )}
                 />
                 <div className={'mt-2 text-center'}>
-                  <Tooltip message="Here you can adjust the certainty value, that means at which level you accept the confidence ratio of automatic annotations. Only the shown annotations will be used to create the contribution data in the next step.">
-                    Certainty {this.state.certaintyThreshold[0].toFixed(2)}
+                  <span className={'mr-2'}>Certainty {this.state.certaintyThreshold[0].toFixed(2)}</span>
+                  <Tooltip trigger={'click'} hideDefaultIcon={true} message="Here you can adjust the certainty value, that means at which level you accept the confidence ratio of automatic annotations. Only the shown annotations will be used to create the contribution data in the next step.">
+                    <Icon style={{ cursor: 'pointer' }} className={'text-primary'} icon={faQuestionCircle} />
                   </Tooltip>
                 </div>
               </div>

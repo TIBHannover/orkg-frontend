@@ -31,6 +31,8 @@ class Tooltip extends React.Component {
         }
         const className = !this.props.colorIcon ? 'text-primary' : '';
 
+        const trigger = this.props.trigger ? this.props.trigger : 'click hover focus';
+
         return (
             <span>
                 <span id={this.id}>
@@ -44,6 +46,7 @@ class Tooltip extends React.Component {
                     isOpen={this.state.tooltipOpen}
                     target={this.id}
                     toggle={this.toggle}
+                    trigger={trigger}
                 >
                     {this.props.message}
                 </ReactstrapTooltip>
@@ -60,6 +63,7 @@ Tooltip.propTypes = {
     ]).isRequired,
     hideDefaultIcon: PropTypes.bool,
     colorIcon: PropTypes.string,
+    trigger: PropTypes.string,
 }
 
 Tooltip.defaultProps = {

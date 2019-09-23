@@ -176,7 +176,7 @@ class Contributions extends Component {
                                                     {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].map((problem, index) => (
                                                         <span key={index}>
                                                             <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>
-                                                                <span className="btn btn-link p-0 border-0 align-baseline">
+                                                                <span style={{ whiteSpace: 'normal', textAlign: 'left' }} className="btn btn-link p-0 border-0 align-baseline">
                                                                     {problem.label}
                                                                 </span>
                                                             </Link>

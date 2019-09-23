@@ -46,6 +46,9 @@ class ResearchProblem extends Component {
                             if (publicationYear.length > 0) {
                                 publicationYear = publicationYear[0].object.label
                             }
+                            else {
+                                publicationYear = ''
+                            }
                             // publication month
                             let publicationMonth = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
                             if (publicationMonth.length > 0) {

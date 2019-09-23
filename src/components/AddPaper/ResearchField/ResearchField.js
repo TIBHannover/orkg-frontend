@@ -97,6 +97,11 @@ class ResearchField extends Component {
                 });
             });
 
+            // sort research fields alphabetically
+            researchFields = researchFields.sort((a, b) => {
+                return a.label.localeCompare(b.label);
+            });
+
             let researchFieldsNew = [...this.props.researchFields];
             researchFieldsNew[level] = researchFields;
 

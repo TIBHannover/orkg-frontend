@@ -246,6 +246,12 @@ export default (state = initialState, action) => {
             }
         }
 
+        case '@@router/LOCATION_CHANGE': { //from connected-react-router, reset the wizard when the page is changed
+            return {
+                ...initialState
+            }
+        }
+
         default: {
             return state
         }
