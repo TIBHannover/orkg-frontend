@@ -156,6 +156,9 @@ class GeneralData extends Component {
                         doi = '';
                     try {
                         paperTitle = paper.data[0].title;
+                        if (paper.data[0].subtitle.length > 0) { // include the subtitle
+                            paperTitle = `${paperTitle} : ${paper.data[0].subtitle[0]}`
+                        }
                         paperAuthors = paper.data[0].author.map((author, index) => {
                             let fullname = [author.given, author.family].join(' ').trim();
                             if (!fullname) {
