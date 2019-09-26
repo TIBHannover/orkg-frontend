@@ -212,16 +212,17 @@ class ViewPaper extends Component {
                                                 <DropdownItem onClick={() => this.toggle('showGraphModal')}>Show graph visualization</DropdownItem>
                                             </DropdownMenu>
                                         </Dropdown>*/}
-
-                                        <Button
-                                            color="darkblue"
-                                            size="sm"
-                                            className="mb-4 mt-4 float-right"
-                                            style={{ marginLeft: 'auto' }}
-                                            onClick={() => this.toggle('showGraphModal')}
-                                        >
-                                            <Icon icon={faProjectDiagram} className="mr-1" /> View graph
-                                        </Button>
+                                        <div>
+                                            <Button
+                                                color="darkblue"
+                                                size="sm"
+                                                className="mb-4 mt-4 float-right"
+                                                style={{ marginLeft: 'auto' }}
+                                                onClick={() => this.toggle('showGraphModal')}
+                                            >
+                                                <Icon icon={faProjectDiagram} className="mr-1" /> View graph
+                                            </Button>
+                                        </div>
                                     </div>
 
                                     <div className="clearfix" />
