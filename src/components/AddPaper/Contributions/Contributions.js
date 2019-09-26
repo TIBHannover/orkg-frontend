@@ -96,7 +96,9 @@ class Contributions extends Component {
         });
 
         if (result) {
-            this.props.deleteContribution(id);
+            // delete the contribution and select the first one in the remaining list 
+            let selectedId = this.props.contributions.allIds.filter(i => i !== id)[0];
+            this.props.deleteContribution({ id, selectAfterDeletion: this.props.contributions.byId[selectedId] });
         }
     }
 
@@ -265,7 +267,7 @@ const mapDispatchToProps = dispatch => ({
     nextStep: () => dispatch(nextStep()),
     previousStep: () => dispatch(previousStep()),
     createContribution: (data) => dispatch(createContribution(data)),
-    deleteContribution: (id) => dispatch(deleteContribution(id)),
+    deleteContribution: (data) => dispatch(deleteContribution(data)),
     selectContribution: (id) => dispatch(selectContribution(id)),
     updateContributionLabel: (data) => dispatch(updateContributionLabel(data)),
     saveAddPaper: (data) => dispatch(saveAddPaper(data)),
