@@ -97,6 +97,9 @@ class ViewPaper extends Component {
                 let publicationDOI = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
                 if (publicationDOI.length > 0) {
                     publicationDOI = publicationDOI[0].object.label;
+                    if (publicationDOI.includes('10.') && !publicationDOI.startsWith('10.')) {
+                        publicationDOI = publicationDOI.substring(publicationDOI.indexOf('10.'));
+                    }
                 } else {
                     publicationDOI = null;
                 }
@@ -243,7 +246,7 @@ class ViewPaper extends Component {
                                         </span>
                                     ))}
                                     <br />
-                                    {this.state.publicationDOI && <div style={{ textAlign: 'right' }}><small >DOI : <i>{this.state.publicationDOI}</i></small></div>}
+                                    {this.state.publicationDOI && this.state.publicationDOI.startsWith('10.') && <div style={{ textAlign: 'right' }}><small>doi: <a href={`https://doi.org/${this.state.publicationDOI}`} target="_blank" rel="noopener noreferrer">{this.state.publicationDOI}</a></small></div>}
                                 </>
                             )}
                             {!this.state.loading_failed && !this.state.unfoundContribution && (
