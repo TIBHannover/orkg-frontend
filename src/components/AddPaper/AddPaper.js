@@ -15,8 +15,9 @@ import styled, { withTheme } from 'styled-components';
 import { CSSTransitionGroup } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
-import { openTour, closeTour } from '../../actions/addPaper';
+import { openTour, closeTour, blockNavigation } from '../../actions/addPaper';
 import GraphViewModal from '../ViewPaper/GraphViewModal';
+import { Prompt } from 'react-router'
 
 const Help = styled.div`
     box-sizing: border-box;
@@ -84,6 +85,21 @@ class AddPaper extends Component {
         this.props.resetStatementBrowser();
     }
 
+    componentDidUpdate(prevProps) {
+        //paperNewResourceId : means paper is saved
+        if (!this.props.shouldBlockNavigation && this.props.currentStep > 1 && !this.props.paperNewResourceId) {
+            this.props.blockNavigation();
+            window.onbeforeunload = () => true;
+        }
+        if (!this.props.shouldBlockNavigation && prevProps.shouldBlockNavigation !== this.props.shouldBlockNavigation) {
+            window.onbeforeunload = null;
+        }
+    }
+
+    componentWillUnmount() {
+        window.onbeforeunload = null;
+    }
+
     toggleDropdown = () => {
         this.setState((prevState) => ({
             dropdownOpen: !prevState.dropdownOpen,
@@ -137,6 +153,10 @@ class AddPaper extends Component {
 
         return (
             <div>
+                <Prompt
+                    when={this.props.shouldBlockNavigation}
+                    message="You have unsaved changes, are you sure you want to leave?"
+                />
                 <Container className="p-0">
                     <h1 className="h4 mt-4 mb-4 float-left">Add paper</h1>
 
@@ -149,15 +169,15 @@ class AddPaper extends Component {
                         </DropdownMenu>
                     </Dropdown>*/}
 
-                        <Button 
-                            color="darkblue" 
-                            size="sm" 
-                            className="mb-4 mt-4 float-right" 
-                            style={{ marginLeft: 'auto' }} 
-                            onClick={() => this.toggle('showGraphModal')}
-                        >
-                            <Icon icon={faProjectDiagram} className="mr-1" /> View graph
-                        </Button>
+                    <Button
+                        color="darkblue"
+                        size="sm"
+                        className="mb-4 mt-4 float-right"
+                        style={{ marginLeft: 'auto' }}
+                        onClick={() => this.toggle('showGraphModal')}
+                    >
+                        <Icon icon={faProjectDiagram} className="mr-1" /> View graph
+                    </Button>
 
                     <div className="clearfix" />
                 </Container>
@@ -197,21 +217,27 @@ class AddPaper extends Component {
 AddPaper.propTypes = {
     currentStep: PropTypes.number.isRequired,
     isTourOpen: PropTypes.bool.isRequired,
+    shouldBlockNavigation: PropTypes.bool.isRequired,
     resetStatementBrowser: PropTypes.func.isRequired,
+    paperNewResourceId: PropTypes.string,
     openTour: PropTypes.func.isRequired,
     closeTour: PropTypes.func.isRequired,
+    blockNavigation: PropTypes.func.isRequired,
     theme: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
     currentStep: state.addPaper.currentStep,
     isTourOpen: state.addPaper.isTourOpen,
+    shouldBlockNavigation: state.addPaper.shouldBlockNavigation,
+    paperNewResourceId: state.addPaper.paperNewResourceId,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     resetStatementBrowser: () => dispatch(resetStatementBrowser()),
     openTour: () => dispatch(openTour()),
     closeTour: () => dispatch(closeTour()),
+    blockNavigation: () => dispatch(blockNavigation()),
 });
 
 export default compose(
