@@ -4,7 +4,7 @@ import { StyledContribution, StyledContributionsList } from '../AddPaper/Contrib
 import { getResource, getSimilaireContribution } from '../../network';
 
 import AddToComparison from './AddToComparison';
-import { CSSTransitionGroup } from 'react-transition-group'
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ContentLoader from 'react-content-loader'
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -30,7 +30,7 @@ const Title = styled.div`
     }
 `;
 
-const AnimationContainer = styled.div`
+const AnimationContainer = styled(CSSTransition)`
     transition: 0.3s background-color,  0.3s border-color;
 
     &.fadeIn-enter {
@@ -136,15 +136,14 @@ class Contributions extends Component {
                                 </StyledContributionsList>
                             )}
                         </Col>
-                        <CSSTransitionGroup
-                            transitionName="fadeIn"
-                            transitionEnterTimeout={500}
-                            transitionLeave={false}
-                            component="div"
+                        <TransitionGroup
                             className="col-9"
+                            exit={false}
                         >
                             <AnimationContainer
                                 key={selectedContributionId}
+                                classNames="fadeIn"
+                                timeout={{ enter: 500, exit: 0 }}
                             >
                                 <StyledContribution>
                                     {!this.state.loading && (
@@ -249,7 +248,7 @@ class Contributions extends Component {
                                 </StyledContribution>
 
                             </AnimationContainer>
-                        </CSSTransitionGroup>
+                        </TransitionGroup>
                     </Row>
                 </Container>
             </div>

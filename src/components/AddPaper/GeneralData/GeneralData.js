@@ -12,7 +12,7 @@ import AuthorsInput from '../../Utils/AuthorsInput';
 import FormValidator from '../../Utils/FormValidator';
 import { connect } from 'react-redux';
 import { updateGeneralData, nextStep, openTour, closeTour, updateTourCurrentStep } from '../../../actions/addPaper';
-import { CSSTransitionGroup } from 'react-transition-group';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { withCookies, Cookies } from 'react-cookie';
 import styled, { withTheme } from 'styled-components';
 import moment from 'moment';
@@ -21,7 +21,7 @@ import Cite from 'citation-js';
 import Tour from 'reactour';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
-const Container = styled.div`
+const Container = styled(CSSTransition)`
   &.fadeIn-enter {
     opacity: 0;
   }
@@ -31,7 +31,7 @@ const Container = styled.div`
     transition: 1s opacity;
   }
 
-  &.fadeIn-leave.fadeIn-leave-active {
+  &.fadeIn-exit.fadeIn-exit-active {
     display: none;
   }
 
@@ -45,7 +45,7 @@ const Container = styled.div`
     transition: 1s;
   }
 
-  &.slideDown-leave.slideDown-leave-active {
+  &.slideDown-exit.slideDown-exit-active {
     display: none;
   }
 `;
@@ -327,119 +327,122 @@ class GeneralData extends Component {
                     </Button>
                 </ButtonGroup>
 
-                <CSSTransitionGroup
-                    transitionName="fadeIn"
-                    transitionEnterTimeout={500}
-                    transitionLeave={false}
-                >
+                <TransitionGroup exit={false}>
                     {(() => {
                         switch (this.state.dataEntry) {
                             case 'doi':
                                 return (
-                                    <Container key={1}>
-                                        <Form className="mt-4" onSubmit={this.submitHandler}>
-                                            <FormGroup>
-                                                <Label for="paperDoi">
-                                                    <Tooltip message={<span>Automatically fetch the details of your paper by providing a DOI or a BibTeX entry. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>
-                                                        Paper DOI or BibTeX
-                                                    </Tooltip>
-                                                </Label>
-                                                <InputGroup id="doiInputGroup">
-                                                    <Input
-                                                        type="text"
-                                                        name="entry"
-                                                        id="paperDoi"
-                                                        value={this.state.entry}
-                                                        onChange={this.handleInputChange}
-                                                        invalid={this.state.validation.entry.isInvalid}
-                                                        onKeyPress={(target) => { target.charCode === 13 && this.handleLookupClick(); }}
-                                                    />
-                                                    <FormFeedback className="order-1">
-                                                        {this.state.validation.entry.message}
-                                                    </FormFeedback>{' '}
-                                                    {/* Need to set order-1 here to fix Bootstrap bug of missing rounded borders */}
-                                                    <InputGroupAddon addonType="append">
-                                                        <Button
-                                                            outline
-                                                            color="primary"
-                                                            innerRef={this.lookup}
-                                                            style={{ minWidth: 130 }}
-                                                            onClick={this.handleLookupClick}
-                                                            disabled={this.state.isFetching}
-                                                            data-test="lookupDoi"
-                                                        >
-                                                            {!this.state.isFetching ? (
-                                                                'Lookup'
-                                                            ) : (
-                                                                    <FontAwesomeIcon icon={faSpinner} spin />
-                                                                )}
-                                                        </Button>
-                                                    </InputGroupAddon>
-                                                </InputGroup>
-                                            </FormGroup>
-                                        </Form>
+                                    <Container key={1} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
+                                        <div>
+                                            <Form className="mt-4" onSubmit={this.submitHandler}>
+                                                <FormGroup>
+                                                    <Label for="paperDoi">
+                                                        <Tooltip message={<span>Automatically fetch the details of your paper by providing a DOI or a BibTeX entry. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>
+                                                            Paper DOI or BibTeX
+                                                        </Tooltip>
+                                                    </Label>
+                                                    <InputGroup id="doiInputGroup">
+                                                        <Input
+                                                            type="text"
+                                                            name="entry"
+                                                            id="paperDoi"
+                                                            value={this.state.entry}
+                                                            onChange={this.handleInputChange}
+                                                            invalid={this.state.validation.entry.isInvalid}
+                                                            onKeyPress={(target) => { target.charCode === 13 && this.handleLookupClick(); }}
+                                                        />
+                                                        <FormFeedback className="order-1">
+                                                            {this.state.validation.entry.message}
+                                                        </FormFeedback>{' '}
+                                                        {/* Need to set order-1 here to fix Bootstrap bug of missing rounded borders */}
+                                                        <InputGroupAddon addonType="append">
+                                                            <Button
+                                                                outline
+                                                                color="primary"
+                                                                innerRef={this.lookup}
+                                                                style={{ minWidth: 130 }}
+                                                                onClick={this.handleLookupClick}
+                                                                disabled={this.state.isFetching}
+                                                                data-test="lookupDoi"
+                                                            >
+                                                                {!this.state.isFetching ? (
+                                                                    'Lookup'
+                                                                ) : (
+                                                                        <FontAwesomeIcon icon={faSpinner} spin />
+                                                                    )}
+                                                            </Button>
+                                                        </InputGroupAddon>
+                                                    </InputGroup>
+                                                </FormGroup>
+                                            </Form>
 
-                                        <CSSTransitionGroup
-                                            transitionName="slideDown"
-                                            transitionEnterTimeout={500}
-                                            transitionLeaveTimeout={300}
-                                        >
-                                            {this.state.showLookupTable ? (
-                                                <Container key={1} className="mt-5">
-                                                    <h3 className="h4 mb-3">
-                                                        Lookup result
-                                                  <Button
-                                                            className={'pull-right ml-1'}
-                                                            outline
-                                                            size="sm"
-                                                            onClick={() => this.handleDataEntryClick('manually')}
-                                                        >
-                                                            Edit
-                                                  </Button>
-                                                    </h3>
-                                                    <Card body>
-                                                        <Table className="mb-0">
-                                                            <tbody>
-                                                                <tr className="table-borderless">
-                                                                    <td>
-                                                                        <strong>Paper title:</strong> {this.state.paperTitle}
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <strong>Authors:</strong>{' '}
-                                                                        {this.state.paperAuthors.map((author, index) => (
-                                                                            <span key={index}>
-                                                                                {this.state.paperAuthors.length > index + 1
-                                                                                    ? author.label + ', '
-                                                                                    : author.label}
-                                                                            </span>
-                                                                        ))}
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <strong>Publication date:</strong>{' '}
-                                                                        {this.state.paperPublicationMonth
-                                                                            ? moment(this.state.paperPublicationMonth, 'M').format('MMMM')
-                                                                            : ''}{' '}
-                                                                        {this.state.paperPublicationYear}
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </Table>
-                                                    </Card>
-                                                </Container>
-                                            ) : (
-                                                    ''
-                                                )}
-                                        </CSSTransitionGroup>
+                                            <TransitionGroup>
+                                                {this.state.showLookupTable ? (
+                                                    <Container
+                                                        key={1}
+                                                        classNames="slideDown"
+                                                        timeout={{ enter: 500, exit: 300 }}
+                                                    >
+                                                        <div className="mt-5">
+                                                            <h3 className="h4 mb-3">
+                                                                Lookup result
+                                                            <Button
+                                                                    className={'pull-right ml-1'}
+                                                                    outline
+                                                                    size="sm"
+                                                                    onClick={() => this.handleDataEntryClick('manually')}
+                                                                >
+                                                                    Edit
+                                                            </Button>
+                                                            </h3>
+                                                            <Card body>
+                                                                <Table className="mb-0">
+                                                                    <tbody>
+                                                                        <tr className="table-borderless">
+                                                                            <td>
+                                                                                <strong>Paper title:</strong> {this.state.paperTitle}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <strong>Authors:</strong>{' '}
+                                                                                {this.state.paperAuthors.map((author, index) => (
+                                                                                    <span key={index}>
+                                                                                        {this.state.paperAuthors.length > index + 1
+                                                                                            ? author.label + ', '
+                                                                                            : author.label}
+                                                                                    </span>
+                                                                                ))}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <strong>Publication date:</strong>{' '}
+                                                                                {this.state.paperPublicationMonth
+                                                                                    ? moment(this.state.paperPublicationMonth, 'M').format('MMMM')
+                                                                                    : ''}{' '}
+                                                                                {this.state.paperPublicationYear}
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </Table>
+                                                            </Card>
+                                                        </div>
+                                                    </Container>
+                                                ) : (
+                                                        ''
+                                                    )}
+                                            </TransitionGroup>
+                                        </div>
                                     </Container>
                                 );
                             default:
                                 //Manually
                                 return (
-                                    <Container key={2}>
+                                    <Container key={2}
+                                        classNames="fadeIn"
+                                        timeout={{ enter: 500, exit: 0 }}
+                                    >
                                         <Form className="mt-4" onSubmit={this.submitHandler}>
                                             <FormGroup>
                                                 <Label for="paperTitle">
@@ -523,7 +526,7 @@ class GeneralData extends Component {
                                 );
                         }
                     })()}
-                </CSSTransitionGroup>
+                </TransitionGroup>
                 <hr className="mt-5 mb-3" />
                 {this.state.errors && this.state.errors.length > 0 &&
                     <ul className="float-left mb-4 text-danger">

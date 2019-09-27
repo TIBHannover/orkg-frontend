@@ -2,8 +2,7 @@ import React, {Component} from 'react';
 import LinkButton from './LinkButton';
 import {Input} from 'reactstrap';
 import {updateResource} from '../network';
-import {NotificationManager} from 'react-notifications';
-import {popupDelay} from '../utils';
+import { toast } from 'react-toastify';
 
 export default class EditableHeader extends Component {
 
@@ -28,12 +27,12 @@ export default class EditableHeader extends Component {
         try {
             await updateResource(this.props.id, this.state.value);
             event.value = this.state.value;
-            NotificationManager.success('Resource name updated successfully', 'Success', popupDelay);
+            toast.success('Resource name updated successfully');
             this.props.onChange(event);
             this.setState({editorState: 'view'});
         } catch (error) {
             console.error(error);
-            NotificationManager.error(error.message, 'Error updating resource', popupDelay);
+            toast.error(`Error updating resource : ${error.message}`);
             this.setState({editorState: 'view'});
         }
     };

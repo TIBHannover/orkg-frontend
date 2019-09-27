@@ -12,7 +12,7 @@ import Finish from './Finish/Finish';
 import { withCookies } from 'react-cookie';
 import { connect } from 'react-redux';
 import styled, { withTheme } from 'styled-components';
-import { CSSTransitionGroup } from 'react-transition-group';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import { openTour, closeTour, blockNavigation } from '../../actions/addPaper';
@@ -57,7 +57,7 @@ const HelpIcon = styled(Icon)`
     font-size: 18px;
 `;
 
-const AnimationContainer = styled.div`
+const AnimationContainer = styled(CSSTransition)`
     &.fadeIn-enter {
         opacity: 0;
     }
@@ -128,26 +128,26 @@ class AddPaper extends Component {
             case 1:
             default:
                 currentStepDetails = (
-                    <AnimationContainer key={1}>
+                    <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
                         <GeneralData />
                     </AnimationContainer>
                 );
                 break;
             case 2:
                 currentStepDetails = (
-                    <AnimationContainer key={2}>
+                    <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
                         <ResearchField />
                     </AnimationContainer>
                 );
                 break;
             case 3:
-                currentStepDetails = <AnimationContainer key={3}><Abstract /></AnimationContainer>
+                currentStepDetails = <AnimationContainer key={3} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}><Abstract /></AnimationContainer>
                 break;
             case 4:
-                currentStepDetails = <AnimationContainer key={4}><Contributions /></AnimationContainer>
+                currentStepDetails = <AnimationContainer key={4} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}><Contributions /></AnimationContainer>
                 break;
             case 5:
-                currentStepDetails = <AnimationContainer key={5}><Finish /></AnimationContainer>
+                currentStepDetails = <AnimationContainer key={5} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}><Finish /></AnimationContainer>
                 break;
         }
 
@@ -186,9 +186,9 @@ class AddPaper extends Component {
 
                     <hr />
 
-                    <CSSTransitionGroup transitionName="fadeIn" transitionEnterTimeout={700} transitionLeave={false}>
+                    <TransitionGroup exit={false}>
                         {currentStepDetails}
-                    </CSSTransitionGroup>
+                    </TransitionGroup>
                 </Container>
 
                 <GraphViewModal
@@ -209,7 +209,7 @@ class AddPaper extends Component {
                 </Help>
 
 
-            </div>
+            </div >
         );
     }
 }

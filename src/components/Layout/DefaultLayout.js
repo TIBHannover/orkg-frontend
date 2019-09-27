@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../../assets/scss/DefaultLayout.scss';
-import { NotificationContainer } from 'react-notifications';
+import { ToastContainer, Slide } from 'react-toastify';
+import { popupDelay } from '../../utils';
 import Header from './Header/Header';
 import Footer from './Footer';
 
@@ -22,7 +23,12 @@ class DefaultLayout extends Component {
     render() {
         return (
             <div className="body">
-                <NotificationContainer />
+                <ToastContainer
+                    position="top-right"
+                    autoClose={parseInt(popupDelay)}
+                    hideProgressBar
+                    transition={Slide}
+                />
 
                 <Header />
                 {this.props.children}

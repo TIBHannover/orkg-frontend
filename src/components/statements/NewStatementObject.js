@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, { Component, Fragment } from 'react';
 import EditToolbar from './EditToolbar';
 import {
     createLiteral,
@@ -7,10 +7,9 @@ import {
     createResource,
     createResourceStatement
 } from '../../network';
-import {NotificationManager} from 'react-notifications';
+import { toast } from 'react-toastify';
 import MainSnak from './MainSnak';
-import {Button} from 'reactstrap';
-import {popupDelay} from '../../utils';
+import { Button } from 'reactstrap';
 
 export default class NewStatementObject extends Component {
 
@@ -33,20 +32,20 @@ export default class NewStatementObject extends Component {
 
     onLiteralStatementCreationSuccess = (responseJson) => {
         this.setEditorState('edit');
-        NotificationManager.success('Literal statement created successfully', 'Success', popupDelay);
+        toast.success('Literal statement created successfully');
         this.props.onPublishSuccess(responseJson.object.label);
     };
 
     onStatementCreationSuccess = (responseJson) => {
         this.setEditorState('edit');
-        NotificationManager.success('Object statement created successfully', 'Success', popupDelay);
+        toast.success('Object statement created successfully');
         this.props.onPublishSuccess(responseJson.object.label);
     };
 
     onStatementCreationError = (error) => {
         this.setEditorState('edit');
         console.error(error);
-        NotificationManager.error(error.message, 'Error creating object statement', popupDelay);
+        toast.error(`Error creating object statement ${error.message}`);
     };
 
     onPredicateCreationSuccess = async (responseJson) => {
@@ -56,13 +55,13 @@ export default class NewStatementObject extends Component {
     onPredicateCreationError = (error) => {
         this.setEditorState('edit');
         console.error(error);
-        NotificationManager.error(error.message, 'Error creating predicate', popupDelay);
+        toast.error(`Error creating predicate ${error.message}`);
     };
 
     getResourceCreationHandler = (predicateId) => {
         return async (responseJson) => {
             this.setEditorState('edit');
-            NotificationManager.success('Resource created successfully', 'Success', popupDelay);
+            toast.success('Resource created successfully');
 
             try {
                 const responseJson1 = await createResourceStatement(this.props.subjectId, predicateId, responseJson.id);
@@ -76,7 +75,7 @@ export default class NewStatementObject extends Component {
     handleResourceCreationError = (error) => {
         this.setEditorState('edit');
         console.error(error);
-        NotificationManager.error(error.message, 'Error creating object statement', popupDelay);
+        toast.error(`Error creating object statement ${error.message}`);
     };
 
     handlePublishClick = async () => {
@@ -100,12 +99,12 @@ export default class NewStatementObject extends Component {
             console.log(`Inner function is called. [predicateId=${predicateId}, responseJson=${responseJson}]`);
             try {
                 const responseJson1 = await createLiteralStatement(this.props.subjectId, predicateId, responseJson.id);
-                NotificationManager.success('Literal created successfully', 'Success', popupDelay);
+                toast.success('Literal created successfully');
                 this.onLiteralStatementCreationSuccess(responseJson1);
             } catch (error) {
                 this.setEditorState('edit');
                 console.error(error);
-                NotificationManager.error(error.message, 'Error creating literal statement', popupDelay);
+                toast.error(`Error creating literal statement ${error.message}`);
             }
         };
     };
@@ -122,7 +121,7 @@ export default class NewStatementObject extends Component {
                     } catch (error) {
                         this.setEditorState('edit');
                         console.error(error);
-                        NotificationManager.error(error.message, 'Error creating literal', popupDelay);
+                        toast.error(`Error creating literal ${error.message}`);
                     }
                 }
                 break;
@@ -131,7 +130,7 @@ export default class NewStatementObject extends Component {
                 if (this.state.selectedObjectId) {
                     try {
                         const responseJson = await createResourceStatement(this.props.subjectId, predicateId,
-                                this.state.selectedObjectId);
+                            this.state.selectedObjectId);
                         this.onStatementCreationSuccess(responseJson);
                     } catch (e) {
                         this.onStatementCreationError(e);
@@ -154,7 +153,7 @@ export default class NewStatementObject extends Component {
     };
 
     setEditorState(editorState) {
-        this.setState({editorState: editorState});
+        this.setState({ editorState: editorState });
     }
 
     onValueChange = (event) => {
@@ -182,7 +181,7 @@ export default class NewStatementObject extends Component {
     };
 
     handleObjectSelect = (objectId) => {
-        this.setState({selectedObjectId: objectId});
+        this.setState({ selectedObjectId: objectId });
     };
 
     handleKeyDown = async (event) => {
@@ -204,39 +203,39 @@ export default class NewStatementObject extends Component {
     render() {
         const newProperty = this.props.predicate === null;
         const editEnabled = !newProperty || this.state.selectedPredicateId !== null
-                || this.state.newPredicateLabel !== null;
+            || this.state.newPredicateLabel !== null;
         return <div id="new" className="statementView newStatement">
             <div className="statementView-rankSelector">
                 <div className="rankSelector">
-                    <span className="fa fa-sort"/>
+                    <span className="fa fa-sort" />
                 </div>
             </div>
             <div className="statementView-mainSnak-container">
                 <MainSnak editing={true} text="" onInput={this.onValueChange}
-                        onObjectTypeSelect={this.handleObjectTypeSelect}
-                        objectType={this.state.objectType}
-                        newProperty={newProperty}
-                        onObjectSelect={this.handleObjectSelect}
-                        onPredicateSelect={this.handlePredicateSelect}
-                        onNewPredicate={this.handleNewPredicate}
-                        onKeyDown={this.handleKeyDown}/>
+                    onObjectTypeSelect={this.handleObjectTypeSelect}
+                    objectType={this.state.objectType}
+                    newProperty={newProperty}
+                    onObjectSelect={this.handleObjectSelect}
+                    onPredicateSelect={this.handlePredicateSelect}
+                    onNewPredicate={this.handleNewPredicate}
+                    onKeyDown={this.handleKeyDown} />
                 <div className="statementView-qualifiers">
-                    <div className="listView"/>
+                    <div className="listView" />
                     <div className="toolbar-container hidden">
                         <span className="toolbar-button toolbar-container">
-                                <Button>
-                                    {
-                                        editEnabled && <Fragment><span className="fa fa-plus"/>add qualifier</Fragment>
-                                    }
-                                </Button>
+                            <Button>
+                                {
+                                    editEnabled && <Fragment><span className="fa fa-plus" />add qualifier</Fragment>
+                                }
+                            </Button>
                         </span>
                     </div>
                 </div>
             </div>
-            <div className="statementView-references-container"/>
+            <div className="statementView-references-container" />
             <div className="editToolbar-container toolbar-container">
                 <EditToolbar editorState={this.state.editorState} showRemoveButton={false} editEnabled={editEnabled}
-                        onPublishClick={this.handlePublishClick} onCancelClick={this.props.onCancelClick}/>
+                    onPublishClick={this.handlePublishClick} onCancelClick={this.props.onCancelClick} />
             </div>
         </div>
     }

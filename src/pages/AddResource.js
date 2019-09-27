@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
     createLiteralStatement,
     createPredicate,
@@ -7,9 +7,9 @@ import {
     getPredicatesByLabel,
     submitGetRequest
 } from '../network';
-import {NotificationManager} from 'react-notifications';
-import {doiPredicateLabel, popupDelay} from '../utils';
+import { doiPredicateLabel } from '../utils';
 import { Container } from 'reactstrap';
+import { toast } from 'react-toastify';
 
 export default class AddResource extends Component {
     state = {
@@ -21,7 +21,7 @@ export default class AddResource extends Component {
     doi = null;
 
     setEditorState = (editorState) => {
-        this.setState({editorState: editorState});
+        this.setState({ editorState: editorState });
     };
 
     handleAdd = async () => {
@@ -40,17 +40,17 @@ export default class AddResource extends Component {
         try {
             const responseJson = await submitGetRequest(crossrefUrl + this.state.value);
             console.log(responseJson);
-            this.setState({value: responseJson.message.title[0]});
+            this.setState({ value: responseJson.message.title[0] });
             //await this.createResource(true);
         } catch (error) {
             console.error(error);
-            NotificationManager.error(error.message, 'Error finding DOI', popupDelay);
+            toast.error(`Error finding DOI ${error.message}`);
             this.setEditorState('edit');
         }
     };
 
     handleInput = (event) => {
-        this.setState({value: event.target.value.trim()});
+        this.setState({ value: event.target.value.trim() });
     };
 
     handleKeyUp = async (event) => {
@@ -62,7 +62,7 @@ export default class AddResource extends Component {
 
     handleLiteralStatementCreationError = (error) => {
         console.error(error);
-        NotificationManager.error(error.message, 'Error creating literal statement', popupDelay);
+        toast.error(`Error creating literal statement ${error.message}`);
     };
 
     createResource = async (usingDoi) => {
@@ -80,7 +80,7 @@ export default class AddResource extends Component {
             } catch (error) {
                 this.setEditorState('edit');
                 console.error(error);
-                NotificationManager.error(error.message, 'Error creating resource', popupDelay);
+                toast.error(`Error creating resource ${error.message}`);
             }
         }
     };
@@ -92,7 +92,7 @@ export default class AddResource extends Component {
 
     createLiteralStatement = (resourceId, predicateId) => {
         createLiteralStatement(resourceId, predicateId, this.doi,
-                () => this.navigateToResource(resourceId), this.handleLiteralStatementCreationError);
+            () => this.navigateToResource(resourceId), this.handleLiteralStatementCreationError);
     };
 
     createDoiStatement = async (resourceId) => {
@@ -106,14 +106,14 @@ export default class AddResource extends Component {
                 } catch (error) {
                     this.setEditorState('edit');
                     console.error(error);
-                    NotificationManager.error(error.message, 'Error creating predicate', popupDelay);
+                    toast.error(`Error creating predicate ${error.message}`);
                 }
             } else {
                 this.createLiteralStatement(resourceId, doiPredicate.id);
             }
         } catch (error) {
             console.error(error);
-            NotificationManager.error(error.message, 'Error finding predicates', popupDelay);
+            toast.error(`Error finding predicates ${error.message}`);
             this.setEditorState('edit');
         }
     };
@@ -125,16 +125,16 @@ export default class AddResource extends Component {
             <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5">
                 <div className="input-group mb-3">
                     <input type="text" className="form-control" placeholder="Research contribution title or DOI"
-                            disabled={loading}
-                            onInput={this.handleInput}
-                            onKeyUp={this.handleKeyUp}
-                            aria-label="Resource title or DOI" aria-describedby="basic-addon2"/>
+                        disabled={loading}
+                        onInput={this.handleInput}
+                        onKeyUp={this.handleKeyUp}
+                        aria-label="Resource title or DOI" aria-describedby="basic-addon2" />
                     {
                         !loading ? <div className="input-group-append">
-                                <button className="btn btn-outline-primary" type="button" onClick={this.handleAdd}>Add</button>
-                            </div>
+                            <button className="btn btn-outline-primary" type="button" onClick={this.handleAdd}>Add</button>
+                        </div>
                             : <div className="container vertical-centered">
-                                <span className="fa fa-spinner fa-spin"/>
+                                <span className="fa fa-spinner fa-spin" />
                             </div>
                     }
                 </div>

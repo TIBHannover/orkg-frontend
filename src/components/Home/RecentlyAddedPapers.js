@@ -13,7 +13,7 @@ class RecentlyAddedPapers extends Component {
     }
 
     // TODO: replace a lot of this logic to the backend (select papers, first author and research fields)
-    async componentWillMount() {
+    async componentDidMount() {
         let paperStatements = await getStatementsByObject({
             id: process.env.REACT_APP_RESOURCE_TYPES_PAPER,
             limit: 4,
@@ -32,9 +32,9 @@ class RecentlyAddedPapers extends Component {
 
                 let statements = await getStatementsBySubject(paper.subject.id);
                 statements = statements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR || statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
-                
+
                 statements.reverse(); // order statements to ensure that the first author statements is ordered at the top
-       
+
                 for (var i = 0; i < statements.length; i++) {
                     if (statements[i].predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD) {
                         paperItem.researchField = statements[i].object.label;
