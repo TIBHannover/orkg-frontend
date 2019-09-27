@@ -204,7 +204,7 @@ class ViewPaper extends Component {
                                                 Help us to improve the ORKG and <a href="https://forms.gle/AgcUXuiuQzexqZmr6" target="_blank" rel="noopener noreferrer">fill out the online evaluation form</a>. Thank you!
                                             </Alert>
                                         : ''}
-                                    <div className="d-flex">
+                                    <div className="d-flex align-items-start">
                                         <h2 className="h4 mt-4 mb-3">{this.state.title ? this.state.title : <em>No title</em>}</h2>
 
                                         {/*<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4" style={{ marginLeft: 'auto' }}>
