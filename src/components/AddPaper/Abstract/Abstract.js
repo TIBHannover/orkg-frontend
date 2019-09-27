@@ -87,7 +87,7 @@ class Abstract extends Component {
         if (predicates.length > 0) {
           return predicates[0]; // Use the first predicate that match the label
         } else {
-          return createPredicate(classOption) // Create the predicate if it doesn't exist
+          return createPredicate(classOption.label) // Create the predicate if it doesn't exist
         }
       })
     })
