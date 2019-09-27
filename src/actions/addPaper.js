@@ -187,15 +187,15 @@ export const prefillStatements = ({ statements, resourceId }) => (dispatch) => {
     }*/
 };
 
-export const deleteContribution = (id) => (dispatch) => {
+export const deleteContribution = (data) => (dispatch) => {
   dispatch({
     type: type.DELETE_CONTRIBUTION,
     payload: {
-      id,
+      id: data.id,
     },
   });
 
-  dispatch(selectContribution({ id: null }));
+  dispatch(selectContribution(data.selectAfterDeletion));
 };
 
 export const selectContribution = (data) => (dispatch) => {
