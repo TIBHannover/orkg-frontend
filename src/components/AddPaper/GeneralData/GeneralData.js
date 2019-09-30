@@ -597,8 +597,14 @@ GeneralData.propTypes = {
     doi: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     authors: PropTypes.array.isRequired,
-    publicationMonth: PropTypes.number.isRequired,
-    publicationYear: PropTypes.number.isRequired,
+    publicationMonth: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ]).isRequired,
+    publicationYear: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ]).isRequired,
     showLookupTable: PropTypes.bool.isRequired,
     updateGeneralData: PropTypes.func.isRequired,
     nextStep: PropTypes.func.isRequired,
