@@ -97,6 +97,9 @@ class ViewPaper extends Component {
                 let publicationDOI = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
                 if (publicationDOI.length > 0) {
                     publicationDOI = publicationDOI[0].object.label;
+                    if (publicationDOI.includes('10.') && !publicationDOI.startsWith('10.')) {
+                        publicationDOI = publicationDOI.substring(publicationDOI.indexOf('10.'));
+                    }
                 } else {
                     publicationDOI = null;
                 }
@@ -201,7 +204,7 @@ class ViewPaper extends Component {
                                                 Help us to improve the ORKG and <a href="https://forms.gle/AgcUXuiuQzexqZmr6" target="_blank" rel="noopener noreferrer">fill out the online evaluation form</a>. Thank you!
                                             </Alert>
                                         : ''}
-                                    <div className="d-flex">
+                                    <div className="d-flex align-items-start">
                                         <h2 className="h4 mt-4 mb-3">{this.state.title ? this.state.title : <em>No title</em>}</h2>
 
                                         {/*<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4" style={{ marginLeft: 'auto' }}>
@@ -243,7 +246,7 @@ class ViewPaper extends Component {
                                         </span>
                                     ))}
                                     <br />
-                                    {this.state.publicationDOI && <div style={{ textAlign: 'right' }}><small >DOI : <i>{this.state.publicationDOI}</i></small></div>}
+                                    {this.state.publicationDOI && this.state.publicationDOI.startsWith('10.') && <div style={{ textAlign: 'right' }}><small>doi: <a href={`https://doi.org/${this.state.publicationDOI}`} target="_blank" rel="noopener noreferrer">{this.state.publicationDOI}</a></small></div>}
                                 </>
                             )}
                             {!this.state.loading_failed && !this.state.unfoundContribution && (

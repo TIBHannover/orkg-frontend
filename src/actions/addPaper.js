@@ -22,6 +22,12 @@ export const previousStep = () => (dispatch) => {
   });
 };
 
+export const blockNavigation = () => (dispatch) => {
+  dispatch({
+    type: type.ADD_PAPER_BLOCK_NAVIGATION,
+  });
+};
+
 export const updateResearchField = (data) => (dispatch) => {
   dispatch({
     type: type.UPDATE_RESEARCH_FIELD,
@@ -187,15 +193,15 @@ export const prefillStatements = ({ statements, resourceId }) => (dispatch) => {
     }*/
 };
 
-export const deleteContribution = (id) => (dispatch) => {
+export const deleteContribution = (data) => (dispatch) => {
   dispatch({
     type: type.DELETE_CONTRIBUTION,
     payload: {
-      id,
+      id: data.id,
     },
   });
 
-  dispatch(selectContribution({ id: null }));
+  dispatch(selectContribution(data.selectAfterDeletion));
 };
 
 export const selectContribution = (data) => (dispatch) => {
@@ -326,6 +332,10 @@ export const saveAddPaper = (data) => {
     dispatch({
       type: type.SAVE_ADD_PAPER,
       id: paper.id,
+    });
+
+    dispatch({
+      type: type.ADD_PAPER_UNBLOCK_NAVIGATION
     });
   };
 };

@@ -4,7 +4,7 @@ import { getStatementsBySubject } from '../../../network';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { updateResearchField, nextStep, previousStep, openTour, closeTour, updateTourCurrentStep } from '../../../actions/addPaper';
-import { CSSTransitionGroup } from 'react-transition-group'
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled, { withTheme } from 'styled-components';
 import { withCookies, Cookies } from 'react-cookie';
 import PropTypes from 'prop-types';
@@ -12,13 +12,7 @@ import Tour from 'reactour';
 import Tooltip from '../../Utils/Tooltip';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
-const ListGroupItemStyled = styled(ListGroupItem)`
-    transition: 0.3s background-color,  0.3s border-color;
-    padding-top: 0.5rem !important;
-    padding-bottom: 0.5rem !important;
-    cursor: pointer;
-    border-radius: 0 !important; //overwrite bootstrap border radius since a card is used to display the lists
-
+const ListGroupItemTransition = styled(CSSTransition)`
     &.fadeIn-enter, &.fadeIn-appear {
         opacity:0;
     }
@@ -27,6 +21,14 @@ const ListGroupItemStyled = styled(ListGroupItem)`
         opacity:1;
         transition:0.5s opacity;
     }
+`;
+
+const ListGroupItemStyled = styled(ListGroupItem)`
+    transition: 0.3s background-color,  0.3s border-color;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    cursor: pointer;
+    border-radius: 0 !important; //overwrite bootstrap border radius since a card is used to display the lists
 `;
 
 const FieldSelector = styled(Card)`
@@ -155,23 +157,22 @@ class ResearchField extends Component {
                         return fields.length > 0 ? (
                             <FieldSelector className="fieldSelector" key={level}>
                                 <ListGroup flush>
-                                    <CSSTransitionGroup
-                                        transitionName="fadeIn"
-                                        transitionEnterTimeout={500}
-                                        transitionLeave={false}
-                                        transitionAppear={true}
-                                        transitionAppearTimeout={500}
-                                    >
+                                    <TransitionGroup exit={false}>
                                         {fields.map((field) => (
-                                            <ListGroupItemStyled
+                                            <ListGroupItemTransition
                                                 key={field.id}
-                                                active={field.active}
-                                                onClick={() => this.handleFieldClick(field.id, level)}
+                                                classNames="fadeIn"
+                                                timeout={{ enter: 500, exit: 0 }}
                                             >
-                                                {field.label}
-                                            </ListGroupItemStyled>
+                                                <ListGroupItemStyled
+                                                    active={field.active}
+                                                    onClick={() => this.handleFieldClick(field.id, level)}
+                                                >
+                                                    {field.label}
+                                                </ListGroupItemStyled>
+                                            </ListGroupItemTransition>
                                         ))}
-                                    </CSSTransitionGroup>
+                                    </TransitionGroup>
                                 </ListGroup>
                             </FieldSelector>
                         ) : ''

@@ -4,7 +4,7 @@ import { renderRoutes } from 'react-router-config'
 import routes from './routes.config'
 import DefaultLayout from './components/Layout/DefaultLayout';
 import './assets/scss/CustomBootstrap.scss';
-import 'react-notifications/lib/notifications.css';
+import 'react-toastify/dist/ReactToastify.css';
 import { ConnectedRouter } from 'connected-react-router'
 import PropTypes from 'prop-types';
 import { withCookies } from 'react-cookie';
