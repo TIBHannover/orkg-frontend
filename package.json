@@ -2,7 +2,7 @@
     "name": "knowledge-graph",
     "version": "0.1.0",
     "private": true,
-    "homepage": "/orkg",
+    "homepage": "https://gitlab.com/TIBHannover/orkg/orkg-frontend",
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^1.2.24",
         "@fortawesome/free-regular-svg-icons": "^5.11.1",
@@ -65,7 +65,9 @@
         "build": "react-scripts build",
         "test": "react-scripts test --env=jsdom",
         "eject": "react-scripts eject",
-        "flow": "flow"
+        "flow": "flow",
+        "lint": "eslint 'src/**/*.js'",
+        "lint:fix": "eslint 'src/**/*.js' --fix"
     },
     "devDependencies": {
         "babel-preset-env": "^1.7.0",

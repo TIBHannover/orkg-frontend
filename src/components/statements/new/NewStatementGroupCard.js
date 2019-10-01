@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {Component} from 'react';
 import NewStatementObject from '../NewStatementObject';
 
@@ -30,7 +31,7 @@ export default class NewStatementGroupCard extends Component {
     };
 
     render() {
-        return <div className="statementGroupView new">
+        return (<div className="statementGroupView new">
             <div className="statementGroupView-property edit">
                 <div className="statementGroupView-property-label">
                     <a href={this.props.href}>{this.props.label}</a>
@@ -40,10 +41,11 @@ export default class NewStatementGroupCard extends Component {
                 <div className="statementListView-listView" ref="innerListView">
                     <NewStatementObject subjectId={this.props.subjectId} predicate={null}
                             onCancelClick={this.onCancelClick}
-                            onPublishSuccess={this.handlePublishSuccess}/>
+                            onPublishSuccess={this.handlePublishSuccess}
+                    />
                 </div>
             </div>
-        </div>
+                </div>)
     }
 
 }

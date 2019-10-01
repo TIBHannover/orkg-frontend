@@ -4,6 +4,7 @@ import { ToastContainer, Slide } from 'react-toastify';
 import { popupDelay } from '../../utils';
 import Header from './Header/Header';
 import Footer from './Footer';
+import PropTypes from 'prop-types';
 
 class DefaultLayout extends Component {
     constructor(props) {
@@ -37,5 +38,9 @@ class DefaultLayout extends Component {
         );
     }
 }
+
+DefaultLayout.propTypes = {
+    children: PropTypes.array.isRequired,
+};
 
 export default DefaultLayout;
