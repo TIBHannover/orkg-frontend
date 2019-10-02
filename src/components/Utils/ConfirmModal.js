@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import PropTypes from 'prop-types';
 
 // This is not used at the moment, requires some changes in order for it te work 
 class ConfirmModal extends Component {
@@ -32,5 +33,10 @@ class ConfirmModal extends Component {
         );
     }
 }
+
+ConfirmModal.propTypes = {
+    message: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+};
 
 export default ConfirmModal;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import ROUTES from '../../constants/routes.js';
 import { getStatementsByObject, getStatementsBySubject } from '../../network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

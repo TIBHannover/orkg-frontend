@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {Component} from 'react';
 import {guid} from '../../utils';
 
@@ -26,21 +27,26 @@ export default class ObjectTypeSelector extends Component {
 
     render() {
         const id = guid();
-        return <div className="snakView-typeSelector dropdown">
+        return (<div className="snakView-typeSelector dropdown">
             <button type="button" id={id} className="snakTypeSelector btn btn-primary dropdown-toggle"
                     data-toggle="dropdown" aria-disabled="false" aria-haspopup="true" aria-expanded="false"
-                    onClick={this.handleDropdownClick}>
-                <span className="fa fa-bars" title="type"/>
+                    onClick={this.handleDropdownClick}
+            >
+                <span className="fa fa-bars" title="type" />
             </button>
             {this.state.dropdownVisible && <div className="dropdown-menu" aria-labelledby={id}>
                 <button name="literal" className={'dropdown-item' + (this.props.objectType === 'literal' ? ' active' : '')}
-                        type="button" onClick={this.handleMenuItemClick} title="Plain text property">literal</button>
+                        type="button" onClick={this.handleMenuItemClick} title="Plain text property"
+                >literal
+                </button>
                 <button name="resource" className={'dropdown-item' + (this.props.objectType === 'resource' ? ' active' : '')}
                         type="button" onClick={this.handleMenuItemClick}
-                        title="Object property, which can have other properties">object</button>
-            </div>}
-            {this.state.dropdownVisible && <div className="overlay" onClick={this.closeOverlay}/>}
-        </div>
+                        title="Object property, which can have other properties"
+                >object
+                </button>
+                                           </div>}
+            {this.state.dropdownVisible && <div className="overlay" onClick={this.closeOverlay} />}
+                </div>)
     }
 
 }

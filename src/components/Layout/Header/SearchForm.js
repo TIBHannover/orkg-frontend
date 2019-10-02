@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import PropTypes from 'prop-types';
 
 class SearchForm extends Component {
 
@@ -37,7 +38,8 @@ class SearchForm extends Component {
             <form className="form-inline mt-2 mt-md-0 search-box" onSubmit={this.handleSubmit}>
                 <div className="input-group">
                     <input type="text" className="form-control" placeholder={this.props.placeholder} value={this.state.value} 
-                        onChange={this.handleChange} aria-label="Search ORKG" aria-describedby="button-main-search" />
+                        onChange={this.handleChange} aria-label="Search ORKG" aria-describedby="button-main-search"
+                    />
 
                     <div className="input-group-append">
                         <button id="button-main-search" className="btn btn-outline-secondary pl-2 pr-2 search-icon" type="submit">
@@ -49,5 +51,10 @@ class SearchForm extends Component {
         );
     }
 }
+
+SearchForm.propTypes = {
+    location: PropTypes.object.isRequired,
+    placeholder: PropTypes.string.isRequired,
+};
 
 export default withRouter(SearchForm);

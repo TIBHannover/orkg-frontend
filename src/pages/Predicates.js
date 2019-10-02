@@ -44,15 +44,16 @@ export default class Predicates extends Component {
 
         if (resultsPresent) {
             const predicates = this.state.allPredicates.map(
-                predicate => <ShortRecord key={predicate.id} header={predicate.id}
-                    href={`${process.env.PUBLIC_URL}/predicate/${encodeURIComponent(predicate.id)}`}>
+                predicate => (<ShortRecord key={predicate.id} header={predicate.id}
+                    href={`${process.env.PUBLIC_URL}/predicate/${encodeURIComponent(predicate.id)}`}
+                              >
                     {predicate.label}
-                </ShortRecord>
+                              </ShortRecord>)
             );
 
-            return <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">
+            return (<Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">
                 {predicates}
-            </Container>
+                    </Container>)
         } else {
             return null;
         }

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import EditToolbar from '../EditToolbar';
 import MainSnak from '../MainSnak';
@@ -153,7 +154,7 @@ export default class Statement extends Component {
     };
 
     render() {
-        return <div className="statementView">
+        return (<div className="statementView">
             <div className="statementView-rankSelector" />
             <div className="statementView-mainSnak-container">
                 <MainSnak ref="mainSnak" editing={this.state.editorState === 'edit'} id={this.id} text={this.getText()}
@@ -162,15 +163,17 @@ export default class Statement extends Component {
                     onObjectSelect={this.handleObjectSelect}
                     objectType={this.state.objectType}
                     onKeyUp={this.handleKeyUp}
-                    onTextAreaKeyUp={this.handleTextAreaKeyUp} />
+                    onTextAreaKeyUp={this.handleTextAreaKeyUp}
+                />
             </div>
             <span className="editToolbar-container toolbar-container" aria-disabled={false}>
                 <EditToolbar editorState={this.state.editorState} showRemoveButton={false} editEnabled={true}
                     onEditClick={this.onEditClick}
                     onPublishClick={this.handlePublishClick}
-                    onCancelClick={this.handleCancelClick} />
+                    onCancelClick={this.handleCancelClick}
+                />
             </span>
-        </div>
+                </div>)
     }
 
 };
