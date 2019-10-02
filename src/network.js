@@ -104,8 +104,8 @@ export const updateLiteral = (id, label) => {
   );
 };
 
-export const createResource = (label) => {
-  return submitPostRequest(resourcesUrl, { 'Content-Type': 'application/json' }, { label: label });
+export const createResource = (label, classes = []) => {
+  return submitPostRequest(resourcesUrl, { 'Content-Type': 'application/json' }, { label, classes });
 };
 
 export const createLiteral = (label) => {
