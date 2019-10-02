@@ -15,8 +15,6 @@ import PropTypes from 'prop-types';
 import ComparisonPopup from './ComparisonPopup';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import GraphViewModal from './GraphViewModal';
-import { withCookies, Cookies } from 'react-cookie';
-import { compose } from 'redux';
 import queryString from 'query-string';
 
 class ViewPaper extends Component {
@@ -194,16 +192,12 @@ class ViewPaper extends Component {
                             )}
                             {!this.state.loading && !this.state.loading_failed && (
                                 <>
-                                    {comingFromWizard ? // We can remove this when the TPDL 2019 experiment is over 
-                                        this.props.cookies && this.props.cookies.get('tpdlExperiment') ?
-                                            <Alert color="info">
-                                                Thank you for adding a paper! Please <a href="https://forms.gle/WpEJ9dvuTz95skW96" target="_blank" rel="noopener noreferrer">fill out the online evaluation form</a> to finish the experiment.
-                                            </Alert>
-                                            :
+                                    {comingFromWizard &&
+                                        (
                                             <Alert color="info">
                                                 Help us to improve the ORKG and <a href="https://forms.gle/AgcUXuiuQzexqZmr6" target="_blank" rel="noopener noreferrer">fill out the online evaluation form</a>. Thank you!
                                             </Alert>
-                                        : ''}
+                                        )}
                                     <div className="d-flex align-items-start">
                                         <h2 className="h4 mt-4 mb-3">{this.state.title ? this.state.title : <em>No title</em>}</h2>
 
@@ -292,7 +286,6 @@ ViewPaper.propTypes = {
         }).isRequired,
     }).isRequired,
     resetStatementBrowser: PropTypes.func.isRequired,
-    cookies: PropTypes.instanceOf(Cookies).isRequired,
     location: PropTypes.object.isRequired,
 }
 
@@ -304,10 +297,7 @@ const mapDispatchToProps = dispatch => ({
     resetStatementBrowser: () => dispatch(resetStatementBrowser()),
 });
 
-export default compose(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    ),
-    withCookies
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
 )(ViewPaper);
