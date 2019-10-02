@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {Component, Fragment} from 'react';
 import NewStatementGroupCard from './NewStatementGroupCard';
 import AddStatementButton from './AddStatementButton';
@@ -19,7 +20,8 @@ export default class NewStatementsSection extends Component {
             id: this.counter,
             card: <NewStatementGroupCard id={this.counter} key={this.counter} onUpdate={this.props.onUpdate}
                 subjectId={this.props.subjectId}
-                onCancelClick={this.onCancelClick}/>
+                onCancelClick={this.onCancelClick}
+                  />
         });
         this.counter++;
         this.forceUpdate();
@@ -35,13 +37,13 @@ export default class NewStatementsSection extends Component {
     };
 
     render () {
-        const addStatementLinkJsx = <AddStatementButton onClick={this.onAddNewStatementClick}/>;
+        const addStatementLinkJsx = <AddStatementButton onClick={this.onAddNewStatementClick} />;
         const newStatementBoxes = this.state.newStatementBoxes.map((statementBox) => statementBox.card);
 
-        return <Fragment>
+        return (<Fragment>
             {newStatementBoxes}
             {addStatementLinkJsx}
-        </Fragment>
+                </Fragment>)
     }
 
 }

@@ -47,12 +47,12 @@ export default class Resources extends Component {
 
         if (resultsPresent) {
             const resources = this.state.allResources.map(
-                resource => <ShortRecord key={resource.id} header={resource.label}
-                    href={`${process.env.PUBLIC_URL}/resource/${encodeURIComponent(resource.id)}`}>
-                </ShortRecord>
+                resource => (<ShortRecord key={resource.id} header={resource.label}
+                    href={`${process.env.PUBLIC_URL}/resource/${encodeURIComponent(resource.id)}`}
+                             />)
             );
 
-            return <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5">
+            return (<Container className="box pt-4 pb-4 pl-5 pr-5 mt-5">
                 <div className="addResource toolbar addToolbar-container">
                     <span className="toolbar-button toolbar-button-add">
                         <Link to={`${process.env.PUBLIC_URL}/addResource`}>
@@ -61,7 +61,7 @@ export default class Resources extends Component {
                     </span>
                 </div>
                 {resources}
-            </Container>
+                    </Container>)
         } else {
             return null;
         }

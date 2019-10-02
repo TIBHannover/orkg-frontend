@@ -391,7 +391,7 @@ class GeneralData extends Component {
                                                                     outline
                                                                     size="sm"
                                                                     onClick={() => this.handleDataEntryClick('manually')}
-                                                                >
+                                                            >
                                                                     Edit
                                                             </Button>
                                                             </h3>
