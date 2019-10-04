@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Alert } from 'reactstrap';
+import { Container, Button, Alert, UncontrolledAlert } from 'reactstrap';
 import { getStatementsBySubject, getResource } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -194,9 +194,9 @@ class ViewPaper extends Component {
                                 <>
                                     {comingFromWizard &&
                                         (
-                                            <Alert color="info">
+                                            <UncontrolledAlert color="info">
                                                 Help us to improve the ORKG and <a href="https://forms.gle/AgcUXuiuQzexqZmr6" target="_blank" rel="noopener noreferrer">fill out the online evaluation form</a>. Thank you!
-                                            </Alert>
+                                            </UncontrolledAlert>
                                         )}
                                     <div className="d-flex align-items-start">
                                         <h2 className="h4 mt-4 mb-3">{this.state.title ? this.state.title : <em>No title</em>}</h2>
