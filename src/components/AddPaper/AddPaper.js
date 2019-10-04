@@ -227,7 +227,7 @@ class AddPaper extends Component {
 AddPaper.propTypes = {
     currentStep: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
-    authors: PropTypes.string.isRequired,
+    authors: PropTypes.array.isRequired,
     isTourOpen: PropTypes.bool.isRequired,
     shouldBlockNavigation: PropTypes.bool.isRequired,
     resetStatementBrowser: PropTypes.func.isRequired,
