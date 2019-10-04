@@ -305,6 +305,19 @@ class Abstract extends Component {
     this.props.updateAbstract(event.target.value);
   };
 
+  stripLineBreaks = (event) => {
+    event.preventDefault();
+    var text = '';
+    if (event.clipboardData || event.originalEvent.clipboardData) {
+      text = (event.originalEvent || event).clipboardData.getData('text/plain');
+    } else if (window.clipboardData) {
+      text = window.clipboardData.getData('Text');
+    }
+    // strip line breaks
+    text = text.replace(/\r?\n|\r/g, ' ')
+    this.props.updateAbstract(text);
+  };
+
   requestCloseTour = () => {
     this.enableBody();
     if (this.props.cookies.get('taketourClosed')) {
@@ -441,6 +454,7 @@ class Abstract extends Component {
                     minRows={5}
                     value={this.props.abstract}
                     onChange={this.handleChange}
+                    onPaste={this.stripLineBreaks}
                   />
                   {!this.state.validation &&
                     <FormFeedback className="order-1">
