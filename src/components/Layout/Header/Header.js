@@ -4,7 +4,7 @@ import SearchForm from './SearchForm';
 import { ReactComponent as Logo } from '../../../assets/img/logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
-import { Link, NavLink as RouterNavLink } from "react-router-dom";
+import { Link, NavLink as RouterNavLink } from 'react-router-dom';
 import ROUTES from '../../../constants/routes.js';
 
 class Header extends Component {
