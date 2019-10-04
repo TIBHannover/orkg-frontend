@@ -240,27 +240,31 @@ export const updateResearchProblems = (data) => (dispatch) => {
   });
 };
 
-export const resourceFactory = (data, resourceId) => {
+export const getResourceObject = (data, resourceId) => {
+  // Make a list of new resources ids
+  let newResources = data.values.allIds.filter(valueId => !data.values.byId[valueId].isExistingValue).map(valueId => data.values.byId[valueId].resourceId);
   return data.resources.byId[resourceId].propertyIds.map(propertyId => {
     let property = data.properties.byId[propertyId];
     return {
+      // Map properties of resource
       [property.existingPredicateId ? property.existingPredicateId : `_${propertyId}`]: property.valueIds.map((valueId => {
         let value = data.values.byId[valueId];
         if (value.type === 'literal' && !value.isExistingValue) {
           return {
-            '@id': value.id,
             'text': value.label,
           }
         } else {
           if (!value.isExistingValue) {
+            let newResources = {}
+            newResources[value.resourceId] = value.resourceId;
             return {
               '@temp': `_${value.resourceId}`,
               'label': value.label,
-              'values': { ...Object.assign({}, ...resourceFactory(data, value.resourceId)) }
+              'values': Object.assign({}, ...getResourceObject(data, value.resourceId))
             }
           } else {
             return {
-              '@id': value.resourceId,
+              '@id': newResources.includes(value.resourceId) ? `_${value.resourceId}` : value.resourceId,
             }
           }
         }
@@ -277,19 +281,14 @@ export const saveAddPaper = (data) => {
     const researchProblemPredicate = process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM;
 
     let paperObj = {
-      'predicates': data.properties.allIds.filter(propertyId => {
-        let property = data.properties.byId[propertyId];
-        if (property.existingPredicateId) {
-          return false;
-        } else {
-          return true;
-        }
-      }).map(propertyId => {
+      // Set new predicates label and temp ID
+      'predicates': data.properties.allIds.filter(propertyId => !data.properties.byId[propertyId].existingPredicateId).map(propertyId => {
         let property = data.properties.byId[propertyId];
         return {
           [property.label]: `_${propertyId}`
         }
       }),
+      // Set the paper metadata
       'paper': {
         'title': data.title,
         'doi': data.doi,
@@ -297,12 +296,13 @@ export const saveAddPaper = (data) => {
         'publicationMonth': data.publicationMonth,
         'publicationYear': data.publicationYear,
         'researchField': data.selectedResearchField,
+        // Set the contributions data
         'contributions': data.contributions.allIds.map(c => {
           let contribution = data.contributions.byId[c];
           let researhProblem = {
             [researchProblemPredicate]: contribution.researchProblems.map(rp => {
               if (rp.hasOwnProperty('_class') && rp._class === 'resource') {
-                return { label: rp.label, '@id': rp.id }
+                return { '@id': rp.id }
               } else {
                 return { label: rp.label }
               }
@@ -310,7 +310,7 @@ export const saveAddPaper = (data) => {
           }
           return {
             'name': contribution.label,
-            'values': Object.assign({}, researhProblem, ...resourceFactory(data, contribution.resourceId))
+            'values': Object.assign({}, researhProblem, ...getResourceObject(data, contribution.resourceId))
           }
         })
       }
