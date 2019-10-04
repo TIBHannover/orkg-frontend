@@ -1,6 +1,7 @@
 import * as network from '../network';
 import * as type from './types.js';
 import { guid } from '../utils';
+import { mergeWith, isArray } from 'lodash';
 import { createResource, selectResource, createProperty, createValue } from './statementBrowser';
 
 export const updateGeneralData = (data) => (dispatch) => {
@@ -240,10 +241,17 @@ export const updateResearchProblems = (data) => (dispatch) => {
   });
 };
 
+// The function to customize merging objects (to handle using the same existing predicate twice in the same ressource)
+function customizer(objValue, srcValue) {
+  if (isArray(objValue)) {
+    return objValue.concat(srcValue);
+  }
+}
+
 export const getResourceObject = (data, resourceId) => {
   // Make a list of new resources ids
   let newResources = data.values.allIds.filter(valueId => !data.values.byId[valueId].isExistingValue).map(valueId => data.values.byId[valueId].resourceId);
-  return data.resources.byId[resourceId].propertyIds.map(propertyId => {
+  return mergeWith({}, ...data.resources.byId[resourceId].propertyIds.map(propertyId => {
     let property = data.properties.byId[propertyId];
     return {
       // Map properties of resource
@@ -260,7 +268,7 @@ export const getResourceObject = (data, resourceId) => {
             return {
               '@temp': `_${value.resourceId}`,
               'label': value.label,
-              'values': Object.assign({}, ...getResourceObject(data, value.resourceId))
+              'values': Object.assign({}, getResourceObject(data, value.resourceId))
             }
           } else {
             return {
@@ -270,7 +278,7 @@ export const getResourceObject = (data, resourceId) => {
         }
       }))
     }
-  })
+  }), customizer)
 }
 
 // Middleware function to transform frontend data to backend format
@@ -310,7 +318,7 @@ export const saveAddPaper = (data) => {
           }
           return {
             'name': contribution.label,
-            'values': Object.assign({}, researhProblem, ...getResourceObject(data, contribution.resourceId))
+            'values': Object.assign({}, researhProblem, getResourceObject(data, contribution.resourceId))
           }
         })
       }
