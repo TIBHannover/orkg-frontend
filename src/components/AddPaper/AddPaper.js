@@ -182,6 +182,16 @@ class AddPaper extends Component {
                     <div className="clearfix" />
                 </Container>
                 <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
+                    {this.props.currentStep > 1 && (
+                        <div>
+                            <b>Title: </b>{this.props.title}
+                            {this.props.authors.length > 0 && (
+                                <small><br />Authors: <i>{this.props.authors.map(author => author.label).join(', ')}</i></small>
+                            )}
+                            <hr />
+                        </div>
+                    )}
+
                     <ProgressBar currentStep={currentStep} />
 
                     <hr />
@@ -216,6 +226,8 @@ class AddPaper extends Component {
 
 AddPaper.propTypes = {
     currentStep: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    authors: PropTypes.string.isRequired,
     isTourOpen: PropTypes.bool.isRequired,
     shouldBlockNavigation: PropTypes.bool.isRequired,
     resetStatementBrowser: PropTypes.func.isRequired,
@@ -229,6 +241,8 @@ AddPaper.propTypes = {
 const mapStateToProps = (state) => ({
     currentStep: state.addPaper.currentStep,
     isTourOpen: state.addPaper.isTourOpen,
+    title: state.addPaper.title,
+    authors: state.addPaper.authors,
     shouldBlockNavigation: state.addPaper.shouldBlockNavigation,
     paperNewResourceId: state.addPaper.paperNewResourceId,
 });
