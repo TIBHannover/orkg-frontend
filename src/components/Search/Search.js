@@ -11,17 +11,15 @@ import { reverse } from 'named-urls';
 import dotProp from 'dot-prop-immutable';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
+import ContentLoader from 'react-content-loader';
 
-//loading indicator
+//TODO: split multiple components
 class Search extends Component {
 
     constructor(props) {
         super(props);
 
-        let value = '';
-        if (this.props.location.pathname.includes('/search/')) {
-            value = this.props.location.pathname.substring(this.props.location.pathname.lastIndexOf('/') + 1);
-        }
+        let value = this.props.match.params.searchTerm;
 
         // use a map so we have an ordered object
         this.filters = new Map([
@@ -55,35 +53,50 @@ class Search extends Component {
             selectedFilters,
             resources: [],
             papers: [],
+            loading: false,
         }
+    }
 
-        this.searchResources();
+    componentDidMount() {
+        document.title = 'Search - ORKG';
+        this.searchResources(this.state.value);
+    }
 
+    componentDidUpdate = (prevProps, prevState) => {
+        if (this.props.match.params.searchTerm !== prevProps.match.params.searchTerm) {
+            this.setState({
+                value: this.props.match.params.searchTerm,
+            })
+            this.searchResources(this.props.match.params.searchTerm);
+        }
     }
 
     handleChange(event) {
         this.setState({ value: event.target.value });
     }
 
-    searchResources = async () => {
+    searchResources = async (searchQuery) => {
+        if (searchQuery.length === 0) {
+            return;
+        }
+
         this.setState({
             loading: true,
         });
 
-        let resources = await submitGetRequest(`${url}resources/?q=${this.state.value}`);
+        let resources = await submitGetRequest(`${url}resources/?q=${searchQuery}`);
 
         // add resource class when there is no class for a resource
         resources.forEach((resource, index) => {
             resources[index].classes = resources[index].classes.length > 0 ? resources[index].classes : ['resource'];
         });
 
-        const predicates = await submitGetRequest(`${url}predicates/?q=${this.state.value}`);
+        const predicates = await submitGetRequest(`${url}predicates/?q=${searchQuery}`);
 
         // add resource class when there is no class for a resource
         predicates.forEach((predicate, index) => {
             predicates[index].classes = ['predicate'];
         });
-        console.log(predicates);
 
         resources = resources.concat(predicates);
 
@@ -102,7 +115,7 @@ class Search extends Component {
         } else {
             selectedFilters = [...this.state.selectedFilters, filterClass];
         }
-        
+
         this.props.history.push(reverse(ROUTES.SEARCH, { searchTerm: this.state.value }) + '?types=' + selectedFilters.join(','));
 
         this.setState({
@@ -139,17 +152,17 @@ class Search extends Component {
                 break;
             }
             case 'resource': {
-                link = '/resource/' + resourceId;
+                link = '/resource/' + resourceId; //TODO: replace this with a better resource view
                 break;
             }
             case 'predicate': {
-                link = '/predicate/' + resourceId;
+                link = '/predicate/' + resourceId; // TODO: replace with better predicate view
                 break;
             }
             default: {
                 link = '';
                 break;
-            }       
+            }
         }
 
         return link;
@@ -181,6 +194,12 @@ class Search extends Component {
         return types;
     }
 
+    handleSubmit = (e) => {
+        this.props.history.push(reverse(ROUTES.SEARCH, { searchTerm: this.state.value }) + '?types=' + this.state.selectedFilters.join(','));
+
+        e.preventDefault();
+    }
+
     render() {
         return (
             <div>
@@ -191,7 +210,7 @@ class Search extends Component {
                     <Row>
                         <Col className="col-sm-4 px-0">
                             <div className="box mr-4 p-4 h-100">
-                                <Form onSubmit={null}>
+                                <Form onSubmit={this.handleSubmit}>
                                     <Label for="searchQuery">Search query</Label>
                                     <InputGroup>
                                         <Input
@@ -203,7 +222,7 @@ class Search extends Component {
                                         />
 
                                         <InputGroupAddon addonType="append">
-                                            <Button color="secondary" className="pl-2 pr-2"><FontAwesomeIcon icon={faSearch} /></Button>
+                                            <Button type="submit" color="secondary" className="pl-2 pr-2"><FontAwesomeIcon icon={faSearch} /></Button>
                                         </InputGroupAddon>
                                     </InputGroup>
                                     <hr className="mt-4 mb-3" />
@@ -214,7 +233,7 @@ class Search extends Component {
                                         <CustomInput
                                             type="checkbox"
                                             id={'filter' + filter.class}
-                                            label={<span>{filter.label} <Badge color="light" className="pl-2 pr-2">{this.getFilterAmount(filter.class)}</Badge></span>}
+                                            label={<span>{filter.label} {!this.state.loading && <Badge color="light" className="pl-2 pr-2">{this.getFilterAmount(filter.class)}</Badge>}</span>}
                                             onChange={() => this.toggleFilter(key)}
                                             checked={this.state.selectedFilters.includes(key)}
                                         />
@@ -225,18 +244,41 @@ class Search extends Component {
                         </Col>
                         <Col className="col-sm-8 px-0">
                             <div className="box p-4 h-100">
-                                {Array.from(this.filters, ([key, filter]) => {
-                                    if ((this.state.selectedFilters.length > 0 && !this.state.selectedFilters.includes(key)) || this.getFilterAmount(filter.class) === 0) {
-                                        return <></>;
-                                    }
+                                {this.state.loading ? (
+                                    <ContentLoader
+                                        height={210}
+                                        speed={2}
+                                        primaryColor="#f3f3f3"
+                                        secondaryColor="#ecebeb"
+                                    >
+                                        <rect x="0" y="8" width="50" height="15" />
+                                        <rect x="0" y="25" width="100%" height="15" />
+                                        <rect x="0" y="42" width="100%" height="15" />
+                                        <rect x="0" y="59" width="100%" height="15" />
+                                        <rect x="0" y="76" width="100%" height="15" />
 
-                                    return (
-                                        <div>
-                                            <h2 className="h5">{filter.label}</h2>
-                                            {this.filteredResults(filter.class)}
-                                        </div>
-                                    );
-                                })}
+                                        <rect x="0" y={8 + 100} width="50" height="15" />
+                                        <rect x="0" y={25 + 100} width="100%" height="15" />
+                                        <rect x="0" y={42 + 100} width="100%" height="15" />
+                                        <rect x="0" y={59 + 100} width="100%" height="15" />
+                                        <rect x="0" y={76 + 100} width="100%" height="15" />
+                                    </ContentLoader>
+                                )
+                                :
+                                (
+                                    Array.from(this.filters, ([key, filter]) => {
+                                        if ((this.state.selectedFilters.length > 0 && !this.state.selectedFilters.includes(key)) || this.getFilterAmount(filter.class) === 0) {
+                                            return <></>;
+                                        }
+
+                                        return (
+                                            <div>
+                                                <h2 className="h5">{filter.label}</h2>
+                                                {this.filteredResults(filter.class)}
+                                            </div>
+                                        );
+                                    })
+                                )}
                             </div>
                         </Col>
                     </Row>
@@ -249,6 +291,11 @@ class Search extends Component {
 Search.propTypes = {
     location: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            searchTerm: PropTypes.string,
+        }).isRequired,
+    }).isRequired,
 }
 
 export default withRouter(Search);
