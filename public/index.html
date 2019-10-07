@@ -23,7 +23,6 @@
         <title>Open Research Knowledge Graph</title>
     </head>
     <body>
-        <!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css"></link>-->
         <noscript>
             You need to enable JavaScript to run this app.
         </noscript>
@@ -38,18 +37,5 @@
             To begin the development, run `npm start` or `yarn start`.
             To create a production bundle, use `npm run build` or `yarn build`.
         -->
-        <script type="text/javascript">
-            const mouseflow_wid = '%REACT_APP_MOUSEFLOW_WEBSITE_ID%';
-            if (mouseflow_wid && !mouseflow_wid.includes('REACT_APP_MOUSEFLOW_WEBSITE_ID')) {
-                window._mfq = window._mfq || [];
-                (function() {
-                    var mf = document.createElement('script');
-                    mf.type = 'text/javascript';
-                    mf.async = true;
-                    mf.src = '//cdn.mouseflow.com/projects/' + mouseflow_wid + '.js';
-                    document.getElementsByTagName('head')[0].appendChild(mf);
-                })();
-            }
-        </script>
     </body>
 </html>
