@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { Container, Row, Col, Input, InputGroup, InputGroupAddon, Button, Form, Label, ListGroup, ListGroupItem, Badge } from 'reactstrap';
-import { CustomInput } from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 import { submitGetRequest, url } from '../../network';
 import ROUTES from '../../constants/routes.js';
-import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import dotProp from 'dot-prop-immutable';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
-import ContentLoader from 'react-content-loader';
+import Results from './Results';
+import Filters from './Filters';
 
-//TODO: split multiple components
 class Search extends Component {
 
     constructor(props) {
@@ -123,53 +119,12 @@ class Search extends Component {
         });
     }
 
-    filteredResults = (filterClass) => {
-        return (
-            <ListGroup className="mb-3">
-                {this.state.resources.map((resource) => {
-                    if (!resource.classes.includes(filterClass)) {
-                        return <></>;
-                    }
-
-                    return (
-                        <ListGroupItem action className="pt-1 pb-1">
-                            <Link to={this.getResourceLink(filterClass, resource.id)}>
-                                {resource.label}
-                            </Link>
-                        </ListGroupItem>
-                    )
-                })}
-            </ListGroup>
-        );
-    }
-
-    getResourceLink = (filterClass, resourceId) => {
-        let link = '';
-
-        switch (filterClass) {
-            case process.env.REACT_APP_CLASSES_PAPER: {
-                link = reverse(ROUTES.VIEW_PAPER, { resourceId: resourceId });
-                break;
-            }
-            case 'resource': {
-                link = '/resource/' + resourceId; //TODO: replace this with a better resource view
-                break;
-            }
-            case 'predicate': {
-                link = '/predicate/' + resourceId; // TODO: replace with better predicate view
-                break;
-            }
-            default: {
-                link = '';
-                break;
-            }
-        }
-
-        return link;
-    }
-
-    getFilterAmount = (filterClass) => {
+    countFilteredResources = (filterClass) => {
         return this.state.resources.filter((resource) => resource.classes.includes(filterClass)).length;
+    }
+
+    countResources = () => {
+        return this.state.resources.length;
     }
 
     handleInputChange = (e) => {
@@ -194,12 +149,6 @@ class Search extends Component {
         return types;
     }
 
-    handleSubmit = (e) => {
-        this.props.history.push(reverse(ROUTES.SEARCH, { searchTerm: this.state.value }) + '?types=' + this.state.selectedFilters.join(','));
-
-        e.preventDefault();
-    }
-
     render() {
         return (
             <div>
@@ -210,75 +159,28 @@ class Search extends Component {
                     <Row>
                         <Col className="col-sm-4 px-0">
                             <div className="box mr-4 p-4 h-100">
-                                <Form onSubmit={this.handleSubmit}>
-                                    <Label for="searchQuery">Search query</Label>
-                                    <InputGroup>
-                                        <Input
-                                            value={this.state.value}
-                                            onChange={this.handleInputChange}
-                                            aria-label="Search ORKG"
-                                            id="searchQuery"
-                                            name="value"
-                                        />
-
-                                        <InputGroupAddon addonType="append">
-                                            <Button type="submit" color="secondary" className="pl-2 pr-2"><FontAwesomeIcon icon={faSearch} /></Button>
-                                        </InputGroupAddon>
-                                    </InputGroup>
-                                    <hr className="mt-4 mb-3" />
-
-                                    <Label>Type</Label>
-
-                                    {Array.from(this.filters, ([key, filter]) => (
-                                        <CustomInput
-                                            type="checkbox"
-                                            id={'filter' + filter.class}
-                                            label={<span>{filter.label} {!this.state.loading && <Badge color="light" className="pl-2 pr-2">{this.getFilterAmount(filter.class)}</Badge>}</span>}
-                                            onChange={() => this.toggleFilter(key)}
-                                            checked={this.state.selectedFilters.includes(key)}
-                                        />
-                                    )
-                                    )}
-                                </Form>
+                                <Filters 
+                                    loading={this.state.loading}
+                                    value={this.state.value}
+                                    countFilteredResources={this.countFilteredResources}
+                                    filters={this.filters}
+                                    selectedFilters={this.state.selectedFilters}
+                                    resources={this.state.resources}
+                                    handleInputChange={this.handleInputChange}
+                                    toggleFilter={this.toggleFilter}
+                                />
                             </div>
                         </Col>
                         <Col className="col-sm-8 px-0">
                             <div className="box p-4 h-100">
-                                {this.state.loading ? (
-                                    <ContentLoader
-                                        height={210}
-                                        speed={2}
-                                        primaryColor="#f3f3f3"
-                                        secondaryColor="#ecebeb"
-                                    >
-                                        <rect x="0" y="8" width="50" height="15" />
-                                        <rect x="0" y="25" width="100%" height="15" />
-                                        <rect x="0" y="42" width="100%" height="15" />
-                                        <rect x="0" y="59" width="100%" height="15" />
-                                        <rect x="0" y="76" width="100%" height="15" />
-
-                                        <rect x="0" y={8 + 100} width="50" height="15" />
-                                        <rect x="0" y={25 + 100} width="100%" height="15" />
-                                        <rect x="0" y={42 + 100} width="100%" height="15" />
-                                        <rect x="0" y={59 + 100} width="100%" height="15" />
-                                        <rect x="0" y={76 + 100} width="100%" height="15" />
-                                    </ContentLoader>
-                                )
-                                :
-                                (
-                                    Array.from(this.filters, ([key, filter]) => {
-                                        if ((this.state.selectedFilters.length > 0 && !this.state.selectedFilters.includes(key)) || this.getFilterAmount(filter.class) === 0) {
-                                            return <></>;
-                                        }
-
-                                        return (
-                                            <div>
-                                                <h2 className="h5">{filter.label}</h2>
-                                                {this.filteredResults(filter.class)}
-                                            </div>
-                                        );
-                                    })
-                                )}
+                                <Results 
+                                    loading={this.state.loading}
+                                    countResources={this.countResources}
+                                    countFilteredResources={this.countFilteredResources}
+                                    filters={this.filters}
+                                    selectedFilters={this.state.selectedFilters}
+                                    resources={this.state.resources}
+                                />
                             </div>
                         </Col>
                     </Row>
