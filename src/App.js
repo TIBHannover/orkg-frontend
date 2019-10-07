@@ -24,20 +24,6 @@ class App extends Component {
             this.state.showBrowserWarning = true;
         }
     }
-    componentDidMount() {
-        // Listen for changes to the current location.
-        this.unlisten = this.props.history.listen((location, action) => {
-            // The _mfq object is the entry point for all communication with the Mouseflow tracking script.
-            // We push a key-value pair into this array each time the routing changes.
-            window._mfq = window._mfq || [];
-            window._mfq.push(['newPageView', location.pathname]);
-        });
-    }
-
-    componentWillUnmount() {
-        // Unlisten when the component lifecycle ends.
-        this.unlisten();
-    }
 
     render() {
 

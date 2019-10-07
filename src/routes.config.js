@@ -18,7 +18,6 @@ import ResearchProblem from './components/ResearchProblem/ResearchProblem'
 import Resources from './pages/Resources'
 import SearchResults from './components/Search/Search'
 import ViewPaper from './components/ViewPaper/ViewPaper';
-import TpdlExperiment from './components/Experiments/Tpdl';
 
 const routes = [
     {
@@ -69,10 +68,10 @@ const routes = [
     },
     {
         /* TODO: Remove this route (it's temporarily backward compatibility for moving contributions ids from view args to query string) */
-        path: ROUTES.COMPARISON+'*',
+        path: ROUTES.COMPARISON + '*',
         exact: true,
         // eslint-disable-next-line react/prop-types
-        component: ({ match, location }) => <Redirect to={`${ROUTES.COMPARISON}?contributions=${match.params[0].split('/').join(',')}${location.search ? '&'+(location.search.charAt(0) === '?' ? location.search.substr(1) : location.search) : ''}`} />
+        component: ({ match, location }) => <Redirect to={`${ROUTES.COMPARISON}?contributions=${match.params[0].split('/').join(',')}${location.search ? '&' + (location.search.charAt(0) === '?' ? location.search.substr(1) : location.search) : ''}`} />
     },
     {
         path: ROUTES.PAPERS,
@@ -112,7 +111,7 @@ const routes = [
     },
     {
         path: ROUTES.TPDL,
-        component: TpdlExperiment
+        component: () => <Redirect to={'/'} />
     },
     /* Don't add routes below this line */
     {
