@@ -189,6 +189,25 @@ export const getStatementsByObject = async ({ id, order = 'asc', limit = null })
   return statements;
 };
 
+export const getResourcesByClass = async ({ id, order = 'asc', limit = null }) => {
+  let resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/`);
+
+  // TODO: replace sorting and limit by backend functionalities when ready
+  resources.sort((a, b) => {
+    if (order === 'asc') {
+      return parseInt(a.id.replace('R', '')) - parseInt(b.id.replace('R', ''));
+    } else {
+      return parseInt(b.id.replace('R', '')) - parseInt(a.id.replace('R', ''));
+    }
+  });
+
+  if (limit) {
+    resources = resources.slice(0, limit);
+  }
+
+  return resources;
+};
+
 export const getStatementsByPredicate = (id) => {
   return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/`);
 };

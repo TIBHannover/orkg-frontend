@@ -252,14 +252,9 @@ export const saveAddPaper = (data) => {
     const researchFieldPredicate = process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD;
     const contributionPredicate = process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION;
     const researchProblemPredicate = process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM;
-    const isAPredicate = process.env.REACT_APP_PREDICATES_IS_A;
-    const paperResource = process.env.REACT_APP_RESOURCE_TYPES_PAPER;
 
     // title
     let paper = await network.createResource(data.title, [process.env.REACT_APP_CLASSES_PAPER]);
-
-    // set resource type to paper
-    await network.createResourceStatement(paper.id, isAPredicate, paperResource);
 
     // DOI
     if (data.doi) {
