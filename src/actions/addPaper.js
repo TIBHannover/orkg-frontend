@@ -256,7 +256,7 @@ export const saveAddPaper = (data) => {
     const paperResource = process.env.REACT_APP_RESOURCE_TYPES_PAPER;
 
     // title
-    let paper = await network.createResource(data.title, ['C0']);
+    let paper = await network.createResource(data.title, [process.env.REACT_APP_CLASSES_PAPER]);
 
     // set resource type to paper
     await network.createResourceStatement(paper.id, isAPredicate, paperResource);

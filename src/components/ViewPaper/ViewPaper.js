@@ -54,10 +54,8 @@ class ViewPaper extends Component {
         getResource(resourceId).then((paperResource) => {
             getStatementsBySubject(resourceId).then((paperStatements) => {
                 // check if type is paper
-                let hasTypePaper = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_IS_A && statement.object.id === process.env.REACT_APP_RESOURCE_TYPES_PAPER);
-
-                if (hasTypePaper.length === 0) {
-                    throw new Error('The requested resource is not of type "paper"');
+                if (!paperResource.classes.includes(process.env.REACT_APP_CLASSES_PAPER)) {
+                    throw new Error(`The requested resource is not of class "${process.env.REACT_APP_CLASSES_PAPER}"`);
                 }
 
                 // research field
