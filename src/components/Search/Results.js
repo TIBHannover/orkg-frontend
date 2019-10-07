@@ -11,13 +11,13 @@ const Results = (props) => {
     const filteredResults = (filterClass) => {
         return (
             <ListGroup className="mb-3">
-                {props.resources.map((resource) => {
+                {props.resources.map((resource, index) => {
                     if (!resource.classes.includes(filterClass)) {
-                        return <></>;
+                        return [];
                     }
 
                     return (
-                        <ListGroupItem action className="pt-1 pb-1">
+                        <ListGroupItem action key={`result-${index}`} className="pt-1 pb-1">
                             <Link to={getResourceLink(filterClass, resource.id)}>
                                 {resource.label}
                             </Link>
@@ -82,11 +82,11 @@ const Results = (props) => {
 
             {!props.loading && Array.from(props.filters, ([key, filter]) => {
                 if ((props.selectedFilters.length > 0 && !props.selectedFilters.includes(key)) || props.countFilteredResources(filter.class) === 0) {
-                    return <></>;
+                    return [];
                 }
 
                 return (
-                    <div>
+                    <div key={`results-${key}`}>
                         <h2 className="h5">{filter.label}</h2>
                         {filteredResults(filter.class)}
                     </div>

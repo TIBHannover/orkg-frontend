@@ -124,7 +124,18 @@ class Search extends Component {
     }
 
     countResources = () => {
-        return this.state.resources.length;
+        let count = 0;
+
+        if (this.state.selectedFilters.length > 0) {
+            // count only the resources within the filters
+            count = this.state.selectedFilters.reduce((previous, currentValue) => {
+                return previous + this.countFilteredResources(this.filters.get(currentValue).class)
+            }, 0);
+        } else {
+            count = this.state.resources.length;
+        }
+
+        return count;
     }
 
     handleInputChange = (e) => {
