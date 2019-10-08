@@ -57,7 +57,17 @@ class RDFDataCube extends Component {
             let cspecifications = await getStatementsBySubject(dsd.id).then(s_dataset => s_dataset.filter(s => s.object.classes.includes(classes['qb:ComponentSpecification']))).then(css => css.map(cs => cs.object))
             // Fetch Statements of each component specification
             cspecifications = cspecifications.map((cs) => {
-                return getStatementsBySubject(cs.id).then(css => css.map(cs => cs.object))
+                return getStatementsBySubject(cs.id).then(css => {
+                    // Get order of component specification
+                    let order = css.filter((statement) => (statement.predicate.label === 'order'));
+                    if (order.length > 0) {
+                        order = order[0].object.label
+                    } else {
+                        order = css[0].subject.id
+                    }
+                    css = css.map(cs => ({ ...cs.object, order: order }))
+                    return css;
+                })
             })
             Promise.all(cspecifications).then(cso => cso.flat(1)).then(cso => {
                 // Get Dimensions and Measures
@@ -70,7 +80,7 @@ class RDFDataCube extends Component {
                 return { sMeasures, sDimensions, sAttributes };
             }).then(({ sMeasures, sDimensions, sAttributes }) => {
                 // Observations (fetch statements of the dataset ressource by object)
-
+                let allDim = Object.assign({}, sDimensions, sMeasures, sAttributes);
                 getStatementsByObject({
                     id: this.props.resourceId,
                     order: 'desc',
@@ -87,9 +97,9 @@ class RDFDataCube extends Component {
                             // Attributes
                             let os_a = observationStatements.filter((statement) => statement.predicate.label in sAttributes);
                             let ob = {
-                                // OLAP table data is in the format data[pointIndex][fieldIndex], sort by predicate label is to keep same order in Table fields
+                                // OLAP table data is in the format data[pointIndex][fieldIndex], sort by order or predicate label is to keep same order in Table fields
                                 data: [...os_m
-                                    .sort((first, second) => first.predicate.label > second.predicate.label)
+                                    .sort((first, second) => allDim[first.predicate.label].order > allDim[second.predicate.label].order)
                                     .map(o_m => {
                                         return {
                                             id: observation.subject.id,
@@ -98,9 +108,9 @@ class RDFDataCube extends Component {
                                         }
                                     }
                                     )],
-                                point: [ // sort by predicate label because statements are not ordered by default
-                                    ...os_d.sort((first, second) => first.predicate.label > second.predicate.label).map(o_d => o_d.object.id),
-                                    ...os_a.sort((first, second) => first.predicate.label > second.predicate.label).map(o_a => o_a.object.id)
+                                point: [ // sort by order or predicate label because statements are not ordered by default
+                                    ...os_d.sort((first, second) => allDim[first.predicate.label].order > allDim[second.predicate.label].order).map(o_d => o_d.object.id),
+                                    ...os_a.sort((first, second) => allDim[first.predicate.label].order > allDim[second.predicate.label].order).map(o_a => o_a.object.id)
                                 ],
                                 point_label: [
                                     ...os_d.map(o_d => { return { id: o_d.object.id, label: o_d.object.label, type: o_d.object._class } }),
@@ -114,8 +124,8 @@ class RDFDataCube extends Component {
                     return Promise.all(observations_data).then((observations) => {
                         try {
                             const table = new CUBE.model.Table({
-                                dimensions: [...Object.keys(sDimensions).sort(), ...Object.keys(sAttributes).sort()],
-                                fields: Object.keys(sMeasures).sort(),
+                                dimensions: [...Object.keys(sDimensions).sort((first, second) => allDim[first].order > allDim[second].order), ...Object.keys(sAttributes).sort((first, second) => allDim[first].order > allDim[second].order)],
+                                fields: Object.keys(sMeasures).sort((first, second) => allDim[first].order > allDim[second].order),
                                 points: observations.map((o) => o.point),
                                 data: observations.map((o) => o.data)
                             })
@@ -126,6 +136,7 @@ class RDFDataCube extends Component {
                             this.setState({ measures: sMeasures, dimensions: sDimensions, attributes: sAttributes, datacube: table, resources: resources, isDatacubeLoading: false, isDatacubeFailedLoading: false });
                         }
                         catch (error) {
+                            console.log(error);
                             this.setState({ isDatacubeLoading: false, isDatacubeFailedLoading: true });
                         }
                     })
@@ -167,7 +178,7 @@ class RDFDataCube extends Component {
                 <ModalHeader toggle={this.props.toggleModal}>View dataset: {this.props.resourceLabel}</ModalHeader>
                 <ModalBody>
 
-                    {!this.state.isDatacubeLoading && (
+                    {!this.state.isDatacubeLoading && !this.state.isDatacubeFailedLoading && (
                         <>
                             <ReactTable
                                 defaultPageSize={10}
@@ -186,6 +197,34 @@ class RDFDataCube extends Component {
                                             id: h,
                                             Header: columns[h].label,
                                             accessor: h,
+                                            sortMethod: (a, b, desc) => {
+                                                // use the label to compare
+                                                a = a.label;
+                                                b = b.label;
+                                                // force null and undefined to the bottom
+                                                a = a === null || a === undefined ? -Infinity : a
+                                                b = b === null || b === undefined ? -Infinity : b
+                                                // check if a and b are numbers (contains only digits)
+                                                var aisnum = /^\d+$/.test(a);
+                                                var bisnum = /^\d+$/.test(b);
+                                                if (aisnum && bisnum) {
+                                                    a = parseInt(a);
+                                                    b = parseInt(b);
+                                                } else {
+                                                    // force any string values to lowercase
+                                                    a = typeof a === 'string' ? a.toLowerCase() : a
+                                                    b = typeof b === 'string' ? b.toLowerCase() : b
+                                                }
+                                                // Return either 1 or -1 to indicate a sort priority
+                                                if (a > b) {
+                                                    return 1
+                                                }
+                                                if (a < b) {
+                                                    return -1
+                                                }
+                                                // returning 0 or undefined will use any subsequent column sorting methods or the row index as a tiebreaker
+                                                return 0
+                                            },
                                             Cell: props => <span onClick={() => this.handleCellClick(props.value)}>{props.value.label}</span>, // Custom cell components!
                                             Filter: ({ filter, onChange }) => (
                                                 <input
@@ -198,6 +237,11 @@ class RDFDataCube extends Component {
                                             )
                                         }
                                     })}
+                                defaultSorted={(this.state.datacube.header.length > 0) ?
+                                    [{
+                                        id: this.state.datacube.header[0],
+                                        desc: false
+                                    }] : []}
                             >
                                 {(state, makeTable, instance) => {
                                     return (
@@ -248,7 +292,7 @@ class RDFDataCube extends Component {
                         </div>
                     )}
                 </ModalBody>
-            </Modal>
+            </Modal >
         );
     }
 }
