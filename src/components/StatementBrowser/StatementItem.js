@@ -93,6 +93,8 @@ class StatementItem extends Component {
                                     propertyId={this.props.id}
                                     existingStatement={this.props.values.byId[valueIds[0]].existingStatement}
                                     inline
+                                    isExistingValue={this.props.values.byId[valueIds[0]].isExistingValue}
+                                    isEditing={false}
                                 />
                             </em>
                         </>
@@ -123,6 +125,8 @@ class StatementItem extends Component {
                                         propertyId={this.props.id}
                                         existingStatement={value.existingStatement}
                                         openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
+                                        isExistingValue={value.isExistingValue}
+                                        isEditing={value.isEditing}
                                     />
                                 );
                             })}

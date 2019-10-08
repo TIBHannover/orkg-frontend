@@ -71,6 +71,20 @@ export const createValue = (data) => dispatch => {
     })
 }
 
+export const toggleEditValue = (data) => dispatch => {
+    dispatch({
+        type: type.TOGGLE_EDIT_VALUE,
+        payload: data
+    })
+}
+
+export const updateValueLabel = (data) => dispatch => {
+    dispatch({
+        type: type.UPDATE_VALUE_LABEL,
+        payload: data
+    })
+}
+
 export const deleteValue = (data) => dispatch => {
     dispatch({
         type: type.DELETE_VALUE,

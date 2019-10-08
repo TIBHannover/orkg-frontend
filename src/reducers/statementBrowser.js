@@ -99,6 +99,7 @@ export default (state = initialState, action) => {
                     resourceId: payload.resourceId ? payload.resourceId : null,
                     isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
                     existingStatement: payload.existingStatement ? payload.existingStatement : false,
+                    isEditing: false,
                 }
             }));
 
@@ -136,6 +137,19 @@ export default (state = initialState, action) => {
             let propertyIndex = dotProp.get(newState, `properties.byId.${payload.propertyId}.valueIds`).indexOf(payload.id);
             newState = dotProp.delete(newState, `properties.byId.${payload.propertyId}.valueIds.${propertyIndex}`);
 
+            return newState;
+        }
+
+        case type.TOGGLE_EDIT_VALUE: {
+            let { payload } = action;
+            let newState = dotProp.set(state, `values.byId.${payload.id}.isEditing`, v => !v);
+            return newState;
+        }
+
+
+        case type.UPDATE_VALUE_LABEL: {
+            let { payload } = action;
+            let newState = dotProp.set(state, `values.byId.${payload.valueId}.label`, payload.label);
             return newState;
         }
 
