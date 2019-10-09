@@ -282,8 +282,6 @@ export const getResourceObject = (data, resourceId) => {
 }
 
 // Middleware function to transform frontend data to backend format
-// TODO: in order to minimize the amount of requests to the backend, it would be better to make this one backend
-// call that is replaces all the individual requests (backend change is needed for this)
 export const saveAddPaper = (data) => {
   return async (dispatch) => {
     const researchProblemPredicate = process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM;
