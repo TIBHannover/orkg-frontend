@@ -16,7 +16,7 @@ import RedirectShortLinks from './components/Comparison/RedirectShortLinks';
 import ResearchField from './components/ResearchField/ResearchField'
 import ResearchProblem from './components/ResearchProblem/ResearchProblem'
 import Resources from './pages/Resources'
-import SearchResults from './pages/SearchResults'
+import SearchResults from './components/Search/Search'
 import ViewPaper from './components/ViewPaper/ViewPaper';
 
 const routes = [

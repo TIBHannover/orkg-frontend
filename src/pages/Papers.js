@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getStatementsByObject, getStatementsBySubject } from '../network';
+import { getResourcesByClass, getStatementsBySubject } from '../network';
 import { Container } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -15,13 +15,13 @@ export default class Resources extends Component {
     };
 
     componentDidMount() {
-        getStatementsByObject({
-            id: process.env.REACT_APP_RESOURCE_TYPES_PAPER,
+        getResourcesByClass({
+            id: process.env.REACT_APP_CLASSES_PAPER,
             order: 'desc',
         }).then((papers) => {
             // Fetch the data of each paper
             var papers_data = papers.map((paper) => {
-                return getStatementsBySubject(paper.subject.id).then((paperStatements) => {
+                return getStatementsBySubject(paper.id).then((paperStatements) => {
                     // publication year
                     let publicationYear = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
                     if (publicationYear.length > 0) {
@@ -74,7 +74,7 @@ export default class Resources extends Component {
                                 (resource) => {
                                     return (
                                         <PaperCard
-                                            paper={{ id: resource.subject.id, title: resource.subject.label, ...resource.data }}
+                                            paper={{ id: resource.id, title: resource.label, ...resource.data }}
                                             key={`pc${resource.id}`}
                                         />
                                     )
