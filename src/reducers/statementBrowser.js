@@ -61,6 +61,7 @@ export default (state = initialState, action) => {
                     existingPredicateId: payload.existingPredicateId ? payload.existingPredicateId : null,
                     valueIds: [],
                     isExistingProperty: payload.isExistingProperty ? payload.isExistingProperty : false,
+                    isEditing: false,
                 }
             }));
 
@@ -82,6 +83,18 @@ export default (state = initialState, action) => {
 
             // TODO: maybe also delete related values, so it becomes easier to make the API call later?
 
+            return newState;
+        }
+
+        case type.UPDATE_PROPERTY_LABEL: {
+            let { payload } = action;
+            let newState = dotProp.set(state, `properties.byId.${payload.propertyId}.label`, payload.label);
+            return newState;
+        }
+
+        case type.TOGGLE_EDIT_PROPERTY_LABEL: {
+            let { payload } = action;
+            let newState = dotProp.set(state, `properties.byId.${payload.id}.isEditing`, v => !v);
             return newState;
         }
 
@@ -145,7 +158,6 @@ export default (state = initialState, action) => {
             let newState = dotProp.set(state, `values.byId.${payload.id}.isEditing`, v => !v);
             return newState;
         }
-
 
         case type.UPDATE_VALUE_LABEL: {
             let { payload } = action;

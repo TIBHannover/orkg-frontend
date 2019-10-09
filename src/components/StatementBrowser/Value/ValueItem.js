@@ -14,7 +14,6 @@ import ValuePlugins from '../../ValuePlugins/ValuePlugins';
 import ContentEditable from 'react-contenteditable'
 import styled from 'styled-components';
 
-/*contributionsList*/
 export const StyledContentEditable = styled(ContentEditable)`
     &[contenteditable="true"] {
         background: #F8F9FB;

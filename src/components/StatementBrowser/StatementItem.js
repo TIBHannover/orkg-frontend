@@ -7,14 +7,27 @@ import { getResource } from '../../network';
 import classNames from 'classnames';
 import ValueItem from './Value/ValueItem';
 import AddValue from './Value/AddValue';
-import DeleteStatement from './DeleteStatement';
+import StatementOptions from './StatementOptions';
 import { connect } from 'react-redux';
-import { togglePropertyCollapse } from '../../actions/statementBrowser';
+import { togglePropertyCollapse, toggleEditPropertyLabel, updatePropertyLabel } from '../../actions/statementBrowser';
 import PropTypes from 'prop-types';
+import ContentEditable from 'react-contenteditable'
+import styled from 'styled-components';
 
+export const StyledContentEditable = styled(ContentEditable)`
+    &[contenteditable="true"] {
+        background: #F8F9FB;
+        color: ${props => props.theme.orkgPrimaryColor};
+        outline: 0;
+        padding: 0 4px;
+        border: dotted 2px ${props => props.theme.listGroupBorderColor};
+    }
+`;
 class StatementItem extends Component {
     constructor(props) {
         super(props);
+
+        this.contentEditable = React.createRef();
 
         this.state = {
             deleteContributionModal: false,
@@ -31,7 +44,19 @@ class StatementItem extends Component {
         if (this.props.predicateLabel !== prevProps.predicateLabel) {
             this.getPredicateLabel();
         }
+
+        if (!prevProps.isEditing && this.props.isEditing) {
+            this.contentEditable.current.focus()
+        }
+
     }
+
+    handleChange = (propertyId, e) => {
+        this.props.updatePropertyLabel({
+            label: e.target.value,
+            propertyId: propertyId,
+        });
+    };
 
     getPredicateLabel = () => {
         if (this.props.predicateLabel.match(new RegExp('^R[0-9]*$'))) {
@@ -79,7 +104,19 @@ class StatementItem extends Component {
         return (
             <>
                 <StyledStatementItem active={isCollapsed} onClick={() => this.props.togglePropertyCollapse(this.props.id)} className={listGroupClass}>
-                    {this.state.predicateLabel}
+                    {!this.props.isEditing ?
+                        this.state.predicateLabel :
+                        <StyledContentEditable
+                            innerRef={this.contentEditable}
+                            html={this.state.predicateLabel}
+                            disabled={!this.props.isEditing}
+                            tagName={'span'}
+                            onChange={(e) => this.handleChange(this.props.id, e)}
+                            onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
+                            onBlur={(e) => this.props.toggleEditPropertyLabel({ id: this.props.id })}
+                            onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
+                        />}
+
                     {valueIds.length === 1 && !isCollapsed ? (
                         <>
                             :{' '}
@@ -105,7 +142,9 @@ class StatementItem extends Component {
                     ) : (
                                 ''
                             )}
-                    <Icon icon={isCollapsed ? faChevronCircleUp : faChevronCircleDown} className={chevronClass} /> {!this.props.isExistingProperty ? <DeleteStatement id={this.props.id} /> : ''}
+                    <Icon icon={isCollapsed ? faChevronCircleUp : faChevronCircleDown} className={chevronClass} />
+
+                    {!this.props.isExistingProperty ? <StatementOptions id={this.props.id} isEditing={this.props.isEditing} existingPredicateId={this.props.properties.byId[this.props.id].existingPredicateId} /> : ''}
                 </StyledStatementItem>
 
                 <Collapse isOpen={isCollapsed}>
@@ -152,6 +191,9 @@ StatementItem.propTypes = {
     properties: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
+    isEditing: PropTypes.bool.isRequired,
+    toggleEditPropertyLabel: PropTypes.func.isRequired,
+    updatePropertyLabel: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -164,6 +206,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
     togglePropertyCollapse: (id) => dispatch(togglePropertyCollapse(id)),
+    toggleEditPropertyLabel: (data) => dispatch(toggleEditPropertyLabel(data)),
+    updatePropertyLabel: (data) => dispatch(updatePropertyLabel(data)),
 });
 
 export default connect(
