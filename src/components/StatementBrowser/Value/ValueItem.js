@@ -20,9 +20,9 @@ export const StyledContentEditable = styled(ContentEditable)`
         background: #F8F9FB;
         color: ${props => props.theme.orkgPrimaryColor};
         outline: 0;
-        border: dotted 2px ${props => props.theme.listGroupBorderColor};
         padding: 0 4px;
-        display: block;
+        display:block;
+        border: dotted 2px ${props => props.theme.listGroupBorderColor};
     }
 `;
 
@@ -37,6 +37,12 @@ class ValueItem extends Component {
             modalDataset: false,
             dialogResourceId: null,
             dialogResourceLabel: null,
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (!prevProps.isEditing && this.props.isEditing) {
+            this.contentEditable.current.focus()
         }
     }
 
@@ -160,8 +166,8 @@ class ValueItem extends Component {
                                     innerRef={this.contentEditable}
                                     html={this.props.label}
                                     disabled={!this.props.isEditing}
+                                    tagName={'span'}
                                     onChange={(e) => this.handleChange(this.props.id, e)}
-                                    tagName="span"
                                     onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
                                     onBlur={(e) => this.props.toggleEditValue({ id: this.props.id })}
                                     onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
