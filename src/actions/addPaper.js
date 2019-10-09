@@ -3,6 +3,7 @@ import * as type from './types.js';
 import { guid } from '../utils';
 import { mergeWith, isArray } from 'lodash';
 import { createResource, selectResource, createProperty, createValue } from './statementBrowser';
+import { toast } from 'react-toastify';
 
 export const updateGeneralData = (data) => (dispatch) => {
   dispatch({
@@ -322,15 +323,23 @@ export const saveAddPaper = (data) => {
       }
     }
 
-    let paper = await network.saveFullPaper(paperObj);
+    try {
+      let paper = await network.saveFullPaper(paperObj);
+      dispatch({
+        type: type.SAVE_ADD_PAPER,
+        id: paper.id,
+      });
 
-    dispatch({
-      type: type.SAVE_ADD_PAPER,
-      id: paper.id,
-    });
+      dispatch({
+        type: type.ADD_PAPER_UNBLOCK_NAVIGATION
+      });
+    } catch (e) {
+      console.log(e);
+      toast.error('Something went wrong while saving this paper.');
+      dispatch({
+        type: type.ADD_PAPER_PREVIOUS_STEP
+      });
+    }
 
-    dispatch({
-      type: type.ADD_PAPER_UNBLOCK_NAVIGATION
-    });
   };
 };
