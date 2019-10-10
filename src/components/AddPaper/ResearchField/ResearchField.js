@@ -128,6 +128,9 @@ class ResearchField extends Component {
     }
 
     handleFieldClick(fieldId, currentLevel) {
+        if (this.props.isTourOpen) {
+            this.requestCloseTour();
+        }
         this.getFields(fieldId, currentLevel + 1);
     }
 
@@ -189,6 +192,7 @@ class ResearchField extends Component {
                 <Tour
                     onAfterOpen={this.disableBody}
                     onBeforeClose={this.enableBody}
+                    disableInteraction={false}
                     steps={[
                         {
                             selector: '.fieldSelector',

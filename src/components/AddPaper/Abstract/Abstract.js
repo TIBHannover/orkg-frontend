@@ -393,11 +393,11 @@ class Abstract extends Component {
                       </Tooltip>
                       <span className={'mr-1 ml-1'} />
                       {rangesClasses.length > 0 &&
-                        rangesClasses.map((c) => {
+                        rangesClasses.map((c, index) => {
                           let aconcept = c ? this.automaticAnnotationConcepts.filter(function (e) { return e.label.toLowerCase() === c.toLowerCase(); }) : []
                           if (c && aconcept.length > 0) {
                             return (
-                              <Tooltip hideDefaultIcon={true} message={aconcept[0].description}>
+                              <Tooltip key={index} hideDefaultIcon={true} message={aconcept[0].description}>
                                 <Badge
                                   className={'mr-2'}
                                   key={`c${c}`}
@@ -450,6 +450,7 @@ class Abstract extends Component {
                   <Tour
                     onAfterOpen={this.disableBody}
                     onBeforeClose={this.enableBody}
+                    disableInteraction={false}
                     steps={[
                       {
                         selector: '#paperAbstract',

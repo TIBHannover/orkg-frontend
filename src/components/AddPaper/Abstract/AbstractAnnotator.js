@@ -262,6 +262,7 @@ class AbstractAnnotator extends Component {
                             ),
                             style: { borderTop: '4px solid #E86161' },
                             position: 'right',
+                            action: node => node.focus(),
                         }
                     ]}
                     showNumber={false}
@@ -271,7 +272,7 @@ class AbstractAnnotator extends Component {
                     isOpen={this.props.isTourOpen}
                     startAt={this.props.tourStartAt}
                     getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); }}
-                    disableInteraction={true}
+                    disableInteraction={false}
                     showButtons={false}
                     showNavigation={false}
                     maskClassName="reactourMask"
