@@ -158,7 +158,7 @@ class GraphView extends Component {
             return list;
         }
 
-        let statements = await getStatementsBySubject(resourceId);
+        let statements = await getStatementsBySubject({ id: resourceId });
 
         if (statements.length > 0) {
             list.push(...statements);

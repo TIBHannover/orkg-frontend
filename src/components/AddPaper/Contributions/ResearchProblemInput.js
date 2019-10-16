@@ -20,7 +20,13 @@ class ResearchProblemInput extends Component {
 
     componentDidMount() {
         // Get the statements that contains the has a research field as a predicate
-        getStatementsByPredicate(process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM).then((result) => {
+        getStatementsByPredicate({
+            id: process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM,
+            page: 1,
+            items: 999,
+            sortBy: 'id',
+            desc: true
+        }).then((result) => {
             // Get the research problems without duplicates
             var researchProblems = result.map((contribution) => {
                 return contribution.object

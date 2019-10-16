@@ -50,7 +50,7 @@ class ViewPaper extends Component {
         this.props.resetStatementBrowser();
 
         getResource(resourceId).then((paperResource) => {
-            getStatementsBySubject(resourceId).then((paperStatements) => {
+            getStatementsBySubject({ id: resourceId }).then((paperStatements) => {
                 // check if type is paper
                 if (!paperResource.classes.includes(process.env.REACT_APP_CLASSES_PAPER)) {
                     throw new Error(`The requested resource is not of class "${process.env.REACT_APP_CLASSES_PAPER}"`);
