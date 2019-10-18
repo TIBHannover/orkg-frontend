@@ -1,3 +1,4 @@
+import queryString from 'query-string';
 export const url = process.env.REACT_APP_SERVER_URL;
 export const similaireServiceUrl = process.env.REACT_APP_SIMILARITY_SERVICE_URL;
 export const annotationServiceUrl = process.env.REACT_APP_ANNOTATION_SERVICE_URL;
@@ -155,62 +156,72 @@ export const getResource = (id) => {
   return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`);
 };
 
-export const getAllResources = () => {
-  return submitGetRequest(resourcesUrl);
+export const getAllResources = ({ page = 1, items = 9999, sortBy = 'id', desc = true }) => {
+
+  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
+
+  return submitGetRequest(`${resourcesUrl}?${params}`);
 };
 
-export const getAllStatements = () => {
-  return submitGetRequest(statementsUrl);
+export const getAllStatements = ({ page = 1, items = 9999, sortBy = 'id', desc = true }) => {
+
+  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
+
+  return submitGetRequest(`${statementsUrl}?${params}`);
 };
 
 export const getPredicatesByLabel = (label) => {
   return submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(label));
 };
 
-export const getStatementsBySubject = (id) => {
-  return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/`);
+export const getStatementsBySubject = ({ id, page = 1, items = 9999, sortBy = 'id', desc = true }) => {
+
+  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
+
+  return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`);
 };
 
-export const getStatementsByObject = async ({ id, order = 'asc', limit = null }) => {
-  let statements = await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/`);
+export const getStatementsByObject = async ({ id, page = 1, items = 9999, sortBy = 'id', desc = true }) => {
+
+  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
+
+  let statements = await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/?${params}`);
 
   // TODO: replace sorting and limit by backend functionalities when ready
   statements.sort((a, b) => {
-    if (order === 'asc') {
+    if (!desc) {
       return parseInt(a.id.replace('S', '')) - parseInt(b.id.replace('S', ''));
     } else {
       return parseInt(b.id.replace('S', '')) - parseInt(a.id.replace('S', ''));
     }
   });
 
-  if (limit) {
-    statements = statements.slice(0, limit);
-  }
-
   return statements;
 };
 
-export const getResourcesByClass = async ({ id, order = 'asc', limit = null }) => {
-  let resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/`);
+export const getResourcesByClass = async ({ id, page = 1, items = 9999, sortBy = 'id', desc = true }) => {
+
+  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
+
+  let resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/?${params}`);
 
   // TODO: replace sorting and limit by backend functionalities when ready
   resources.sort((a, b) => {
-    if (order === 'asc') {
+    if (!desc) {
       return parseInt(a.id.replace('R', '')) - parseInt(b.id.replace('R', ''));
     } else {
       return parseInt(b.id.replace('R', '')) - parseInt(a.id.replace('R', ''));
     }
   });
 
-  if (limit) {
-    resources = resources.slice(0, limit);
-  }
-
   return resources;
 };
 
-export const getStatementsByPredicate = (id) => {
-  return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/`);
+export const getStatementsByPredicate = ({ id, page = 1, items = 9999, sortBy = 'id', desc = true }) => {
+
+  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
+
+  return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/?${params}`);
 };
 
 export const getSimilaireContribution = (id) => {

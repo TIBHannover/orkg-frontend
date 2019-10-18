@@ -145,7 +145,7 @@ class ExportToLatex extends Component {
                         latexTable += `\n\\footnotetext{${link}} [accessed ${moment().format('YYYY MMM DD')}]}`;
                         this.setState({ latexTable: latexTable, latexTableLoading: false });
                     }).then((data) => {
-                        let shortLink = `${this.props.location.protocol}//${window.location.host}${window.location.pathname.replace(ROUTES.COMPARISON,'')}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
+                        let shortLink = `${this.props.location.protocol}//${window.location.host}${window.location.pathname.replace(ROUTES.COMPARISON, '')}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
                         latexTable += `\n\\footnotetext{${shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
                         this.setState({ shortLink: shortLink, latexTable: latexTable, latexTableLoading: false });
                     })
@@ -216,7 +216,7 @@ class ExportToLatex extends Component {
         }
         let contributions = this.props.contributions.map((contribution) => {
             // Fetch the data of each contribution
-            return getStatementsBySubject(contribution.paperId).then((paperStatements) => {
+            return getStatementsBySubject({ id: contribution.paperId }).then((paperStatements) => {
                 let publicationDOI = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
                 if (publicationDOI.length > 0) {
                     publicationDOI = publicationDOI[0].object.label
