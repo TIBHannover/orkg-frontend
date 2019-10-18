@@ -16,8 +16,10 @@ import RedirectShortLinks from './components/Comparison/RedirectShortLinks';
 import ResearchField from './components/ResearchField/ResearchField'
 import ResearchProblem from './components/ResearchProblem/ResearchProblem'
 import Resources from './pages/Resources'
-import SearchResults from './pages/SearchResults'
+import SearchResults from './components/Search/Search'
 import ViewPaper from './components/ViewPaper/ViewPaper';
+import Stats from './components/Stats/Stats';
+
 
 const routes = [
     {
@@ -90,6 +92,14 @@ const routes = [
         path: ROUTES.LICENSE,
         component: License
     },
+    {
+        path: ROUTES.SEARCH,
+        component: SearchResults
+    },
+    {
+        path: ROUTES.STATS,
+        component: Stats
+    },
     /* Legacy routes, only used for debugging now */
     {
         path: ROUTES.RESSOURCE_DETAILS,
@@ -98,10 +108,6 @@ const routes = [
     {
         path: ROUTES.PREDICATE_DETAILS,
         component: PredicateDetails
-    },
-    {
-        path: ROUTES.SEARCH,
-        component: SearchResults
     },
     {
         path: '/resource/:resourceId',

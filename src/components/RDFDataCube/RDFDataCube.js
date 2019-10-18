@@ -52,12 +52,12 @@ class RDFDataCube extends Component {
             // Convert to an object { class_label: class_ID }
             classes = Object.assign({}, ...(classes.map(item => ({ [item.label]: item.id }))));
             // Get Data Structure Definition (DSD)
-            let dsd = await getStatementsBySubject(this.props.resourceId).then(s_dataset => s_dataset.find(s => s.object.classes.includes(classes['qb:DataStructureDefinition'])).object)
+            let dsd = await getStatementsBySubject({ id: this.props.resourceId }).then(s_dataset => s_dataset.find(s => s.object.classes.includes(classes['qb:DataStructureDefinition'])).object)
             // Get Component Specification
-            let cspecifications = await getStatementsBySubject(dsd.id).then(s_dataset => s_dataset.filter(s => s.object.classes.includes(classes['qb:ComponentSpecification']))).then(css => css.map(cs => cs.object))
+            let cspecifications = await getStatementsBySubject({ id: dsd.id }).then(s_dataset => s_dataset.filter(s => s.object.classes.includes(classes['qb:ComponentSpecification']))).then(css => css.map(cs => cs.object))
             // Fetch Statements of each component specification
             cspecifications = cspecifications.map((cs) => {
-                return getStatementsBySubject(cs.id).then(css => {
+                return getStatementsBySubject({ id: cs.id }).then(css => {
                     // Get order of component specification
                     let order = css.filter((statement) => (statement.predicate.label === 'order'));
                     if (order.length > 0) {
@@ -83,13 +83,15 @@ class RDFDataCube extends Component {
                 let allDim = Object.assign({}, sDimensions, sMeasures, sAttributes);
                 getStatementsByObject({
                     id: this.props.resourceId,
-                    order: 'desc',
+                    items: 9999,
+                    sortBy: 'id',
+                    desc: true
                 }).then((statements) => {
                     // Filter observations
                     let observations = statements.filter((statement) => (statement.predicate.label.toLowerCase() === 'dataset' && statement.subject.classes.includes(classes['qb:Observation'])))
                     // Fetch the data of each observation
                     var observations_data = observations.map((observation) => {
-                        return getStatementsBySubject(observation.subject.id).then((observationStatements) => {
+                        return getStatementsBySubject({ id: observation.subject.id }).then((observationStatements) => {
                             // Measure
                             let os_m = observationStatements.filter((statement) => statement.predicate.label in sMeasures);
                             // Dimensions

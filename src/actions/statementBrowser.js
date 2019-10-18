@@ -156,7 +156,7 @@ export const fetchStatementsForResource = (data) => {
             type: type.IS_FETCHING_STATEMENTS
         });
 
-        return network.getStatementsBySubject(existingResourceId)
+        return network.getStatementsBySubject({ id: existingResourceId })
             .then(
                 response => {
                     dispatch({

@@ -53,7 +53,7 @@ class ResourceDetails extends Component {
 
   findAllStatements = async () => {
     try {
-      const responseJson = await getStatementsBySubject(this.props.match.params.resourceId);
+      const responseJson = await getStatementsBySubject({ id: this.props.match.params.resourceId });
 
       this.setState({
         allStatements: responseJson,
