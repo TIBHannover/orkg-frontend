@@ -2,7 +2,7 @@
     "name": "knowledge-graph",
     "version": "0.1.0",
     "private": true,
-    "homepage": "/orkg",
+    "homepage": "https://gitlab.com/TIBHannover/orkg/orkg-frontend",
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^1.2.24",
         "@fortawesome/free-regular-svg-icons": "^5.11.1",
@@ -37,9 +37,11 @@
         "react-copy-to-clipboard": "^5.0.1",
         "react-csv": "^1.1.1",
         "react-dom": "^16.9.0",
-        "react-graph-vis": "github:crubier/react-graph-vis#pull/74/head",
+        "react-graph-vis": "^1.0.5",
         "react-hot-loader": "^4.12.13",
         "react-input-autosize": "^2.2.1",
+        "react-mathjax-preview-svg": "^1.0.5",
+        "react-number-format": "^4.3.0",
         "react-range": "^1.3.0",
         "react-redux": "^6.0.1",
         "react-router-config": "^5.0.1",
@@ -54,7 +56,7 @@
         "react-transition-group": "^2.9.0",
         "reactour": "^1.15.0",
         "reactstrap": "^8.0.1",
-        "reactstrap-confirm": "^1.1.0",
+        "reactstrap-confirm": "git://github.com/algm/reactstrap-confirm.git#pull/11/head",
         "redux": "^4.0.4",
         "redux-thunk": "^2.3.0",
         "strict-mode": "^1.1.3",
@@ -66,19 +68,34 @@
         "build": "react-scripts build",
         "test": "react-scripts test --env=jsdom",
         "eject": "react-scripts eject",
-        "flow": "flow"
+        "flow": "flow",
+        "lint": "eslint 'src/**/*.{js,jsx}'",
+        "lint:fix": "eslint 'src/**/*.{js,jsx}' --fix"
     },
     "devDependencies": {
         "babel-preset-env": "^1.7.0",
         "enzyme": "^3.10.0",
         "enzyme-adapter-react-16": "^1.14.0",
         "enzyme-to-json": "^3.4.0",
+        "husky": "^3.0.7",
         "jest-canvas-mock": "^2.1.1",
+        "lint-staged": "^9.4.1",
         "named-urls": "^1.4.0",
         "react-test-renderer": "^16.9.0",
         "sass-extract": "^2.1.0",
         "sass-extract-js": "^0.4.0",
         "sass-extract-loader": "^1.1.0"
+    },
+    "lint-staged": {
+        "src/**/*.{js,jsx}": [
+            "npm run --silent lint:fix",
+            "git add"
+        ]
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
     },
     "browserslist": [
         ">0.2%",

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {Component, Fragment} from 'react';
 import {submitGetRequest} from '../../../network';
 
@@ -33,16 +34,19 @@ export default class EditableDropdown extends Component {
                 const responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value));
 
                 const menuItemsJsx = responseJson.map(
-                    (item) => <button id={item.id} key={item.id} className="dropdown-item"
-                        onClick={this.handleItemClick}>{item.label}</button>).slice(0, maxValues);
+                    (item) => (<button id={item.id} key={item.id} className="dropdown-item"
+                        onClick={this.handleItemClick}
+                               >{item.label}
+                               </button>)).slice(0, maxValues);
 
                     const firstItem = this.props.onNewItemSelected && <Fragment>
                         <button id="-" key="-" className="dropdown-item"
-                                onClick={this.getNewItemClickHandler(value.trim())}>
+                                onClick={this.getNewItemClickHandler(value.trim())}
+                        >
                             <strong>New: {value.trim()}</strong>
                         </button>
-                        {menuItemsJsx.length > 0 && <hr/>}
-                    </Fragment>;
+                        {menuItemsJsx.length > 0 && <hr />}
+                                                                      </Fragment>;
 
                 const completeMenuItemsJsx = firstItem ? [firstItem, ...menuItemsJsx] : menuItemsJsx;
                 if (completeMenuItemsJsx.length > 0) {
@@ -83,12 +87,13 @@ export default class EditableDropdown extends Component {
     };
 
     render() {
-        const inputStyle = {height: "21.8px", overflow: "hidden", resize: "none"};
-        return <div className="dropdown valueView">
+        const inputStyle = {height: '21.8px', overflow: 'hidden', resize: 'none'};
+        return (<div className="dropdown valueView">
             <input autoFocus={true} placeholder={this.props.placeholder} className="dropdown-toggle valueView-input"
                     style={inputStyle}
-                    value={this.state.value} onChange={this.handleChange} onKeyUp={this.props.onKeyUp}/>
+                    value={this.state.value} onChange={this.handleChange} onKeyUp={this.props.onKeyUp}
+            />
             {this.state.dropdownMenuJsx}
-        </div>;
+                </div>);
     }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component, Fragment } from 'react';
 import EditToolbar from './EditToolbar';
 import {
@@ -204,7 +205,7 @@ export default class NewStatementObject extends Component {
         const newProperty = this.props.predicate === null;
         const editEnabled = !newProperty || this.state.selectedPredicateId !== null
             || this.state.newPredicateLabel !== null;
-        return <div id="new" className="statementView newStatement">
+        return (<div id="new" className="statementView newStatement">
             <div className="statementView-rankSelector">
                 <div className="rankSelector">
                     <span className="fa fa-sort" />
@@ -218,7 +219,8 @@ export default class NewStatementObject extends Component {
                     onObjectSelect={this.handleObjectSelect}
                     onPredicateSelect={this.handlePredicateSelect}
                     onNewPredicate={this.handleNewPredicate}
-                    onKeyDown={this.handleKeyDown} />
+                    onKeyDown={this.handleKeyDown}
+                />
                 <div className="statementView-qualifiers">
                     <div className="listView" />
                     <div className="toolbar-container hidden">
@@ -235,9 +237,10 @@ export default class NewStatementObject extends Component {
             <div className="statementView-references-container" />
             <div className="editToolbar-container toolbar-container">
                 <EditToolbar editorState={this.state.editorState} showRemoveButton={false} editEnabled={editEnabled}
-                    onPublishClick={this.handlePublishClick} onCancelClick={this.props.onCancelClick} />
+                    onPublishClick={this.handlePublishClick} onCancelClick={this.props.onCancelClick}
+                />
             </div>
-        </div>
+                </div>)
     }
 
 }

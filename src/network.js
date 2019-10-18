@@ -6,6 +6,7 @@ export const predicatesUrl = `${url}predicates/`;
 export const statementsUrl = `${url}statements/`;
 export const literalsUrl = `${url}literals/`;
 export const classesUrl = `${url}classes/`;
+export const statsUrl = `${url}stats/`;
 export const crossrefUrl = process.env.REACT_APP_CROSSREF_URL;
 export const arxivUrl = process.env.REACT_APP_ARXIV_URL;
 export const semanticScholarUrl = process.env.REACT_APP_SEMANTICSCHOLAR_URL;
@@ -104,8 +105,8 @@ export const updateLiteral = (id, label) => {
   );
 };
 
-export const createResource = (label) => {
-  return submitPostRequest(resourcesUrl, { 'Content-Type': 'application/json' }, { label: label });
+export const createResource = (label, classes = []) => {
+  return submitPostRequest(resourcesUrl, { 'Content-Type': 'application/json' }, { label, classes });
 };
 
 export const createLiteral = (label) => {
@@ -189,6 +190,25 @@ export const getStatementsByObject = async ({ id, order = 'asc', limit = null })
   return statements;
 };
 
+export const getResourcesByClass = async ({ id, order = 'asc', limit = null }) => {
+  let resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/`);
+
+  // TODO: replace sorting and limit by backend functionalities when ready
+  resources.sort((a, b) => {
+    if (order === 'asc') {
+      return parseInt(a.id.replace('R', '')) - parseInt(b.id.replace('R', ''));
+    } else {
+      return parseInt(b.id.replace('R', '')) - parseInt(a.id.replace('R', ''));
+    }
+  });
+
+  if (limit) {
+    resources = resources.slice(0, limit);
+  }
+
+  return resources;
+};
+
 export const getStatementsByPredicate = (id) => {
   return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/`);
 };
@@ -198,15 +218,17 @@ export const getSimilaireContribution = (id) => {
 };
 
 export const getAnnotations = (abstract) => {
-  return submitGetRequest(
-    `${annotationServiceUrl}annotator/?text2annotate=${encodeURIComponent(abstract)}`,
-  );
+  return submitPostRequest(`${annotationServiceUrl}annotator/`, { 'Content-Type': 'application/json' }, { text2annotate: abstract });
 };
 
 export const indexContribution = (contribution_id) => {
   return fetch(`${similaireServiceUrl}internal/index/${encodeURIComponent(contribution_id)}/`, {
     method: 'GET',
   });
+};
+
+export const getStats = () => {
+  return submitGetRequest(statsUrl);
 };
 
 export const createShortLink = (data) => {

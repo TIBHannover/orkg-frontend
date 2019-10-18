@@ -128,14 +128,15 @@ export default class AddResource extends Component {
                         disabled={loading}
                         onInput={this.handleInput}
                         onKeyUp={this.handleKeyUp}
-                        aria-label="Resource title or DOI" aria-describedby="basic-addon2" />
+                        aria-label="Resource title or DOI" aria-describedby="basic-addon2"
+                    />
                     {
                         !loading ? <div className="input-group-append">
                             <button className="btn btn-outline-primary" type="button" onClick={this.handleAdd}>Add</button>
-                        </div>
+                                   </div>
                             : <div className="container vertical-centered">
                                 <span className="fa fa-spinner fa-spin" />
-                            </div>
+                              </div>
                     }
                 </div>
             </Container>

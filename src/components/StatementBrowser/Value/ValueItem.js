@@ -127,7 +127,7 @@ class ValueItem extends Component {
                 {!this.props.inline ? (
                     <StyledValueItem>
                         <span className={labelClass} onClick={onClick}>
-                            <ValuePlugins>{this.props.label}</ValuePlugins>
+                            <ValuePlugins type={this.props.type}>{this.props.label}</ValuePlugins>
                             {existingResourceId && this.props.openExistingResourcesInDialog ? (
                                 <span>
                                     {' '}

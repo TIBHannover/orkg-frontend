@@ -7,6 +7,7 @@ import { Modal, ModalHeader, ModalBody, Input, Form, FormGroup, Label } from 're
 import uniqBy from 'lodash/uniqBy';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import 'vis-network/dist/vis-network.min.css';
 
 class GraphView extends Component {
     state = {
