@@ -218,9 +218,7 @@ export const getSimilaireContribution = (id) => {
 };
 
 export const getAnnotations = (abstract) => {
-  return submitGetRequest(
-    `${annotationServiceUrl}annotator/?text2annotate=${encodeURIComponent(abstract)}`,
-  );
+  return submitPostRequest(`${annotationServiceUrl}annotator/`, { 'Content-Type': 'application/json' }, { text2annotate: abstract });
 };
 
 export const indexContribution = (contribution_id) => {
