@@ -76,7 +76,7 @@ export default class Resources extends Component {
                                         <ShortRecord
                                             key={predicate.id}
                                             header={predicate.id}
-                                            href={`${process.env.PUBLIC_URL}/predicate/${encodeURIComponent(predicate.id)}`}
+                                            href={`${process.env.PUBLIC_URL}/resource/${encodeURIComponent(predicate.id)}`}
                                         >
                                             {predicate.label}
                                         </ShortRecord>
