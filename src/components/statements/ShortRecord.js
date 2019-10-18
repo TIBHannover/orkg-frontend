@@ -1,7 +1,7 @@
-/* eslint-disable */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-export default class ShortRecord extends Component {
+class ShortRecord extends Component {
 
     render() {
         return (
@@ -13,3 +13,11 @@ export default class ShortRecord extends Component {
     }
 
 }
+
+ShortRecord.propTypes = {
+    href: PropTypes.string.isRequired,
+    children: PropTypes.string.isRequired,
+    header: PropTypes.string.isRequired,
+}
+
+export default ShortRecord;
