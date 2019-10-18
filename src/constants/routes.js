@@ -21,4 +21,5 @@ export default {
    PREDICATE_DETAILS: '/predicate/:predicateId',
    SEARCH: '/search/:searchTerm?',
    TPDL: '/tpdl',
+   STATS: '/stats',
 }

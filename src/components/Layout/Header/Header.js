@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Nav, NavItem, NavLink, Navbar, NavbarToggler, Collapse, Container, Button, ButtonDropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'reactstrap';
+import { Nav, NavItem, NavLink, Navbar, NavbarToggler, Collapse, Container, Button, ButtonDropdown, DropdownToggle, DropdownItem, DropdownMenu, Badge } from 'reactstrap';
 import SearchForm from './SearchForm';
 import { ReactComponent as Logo } from '../../../assets/img/logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -50,10 +50,11 @@ class Header extends Component {
                                     </NavLink>
                                 </NavItem>
                                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.dropdownOpen} nav inNavbar>
-                                    <DropdownToggle nav className="ml-4">Debug <FontAwesomeIcon icon={faSortDown} pull="right" /></DropdownToggle>
+                                    <DropdownToggle nav className="ml-4">Tools <FontAwesomeIcon icon={faSortDown} pull="right" /></DropdownToggle>
                                     <DropdownMenu right>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>All Resources</DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>All Predicates</DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS}>Statistics</DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>Resources <small><Badge color="info">Beta</Badge></small></DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>Predicates <small><Badge color="info">Beta</Badge></small></DropdownItem>
                                     </DropdownMenu>
                                 </ButtonDropdown>
                             </Nav>
