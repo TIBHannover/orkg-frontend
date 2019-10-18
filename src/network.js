@@ -152,6 +152,13 @@ export const getPredicate = (id) => {
   return submitGetRequest(`${predicatesUrl}${encodeURIComponent(id)}/`);
 };
 
+export const getAllPredicates = ({ page = 1, items = 9999, sortBy = 'id', desc = true }) => {
+
+  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
+
+  return submitGetRequest(`${predicatesUrl}?${params}`);
+};
+
 export const getResource = (id) => {
   return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`);
 };
