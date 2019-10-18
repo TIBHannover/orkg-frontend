@@ -262,7 +262,7 @@ class AbstractAnnotator extends Component {
                             ),
                             style: { borderTop: '4px solid #E86161' },
                             position: 'right',
-                            action: node => node.focus(),
+                            action: node => node ? node.focus() : null,
                         }
                     ]}
                     showNumber={false}

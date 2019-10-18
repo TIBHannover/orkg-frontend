@@ -553,19 +553,19 @@ class GeneralData extends Component {
                     <Tour
                         onAfterOpen={this.disableBody}
                         onBeforeClose={this.enableBody}
-                        steps={[
-                            {
+                        steps={
+                            [...(this.state.dataEntry === 'doi') ? [{
                                 selector: '#doiInputGroup',
                                 content: 'Start by entering the DOI or the BibTeX of the paper you want to add. Then, click on "Lookup" to fetch paper meta-data automatically.',
                                 style: { borderTop: '4px solid #E86161' },
-                                action: node => node.focus(),
-                            },
+                                action: node => node ? node.focus() : null,
+                            }] : [],
                             {
                                 selector: '#entryOptions',
                                 content: 'In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button on the right.',
                                 style: { borderTop: '4px solid #E86161' },
-                            }
-                        ]}
+                            }]
+                        }
                         showNumber={false}
                         accentColor={this.props.theme.orkgPrimaryColor}
                         rounded={10}
