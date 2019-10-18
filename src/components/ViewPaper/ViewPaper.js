@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Alert } from 'reactstrap';
+import { Container, Button, Alert, UncontrolledAlert } from 'reactstrap';
 import { getStatementsBySubject, getResource } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -15,14 +15,13 @@ import PropTypes from 'prop-types';
 import ComparisonPopup from './ComparisonPopup';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import GraphViewModal from './GraphViewModal';
-import { withCookies, Cookies } from 'react-cookie';
-import { compose } from 'redux';
 import queryString from 'query-string';
 
 class ViewPaper extends Component {
     state = {
         loading: true,
         loading_failed: false,
+        unfoundContribution: false,
         id: null,
         title: '',
         authorNames: [],
@@ -51,12 +50,10 @@ class ViewPaper extends Component {
         this.props.resetStatementBrowser();
 
         getResource(resourceId).then((paperResource) => {
-            getStatementsBySubject(resourceId).then((paperStatements) => {
+            getStatementsBySubject({ id: resourceId }).then((paperStatements) => {
                 // check if type is paper
-                let hasTypePaper = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_IS_A && statement.object.id === process.env.REACT_APP_RESOURCE_TYPES_PAPER);
-
-                if (hasTypePaper.length === 0) {
-                    throw new Error('The requested resource is not of type "paper"');
+                if (!paperResource.classes.includes(process.env.REACT_APP_CLASSES_PAPER)) {
+                    throw new Error(`The requested resource is not of class "${process.env.REACT_APP_CLASSES_PAPER}"`);
                 }
 
                 // research field
@@ -96,6 +93,9 @@ class ViewPaper extends Component {
                 let publicationDOI = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
                 if (publicationDOI.length > 0) {
                     publicationDOI = publicationDOI[0].object.label;
+                    if (publicationDOI.includes('10.') && !publicationDOI.startsWith('10.')) {
+                        publicationDOI = publicationDOI.substring(publicationDOI.indexOf('10.'));
+                    }
                 } else {
                     publicationDOI = null;
                 }
@@ -125,13 +125,22 @@ class ViewPaper extends Component {
                     authorNames: authorNamesArray.reverse(), // statements are ordered desc, so first author is last => thus reverse
                     contributions: contributionArray.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
                 });
-            }).then(() => {
+            }).then((e) => {
                 if (this.props.match.params.contributionId && !this.state.contributions.some((el) => { return el.id === this.props.match.params.contributionId; })) {
                     throw new Error('Contribution not found');
                 }
-                this.setState({ selectedContribution: (this.props.match.params.contributionId && this.state.contributions.some((el) => { return el.id === this.props.match.params.contributionId; })) ? this.props.match.params.contributionId : this.state.contributions[0].id });
+                if (this.state.contributions[0]) {
+                    this.setState({ selectedContribution: (this.props.match.params.contributionId && this.state.contributions.some((el) => { return el.id === this.props.match.params.contributionId; })) ? this.props.match.params.contributionId : this.state.contributions[0].id });
+                } else {
+                    throw new Error('No Contribution found');
+                }
             }).catch(error => {
-                this.setState({ loading: false, loading_failed: true })
+                if (error.message === 'No Contribution found') {
+                    this.setState({ unfoundContribution: true, loading: false, loading_failed: false })
+                }
+                else {
+                    this.setState({ loading: false, loading_failed: true })
+                }
             });
         }).catch(error => {
             this.setState({ loading: false, loading_failed: true })
@@ -181,17 +190,13 @@ class ViewPaper extends Component {
                             )}
                             {!this.state.loading && !this.state.loading_failed && (
                                 <>
-                                    {comingFromWizard ? // We can remove this when the TPDL 2019 experiment is over 
-                                        this.props.cookies && this.props.cookies.get('tpdlExperiment') ?
-                                            <Alert color="info">
-                                                Thank you for adding a paper! Please <a href="https://forms.gle/WpEJ9dvuTz95skW96" target="_blank" rel="noopener noreferrer">fill out the online evaluation form</a> to finish the experiment.
-                                            </Alert>
-                                            :
-                                            <Alert color="info">
+                                    {comingFromWizard &&
+                                        (
+                                            <UncontrolledAlert color="info">
                                                 Help us to improve the ORKG and <a href="https://forms.gle/AgcUXuiuQzexqZmr6" target="_blank" rel="noopener noreferrer">fill out the online evaluation form</a>. Thank you!
-                                            </Alert>
-                                        : ''}
-                                    <div className="d-flex">
+                                            </UncontrolledAlert>
+                                        )}
+                                    <div className="d-flex align-items-start">
                                         <h2 className="h4 mt-4 mb-3">{this.state.title ? this.state.title : <em>No title</em>}</h2>
 
                                         {/*<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4" style={{ marginLeft: 'auto' }}>
@@ -233,10 +238,10 @@ class ViewPaper extends Component {
                                         </span>
                                     ))}
                                     <br />
-                                    {this.state.publicationDOI && <div style={{ textAlign: 'right' }}><small >DOI : <i>{this.state.publicationDOI}</i></small></div>}
+                                    {this.state.publicationDOI && this.state.publicationDOI.startsWith('10.') && <div style={{ textAlign: 'right' }}><small>DOI: <a href={`https://doi.org/${this.state.publicationDOI}`} target="_blank" rel="noopener noreferrer">{this.state.publicationDOI}</a></small></div>}
                                 </>
                             )}
-                            {!this.state.loading_failed && (
+                            {!this.state.loading_failed && !this.state.unfoundContribution && (
                                 <>
                                     <hr className="mt-4 mb-5" />
                                     <Contributions
@@ -247,6 +252,14 @@ class ViewPaper extends Component {
                                     />
 
                                     <ComparisonPopup />
+                                </>
+                            )}
+                            {!this.state.loading_failed && this.state.unfoundContribution && (
+                                <>
+                                    <hr className="mt-4 mb-5" />
+                                    <Alert color="danger">
+                                        Failed to load contributions.
+                                    </Alert>
                                 </>
                             )}
                         </Container>
@@ -271,7 +284,6 @@ ViewPaper.propTypes = {
         }).isRequired,
     }).isRequired,
     resetStatementBrowser: PropTypes.func.isRequired,
-    cookies: PropTypes.instanceOf(Cookies).isRequired,
     location: PropTypes.object.isRequired,
 }
 
@@ -283,10 +295,7 @@ const mapDispatchToProps = dispatch => ({
     resetStatementBrowser: () => dispatch(resetStatementBrowser()),
 });
 
-export default compose(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    ),
-    withCookies
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
 )(ViewPaper);

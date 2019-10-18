@@ -16,20 +16,25 @@ export const miscSection = 'misc';
 // const sections = [descriptionSection, implementationSection, evaluationSection, miscSection];
 
 class ResourceDetails extends Component {
-  state = {
-    allStatements: null,
-    results: null,
-    error: null,
-    title: null,
-    predicateMap: {},
-    objectMap: {},
-  };
 
-  async componentWillMount() {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      allStatements: null,
+      results: null,
+      error: null,
+      title: null,
+      predicateMap: {},
+      objectMap: {},
+    };
+  }
+
+  async componentDidMount() {
     await this.findResource();
     await this.findAllStatements();
   }
-  initialState = this.state;
 
   findResource = async () => {
     try {
@@ -48,7 +53,7 @@ class ResourceDetails extends Component {
 
   findAllStatements = async () => {
     try {
-      const responseJson = await getStatementsBySubject(this.props.match.params.resourceId);
+      const responseJson = await getStatementsBySubject({ id: this.props.match.params.resourceId });
 
       this.setState({
         allStatements: responseJson,

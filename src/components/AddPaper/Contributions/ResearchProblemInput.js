@@ -20,7 +20,13 @@ class ResearchProblemInput extends Component {
     loadOptions = async (value) => {
         try {
             // Get the statements that contains the has a research field as a predicate
-            let responseJson = await getStatementsByPredicate(process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM)
+            let responseJson = await getStatementsByPredicate({
+                id: process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM,
+                page: 1,
+                items: 999,
+                sortBy: 'id',
+                desc: true
+            })
             let options = [];
             responseJson = responseJson.map((statement) => statement.object).filter((researchProblem, index, self) =>
                 index === self.findIndex((t) => (
@@ -98,6 +104,18 @@ class ResearchProblemInput extends Component {
             menu: (provided) => ({
                 ...provided,
                 zIndex: 10
+            }),
+            multiValueLabel: (provided) => ({
+                ...provided,
+                whiteSpace: 'normal',
+            }),
+            option: (provided) => ({
+                ...provided,
+                whiteSpace: 'normal',
+            }),
+            input: (provided) => ({
+                ...provided,
+                whiteSpace: 'normal',
             })
         }
 
@@ -145,13 +163,15 @@ class ResearchProblemInput extends Component {
                         loadOptions={this.loadOptions}
                     />
                 </StyledResearchFieldsInputFormControl>
-                {false && (
-                    <StyledResearchFieldBrowser className="form-control">
-                        <button type="button" className={'close'} onClick={this.closeProblemBrowser}><span>×</span></button>
-                        <>Problem browser :</><br />
-                        <><b>ID</b> {this.state.problemBrowser.id}</><br />
-                        <><b>Label</b> {this.state.problemBrowser.label}</>
-                    </StyledResearchFieldBrowser>)}
+                {
+                    false && (
+                        <StyledResearchFieldBrowser className="form-control">
+                            <button type="button" className={'close'} onClick={this.closeProblemBrowser}><span>×</span></button>
+                            <>Problem browser :</><br />
+                            <><b>ID</b> {this.state.problemBrowser.id}</><br />
+                            <><b>Label</b> {this.state.problemBrowser.label}</>
+                        </StyledResearchFieldBrowser>)
+                }
             </>
         );
     }

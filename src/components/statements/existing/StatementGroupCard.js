@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {Component, Fragment} from 'react';
 import NewStatementObject from '../NewStatementObject';
 import AddValueToolbar from './AddValueToolbar';
@@ -37,17 +38,18 @@ export default class StatementGroupCard extends Component {
         const predicate = statementGroup[0].predicate;
 
         const statements = statementGroup.map(
-            (statement, index) => <Statement key={index}
+            (statement, index) => (<Statement key={index}
                     getText={this.props.getStatementText(statement)}
                     setText={this.props.setStatementText(statement)}
                     id={statement.object.id}
                     onUpdate={this.reset}
                     type={statement.object._class}
                     subject={statement.subject}
-                    predicate={statement.predicate}/>
+                    predicate={statement.predicate}
+                                   />)
         );
 
-        return <div className="statementGroupView">
+        return (<div className="statementGroupView">
             <div className="statementGroupView-property">
                 <div className="statementGroupView-property-label">
                     <a href={this.props.href}>{this.props.label}</a>
@@ -60,14 +62,15 @@ export default class StatementGroupCard extends Component {
                         {this.state.newStatementVisible
                                 && <NewStatementObject subjectId={subject.id} predicate={predicate}
                                         onCancelClick={this.onCancelAddValueClick}
-                                        onPublishSuccess={this.handlePublishSuccess}/>}
+                                        onPublishSuccess={this.handlePublishSuccess}
+                                   />}
                     </Fragment>
                 </div>
                 <div className="toolbar-wrapper">
-                    <AddValueToolbar onAddValueClick={this.onAddValueClick}/>
+                    <AddValueToolbar onAddValueClick={this.onAddValueClick} />
                 </div>
             </div>
-        </div>
+                </div>)
     }
 
 }

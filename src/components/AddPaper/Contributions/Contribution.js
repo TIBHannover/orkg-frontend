@@ -127,7 +127,7 @@ class Contribution extends Component {
                 <Modal isOpen={this.state.showVideoDialog} toggle={this.toggleVideoDialog} size="lg">
                     <ModalHeader toggle={this.toggleVideoDialog}>How to add contribution data</ModalHeader>
                     <ModalBody>
-                        <iframe width="100%" height="480" src="https://www.youtube.com/embed/BhI-gngCl0k?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="ORKG - How to add contribution data" />
+                        <iframe width="100%" height="480" src="https://www.youtube.com/embed/BhI-gngCl0k?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="true" title="ORKG - How to add contribution data" />
                         <hr />
                         <a href="https://labs.tib.eu/orkg/paper/R1020" target="_blank" rel="noopener noreferrer">View paper that has been used in this example <Icon size="sm" icon={faExternalLinkAlt} /></a>
                     </ModalBody>

@@ -55,13 +55,18 @@ class ResearchFieldCards extends Component {
 
     async getFields(fieldId, label, addBreadcrumb = true) {
         try {
-            await getStatementsBySubject(fieldId).then(async (res) => {
+            await getStatementsBySubject({ id: fieldId }).then(async (res) => {
                 let researchFields = [];
                 res.forEach((elm) => {
                     researchFields.push({
                         'label': elm.object.label,
                         'id': elm.object.id,
                     });
+                });
+
+                // sort research fields alphabetically
+                researchFields = researchFields.sort((a, b) => {
+                    return a.label.localeCompare(b.label);
                 });
 
                 this.setState({
@@ -89,7 +94,10 @@ class ResearchFieldCards extends Component {
 
                     let papers = await getStatementsByObject({
                         id: fieldId,
-                        order: 'desc',
+                        page: 1,
+                        items: 24,
+                        sortBy: 'id',
+                        desc: true
                     });
 
                     papers = papers.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);

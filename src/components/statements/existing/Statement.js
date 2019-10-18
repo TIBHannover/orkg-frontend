@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+/* eslint-disable */
+import React, { Component } from 'react';
 import EditToolbar from '../EditToolbar';
 import MainSnak from '../MainSnak';
-import {updateLiteral, updateResource} from '../../../network';
-import {NotificationManager} from 'react-notifications';
-import {popupDelay} from '../../../utils';
+import { updateLiteral, updateResource } from '../../../network';
+import { toast } from 'react-toastify';
 
 export default class Statement extends Component {
 
@@ -49,20 +49,20 @@ export default class Statement extends Component {
     onUpdateResourceSuccess = (responseJson) => {
         this.setText(responseJson.label);
         this.setEditorState('view');
-        NotificationManager.success('Resource submitted successfully', 'Success', popupDelay);
+        toast.success('Resource submitted successfully');
     };
 
     onUpdateLiteralSuccess = (responseJson) => {
         this.setText(responseJson.label);
         this.setEditorState('view');
-        NotificationManager.success('Resource submitted successfully', 'Success', popupDelay);
+        toast.success('Resource submitted successfully');
     };
 
     onUpdateError = (error) => {
         this.revertText();
         this.setEditorState('view');
         console.error(error);
-        NotificationManager.error(error.message, 'Error submitting resource', popupDelay);
+        toast.error(`Error submitting resource : ${error.message}`);
     };
 
     handlePublishClick = async () => {
@@ -106,7 +106,7 @@ export default class Statement extends Component {
     };
 
     setEditorState(editorState) {
-        this.setState({editorState: editorState});
+        this.setState({ editorState: editorState });
     }
 
     handleObjectTypeSelect = (itemName) => {
@@ -154,24 +154,26 @@ export default class Statement extends Component {
     };
 
     render() {
-        return <div className="statementView">
-            <div className="statementView-rankSelector"/>
+        return (<div className="statementView">
+            <div className="statementView-rankSelector" />
             <div className="statementView-mainSnak-container">
                 <MainSnak ref="mainSnak" editing={this.state.editorState === 'edit'} id={this.id} text={this.getText()}
-                        onInput={this.onValueChange} newProperty={false}
-                        onObjectTypeSelect={this.handleObjectTypeSelect}
-                        onObjectSelect={this.handleObjectSelect}
-                        objectType={this.state.objectType}
-                        onKeyUp={this.handleKeyUp}
-                        onTextAreaKeyUp={this.handleTextAreaKeyUp}/>
+                    onInput={this.onValueChange} newProperty={false}
+                    onObjectTypeSelect={this.handleObjectTypeSelect}
+                    onObjectSelect={this.handleObjectSelect}
+                    objectType={this.state.objectType}
+                    onKeyUp={this.handleKeyUp}
+                    onTextAreaKeyUp={this.handleTextAreaKeyUp}
+                />
             </div>
             <span className="editToolbar-container toolbar-container" aria-disabled={false}>
                 <EditToolbar editorState={this.state.editorState} showRemoveButton={false} editEnabled={true}
-                        onEditClick={this.onEditClick}
-                        onPublishClick={this.handlePublishClick}
-                        onCancelClick={this.handleCancelClick}/>
+                    onEditClick={this.onEditClick}
+                    onPublishClick={this.handlePublishClick}
+                    onCancelClick={this.handleCancelClick}
+                />
             </span>
-        </div>
+                </div>)
     }
 
 };

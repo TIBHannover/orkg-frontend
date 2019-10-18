@@ -1,17 +1,23 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ShortRecord from '../components/statements/ShortRecord';
-import {Link} from 'react-router-dom';
-import {submitGetRequest, url} from '../network';
+import { Link } from 'react-router-dom';
+import { submitGetRequest, url } from '../network';
 import { Container } from 'reactstrap';
 
 export default class Resources extends Component {
-    state = {
-        allResources: null,
-        results: null,
-        error: null,
-    };
 
-    async componentWillMount() {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            allResources: null,
+            results: null,
+            error: null,
+        };
+
+    }
+
+    async componentDidMount() {
         await this.findAllResources();
     }
 
@@ -41,21 +47,21 @@ export default class Resources extends Component {
 
         if (resultsPresent) {
             const resources = this.state.allResources.map(
-                resource => <ShortRecord key={resource.id} header={resource.label}
-                    href={`${process.env.PUBLIC_URL}/resource/${encodeURIComponent(resource.id)}`}>
-                    </ShortRecord>
+                resource => (<ShortRecord key={resource.id} header={resource.label}
+                    href={`${process.env.PUBLIC_URL}/resource/${encodeURIComponent(resource.id)}`}
+                             />)
             );
 
-            return <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5">
+            return (<Container className="box pt-4 pb-4 pl-5 pr-5 mt-5">
                 <div className="addResource toolbar addToolbar-container">
                     <span className="toolbar-button toolbar-button-add">
                         <Link to={`${process.env.PUBLIC_URL}/addResource`}>
-                            <span className="fa fa-plus"/>add new resource
+                            <span className="fa fa-plus" />add new resource
                         </Link>
                     </span>
                 </div>
                 {resources}
-            </Container>
+                    </Container>)
         } else {
             return null;
         }

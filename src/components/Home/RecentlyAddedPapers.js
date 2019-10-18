@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import ROUTES from '../../constants/routes.js';
-import { getStatementsByObject, getStatementsBySubject } from '../../network';
+import { getResourcesByClass, getStatementsBySubject } from '../../network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
@@ -13,28 +13,30 @@ class RecentlyAddedPapers extends Component {
     }
 
     // TODO: replace a lot of this logic to the backend (select papers, first author and research fields)
-    async componentWillMount() {
-        let paperStatements = await getStatementsByObject({
-            id: process.env.REACT_APP_RESOURCE_TYPES_PAPER,
-            limit: 4,
-            order: 'desc',
+    async componentDidMount() {
+        let paperStatements = await getResourcesByClass({
+            id: process.env.REACT_APP_CLASSES_PAPER,
+            page: 1,
+            items: 4,
+            sortBy: 'id',
+            desc: true
         });
 
         await Promise.all(
             paperStatements.map(async (paper, index) => {
 
                 let paperItem = {
-                    id: paper.subject.id,
-                    label: paper.subject.label,
+                    id: paper.id,
+                    label: paper.label,
                     researchField: null,
                     firstAuthor: null,
                 };
 
-                let statements = await getStatementsBySubject(paper.subject.id);
+                let statements = await getStatementsBySubject({ id: paper.id });
                 statements = statements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR || statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
-                
+
                 statements.reverse(); // order statements to ensure that the first author statements is ordered at the top
-       
+
                 for (var i = 0; i < statements.length; i++) {
                     if (statements[i].predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD) {
                         paperItem.researchField = statements[i].object.label;

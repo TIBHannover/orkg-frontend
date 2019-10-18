@@ -16,9 +16,10 @@ import RedirectShortLinks from './components/Comparison/RedirectShortLinks';
 import ResearchField from './components/ResearchField/ResearchField'
 import ResearchProblem from './components/ResearchProblem/ResearchProblem'
 import Resources from './pages/Resources'
-import SearchResults from './pages/SearchResults'
+import SearchResults from './components/Search/Search'
 import ViewPaper from './components/ViewPaper/ViewPaper';
-import TpdlExperiment from './components/Experiments/Tpdl';
+import Stats from './components/Stats/Stats';
+
 
 const routes = [
     {
@@ -69,10 +70,10 @@ const routes = [
     },
     {
         /* TODO: Remove this route (it's temporarily backward compatibility for moving contributions ids from view args to query string) */
-        path: ROUTES.COMPARISON+'*',
+        path: ROUTES.COMPARISON + '*',
         exact: true,
         // eslint-disable-next-line react/prop-types
-        component: ({ match, location }) => <Redirect to={`${ROUTES.COMPARISON}?contributions=${match.params[0].split('/').join(',')}${location.search ? '&'+(location.search.charAt(0) === '?' ? location.search.substr(1) : location.search) : ''}`} />
+        component: ({ match, location }) => <Redirect to={`${ROUTES.COMPARISON}?contributions=${match.params[0].split('/').join(',')}${location.search ? '&' + (location.search.charAt(0) === '?' ? location.search.substr(1) : location.search) : ''}`} />
     },
     {
         path: ROUTES.PAPERS,
@@ -91,6 +92,14 @@ const routes = [
         path: ROUTES.LICENSE,
         component: License
     },
+    {
+        path: ROUTES.SEARCH,
+        component: SearchResults
+    },
+    {
+        path: ROUTES.STATS,
+        component: Stats
+    },
     /* Legacy routes, only used for debugging now */
     {
         path: ROUTES.RESSOURCE_DETAILS,
@@ -101,10 +110,6 @@ const routes = [
         component: PredicateDetails
     },
     {
-        path: ROUTES.SEARCH,
-        component: SearchResults
-    },
-    {
         path: '/resource/:resourceId',
         exact: true,
         // eslint-disable-next-line react/prop-types
@@ -112,7 +117,7 @@ const routes = [
     },
     {
         path: ROUTES.TPDL,
-        component: TpdlExperiment
+        component: () => <Redirect to={'/'} />
     },
     /* Don't add routes below this line */
     {
