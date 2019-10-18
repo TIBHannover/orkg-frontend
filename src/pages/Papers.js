@@ -25,6 +25,8 @@ export default class Resources extends Component {
     }
 
     componentDidMount() {
+        document.title = 'Papers - ORKG';
+
         this.loadMorePapers();
     }
 

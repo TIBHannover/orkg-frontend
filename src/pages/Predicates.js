@@ -23,6 +23,8 @@ export default class Predicates extends Component {
     }
 
     componentDidMount() {
+        document.title = 'Predicates - ORKG';
+
         this.loadMorePredicates();
     }
 
