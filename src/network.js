@@ -246,3 +246,7 @@ export const getLongLink = (shortCode) => {
 export const getAllClasses = () => {
   return submitGetRequest(classesUrl);
 };
+
+export const saveFullPaper = (data) => {
+  return submitPostRequest(`${url}papers/`, { 'Content-Type': 'application/json' }, data);
+};
