@@ -53,8 +53,8 @@ class Header extends Component {
                                     <DropdownToggle nav className="ml-4">Tools <FontAwesomeIcon icon={faSortDown} pull="right" /></DropdownToggle>
                                     <DropdownMenu right>
                                         <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS}>Statistics</DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>Resources <Badge color="info">Beta</Badge></DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>Predicates <Badge color="info">Beta</Badge></DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>Resources <small><Badge color="info">Beta</Badge></small></DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>Predicates <small><Badge color="info">Beta</Badge></small></DropdownItem>
                                     </DropdownMenu>
                                 </ButtonDropdown>
                             </Nav>
