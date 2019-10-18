@@ -107,7 +107,7 @@ class ResourceDetails extends Component {
 
     if (resultsPresent) {
       const titleText = this.state.title;
-      const titleJsx = titleText && <EditableHeader {...this.props} value={titleText} onChange={this.handleHeaderChange} />;
+      const titleJsx = titleText && <EditableHeader {...this.props} id={id} value={titleText} onChange={this.handleHeaderChange} />;
 
       const abstractText = this.state.allStatements.find((statement) => statement.subject.id === id && statement.predicate.id === abstractId);
       const abstractJsx = abstractText && <div>{abstractText.object.id}</div>;
