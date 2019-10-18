@@ -6,6 +6,7 @@ export const predicatesUrl = `${url}predicates/`;
 export const statementsUrl = `${url}statements/`;
 export const literalsUrl = `${url}literals/`;
 export const classesUrl = `${url}classes/`;
+export const statsUrl = `${url}stats/`;
 export const crossrefUrl = process.env.REACT_APP_CROSSREF_URL;
 export const arxivUrl = process.env.REACT_APP_ARXIV_URL;
 export const semanticScholarUrl = process.env.REACT_APP_SEMANTICSCHOLAR_URL;
@@ -217,15 +218,17 @@ export const getSimilaireContribution = (id) => {
 };
 
 export const getAnnotations = (abstract) => {
-  return submitGetRequest(
-    `${annotationServiceUrl}annotator/?text2annotate=${encodeURIComponent(abstract)}`,
-  );
+  return submitPostRequest(`${annotationServiceUrl}annotator/`, { 'Content-Type': 'application/json' }, { text2annotate: abstract });
 };
 
 export const indexContribution = (contribution_id) => {
   return fetch(`${similaireServiceUrl}internal/index/${encodeURIComponent(contribution_id)}/`, {
     method: 'GET',
   });
+};
+
+export const getStats = () => {
+  return submitGetRequest(statsUrl);
 };
 
 export const createShortLink = (data) => {
