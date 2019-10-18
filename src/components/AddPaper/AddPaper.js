@@ -68,6 +68,24 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
+const SubtitleSeperator = styled.div`
+    background: ${(props) => props.theme.darkblue};
+    width:2px;
+    height:30px;
+    margin:0 15px;
+    content: "";
+    display: block;
+    opacity: 0.7;
+`;
+
+const PaperTitle = styled.div`
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-right:20px;
+    color: #62687d;
+`;
+
 class AddPaper extends Component {
     constructor(props) {
         super(props);
@@ -157,8 +175,18 @@ class AddPaper extends Component {
                     when={this.props.shouldBlockNavigation}
                     message="You have unsaved changes, are you sure you want to leave?"
                 />
-                <Container className="p-0">
-                    <h1 className="h4 mt-4 mb-4 float-left">Add paper</h1>
+                <Container className="p-0 mt-4 mb-4 d-flex align-items-center">
+                    <h1 className="h4 flex-shrink-0 mb-0">Add paper</h1>
+
+                    {this.props.currentStep > 1 && (
+                        <>
+                            <SubtitleSeperator />
+
+                            <PaperTitle>
+                                {this.props.title}
+                            </PaperTitle>
+                        </>
+                    )}
 
                     {/*<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4 float-right" style={{ marginLeft: 'auto' }}>
                         <DropdownToggle color="darkblue" size="sm">
@@ -172,7 +200,7 @@ class AddPaper extends Component {
                     <Button
                         color="darkblue"
                         size="sm"
-                        className="mb-4 mt-4 float-right"
+                        className="flex-shrink-0"
                         style={{ marginLeft: 'auto' }}
                         onClick={() => this.toggle('showGraphModal')}
                     >
@@ -216,6 +244,8 @@ class AddPaper extends Component {
 
 AddPaper.propTypes = {
     currentStep: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    authors: PropTypes.array.isRequired,
     isTourOpen: PropTypes.bool.isRequired,
     shouldBlockNavigation: PropTypes.bool.isRequired,
     resetStatementBrowser: PropTypes.func.isRequired,
@@ -229,6 +259,8 @@ AddPaper.propTypes = {
 const mapStateToProps = (state) => ({
     currentStep: state.addPaper.currentStep,
     isTourOpen: state.addPaper.isTourOpen,
+    title: state.addPaper.title,
+    authors: state.addPaper.authors,
     shouldBlockNavigation: state.addPaper.shouldBlockNavigation,
     paperNewResourceId: state.addPaper.paperNewResourceId,
 });
