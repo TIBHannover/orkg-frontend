@@ -1,4 +1,3 @@
-export const doiPredicateLabel = process.env.REACT_APP_DOI_PREDICATE_LABEL;
 export const popupDelay = process.env.REACT_APP_POPUP_DELAY;
 
 export function hashCode(s) {
