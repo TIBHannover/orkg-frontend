@@ -47,6 +47,13 @@ export const selectContribution = ({contributionId: id, contributionIsLoaded}) =
 
 }
 
+export const loadPaper = (payload) => dispatch => {
+    dispatch({
+        type: type.LOAD_PAPER,
+        payload
+    });
+}
+
 export const addToComparison = ({contributionId, contributionData}) => dispatch => {
     dispatch({
         type: type.ADD_TO_COMPARISON,

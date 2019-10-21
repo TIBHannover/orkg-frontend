@@ -14,17 +14,16 @@ import moment from 'moment'
 import PropTypes from 'prop-types';
 import ComparisonPopup from './ComparisonPopup';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
+import { loadPaper } from '../../actions/viewPaper';
 import GraphViewModal from './GraphViewModal';
 import queryString from 'query-string';
+import EditPaperDialog from './EditDialog/EditPaperDialog';
 
 class ViewPaper extends Component {
     state = {
         loading: true,
         loading_failed: false,
         unfoundContribution: false,
-        id: null,
-        title: '',
-        authorNames: [],
         contributions: [],
         selectedContribution: '',
         dropdownOpen: false,
@@ -55,7 +54,7 @@ class ViewPaper extends Component {
                 if (!paperResource.classes.includes(process.env.REACT_APP_CLASSES_PAPER)) {
                     throw new Error(`The requested resource is not of class "${process.env.REACT_APP_CLASSES_PAPER}"`);
                 }
-
+                console.log('test');
                 // research field
                 let researchField = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
 
@@ -64,40 +63,50 @@ class ViewPaper extends Component {
                 }
 
                 // publication year
-                let publicationYear = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
-
-                if (publicationYear.length > 0) {
-                    publicationYear = publicationYear[0].object.label
+                let publicationYearStatements = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
+                let publicationYearResourceId = 0;
+                let publicationYear = 0;
+                if (publicationYearStatements.length > 0) {
+                    publicationYear = publicationYearStatements[0].object.label;
+                    publicationYearResourceId = publicationYearStatements[0].object.id;
                 }
 
                 // publication month
-                let publicationMonth = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
+                let publicationMonthStatements = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
+                let publicationMonthResourceId = 0;
+                let publicationMonth = 0;
 
-                if (publicationMonth.length > 0) {
-                    publicationMonth = publicationMonth[0].object.label
+                if (publicationMonthStatements.length > 0) {
+                    publicationMonth = publicationMonthStatements[0].object.label;
+                    publicationMonthResourceId = publicationMonthStatements[0].object.id;
                 }
 
                 // authors
                 let authors = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
-
                 let authorNamesArray = [];
 
                 if (authors.length > 0) {
                     for (let author of authors) {
-                        let authorName = author.object.label;
-                        authorNamesArray.push(authorName);
+                        authorNamesArray.push({
+                            id: author.object.id,
+                            label: author.object.label
+                        });
                     }
                 }
 
                 // DOI
-                let publicationDOI = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
-                if (publicationDOI.length > 0) {
-                    publicationDOI = publicationDOI[0].object.label;
-                    if (publicationDOI.includes('10.') && !publicationDOI.startsWith('10.')) {
-                        publicationDOI = publicationDOI.substring(publicationDOI.indexOf('10.'));
+                let doi = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
+                let doiResourceId = 0;
+                
+                if (doi.length > 0) {
+                    doiResourceId = doi[0].object.id;
+                    doi = doi[0].object.label;
+                    
+                    if (doi.includes('10.') && !doi.startsWith('10.')) {
+                        doi = doi.substring(doi.indexOf('10.'));
                     }
                 } else {
-                    publicationDOI = null;
+                    doi = null;
                 }
 
                 // contributions
@@ -112,17 +121,23 @@ class ViewPaper extends Component {
                 }
 
                 // Set document title
-                document.title = `${paperResource.label} - ORKG`
+                document.title = `${paperResource.label} - ORKG`;
+
+                this.props.loadPaper({
+                    title: paperResource.label,
+                    paperResourceId: paperResource.id,
+                    authors: authorNamesArray.reverse(), // statements are ordered desc, so first author is last => thus reverse
+                    publicationMonth,
+                    publicationMonthResourceId,
+                    publicationYear,
+                    publicationYearResourceId,
+                    doi,
+                    doiResourceId,
+                    researchField,
+                });
 
                 this.setState({
                     loading: false,
-                    id: this.props.match.params.resourceId,
-                    title: paperResource.label,
-                    publicationYear,
-                    publicationMonth,
-                    researchField,
-                    publicationDOI: publicationDOI,
-                    authorNames: authorNamesArray.reverse(), // statements are ordered desc, so first author is last => thus reverse
                     contributions: contributionArray.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
                 });
             }).then((e) => {
@@ -197,7 +212,7 @@ class ViewPaper extends Component {
                                             </UncontrolledAlert>
                                         )}
                                     <div className="d-flex align-items-start">
-                                        <h2 className="h4 mt-4 mb-3">{this.state.title ? this.state.title : <em>No title</em>}</h2>
+                                        <h2 className="h4 mt-4 mb-3">{this.props.viewPaper.title ? this.props.viewPaper.title : <em>No title</em>}</h2>
 
                                         {/*<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4" style={{ marginLeft: 'auto' }}>
                                             <DropdownToggle color="darkblue" size="sm" >
@@ -217,28 +232,30 @@ class ViewPaper extends Component {
                                         >
                                             <Icon icon={faProjectDiagram} className="mr-1" /> View graph
                                         </Button>
+                                        
+                                        <EditPaperDialog />
                                     </div>
 
                                     <div className="clearfix" />
 
                                     {/* TODO: change links of badges  */}
                                     <span className="badge badge-lightblue mr-2">
-                                        <Icon icon={faCalendar} className="text-primary" /> {this.state.publicationMonth && this.state.publicationMonth.length > 0 && moment(this.state.publicationMonth, 'M').format('MMMM')} {this.state.publicationYear}
+                                        <Icon icon={faCalendar} className="text-primary" /> {this.props.viewPaper.publicationMonth && this.props.viewPaper.publicationMonth.length > 0 && moment(this.props.viewPaper.publicationMonth, 'M').format('MMMM')} {this.props.viewPaper.publicationYear}
                                     </span>
-                                    {this.state.researchField && this.state.researchField.object && (
-                                        <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.researchField.object.id })} >
+                                    {this.props.viewPaper.researchField && this.props.viewPaper.researchField.object && (
+                                        <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.props.viewPaper.researchField.object.id })} >
                                             <span className="badge badge-lightblue mr-2 mb-2">
-                                                <Icon icon={faBars} className="text-primary" /> {this.state.researchField.object.label}
+                                                <Icon icon={faBars} className="text-primary" /> {this.props.viewPaper.researchField.object.label}
                                             </span>
                                         </Link>)
                                     }
-                                    {this.state.authorNames.map((author, index) => (
+                                    {this.props.viewPaper.authors.map((author, index) => (
                                         <span className="badge badge-lightblue mr-2 mb-2" key={index}>
-                                            <Icon icon={faUser} className="text-primary" /> {author}
+                                            <Icon icon={faUser} className="text-primary" /> {author.label}
                                         </span>
                                     ))}
                                     <br />
-                                    {this.state.publicationDOI && this.state.publicationDOI.startsWith('10.') && <div style={{ textAlign: 'right' }}><small>DOI: <a href={`https://doi.org/${this.state.publicationDOI}`} target="_blank" rel="noopener noreferrer">{this.state.publicationDOI}</a></small></div>}
+                                    {this.props.viewPaper.doi && this.props.viewPaper.doi.startsWith('10.') && <div style={{ textAlign: 'right' }}><small>DOI: <a href={`https://doi.org/${this.props.viewPaper.doi}`} target="_blank" rel="noopener noreferrer">{this.props.viewPaper.doi}</a></small></div>}
                                 </>
                             )}
                             {!this.state.loading_failed && !this.state.unfoundContribution && (
@@ -248,7 +265,7 @@ class ViewPaper extends Component {
                                         selectedContribution={this.state.selectedContribution}
                                         contributions={this.state.contributions}
                                         paperId={this.props.match.params.resourceId}
-                                        paperTitle={this.state.title}
+                                        paperTitle={this.props.viewPaper.title}
                                     />
 
                                     <ComparisonPopup />
@@ -285,6 +302,8 @@ ViewPaper.propTypes = {
     }).isRequired,
     resetStatementBrowser: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
+    viewPaper: PropTypes.object.isRequired,
+    loadPaper: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
@@ -293,6 +312,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     resetStatementBrowser: () => dispatch(resetStatementBrowser()),
+    loadPaper: (payload) => dispatch(loadPaper(payload)),
 });
 
 export default connect(
