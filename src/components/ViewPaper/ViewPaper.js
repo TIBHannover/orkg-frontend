@@ -211,7 +211,7 @@ class ViewPaper extends Component {
                                         <Button
                                             color="darkblue"
                                             size="sm"
-                                            className="mb-4 mt-4 float-right"
+                                            className="mb-4 mt-4 ml-2 float-right flex-shrink-0"
                                             style={{ marginLeft: 'auto' }}
                                             onClick={() => this.toggle('showGraphModal')}
                                         >
