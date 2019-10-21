@@ -48,6 +48,7 @@ class Statements extends Component {
                                     enableEdit={this.props.enableEdit}
                                     isLastItem={propertyIds.length === index + 1}
                                     openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
+                                    isEditing={property.isEditing}
                                 />
                             )
                         }))

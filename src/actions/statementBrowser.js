@@ -59,6 +59,20 @@ export const deleteProperty = (data) => dispatch => {
     })
 }
 
+export const toggleEditPropertyLabel = (data) => dispatch => {
+    dispatch({
+        type: type.TOGGLE_EDIT_PROPERTY_LABEL,
+        payload: data
+    })
+}
+
+export const updatePropertyLabel = (data) => dispatch => {
+    dispatch({
+        type: type.UPDATE_PROPERTY_LABEL,
+        payload: data
+    })
+}
+
 export const createValue = (data) => dispatch => {
     let resourceId = data.existingResourceId ? data.existingResourceId : (data.type === 'object' ? guid() : null);
     dispatch({
@@ -68,6 +82,20 @@ export const createValue = (data) => dispatch => {
             resourceId: resourceId,
             ...data,
         }
+    })
+}
+
+export const toggleEditValue = (data) => dispatch => {
+    dispatch({
+        type: type.TOGGLE_EDIT_VALUE,
+        payload: data
+    })
+}
+
+export const updateValueLabel = (data) => dispatch => {
+    dispatch({
+        type: type.UPDATE_VALUE_LABEL,
+        payload: data
     })
 }
 

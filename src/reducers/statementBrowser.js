@@ -61,6 +61,7 @@ export default (state = initialState, action) => {
                     existingPredicateId: payload.existingPredicateId ? payload.existingPredicateId : null,
                     valueIds: [],
                     isExistingProperty: payload.isExistingProperty ? payload.isExistingProperty : false,
+                    isEditing: false,
                 }
             }));
 
@@ -85,6 +86,18 @@ export default (state = initialState, action) => {
             return newState;
         }
 
+        case type.UPDATE_PROPERTY_LABEL: {
+            let { payload } = action;
+            let newState = dotProp.set(state, `properties.byId.${payload.propertyId}.label`, payload.label);
+            return newState;
+        }
+
+        case type.TOGGLE_EDIT_PROPERTY_LABEL: {
+            let { payload } = action;
+            let newState = dotProp.set(state, `properties.byId.${payload.id}.isEditing`, v => !v);
+            return newState;
+        }
+
         case type.CREATE_VALUE: {
             let { payload } = action;
 
@@ -99,6 +112,7 @@ export default (state = initialState, action) => {
                     resourceId: payload.resourceId ? payload.resourceId : null,
                     isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
                     existingStatement: payload.existingStatement ? payload.existingStatement : false,
+                    isEditing: false,
                 }
             }));
 
@@ -136,6 +150,18 @@ export default (state = initialState, action) => {
             let propertyIndex = dotProp.get(newState, `properties.byId.${payload.propertyId}.valueIds`).indexOf(payload.id);
             newState = dotProp.delete(newState, `properties.byId.${payload.propertyId}.valueIds.${propertyIndex}`);
 
+            return newState;
+        }
+
+        case type.TOGGLE_EDIT_VALUE: {
+            let { payload } = action;
+            let newState = dotProp.set(state, `values.byId.${payload.id}.isEditing`, v => !v);
+            return newState;
+        }
+
+        case type.UPDATE_VALUE_LABEL: {
+            let { payload } = action;
+            let newState = dotProp.set(state, `values.byId.${payload.valueId}.label`, payload.label);
             return newState;
         }
 
