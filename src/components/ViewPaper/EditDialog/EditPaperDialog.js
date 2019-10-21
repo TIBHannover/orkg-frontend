@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import { Container, Button, Alert, UncontrolledAlert, Modal, ModalHeader, ModalBody, Collapse, ListGroup } from 'reactstrap';
-import { getStatementsBySubject, getResource, updateResource, updateLiteral, createLiteral, createLiteralStatement, deleteStatementById } from 'network';
+import { Button, Modal, ModalHeader, ModalBody, ListGroup } from 'reactstrap';
+import { updateResource, updateLiteral, createLiteral, createLiteralStatement, deleteStatementById } from 'network';
 import { connect } from 'react-redux';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faBars, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
-import { StyledStatementItem, StyledListGroupOpen, StyledValueItem } from 'components/AddPaper/Contributions/styled';
-import classNames from 'classnames';
 import EditItem from './EditItem';
 import { loadPaper } from 'actions/viewPaper';
+import PropTypes from 'prop-types';
 
 class EditPaperDialog extends Component {
 
@@ -17,19 +14,33 @@ class EditPaperDialog extends Component {
         this.state = {
             showDialog: false,
             openItem: 'title',
-            title: props.viewPaper.title,
-            publicationMonth: props.viewPaper.publicationMonth,
-            publicationYear: props.viewPaper.publicationYear,
-            doi: props.viewPaper.doi,
-            authors: props.viewPaper.authors,
+            ...this.getStateFromRedux()
+        }
+    }
+
+    getStateFromRedux = () => {
+        return {
+            title: this.props.viewPaper.title,
+            publicationMonth: this.props.viewPaper.publicationMonth,
+            publicationYear: this.props.viewPaper.publicationYear,
+            doi: this.props.viewPaper.doi,
+            authors: this.props.viewPaper.authors,
         }
     }
 
     toggleDialog = () => {
-        this.setState(prevState => ({
-            showDialog: !prevState.showDialog,
-            openItem: 'title',
-        }));
+        if (!this.state.showDialog) {
+            this.setState({
+                showDialog: true,
+                openItem: 'title',
+                ...this.getStateFromRedux(),
+            });
+        } else {
+            this.setState({
+                showDialog: false,
+            });
+        }
+        
     }
 
     handleChange = (event, name) => {
@@ -37,34 +48,36 @@ class EditPaperDialog extends Component {
     }
 
     handleSave = async () => {
-        this.toggleDialog();
-
         let loadPaper = {};
 
+        //title 
         updateResource(this.props.viewPaper.paperResourceId, this.state.title);
-        //updateLiteral(this.props.viewPaper.publicationMonthResourceId, this.state.publicationMonth);
-        //updateLiteral(this.props.viewPaper.publicationYearResourceId, this.state.publicationYear);
 
-        this.updateAuthors(this.state.authors);
+        //authors
+        await this.updateAuthors(this.state.authors);
 
+        //publication month
         this.updateOrCreateLiteral({
             reducerName: 'publicationMonthResourceId',
             value: this.state.publicationMonth,
             predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH,
         }); 
 
+        //publication year
         this.updateOrCreateLiteral({
             reducerName: 'publicationYearResourceId',
             value: this.state.publicationYear,
             predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR,
         }); 
 
+        //doi
         this.updateOrCreateLiteral({
             reducerName: 'doiResourceId',
             value: this.state.doi,
             predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_DOI,
         }); 
 
+        //update redux state with changes, so it is updated on the view paper page
         this.props.loadPaper({
             ...loadPaper,
             title: this.state.title,
@@ -73,6 +86,8 @@ class EditPaperDialog extends Component {
             doi: this.state.doi,
             authors: this.state.authors,
         });
+
+        this.toggleDialog();
     }
 
     updateOrCreateLiteral = async ({ reducerName, value, predicateIdForCreate }) => {
@@ -80,7 +95,7 @@ class EditPaperDialog extends Component {
 
         if (literalId) {
             updateLiteral(literalId, value);
-        } else {
+        } else if (value) { // only create a new literal if a value has been provided
             let newLiteral = await this.createNewLiteral(this.props.viewPaper.paperResourceId, predicateIdForCreate, value);
             loadPaper[reducerName] = newLiteral.literalId;
         }
@@ -120,7 +135,7 @@ class EditPaperDialog extends Component {
                 if (existingAuthor.id === author.id) {
                     authorExists = true;
                 }
-            }   
+            }
 
             if (!authorExists) {
                 let authorLiteral = await this.createNewLiteral(this.props.viewPaper.paperResourceId, process.env.REACT_APP_PREDICATES_HAS_AUTHOR, author.label);
@@ -217,14 +232,18 @@ class EditPaperDialog extends Component {
 }
 
 EditPaperDialog.propTypes = {
-    // match: PropTypes.shape({
-    //     params: PropTypes.shape({
-    //         resourceId: PropTypes.string,
-    //         contributionId: PropTypes.string,
-    //     }).isRequired,
-    // }).isRequired,
-    // resetStatementBrowser: PropTypes.func.isRequired,
-    // location: PropTypes.object.isRequired,
+    loadPaper: PropTypes.func.isRequired,
+    viewPaper: PropTypes.shape({
+        paperResourceId: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        publicationMonth: PropTypes.number.isRequired,
+        publicationYear: PropTypes.number.isRequired,
+        doi: PropTypes.string.isRequired,
+        authors: PropTypes.shape({
+            id: PropTypes.number.isRequired,
+            label: PropTypes.string.isRequired,
+        }).isRequired,
+    }).isRequired,
 }
 
 const mapStateToProps = state => ({
