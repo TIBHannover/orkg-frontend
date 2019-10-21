@@ -160,7 +160,7 @@ class ValueItem extends Component {
                     <StyledValueItem>
                         <span className={labelClass} onClick={!this.props.isEditing ? onClick : undefined}>
                             {!this.props.isEditing ?
-                                <ValuePlugins type={this.props.type}>{this.props.label}</ValuePlugins> :
+                                <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>{this.props.label}</ValuePlugins> :
                                 <StyledContentEditable
                                     innerRef={this.contentEditable}
                                     html={this.props.label}
