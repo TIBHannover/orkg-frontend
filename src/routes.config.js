@@ -1,5 +1,4 @@
-import ResourceDetails, { descriptionSection } from './pages/ResourceDetails'
-
+import ResourceDetails from './pages/ResourceDetails'
 import AddPaper from './components/AddPaper/AddPaper'
 import AddResource from './pages/AddResource';
 import Comparison from './components/Comparison/Comparison';
@@ -108,12 +107,6 @@ const routes = [
     {
         path: ROUTES.PREDICATE_DETAILS,
         component: PredicateDetails
-    },
-    {
-        path: '/resource/:resourceId',
-        exact: true,
-        // eslint-disable-next-line react/prop-types
-        component: ({ match }) => <Redirect to={`/resource/${match.params.resourceId}/${descriptionSection}`} />
     },
     {
         path: ROUTES.TPDL,

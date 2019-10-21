@@ -17,7 +17,7 @@ export default {
    RESEARCH_FIELD: '/field/:researchFieldId',
    LICENSE: '/license',
    /* Legacy routes, only used for debugging now */
-   RESSOURCE_DETAILS: '/resource/:resourceId/:sectionName',
+   RESSOURCE_DETAILS: '/resource/:resourceId',
    PREDICATE_DETAILS: '/predicate/:predicateId',
    SEARCH: '/search/:searchTerm?',
    TPDL: '/tpdl',

@@ -4,11 +4,8 @@ import { Container } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PaperCard from './../components/PaperCard/PaperCard'
-/*
-This page is only for debugging. It is requesting ALL statements and resources in 
-order to filter out non-paper resources (very inefficient)
-*/
-export default class Resources extends Component {
+
+export default class Papers extends Component {
 
     constructor(props) {
         super(props);
@@ -25,6 +22,8 @@ export default class Resources extends Component {
     }
 
     componentDidMount() {
+        document.title = 'Papers - ORKG';
+
         this.loadMorePapers();
     }
 
