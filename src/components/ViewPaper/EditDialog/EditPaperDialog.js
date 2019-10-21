@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Button, Alert, UncontrolledAlert, Modal, ModalHeader, ModalBody, Collapse, ListGroup } from 'reactstrap';
-import { getStatementsBySubject, getResource, updateResource, updateLiteral, createLiteral, createLiteralStatement } from 'network';
+import { getStatementsBySubject, getResource, updateResource, updateLiteral, createLiteral, createLiteralStatement, deleteStatementById } from 'network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar, faBars, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
@@ -28,6 +28,7 @@ class EditPaperDialog extends Component {
     toggleDialog = () => {
         this.setState(prevState => ({
             showDialog: !prevState.showDialog,
+            openItem: 'title',
         }));
     }
 
@@ -80,18 +81,23 @@ class EditPaperDialog extends Component {
         if (literalId) {
             updateLiteral(literalId, value);
         } else {
-            let newLiteralId = await this.createNewLiteral(this.props.viewPaper.paperResourceId, predicateIdForCreate, value);
-            loadPaper[reducerName] = newLiteralId;
+            let newLiteral = await this.createNewLiteral(this.props.viewPaper.paperResourceId, predicateIdForCreate, value);
+            loadPaper[reducerName] = newLiteral.literalId;
         }
     }
 
     createNewLiteral = async (resourceId, predicateId, label) => {
         let newLiteral = await createLiteral(label);
-        await createLiteralStatement(resourceId, predicateId, newLiteral.id);
-        return newLiteral.id;
+        let statement = await createLiteralStatement(resourceId, predicateId, newLiteral.id);
+
+        return {
+            literalId: newLiteral.id,
+            statementId: statement.id,
+        };
     }
 
-    updateAuthors = () => {
+    // TODO: improve code by using reduce function 
+    updateAuthors = async () => {
         // check which authors to remove
         for (let author of this.props.viewPaper.authors){
             let keepAuthor = false;
@@ -102,12 +108,13 @@ class EditPaperDialog extends Component {
             }   
 
             if (!keepAuthor) {
-                console.log('remove author');
+                deleteStatementById(author.id);
             }
         }
 
         // check which authors to add
-        for (let author of this.state.authors){
+        let authors = this.state.authors; 
+        for (let [i, author] of this.state.authors.entries()){
             let authorExists = false;
             for (let existingAuthor of this.props.viewPaper.authors) {
                 if (existingAuthor.id === author.id) {
@@ -116,10 +123,14 @@ class EditPaperDialog extends Component {
             }   
 
             if (!authorExists) {
-                console.log('create author');
-                this.createNewLiteral(this.props.viewPaper.paperResourceId, process.env.REACT_APP_PREDICATES_HAS_AUTHOR, author.label);
+                let authorLiteral = await this.createNewLiteral(this.props.viewPaper.paperResourceId, process.env.REACT_APP_PREDICATES_HAS_AUTHOR, author.label);
+                authors[i].id = authorLiteral.statementId;
             }
         }
+
+        this.setState({
+            authors,
+        })
     }
 
     toggleItem = (type) => {
@@ -150,7 +161,7 @@ class EditPaperDialog extends Component {
                     Edit
                 </Button>
 
-                <Modal isOpen={this.state.showDialog} toggle={this.toggleDialog} size="lg">
+                <Modal isOpen={this.state.showDialog} size="lg"> {/* toggle={this.toggleDialog}*/ }
                     <ModalHeader toggle={this.toggleDialog}>Edit general data</ModalHeader>
                     <ModalBody>
                         <ListGroup className="listGroupEnlarge">

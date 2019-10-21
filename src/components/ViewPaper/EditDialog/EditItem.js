@@ -61,7 +61,6 @@ class EditItem extends Component {
                 </Input>
             );
         } else if (this.props.type === 'authors') {
-            console.log(this.props.value);
             input = (
                 <AuthorsInput 
                     value={this.props.value}

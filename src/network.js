@@ -90,6 +90,24 @@ const submitPutRequest = (url, headers, data) => {
   });
 };
 
+const submitDeleteRequest = (url, headers, data) => {
+  if (!url) {
+    throw new Error('Cannot submit DELETE request. URL is null or undefined.');
+  }
+
+  return new Promise((resolve, reject) => {
+    fetch(url, { method: 'DELETE', headers: headers, body: JSON.stringify(data) })
+      .then((response) => {
+        if (!response.ok) {
+          reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
+        } else {
+            return resolve();
+        }
+      })
+      .catch(reject);
+  });
+};
+
 export const updateResource = (id, label) => {
   return submitPutRequest(
     `${resourcesUrl}${id}`,
@@ -172,6 +190,10 @@ export const getAllStatements = ({ page = 1, items = 9999, sortBy = 'id', desc =
 
 export const getPredicatesByLabel = (label) => {
   return submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(label));
+};
+
+export const deleteStatementById = (id) => {
+  return submitDeleteRequest(statementsUrl + encodeURIComponent(id));
 };
 
 export const getStatementsBySubject = ({ id, page = 1, items = 9999, sortBy = 'id', desc = true }) => {

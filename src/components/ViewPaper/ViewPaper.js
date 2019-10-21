@@ -88,7 +88,7 @@ class ViewPaper extends Component {
                 if (authors.length > 0) {
                     for (let author of authors) {
                         authorNamesArray.push({
-                            id: author.object.id,
+                            id: author.id,
                             label: author.object.label
                         });
                     }
