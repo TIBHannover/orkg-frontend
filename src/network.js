@@ -283,3 +283,10 @@ export const getAllClasses = () => {
 export const saveFullPaper = (data) => {
   return submitPostRequest(`${url}papers/`, { 'Content-Type': 'application/json' }, data);
 };
+
+export const getAllPredicates = ({ page = 1, items = 9999, sortBy = 'id', desc = true }) => {
+
+  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
+
+  return submitGetRequest(`${predicatesUrl}?${params}`);
+};
