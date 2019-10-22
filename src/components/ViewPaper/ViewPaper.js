@@ -212,7 +212,7 @@ class ViewPaper extends Component {
                                             </UncontrolledAlert>
                                         )}
                                     <div className="d-flex align-items-start">
-                                        <h2 className="h4 mt-4 mb-3">{this.props.viewPaper.title ? this.props.viewPaper.title : <em>No title</em>}</h2>
+                                        <h2 className="h4 mt-4 mb-3 flex-grow-1">{this.props.viewPaper.title ? this.props.viewPaper.title : <em>No title</em>}</h2>
 
                                         {/*<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4" style={{ marginLeft: 'auto' }}>
                                             <DropdownToggle color="darkblue" size="sm" >
@@ -226,7 +226,7 @@ class ViewPaper extends Component {
                                         <Button
                                             color="darkblue"
                                             size="sm"
-                                            className="mb-4 mt-4 ml-2 float-right flex-shrink-0"
+                                            className="mb-4 mt-4 ml-2 flex-shrink-0"
                                             style={{ marginLeft: 'auto' }}
                                             onClick={() => this.toggle('showGraphModal')}
                                         >

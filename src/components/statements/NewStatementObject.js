@@ -1,34 +1,26 @@
-/* eslint-disable */
 import React, { Component, Fragment } from 'react';
-import EditToolbar from './EditToolbar';
-import {
-    createLiteral,
-    createLiteralStatement,
-    createPredicate,
-    createResource,
-    createResourceStatement
-} from '../../network';
+import { Button } from 'reactstrap';
+import { createLiteral, createLiteralStatement, createPredicate, createResource, createResourceStatement } from '../../network';
 import { toast } from 'react-toastify';
 import MainSnak from './MainSnak';
-import { Button } from 'reactstrap';
+import EditToolbar from './EditToolbar';
+import PropTypes from 'prop-types';
 
-export default class NewStatementObject extends Component {
-
-    state = {
-        /* Possible valhttp://10.115.83.128:3000/ues: 'edit', 'loading'. */
-        editorState: 'edit',
-        objectType: 'resource',
-        selectedPredicateId: null,
-        newPredicateLabel: null,
-        selectedObjectId: null,
-    };
-
-    value = null;
+class NewStatementObject extends Component {
 
     constructor(props) {
         super(props);
 
         this.value = this.props.value;
+
+        this.state = {
+            /* Possible values: 'edit', 'loading'. */
+            editorState: 'edit',
+            objectType: 'resource',
+            selectedPredicateId: null,
+            newPredicateLabel: null,
+            selectedObjectId: null,
+        };
     }
 
     onLiteralStatementCreationSuccess = (responseJson) => {
@@ -205,42 +197,53 @@ export default class NewStatementObject extends Component {
         const newProperty = this.props.predicate === null;
         const editEnabled = !newProperty || this.state.selectedPredicateId !== null
             || this.state.newPredicateLabel !== null;
-        return (<div id="new" className="statementView newStatement">
-            <div className="statementView-rankSelector">
-                <div className="rankSelector">
-                    <span className="fa fa-sort" />
-                </div>
-            </div>
-            <div className="statementView-mainSnak-container">
-                <MainSnak editing={true} text="" onInput={this.onValueChange}
-                    onObjectTypeSelect={this.handleObjectTypeSelect}
-                    objectType={this.state.objectType}
-                    newProperty={newProperty}
-                    onObjectSelect={this.handleObjectSelect}
-                    onPredicateSelect={this.handlePredicateSelect}
-                    onNewPredicate={this.handleNewPredicate}
-                    onKeyDown={this.handleKeyDown}
-                />
-                <div className="statementView-qualifiers">
-                    <div className="listView" />
-                    <div className="toolbar-container hidden">
-                        <span className="toolbar-button toolbar-container">
-                            <Button>
-                                {
-                                    editEnabled && <Fragment><span className="fa fa-plus" />add qualifier</Fragment>
-                                }
-                            </Button>
-                        </span>
+        return (
+            <div id="new" className="statementView newStatement">
+                <div className="statementView-mainSnak-container">
+                    <MainSnak
+                        editing={true}
+                        text=""
+                        onInput={this.onValueChange}
+                        onObjectTypeSelect={this.handleObjectTypeSelect}
+                        objectType={this.state.objectType}
+                        newProperty={newProperty}
+                        onObjectSelect={this.handleObjectSelect}
+                        onPredicateSelect={this.handlePredicateSelect}
+                        onNewPredicate={this.handleNewPredicate}
+                        onKeyDown={this.handleKeyDown}
+                    />
+                    <div className="statementView-qualifiers">
+                        <div className="listView" />
+                        <div className="toolbar-container hidden">
+                            <span className="toolbar-button toolbar-container">
+                                <Button>
+                                    {
+                                        editEnabled && <Fragment><span className="fa fa-plus" />add qualifier</Fragment>
+                                    }
+                                </Button>
+                            </span>
+                        </div>
                     </div>
                 </div>
+                <div className="statementView-references-container" />
+                <div className="editToolbar-container toolbar-container">
+                    <EditToolbar editorState={this.state.editorState} showRemoveButton={false} editEnabled={editEnabled}
+                        onPublishClick={this.handlePublishClick} onCancelClick={this.props.onCancelClick}
+                    />
+                </div>
             </div>
-            <div className="statementView-references-container" />
-            <div className="editToolbar-container toolbar-container">
-                <EditToolbar editorState={this.state.editorState} showRemoveButton={false} editEnabled={editEnabled}
-                    onPublishClick={this.handlePublishClick} onCancelClick={this.props.onCancelClick}
-                />
-            </div>
-                </div>)
+        )
     }
 
 }
+
+
+NewStatementObject.propTypes = {
+    predicate: PropTypes.number,
+    subjectId: PropTypes.string.isRequired,
+    value: PropTypes.string,
+    onPublishSuccess: PropTypes.func.isRequired,
+    onCancelClick: PropTypes.func.isRequired,
+};
+
+export default NewStatementObject;
