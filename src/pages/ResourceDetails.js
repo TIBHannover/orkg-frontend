@@ -15,7 +15,7 @@ class ResourceDetails extends Component {
 
     this.state = {
       error: null,
-      label: null,
+      label: '',
       isLoading: false,
     };
   }
@@ -47,7 +47,7 @@ class ResourceDetails extends Component {
         {!this.state.isLoading && !this.state.error && this.state.label && (
           <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">
             <div className="entityView-main">
-              <EditableHeader {...this.props} id={id} value={this.state.label} onChange={this.handleHeaderChange} />
+              <EditableHeader id={id} value={this.state.label} onChange={this.handleHeaderChange} />
               <StatementBrowser
                 enableEdit={true}
                 syncBackend={true}

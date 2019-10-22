@@ -2,13 +2,6 @@
     padding: 10px 5px 5px 10px;
 }
 
-.snakView-value-container {
-    min-height: 1.6em;
-}
-
-.snakView-body {
-}
-
 .snakView-value {
     display: inline;
 }
@@ -47,33 +40,6 @@
     text-align: right;
     padding-right: 2px;
     background-image: none;
-}
-
-.addToolbar {
-    line-height: 2em;
-    position: static;
-    float: right;
-    right: 0;
-    top: 0;
-    width: 18em;
-}
-
-.newStatement {
-    padding-bottom: 0;
-}
-
-.newStatement:last-child {
-    border-bottom: 0;
-}
-
-.newStatement .statementView-mainSnak .snakView-property-container {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: -15em;
-    width: 15em;
-    display: block;
-    z-index: 2;
 }
 
 .snakView .snakView-value-container {
@@ -165,16 +131,6 @@
     box-sizing: border-box;
     border-color: gray;
     background-color: white;
-}
-
-.addResource {
-    float: none;
-    text-align: right;
-    height: 2em;
-}
-
-.snakView-value-container .snakView-body {
-    float: left;
 }
 
 .snakView-typeSelector {

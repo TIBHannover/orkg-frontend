@@ -61,12 +61,10 @@ export default class Resources extends Component {
                     <h1 className="h4 mt-4 mb-4">View all resources</h1>
                 </Container>
                 <Container className={'box pt-4 pb-4 pl-5 pr-5 clearfix'}>
-                    <div className="addResource toolbar addToolbar-container">
-                        <span className="toolbar-button toolbar-button-add">
-                            <Link to={`${process.env.PUBLIC_URL}/addResource`}>
-                                <span className="fa fa-plus" />add new resource
-                            </Link>
-                        </span>
+                    <div className="clearfix">
+                        <Link className="float-right mb-2 mt-2 clearfix" to={`${process.env.PUBLIC_URL}/addResource`}>
+                            <span className="fa fa-plus" /> add new resource
+                        </Link>
                     </div>
                     {this.state.resources.length > 0 &&
                         <div>
