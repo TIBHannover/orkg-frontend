@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Container, Button, ButtonGroup, Alert, UncontrolledAlert, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Container, Button, Alert, UncontrolledAlert, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { getStatementsBySubject, getResource } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faBars, faProjectDiagram, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faCalendar, faBars, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader'
 import Contributions from './Contributions';
