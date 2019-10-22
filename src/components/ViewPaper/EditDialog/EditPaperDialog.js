@@ -5,7 +5,13 @@ import { connect } from 'react-redux';
 import EditItem from './EditItem';
 import { loadPaper } from 'actions/viewPaper';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import LoadingOverlay from 'react-loading-overlay';
 
+const LoadingOverlayStyled = styled(LoadingOverlay)`
+    //border-radius: 7px;
+    //overflow: hidden;
+`;
 class EditPaperDialog extends Component {
 
     constructor(props) {
@@ -14,6 +20,7 @@ class EditPaperDialog extends Component {
         this.state = {
             showDialog: false,
             openItem: 'title',
+            isLoading: false,
             ...this.getStateFromRedux()
         }
     }
@@ -40,7 +47,7 @@ class EditPaperDialog extends Component {
                 showDialog: false,
             });
         }
-        
+
     }
 
     handleChange = (event, name) => {
@@ -48,6 +55,9 @@ class EditPaperDialog extends Component {
     }
 
     handleSave = async () => {
+        this.setState({
+            isLoading: true
+        });
         let loadPaper = {};
 
         //title 
@@ -61,21 +71,21 @@ class EditPaperDialog extends Component {
             reducerName: 'publicationMonthResourceId',
             value: this.state.publicationMonth,
             predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH,
-        }); 
+        });
 
         //publication year
         this.updateOrCreateLiteral({
             reducerName: 'publicationYearResourceId',
             value: this.state.publicationYear,
             predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR,
-        }); 
+        });
 
         //doi
         this.updateOrCreateLiteral({
             reducerName: 'doiResourceId',
             value: this.state.doi,
             predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_DOI,
-        }); 
+        });
 
         //update redux state with changes, so it is updated on the view paper page
         this.props.loadPaper({
@@ -85,6 +95,10 @@ class EditPaperDialog extends Component {
             publicationYear: this.state.publicationYear,
             doi: this.state.doi,
             authors: this.state.authors,
+        });
+        
+        this.setState({
+            isLoading: false
         });
 
         this.toggleDialog();
@@ -114,13 +128,13 @@ class EditPaperDialog extends Component {
     // TODO: improve code by using reduce function 
     updateAuthors = async () => {
         // check which authors to remove
-        for (let author of this.props.viewPaper.authors){
+        for (let author of this.props.viewPaper.authors) {
             let keepAuthor = false;
             for (let existingAuthor of this.state.authors) {
                 if (existingAuthor.id === author.id) {
                     keepAuthor = true;
                 }
-            }   
+            }
 
             if (!keepAuthor) {
                 deleteStatementById(author.id);
@@ -128,8 +142,8 @@ class EditPaperDialog extends Component {
         }
 
         // check which authors to add
-        let authors = this.state.authors; 
-        for (let [i, author] of this.state.authors.entries()){
+        let authors = this.state.authors;
+        for (let [i, author] of this.state.authors.entries()) {
             let authorExists = false;
             for (let existingAuthor of this.props.viewPaper.authors) {
                 if (existingAuthor.id === author.id) {
@@ -155,7 +169,6 @@ class EditPaperDialog extends Component {
     }
 
     handleAuthorsChange = (tags) => {
-        console.log(tags);
         tags = tags ? tags : [];
         this.setState({
             authors: tags,
@@ -176,55 +189,70 @@ class EditPaperDialog extends Component {
                     Edit
                 </Button>
 
-                <Modal isOpen={this.state.showDialog} size="lg"> {/* toggle={this.toggleDialog}*/ }
-                    <ModalHeader toggle={this.toggleDialog}>Edit general data</ModalHeader>
-                    <ModalBody>
-                        <ListGroup className="listGroupEnlarge">
-                            <EditItem 
-                                open={this.state.openItem === 'title'} 
-                                label="Title"
-                                type="text"
-                                value={this.state.title}
-                                onChange={(e) => this.handleChange(e, 'title')}
-                                toggleItem={() => this.toggleItem('title')}
-                            />
-                            <EditItem 
-                                open={this.state.openItem === 'month'} 
-                                label="Publication month"
-                                type="month"
-                                value={this.state.publicationMonth}
-                                onChange={(e) => this.handleChange(e, 'publicationMonth')}
-                                toggleItem={() => this.toggleItem('month')}
-                            />
-                            <EditItem 
-                                open={this.state.openItem === 'year'} 
-                                label="Publication year"
-                                type="year"
-                                value={this.state.publicationYear}
-                                onChange={(e) => this.handleChange(e, 'publicationYear')}
-                                toggleItem={() => this.toggleItem('year')}
-                            />
-                            <EditItem 
-                                open={this.state.openItem === 'authors'} 
-                                label="Authors"
-                                type="authors"
-                                value={this.state.authors}
-                                onChange={this.handleAuthorsChange}
-                                toggleItem={() => this.toggleItem('authors')}
-                            />
-                            <EditItem 
-                                open={this.state.openItem === 'doi'} 
-                                isLastItem={true} 
-                                label="DOI"
-                                type="text"
-                                value={this.state.doi}
-                                onChange={(e) => this.handleChange(e, 'doi')}
-                                toggleItem={() => this.toggleItem('doi')}
-                            />
-                        </ListGroup>
 
-                        <Button color="primary" className="float-right mt-2" onClick={this.handleSave}>Save</Button>
-                    </ModalBody>
+
+                <Modal isOpen={this.state.showDialog} toggle={this.toggleDialog} size="lg">
+                    <LoadingOverlayStyled
+                        active={this.state.isLoading}
+                        spinner
+                        text="Saving..."
+                        styles={{
+                            overlay: (base) => ({
+                              ...base,
+                              borderRadius: 7,
+                              overflow: 'hidden',
+                            })
+                          }}
+                    >
+                        <ModalHeader toggle={this.toggleDialog}>Edit general data</ModalHeader>
+                        <ModalBody>
+                            <ListGroup className="listGroupEnlarge">
+                                <EditItem
+                                    open={this.state.openItem === 'title'}
+                                    label="Title"
+                                    type="text"
+                                    value={this.state.title}
+                                    onChange={(e) => this.handleChange(e, 'title')}
+                                    toggleItem={() => this.toggleItem('title')}
+                                />
+                                <EditItem
+                                    open={this.state.openItem === 'month'}
+                                    label="Publication month"
+                                    type="month"
+                                    value={this.state.publicationMonth}
+                                    onChange={(e) => this.handleChange(e, 'publicationMonth')}
+                                    toggleItem={() => this.toggleItem('month')}
+                                />
+                                <EditItem
+                                    open={this.state.openItem === 'year'}
+                                    label="Publication year"
+                                    type="year"
+                                    value={this.state.publicationYear}
+                                    onChange={(e) => this.handleChange(e, 'publicationYear')}
+                                    toggleItem={() => this.toggleItem('year')}
+                                />
+                                <EditItem
+                                    open={this.state.openItem === 'authors'}
+                                    label="Authors"
+                                    type="authors"
+                                    value={this.state.authors}
+                                    onChange={this.handleAuthorsChange}
+                                    toggleItem={() => this.toggleItem('authors')}
+                                />
+                                <EditItem
+                                    open={this.state.openItem === 'doi'}
+                                    isLastItem={true}
+                                    label="DOI"
+                                    type="text"
+                                    value={this.state.doi}
+                                    onChange={(e) => this.handleChange(e, 'doi')}
+                                    toggleItem={() => this.toggleItem('doi')}
+                                />
+                            </ListGroup>
+
+                            <Button color="primary" className="float-right mt-2 mb-2" onClick={this.handleSave}>Save</Button>
+                        </ModalBody>
+                    </LoadingOverlayStyled>
                 </Modal>
             </>
         );
