@@ -20,7 +20,7 @@ class EditPaperDialog extends Component {
         this.state = {
             showDialog: false,
             openItem: 'title',
-            isLoading: true,
+            isLoading: false,
             ...this.getStateFromRedux()
         }
     }
