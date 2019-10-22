@@ -81,14 +81,19 @@ EditItem.propTypes = {
     open: PropTypes.bool.isRequired,
     label: PropTypes.string.isRequired,
     toggleItem: PropTypes.func.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+        PropTypes.array,
+    ]),
     onChange: PropTypes.func.isRequired,
     type: PropTypes.oneOf(['text', 'month', 'year', 'authors']).isRequired,
     isLastItem: PropTypes.bool,
 }
 
-EditItem.propTypes = {
+EditItem.defaultProps = {
     isLastItem: false,
+    value: '',
 }
 
 export default EditItem;

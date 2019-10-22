@@ -96,7 +96,7 @@ class EditPaperDialog extends Component {
             doi: this.state.doi,
             authors: this.state.authors,
         });
-        
+
         this.setState({
             isLoading: false
         });
@@ -176,7 +176,6 @@ class EditPaperDialog extends Component {
     };
 
     render() {
-
         return (
             <>
                 <Button
@@ -198,11 +197,11 @@ class EditPaperDialog extends Component {
                         text="Saving..."
                         styles={{
                             overlay: (base) => ({
-                              ...base,
-                              borderRadius: 7,
-                              overflow: 'hidden',
+                                ...base,
+                                borderRadius: 7,
+                                overflow: 'hidden',
                             })
-                          }}
+                        }}
                     >
                         <ModalHeader toggle={this.toggleDialog}>Edit general data</ModalHeader>
                         <ModalBody>
@@ -267,10 +266,12 @@ EditPaperDialog.propTypes = {
         publicationMonth: PropTypes.number.isRequired,
         publicationYear: PropTypes.number.isRequired,
         doi: PropTypes.string.isRequired,
-        authors: PropTypes.shape({
-            id: PropTypes.number.isRequired,
-            label: PropTypes.string.isRequired,
-        }).isRequired,
+        authors: PropTypes.arrayOf(
+            PropTypes.shape({
+                id: PropTypes.string.isRequired,
+                label: PropTypes.string.isRequired,
+            }).isRequired
+        ).isRequired,
     }).isRequired,
 }
 

@@ -54,7 +54,7 @@ class ViewPaper extends Component {
                 if (!paperResource.classes.includes(process.env.REACT_APP_CLASSES_PAPER)) {
                     throw new Error(`The requested resource is not of class "${process.env.REACT_APP_CLASSES_PAPER}"`);
                 }
-                console.log('test');
+
                 // research field
                 let researchField = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
 
@@ -127,9 +127,9 @@ class ViewPaper extends Component {
                     title: paperResource.label,
                     paperResourceId: paperResource.id,
                     authors: authorNamesArray.reverse(), // statements are ordered desc, so first author is last => thus reverse
-                    publicationMonth,
+                    publicationMonth: parseInt(publicationMonth),
                     publicationMonthResourceId,
-                    publicationYear,
+                    publicationYear: parseInt(publicationYear),
                     publicationYearResourceId,
                     doi,
                     doiResourceId,
