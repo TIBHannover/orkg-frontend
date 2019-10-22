@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Container, Button, Alert, UncontrolledAlert } from 'reactstrap';
+import { Container, Button, ButtonGroup, Alert, UncontrolledAlert, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { getStatementsBySubject, getResource } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faBars, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faCalendar, faBars, faProjectDiagram, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader'
 import Contributions from './Contributions';
@@ -29,6 +29,7 @@ class ViewPaper extends Component {
         selectedContribution: '',
         dropdownOpen: false,
         showGraphModal: false,
+        editMode: false,
     }
 
     componentDidMount() {
@@ -199,24 +200,26 @@ class ViewPaper extends Component {
                                     <div className="d-flex align-items-start">
                                         <h2 className="h4 mt-4 mb-3 flex-grow-1">{this.state.title ? this.state.title : <em>No title</em>}</h2>
 
-                                        {/*<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4" style={{ marginLeft: 'auto' }}>
-                                            <DropdownToggle color="darkblue" size="sm" >
-                                                <span className="mr-2">View</span> <Icon icon={faEllipsisV} />
-                                            </DropdownToggle>
-                                            <DropdownMenu>
-                                                <DropdownItem onClick={() => this.toggle('showGraphModal')}>Show graph visualization</DropdownItem>
-                                            </DropdownMenu>
-                                        </Dropdown>*/}
-
-                                        <Button
-                                            color="darkblue"
-                                            size="sm"
-                                            className="mb-4 mt-4 ml-2 flex-shrink-0"
-                                            style={{ marginLeft: 'auto' }}
-                                            onClick={() => this.toggle('showGraphModal')}
-                                        >
-                                            <Icon icon={faProjectDiagram} className="mr-1" /> View graph
-                                        </Button>
+                                        {!this.state.editMode && (
+                                            <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4 ml-2 flex-shrink-0" style={{ marginLeft: 'auto' }}>
+                                                <DropdownToggle color="darkblue" size="sm" >
+                                                    <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
+                                                </DropdownToggle>
+                                                <DropdownMenu>
+                                                    <DropdownItem onClick={() => this.toggle('showGraphModal')}>Show graph visualization</DropdownItem>
+                                                    <DropdownItem onClick={() => this.toggle('editMode')}>Edit mode</DropdownItem>
+                                                </DropdownMenu>
+                                            </Dropdown>)}
+                                        {this.state.editMode && (
+                                            <Button
+                                                className="mb-4 mt-4 ml-2 flex-shrink-0"
+                                                style={{ marginLeft: 'auto' }}
+                                                color="darkblue"
+                                                size="sm"
+                                                onClick={() => this.toggle('editMode')}
+                                            >
+                                                Finish Edit
+                                            </Button>)}
                                     </div>
 
                                     <div className="clearfix" />
@@ -249,6 +252,7 @@ class ViewPaper extends Component {
                                         contributions={this.state.contributions}
                                         paperId={this.props.match.params.resourceId}
                                         paperTitle={this.state.title}
+                                        enableEdit={this.state.editMode}
                                     />
 
                                     <ComparisonPopup />

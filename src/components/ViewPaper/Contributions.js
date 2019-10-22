@@ -2,7 +2,6 @@ import { Alert, Col, Container, Form, FormGroup, Row } from 'reactstrap';
 import React, { Component } from 'react';
 import { StyledContribution, StyledContributionsList } from '../AddPaper/Contributions/styled';
 import { getResource, getSimilaireContribution } from '../../network';
-
 import AddToComparison from './AddToComparison';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ContentLoader from 'react-content-loader'
@@ -171,21 +170,23 @@ class Contributions extends Component {
                                                     </ContentLoader>
                                                 </div>
                                             )}
-                                            {!this.state.loading && (
-                                                <>
-                                                    {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].map((problem, index) => (
-                                                        <span key={index}>
-                                                            <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>
-                                                                <span style={{ whiteSpace: 'normal', textAlign: 'left' }} className="btn btn-link p-0 border-0 align-baseline">
-                                                                    {problem.label}
-                                                                </span>
-                                                            </Link>
-                                                            <br />
-                                                        </span>
-                                                    ))
-                                                    }
-                                                </>
-                                            )}
+                                            {!this.state.loading &&
+                                                (
+                                                    <>
+                                                        {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].map((problem, index) => (
+                                                            <span key={index}>
+                                                                <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>
+                                                                    <span style={{ whiteSpace: 'normal', textAlign: 'left' }} className="btn btn-link p-0 border-0 align-baseline">
+                                                                        {problem.label}
+                                                                    </span>
+                                                                </Link>
+                                                                <br />
+                                                            </span>
+                                                        ))
+                                                        }
+                                                    </>
+                                                )
+                                            }
                                         </FormGroup>
 
                                         <FormGroup>
@@ -205,7 +206,8 @@ class Contributions extends Component {
                                             )}
                                             {!this.state.loading && (
                                                 <StatementBrowser
-                                                    enableEdit={false}
+                                                    enableEdit={this.props.enableEdit}
+                                                    syncBackend={this.props.enableEdit}
                                                     openExistingResourcesInDialog={false}
                                                 />
                                             )}
@@ -264,6 +266,7 @@ Contributions.propTypes = {
     contributions: PropTypes.array.isRequired,
     paperId: PropTypes.string.isRequired,
     paperTitle: PropTypes.string.isRequired,
+    enableEdit: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
