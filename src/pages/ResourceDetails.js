@@ -6,7 +6,6 @@ import EditableHeader from '../components/EditableHeader';
 import InternalServerError from '../components/StaticPages/InternalServerError';
 import NotFound from '../components/StaticPages/NotFound';
 import PropTypes from 'prop-types';
-import './ResourceDetails.css';
 
 class ResourceDetails extends Component {
 

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { predicatesUrl, submitGetRequest } from '../network';
-import './ResourceDetails.css';
 import PropTypes from 'prop-types';
 import { Container } from 'reactstrap';
 
