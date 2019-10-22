@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ShortRecord from '../components/statements/ShortRecord';
+import ShortRecord from '../components/ShortRecord/ShortRecord';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getAllPredicates } from '../network';

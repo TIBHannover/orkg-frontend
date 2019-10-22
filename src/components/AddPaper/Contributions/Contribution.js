@@ -82,6 +82,7 @@ class Contribution extends Component {
                         <StatementBrowser
                             enableEdit={true}
                             openExistingResourcesInDialog={true}
+                            syncBackend={false}
                         />
                     </FormGroup>
                 </Form>

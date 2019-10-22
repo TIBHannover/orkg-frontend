@@ -3,7 +3,7 @@ import { ListGroup, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { StyledStatementItem, StyledListGroupOpen } from '../AddPaper/Contributions/styled';
-import { getResource } from '../../network';
+import { getResource, updatePredicate } from '../../network';
 import classNames from 'classnames';
 import ValueItem from './Value/ValueItem';
 import AddValue from './Value/AddValue';
@@ -11,6 +11,7 @@ import StatementOptions from './StatementOptions';
 import { connect } from 'react-redux';
 import { togglePropertyCollapse, toggleEditPropertyLabel, updatePropertyLabel } from '../../actions/statementBrowser';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import ContentEditable from 'react-contenteditable'
 import styled from 'styled-components';
 
@@ -56,6 +57,17 @@ class StatementItem extends Component {
             label: e.target.value,
             propertyId: propertyId,
         });
+    };
+
+    handleSyncBackend = () => {
+        if (this.props.syncBackend) {
+            let predicate = this.props.properties.byId[this.props.id];
+            let existingPredicateId = predicate ? predicate.existingPredicateId : false;
+            if (existingPredicateId) {
+                updatePredicate(existingPredicateId, this.props.predicateLabel);
+                toast.success('Predicate label updated successfully');
+            }
+        }
     };
 
     getPredicateLabel = () => {
@@ -108,12 +120,12 @@ class StatementItem extends Component {
                         this.state.predicateLabel :
                         <StyledContentEditable
                             innerRef={this.contentEditable}
-                            html={this.state.predicateLabel}
+                            html={this.props.predicateLabel}
                             disabled={!this.props.isEditing}
                             tagName={'span'}
                             onChange={(e) => this.handleChange(this.props.id, e)}
                             onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
-                            onBlur={(e) => this.props.toggleEditPropertyLabel({ id: this.props.id })}
+                            onBlur={(e) => { this.handleSyncBackend(); this.props.toggleEditPropertyLabel({ id: this.props.id }) }}
                             onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
                         />}
 
@@ -132,6 +144,8 @@ class StatementItem extends Component {
                                     inline
                                     isExistingValue={this.props.values.byId[valueIds[0]].isExistingValue}
                                     isEditing={false}
+                                    enableEdit={false}
+                                    syncBackend={false}
                                 />
                             </em>
                         </>
@@ -144,7 +158,12 @@ class StatementItem extends Component {
                             )}
                     <Icon icon={isCollapsed ? faChevronCircleUp : faChevronCircleDown} className={chevronClass} />
 
-                    {!this.props.isExistingProperty ? <StatementOptions id={this.props.id} isEditing={this.props.isEditing} existingPredicateId={this.props.properties.byId[this.props.id].existingPredicateId} /> : ''}
+                    {this.props.enableEdit ? (
+                        <StatementOptions
+                            id={this.props.id}
+                            syncBackend={this.props.syncBackend}
+                            isEditing={this.props.isEditing}
+                        />) : ''}
                 </StyledStatementItem>
 
                 <Collapse isOpen={isCollapsed}>
@@ -160,17 +179,20 @@ class StatementItem extends Component {
                                         id={valueId}
                                         type={value.type}
                                         classes={value.classes}
+                                        enableEdit={this.props.enableEdit}
+                                        syncBackend={this.props.syncBackend}
                                         resourceId={value.resourceId}
                                         propertyId={this.props.id}
                                         existingStatement={value.existingStatement}
                                         openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                                         isExistingValue={value.isExistingValue}
                                         isEditing={value.isEditing}
+                                        statementId={value.statementId}
                                     />
                                 );
                             })}
 
-                            {this.props.enableEdit ? <AddValue /> : ''}
+                            {this.props.enableEdit ? <AddValue syncBackend={this.props.syncBackend} /> : ''}
                         </ListGroup>
                     </StyledListGroupOpen>
                 </Collapse>
@@ -185,6 +207,7 @@ StatementItem.propTypes = {
     index: PropTypes.number.isRequired,
     isExistingProperty: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
+    syncBackend: PropTypes.bool.isRequired,
     isLastItem: PropTypes.bool.isRequired,
     togglePropertyCollapse: PropTypes.func.isRequired,
     selectedProperty: PropTypes.string.isRequired,

@@ -112,7 +112,9 @@ export default (state = initialState, action) => {
                     resourceId: payload.resourceId ? payload.resourceId : null,
                     isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
                     existingStatement: payload.existingStatement ? payload.existingStatement : false,
+                    statementId: payload.statementId,
                     isEditing: false,
+
                 }
             }));
 

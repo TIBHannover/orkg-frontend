@@ -89,7 +89,7 @@ export const StyledResearchFieldBrowser = styled.div`
     cursor: text;
 `;
 
-/*statementItem*/
+/*propertyItem*/
 export const StyledStatementItem = styled(ListGroupItem)`
     padding: 0.5rem 0.75rem !important;
     cursor: default;
@@ -129,12 +129,12 @@ export const StyledStatementItem = styled(ListGroupItem)`
     }
 `;
 
-/*addStatement*/
-export const StyledAddStatement = styled(InputGroup)`
+/*addProperty*/
+export const StyledAddProperty = styled(InputGroup)`
     & input[type="text"] {
         background: #fff !important;
     }
-    & .addStatementActionButton {
+    & .addPropertyActionButton {
         padding: 0 15px;
         font-size: 95%;
         border-color: ${props => props.theme.listGroupBorderColor};

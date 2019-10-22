@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ListGroup } from 'reactstrap';
 import { StyledLevelBox, StyledStatementItem } from '../AddPaper/Contributions/styled';
 import StatementItem from './StatementItem';
-import AddStatement from './AddStatement';
+import AddProperty from './AddProperty';
 import { connect } from 'react-redux';
 import Breadcrumbs from './Breadcrumbs';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -46,6 +46,7 @@ class Statements extends Component {
                                     index={index}
                                     isExistingProperty={property.isExistingProperty ? true : false}
                                     enableEdit={this.props.enableEdit}
+                                    syncBackend={this.props.syncBackend}
                                     isLastItem={propertyIds.length === index + 1}
                                     openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                                     isEditing={property.isEditing}
@@ -59,7 +60,7 @@ class Statements extends Component {
                         </StyledStatementItem>
                     )}
 
-                {this.props.enableEdit ? <AddStatement /> : ''}
+                {this.props.enableEdit ? <AddProperty syncBackend={this.props.syncBackend} /> : ''}
             </ListGroup>
         );
     }
@@ -97,6 +98,7 @@ Statements.propTypes = {
     isFetchingStatements: PropTypes.bool.isRequired,
     selectedResource: PropTypes.string.isRequired,
     enableEdit: PropTypes.bool.isRequired,
+    syncBackend: PropTypes.bool.isRequired,
     initializeWithoutContribution: PropTypes.func.isRequired,
     initialResourceId: PropTypes.string,
     initialResourceLabel: PropTypes.string,
@@ -107,6 +109,7 @@ Statements.defaultProps = {
     openExistingResourcesInDialog: false,
     initialResourceId: null,
     initialResourceLabel: null,
+    syncBackend: false,
 };
 
 const mapStateToProps = state => {

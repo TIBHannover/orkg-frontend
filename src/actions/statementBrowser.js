@@ -155,7 +155,6 @@ export const fetchStatementsForResource = (data) => {
         dispatch({
             type: type.IS_FETCHING_STATEMENTS
         });
-
         return network.getStatementsBySubject({ id: existingResourceId })
             .then(
                 response => {
@@ -169,7 +168,6 @@ export const fetchStatementsForResource = (data) => {
                     for (let statement of response) {
                         let propertyId = guid();
                         const valueId = guid();
-
                         // filter out research problem to show differently
                         if (isContribution && statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM) {
                             researchProblems.push({
@@ -205,6 +203,7 @@ export const fetchStatementsForResource = (data) => {
                                 classes: statement.object.classes ? statement.object.classes : [],
                                 isExistingValue: true,
                                 existingStatement: true,
+                                statementId: statement.id
                             }));
                         }
 

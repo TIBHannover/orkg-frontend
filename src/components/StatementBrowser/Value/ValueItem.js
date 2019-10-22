@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faExternalLinkAlt, faTable } from '@fortawesome/free-solid-svg-icons';
-import Tooltip from '../../Utils/Tooltip';
 import { StyledValueItem } from '../../AddPaper/Contributions/styled';
 import classNames from 'classnames';
 import Confirm from 'reactstrap-confirm';
@@ -11,7 +10,11 @@ import PropTypes from 'prop-types';
 import StatementBrowserDialog from '../StatementBrowserDialog';
 import RDFDataCube from '../../RDFDataCube/RDFDataCube';
 import ValuePlugins from '../../ValuePlugins/ValuePlugins';
-import ContentEditable from 'react-contenteditable'
+import { updateResource, deleteStatementById, updateLiteral } from '../../../network';
+import Tippy from '@tippy.js/react';
+import 'tippy.js/dist/tippy.css';
+import { toast } from 'react-toastify';
+import ContentEditable from 'react-contenteditable';
 import styled from 'styled-components';
 
 export const StyledContentEditable = styled(ContentEditable)`
@@ -52,6 +55,23 @@ class ValueItem extends Component {
         });
     };
 
+    handleSyncBackend = () => {
+        if (this.props.syncBackend) {
+            let resource = this.props.values.byId[this.props.id];
+            let existingResourceId = resource ? resource.resourceId : false;
+            if (existingResourceId) {
+                if (resource.type === 'literal') {
+                    updateLiteral(existingResourceId, this.props.label);
+                    toast.success('Literal label updated successfully');
+                } else {
+                    updateResource(existingResourceId, this.props.label);
+                    toast.success('Resource label updated successfully');
+                }
+
+            }
+        }
+    };
+
     toggleDeleteContribution = async () => {
         let result = await Confirm({
             title: 'Are you sure?',
@@ -60,6 +80,10 @@ class ValueItem extends Component {
         });
 
         if (result) {
+            if (this.props.syncBackend) {
+                deleteStatementById(this.props.statementId);
+                toast.success('Statement deleted successfully');
+            }
             this.props.deleteValue({
                 id: this.props.id,
                 propertyId: this.props.propertyId,
@@ -168,7 +192,7 @@ class ValueItem extends Component {
                                     tagName={'span'}
                                     onChange={(e) => this.handleChange(this.props.id, e)}
                                     onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
-                                    onBlur={(e) => this.props.toggleEditValue({ id: this.props.id })}
+                                    onBlur={(e) => { this.handleSyncBackend(); this.props.toggleEditValue({ id: this.props.id }) }}
                                     onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
                                 />}
                             {existingResourceId && this.props.openExistingResourcesInDialog ? (
@@ -181,26 +205,30 @@ class ValueItem extends Component {
                                 )}
                         </span>
                         {this.props.classes && this.props.classes.includes(process.env.REACT_APP_QB_DATASET_CLASS) && (
-                            <Tooltip message="Visualize data in tabular form" hideDefaultIcon>
+                            <Tippy content="Visualize data in tabular form">
                                 <span style={{ cursor: 'pointer' }} onClick={this.handleDatasetClick}>
                                     {' '}
                                     <Icon icon={faTable} />
                                 </span>
-                            </Tooltip>
+
+                            </Tippy>
                         )}
-                        {(!this.props.existingStatement && !this.props.isEditing) ? (
+                        {(!this.props.isEditing && this.props.enableEdit) ? (
                             <>
                                 <span className={'deleteValue float-right'} onClick={this.toggleDeleteContribution}>
-                                    <Tooltip message="Delete value" hideDefaultIcon={true}>
-                                        <Icon icon={faTrash} /> Delete
-                                    </Tooltip>
+                                    <Tippy content="Delete value">
+                                        <span>
+                                            <Icon icon={faTrash} /> Delete
+                                        </span>
+                                    </Tippy>
                                 </span>
-                                {!this.props.isExistingValue && (
-                                    <span className={'mr-2 deleteValue float-right'} onClick={() => { this.props.toggleEditValue({ id: this.props.id }); }}>
-                                        <Tooltip message="Edit label" hideDefaultIcon={true}>
+                                <span className={'mr-2 deleteValue float-right'} onClick={() => { this.props.toggleEditValue({ id: this.props.id }); }}>
+                                    <Tippy content="Edit label">
+                                        <span>
                                             <Icon icon={faPen} /> Edit
-                                        </Tooltip>
-                                    </span>)}
+                                        </span>
+                                    </Tippy>
+                                </span>
                             </>
                         ) : (
                                 ''
@@ -242,15 +270,19 @@ ValueItem.propTypes = {
     createResource: PropTypes.func.isRequired,
     fetchStatementsForResource: PropTypes.func.isRequired,
     resources: PropTypes.object.isRequired,
+    values: PropTypes.object.isRequired,
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     classes: PropTypes.array.isRequired,
     propertyId: PropTypes.string.isRequired,
     existingStatement: PropTypes.bool.isRequired,
+    enableEdit: PropTypes.bool.isRequired,
+    syncBackend: PropTypes.bool.isRequired,
     isEditing: PropTypes.bool.isRequired,
     isExistingValue: PropTypes.bool.isRequired,
     resourceId: PropTypes.string,
+    statementId: PropTypes.string,
     inline: PropTypes.bool,
     openExistingResourcesInDialog: PropTypes.bool,
 };
@@ -263,6 +295,7 @@ ValueItem.defaultProps = {
 const mapStateToProps = (state) => {
     return {
         resources: state.statementBrowser.resources,
+        values: state.statementBrowser.values,
     };
 };
 

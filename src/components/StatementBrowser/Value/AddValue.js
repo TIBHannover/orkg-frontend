@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { resourcesUrl } from '../../../network';
+import { resourcesUrl, createResourceStatement, createResource, createLiteral, createLiteralStatement } from '../../../network';
 import { Input, InputGroup, InputGroupAddon, Button, DropdownToggle, DropdownMenu, InputGroupButtonDropdown } from 'reactstrap';
 import Tooltip from '../../Utils/Tooltip';
 import { StyledValueItem, StyledDropdownItem } from '../../AddPaper/Contributions/styled';
@@ -55,24 +55,58 @@ class AddValue extends Component {
         });
     }
 
-    handlePropertySelect = ({ id, value }) => {
-        this.props.createValue({
-            label: value,
-            type: this.state.valueType,
-            propertyId: this.props.selectedProperty,
-            existingResourceId: id,
-            isExistingValue: true,
-        });
+    handleValueSelect = async ({ id, value }) => {
+        if (this.props.syncBackend) {
+            let predicate = this.props.properties.byId[this.props.selectedProperty]
+            let newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, id);
+            this.props.createValue({
+                label: value,
+                type: this.state.valueType,
+                propertyId: this.props.selectedProperty,
+                existingResourceId: id,
+                isExistingValue: true,
+                statementId: newStatement.id
+            });
+        } else {
+            this.props.createValue({
+                label: value,
+                type: this.state.valueType,
+                propertyId: this.props.selectedProperty,
+                existingResourceId: id,
+                isExistingValue: true,
+            });
+        }
 
         this.handleHideAddValue();
     }
 
-    handleAddValue = () => {
-        this.props.createValue({
-            label: this.state.inputValue,
-            type: this.state.valueType,
-            propertyId: this.props.selectedProperty,
-        });
+    handleAddValue = async () => {
+        if (this.props.syncBackend) {
+            let predicate = this.props.properties.byId[this.props.selectedProperty]
+            let newObject = null
+            let newStatement = null
+            if (this.state.valueType === 'object') {
+                newObject = await createResource(this.state.inputValue);
+                newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
+            } else {
+                newObject = await createLiteral(this.state.inputValue);
+                newStatement = await createLiteralStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
+            }
+            this.props.createValue({
+                label: this.state.inputValue,
+                type: this.state.valueType,
+                propertyId: this.props.selectedProperty,
+                existingResourceId: newObject.id,
+                isExistingValue: true,
+                statementId: newStatement.id
+            });
+        } else {
+            this.props.createValue({
+                label: this.state.inputValue,
+                type: this.state.valueType,
+                propertyId: this.props.selectedProperty
+            });
+        }
 
         this.handleHideAddValue();
     }
@@ -123,7 +157,7 @@ class AddValue extends Component {
                                     <AutoComplete
                                         requestUrl={resourcesUrl}
                                         placeholder="Enter an object"
-                                        onItemSelected={this.handlePropertySelect}
+                                        onItemSelected={this.handleValueSelect}
                                         onInput={this.handleInputChange}
                                         value={this.state.inputValue}
                                         additionalData={this.getNewResources()}
@@ -158,13 +192,18 @@ class AddValue extends Component {
 AddValue.propTypes = {
     createValue: PropTypes.func.isRequired,
     selectedProperty: PropTypes.string.isRequired,
+    selectedResource: PropTypes.string.isRequired,
     newResources: PropTypes.object.isRequired,
+    syncBackend: PropTypes.bool.isRequired,
+    properties: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => {
     return {
         selectedProperty: state.statementBrowser.selectedProperty,
-        newResources: state.statementBrowser.resources.byId
+        selectedResource: state.statementBrowser.selectedResource,
+        newResources: state.statementBrowser.resources.byId,
+        properties: state.statementBrowser.properties
     }
 };
 

@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
-import { resourcesUrl, submitGetRequest, getStatementsBySubject } from '../network';
-import NewStatementsSection from '../components/statements/new/NewStatementsSection';
-import StatementGroupCard from '../components/statements/existing/StatementGroupCard';
+import { getResource } from '../network';
+import StatementBrowser from '../components/StatementBrowser/Statements';
 import EditableHeader from '../components/EditableHeader';
 import InternalServerError from '../components/StaticPages/InternalServerError';
 import NotFound from '../components/StaticPages/NotFound';
-import { groupByObjectWithId } from '../utils';
 import PropTypes from 'prop-types';
 import './ResourceDetails.css';
 
@@ -16,12 +14,8 @@ class ResourceDetails extends Component {
     super(props);
 
     this.state = {
-      allStatements: null,
-      results: null,
       error: null,
-      title: null,
-      predicateMap: {},
-      objectMap: {},
+      label: null,
       isLoading: false,
     };
   }
@@ -32,94 +26,40 @@ class ResourceDetails extends Component {
 
   findResource = () => {
     this.setState({ isLoading: true })
-    submitGetRequest(resourcesUrl + encodeURIComponent(this.props.match.params.resourceId)).then((responseJson) => {
-      getStatementsBySubject({ id: this.props.match.params.resourceId }).then(resourceStatements => {
-        this.setState({ title: responseJson.label, allStatements: resourceStatements, isLoading: false });
-      }).catch(error => {
-        this.setState({ title: responseJson.label, allStatements: null, isLoading: false, error: error });
-      })
+    getResource(this.props.match.params.resourceId).then((responseJson) => {
+      document.title = `${responseJson.label} - Resource - ORKG`
+      this.setState({ label: responseJson.label, isLoading: false });
     }).catch(error => {
-      this.setState({ title: null, allStatements: null, isLoading: false, error: error });
+      this.setState({ label: null, isLoading: false, error: error });
     });
   }
 
-  reset = async () => {
-    this.setState(this.initialState);
-    await this.findAllStatements();
-  };
-
-  getStatementText = (statement) => {
-    const that = this;
-    return () => {
-      return that.state.objectMap[statement.id] || statement.object.label;
-    };
-  };
-
-  setStatementText = (statement) => {
-    const that = this;
-    return (text) => {
-      that.state.objectMap[statement.id] = text;
-    };
-  };
-
   handleHeaderChange = (event) => {
-    this.setState({ title: event.value });
+    this.setState({ label: event.value });
   };
 
   render() {
     const id = this.props.match.params.resourceId;
-
-    if (this.state.isLoading) {
-      return <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>;
-    }
-
-    if (!this.state.isLoading && this.state.error) {
-      if (this.state.error.statusCode === 404) {
-        return <NotFound />;
-      } else {
-        return <InternalServerError />;
-      }
-    }
-
-    if (!this.state.isLoading && !this.state.error && this.state.allStatements) {
-      const titleText = this.state.title;
-      const titleJsx = titleText && <EditableHeader {...this.props} id={id} value={titleText} onChange={this.handleHeaderChange} />;
-
-      const groupingProperty = 'predicate';
-      const groupedStatements = groupByObjectWithId(this.state.allStatements, groupingProperty);
-      const statementGroupJsxs = groupedStatements.map((statementGroup) => {
-        if (statementGroup.length > 0) {
-          const propertyId = statementGroup[0][groupingProperty].id;
-          const propertyLabel = statementGroup[0][groupingProperty].label;
-          return (
-            <StatementGroupCard
-              href={`${process.env.PUBLIC_URL}/predicate/${encodeURIComponent(propertyId)}`}
-              key={propertyId}
-              label={this.state.predicateMap[propertyId] || propertyLabel}
-              onUpdate={this.reset}
-              statementGroup={statementGroup}
-              getStatementText={this.getStatementText}
-              setStatementText={this.setStatementText}
-            />);
-        } else {
-          return null;
-        }
-      });
-
-      const newStatementsSectionJsx = <NewStatementsSection subjectId={id} onUpdate={this.reset} />;
-
-      return (
-        <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">
-          <div className="entityView-main">
-            {titleJsx}
-            {statementGroupJsxs}
-            {newStatementsSectionJsx}
-          </div>
-        </Container>
-      );
-    } else {
-      return null;
-    }
+    return (
+      <>
+        {this.state.isLoading && <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
+        {!this.state.isLoading && this.state.error && <>{this.state.error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
+        {!this.state.isLoading && !this.state.error && this.state.label && (
+          <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">
+            <div className="entityView-main">
+              <EditableHeader {...this.props} id={id} value={this.state.label} onChange={this.handleHeaderChange} />
+              <StatementBrowser
+                enableEdit={true}
+                syncBackend={true}
+                openExistingResourcesInDialog={false}
+                initialResourceId={this.props.match.params.resourceId}
+                initialResourceLabel={this.state.label}
+              />
+            </div>
+          </Container>
+        )}
+      </>
+    )
   }
 }
 

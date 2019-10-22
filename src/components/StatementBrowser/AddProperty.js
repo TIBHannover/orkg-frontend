@@ -1,34 +1,33 @@
 import React, { Component } from 'react';
-import { predicatesUrl } from '../../network';
+import { predicatesUrl, createPredicate } from '../../network';
 import { InputGroupAddon, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { StyledStatementItem, StyledAddStatement } from '../AddPaper/Contributions/styled';
+import { StyledStatementItem, StyledAddProperty } from '../AddPaper/Contributions/styled';
 import AutoComplete from './AutoComplete';
 import { connect } from 'react-redux';
 import { createProperty } from '../../actions/statementBrowser';
 import PropTypes from 'prop-types';
 
-// TODO: this is about adding a property, not really a statement. So rename this component?
-class AddStatement extends Component {
+class AddProperty extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            showAddStatement: false,
+            showAddProperty: false,
             newPredicateValue: '',
             confirmNewPropertyModal: false,
             newPropertyLabel: '',
         }
     }
 
-    handleShowAddStatement = () => {
+    handleShowAddProperty = () => {
         this.setState({
-            showAddStatement: true,
+            showAddProperty: true,
         });
     }
 
-    handleHideAddStatement = () => {
+    handleHideAddProperty = () => {
         this.setState({
-            showAddStatement: false,
+            showAddProperty: false,
             newPredicateValue: '',
         });
     }
@@ -42,13 +41,13 @@ class AddStatement extends Component {
     toggleConfirmNewProperty = (propertyLabel) => {
         this.setState(prevState => ({
             confirmNewPropertyModal: !prevState.confirmNewPropertyModal,
-            propertyLabel
+            newPropertyLabel: propertyLabel
         }));
     }
 
     handlePropertySelect = ({ id, value: label }) => {
         this.setState({
-            showAddStatement: false
+            showAddProperty: false
         });
 
         this.props.createProperty({
@@ -58,17 +57,26 @@ class AddStatement extends Component {
         });
     }
 
-    handleNewProperty = () => {
+    handleNewProperty = async () => {
         this.setState({
-            showAddStatement: false
+            showAddProperty: false
         });
 
         this.toggleConfirmNewProperty(); // hide dialog
 
-        this.props.createProperty({
-            resourceId: this.props.selectedResource,
-            label: this.state.propertyLabel,
-        });
+        if (this.props.syncBackend) {
+            let newPredicate = await createPredicate(this.state.newPropertyLabel);
+            this.props.createProperty({
+                resourceId: this.props.selectedResource,
+                existingPredicateId: newPredicate.id,
+                label: newPredicate.label,
+            });
+        } else {
+            this.props.createProperty({
+                resourceId: this.props.selectedResource,
+                label: this.state.newPropertyLabel,
+            });
+        }
     }
 
     getNewProperties = () => {
@@ -76,7 +84,7 @@ class AddStatement extends Component {
 
         for (let key in this.props.newProperties) {
             let property = this.props.newProperties[key];
-            
+
             if (!property.existingPredicateId) {
                 propertyList.push({
                     id: null,
@@ -126,8 +134,8 @@ class AddStatement extends Component {
         return (
             <>
                 <StyledStatementItem>
-                    {this.state.showAddStatement ?
-                        <StyledAddStatement>
+                    {this.state.showAddProperty ?
+                        <StyledAddProperty>
                             <AutoComplete
                                 requestUrl={predicatesUrl}
                                 placeholder="Select or type to enter a property"
@@ -141,11 +149,11 @@ class AddStatement extends Component {
                             />
 
                             <InputGroupAddon addonType="append">
-                                <Button color="light" className={'addStatementActionButton'} onClick={this.handleHideAddStatement}>Cancel</Button>
+                                <Button color="light" className={'addPropertyActionButton'} onClick={this.handleHideAddProperty}>Cancel</Button>
                             </InputGroupAddon>
-                        </StyledAddStatement>
+                        </StyledAddProperty>
                         :
-                        <span className="btn btn-link p-0 border-0 align-baseline" onClick={this.handleShowAddStatement}>
+                        <span className="btn btn-link p-0 border-0 align-baseline" onClick={this.handleShowAddProperty}>
                             + Add property
                         </span>
                     }
@@ -166,10 +174,11 @@ class AddStatement extends Component {
     }
 }
 
-AddStatement.propTypes = {
+AddProperty.propTypes = {
     createProperty: PropTypes.func.isRequired,
     selectedResource: PropTypes.string.isRequired,
     newProperties: PropTypes.object.isRequired,
+    syncBackend: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -186,4 +195,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(AddStatement);
+)(AddProperty);
