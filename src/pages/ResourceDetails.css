@@ -1,64 +1,3 @@
-.statementGroupView {
-    float: left;
-    margin-bottom: 2em;
-    position: relative;
-    width: 100%;
-}
-
-.statementGroupView-property {
-    border: 1px solid #c8ccd1;
-    border-right: 0;
-}
-
-.statementGroupView .statementGroupView-property {
-    width: 15em;
-    background: #eaecf0;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    z-index: 1;
-}
-
-.statementGroupView-property-label {
-    float: left;
-    word-wrap: break-word;
-    padding: 10px 10px 0;
-    transition: top 0.3s ease-out;
-}
-
-.statementListView {
-    float: left;
-    position: relative;
-    background-color: #ffffff;
-    width: 100%;
-    border: 1px solid #c8ccd1;
-}
-
-.statementView {
-    border-bottom: 1px solid #eaecf0;
-    float: left;
-    position: relative;
-    padding-bottom: 1em;
-    width: 100%;
-}
-
-.statementView-mainSnak-container {
-}
-
-.statementView-mainSnak-body {
-    word-wrap: break-word;
-}
-
-.statementView-mainSnak {
-    position: relative;
-    margin-left: 15em;
-    margin-right: 18em;
-    max-width: 32em;
-    word-wrap: break-word;
-}
-
 .snakView {
     padding: 10px 5px 5px 10px;
 }
@@ -97,11 +36,6 @@
     width: auto;
 }
 
-.statementView .toolbar-container {
-    top: 10px;
-    white-space: nowrap;
-}
-
 .editToolbar-container > .toolbar {
     padding-left: 0;
 }
@@ -113,14 +47,6 @@
     text-align: right;
     padding-right: 2px;
     background-image: none;
-}
-
-.statementListView > .toolbar-wrapper {
-    background-color: #eaecf0;
-    display: block;
-    float: left;
-    position: relative;
-    width: 100%;
 }
 
 .addToolbar {
@@ -152,12 +78,6 @@
 
 .snakView .snakView-value-container {
     min-height: 1.6em;
-}
-
-.statementGroupView .newStatement .statementView-mainSnak .snakView-value {
-    display: block;
-    min-height: 1.5em;
-    max-width: 32em;
 }
 
 .snakView .snakView-value .valueView {
@@ -197,18 +117,6 @@
     margin-bottom: 0.25em;
 }
 
-.statementView textarea {
-    margin: 0;
-    box-sizing: border-box;
-    width: 100%;
-}
-
-.statementView-qualifiers > .toolbar-container {
-    float: right;
-    margin-bottom: 1em;
-    position: static;
-}
-
 .toolbar-container > .toolbar {
     padding-left: 0;
 }
@@ -224,13 +132,6 @@
 .valueView-inEditMode .valueView-input {
     border-color: gray;
     background-color: white;
-}
-
-div.statementView textarea {
-    margin: 0;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
 }
 
 .snakView-variation-valueSnak textarea {
@@ -252,10 +153,6 @@ div.statementView textarea {
 
 .shortRecord-content {
     width: 100%;
-}
-
-.statementGroupView-property.edit {
-    background-color: #b6c8ec;
 }
 
 .entityView-main .new .snakView-property {
@@ -379,18 +276,4 @@ div.statementView textarea {
     font-size: 0.875rem;
     line-height: 1;
     border-radius: 0.15rem;
-}
-
-div.nav.bottomNavigator {
-    float: left;
-    display: block;
-    width: 100%;
-}
-
-div.nav.bottomNavigator > * {
-    display: inline-flex;
-}
-
-div.nav.bottomNavigator > *:last-child {
-    float: right;
 }
