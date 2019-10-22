@@ -54,7 +54,7 @@ class EditPaperDialog extends Component {
         updateResource(this.props.viewPaper.paperResourceId, this.state.title);
 
         //authors
-        await this.updateAuthors(this.state.authors);
+        await this.updateAuthors(this.state.authors); //use await to prevent updating the props, which are needed to check whether authors exist
 
         //publication month
         this.updateOrCreateLiteral({

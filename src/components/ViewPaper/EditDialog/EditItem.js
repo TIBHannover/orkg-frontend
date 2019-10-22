@@ -77,7 +77,6 @@ const EditItem = (props) => {
     );
 }
 
-
 EditItem.propTypes = {
     open: PropTypes.bool.isRequired,
     label: PropTypes.string.isRequired,

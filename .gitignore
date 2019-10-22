@@ -9,5 +9,3 @@ build/
 
 *.iml
 .vscode
-
-jsconfig.json
