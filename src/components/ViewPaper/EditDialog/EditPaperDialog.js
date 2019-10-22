@@ -20,7 +20,7 @@ class EditPaperDialog extends Component {
         this.state = {
             showDialog: false,
             openItem: 'title',
-            isLoading: false,
+            isLoading: true,
             ...this.getStateFromRedux()
         }
     }
@@ -200,6 +200,11 @@ class EditPaperDialog extends Component {
                                 ...base,
                                 borderRadius: 7,
                                 overflow: 'hidden',
+                                background: 'rgba(215, 215, 215, 0.7)',
+                                color: '#282828',
+                                '& svg circle': {
+                                    stroke: '#282828'
+                                }
                             })
                         }}
                     >
