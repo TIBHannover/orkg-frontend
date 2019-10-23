@@ -57,7 +57,7 @@ class StatementOptions extends Component {
                 </span>
                 {!this.props.isEditing && (
                     <span className={'deletePredicate float-right mr-4'} onClick={(e) => { e.stopPropagation(); this.props.toggleEditPropertyLabel({ id: this.props.id }); }}>
-                        <Tippy content="Edit property label">
+                        <Tippy content="Edit property">
                             <span><Icon icon={faPen} /> Edit</span>
                         </Tippy>
                     </span>)

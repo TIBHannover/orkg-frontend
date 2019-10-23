@@ -62,6 +62,7 @@ export default (state = initialState, action) => {
                     valueIds: [],
                     isExistingProperty: payload.isExistingProperty ? payload.isExistingProperty : false,
                     isEditing: false,
+                    isSaving: false,
                 }
             }));
 
@@ -92,9 +93,28 @@ export default (state = initialState, action) => {
             return newState;
         }
 
+        case type.CHANGE_PROPERTY: {
+            let { payload } = action;
+            let newState = dotProp.set(state, `properties.byId.${payload.propertyId}.label`, payload.newProperty.label);
+            newState = dotProp.set(newState, `properties.byId.${payload.propertyId}.existingPredicateId`, payload.newProperty.id);
+            return newState;
+        }
+
         case type.TOGGLE_EDIT_PROPERTY_LABEL: {
             let { payload } = action;
             let newState = dotProp.set(state, `properties.byId.${payload.id}.isEditing`, v => !v);
+            return newState;
+        }
+
+        case type.IS_SAVING_PROPERTY: {
+            let { payload } = action;
+            let newState = dotProp.set(state, `properties.byId.${payload.id}.isSaving`, v => true);
+            return newState;
+        }
+
+        case type.DONE_SAVING_PROPERTY: {
+            let { payload } = action;
+            let newState = dotProp.set(state, `properties.byId.${payload.id}.isSaving`, v => false);
             return newState;
         }
 

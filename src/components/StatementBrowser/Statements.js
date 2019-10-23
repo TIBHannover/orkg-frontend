@@ -50,6 +50,7 @@ class Statements extends Component {
                                     isLastItem={propertyIds.length === index + 1}
                                     openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                                     isEditing={property.isEditing}
+                                    isSaving={property.isSaving}
                                 />
                             )
                         }))

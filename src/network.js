@@ -170,6 +170,18 @@ export const createLiteralStatement = (subjectId, predicateId, property) => {
   );
 };
 
+export const updateStatement = (id, { subject_id = null, predicate_id = null, object_id = null }) => {
+  return submitPutRequest(
+    `${statementsUrl}${id}`,
+    { 'Content-Type': 'application/json' },
+    {
+      ...subject_id ? { subject_id: subject_id } : null,
+      ...predicate_id ? { predicate_id: predicate_id } : null,
+      ...object_id ? { object_id: object_id } : null,
+    },
+  );
+};
+
 export const createPredicate = (label) => {
   return submitPostRequest(predicatesUrl, { 'Content-Type': 'application/json' }, { label: label });
 };

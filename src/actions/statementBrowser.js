@@ -66,6 +66,27 @@ export const toggleEditPropertyLabel = (data) => dispatch => {
     })
 }
 
+export const changeProperty = (data) => dispatch => {
+    dispatch({
+        type: type.CHANGE_PROPERTY,
+        payload: data
+    })
+}
+
+export const isSavingProperty = (data) => dispatch => {
+    dispatch({
+        type: type.IS_SAVING_PROPERTY,
+        payload: data
+    })
+}
+
+export const doneSavingProperty = (data) => dispatch => {
+    dispatch({
+        type: type.DONE_SAVING_PROPERTY,
+        payload: data
+    })
+}
+
 export const updatePropertyLabel = (data) => dispatch => {
     dispatch({
         type: type.UPDATE_PROPERTY_LABEL,
