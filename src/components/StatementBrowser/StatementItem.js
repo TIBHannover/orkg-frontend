@@ -271,6 +271,7 @@ class StatementItem extends Component {
                                     inline
                                     isExistingValue={this.props.values.byId[valueIds[0]].isExistingValue}
                                     isEditing={false}
+                                    isSaving={false}
                                     enableEdit={false}
                                     syncBackend={false}
                                 />
@@ -314,6 +315,7 @@ class StatementItem extends Component {
                                         openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                                         isExistingValue={value.isExistingValue}
                                         isEditing={value.isEditing}
+                                        isSaving={value.isSaving}
                                         statementId={value.statementId}
                                     />
                                 );

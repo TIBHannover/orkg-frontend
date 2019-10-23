@@ -113,6 +113,27 @@ export const toggleEditValue = (data) => dispatch => {
     })
 }
 
+export const changeValue = (data) => dispatch => {
+    dispatch({
+        type: type.CHANGE_VALUE,
+        payload: data
+    })
+}
+
+export const isSavingValue = (data) => dispatch => {
+    dispatch({
+        type: type.IS_SAVING_VALUE,
+        payload: data
+    })
+}
+
+export const doneSavingValue = (data) => dispatch => {
+    dispatch({
+        type: type.DONE_SAVING_VALUE,
+        payload: data
+    })
+}
+
 export const updateValueLabel = (data) => dispatch => {
     dispatch({
         type: type.UPDATE_VALUE_LABEL,

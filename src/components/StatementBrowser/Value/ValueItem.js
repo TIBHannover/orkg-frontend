@@ -1,38 +1,30 @@
 import React, { Component } from 'react';
+import { Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faExternalLinkAlt, faTable } from '@fortawesome/free-solid-svg-icons';
 import { StyledValueItem } from '../../AddPaper/Contributions/styled';
 import classNames from 'classnames';
 import Confirm from 'reactstrap-confirm';
 import { connect } from 'react-redux';
-import { selectResource, fetchStatementsForResource, deleteValue, toggleEditValue, updateValueLabel, createValue, createResource } from '../../../actions/statementBrowser';
+import {
+    selectResource, fetchStatementsForResource, deleteValue, toggleEditValue,
+    updateValueLabel, createValue, createResource, doneSavingValue, isSavingValue, changeValue
+} from '../../../actions/statementBrowser';
 import PropTypes from 'prop-types';
 import StatementBrowserDialog from '../StatementBrowserDialog';
 import RDFDataCube from '../../RDFDataCube/RDFDataCube';
 import ValuePlugins from '../../ValuePlugins/ValuePlugins';
-import { updateResource, deleteStatementById, updateLiteral } from '../../../network';
+import { deleteStatementById, updateLiteral, submitGetRequest, resourcesUrl, updateStatement } from '../../../network';
 import Tippy from '@tippy.js/react';
 import 'tippy.js/dist/tippy.css';
 import { toast } from 'react-toastify';
-import ContentEditable from 'react-contenteditable';
-import styled from 'styled-components';
+import AsyncCreatableSelect from 'react-select/async-creatable';
+import { guid } from '../../../utils';
 
-export const StyledContentEditable = styled(ContentEditable)`
-    &[contenteditable="true"] {
-        background: #F8F9FB;
-        color: ${props => props.theme.orkgPrimaryColor};
-        outline: 0;
-        padding: 0 4px;
-        display:block;
-        border: dotted 2px ${props => props.theme.listGroupBorderColor};
-    }
-`;
 
 class ValueItem extends Component {
     constructor(props) {
         super(props);
-
-        this.contentEditable = React.createRef();
 
         this.state = {
             modal: false,
@@ -42,34 +34,67 @@ class ValueItem extends Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
-        if (!prevProps.isEditing && this.props.isEditing) {
-            this.contentEditable.current.focus()
-        }
-    }
-
-    handleChange = (valueId, e) => {
+    handleChangeLiteral = (e) => {
         this.props.updateValueLabel({
             label: e.target.value,
-            valueId: valueId,
+            valueId: this.props.id,
         });
     };
 
-    handleSyncBackend = () => {
+    handleSyncBackendLiteral = () => {
         if (this.props.syncBackend) {
             let resource = this.props.values.byId[this.props.id];
             let existingResourceId = resource ? resource.resourceId : false;
             if (existingResourceId) {
-                if (resource.type === 'literal') {
-                    updateLiteral(existingResourceId, this.props.label);
-                    toast.success('Literal label updated successfully');
-                } else {
-                    updateResource(existingResourceId, this.props.label);
-                    toast.success('Resource label updated successfully');
-                }
-
+                updateLiteral(existingResourceId, this.props.label);
+                toast.success('Literal label updated successfully');
             }
         }
+    };
+
+    handleChange = async (selectedOption, a) => {
+        let property = this.props.values.byId[this.props.id];
+        // Check if the user changed the value
+        if (this.props.label !== selectedOption.label || (property.existingPredicateId !== selectedOption.id)) {
+            this.props.isSavingValue({ id: this.props.id }); // Show the saving message instead of the property label
+            if (a.action === 'select-option') {
+                this.changeValue(selectedOption);
+            } else if (a.action === 'create-option') {
+                let newResource = null;
+                if (this.props.syncBackend) {
+                    newResource = await createResource(selectedOption.label);
+                    this.props.createValue({
+                        label: newResource.label,
+                        type: this.state.valueType,
+                        propertyId: this.props.selectedProperty,
+                        existingResourceId: newResource.id,
+                        isExistingValue: true,
+                    });
+                } else {
+                    newResource = { id: guid(), label: selectedOption.label }
+                    this.props.createValue({
+                        valueId: newResource.id,
+                        label: newResource.label,
+                        type: this.state.valueType,
+                        propertyId: this.props.selectedProperty,
+                        existingResourceId: null,
+                        isExistingValue: true,
+                    });
+                }
+                this.changeValue(newResource);
+            }
+        }
+    };
+
+    changeValue = async (newResource) => {
+        if (this.props.syncBackend) {
+            await updateStatement(this.props.statementId, { object_id: newResource.id })
+            this.props.changeValue({ propertyId: this.props.id, newValue: newResource });
+            toast.success('Value updated successfully');
+        } else {
+            this.props.changeValue({ propertyId: this.props.id, newValue: newResource });
+        }
+        this.props.doneSavingValue({ id: this.props.id });
     };
 
     toggleDeleteContribution = async () => {
@@ -163,6 +188,59 @@ class ValueItem extends Component {
         }));
     };
 
+    IdMatch = async (value, responseJson) => {
+        if (value.startsWith('#')) {
+            const valueWithoutHashtag = value.substr(1);
+
+            if (valueWithoutHashtag.length > 0) {
+                let responseJsonExact;
+
+                try {
+                    responseJsonExact = await submitGetRequest(resourcesUrl + encodeURIComponent(valueWithoutHashtag));
+                } catch (err) {
+                    responseJsonExact = null;
+                }
+
+                if (responseJsonExact) {
+                    responseJson.unshift(responseJsonExact);
+                }
+            }
+        }
+
+        return responseJson;
+    }
+
+    loadOptions = async (value) => {
+        try {
+            let queryParams = '';
+
+            if (value.startsWith('"') && value.endsWith('"') && value.length > 2) {
+                value = value.substring(1, value.length - 1);
+                queryParams = '&exact=true';
+            }
+
+            let responseJson = await submitGetRequest(resourcesUrl + '?q=' + encodeURIComponent(value) + queryParams);
+            responseJson = await this.IdMatch(value, responseJson);
+
+            if (responseJson.length > this.maxResults) {
+                responseJson = responseJson.slice(0, this.maxResults);
+            }
+
+            let options = [];
+
+            responseJson.map((item) => options.push({
+                label: item.label,
+                id: item.id
+            }));
+
+            return options;
+        } catch (err) {
+            console.error(err);
+
+            return [];
+        }
+    }
+
     render() {
         const labelClass = classNames({
             objectLink: this.props.type === 'object',
@@ -178,23 +256,94 @@ class ValueItem extends Component {
             onClick = this.handleResourceClick;
         }
 
+        let customStyles = {
+            control: (provided, state) => ({
+                ...provided,
+                background: 'inherit',
+                boxShadow: state.isFocused ? 0 : 0,
+                border: 0,
+                paddingLeft: 0,
+                paddingRight: 0,
+                cursor: 'text',
+                minHeight: 'initial',
+                borderRadius: 'inherit',
+                padding: 0,
+                '&>div:first-of-type': {
+                    padding: 0
+                }
+            }),
+            container: (provided) => ({
+                padding: 0,
+                height: 'auto',
+                background: '#fff',
+                display: 'inline-block',
+                width: '70%',
+                '&>div:first-of-type': {
+                    padding: 0
+                }
+            }),
+            menu: (provided) => ({
+                ...provided,
+                zIndex: 10,
+                width: '70%',
+                color: '#000'
+            }),
+            option: (provided) => ({
+                ...provided,
+                cursor: 'pointer',
+                whiteSpace: 'normal',
+            }),
+            indicatorsContainer: (provided) => ({
+                ...provided,
+                '&>div:last-child': {
+                    padding: '0 8px'
+                }
+            }),
+            input: (provided) => ({
+                ...provided,
+                margin: '0 4px',
+            }),
+        }
+
         return (
             <>
                 {!this.props.inline ? (
                     <StyledValueItem>
                         <span className={labelClass} onClick={!this.props.isEditing ? onClick : undefined}>
-                            {!this.props.isEditing ?
-                                <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>{this.props.label}</ValuePlugins> :
-                                <StyledContentEditable
-                                    innerRef={this.contentEditable}
-                                    html={this.props.label}
-                                    disabled={!this.props.isEditing}
-                                    tagName={'span'}
-                                    onChange={(e) => this.handleChange(this.props.id, e)}
-                                    onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
-                                    onBlur={(e) => { this.handleSyncBackend(); this.props.toggleEditValue({ id: this.props.id }) }}
-                                    onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
-                                />}
+                            {!this.props.isSaving ?
+                                (!this.props.isEditing ?
+                                    <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>{this.props.label}</ValuePlugins> :
+                                    (this.props.type === 'object' ?
+                                        <AsyncCreatableSelect
+                                            loadOptions={this.loadOptions}
+                                            noOptionsMessage={this.noResults}
+                                            styles={customStyles}
+                                            autoFocus
+                                            getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
+                                            getOptionValue={({ id }) => id}
+                                            defaultOptions={[{
+                                                label: this.props.label,
+                                                id: this.props.values.byId[this.props.id].resourceId
+                                            }]}
+                                            defaultValue={{
+                                                label: this.props.label,
+                                                id: this.props.values.byId[this.props.id].resourceId
+                                            }}
+                                            cacheOptions
+                                            onChange={(selectedOption, a) => { this.handleChange(selectedOption, a); this.props.toggleEditValue({ id: this.props.id }); }}
+                                            onBlur={(e) => { this.props.toggleEditValue({ id: this.props.id }) }}
+                                        /> : (
+                                            <Input
+                                                value={this.props.label}
+                                                onChange={(e) => this.handleChangeLiteral(e)}
+                                                onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
+                                                onBlur={(e) => { this.handleSyncBackendLiteral(); this.props.toggleEditValue({ id: this.props.id }) }}
+                                                onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
+                                            />)
+                                    )
+                                ) :
+                                'Saving ...'
+                            }
                             {existingResourceId && this.props.openExistingResourcesInDialog ? (
                                 <span>
                                     {' '}
@@ -273,6 +422,7 @@ ValueItem.propTypes = {
     values: PropTypes.object.isRequired,
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
+    selectedProperty: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     classes: PropTypes.array.isRequired,
     propertyId: PropTypes.string.isRequired,
@@ -280,6 +430,10 @@ ValueItem.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     isEditing: PropTypes.bool.isRequired,
+    isSaving: PropTypes.bool.isRequired,
+    isSavingValue: PropTypes.func.isRequired,
+    doneSavingValue: PropTypes.func.isRequired,
+    changeValue: PropTypes.func.isRequired,
     isExistingValue: PropTypes.bool.isRequired,
     resourceId: PropTypes.string,
     statementId: PropTypes.string,
@@ -296,6 +450,7 @@ const mapStateToProps = (state) => {
     return {
         resources: state.statementBrowser.resources,
         values: state.statementBrowser.values,
+        selectedProperty: state.statementBrowser.selectedProperty,
     };
 };
 
@@ -307,6 +462,9 @@ const mapDispatchToProps = (dispatch) => ({
     deleteValue: (data) => dispatch(deleteValue(data)),
     toggleEditValue: (data) => dispatch(toggleEditValue(data)),
     updateValueLabel: (data) => dispatch(updateValueLabel(data)),
+    isSavingValue: (data) => dispatch(isSavingValue(data)),
+    doneSavingValue: (data) => dispatch(doneSavingValue(data)),
+    changeValue: (data) => dispatch(changeValue(data)),
 });
 
 export default connect(

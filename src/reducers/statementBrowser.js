@@ -134,7 +134,7 @@ export default (state = initialState, action) => {
                     existingStatement: payload.existingStatement ? payload.existingStatement : false,
                     statementId: payload.statementId,
                     isEditing: false,
-
+                    isSaving: false,
                 }
             }));
 
@@ -172,6 +172,25 @@ export default (state = initialState, action) => {
             let propertyIndex = dotProp.get(newState, `properties.byId.${payload.propertyId}.valueIds`).indexOf(payload.id);
             newState = dotProp.delete(newState, `properties.byId.${payload.propertyId}.valueIds.${propertyIndex}`);
 
+            return newState;
+        }
+
+        case type.CHANGE_VALUE: {
+            let { payload } = action;
+            let newState = dotProp.set(state, `values.byId.${payload.propertyId}.label`, payload.newValue.label);
+            newState = dotProp.set(newState, `values.byId.${payload.propertyId}.resourceId`, payload.newValue.id);
+            return newState;
+        }
+
+        case type.IS_SAVING_VALUE: {
+            let { payload } = action;
+            let newState = dotProp.set(state, `values.byId.${payload.id}.isSaving`, v => true);
+            return newState;
+        }
+
+        case type.DONE_SAVING_VALUE: {
+            let { payload } = action;
+            let newState = dotProp.set(state, `values.byId.${payload.id}.isSaving`, v => false);
             return newState;
         }
 
