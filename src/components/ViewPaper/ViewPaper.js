@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Container, Button, Alert, UncontrolledAlert, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Container, Button, Alert, UncontrolledAlert, ButtonGroup } from 'reactstrap';
 import { getStatementsBySubject, getResource } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faBars, faEllipsisV, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faCalendar, faBars, faProjectDiagram, faPen, faCheck } from '@fortawesome/free-solid-svg-icons';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader'
 import Contributions from './Contributions';
@@ -40,7 +40,7 @@ class ViewPaper extends Component {
         selectedContribution: '',
         dropdownOpen: false,
         showGraphModal: false,
-        editMode: true,
+        editMode: false,
     }
 
     componentDidMount() {
@@ -198,20 +198,47 @@ class ViewPaper extends Component {
                 )}
                 {!this.state.loading_failed && (
                     <>
-                        <Container className="p-0">
-                            <h1 className="h4 mt-4 mb-4">View paper</h1>
+                        <Container className="p-0 d-flex align-items-center">
+                            <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
+                            <ButtonGroup className="flex-shrink-0">
+                                <Button
+                                    className="flex-shrink-0"
+                                    color="darkblue"
+                                    size="sm"
+                                    onClick={() => this.toggle('showGraphModal')}
+                                >
+                                    <Icon icon={faProjectDiagram} style={{ margin: '2px 4px 0 0' }} /> Graph view
+                                </Button>
+
+                                {!this.state.editMode ?
+                                    <Button
+                                        className="flex-shrink-0"
+                                        style={{ marginLeft: 1 }}
+                                        color="darkblue"
+                                        size="sm"
+                                        onClick={() => this.toggle('editMode')}
+                                    >
+                                        <Icon icon={faPen} /> Edit
+                                    </Button>
+                                    :
+                                    <Button
+                                        className="flex-shrink-0"
+                                        style={{ marginLeft: 1 }}
+                                        color="darkblueDarker"
+                                        size="sm"
+                                        onClick={() => this.toggle('editMode')}
+                                    >
+                                        <Icon icon={faCheck} /> Finish
+                                    </Button>
+                                }
+
+                            </ButtonGroup>
                         </Container>
+
+
                         {this.state.editMode && (
                             <EditModeHeader className="box">
                                 <Title>Edit mode</Title>
-                                <Button
-                                    className="flex-shrink-0"
-                                    color="darkblueDarker"
-                                    size="sm"
-                                    onClick={() => this.toggle('editMode')}
-                                >
-                                    Finish
-                                </Button>
                             </EditModeHeader>
                         )}
                         <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
@@ -240,19 +267,6 @@ class ViewPaper extends Component {
                                         )}
                                     <div className="d-flex align-items-start">
                                         <h2 className="h4 mt-4 mb-3 flex-grow-1">{this.props.viewPaper.title ? this.props.viewPaper.title : <em>No title</em>}</h2>
-
-                                        {!this.state.editMode && (
-                                            <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4 ml-2 flex-shrink-0" style={{ marginLeft: 'auto' }}>
-                                                <DropdownToggle color="darkblue" size="sm" >
-                                                    <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
-                                                </DropdownToggle>
-                                                <DropdownMenu>
-                                                    <DropdownItem onClick={() => this.toggle('showGraphModal')}>View graph</DropdownItem>
-                                                    <DropdownItem onClick={() => this.toggle('editMode')}>Edit mode</DropdownItem>
-                                                </DropdownMenu>
-                                            </Dropdown>)}
-
-                                        
                                     </div>
 
                                     <div className="clearfix" />
