@@ -122,6 +122,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
     &.statementActive {
         background-color: ${props => props.theme.darkblue}  !important;
         border-color: ${props => props.theme.darkblue}  !important;
+        color: #fff;
 
         & .deletePredicate {
             display: inline-block !important;
