@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {Component} from 'react';
 import LinkButton from '../LinkButton';
 
@@ -7,8 +8,9 @@ export default class EditToolbar extends Component {
         let content = null;
         switch (this.props.editorState) {
             case 'view': {
-                content = <LinkButton value="edit" onClick={this.props.onEditClick} className="toolbar-button"
-                        spanClassName="fa fa-pencil"/>;
+                content = (<LinkButton value="edit" onClick={this.props.onEditClick} className="toolbar-button"
+                        spanClassName="fa fa-pencil"
+                           />);
                 break;
             }
             case 'edit': {
@@ -16,18 +18,21 @@ export default class EditToolbar extends Component {
                         : ' toolbarButton-disabled');
                 const onPublishClickHandler = this.props.editEnabled ? this.props.onPublishClick
                         : (event) => {};
-                content = <span className="toolbar toolbar-container">
+                content = (<span className="toolbar toolbar-container">
                     <LinkButton value="publish" onClick={onPublishClickHandler}
-                            className={className} spanClassName="fa fa-check"/>
+                            className={className} spanClassName="fa fa-check"
+                    />
                     {this.props.showRemoveButton ? <LinkButton value="remove"
-                            className="toolbar-container toolbar-button" spanClassName="fa fa-trash"/> : null}
+                            className="toolbar-container toolbar-button" spanClassName="fa fa-trash"
+                                                   /> : null}
                     <LinkButton value="cancel" onClick={this.props.onCancelClick}
-                            className="toolbar-container toolbar-button" spanClassName="fa fa-close"/>
-                </span>;
+                            className="toolbar-container toolbar-button" spanClassName="fa fa-close"
+                    />
+                           </span>);
                 break;
             }
             case 'loading': {
-                content = <span className="fa fa-spinner fa-spin"/>;
+                content = <span className="fa fa-spinner fa-spin" />;
                 break;
             }
             default: {
@@ -35,9 +40,9 @@ export default class EditToolbar extends Component {
             }
         }
 
-        return <span className="toolbar toolbar-container" aria-disabled={false}>
+        return (<span className="toolbar toolbar-container" aria-disabled={false}>
             {content}
-        </span>
+                </span>)
     }
 
 }

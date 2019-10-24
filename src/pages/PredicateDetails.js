@@ -6,15 +6,18 @@ import { Container } from 'reactstrap';
 
 class PredicateDetails extends Component {
 
-    state = {
-        error: null,
-        title: null,
-    };
+    constructor(props) {
+        super(props);
 
-    async componentWillMount() {
+        this.state = {
+            error: null,
+            title: null,
+        };
+    }
+
+    async componentDidMount() {
         await this.findPredicate();
     }
-    initialState = this.state;
 
     findPredicate = async () => {
         try {

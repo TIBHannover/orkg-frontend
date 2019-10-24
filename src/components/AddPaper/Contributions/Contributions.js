@@ -3,16 +3,24 @@ import { Container, Row, Col, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../../Utils/Tooltip';
-import { StyledContributionsList, StyledContentEditable} from './styled';
+import { StyledContributionsList, StyledContentEditable } from './styled';
 import { connect } from 'react-redux';
-import { nextStep, previousStep, createContribution, deleteContribution, selectContribution, updateContributionLabel, saveAddPaper } from '../../../actions/addPaper';
+import { compose } from 'redux';
+import {
+    nextStep, previousStep, createContribution, deleteContribution,
+    selectContribution, updateContributionLabel, saveAddPaper, openTour,
+    updateTourCurrentStep
+} from '../../../actions/addPaper';
 import Confirm from 'reactstrap-confirm';
 import Contribution from './Contribution';
-import { CSSTransitionGroup } from 'react-transition-group'
-import styled from 'styled-components';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import styled, { withTheme } from 'styled-components';
+import { withCookies } from 'react-cookie';
 import PropTypes from 'prop-types';
 
-const AnimationContainer = styled.div`
+
+
+const AnimationContainer = styled(CSSTransition)`
     transition: 0.3s background-color,  0.3s border-color;
 
     &.fadeIn-enter {
@@ -46,21 +54,38 @@ class Contributions extends Component {
         }
     }
 
-    handleNextClick = () => {
-        // save add paper 
-        this.props.saveAddPaper({
-            title: this.props.title,
-            authors: this.props.authors,
-            publicationMonth: this.props.publicationMonth,
-            publicationYear: this.props.publicationYear,
-            doi: this.props.doi,
-            selectedResearchField: this.props.selectedResearchField,
-            contributions: this.props.contributions,
-            resources: this.props.resources,
-            properties: this.props.properties,
-            values: this.props.values,
+    handleNextClick = async () => {
+        let result = await Confirm({
+            title: (
+                <div>
+                    Are you sure you want to save this paper?
+                </div>
+            ),
+            message: (
+                <div>
+                    You will no longer be able to edit this paper once it's saved!<br />
+                </div>
+            ),
+            confirmText: 'Save and lock',
+            cancelColor: 'light'
         });
-        this.props.nextStep();
+        //
+        if (result) {
+            // save add paper 
+            this.props.saveAddPaper({
+                title: this.props.title,
+                authors: this.props.authors,
+                publicationMonth: this.props.publicationMonth,
+                publicationYear: this.props.publicationYear,
+                doi: this.props.doi,
+                selectedResearchField: this.props.selectedResearchField,
+                contributions: this.props.contributions,
+                resources: this.props.resources,
+                properties: this.props.properties,
+                values: this.props.values,
+            });
+            this.props.nextStep();
+        }
     }
 
     toggleDeleteContribution = async (id) => {
@@ -71,7 +96,9 @@ class Contributions extends Component {
         });
 
         if (result) {
-            this.props.deleteContribution(id);
+            // delete the contribution and select the first one in the remaining list 
+            let selectedId = this.props.contributions.allIds.filter(i => i !== id)[0];
+            this.props.deleteContribution({ id, selectAfterDeletion: this.props.contributions.byId[selectedId] });
         }
     }
 
@@ -106,17 +133,21 @@ class Contributions extends Component {
         });
     };
 
+    handleLearnMore = (step) => {
+        this.props.openTour(step);
+    }
+
     render() {
         let selectedResourceId = this.props.selectedContribution;
 
         return (
             <div>
-                <h2 className="h4 mt-4 mb-5"><Tooltip message="Specify the research contributions that this paper makes. A paper can have multiple contributions and each contribution addresses at least one research problem">Specify research contributions</Tooltip></h2>
+                <h2 className="h4 mt-4 mb-5"><Tooltip message={<span>Specify the research contributions that this paper makes. A paper can have multiple contributions and each contribution addresses at least one research problem. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(1)}>Learn more</span></span>}>Specify research contributions</Tooltip></h2>
 
                 <Container>
                     <Row noGutters={true}>
                         <Col xs="3">
-                            <StyledContributionsList>
+                            <StyledContributionsList id="contributionsList">
                                 {this.props.contributions.allIds.map((contribution, index) => {
                                     let contributionId = this.props.contributions.byId[contribution]['id'];
 
@@ -162,26 +193,22 @@ class Contributions extends Component {
                             </StyledContributionsList>
                         </Col>
 
-                        <CSSTransitionGroup
-                            transitionName="fadeIn"
-                            transitionEnterTimeout={500}
-                            transitionLeave={false}
-                            component="div"
-                            className="col-9"
-                        >
+                        <TransitionGroup className="col-9" exit={false}>
                             <AnimationContainer
+                                classNames="fadeIn"
+                                timeout={{ enter: 500, exit: 0 }}
                                 key={selectedResourceId}
                             >
                                 <Contribution id={selectedResourceId} />
                             </AnimationContainer>
-                        </CSSTransitionGroup>
+                        </TransitionGroup>
                     </Row>
                 </Container>
 
                 <hr className="mt-5 mb-3" />
-                <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Next step</Button>
+                <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Finish</Button>
                 <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>Previous step</Button>
-            </div>
+            </div >
         );
     }
 }
@@ -189,8 +216,14 @@ class Contributions extends Component {
 Contributions.propTypes = {
     title: PropTypes.string.isRequired,
     authors: PropTypes.array.isRequired,
-    publicationMonth: PropTypes.number.isRequired,
-    publicationYear: PropTypes.number.isRequired,
+    publicationMonth: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ]).isRequired,
+    publicationYear: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ]).isRequired,
     doi: PropTypes.string.isRequired,
     selectedResearchField: PropTypes.string.isRequired,
     contributions: PropTypes.object.isRequired,
@@ -205,6 +238,9 @@ Contributions.propTypes = {
     selectContribution: PropTypes.func.isRequired,
     updateContributionLabel: PropTypes.func.isRequired,
     saveAddPaper: PropTypes.func.isRequired,
+    theme: PropTypes.object.isRequired,
+    openTour: PropTypes.func.isRequired,
+    updateTourCurrentStep: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -227,13 +263,19 @@ const mapDispatchToProps = dispatch => ({
     nextStep: () => dispatch(nextStep()),
     previousStep: () => dispatch(previousStep()),
     createContribution: (data) => dispatch(createContribution(data)),
-    deleteContribution: (id) => dispatch(deleteContribution(id)),
+    deleteContribution: (data) => dispatch(deleteContribution(data)),
     selectContribution: (id) => dispatch(selectContribution(id)),
     updateContributionLabel: (data) => dispatch(updateContributionLabel(data)),
     saveAddPaper: (data) => dispatch(saveAddPaper(data)),
+    openTour: (data) => dispatch(openTour(data)),
+    updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps,
+    ),
+    withTheme,
+    withCookies
 )(Contributions);

@@ -3,47 +3,99 @@ import { ListGroup, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { StyledStatementItem, StyledListGroupOpen } from '../AddPaper/Contributions/styled';
+import { getResource } from '../../network';
 import classNames from 'classnames';
 import ValueItem from './Value/ValueItem';
 import AddValue from './Value/AddValue';
-import DeleteStatement from './DeleteStatement';
+import StatementOptions from './StatementOptions';
 import { connect } from 'react-redux';
-import { togglePropertyCollapse } from '../../actions/statementBrowser';
+import { togglePropertyCollapse, toggleEditPropertyLabel, updatePropertyLabel } from '../../actions/statementBrowser';
 import PropTypes from 'prop-types';
+import ContentEditable from 'react-contenteditable'
+import styled from 'styled-components';
 
+export const StyledContentEditable = styled(ContentEditable)`
+    &[contenteditable="true"] {
+        background: #F8F9FB;
+        color: ${props => props.theme.orkgPrimaryColor};
+        outline: 0;
+        padding: 0 4px;
+        border: dotted 2px ${props => props.theme.listGroupBorderColor};
+    }
+`;
 class StatementItem extends Component {
     constructor(props) {
         super(props);
 
+        this.contentEditable = React.createRef();
+
         this.state = {
             deleteContributionModal: false,
+            predicateLabel: null
+        };
+    }
+
+
+    componentDidMount() {
+        this.getPredicateLabel();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.predicateLabel !== prevProps.predicateLabel) {
+            this.getPredicateLabel();
+        }
+
+        if (!prevProps.isEditing && this.props.isEditing) {
+            this.contentEditable.current.focus()
+        }
+
+    }
+
+    handleChange = (propertyId, e) => {
+        this.props.updatePropertyLabel({
+            label: e.target.value,
+            propertyId: propertyId,
+        });
+    };
+
+    getPredicateLabel = () => {
+        if (this.props.predicateLabel.match(new RegExp('^R[0-9]*$'))) {
+            getResource(this.props.predicateLabel)
+                .catch((e) => {
+                    console.log(e);
+                    this.setState({ predicateLabel: this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1) })
+                }).then((r) => {
+                    this.setState({ predicateLabel: `${r.label.charAt(0).toUpperCase() + r.label.slice(1)} (${this.props.predicateLabel})` })
+                })
+        } else {
+            this.setState({ predicateLabel: this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1) })
         }
     }
 
     toggleDeleteContribution = () => {
-        this.setState(prevState => ({
-            deleteContributionModal: !prevState.deleteContributionModal
+        this.setState((prevState) => ({
+            deleteContributionModal: !prevState.deleteContributionModal,
         }));
-    }
+    };
 
     render() {
         const isCollapsed = this.props.selectedProperty === this.props.id;
 
         const listGroupClass = classNames({
-            'statementActive': isCollapsed,
-            'statementItem': true,
-            'selectable': true,
+            statementActive: isCollapsed,
+            statementItem: true,
+            selectable: true,
             'rounded-bottom': this.props.isLastItem && !isCollapsed && !this.props.enableEdit,
         });
 
         const chevronClass = classNames({
-            'statementItemIcon': true,
-            'open': isCollapsed,
+            statementItemIcon: true,
+            open: isCollapsed,
             'float-right': true,
         });
 
         const openBoxClass = classNames({
-            'listGroupOpenBorderBottom': this.props.isLastItem && !this.props.enableEdit,
+            listGroupOpenBorderBottom: this.props.isLastItem && !this.props.enableEdit,
             'rounded-bottom': this.props.isLastItem && !this.props.enableEdit,
         });
 
@@ -52,31 +104,47 @@ class StatementItem extends Component {
         return (
             <>
                 <StyledStatementItem active={isCollapsed} onClick={() => this.props.togglePropertyCollapse(this.props.id)} className={listGroupClass}>
-                    {this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1)}
+                    {!this.props.isEditing ?
+                        this.state.predicateLabel :
+                        <StyledContentEditable
+                            innerRef={this.contentEditable}
+                            html={this.state.predicateLabel}
+                            disabled={!this.props.isEditing}
+                            tagName={'span'}
+                            onChange={(e) => this.handleChange(this.props.id, e)}
+                            onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
+                            onBlur={(e) => this.props.toggleEditPropertyLabel({ id: this.props.id })}
+                            onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
+                        />}
 
-                    {valueIds.length === 1 && !isCollapsed ?
+                    {valueIds.length === 1 && !isCollapsed ? (
                         <>
-                            : {' '}
+                            :{' '}
                             <em className="text-muted">
                                 <ValueItem
                                     label={this.props.values.byId[valueIds[0]].label}
                                     id={valueIds[0]}
                                     type={this.props.values.byId[valueIds[0]].type}
+                                    classes={this.props.values.byId[valueIds[0]].classes}
                                     resourceId={this.props.values.byId[valueIds[0]].resourceId}
                                     propertyId={this.props.id}
                                     existingStatement={this.props.values.byId[valueIds[0]].existingStatement}
                                     inline
+                                    isExistingValue={this.props.values.byId[valueIds[0]].isExistingValue}
+                                    isEditing={false}
                                 />
                             </em>
                         </>
-                        : valueIds.length > 1 && !isCollapsed ?
-                            <>: <em className="text-muted">{valueIds.length} values</em></>
-                            : ''}
+                    ) : valueIds.length > 1 && !isCollapsed ? (
+                        <>
+                            : <em className="text-muted">{valueIds.length} values</em>
+                        </>
+                    ) : (
+                                ''
+                            )}
+                    <Icon icon={isCollapsed ? faChevronCircleUp : faChevronCircleDown} className={chevronClass} />
 
-                    <Icon icon={isCollapsed ? faChevronCircleUp : faChevronCircleDown} className={chevronClass} />{' '}
-
-                    {!this.props.isExistingProperty ?
-                        <DeleteStatement id={this.props.id} /> : ''}
+                    {!this.props.isExistingProperty ? <StatementOptions id={this.props.id} isEditing={this.props.isEditing} existingPredicateId={this.props.properties.byId[this.props.id].existingPredicateId} /> : ''}
                 </StyledStatementItem>
 
                 <Collapse isOpen={isCollapsed}>
@@ -91,17 +159,18 @@ class StatementItem extends Component {
                                         label={value.label}
                                         id={valueId}
                                         type={value.type}
+                                        classes={value.classes}
                                         resourceId={value.resourceId}
                                         propertyId={this.props.id}
                                         existingStatement={value.existingStatement}
                                         openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
+                                        isExistingValue={value.isExistingValue}
+                                        isEditing={value.isEditing}
                                     />
-                                )
+                                );
                             })}
 
-                            {this.props.enableEdit ? (
-                                <AddValue />
-                            ) : ''}
+                            {this.props.enableEdit ? <AddValue /> : ''}
                         </ListGroup>
                     </StyledListGroupOpen>
                 </Collapse>
@@ -122,21 +191,26 @@ StatementItem.propTypes = {
     properties: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
+    isEditing: PropTypes.bool.isRequired,
+    toggleEditPropertyLabel: PropTypes.func.isRequired,
+    updatePropertyLabel: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
         selectedProperty: state.statementBrowser.selectedProperty,
         properties: state.statementBrowser.properties,
         values: state.statementBrowser.values,
-    }
+    };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
     togglePropertyCollapse: (id) => dispatch(togglePropertyCollapse(id)),
+    toggleEditPropertyLabel: (data) => dispatch(toggleEditPropertyLabel(data)),
+    updatePropertyLabel: (data) => dispatch(updatePropertyLabel(data)),
 });
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(StatementItem);

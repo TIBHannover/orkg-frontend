@@ -1,15 +1,7 @@
-import React, {Component} from 'react';
-import {
-    createLiteralStatement,
-    createPredicate,
-    createResource,
-    crossrefUrl,
-    getPredicatesByLabel,
-    submitGetRequest
-} from '../network';
-import {NotificationManager} from 'react-notifications';
-import {doiPredicateLabel, popupDelay} from '../utils';
+import React, { Component } from 'react';
+import { createLiteralStatement, createResource, crossrefUrl, submitGetRequest, createLiteral } from '../network';
 import { Container } from 'reactstrap';
+import { toast } from 'react-toastify';
 
 export default class AddResource extends Component {
     state = {
@@ -21,14 +13,14 @@ export default class AddResource extends Component {
     doi = null;
 
     setEditorState = (editorState) => {
-        this.setState({editorState: editorState});
+        this.setState({ editorState: editorState });
     };
 
     handleAdd = async () => {
         this.setEditorState('loading');
         const doiRegex = /\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&'<>])\S)+)\b/g;
         if (!doiRegex.test(this.state.value)) {
-            await this.createResource(false);
+            await this.createNewResource(false);
         } else {
             console.log('this is a DOI');
             this.doi = this.state.value;
@@ -40,17 +32,17 @@ export default class AddResource extends Component {
         try {
             const responseJson = await submitGetRequest(crossrefUrl + this.state.value);
             console.log(responseJson);
-            this.setState({value: responseJson.message.title[0]});
-            //await this.createResource(true);
+            this.setState({ value: responseJson.message.title[0] });
+            await this.createNewResource(true);
         } catch (error) {
             console.error(error);
-            NotificationManager.error(error.message, 'Error finding DOI', popupDelay);
+            toast.error(`Error finding DOI ${error.message}`);
             this.setEditorState('edit');
         }
     };
 
     handleInput = (event) => {
-        this.setState({value: event.target.value.trim()});
+        this.setState({ value: event.target.value.trim() });
     };
 
     handleKeyUp = async (event) => {
@@ -62,10 +54,10 @@ export default class AddResource extends Component {
 
     handleLiteralStatementCreationError = (error) => {
         console.error(error);
-        NotificationManager.error(error.message, 'Error creating literal statement', popupDelay);
+        toast.error(`Error creating literal statement ${error.message}`);
     };
 
-    createResource = async (usingDoi) => {
+    createNewResource = async (usingDoi) => {
         const value = this.state.value;
         if (value && value.length !== 0) {
             try {
@@ -73,14 +65,14 @@ export default class AddResource extends Component {
                 const resourceId = responseJson.id;
 
                 if (usingDoi) {
-                    await this.createDoiStatement(resourceId);
+                    await this.createDoiStatement(resourceId, process.env.REACT_APP_PREDICATES_HAS_DOI);
                 } else {
                     this.navigateToResource(resourceId);
                 }
             } catch (error) {
                 this.setEditorState('edit');
                 console.error(error);
-                NotificationManager.error(error.message, 'Error creating resource', popupDelay);
+                toast.error(`Error creating resource ${error.message}`);
             }
         }
     };
@@ -90,32 +82,11 @@ export default class AddResource extends Component {
         document.location.href = `${process.env.PUBLIC_URL}/resource/${resourceId}`;
     };
 
-    createLiteralStatement = (resourceId, predicateId) => {
-        createLiteralStatement(resourceId, predicateId, this.doi,
-                () => this.navigateToResource(resourceId), this.handleLiteralStatementCreationError);
-    };
-
-    createDoiStatement = async (resourceId) => {
-        try {
-            const responseJson1 = await getPredicatesByLabel(doiPredicateLabel);
-            const doiPredicate = responseJson1.find((item) => item.label === doiPredicateLabel);
-            if (!doiPredicate) {
-                try {
-                    const responseJson2 = await createPredicate(doiPredicateLabel);
-                    await this.createLiteralStatement(resourceId, responseJson2.id);
-                } catch (error) {
-                    this.setEditorState('edit');
-                    console.error(error);
-                    NotificationManager.error(error.message, 'Error creating predicate', popupDelay);
-                }
-            } else {
-                this.createLiteralStatement(resourceId, doiPredicate.id);
-            }
-        } catch (error) {
-            console.error(error);
-            NotificationManager.error(error.message, 'Error finding predicates', popupDelay);
-            this.setEditorState('edit');
-        }
+    createDoiStatement = async (resourceId, predicateId) => {
+        const responseJson = await createLiteral(this.doi);
+        createLiteralStatement(resourceId, predicateId, responseJson.id).then(result => {
+            this.navigateToResource(resourceId);
+        });
     };
 
     render() {
@@ -125,17 +96,22 @@ export default class AddResource extends Component {
             <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5">
                 <div className="input-group mb-3">
                     <input type="text" className="form-control" placeholder="Research contribution title or DOI"
-                            disabled={loading}
-                            onInput={this.handleInput}
-                            onKeyUp={this.handleKeyUp}
-                            aria-label="Resource title or DOI" aria-describedby="basic-addon2"/>
+                        disabled={loading}
+                        onInput={this.handleInput}
+                        onKeyUp={this.handleKeyUp}
+                        aria-label="Resource title or DOI" aria-describedby="basic-addon2"
+                    />
                     {
-                        !loading ? <div className="input-group-append">
+                        !loading ? (
+                            <div className="input-group-append">
                                 <button className="btn btn-outline-primary" type="button" onClick={this.handleAdd}>Add</button>
                             </div>
-                            : <div className="container vertical-centered">
-                                <span className="fa fa-spinner fa-spin"/>
-                            </div>
+                        )
+                            : (
+                                <div className="container vertical-centered">
+                                    <span className="fa fa-spinner fa-spin" />
+                                </div>
+                            )
                     }
                 </div>
             </Container>

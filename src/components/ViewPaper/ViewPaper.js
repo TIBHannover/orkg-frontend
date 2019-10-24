@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Container, Dropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'reactstrap';
+import { Container, Button, Alert, UncontrolledAlert } from 'reactstrap';
 import { getStatementsBySubject, getResource } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faBars, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faCalendar, faBars, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader'
 import Contributions from './Contributions';
@@ -15,11 +15,13 @@ import PropTypes from 'prop-types';
 import ComparisonPopup from './ComparisonPopup';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import GraphViewModal from './GraphViewModal';
+import queryString from 'query-string';
 
 class ViewPaper extends Component {
     state = {
         loading: true,
         loading_failed: false,
+        unfoundContribution: false,
         id: null,
         title: '',
         authorNames: [],
@@ -48,12 +50,10 @@ class ViewPaper extends Component {
         this.props.resetStatementBrowser();
 
         getResource(resourceId).then((paperResource) => {
-            getStatementsBySubject(resourceId).then((paperStatements) => {
+            getStatementsBySubject({ id: resourceId }).then((paperStatements) => {
                 // check if type is paper
-                let hasTypePaper = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_IS_A && statement.object.id === process.env.REACT_APP_RESOURCE_TYPES_PAPER);
-
-                if (hasTypePaper.length === 0) {
-                    throw new Error('The requested resource is not of type "paper"');
+                if (!paperResource.classes.includes(process.env.REACT_APP_CLASSES_PAPER)) {
+                    throw new Error(`The requested resource is not of class "${process.env.REACT_APP_CLASSES_PAPER}"`);
                 }
 
                 // research field
@@ -89,6 +89,17 @@ class ViewPaper extends Component {
                     }
                 }
 
+                // DOI
+                let publicationDOI = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
+                if (publicationDOI.length > 0) {
+                    publicationDOI = publicationDOI[0].object.label;
+                    if (publicationDOI.includes('10.') && !publicationDOI.startsWith('10.')) {
+                        publicationDOI = publicationDOI.substring(publicationDOI.indexOf('10.'));
+                    }
+                } else {
+                    publicationDOI = null;
+                }
+
                 // contributions
                 let contributions = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION);
 
@@ -110,16 +121,26 @@ class ViewPaper extends Component {
                     publicationYear,
                     publicationMonth,
                     researchField,
+                    publicationDOI: publicationDOI,
                     authorNames: authorNamesArray.reverse(), // statements are ordered desc, so first author is last => thus reverse
                     contributions: contributionArray.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
                 });
-            }).then(() => {
+            }).then((e) => {
                 if (this.props.match.params.contributionId && !this.state.contributions.some((el) => { return el.id === this.props.match.params.contributionId; })) {
                     throw new Error('Contribution not found');
                 }
-                this.setState({ selectedContribution: (this.props.match.params.contributionId && this.state.contributions.some((el) => { return el.id === this.props.match.params.contributionId; })) ? this.props.match.params.contributionId : this.state.contributions[0].id });
+                if (this.state.contributions[0]) {
+                    this.setState({ selectedContribution: (this.props.match.params.contributionId && this.state.contributions.some((el) => { return el.id === this.props.match.params.contributionId; })) ? this.props.match.params.contributionId : this.state.contributions[0].id });
+                } else {
+                    throw new Error('No Contribution found');
+                }
             }).catch(error => {
-                this.setState({ loading: false, loading_failed: true })
+                if (error.message === 'No Contribution found') {
+                    this.setState({ unfoundContribution: true, loading: false, loading_failed: false })
+                }
+                else {
+                    this.setState({ loading: false, loading_failed: true })
+                }
             });
         }).catch(error => {
             this.setState({ loading: false, loading_failed: true })
@@ -139,6 +160,9 @@ class ViewPaper extends Component {
     }
 
     render() {
+        let comingFromWizard = queryString.parse(this.props.location.search);
+        comingFromWizard = comingFromWizard ? comingFromWizard.comingFromWizard === 'true' : false;
+
         return (
             <div>
                 {!this.state.loading && this.state.loading_failed && (
@@ -166,24 +190,40 @@ class ViewPaper extends Component {
                             )}
                             {!this.state.loading && !this.state.loading_failed && (
                                 <>
-                                    <div className="d-flex">
-                                        <h2 className="h4 mt-4 mb-3">{this.state.title ? this.state.title : <em>No title</em>}</h2>
+                                    {comingFromWizard &&
+                                        (
+                                            <UncontrolledAlert color="info">
+                                                Help us to improve the ORKG and <a href="https://forms.gle/AgcUXuiuQzexqZmr6" target="_blank" rel="noopener noreferrer">fill out the online evaluation form</a>. Thank you!
+                                            </UncontrolledAlert>
+                                        )}
+                                    <div className="d-flex align-items-start">
+                                        <h2 className="h4 mt-4 mb-3 flex-grow-1">{this.state.title ? this.state.title : <em>No title</em>}</h2>
 
-                                        <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4" style={{ marginLeft: 'auto'}}>
+                                        {/*<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4" style={{ marginLeft: 'auto' }}>
                                             <DropdownToggle color="darkblue" size="sm" >
-                                                <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
+                                                <span className="mr-2">View</span> <Icon icon={faEllipsisV} />
                                             </DropdownToggle>
                                             <DropdownMenu>
                                                 <DropdownItem onClick={() => this.toggle('showGraphModal')}>Show graph visualization</DropdownItem>
                                             </DropdownMenu>
-                                        </Dropdown>
+                                        </Dropdown>*/}
+
+                                        <Button
+                                            color="darkblue"
+                                            size="sm"
+                                            className="mb-4 mt-4 ml-2 flex-shrink-0"
+                                            style={{ marginLeft: 'auto' }}
+                                            onClick={() => this.toggle('showGraphModal')}
+                                        >
+                                            <Icon icon={faProjectDiagram} className="mr-1" /> View graph
+                                        </Button>
                                     </div>
 
                                     <div className="clearfix" />
 
                                     {/* TODO: change links of badges  */}
                                     <span className="badge badge-lightblue mr-2">
-                                        <Icon icon={faCalendar} className="text-primary" /> {moment(this.state.publicationMonth, 'M').format('MMMM')} {this.state.publicationYear}
+                                        <Icon icon={faCalendar} className="text-primary" /> {this.state.publicationMonth && this.state.publicationMonth.length > 0 && moment(this.state.publicationMonth, 'M').format('MMMM')} {this.state.publicationYear}
                                     </span>
                                     {this.state.researchField && this.state.researchField.object && (
                                         <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.researchField.object.id })} >
@@ -197,9 +237,11 @@ class ViewPaper extends Component {
                                             <Icon icon={faUser} className="text-primary" /> {author}
                                         </span>
                                     ))}
+                                    <br />
+                                    {this.state.publicationDOI && this.state.publicationDOI.startsWith('10.') && <div style={{ textAlign: 'right' }}><small>DOI: <a href={`https://doi.org/${this.state.publicationDOI}`} target="_blank" rel="noopener noreferrer">{this.state.publicationDOI}</a></small></div>}
                                 </>
                             )}
-                            {!this.state.loading_failed && (
+                            {!this.state.loading_failed && !this.state.unfoundContribution && (
                                 <>
                                     <hr className="mt-4 mb-5" />
                                     <Contributions
@@ -212,13 +254,21 @@ class ViewPaper extends Component {
                                     <ComparisonPopup />
                                 </>
                             )}
+                            {!this.state.loading_failed && this.state.unfoundContribution && (
+                                <>
+                                    <hr className="mt-4 mb-5" />
+                                    <Alert color="danger">
+                                        Failed to load contributions.
+                                    </Alert>
+                                </>
+                            )}
                         </Container>
                     </>
                 )}
 
-                <GraphViewModal 
-                    showDialog={this.state.showGraphModal} 
-                    toggle={() => this.toggle('showGraphModal')} 
+                <GraphViewModal
+                    showDialog={this.state.showGraphModal}
+                    toggle={() => this.toggle('showGraphModal')}
                     paperId={this.props.match.params.resourceId}
                 />
             </div>
@@ -234,6 +284,7 @@ ViewPaper.propTypes = {
         }).isRequired,
     }).isRequired,
     resetStatementBrowser: PropTypes.func.isRequired,
+    location: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({

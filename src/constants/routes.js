@@ -9,7 +9,7 @@ export default {
   ADD_RESOURCE: '/addResource',
   PREDICATES: '/predicates',
   ADD_PAPER: {
-    GENERAL_DATA: '/add-paper',
+    GENERAL_DATA: '/add-paper'
   },
   VIEW_PAPER_CONTRIBUTION: '/paper/:resourceId/:contributionId',
   VIEW_PAPER: '/paper/:resourceId',
@@ -20,7 +20,9 @@ export default {
   RESEARCH_FIELD: '/field/:researchFieldId',
   LICENSE: '/license',
   /* Legacy routes, only used for debugging now */
-  RESSOURCE_DETAILS: '/resource/:resourceId/:sectionName',
+  RESSOURCE_DETAILS: '/resource/:resourceId',
   PREDICATE_DETAILS: '/predicate/:predicateId',
-  SEARCH: '/search/:searchTerm',
-};
+  SEARCH: '/search/:searchTerm?',
+  TPDL: '/tpdl',
+  STATS: '/stats',
+}

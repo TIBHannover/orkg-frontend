@@ -3,21 +3,21 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { openAuthDialog, toggleAuthDialog } from '../../actions/auth';
-import { CSSTransitionGroup } from 'react-transition-group';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import ForgotPassword from './ForgotPassword';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 
-const AnimationContainer = styled.div`
-  &.fadeIn-enter {
-    opacity: 0;
-  }
+const AnimationContainer = styled(CSSTransition)`
+    &.fadeIn-enter {
+        opacity: 0;
+    }
 
-  &.fadeIn-enter.fadeIn-enter-active {
-    opacity: 1;
-    transition: 1s opacity;
-  }
+    &.fadeIn-enter.fadeIn-enter-active {
+        opacity: 1;
+        transition: 1s opacity;
+    }
 `;
 
 class Authentication extends Component {
@@ -31,27 +31,23 @@ class Authentication extends Component {
             {this.props.action === 'forgotpassword' && 'Forgot password'}
           </ModalHeader>
           <ModalBody>
-            <CSSTransitionGroup
-              transitionName="fadeIn"
-              transitionEnterTimeout={700}
-              transitionLeave={false}
-            >
+            <TransitionGroup exit={false}>
               {this.props.action === 'signin' && (
-                <AnimationContainer>
+                <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
                   <SignIn />
                 </AnimationContainer>
               )}
               {this.props.action === 'signup' && (
-                <AnimationContainer>
+                <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
                   <SignUp changeMode={this.props.openAuthDialog} />
                 </AnimationContainer>
               )}
               {this.props.action === 'forgotpassword' && (
-                <AnimationContainer>
+                <AnimationContainer key={3} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
                   <ForgotPassword />
                 </AnimationContainer>
               )}
-            </CSSTransitionGroup>
+            </TransitionGroup>
           </ModalBody>
           <ModalFooter className="justify-content-center">
             {this.props.action === 'signin' && (

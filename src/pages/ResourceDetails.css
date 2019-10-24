@@ -44,7 +44,8 @@
     width: 100%;
 }
 
-.statementView-mainSnak-container {}
+.statementView-mainSnak-container {
+}
 
 .statementView-mainSnak-body {
     word-wrap: break-word;
@@ -66,7 +67,8 @@
     min-height: 1.6em;
 }
 
-.snakView-body {}
+.snakView-body {
+}
 
 .snakView-value {
     display: inline;
@@ -136,18 +138,6 @@
 
 .newStatement:last-child {
     border-bottom: 0;
-}
-
-.statementView-rankSelector {
-    position: absolute;
-    margin-left: 15.2em;
-    margin-top: 10px;
-    z-index: 1;
-}
-
-.rankSelector {
-    background: none;
-    border: 0;
 }
 
 .newStatement .statementView-mainSnak .snakView-property-container {
@@ -299,7 +289,8 @@ div.statementView textarea {
     float: left;
 }
 
-.valueView-input-group-prepend, .valueView-input-group-append {
+.valueView-input-group-prepend,
+.valueView-input-group-append {
     display: inline;
 }
 
@@ -362,12 +353,15 @@ div.statementView textarea {
     padding: 0 5px 0 0;
 }
 
-@supports (-moz-appearance:none) { /* Mozilla-only */
-    button::-moz-focus-inner { /* reset any predefined properties */
+@supports (-moz-appearance: none) {
+    /* Mozilla-only */
+    button::-moz-focus-inner {
+        /* reset any predefined properties */
         border: none;
         padding: 0;
     }
-    button:focus { /* add outline to focus pseudo-class */
+    button:focus {
+        /* add outline to focus pseudo-class */
         outline-style: dotted;
         outline-width: 1px;
     }

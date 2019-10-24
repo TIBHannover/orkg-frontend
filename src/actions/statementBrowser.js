@@ -59,6 +59,20 @@ export const deleteProperty = (data) => dispatch => {
     })
 }
 
+export const toggleEditPropertyLabel = (data) => dispatch => {
+    dispatch({
+        type: type.TOGGLE_EDIT_PROPERTY_LABEL,
+        payload: data
+    })
+}
+
+export const updatePropertyLabel = (data) => dispatch => {
+    dispatch({
+        type: type.UPDATE_PROPERTY_LABEL,
+        payload: data
+    })
+}
+
 export const createValue = (data) => dispatch => {
     let resourceId = data.existingResourceId ? data.existingResourceId : (data.type === 'object' ? guid() : null);
     dispatch({
@@ -68,6 +82,20 @@ export const createValue = (data) => dispatch => {
             resourceId: resourceId,
             ...data,
         }
+    })
+}
+
+export const toggleEditValue = (data) => dispatch => {
+    dispatch({
+        type: type.TOGGLE_EDIT_VALUE,
+        payload: data
+    })
+}
+
+export const updateValueLabel = (data) => dispatch => {
+    dispatch({
+        type: type.UPDATE_VALUE_LABEL,
+        payload: data
     })
 }
 
@@ -128,7 +156,7 @@ export const fetchStatementsForResource = (data) => {
             type: type.IS_FETCHING_STATEMENTS
         });
 
-        return network.getStatementsBySubject(existingResourceId)
+        return network.getStatementsBySubject({ id: existingResourceId })
             .then(
                 response => {
                     dispatch({
@@ -174,6 +202,7 @@ export const fetchStatementsForResource = (data) => {
                                 propertyId: propertyId,
                                 label: statement.object.label,
                                 type: statement.object._class === 'literal' ? 'literal' : 'object', // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
+                                classes: statement.object.classes ? statement.object.classes : [],
                                 isExistingValue: true,
                                 existingStatement: true,
                             }));

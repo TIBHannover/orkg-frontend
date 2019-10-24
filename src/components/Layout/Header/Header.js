@@ -1,37 +1,23 @@
+import React, { Component } from 'react';
 import {
-  Button,
-  ButtonDropdown,
-  Collapse,
-  Container,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Nav,
-  NavItem,
-  NavLink,
-  Navbar,
-  NavbarToggler,
-  Tooltip,
-  ButtonGroup,
-  Row,
+  Button, ButtonDropdown, Collapse, Container, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem,
+  NavLink, Navbar, NavbarToggler, Tooltip, ButtonGroup, Row, Badge
 } from 'reactstrap';
 import styled from 'styled-components';
 import { Link, NavLink as RouterNavLink } from 'react-router-dom';
-import React, { Component } from 'react';
-import { Cookies } from 'react-cookie';
-import { faSortDown, faUser } from '@fortawesome/free-solid-svg-icons';
-
+import { ReactComponent as Logo } from '../../../assets/img/logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSortDown, faUser } from '@fortawesome/free-solid-svg-icons';
+import ROUTES from '../../../constants/routes.js';
+import { Cookies } from 'react-cookie';
 import Gravatar from 'react-gravatar';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Authentication from '../../Authentication/Authentication';
-import { ReactComponent as Logo } from '../../../assets/img/logo.svg';
-import ROUTES from '../../../constants/routes';
 import SearchForm from './SearchForm';
 import { reverse } from 'named-urls';
-
 import { openAuthDialog, updateAuth } from '../../../actions/auth';
+
 
 const StyledGravatar = styled(Gravatar)`
   border: 3px solid ${(props) => props.theme.avatarBorderColor};
@@ -114,77 +100,37 @@ class Header extends Component {
             <Nav className="mr-auto" navbar>
               <NavItem>
                 <NavLink tag={RouterNavLink} exact to={ROUTES.PAPERS}>
-                  View all papers
-                  {/* TODO: add taxonomy "Browse by research field"
-                    <FontAwesomeIcon icon={faSortDown} pull="right" /> */}
+                  View all papers{/* TODO: add taxonomy "Browse by research field" <FontAwesomeIcon icon={faSortDown} pull="right" /> */}
                 </NavLink>
               </NavItem>
-              <ButtonDropdown
-                isOpen={this.state.dropdownOpen}
-                toggle={this.dropdownOpen}
-                nav
-                inNavbar
-              >
-                <DropdownToggle nav className="ml-4">
-                  Debug <FontAwesomeIcon icon={faSortDown} pull="right" />
-                </DropdownToggle>
+              <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.dropdownOpen} nav inNavbar>
+                <DropdownToggle nav className="ml-4">Tools <FontAwesomeIcon icon={faSortDown} pull="right" /></DropdownToggle>
                 <DropdownMenu right>
-                  <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>
-                    All Resources
-                  </DropdownItem>
-                  <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>
-                    All Predicates
-                  </DropdownItem>
+                  <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS}>Statistics</DropdownItem>
+                  <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>Resources <small><Badge color="info">Beta</Badge></small></DropdownItem>
+                  <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>Predicates <small><Badge color="info">Beta</Badge></small></DropdownItem>
                 </DropdownMenu>
               </ButtonDropdown>
             </Nav>
             <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
-              <Button color="primary" className="mr-3">
-                Add paper
-              </Button>
+              <Button color="primary" className="mr-3">Add paper</Button>
             </Link>
 
             <SearchForm placeholder="Search..." />
             {this.props.user !== null && (
               <div>
-                <StyledGravatar
-                  className="rounded-circle"
-                  email="example@example.com"
-                  size={40}
-                  id="TooltipExample"
-                />
-                <StyledAuthTooltip
-                  trigger="click"
-                  innerClassName="pr-3 pl-3 pt-3 pb-3 clearfix"
-                  placement="bottom-end"
-                  isOpen={this.state.userTooltipOpen}
-                  target="TooltipExample"
-                  toggle={this.toggleUserTooltip}
-                >
+                <StyledGravatar className="rounded-circle" email="example@example.com" size={40} id="TooltipExample" />
+                <StyledAuthTooltip trigger="click" innerClassName="pr-3 pl-3 pt-3 pb-3 clearfix" placement="bottom-end" isOpen={this.state.userTooltipOpen} target="TooltipExample" toggle={this.toggleUserTooltip}>
                   <Row>
                     <div className="col-3 text-center">
-                      <Link
-                        onClick={this.toggleUserTooltip}
-                        to={reverse(ROUTES.USER_PROFILE, { userId: this.props.user.id })}
-                      >
-                        <StyledGravatar
-                          className="rounded-circle"
-                          style={{ border: '3px solid #fff' }}
-                          email="example@example.com"
-                          size={76}
-                          id="TooltipExample"
-                        />
+                      <Link onClick={this.toggleUserTooltip} to={reverse(ROUTES.USER_PROFILE, { userId: this.props.user.id })} >
+                        <StyledGravatar className="rounded-circle" style={{ border: '3px solid #fff' }} email="example@example.com" size={76} id="TooltipExample" />
                       </Link>
                     </div>
                     <div className="col-9">
                       Good evening {this.props.user.displayName},
                       <ButtonGroup className="mt-2" size="sm">
-                        <Button
-                          color="secondary"
-                          onClick={this.toggleUserTooltip}
-                          tag={Link}
-                          to={ROUTES.USER_SETTINGS}
-                        >
+                        <Button color="secondary" onClick={this.toggleUserTooltip} tag={Link} to={ROUTES.USER_SETTINGS} >
                           Settings
                         </Button>
                         <Button onClick={this.toggleUserTooltip} tag={Link} to={ROUTES.SIGNOUT}>

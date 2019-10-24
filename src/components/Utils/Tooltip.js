@@ -24,12 +24,14 @@ class Tooltip extends React.Component {
         });
     }
 
-    render() {  
+    render() {
         const style = {
             fontSize: '1rem',
             color: this.props.colorIcon ? this.props.colorIcon : 'initial',
         }
         const className = !this.props.colorIcon ? 'text-primary' : '';
+
+        const trigger = this.props.trigger ? this.props.trigger : 'click hover focus';
 
         return (
             <span>
@@ -37,12 +39,14 @@ class Tooltip extends React.Component {
                     {this.props.children} {!this.props.hideDefaultIcon ? <span style={style}><FontAwesomeIcon icon={faQuestionCircle} className={className} /></span> : ''}
                 </span>
 
-                <ReactstrapTooltip 
-                    delay={{show:0,hide:0}} 
-                    placement="top" 
-                    isOpen={this.state.tooltipOpen} 
-                    target={this.id} 
+                <ReactstrapTooltip
+                    delay={{ show: 0, hide: 250 }}
+                    placement="top"
+                    autohide={false}
+                    isOpen={this.state.tooltipOpen}
+                    target={this.id}
                     toggle={this.toggle}
+                    trigger={trigger}
                 >
                     {this.props.message}
                 </ReactstrapTooltip>
@@ -53,9 +57,13 @@ class Tooltip extends React.Component {
 
 Tooltip.propTypes = {
     children: PropTypes.node,
-    message: PropTypes.string.isRequired,
+    message: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.object
+    ]).isRequired,
     hideDefaultIcon: PropTypes.bool,
     colorIcon: PropTypes.string,
+    trigger: PropTypes.string,
 }
 
 Tooltip.defaultProps = {

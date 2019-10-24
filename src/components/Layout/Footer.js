@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container } from 'reactstrap';
 import ROUTES from '../../constants/routes';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const Footer = () => (
     <Container>
@@ -9,6 +9,8 @@ const Footer = () => (
             Open Research Knowledge Graph 
             {' '}-{' '} 
             <Link to={ROUTES.LICENSE} className="text-dark"><u>License</u></Link>
+            {' '}-{' '} 
+            <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/" target="_blank" rel="noopener noreferrer" className="text-dark"><u>Gitlab</u></a>
             {' '}-{' '} 
             <a href="https://projects.tib.eu/orkg/" target="_blank" rel="noopener noreferrer" className="text-dark"><u>About</u></a>
         </footer>

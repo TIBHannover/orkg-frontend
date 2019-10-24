@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import AddPaper from './AddPaper';
 import { Provider } from 'react-redux'
-import configureStore, { history } from '../../store'
+import configureStore from '../../store'
 
 //TODO: this test is not finished, needs to be determined how componenets will be tested
 // E.g. the backend calls should not be tested, but many of the functionality relies on the backend
