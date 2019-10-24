@@ -14,11 +14,12 @@ import PropTypes from 'prop-types';
 import StatementBrowserDialog from '../StatementBrowserDialog';
 import RDFDataCube from '../../RDFDataCube/RDFDataCube';
 import ValuePlugins from '../../ValuePlugins/ValuePlugins';
-import { deleteStatementById, updateLiteral, submitGetRequest, resourcesUrl, updateStatement } from '../../../network';
+import { deleteStatementById, updateLiteral, submitGetRequest, resourcesUrl, updateStatement, createResource as createResourceAPICall } from '../../../network';
 import Tippy from '@tippy.js/react';
 import 'tippy.js/dist/tippy.css';
 import { toast } from 'react-toastify';
 import AsyncCreatableSelect from 'react-select/async-creatable';
+import { StyledAutoCompleteInputFormControl } from '../AutoComplete';
 import { guid } from '../../../utils';
 
 
@@ -34,67 +35,75 @@ class ValueItem extends Component {
         }
     }
 
-    handleChangeLiteral = (e) => {
-        this.props.updateValueLabel({
-            label: e.target.value,
-            valueId: this.props.id,
-        });
-    };
-
-    handleSyncBackendLiteral = () => {
-        if (this.props.syncBackend) {
-            let resource = this.props.values.byId[this.props.id];
-            let existingResourceId = resource ? resource.resourceId : false;
-            if (existingResourceId) {
-                updateLiteral(existingResourceId, this.props.label);
+    // @param sync : to update the literal label on the backend.
+    handleChangeLiteral = async (e, sync = false) => {
+        // Check if the user changed the label
+        if (e.target.value !== this.props.label) {
+            this.props.updateValueLabel({
+                label: e.target.value,
+                valueId: this.props.id,
+            });
+        }
+        if (sync && this.props.syncBackend) {
+            this.props.isSavingValue({ id: this.props.id }); // To show the saving message instead of the value label
+            if (this.props.resourceId) {
+                await updateLiteral(this.props.resourceId, this.props.label);
                 toast.success('Literal label updated successfully');
             }
+            this.props.doneSavingValue({ id: this.props.id });
         }
     };
 
-    handleChange = async (selectedOption, a) => {
-        let property = this.props.values.byId[this.props.id];
+    handleChangeResource = async (selectedOption, a) => {
         // Check if the user changed the value
-        if (this.props.label !== selectedOption.label || (property.existingPredicateId !== selectedOption.id)) {
-            this.props.isSavingValue({ id: this.props.id }); // Show the saving message instead of the property label
+        if (this.props.label !== selectedOption.label || this.props.resourceId !== selectedOption.id) {
+            this.props.isSavingValue({ id: this.props.id }); // To show the saving message instead of the value label
             if (a.action === 'select-option') {
-                this.changeValue(selectedOption);
+                this.changeValueinStatementBrowser({ ...selectedOption, isExistingValue: true });
             } else if (a.action === 'create-option') {
                 let newResource = null;
                 if (this.props.syncBackend) {
-                    newResource = await createResource(selectedOption.label);
-                    this.props.createValue({
-                        label: newResource.label,
-                        type: this.state.valueType,
-                        propertyId: this.props.selectedProperty,
-                        existingResourceId: newResource.id,
-                        isExistingValue: true,
-                    });
+                    newResource = await createResourceAPICall(selectedOption.label);
+                    newResource['isExistingValue'] = true
                 } else {
-                    newResource = { id: guid(), label: selectedOption.label }
-                    this.props.createValue({
-                        valueId: newResource.id,
-                        label: newResource.label,
-                        type: this.state.valueType,
-                        propertyId: this.props.selectedProperty,
-                        existingResourceId: null,
-                        isExistingValue: true,
-                    });
+                    newResource = { id: guid(), isExistingValue: false, label: selectedOption.label, type: 'object', classes: [] }
                 }
-                this.changeValue(newResource);
+                await this.changeValueinStatementBrowser(newResource);
             }
+            this.props.doneSavingValue({ id: this.props.id });
         }
     };
 
-    changeValue = async (newResource) => {
-        if (this.props.syncBackend) {
+    changeValueinStatementBrowser = async (newResource) => {
+        if (this.props.syncBackend && this.props.statementId) {
             await updateStatement(this.props.statementId, { object_id: newResource.id })
-            this.props.changeValue({ propertyId: this.props.id, newValue: newResource });
+            this.props.changeValue({
+                valueId: this.props.id,
+                ...{
+                    classes: newResource.classes,
+                    label: newResource.label,
+                    resourceId: newResource.id,
+                    existingResourceId: newResource.id,
+                    isExistingValue: newResource.isExistingValue,
+                    existingStatement: true,
+                    statementId: this.props.statementId,
+                }
+            });
             toast.success('Value updated successfully');
         } else {
-            this.props.changeValue({ propertyId: this.props.id, newValue: newResource });
+            this.props.changeValue({
+                valueId: this.props.id,
+                ...{
+                    classes: newResource.classes,
+                    label: newResource.label,
+                    resourceId: newResource.id,
+                    existingResourceId: newResource.isExistingValue ? newResource.id : null,
+                    isExistingValue: newResource.isExistingValue,
+                    existingStatement: false,
+                    statementId: null,
+                }
+            });
         }
-        this.props.doneSavingValue({ id: this.props.id });
     };
 
     toggleDeleteContribution = async () => {
@@ -106,7 +115,7 @@ class ValueItem extends Component {
 
         if (result) {
             if (this.props.syncBackend) {
-                deleteStatementById(this.props.statementId);
+                await deleteStatementById(this.props.statementId);
                 toast.success('Statement deleted successfully');
             }
             this.props.deleteValue({
@@ -230,7 +239,9 @@ class ValueItem extends Component {
 
             responseJson.map((item) => options.push({
                 label: item.label,
-                id: item.id
+                id: item.id,
+                classes: item.classes,
+                type: 'object'
             }));
 
             return options;
@@ -275,9 +286,11 @@ class ValueItem extends Component {
             container: (provided) => ({
                 padding: 0,
                 height: 'auto',
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+                borderTopRightRadius: 0,
+                borderBottomRightRadius: 0,
                 background: '#fff',
-                display: 'inline-block',
-                width: '70%',
                 '&>div:first-of-type': {
                     padding: 0
                 }
@@ -285,7 +298,6 @@ class ValueItem extends Component {
             menu: (provided) => ({
                 ...provided,
                 zIndex: 10,
-                width: '70%',
                 color: '#000'
             }),
             option: (provided) => ({
@@ -314,30 +326,32 @@ class ValueItem extends Component {
                                 (!this.props.isEditing ?
                                     <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>{this.props.label}</ValuePlugins> :
                                     (this.props.type === 'object' ?
-                                        <AsyncCreatableSelect
-                                            loadOptions={this.loadOptions}
-                                            noOptionsMessage={this.noResults}
-                                            styles={customStyles}
-                                            autoFocus
-                                            getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
-                                            getOptionValue={({ id }) => id}
-                                            defaultOptions={[{
-                                                label: this.props.label,
-                                                id: this.props.values.byId[this.props.id].resourceId
-                                            }]}
-                                            defaultValue={{
-                                                label: this.props.label,
-                                                id: this.props.values.byId[this.props.id].resourceId
-                                            }}
-                                            cacheOptions
-                                            onChange={(selectedOption, a) => { this.handleChange(selectedOption, a); this.props.toggleEditValue({ id: this.props.id }); }}
-                                            onBlur={(e) => { this.props.toggleEditValue({ id: this.props.id }) }}
-                                        /> : (
+                                        <StyledAutoCompleteInputFormControl className="form-control" style={{ borderRadius: 0 }} >
+                                            <AsyncCreatableSelect
+                                                loadOptions={this.loadOptions}
+                                                noOptionsMessage={this.noResults}
+                                                styles={customStyles}
+                                                autoFocus
+                                                getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
+                                                getOptionValue={({ id }) => id}
+                                                defaultOptions={[{
+                                                    label: this.props.label,
+                                                    id: this.props.values.byId[this.props.id].resourceId
+                                                }]}
+                                                defaultValue={{
+                                                    label: this.props.label,
+                                                    id: this.props.values.byId[this.props.id].resourceId
+                                                }}
+                                                cacheOptions
+                                                onChange={(selectedOption, a) => { this.handleChangeResource(selectedOption, a); this.props.toggleEditValue({ id: this.props.id }); }}
+                                                onBlur={(e) => { this.props.toggleEditValue({ id: this.props.id }) }}
+                                            />
+                                        </StyledAutoCompleteInputFormControl> : (
                                             <Input
                                                 value={this.props.label}
-                                                onChange={(e) => this.handleChangeLiteral(e)}
+                                                onChange={(e) => this.handleChangeLiteral(e, false)}
                                                 onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
-                                                onBlur={(e) => { this.handleSyncBackendLiteral(); this.props.toggleEditValue({ id: this.props.id }) }}
+                                                onBlur={(e) => { this.handleChangeLiteral(e, true); this.props.toggleEditValue({ id: this.props.id }) }}
                                                 onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
                                             />)
                                     )

@@ -177,8 +177,31 @@ export default (state = initialState, action) => {
 
         case type.CHANGE_VALUE: {
             let { payload } = action;
-            let newState = dotProp.set(state, `values.byId.${payload.propertyId}.label`, payload.newValue.label);
-            newState = dotProp.set(newState, `values.byId.${payload.propertyId}.resourceId`, payload.newValue.id);
+            let newState = dotProp.set(state, `values.byId.${payload.valueId}`, v => ({
+                type: v.type,
+                classes: payload.classes ? payload.classes : [],
+                label: payload.label ? payload.label : '',
+                resourceId: payload.resourceId ? payload.resourceId : null,
+                isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
+                existingStatement: payload.existingStatement ? payload.existingStatement : false,
+                statementId: payload.statementId ? payload.statementId : null,
+                isEditing: v.isEditing,
+                isSaving: v.isSaving,
+            }));
+            //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
+            if (!state.resources.byId[payload.resourceId]) {
+                newState = dotProp.set(newState, 'resources.allIds', ids => [...ids, payload.resourceId]);
+
+                newState = dotProp.set(newState, 'resources.byId', ids => ({
+                    ...ids,
+                    [payload.resourceId]: {
+                        existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
+                        id: payload.resourceId,
+                        label: payload.label,
+                        propertyIds: [],
+                    }
+                }));
+            }
             return newState;
         }
 
