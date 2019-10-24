@@ -345,6 +345,8 @@ class ValueItem extends Component {
                                                 cacheOptions
                                                 onChange={(selectedOption, a) => { this.handleChangeResource(selectedOption, a); this.props.toggleEditValue({ id: this.props.id }); }}
                                                 onBlur={(e) => { this.props.toggleEditValue({ id: this.props.id }) }}
+                                                isValidNewOption={(inputValue) => inputValue.length !== 0 && inputValue.trim().length !== 0}
+                                                createOptionPosition={'first'}
                                             />
                                         </StyledAutoCompleteInputFormControl> : (
                                             <Input
