@@ -178,16 +178,17 @@ class EditPaperDialog extends Component {
     render() {
         return (
             <>
+                <div className="flex-grow-1">
                 <Button
                     color="darkblue"
                     size="sm"
-                    className="mb-4 mt-4 ml-2 float-right flex-shrink-0"
+                    className="mt-2"
                     style={{ marginLeft: 'auto' }}
                     onClick={this.toggleDialog}
                 >
-                    Edit
+                    Edit data
                 </Button>
-
+                </div>
 
 
                 <Modal isOpen={this.state.showDialog} toggle={this.toggleDialog} size="lg">

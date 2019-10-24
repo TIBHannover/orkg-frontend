@@ -18,7 +18,19 @@ import { loadPaper } from '../../actions/viewPaper';
 import GraphViewModal from './GraphViewModal';
 import queryString from 'query-string';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
+import styled from 'styled-components';
 
+const EditModeHeader = styled(Container)`
+    background-color: #80869B!important;
+    color:#fff;
+    padding: 8px 25px!important;
+    display:flex;
+    align-items: center;
+`;
+const Title = styled.div`
+    font-size:1.1rem;
+    flex-grow:1;
+`;
 class ViewPaper extends Component {
     state = {
         loading: true,
@@ -28,7 +40,7 @@ class ViewPaper extends Component {
         selectedContribution: '',
         dropdownOpen: false,
         showGraphModal: false,
-        editMode: false,
+        editMode: true,
     }
 
     componentDidMount() {
@@ -189,7 +201,21 @@ class ViewPaper extends Component {
                         <Container className="p-0">
                             <h1 className="h4 mt-4 mb-4">View paper</h1>
                         </Container>
+                        {this.state.editMode && (
+                            <EditModeHeader className="box">
+                                <Title>Edit mode</Title>
+                                <Button
+                                    className="flex-shrink-0"
+                                    color="darkblueDarker"
+                                    size="sm"
+                                    onClick={() => this.toggle('editMode')}
+                                >
+                                    Finish
+                                </Button>
+                            </EditModeHeader>
+                        )}
                         <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
+
                             {this.state.loading && (
                                 <ContentLoader
                                     height={38}
@@ -221,33 +247,13 @@ class ViewPaper extends Component {
                                                     <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
                                                 </DropdownToggle>
                                                 <DropdownMenu>
-                                                    <DropdownItem onClick={() => this.toggle('showGraphModal')}>Show graph visualization</DropdownItem>
+                                                    <DropdownItem onClick={() => this.toggle('showGraphModal')}>View graph</DropdownItem>
                                                     <DropdownItem onClick={() => this.toggle('editMode')}>Edit mode</DropdownItem>
                                                 </DropdownMenu>
                                             </Dropdown>)}
-                                        {this.state.editMode && (
-                                            <Button
-                                                className="mb-4 mt-4 ml-2 flex-shrink-0"
-                                                style={{ marginLeft: 'auto' }}
-                                                color="darkblue"
-                                                size="sm"
-                                                onClick={() => this.toggle('editMode')}
-                                            >
-                                                Finish Edit
-                                            </Button>)}
+
+                                        
                                     </div>
-
-                                    <Button
-                                        color="darkblue"
-                                        size="sm"
-                                        className="mb-4 mt-4 ml-2 flex-shrink-0"
-                                        style={{ marginLeft: 'auto' }}
-                                        onClick={() => this.toggle('showGraphModal')}
-                                    >
-                                        <Icon icon={faProjectDiagram} className="mr-1" /> View graph
-                                    </Button>
-
-                                    <EditPaperDialog />
 
                                     <div className="clearfix" />
 
@@ -268,7 +274,12 @@ class ViewPaper extends Component {
                                         </span>
                                     ))}
                                     <br />
-                                    {this.props.viewPaper.doi && this.props.viewPaper.doi.startsWith('10.') && <div style={{ textAlign: 'right' }}><small>DOI: <a href={`https://doi.org/${this.props.viewPaper.doi}`} target="_blank" rel="noopener noreferrer">{this.props.viewPaper.doi}</a></small></div>}
+                                    <div className="d-flex justify-content-end align-items-center">
+                                        {this.state.editMode && (
+                                            <EditPaperDialog />
+                                        )}
+                                        {this.props.viewPaper.doi && this.props.viewPaper.doi.startsWith('10.') && <div className="flex-shrink-0"><small>DOI: <a href={`https://doi.org/${this.props.viewPaper.doi}`} target="_blank" rel="noopener noreferrer">{this.props.viewPaper.doi}</a></small></div>}
+                                    </div>
                                 </>
                             )}
                             {!this.state.loading_failed && !this.state.unfoundContribution && (
