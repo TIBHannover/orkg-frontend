@@ -56,6 +56,12 @@ export default (state = initialState, action) => {
             }
         }
 
+        case type.UPDATE_RESEARCH_PROBLEMS: {
+            let { payload } = action;
+
+            return dotProp.set(state, `researchProblems.${payload.contributionId}`, payload.problemsArray);
+        }
+
         case type.LOAD_COMPARISON_FROM_COOKIE: {
             let { payload } = action;
             let newComparison = payload

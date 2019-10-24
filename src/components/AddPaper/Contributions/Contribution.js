@@ -45,7 +45,7 @@ class Contribution extends Component {
         }
     };
 
-    handleResearchProblemsChange = (problemsArray) => {
+    handleResearchProblemsChange = (problemsArray, a) => {
         problemsArray = problemsArray ? problemsArray : [];
         this.props.updateResearchProblems({
             problemsArray,

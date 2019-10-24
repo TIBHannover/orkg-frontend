@@ -215,6 +215,7 @@ export const fetchStatementsForResource = (data) => {
                             researchProblems.push({
                                 label: statement.object.label,
                                 id: statement.object.id,
+                                statementId: statement.id
                             });
                         } else {
                             // check whether there already exist a property for this, then combine 

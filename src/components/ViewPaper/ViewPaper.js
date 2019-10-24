@@ -307,6 +307,7 @@ class ViewPaper extends Component {
                                         paperId={this.props.match.params.resourceId}
                                         paperTitle={this.props.viewPaper.title}
                                         enableEdit={this.state.editMode}
+                                        toggleEditMode={() => this.toggle('editMode')}
                                     />
 
                                     <ComparisonPopup />
