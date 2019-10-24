@@ -7,6 +7,8 @@ import { loadPaper } from 'actions/viewPaper';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import LoadingOverlay from 'react-loading-overlay';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
 
 const LoadingOverlayStyled = styled(LoadingOverlay)`
     //border-radius: 7px;
@@ -186,7 +188,7 @@ class EditPaperDialog extends Component {
                     style={{ marginLeft: 'auto' }}
                     onClick={this.toggleDialog}
                 >
-                    Edit data
+                    <Icon icon={faPen} /> Edit data
                 </Button>
                 </div>
 
