@@ -54,6 +54,17 @@ class ValueItem extends Component {
         }
     };
 
+    // @param sync : to update the resource label
+    handleChangeLabel = (e) => {
+        // Check if the user changed the label
+        if (e.target.value !== this.props.label) {
+            this.props.updateValueLabel({
+                label: e.target.value,
+                valueId: this.props.id,
+            });
+        }
+    };
+
     handleChangeResource = async (selectedOption, a) => {
         // Check if the user changed the value
         if (this.props.label !== selectedOption.label || this.props.resourceId !== selectedOption.id) {
@@ -326,29 +337,42 @@ class ValueItem extends Component {
                                 (!this.props.isEditing ?
                                     <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>{this.props.label}</ValuePlugins> :
                                     (this.props.type === 'object' ?
-                                        <StyledAutoCompleteInputFormControl className="form-control" style={{ borderRadius: 0 }} >
-                                            <AsyncCreatableSelect
-                                                loadOptions={this.loadOptions}
-                                                noOptionsMessage={this.noResults}
-                                                styles={customStyles}
-                                                autoFocus
-                                                getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
-                                                getOptionValue={({ id }) => id}
-                                                defaultOptions={[{
-                                                    label: this.props.label,
-                                                    id: this.props.values.byId[this.props.id].resourceId
-                                                }]}
-                                                defaultValue={{
-                                                    label: this.props.label,
-                                                    id: this.props.values.byId[this.props.id].resourceId
-                                                }}
-                                                cacheOptions
-                                                onChange={(selectedOption, a) => { this.handleChangeResource(selectedOption, a); this.props.toggleEditValue({ id: this.props.id }); }}
-                                                onBlur={(e) => { this.props.toggleEditValue({ id: this.props.id }) }}
-                                                isValidNewOption={(inputValue) => inputValue.length !== 0 && inputValue.trim().length !== 0}
-                                                createOptionPosition={'first'}
-                                            />
-                                        </StyledAutoCompleteInputFormControl> : (
+
+                                        (this.props.syncBackend || existingResourceId ? (
+                                            <StyledAutoCompleteInputFormControl className="form-control" style={{ borderRadius: 0 }} >
+                                                <AsyncCreatableSelect
+                                                    loadOptions={this.loadOptions}
+                                                    noOptionsMessage={this.noResults}
+                                                    styles={customStyles}
+                                                    autoFocus
+                                                    getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
+                                                    getOptionValue={({ id }) => id}
+                                                    defaultOptions={[{
+                                                        label: this.props.label,
+                                                        id: this.props.values.byId[this.props.id].resourceId
+                                                    }]}
+                                                    defaultValue={{
+                                                        label: this.props.label,
+                                                        id: this.props.values.byId[this.props.id].resourceId
+                                                    }}
+                                                    cacheOptions
+                                                    onChange={(selectedOption, a) => { this.handleChangeResource(selectedOption, a); this.props.toggleEditValue({ id: this.props.id }); }}
+                                                    onBlur={(e) => { this.props.toggleEditValue({ id: this.props.id }) }}
+                                                    isValidNewOption={(inputValue) => inputValue.length !== 0 && inputValue.trim().length !== 0}
+                                                    createOptionPosition={'first'}
+                                                />
+                                            </StyledAutoCompleteInputFormControl>
+                                        ) : (
+                                                <Input
+                                                    value={this.props.label}
+                                                    onChange={(e) => this.handleChangeLabel(e)}
+                                                    onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
+                                                    onBlur={(e) => { this.props.toggleEditValue({ id: this.props.id }) }}
+                                                    onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
+                                                />
+                                            )
+                                        )
+                                        : (
                                             <Input
                                                 value={this.props.label}
                                                 onChange={(e) => this.handleChangeLiteral(e, false)}
