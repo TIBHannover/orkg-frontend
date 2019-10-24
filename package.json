@@ -38,7 +38,7 @@
         "react-csv": "^1.1.1",
         "react-dom": "^16.9.0",
         "react-graph-vis": "^1.0.5",
-        "react-hot-loader": "^4.12.12",
+        "react-hot-loader": "^4.12.13",
         "react-input-autosize": "^2.2.1",
         "react-loading-overlay": "^1.0.1",
         "react-mathjax-preview-svg": "^1.0.5",
