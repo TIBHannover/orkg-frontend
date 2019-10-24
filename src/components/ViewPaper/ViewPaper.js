@@ -272,9 +272,11 @@ class ViewPaper extends Component {
                                     <div className="clearfix" />
 
                                     {/* TODO: change links of badges  */}
-                                    <span className="badge badge-lightblue mr-2">
-                                        <Icon icon={faCalendar} className="text-primary" /> {this.props.viewPaper.publicationMonth && this.props.viewPaper.publicationMonth.length > 0 && moment(this.props.viewPaper.publicationMonth, 'M').format('MMMM')} {this.props.viewPaper.publicationYear}
-                                    </span>
+                                    {(this.props.viewPaper.publicationMonth || this.props.viewPaper.publicationYear) ? (
+                                        <span className="badge badge-lightblue mr-2">
+                                            <Icon icon={faCalendar} className="text-primary" /> {this.props.viewPaper.publicationMonth ? moment(this.props.viewPaper.publicationMonth, 'M').format('MMMM') : ''} {this.props.viewPaper.publicationYear ? this.props.viewPaper.publicationYear : ''}
+                                        </span>
+                                    ) : ''}
                                     {this.props.viewPaper.researchField && this.props.viewPaper.researchField.object && (
                                         <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.props.viewPaper.researchField.object.id })} >
                                             <span className="badge badge-lightblue mr-2 mb-2">
