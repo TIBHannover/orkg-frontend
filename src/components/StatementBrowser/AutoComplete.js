@@ -5,7 +5,7 @@ import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import styled from 'styled-components';
 
-const StyledAutoCompleteInputFormControl = styled.div`
+export const StyledAutoCompleteInputFormControl = styled.div`
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     height: auto !important;
