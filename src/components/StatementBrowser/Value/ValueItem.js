@@ -358,7 +358,7 @@ class ValueItem extends Component {
                                 ) :
                                 'Saving ...'
                             }
-                            {existingResourceId && this.props.openExistingResourcesInDialog ? (
+                            {!this.props.isEditing && existingResourceId && this.props.openExistingResourcesInDialog ? (
                                 <span>
                                     {' '}
                                     <Icon icon={faExternalLinkAlt} />
@@ -367,7 +367,7 @@ class ValueItem extends Component {
                                     ''
                                 )}
                         </span>
-                        {this.props.classes && this.props.classes.includes(process.env.REACT_APP_QB_DATASET_CLASS) && (
+                        {!this.props.isEditing && this.props.classes && this.props.classes.includes(process.env.REACT_APP_QB_DATASET_CLASS) && (
                             <Tippy content="Visualize data in tabular form">
                                 <span style={{ cursor: 'pointer' }} onClick={this.handleDatasetClick}>
                                     {' '}
