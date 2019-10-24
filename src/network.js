@@ -30,9 +30,9 @@ export const submitGetRequest = (url) => {
   return new Promise((resolve, reject) => {
     fetch(url, {
       method: 'GET',
-      headers: {
+      headers: token ? {
         Authorization: `Bearer ${token}`
-      }
+      } : {}
     })
       .then((response) => {
         if (!response.ok) {
@@ -61,7 +61,9 @@ const submitPostRequest = (url, headers, data) => {
   const cookies = new Cookies();
   let token = cookies.get('token') ? cookies.get('token') : null;
   let myHeaders = new Headers(headers);
-  myHeaders.append('Authorization', `Bearer ${token}`);
+  if (token) {
+    myHeaders.append('Authorization', `Bearer ${token}`);
+  }
 
   return new Promise((resolve, reject) => {
     fetch(url, { method: 'POST', headers: myHeaders, body: JSON.stringify(data) })
@@ -89,7 +91,9 @@ const submitPutRequest = (url, headers, data) => {
   const cookies = new Cookies();
   let token = cookies.get('token') ? cookies.get('token') : null;
   let myHeaders = new Headers(headers);
-  myHeaders.append('Authorization', `Bearer ${token}`);
+  if (token) {
+    myHeaders.append('Authorization', `Bearer ${token}`);
+  }
 
   return new Promise((resolve, reject) => {
     fetch(url, { method: 'PUT', headers: myHeaders, body: JSON.stringify(data) })
