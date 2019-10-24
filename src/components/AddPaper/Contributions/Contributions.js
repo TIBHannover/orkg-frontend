@@ -55,37 +55,20 @@ class Contributions extends Component {
     }
 
     handleNextClick = async () => {
-        let result = await Confirm({
-            title: (
-                <div>
-                    Are you sure you want to save this paper?
-                </div>
-            ),
-            message: (
-                <div>
-                    You will no longer be able to edit this paper once it's saved!<br />
-                </div>
-            ),
-            confirmText: 'Save and lock',
-            cancelColor: 'light'
+        // save add paper 
+        this.props.saveAddPaper({
+            title: this.props.title,
+            authors: this.props.authors,
+            publicationMonth: this.props.publicationMonth,
+            publicationYear: this.props.publicationYear,
+            doi: this.props.doi,
+            selectedResearchField: this.props.selectedResearchField,
+            contributions: this.props.contributions,
+            resources: this.props.resources,
+            properties: this.props.properties,
+            values: this.props.values,
         });
-        //
-        if (result) {
-            // save add paper 
-            this.props.saveAddPaper({
-                title: this.props.title,
-                authors: this.props.authors,
-                publicationMonth: this.props.publicationMonth,
-                publicationYear: this.props.publicationYear,
-                doi: this.props.doi,
-                selectedResearchField: this.props.selectedResearchField,
-                contributions: this.props.contributions,
-                resources: this.props.resources,
-                properties: this.props.properties,
-                values: this.props.values,
-            });
-            this.props.nextStep();
-        }
+        this.props.nextStep();
     }
 
     toggleDeleteContribution = async (id) => {
