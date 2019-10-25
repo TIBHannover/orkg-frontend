@@ -73,7 +73,19 @@ class ContributionItemList extends Component {
                             onBlur={(e) => { this.props.handleChangeContributionLabel(this.props.contribution.id, this.props.contribution.label, true); this.toggleEditLabelContribution() }}
                             onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
                         />)}
-                    {!this.state.isEditing && (<Link to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: this.props.paperId, contributionId: this.props.contribution.id })}>{this.props.contribution.label}</Link>)}
+                    {!this.state.isEditing && (
+                        <span>
+                            {this.props.paperId ? (
+                                <Link to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: this.props.paperId, contributionId: this.props.contribution.id })}>
+                                    {this.props.contribution.label}
+                                </Link>) : (
+                                    <span className={'selectContribution'} onClick={() => this.props.handleSelectContribution(this.props.contribution.id)}>
+                                        {this.props.contribution.label}
+                                    </span>
+                                )}
+                        </span>
+                    )
+                    }
                     {!this.state.isEditing && (
                         <>
                             {this.props.canDelete && (
@@ -100,7 +112,8 @@ ContributionItemList.propTypes = {
     contribution: PropTypes.object.isRequired,
     canDelete: PropTypes.bool.isRequired,
     isSelected: PropTypes.bool.isRequired,
-    paperId: PropTypes.string.isRequired,
+    paperId: PropTypes.string,
+    handleSelectContribution: PropTypes.func,
     handleChangeContributionLabel: PropTypes.func.isRequired,
     toggleDeleteContribution: PropTypes.func.isRequired,
 };

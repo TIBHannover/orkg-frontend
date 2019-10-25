@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import ContentEditable from 'react-contenteditable'
 import { ListGroupItem, InputGroup, DropdownItem } from 'reactstrap';
 
 /*contribution*/
@@ -50,18 +49,6 @@ export const StyledContributionsList = styled.ul`
             text-decoration: underline;
         }
     }
-`;
-
-/*contributionsList*/
-export const StyledContentEditable = styled(ContentEditable)`
-    &:focus {
-    background: #fff;
-    color: ${props => props.theme.orkgPrimaryColor};
-    outline: 0;
-    border: dotted 2px ${props => props.theme.listGroupBorderColor};
-    padding: 0 4px;
-    display: block;
-  }
 `;
 
 /*researchFieldsInput*/
