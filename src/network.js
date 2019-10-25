@@ -1,6 +1,6 @@
 import { Cookies } from 'react-cookie';
 import queryString from 'query-string';
-export const url = process.env.REACT_APP_SERVER_URL;
+export const url = `${process.env.REACT_APP_SERVER_URL}api/`;
 export const similaireServiceUrl = process.env.REACT_APP_SIMILARITY_SERVICE_URL;
 export const annotationServiceUrl = process.env.REACT_APP_ANNOTATION_SERVICE_URL;
 export const resourcesUrl = `${url}resources/`;
@@ -14,7 +14,7 @@ export const arxivUrl = process.env.REACT_APP_ARXIV_URL;
 export const semanticScholarUrl = process.env.REACT_APP_SEMANTICSCHOLAR_URL;
 export const comparisonUrl = `${similaireServiceUrl}compare/`;
 export const similaireUrl = `${similaireServiceUrl}similar/`;
-export const authenticationUrl = process.env.REACT_APP_AUTHENTICATION_URL;
+export const authenticationUrl = process.env.REACT_APP_SERVER_URL;
 
 /**
  * Sends simple GET request to the URL.
@@ -54,7 +54,7 @@ export const submitGetRequest = (url) => {
   });
 };
 
-const submitPostRequest = (url, headers, data) => {
+const submitPostRequest = (url, headers, data, jsonStringify = true) => {
   if (!url) {
     throw new Error('Cannot submit POST request. URL is null or undefined.');
   }
@@ -65,11 +65,20 @@ const submitPostRequest = (url, headers, data) => {
     myHeaders.append('Authorization', `Bearer ${token}`);
   }
 
+  if (jsonStringify) {
+    data = JSON.stringify(data);
+  }
+
   return new Promise((resolve, reject) => {
-    fetch(url, { method: 'POST', headers: myHeaders, body: JSON.stringify(data) })
+    fetch(url, { method: 'POST', headers: myHeaders, body: data })
       .then((response) => {
         if (!response.ok) {
-          reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
+          const json = response.json();
+          if (json.then) {
+            json.then(reject);
+          } else {
+            reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
+          }
         } else {
           const json = response.json();
           if (json.then) {
@@ -315,7 +324,8 @@ export const getAllPredicates = ({ page = 1, items = 9999, sortBy = 'id', desc =
 };
 
 
-export const signInWithEmailAndPassword = (email, password) => {
+export const signInWithEmailAndPassword = async (email, password) => {
+  // because of the spring oauth implementation, these calls don't send json
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
     'Authorization': 'Basic b3JrZy1jbGllbnQ6c2VjcmV0',
@@ -330,25 +340,29 @@ export const signInWithEmailAndPassword = (email, password) => {
 
   const formBody = Object.keys(data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])).join('&');
 
-  return new Promise(
-    (resolve, reject) => {
-      fetch(`${authenticationUrl}oauth/token`, {
+  return submitPostRequest(`${authenticationUrl}oauth/token`, headers, formBody, false);
+
+  /*//TODO: use this setup also in submitPostRequest, and remove the code from there
+  //difference here is that a json is parsed, no matter whether response.ok is true or not
+  try {
+    const response = await fetch(`${authenticationUrl}oauth/token`,
+      {
         headers: headers,
         method: 'POST',
         body: formBody,
-      })
-        .then(response => response.json())
-        .then(json => {
-          if (json.error === 'invalid_grant') {
-            return reject(json)
-          }
-          else {
-            return resolve(json)
-          }
-        }).catch(error =>
-          Promise.reject(error)
-        )
-    });
+      }
+    );
+    const json = await response.json();
+
+    if (!response.ok) {
+      throw json;
+    }
+
+    return json;
+    
+  } catch (error) {
+    throw error;
+  }*/
 }
 
 export const registerWithEmailAndPassword = (email, password, name) => {

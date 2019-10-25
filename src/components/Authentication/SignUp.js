@@ -1,4 +1,4 @@
-import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -17,6 +17,7 @@ class SignUp extends Component {
       email: '',
       password: '',
       loading: false,
+      error: null,
     };
   }
 
@@ -27,27 +28,43 @@ class SignUp extends Component {
   }
 
   signUp = async () => {
+    const { email, password, name} = this.state;
+    
+    if (!email || !password || !name) {
+      this.setState({
+        error: 'Please fill out all fields',
+      });
+      return;
+    }
+
     this.setState({
       loading: true,
     });
 
-    registerWithEmailAndPassword(this.state.email, this.state.password, this.state.name).then(
-      ()=>{
-        this.setState({loading: false,});
-      }
-    ).catch((e)=> {
-      console.log(e);
-      this.setState({loading: false,});
+    registerWithEmailAndPassword(email, password, name).then(()=> {
+      this.setState({
+        loading: false,
+        error: null
+      });
+      this.props.updateAuth({ user: { displayName: 'John Doe', email: '', id: 1 } });
+      this.props.toggleAuthDialog();
+    }).catch((e)=> {
+      this.setState({
+        loading: false,
+        error: 'An error has occurred, please try again'
+      });
     });
-
-    this.props.updateAuth({ user: { displayName: 'John Doe', email: '', id: 1 } });
-    this.props.toggleAuthDialog();
   };
 
   render() {
     return (
       <>
         <Form className="pl-3 pr-3 pt-2">
+          {this.state.error && (
+            <Alert color="danger">
+              {this.state.error}
+            </Alert>)
+          }
           <FormGroup>
             <Label for="name">Display name</Label>
             <Input

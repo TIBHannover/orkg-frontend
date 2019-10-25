@@ -8,6 +8,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import ResearchFieldCards from './ResearchFieldCards';
 import RecentlyAddedPapers from './RecentlyAddedPapers';
+import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
 
 class Home extends Component {
 
@@ -15,8 +17,20 @@ class Home extends Component {
     document.title = 'Open Research Knowledge Graph'
   }
 
+  checkSignOutMessage = () => {
+    const showSignOutMessage = this.props.location.state && this.props.location.state.signedOut;
+
+    if (showSignOutMessage) {
+      let locationState = {...this.props.location.state, signedOut: false}
+      this.props.history.replace({ state: locationState });
+      toast.success('You have been signed out successfully');
+    }
+  }
+
   render = () => {
     const showWarning = process.env.REACT_APP_SERVER_URL.includes('labs.tib.eu');
+
+    this.checkSignOutMessage();
 
     return (
       <div>
@@ -29,6 +43,7 @@ class Home extends Component {
               <strong>Warning: </strong> The ORKG is currently in an alpha stage. Data you enter in the system can be deleted without any notice.
             </Alert>
           }
+          
           <Icon icon={faInfoCircle} className="text-primary" /> The <strong>Open Research Knowledge Graph</strong> - or - ORKG aims to describe research papers and contributions in a structured manner. With ORKG research contributions become findable and comparable. In order to add your own research, or to contribute,
                 {' '}<a href="https://projects.tib.eu/orkg/" target="_blank" rel="noopener noreferrer">learn more <Icon icon={faExternalLinkAlt} /></a>
         </Container>
@@ -56,6 +71,11 @@ class Home extends Component {
       </div>
     );
   };
+}
+
+Home.propTypes = {
+  location: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 }
 
 export default Home;

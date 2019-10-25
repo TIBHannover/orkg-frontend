@@ -72,7 +72,7 @@ class Search extends Component {
     }
 
     searchResources = async (searchQuery) => {
-        if (searchQuery.length === 0) {
+        if (!searchQuery || searchQuery.length === 0) {
             return;
         }
 

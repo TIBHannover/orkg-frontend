@@ -16,7 +16,8 @@ import { connect } from 'react-redux';
 import Authentication from '../../Authentication/Authentication';
 import SearchForm from './SearchForm';
 import { reverse } from 'named-urls';
-import { openAuthDialog, updateAuth } from '../../../actions/auth';
+import { openAuthDialog, updateAuth, resetAuth } from '../../../actions/auth';
+import { Redirect } from 'react-router-dom';
 
 
 const StyledGravatar = styled(Gravatar)`
@@ -57,6 +58,7 @@ class Header extends Component {
       isOpen: false,
       dropdownOpen: false,
       userTooltipOpen: false,
+      redirectLogout: false,
     };
   }
 
@@ -86,7 +88,27 @@ class Header extends Component {
     });
   };
 
+  handleSignOut = () => {
+    this.props.resetAuth();
+    const cookies = new Cookies();
+    cookies.remove('token');
+
+    this.toggleUserTooltip();
+
+    this.setState({
+      redirectLogout: true,
+    });
+  }
+
   render() {
+    if (this.state.redirectLogout) {
+      this.setState({
+        redirectLogout: false,
+      });
+
+      return <Redirect to={{ pathname: '/', state: { signedOut: true } }} />;
+    }
+
     return (
       <Navbar color="light" expand="md" fixed="top" id="main-navbar" light>
         <Container>
@@ -112,11 +134,13 @@ class Header extends Component {
                 </DropdownMenu>
               </ButtonDropdown>
             </Nav>
+            
+            <SearchForm placeholder="Search..." />
+
             <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
-              <Button color="primary" className="mr-3">Add paper</Button>
+              <Button color="primary" className="mr-3 pl-4 pr-4">Add paper</Button>
             </Link>
 
-            <SearchForm placeholder="Search..." />
             {this.props.user !== null && (
               <div>
                 <StyledGravatar className="rounded-circle" email="example@example.com" size={40} id="TooltipExample" />
@@ -133,7 +157,7 @@ class Header extends Component {
                         <Button color="secondary" onClick={this.toggleUserTooltip} tag={Link} to={ROUTES.USER_SETTINGS} >
                           Settings
                         </Button>
-                        <Button onClick={this.toggleUserTooltip} tag={Link} to={ROUTES.SIGNOUT}>
+                        <Button onClick={this.handleSignOut}>
                           Sign out
                         </Button>
                       </ButtonGroup>
@@ -142,8 +166,9 @@ class Header extends Component {
                 </StyledAuthTooltip>
               </div>
             )}
+  
             {!this.props.user && (
-              <Button color="primary" onClick={() => this.props.openAuthDialog('signin')}>
+              <Button color="darkblue" className="pl-4 pr-4" outline onClick={() => this.props.openAuthDialog('signin')}>
                 {' '}
                 <FontAwesomeIcon className="mr-1" icon={faUser} /> Sign in
               </Button>
@@ -163,6 +188,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  resetAuth: () => dispatch(resetAuth()),
   openAuthDialog: (action) => dispatch(openAuthDialog(action)),
   updateAuth: (data) => dispatch(updateAuth(data)),
 });
@@ -171,6 +197,7 @@ Header.propTypes = {
   openAuthDialog: PropTypes.func.isRequired,
   updateAuth: PropTypes.func.isRequired,
   user: PropTypes.object,
+  resetAuth: PropTypes.func.isRequired,
 };
 
 export default connect(

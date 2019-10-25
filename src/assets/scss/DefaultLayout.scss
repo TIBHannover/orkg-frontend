@@ -59,3 +59,12 @@ body {
  .reactourMask {
      opacity: 0.6;
  }
+
+ // REACT-TOASTIFY 
+ .toast-container {
+     .Toastify__toast {
+         border-radius: 11px;
+         padding-left: 15px;
+         padding-right: 15px;
+     }
+ }

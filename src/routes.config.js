@@ -20,7 +20,6 @@ import ViewPaper from './components/ViewPaper/ViewPaper';
 import Stats from './components/Stats/Stats';
 import UserSettings from './components/UserSettings/UserSettings';
 import UserProfile from './components/UserProfile/UserProfile';
-import Signout from './components/Authentication/Signout';
 
 
 const routes = [
@@ -39,11 +38,11 @@ const routes = [
     exact: true,
     component: AddResource
   },
-  {
+  /*{
     path: ROUTES.SIGNOUT,
     exact: true,
-    component: Signout,
-  },
+    component: () => <Redirect to={{ pathname: '/', state: { signedOut: true } }} />,
+  },*/
   {
     path: ROUTES.USER_SETTINGS,
     exact: true,

@@ -5,6 +5,8 @@ import { popupDelay } from '../../utils';
 import Header from './Header/Header';
 import Footer from './Footer';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 class DefaultLayout extends Component {
     constructor(props) {
@@ -29,6 +31,8 @@ class DefaultLayout extends Component {
                     autoClose={parseInt(popupDelay)}
                     hideProgressBar
                     transition={Slide}
+                    className="toast-container"
+                    closeButton={<Icon icon={faTimes} />} 
                 />
 
                 <Header />

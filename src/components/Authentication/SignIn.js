@@ -40,8 +40,15 @@ class SignIn extends Component {
         window.location.reload();
       }
     ).catch((e) => {
-      console.log(e);
-      this.setState({ loading: false, errors: e.error_description ? e.error_description : 'Something went wrong, please try again.' });
+      let error = 'Something went wrong, please try again';
+
+      if (e.error === 'invalid_grant') {
+        error = 'Wrong email address or password';
+      } else if (e.error_description) {
+        error = e.error_description;
+      }
+      
+      this.setState({ loading: false, errors: error});
     });
   }
 
