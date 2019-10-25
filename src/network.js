@@ -379,3 +379,30 @@ export const registerWithEmailAndPassword = (email, password, name) => {
 
   return submitPostRequest(`${authenticationUrl}auth/register`, headers, data);
 }
+
+export const getUserInformation = () => {
+  return submitGetRequest(`${authenticationUrl}user/`);
+}
+
+export const updateUserInformation = ({ email, displayName}) => {
+  const headers = { 'Content-Type': 'application/json' };
+
+  const data = {
+    //email, //back doesn't support this
+    display_name: displayName
+  }
+
+  return submitPutRequest(`${authenticationUrl}user/`, headers, data);
+}
+
+
+export const updateUserPassword = ({ password, newPassword, confirmNewPassword }) => {
+  const headers = { 'Content-Type': 'application/json' };
+
+  const data = {
+    password: newPassword,
+    matching_password: confirmNewPassword
+  }
+
+  return submitPutRequest(`${authenticationUrl}user/`, headers, data);
+}

@@ -29,7 +29,7 @@ class Home extends Component {
 
   render = () => {
     const showWarning = process.env.REACT_APP_SERVER_URL.includes('labs.tib.eu');
-
+    
     this.checkSignOutMessage();
 
     return (

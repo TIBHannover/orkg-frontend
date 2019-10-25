@@ -18,6 +18,8 @@ import SearchForm from './SearchForm';
 import { reverse } from 'named-urls';
 import { openAuthDialog, updateAuth, resetAuth } from '../../../actions/auth';
 import { Redirect } from 'react-router-dom';
+import { getUserInformation } from '../../../network';
+import greetingTime from 'greeting-time';
 
 
 const StyledGravatar = styled(Gravatar)`
@@ -63,10 +65,15 @@ class Header extends Component {
   }
 
   componentDidMount() {
+    this.getUserInformation();
+  }
+
+  getUserInformation = async () => {
     const cookies = new Cookies();
     let token = cookies.get('token') ? cookies.get('token') : null;
     if (token && !this.props.user) {
-      this.props.updateAuth({ user: { displayName: 'John Doe', id: 1, token: token } })
+      const userData = await getUserInformation();
+      this.props.updateAuth({ user: { displayName: userData.display_name, id: 1, token: token, email: userData.email } })
     }
   }
 
@@ -100,6 +107,8 @@ class Header extends Component {
     });
   }
 
+  
+
   render() {
     if (this.state.redirectLogout) {
       this.setState({
@@ -108,7 +117,10 @@ class Header extends Component {
 
       return <Redirect to={{ pathname: '/', state: { signedOut: true } }} />;
     }
-
+    console.log(this.props.user);
+    const email = this.props.user && this.props.user.email ? this.props.user.email : 'example@example.com';
+    const greeting = greetingTime(new Date());
+    
     return (
       <Navbar color="light" expand="md" fixed="top" id="main-navbar" light>
         <Container>
@@ -137,22 +149,20 @@ class Header extends Component {
             
             <SearchForm placeholder="Search..." />
 
-            <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
-              <Button color="primary" className="mr-3 pl-4 pr-4">Add paper</Button>
-            </Link>
+            <Button color="primary" className="mr-3 pl-4 pr-4" tag={Link} to={ROUTES.ADD_PAPER.GENERAL_DATA}>Add paper</Button>
 
             {this.props.user !== null && (
               <div>
-                <StyledGravatar className="rounded-circle" email="example@example.com" size={40} id="TooltipExample" />
+                <StyledGravatar className="rounded-circle" email={email} size={40} id="TooltipExample" />
                 <StyledAuthTooltip trigger="click" innerClassName="pr-3 pl-3 pt-3 pb-3 clearfix" placement="bottom-end" isOpen={this.state.userTooltipOpen} target="TooltipExample" toggle={this.toggleUserTooltip}>
                   <Row>
                     <div className="col-3 text-center">
-                      <Link onClick={this.toggleUserTooltip} to={reverse(ROUTES.USER_PROFILE, { userId: this.props.user.id })} >
-                        <StyledGravatar className="rounded-circle" style={{ border: '3px solid #fff' }} email="example@example.com" size={76} id="TooltipExample" />
-                      </Link>
+                      {/*<Link onClick={this.toggleUserTooltip} to={reverse(ROUTES.USER_PROFILE, { userId: this.props.user.id })} >*/}
+                      <StyledGravatar className="rounded-circle" style={{ border: '3px solid #fff' }} email={email} size={76} id="TooltipExample" />
+                      {/*</Link>*/}
                     </div>
                     <div className="col-9">
-                      Good evening {this.props.user.displayName},
+                      {greeting} {this.props.user.displayName},
                       <ButtonGroup className="mt-2" size="sm">
                         <Button color="secondary" onClick={this.toggleUserTooltip} tag={Link} to={ROUTES.USER_SETTINGS} >
                           Settings
