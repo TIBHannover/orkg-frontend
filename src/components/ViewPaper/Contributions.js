@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Col, Container, Form, FormGroup, Row } from 'reactstrap';
+import { Alert, Col, Container, Form, FormGroup, Row, Button } from 'reactstrap';
 import { StyledContribution, StyledContributionsList } from '../AddPaper/Contributions/styled';
 import { getResource, getSimilaireContribution, deleteStatementById, createResource, createResourceStatement } from '../../network';
 import AddToComparison from './AddToComparison';
@@ -11,6 +11,7 @@ import ROUTES from '../../constants/routes';
 import SimilarContributions from './SimilarContributions';
 import StatementBrowser from '../StatementBrowser/Statements';
 import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProblemInput';
+import ContributionItemList from 'components/AddPaper/Contributions/ContributionItemList';
 import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
 import { toast } from 'react-toastify';
@@ -48,12 +49,16 @@ const AnimationContainer = styled(CSSTransition)`
 // Dependent on the future look/functionalitiy of this page, the reducers should split and renamed so viewing
 // a paper is not needing a reducer that is called: addPaper (e.g. make a reducer for the statement browser?)
 class Contributions extends Component {
-    state = {
-        selectedContribution: '',
-        loading: true,
-        similaireContributions: [],
-        isSimilaireContributionsLoading: true,
-        isSimilaireContributionsFailedLoading: false
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedContribution: '',
+            loading: true,
+            similaireContributions: [],
+            isSimilaireContributionsLoading: true,
+            isSimilaireContributionsFailedLoading: false,
+        }
     }
 
     componentDidUpdate = (prevProps) => {
@@ -162,7 +167,7 @@ class Contributions extends Component {
                                     </ContentLoader>
                                 </div>
                             )}
-                            {!this.state.loading && (
+                            {!this.state.loading && !this.props.enableEdit && (
                                 <StyledContributionsList>
                                     {this.props.contributions.map((contribution, index) => {
                                         return (
@@ -175,6 +180,29 @@ class Contributions extends Component {
                                     })}
                                 </StyledContributionsList>
                             )}
+                            {!this.state.loading && this.props.enableEdit &&
+                                (
+                                    <StyledContributionsList>
+                                        {this.props.contributions.map((contribution, index) => {
+                                            return (
+                                                <ContributionItemList
+                                                    paperId={this.props.paperId}
+                                                    handleChangeContributionLabel={this.props.handleChangeContributionLabel}
+                                                    isSelected={contribution.id === selectedContributionId}
+                                                    canDelete={this.props.contributions.length !== 1}
+                                                    selectedContributionId={this.state.selectedContribution}
+                                                    contribution={contribution}
+                                                    key={contribution.id}
+                                                    toggleDeleteContribution={this.props.toggleDeleteContribution}
+                                                />
+                                            )
+                                        })}
+                                        <li className={'addContribution text-primary'}>
+                                            <span onClick={() => this.props.handleCreateContribution()}>+ Add another contribution</span>
+                                        </li>
+                                    </StyledContributionsList>
+                                )
+                            }
                         </Col>
                         <TransitionGroup
                             className="col-9"
@@ -226,7 +254,7 @@ class Contributions extends Component {
                                                         ))
                                                         }
                                                         {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].length === 0 && (
-                                                            <i>No informations about the research problems. Please contribute by  <Link href="#" onClick={() => this.props.toggleEditMode()}>editing</Link> the paper.</i>
+                                                            <i>No informations about the research problems. Please contribute by  <Button color="link" className={'m-0 p-0'} onClick={() => this.props.toggleEditMode()}>editing</Button> the paper.</i>
                                                         )}
                                                     </>
                                                 )
@@ -304,7 +332,7 @@ class Contributions extends Component {
                         </TransitionGroup>
                     </Row>
                 </Container>
-            </div>
+            </div >
         );
     }
 }
@@ -320,6 +348,9 @@ Contributions.propTypes = {
     paperTitle: PropTypes.string.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     updateResearchProblems: PropTypes.func.isRequired,
+    handleChangeContributionLabel: PropTypes.func.isRequired,
+    handleCreateContribution: PropTypes.func.isRequired,
+    toggleDeleteContribution: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

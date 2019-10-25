@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Button, Alert, UncontrolledAlert, ButtonGroup } from 'reactstrap';
-import { getStatementsBySubject, getResource } from '../../network';
+import { getStatementsBySubject, getResource, updateResource, createResource, createResourceStatement, deleteStatementById } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar, faBars, faProjectDiagram, faPen, faCheck } from '@fortawesome/free-solid-svg-icons';
@@ -14,9 +14,11 @@ import moment from 'moment'
 import PropTypes from 'prop-types';
 import ComparisonPopup from './ComparisonPopup';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
-import { loadPaper } from '../../actions/viewPaper';
+import { loadPaper, selectContribution } from '../../actions/viewPaper';
 import GraphViewModal from './GraphViewModal';
 import queryString from 'query-string';
+import { toast } from 'react-toastify';
+import Confirm from 'reactstrap-confirm';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
 import styled from 'styled-components';
 
@@ -129,7 +131,7 @@ class ViewPaper extends Component {
 
                 if (contributions.length > 0) {
                     for (let contribution of contributions) {
-                        contributionArray.push(contribution.object);
+                        contributionArray.push({ ...contribution.object, statementId: contribution.id });
                     }
                 }
 
@@ -179,6 +181,58 @@ class ViewPaper extends Component {
         this.setState(prevState => ({
             [type]: !prevState[type],
         }));
+    }
+
+    // @param sync : to update the contribution label on the backend.
+    handleChangeContributionLabel = async (contributionId, label, sync = false) => {
+        //find the index of contribution 
+        const objIndex = this.state.contributions.findIndex(obj => obj.id === contributionId);
+        if (this.state.contributions[objIndex].label !== label) {
+            // set the label of the contribution
+            const updatedObj = { ...this.state.contributions[objIndex], label: label };
+            // update the contributions array
+            let newContributions = [
+                ...this.state.contributions.slice(0, objIndex),
+                updatedObj,
+                ...this.state.contributions.slice(objIndex + 1),
+            ];
+            this.setState({ contributions: newContributions })
+        }
+        if (sync) {
+            await updateResource(contributionId, label);
+            toast.success('Contribution name updated successfully');
+        }
+
+    }
+
+    handleCreateContribution = async () => {
+        let newContribution = await createResource(`Contribution ${this.state.contributions.length + 1}`);
+        let statement = await createResourceStatement(this.props.match.params.resourceId, process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION, newContribution.id)
+        this.setState({ contributions: [...this.state.contributions, { ...statement.object, statementId: statement.id }] })
+        toast.success('Contribution cratead successfully');
+    }
+
+    toggleDeleteContribution = async (contributionId) => {
+        let result = await Confirm({
+            title: 'Are you sure?',
+            message: 'Are you sure you want to delete this contribution?',
+            cancelColor: 'light'
+        });
+
+        if (result) {
+            const objIndex = this.state.contributions.findIndex(obj => obj.id === contributionId);
+            let statementId = this.state.contributions[objIndex].statementId;
+            let newContributions = this.state.contributions.filter(function (contribution) {
+                return contribution.id !== contributionId
+            })
+            this.setState({
+                selectedContribution: newContributions[0].id,
+            }, () => {
+                this.setState({ contributions: newContributions });
+            })
+            await deleteStatementById(statementId)
+            toast.success('Contribution deleted successfully');
+        }
     }
 
     toggleDropdown = () => {
@@ -308,6 +362,9 @@ class ViewPaper extends Component {
                                         paperTitle={this.props.viewPaper.title}
                                         enableEdit={this.state.editMode}
                                         toggleEditMode={() => this.toggle('editMode')}
+                                        handleChangeContributionLabel={this.handleChangeContributionLabel}
+                                        handleCreateContribution={this.handleCreateContribution}
+                                        toggleDeleteContribution={this.toggleDeleteContribution}
                                     />
 
                                     <ComparisonPopup />
@@ -343,6 +400,7 @@ ViewPaper.propTypes = {
         }).isRequired,
     }).isRequired,
     resetStatementBrowser: PropTypes.func.isRequired,
+    selectContribution: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     viewPaper: PropTypes.object.isRequired,
     loadPaper: PropTypes.func.isRequired,
@@ -355,6 +413,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     resetStatementBrowser: () => dispatch(resetStatementBrowser()),
     loadPaper: (payload) => dispatch(loadPaper(payload)),
+    selectContribution: (payload) => dispatch(selectContribution(payload)),
 });
 
 export default connect(
