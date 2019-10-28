@@ -170,7 +170,7 @@ class Search extends Component {
                     <Row>
                         <Col className="col-sm-4 px-0">
                             <div className="box mr-4 p-4 h-100">
-                                <Filters 
+                                <Filters
                                     loading={this.state.loading}
                                     value={this.state.value}
                                     countFilteredResources={this.countFilteredResources}
@@ -184,7 +184,7 @@ class Search extends Component {
                         </Col>
                         <Col className="col-sm-8 px-0">
                             <div className="box p-4 h-100">
-                                <Results 
+                                <Results
                                     loading={this.state.loading}
                                     countResources={this.countResources}
                                     countFilteredResources={this.countFilteredResources}

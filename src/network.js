@@ -248,9 +248,9 @@ export const getStatementsByObject = async ({ id, page = 1, items = 9999, sortBy
   return statements;
 };
 
-export const getResourcesByClass = async ({ id, page = 1, items = 9999, sortBy = 'id', desc = true }) => {
+export const getResourcesByClass = async ({ id, page = 1, items = 9999, sortBy = 'id', desc = true, q = null }) => {
 
-  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
+  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc, ...(q) ? { q: q } : {} })
 
   let resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/?${params}`);
 

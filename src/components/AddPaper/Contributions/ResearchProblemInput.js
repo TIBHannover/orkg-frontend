@@ -3,7 +3,7 @@ import { StyledResearchFieldsInputFormControl, StyledResearchFieldBrowser } from
 import PropTypes from 'prop-types';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { components } from 'react-select';
-import { getStatementsByPredicate } from '../../../network';
+import { getResourcesByClass } from '../../../network';
 
 
 class ResearchProblemInput extends Component {
@@ -19,26 +19,19 @@ class ResearchProblemInput extends Component {
 
     loadOptions = async (value) => {
         try {
-            // Get the statements that contains the has a research field as a predicate
-            let responseJson = await getStatementsByPredicate({
-                id: process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM,
+            // Get the resoures that contains 'Problem' as a class
+            let responseJson = await getResourcesByClass({
+                id: process.env.REACT_APP_CLASSES_PROBLEM,
                 page: 1,
                 items: 999,
                 sortBy: 'id',
-                desc: true
+                desc: true,
+                q: value
             })
-            let options = [];
-            responseJson = responseJson.map((statement) => statement.object).filter((researchProblem, index, self) =>
-                index === self.findIndex((t) => (
-                    t.id === researchProblem.id && t.label === researchProblem.label
-                ))
-            )
-            responseJson = responseJson.filter(({ label }) => label.includes(value));
-            responseJson.map((item) => options.push({
+            return responseJson.map((item) => ({
                 label: item.label,
                 id: item.id
             }));
-            return options;
         } catch (err) {
             console.error(err);
             return [];
