@@ -226,6 +226,18 @@ export default (state = initialState, action) => {
         case type.UPDATE_VALUE_LABEL: {
             let { payload } = action;
             let newState = dotProp.set(state, `values.byId.${payload.valueId}.label`, payload.label);
+            // Update all the labels of the same resource ID
+            let resourceId = dotProp.get(state, `values.byId.${payload.valueId}.resourceId`);
+            if (resourceId) {
+                newState = dotProp.set(newState, `resources.byId.${resourceId}.label`, payload.label);
+                for (let valueId of newState.values.allIds) {
+                    if (dotProp.get(newState, `values.byId.${valueId}.resourceId`) === resourceId && valueId !== payload.valueId) {
+                        newState = dotProp.set(newState, `values.byId.${valueId}.label`, payload.label);
+                    }
+                }
+                // Update the label in resource history
+                newState = dotProp.set(newState, `resourceHistory.byId.${resourceId}.label`, payload.label);
+            }
             return newState;
         }
 
