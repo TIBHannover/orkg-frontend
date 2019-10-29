@@ -185,6 +185,10 @@ export const StyledValueItem = styled(ListGroupItem)`
         &:hover {
             text-decoration: underline;
         }
+        &.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     }
     &:hover {
         & .deleteValue {

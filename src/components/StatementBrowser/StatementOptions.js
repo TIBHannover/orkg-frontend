@@ -12,7 +12,9 @@ import PropTypes from 'prop-types';
 
 class StatementOptions extends Component {
 
-    toggleDeleteStatement = async () => {
+    toggleDeleteStatement = async (e) => {
+        e.stopPropagation();
+
         let property = this.props.properties.byId[this.props.id];
         let title = '';
         let message = '';
@@ -20,8 +22,8 @@ class StatementOptions extends Component {
             title = (<>Delete the <i>{property.label}</i> property?</>);
             message = 'Are you sure you want to delete this property?'
         } else {
-            title = (<>Delete the <i>{property.label}</i> property and all related statements?</>);
-            message = `Also, ${property.valueIds.length} related ${property.valueIds.length === 1 ? 'statement' : 'statements'} will be deleted.`;
+            title = (<>Delete the <i>{property.label}</i> property and all related values?</>);
+            message = `Also, ${property.valueIds.length} related ${property.valueIds.length === 1 ? 'value' : 'values'} will be deleted.`;
         }
         let result = await Confirm({
             title: title,
@@ -50,19 +52,18 @@ class StatementOptions extends Component {
     render() {
         return (
             <>
-                <span className={'deletePredicate float-right mr-4'} onClick={this.toggleDeleteStatement}>
-                    <Tippy content="Delete statement">
-                        <span><Icon icon={faTrash} /> Delete</span>
-                    </Tippy>
-                </span>
                 {!this.props.isEditing && (
-                    <span className={'deletePredicate float-right mr-4'} onClick={(e) => { e.stopPropagation(); this.props.toggleEditPropertyLabel({ id: this.props.id }); }}>
+                    <span className={'deletePredicate mr-3'} onClick={(e) => { e.stopPropagation(); this.props.toggleEditPropertyLabel({ id: this.props.id }); }}>
                         <Tippy content="Edit property">
                             <span><Icon icon={faPen} /> Edit</span>
                         </Tippy>
                     </span>)
                 }
-
+                <span className={'deletePredicate mr-4'} onClick={this.toggleDeleteStatement}>
+                    <Tippy content="Delete statement">
+                        <span><Icon icon={faTrash} /> Delete</span>
+                    </Tippy>
+                </span>
             </>
         );
     }
