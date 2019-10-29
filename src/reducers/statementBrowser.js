@@ -52,23 +52,23 @@ export default (state = initialState, action) => {
 
         case type.CREATE_PROPERTY: {
             let { payload } = action;
-            let newState = dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, propertyIds => [...propertyIds, payload.propertyId]);
-
-            newState = dotProp.set(newState, 'properties.byId', ids => ({
-                ...ids,
-                [payload.propertyId]: {
-                    label: payload.label ? payload.label : '',
-                    existingPredicateId: payload.existingPredicateId ? payload.existingPredicateId : null,
-                    valueIds: [],
-                    isExistingProperty: payload.isExistingProperty ? payload.isExistingProperty : false,
-                    isEditing: false,
-                    isSaving: false,
-                }
-            }));
-
-            newState = dotProp.set(newState, 'properties.allIds', ids => [...ids, payload.propertyId]);
-
-            return newState;
+            let newState;
+            if (dotProp.get(state, `resources.byId.${payload.resourceId}`)) {
+                newState = dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, propertyIds => [...propertyIds, payload.propertyId]);
+                newState = dotProp.set(newState, 'properties.byId', ids => ({
+                    ...ids,
+                    [payload.propertyId]: {
+                        label: payload.label ? payload.label : '',
+                        existingPredicateId: payload.existingPredicateId ? payload.existingPredicateId : null,
+                        valueIds: [],
+                        isExistingProperty: payload.isExistingProperty ? payload.isExistingProperty : false,
+                        isEditing: false,
+                        isSaving: false,
+                    }
+                }));
+                newState = dotProp.set(newState, 'properties.allIds', ids => [...ids, payload.propertyId]);
+            }
+            return newState ? newState : state;
         }
 
         case type.DELETE_PROPERTY: {
@@ -120,45 +120,46 @@ export default (state = initialState, action) => {
 
         case type.CREATE_VALUE: {
             let { payload } = action;
+            let newState;
+            if (dotProp.get(state, `properties.byId.${payload.propertyId}`)) {
+                newState = dotProp.set(state, `properties.byId.${payload.propertyId}.valueIds`, valueIds => [...valueIds, payload.valueId]);
 
-            let newState = dotProp.set(state, `properties.byId.${payload.propertyId}.valueIds`, valueIds => [...valueIds, payload.valueId]);
-
-            newState = dotProp.set(newState, 'values.byId', ids => ({
-                ...ids,
-                [payload.valueId]: {
-                    type: payload.type,
-                    classes: payload.classes ? payload.classes : [],
-                    label: payload.label ? payload.label : '',
-                    resourceId: payload.resourceId ? payload.resourceId : null,
-                    isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
-                    existingStatement: payload.existingStatement ? payload.existingStatement : false,
-                    statementId: payload.statementId,
-                    isEditing: false,
-                    isSaving: false,
-                }
-            }));
-
-            newState = dotProp.set(newState, 'values.allIds', ids => [...ids, payload.valueId]);
-
-            // TODO: is the same as creating a resource in the contributions, so make a function 
-            // add a new resource when a object value is created
-
-            //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
-            if (payload.type === 'object' && !state.resources.byId[payload.resourceId]) {
-                newState = dotProp.set(newState, 'resources.allIds', ids => [...ids, payload.resourceId]);
-
-                newState = dotProp.set(newState, 'resources.byId', ids => ({
+                newState = dotProp.set(newState, 'values.byId', ids => ({
                     ...ids,
-                    [payload.resourceId]: {
-                        existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
-                        id: payload.resourceId,
-                        label: payload.label,
-                        propertyIds: [],
+                    [payload.valueId]: {
+                        type: payload.type,
+                        classes: payload.classes ? payload.classes : [],
+                        label: payload.label ? payload.label : '',
+                        resourceId: payload.resourceId ? payload.resourceId : null,
+                        isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
+                        existingStatement: payload.existingStatement ? payload.existingStatement : false,
+                        statementId: payload.statementId,
+                        isEditing: false,
+                        isSaving: false,
                     }
                 }));
-            }
 
-            return newState;
+                newState = dotProp.set(newState, 'values.allIds', ids => [...ids, payload.valueId]);
+
+                // TODO: is the same as creating a resource in the contributions, so make a function 
+                // add a new resource when a object value is created
+
+                //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
+                if (payload.type === 'object' && !state.resources.byId[payload.resourceId]) {
+                    newState = dotProp.set(newState, 'resources.allIds', ids => [...ids, payload.resourceId]);
+
+                    newState = dotProp.set(newState, 'resources.byId', ids => ({
+                        ...ids,
+                        [payload.resourceId]: {
+                            existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
+                            id: payload.resourceId,
+                            label: payload.label,
+                            propertyIds: [],
+                        }
+                    }));
+                }
+            }
+            return newState ? newState : state;
         }
 
         case type.DELETE_VALUE: {
@@ -177,32 +178,35 @@ export default (state = initialState, action) => {
 
         case type.CHANGE_VALUE: {
             let { payload } = action;
-            let newState = dotProp.set(state, `values.byId.${payload.valueId}`, v => ({
-                type: v.type,
-                classes: payload.classes ? payload.classes : [],
-                label: payload.label ? payload.label : '',
-                resourceId: payload.resourceId ? payload.resourceId : null,
-                isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
-                existingStatement: payload.existingStatement ? payload.existingStatement : false,
-                statementId: payload.statementId ? payload.statementId : null,
-                isEditing: v.isEditing,
-                isSaving: v.isSaving,
-            }));
-            //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
-            if (!state.resources.byId[payload.resourceId]) {
-                newState = dotProp.set(newState, 'resources.allIds', ids => [...ids, payload.resourceId]);
-
-                newState = dotProp.set(newState, 'resources.byId', ids => ({
-                    ...ids,
-                    [payload.resourceId]: {
-                        existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
-                        id: payload.resourceId,
-                        label: payload.label,
-                        propertyIds: [],
-                    }
+            let newState;
+            if (dotProp.get(state, `values.byId.${payload.valueId}`)) {
+                newState = dotProp.set(state, `values.byId.${payload.valueId}`, v => ({
+                    type: v.type,
+                    classes: payload.classes ? payload.classes : [],
+                    label: payload.label ? payload.label : '',
+                    resourceId: payload.resourceId ? payload.resourceId : null,
+                    isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
+                    existingStatement: payload.existingStatement ? payload.existingStatement : false,
+                    statementId: payload.statementId ? payload.statementId : null,
+                    isEditing: v.isEditing,
+                    isSaving: v.isSaving,
                 }));
+                //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
+                if (!state.resources.byId[payload.resourceId]) {
+                    newState = dotProp.set(newState, 'resources.allIds', ids => [...ids, payload.resourceId]);
+
+                    newState = dotProp.set(newState, 'resources.byId', ids => ({
+                        ...ids,
+                        [payload.resourceId]: {
+                            existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
+                            id: payload.resourceId,
+                            label: payload.label,
+                            propertyIds: [],
+                        }
+                    }));
+                }
             }
-            return newState;
+            return newState ? newState : state;
         }
 
         case type.IS_SAVING_VALUE: {
