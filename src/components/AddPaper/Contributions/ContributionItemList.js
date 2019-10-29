@@ -76,7 +76,7 @@ class ContributionItemList extends Component {
                     {!this.state.isEditing && (
                         <span>
                             {this.props.paperId ? (
-                                <Link to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: this.props.paperId, contributionId: this.props.contribution.id })}>
+                                <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paperId, contributionId: this.props.contribution.id })}>
                                     {this.props.contribution.label}
                                 </Link>) : (
                                     <span className={'selectContribution'} onClick={() => this.props.handleSelectContribution(this.props.contribution.id)}>
