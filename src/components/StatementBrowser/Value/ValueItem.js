@@ -265,7 +265,7 @@ class ValueItem extends Component {
 
     render() {
         const labelClass = classNames({
-            objectLink: this.props.type === 'object',
+            objectLink: this.props.type === 'object' && !this.props.isEditing,
         });
 
         let resource = this.props.resources.byId[this.props.resourceId];
@@ -366,9 +366,11 @@ class ValueItem extends Component {
                                                 <Input
                                                     value={this.props.label}
                                                     onChange={(e) => this.handleChangeLabel(e)}
-                                                    onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
+                                                    onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
                                                     onBlur={(e) => { this.props.toggleEditValue({ id: this.props.id }) }}
-                                                    onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
+                                                    autoFocus
+                                                    size="sm"
+                                                    //onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
                                                 />
                                             )
                                         )
@@ -376,9 +378,11 @@ class ValueItem extends Component {
                                             <Input
                                                 value={this.props.label}
                                                 onChange={(e) => this.handleChangeLiteral(e, false)}
-                                                onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
+                                                onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} 
                                                 onBlur={(e) => { this.handleChangeLiteral(e, true); this.props.toggleEditValue({ id: this.props.id }) }}
-                                                onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
+                                                autoFocus
+                                                size="sm"
+                                                //onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
                                             />)
                                     )
                                 ) :
@@ -411,13 +415,23 @@ class ValueItem extends Component {
                                         </span>
                                     </Tippy>
                                 </span>
-                                <span className={'mr-2 deleteValue float-right'} onClick={() => { this.props.toggleEditValue({ id: this.props.id }); }}>
-                                    <Tippy content="Edit label">
-                                        <span>
-                                            <Icon icon={faPen} /> Edit
-                                        </span>
-                                    </Tippy>
-                                </span>
+                                {!existingResourceId &&
+                                    <span className={'mr-3 deleteValue float-right'} onClick={() => { this.props.toggleEditValue({ id: this.props.id }); }}>
+                                        <Tippy content="Edit label">
+                                            <span>
+                                                <Icon icon={faPen} /> Edit
+                                            </span>
+                                        </Tippy>
+                                    </span>}
+
+                                {existingResourceId && !this.props.syncBackend &&
+                                    <span className={'mr-3 deleteValue float-right disabled'} >
+                                        <Tippy content="An existing resource cannot be edited directly">
+                                            <span>
+                                                <Icon icon={faPen} /> Edit
+                                            </span>
+                                        </Tippy>
+                                    </span>}
                             </>
                         ) : (
                                 ''
