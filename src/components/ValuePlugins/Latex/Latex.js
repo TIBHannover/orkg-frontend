@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import MathJax from 'react-mathjax-preview-svg'
+import MathJax from 'react-mathjax-preview'
 import { renderToString } from 'react-dom/server';
 import styled from 'styled-components';
 
@@ -29,7 +29,18 @@ class Latex extends Component {
 
     if (this.props.type === 'literal' && labelToText.match(this.supportedValues)) {
       return (
-        <StyledMathJax math={labelToText.substr(1).substring(0, labelToText.substr(1).length - 1)} />
+        <StyledMathJax
+          config={{
+            jax: ['input/TeX', 'output/SVG'],
+            showMathMenu: false,
+            SVG: {
+              useFontCache: false,
+              useGlobalCache: false
+            },
+            skipStartupTypeset: true
+          }}
+          math={labelToText.substr(1).substring(0, labelToText.substr(1).length - 1)}
+        />
       );
     } else {
       return label;
