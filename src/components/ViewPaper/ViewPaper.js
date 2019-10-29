@@ -22,17 +22,19 @@ import Confirm from 'reactstrap-confirm';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
 import styled from 'styled-components';
 
-const EditModeHeader = styled(Container)`
+export const EditModeHeader = styled(Container)`
     background-color: #80869B!important;
     color:#fff;
     padding: 8px 25px!important;
     display:flex;
     align-items: center;
 `;
-const Title = styled.div`
+
+export const Title = styled.div`
     font-size:1.1rem;
     flex-grow:1;
 `;
+
 class ViewPaper extends Component {
     state = {
         loading: true,
