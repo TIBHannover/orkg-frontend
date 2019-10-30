@@ -371,7 +371,7 @@ export const registerWithEmailAndPassword = (email, password, name) => {
   };
 
   const data = {
-    username: name,
+    display_name: name,
     email: email,
     password,
     matching_password: password, //TODO: do we want a confirm password in the UI, or leave it like this?
@@ -384,7 +384,7 @@ export const getUserInformation = () => {
   return submitGetRequest(`${authenticationUrl}user/`);
 }
 
-export const updateUserInformation = ({ email, displayName}) => {
+export const updateUserInformation = ({ email, displayName }) => {
   const headers = { 'Content-Type': 'application/json' };
 
   const data = {

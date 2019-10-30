@@ -15,7 +15,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Authentication from '../../Authentication/Authentication';
 import SearchForm from './SearchForm';
-import { reverse } from 'named-urls';
 import { openAuthDialog, updateAuth, resetAuth } from '../../../actions/auth';
 import { Redirect } from 'react-router-dom';
 import { getUserInformation } from '../../../network';
@@ -107,7 +106,7 @@ class Header extends Component {
     });
   }
 
-  
+
 
   render() {
     if (this.state.redirectLogout) {
@@ -120,7 +119,7 @@ class Header extends Component {
     console.log(this.props.user);
     const email = this.props.user && this.props.user.email ? this.props.user.email : 'example@example.com';
     const greeting = greetingTime(new Date());
-    
+
     return (
       <Navbar color="light" expand="md" fixed="top" id="main-navbar" light>
         <Container>
@@ -146,7 +145,7 @@ class Header extends Component {
                 </DropdownMenu>
               </ButtonDropdown>
             </Nav>
-            
+
             <SearchForm placeholder="Search..." />
 
             <Button color="primary" className="mr-3 pl-4 pr-4" tag={Link} to={ROUTES.ADD_PAPER.GENERAL_DATA}>Add paper</Button>
@@ -176,7 +175,7 @@ class Header extends Component {
                 </StyledAuthTooltip>
               </div>
             )}
-  
+
             {!this.props.user && (
               <Button color="darkblue" className="pl-4 pr-4" outline onClick={() => this.props.openAuthDialog('signin')}>
                 {' '}
