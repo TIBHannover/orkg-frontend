@@ -54,15 +54,19 @@ export const submitGetRequest = (url) => {
   });
 };
 
-const submitPostRequest = (url, headers, data, jsonStringify = true) => {
+const submitPostRequest = (url, headers, data, jsonStringify = true, send_token = true) => {
   if (!url) {
     throw new Error('Cannot submit POST request. URL is null or undefined.');
   }
-  const cookies = new Cookies();
-  let token = cookies.get('token') ? cookies.get('token') : null;
+
   let myHeaders = new Headers(headers);
-  if (token) {
-    myHeaders.append('Authorization', `Bearer ${token}`);
+
+  if (send_token) {
+    const cookies = new Cookies();
+    let token = cookies.get('token') ? cookies.get('token') : null;
+    if (token) {
+      myHeaders.append('Authorization', `Bearer ${token}`);
+    }
   }
 
   if (jsonStringify) {
@@ -340,7 +344,7 @@ export const signInWithEmailAndPassword = async (email, password) => {
 
   const formBody = Object.keys(data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key])).join('&');
 
-  return submitPostRequest(`${authenticationUrl}oauth/token`, headers, formBody, false);
+  return submitPostRequest(`${authenticationUrl}oauth/token`, headers, formBody, false, false);
 
   /*//TODO: use this setup also in submitPostRequest, and remove the code from there
   //difference here is that a json is parsed, no matter whether response.ok is true or not
@@ -377,7 +381,7 @@ export const registerWithEmailAndPassword = (email, password, name) => {
     matching_password: password, //TODO: do we want a confirm password in the UI, or leave it like this?
   }
 
-  return submitPostRequest(`${authenticationUrl}auth/register`, headers, data);
+  return submitPostRequest(`${authenticationUrl}auth/register`, headers, data, true, false);
 }
 
 export const getUserInformation = () => {
