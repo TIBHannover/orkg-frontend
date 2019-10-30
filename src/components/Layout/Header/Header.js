@@ -152,7 +152,7 @@ class Header extends Component {
             {this.props.user !== null && (
               <div>
                 <StyledGravatar className="rounded-circle" email={email} size={40} id="TooltipExample" />
-                <StyledAuthTooltip trigger="click" innerClassName="pr-3 pl-3 pt-3 pb-3 clearfix" placement="bottom-end" isOpen={this.state.userTooltipOpen} target="TooltipExample" toggle={this.toggleUserTooltip}>
+                <StyledAuthTooltip fade={false} trigger="click" innerClassName="pr-3 pl-3 pt-3 pb-3 clearfix" placement="bottom-end" isOpen={this.state.userTooltipOpen} target="TooltipExample" toggle={this.toggleUserTooltip}>
                   <Row>
                     <div className="col-3 text-center">
                       {/*<Link onClick={this.toggleUserTooltip} to={reverse(ROUTES.USER_PROFILE, { userId: this.props.user.id })} >*/}
