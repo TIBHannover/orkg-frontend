@@ -172,9 +172,11 @@ class Contributions extends Component {
                                     {this.props.contributions.map((contribution, index) => {
                                         return (
                                             <li className={contribution.id === selectedContributionId ? 'activeContribution' : ''} key={contribution.id}>
-                                                <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paperId, contributionId: contribution.id })} className={'selectContribution'}>
-                                                    {contribution.label}
-                                                </Link>
+                                                {(contribution.id !== selectedContributionId) ? (
+                                                    <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paperId, contributionId: contribution.id })} className={'selectContribution'}>
+                                                        {contribution.label}
+                                                    </Link>
+                                                ) : contribution.label}
                                             </li>
                                         )
                                     })}

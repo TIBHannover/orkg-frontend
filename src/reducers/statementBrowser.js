@@ -34,6 +34,7 @@ export default (state = initialState, action) => {
                 [payload.resourceId]: {
                     label: payload.label ? payload.label : '',
                     existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
+                    shared: payload.shared ? payload.shared : 1,
                     propertyIds: [],
                 }
             }));
@@ -136,6 +137,7 @@ export default (state = initialState, action) => {
                         statementId: payload.statementId,
                         isEditing: false,
                         isSaving: false,
+                        shared: payload.shared ? payload.shared : 1,
                     }
                 }));
 
@@ -154,6 +156,7 @@ export default (state = initialState, action) => {
                             existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
                             id: payload.resourceId,
                             label: payload.label,
+                            shared: payload.shared ? payload.shared : 1,
                             propertyIds: [],
                         }
                     }));
@@ -190,6 +193,7 @@ export default (state = initialState, action) => {
                     statementId: payload.statementId ? payload.statementId : null,
                     isEditing: v.isEditing,
                     isSaving: v.isSaving,
+                    shared: payload.shared ? payload.shared : 1,
                 }));
                 //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
                 if (!state.resources.byId[payload.resourceId]) {
@@ -201,6 +205,7 @@ export default (state = initialState, action) => {
                             existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
                             id: payload.resourceId,
                             label: payload.label,
+                            shared: payload.shared ? payload.shared : 1,
                             propertyIds: [],
                         }
                     }));

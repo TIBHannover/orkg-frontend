@@ -55,7 +55,7 @@ class AddValue extends Component {
         });
     }
 
-    handleValueSelect = async ({ id, value }) => {
+    handleValueSelect = async ({ id, value, shared }) => {
         if (this.props.syncBackend) {
             let predicate = this.props.properties.byId[this.props.selectedProperty]
             let newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, id);
@@ -65,7 +65,8 @@ class AddValue extends Component {
                 propertyId: this.props.selectedProperty,
                 existingResourceId: id,
                 isExistingValue: true,
-                statementId: newStatement.id
+                statementId: newStatement.id,
+                shared: shared
             });
         } else {
             this.props.createValue({
@@ -74,6 +75,7 @@ class AddValue extends Component {
                 propertyId: this.props.selectedProperty,
                 existingResourceId: id,
                 isExistingValue: true,
+                shared: shared
             });
         }
 
@@ -98,13 +100,15 @@ class AddValue extends Component {
                 propertyId: this.props.selectedProperty,
                 existingResourceId: newObject.id,
                 isExistingValue: true,
-                statementId: newStatement.id
+                statementId: newStatement.id,
+                shared: newObject.shared
             });
         } else {
             this.props.createValue({
                 label: this.state.inputValue,
                 type: this.state.valueType,
-                propertyId: this.props.selectedProperty
+                propertyId: this.props.selectedProperty,
+                shared: 1
             });
         }
 

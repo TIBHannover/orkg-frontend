@@ -283,6 +283,7 @@ class StatementItem extends Component {
                                         isSaving={false}
                                         enableEdit={false}
                                         syncBackend={false}
+                                        shared={1}
                                     />
                                 </em>
                             </>
@@ -291,8 +292,8 @@ class StatementItem extends Component {
                                 : <em className="text-muted">{valueIds.length} values</em>
                             </>
                         ) : (
-                            ''
-                        )}
+                                    ''
+                                )}
                     </div>
 
                     {this.props.enableEdit ? (
@@ -301,7 +302,7 @@ class StatementItem extends Component {
                             syncBackend={this.props.syncBackend}
                             isEditing={this.props.isEditing}
                         />) : ''}
-                    
+
                     <Icon icon={isCollapsed ? faChevronCircleUp : faChevronCircleDown} className={chevronClass} />
                 </StyledStatementItem>
 
@@ -328,6 +329,7 @@ class StatementItem extends Component {
                                         isEditing={value.isEditing}
                                         isSaving={value.isSaving}
                                         statementId={value.statementId}
+                                        shared={value.shared}
                                     />
                                 );
                             })}

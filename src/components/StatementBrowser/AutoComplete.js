@@ -82,7 +82,8 @@ class AutoComplete extends Component {
 
             responseJson.map((item) => options.push({
                 label: item.label,
-                id: item.id
+                id: item.id,
+                ...item.shared ? { shared: item.shared } : {}
             }));
 
             return options;
@@ -113,6 +114,7 @@ class AutoComplete extends Component {
             this.props.onItemSelected({
                 id: selected.id,
                 value: selected.label,
+                shared: selected.shared,
             });
         } else if (action.action === 'create-option') {
             this.props.onNewItemSelected && this.props.onNewItemSelected(selected.label);

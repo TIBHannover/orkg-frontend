@@ -154,7 +154,8 @@ export const createResource = (data) => dispatch => {
         payload: {
             resourceId: data.resourceId ? data.resourceId : guid(),
             label: data.label,
-            existingResourceId: data.existingResourceId
+            existingResourceId: data.existingResourceId,
+            shared: data.shared ? data.shared : 1
         }
     })
 }
@@ -246,7 +247,8 @@ export const fetchStatementsForResource = (data) => {
                                 classes: statement.object.classes ? statement.object.classes : [],
                                 isExistingValue: true,
                                 existingStatement: true,
-                                statementId: statement.id
+                                statementId: statement.id,
+                                shared: statement.object.shared
                             }));
                         }
 

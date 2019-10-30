@@ -77,7 +77,7 @@ class ValueItem extends Component {
                     newResource = await createResourceAPICall(selectedOption.label);
                     newResource['isExistingValue'] = true
                 } else {
-                    newResource = { id: guid(), isExistingValue: false, label: selectedOption.label, type: 'object', classes: [] }
+                    newResource = { id: guid(), isExistingValue: false, label: selectedOption.label, type: 'object', classes: [], shared: 1 }
                 }
                 await this.changeValueinStatementBrowser(newResource);
             }
@@ -98,6 +98,7 @@ class ValueItem extends Component {
                     isExistingValue: newResource.isExistingValue,
                     existingStatement: true,
                     statementId: this.props.statementId,
+                    shared: newResource.shared,
                 }
             });
             toast.success('Value updated successfully');
@@ -112,6 +113,7 @@ class ValueItem extends Component {
                     isExistingValue: newResource.isExistingValue,
                     existingStatement: false,
                     statementId: null,
+                    shared: newResource.shared,
                 }
             });
         }
@@ -252,6 +254,7 @@ class ValueItem extends Component {
                 label: item.label,
                 id: item.id,
                 classes: item.classes,
+                shared: item.shared,
                 type: 'object'
             }));
 
@@ -338,7 +341,7 @@ class ValueItem extends Component {
                                     <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>{this.props.label}</ValuePlugins> :
                                     (this.props.type === 'object' ?
 
-                                        (this.props.syncBackend || existingResourceId ? (
+                                        (existingResourceId && this.props.shared > 1 ? (
                                             <StyledAutoCompleteInputFormControl className="form-control" style={{ borderRadius: 0 }} >
                                                 <AsyncCreatableSelect
                                                     loadOptions={this.loadOptions}
@@ -369,8 +372,8 @@ class ValueItem extends Component {
                                                     onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
                                                     onBlur={(e) => { this.props.toggleEditValue({ id: this.props.id }) }}
                                                     autoFocus
-                                                    size="sm"
-                                                    //onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
+                                                    bsSize="sm"
+                                                //onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
                                                 />
                                             )
                                         )
@@ -378,12 +381,13 @@ class ValueItem extends Component {
                                             <Input
                                                 value={this.props.label}
                                                 onChange={(e) => this.handleChangeLiteral(e, false)}
-                                                onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} 
+                                                onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()}
                                                 onBlur={(e) => { this.handleChangeLiteral(e, true); this.props.toggleEditValue({ id: this.props.id }) }}
                                                 autoFocus
-                                                size="sm"
-                                                //onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
-                                            />)
+                                                bsSize="sm"
+                                            //onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
+                                            />
+                                        )
                                     )
                                 ) :
                                 'Saving ...'
@@ -415,7 +419,7 @@ class ValueItem extends Component {
                                         </span>
                                     </Tippy>
                                 </span>
-                                {!existingResourceId &&
+                                {(!existingResourceId || this.props.shared <= 1) &&
                                     <span className={'mr-3 deleteValue float-right'} onClick={() => { this.props.toggleEditValue({ id: this.props.id }); }}>
                                         <Tippy content="Edit label">
                                             <span>
@@ -424,7 +428,7 @@ class ValueItem extends Component {
                                         </Tippy>
                                     </span>}
 
-                                {existingResourceId && !this.props.syncBackend &&
+                                {existingResourceId && this.props.shared > 1 &&
                                     <span className={'mr-3 deleteValue float-right disabled'} >
                                         <Tippy content="An existing resource cannot be edited directly">
                                             <span>
@@ -479,6 +483,7 @@ ValueItem.propTypes = {
     selectedProperty: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     classes: PropTypes.array.isRequired,
+    shared: PropTypes.number.isRequired,
     propertyId: PropTypes.string.isRequired,
     existingStatement: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
