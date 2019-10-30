@@ -430,7 +430,7 @@ class ValueItem extends Component {
 
                                 {existingResourceId && this.props.shared > 1 &&
                                     <span className={'mr-3 deleteValue float-right disabled'} >
-                                        <Tippy content="An shared resource cannot be edited directly">
+                                        <Tippy content="A shared resource cannot be edited directly">
                                             <span>
                                                 <Icon icon={faPen} /> Edit
                                             </span>
