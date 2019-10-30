@@ -102,7 +102,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "lint-staged && version"
+            "pre-commit": "lint-staged && npm run version"
         }
     },
     "browserslist": [
