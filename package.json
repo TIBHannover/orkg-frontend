@@ -70,9 +70,11 @@
         "eject": "react-scripts eject",
         "flow": "flow",
         "lint": "eslint 'src/**/*.{js,jsx}'",
-        "lint:fix": "eslint 'src/**/*.{js,jsx}' --fix"
+        "lint:fix": "eslint 'src/**/*.{js,jsx}' --fix",
+        "version": "auto-changelog && git add CHANGELOG.md"
     },
     "devDependencies": {
+        "auto-changelog": "^1.16.2",
         "babel-preset-env": "^1.7.0",
         "enzyme": "^3.10.0",
         "enzyme-adapter-react-16": "^1.14.0",
@@ -86,6 +88,12 @@
         "sass-extract-js": "^0.4.0",
         "sass-extract-loader": "^1.1.0"
     },
+    "auto-changelog": {
+        "template": "keepachangelog",
+        "unreleased": false,
+        "commitLimit": 0,
+        "tagPattern": ".+"
+    },
     "lint-staged": {
         "src/**/*.{js,jsx}": [
             "npm run --silent lint:fix",
@@ -94,7 +102,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "lint-staged"
+            "pre-commit": "lint-staged && version"
         }
     },
     "browserslist": [
