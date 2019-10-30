@@ -116,7 +116,6 @@ class Header extends Component {
 
       return <Redirect to={{ pathname: '/', state: { signedOut: true } }} />;
     }
-    console.log(this.props.user);
     const email = this.props.user && this.props.user.email ? this.props.user.email : 'example@example.com';
     const greeting = greetingTime(new Date());
 

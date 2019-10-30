@@ -4,9 +4,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { toggleAuthDialog, updateAuth } from '../../actions/auth';
-import { registerWithEmailAndPassword } from '../../network';
+import { registerWithEmailAndPassword, signInWithEmailAndPassword } from '../../network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { Cookies } from 'react-cookie';
+const cookies = new Cookies();
 
 class SignUp extends Component {
   constructor(props) {
@@ -28,8 +30,8 @@ class SignUp extends Component {
   }
 
   signUp = async () => {
-    const { email, password, name} = this.state;
-    
+    const { email, password, name } = this.state;
+
     if (!email || !password || !name) {
       this.setState({
         error: 'Please fill out all fields',
@@ -41,14 +43,18 @@ class SignUp extends Component {
       loading: true,
     });
 
-    registerWithEmailAndPassword(email, password, name).then(()=> {
-      this.setState({
-        loading: false,
-        error: null
+    registerWithEmailAndPassword(email, password, name).then(() => {
+      signInWithEmailAndPassword(email, password).then(
+        (token) => {
+          cookies.set('token', token.access_token, { path: '/', maxAge: token.expires_in });
+          this.props.toggleAuthDialog();
+          this.setState({ loading: false, error: null });
+          window.location.reload();
+        }
+      ).catch((e) => {
+        this.setState({ loading: false, errors: 'Something went wrong, please try again' });
       });
-      this.props.updateAuth({ user: { displayName: 'John Doe', email: '', id: 1 } });
-      this.props.toggleAuthDialog();
-    }).catch((e)=> {
+    }).catch((e) => {
       this.setState({
         loading: false,
         error: 'An error has occurred, please try again'

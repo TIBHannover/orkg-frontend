@@ -32,9 +32,9 @@ class SignIn extends Component {
       loading: true,
     });
 
-    signInWithEmailAndPassword(this.state.email, this.state.password, this.state.name).then(
+    signInWithEmailAndPassword(this.state.email, this.state.password).then(
       (token) => {
-        cookies.set('token', token.access_token, { path: '/' });
+        cookies.set('token', token.access_token, { path: '/', maxAge: token.expires_in });
         this.props.toggleAuthDialog();
         this.setState({ loading: false });
         window.location.reload();
@@ -47,8 +47,8 @@ class SignIn extends Component {
       } else if (e.error_description) {
         error = e.error_description;
       }
-      
-      this.setState({ loading: false, errors: error});
+
+      this.setState({ loading: false, errors: error });
     });
   }
 
