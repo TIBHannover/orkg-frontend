@@ -62,7 +62,7 @@ class Statements extends Component {
                         </StyledStatementItem>
                     )}
 
-                {this.props.enableEdit ? <AddProperty syncBackend={this.props.syncBackend} /> : ''}
+                {shared <= 1 & this.props.enableEdit ? <AddProperty syncBackend={this.props.syncBackend} /> : ''}
             </ListGroup>
         );
     }
