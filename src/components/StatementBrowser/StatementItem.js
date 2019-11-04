@@ -45,18 +45,14 @@ class StatementItem extends Component {
         if (this.props.predicateLabel !== selectedOption.label || (property.existingPredicateId !== selectedOption.id)) {
             this.props.isSavingProperty({ id: this.props.id }); // Show the saving message instead of the property label
             if (a.action === 'select-option') {
-                this.changePredicate(selectedOption);
+                this.changePredicate({ ...selectedOption, isExistingProperty: true });
             } else if (a.action === 'create-option') {
                 let newPredicate = null;
                 if (this.props.syncBackend) {
                     newPredicate = await createPredicate(selectedOption.label);
+                    newPredicate['isExistingProperty'] = true
                 } else {
-                    newPredicate = { id: guid(), label: selectedOption.label }
-                    this.props.createProperty({
-                        propertyId: newPredicate.id,
-                        resourceId: this.props.selectedResource,
-                        label: newPredicate.label,
-                    });
+                    newPredicate = { id: guid(), label: selectedOption.label, isExistingProperty: false }
                 }
                 this.changePredicate(newPredicate);
             }

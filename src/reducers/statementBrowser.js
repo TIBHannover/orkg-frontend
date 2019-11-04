@@ -97,7 +97,8 @@ export default (state = initialState, action) => {
         case type.CHANGE_PROPERTY: {
             let { payload } = action;
             let newState = dotProp.set(state, `properties.byId.${payload.propertyId}.label`, payload.newProperty.label);
-            newState = dotProp.set(newState, `properties.byId.${payload.propertyId}.existingPredicateId`, payload.newProperty.id);
+            newState = dotProp.set(newState, `properties.byId.${payload.propertyId}.existingPredicateId`, payload.newProperty.isExistingProperty ? payload.newProperty.id : false);
+            newState = dotProp.set(newState, `properties.byId.${payload.propertyId}.isExistingProperty`, payload.newProperty.isExistingProperty);
             return newState;
         }
 
