@@ -256,7 +256,7 @@ class Contributions extends Component {
                                                         ))
                                                         }
                                                         {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].length === 0 && (
-                                                            <i>No informations about the research problems. Please contribute by  <Button color="link" style={{ verticalAlign: 'None' }} className={'m-0 p-0'} onClick={() => this.props.toggleEditMode()}>editing</Button> the paper.</i>
+                                                            <i>No research problems added yet. Please contribute by  <Button color="link" style={{ verticalAlign: 'None', fontStyle: 'italic' }} className={'m-0 p-0'} onClick={() => this.props.toggleEditMode()}>editing</Button> the paper.</i>
                                                         )}
                                                     </>
                                                 )
