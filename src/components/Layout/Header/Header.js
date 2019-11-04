@@ -6,6 +6,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { Link, NavLink as RouterNavLink } from 'react-router-dom';
 import ROUTES from '../../../constants/routes.js';
+import styled from 'styled-components';
+
+const StyledLink = styled(Link)`
+    :focus {outline:none;}
+    ::-moz-focus-inner {border:0;}
+`;
 
 class Header extends Component {
     constructor(props) {
@@ -36,9 +42,9 @@ class Header extends Component {
             return (
                 <Navbar color="light" expand="md" fixed="top" id="main-navbar" light>
                     <Container>
-                        <Link to={ROUTES.HOME} className="mr-5 navbar-brand p-0">
+                        <StyledLink to={ROUTES.HOME} className="mr-5 p-0">
                             <Logo />
-                        </Link>
+                        </StyledLink>
 
                         <NavbarToggler onClick={this.toggle} />
 
