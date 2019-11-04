@@ -36,7 +36,7 @@ class Header extends Component {
             return (
                 <Navbar color="light" expand="md" fixed="top" id="main-navbar" light>
                     <Container>
-                        <Link to={ROUTES.HOME} className="mr-5 navbar-brand">
+                        <Link to={ROUTES.HOME} className="mr-5 navbar-brand p-0">
                             <Logo />
                         </Link>
 
@@ -46,7 +46,7 @@ class Header extends Component {
                             <Nav className="mr-auto" navbar>
                                 <NavItem>
                                     <NavLink tag={RouterNavLink} exact to={ROUTES.PAPERS}>
-                                        View all papers{/* TODO: add taxonomy "Browse by research field" <FontAwesomeIcon icon={faSortDown} pull="right" /> */} 
+                                        View all papers
                                     </NavLink>
                                 </NavItem>
                                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.dropdownOpen} nav inNavbar>
