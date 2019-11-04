@@ -64,7 +64,7 @@ class TableCell extends Component {
                                 date.type === 'resource' ? (
                                     <span key={`value-${index}`}>
                                         {index > 0 && <ItemInnerSeparator />}
-                                        <Tippy content={date.pathLabels.join(' / ')} arrow={true}>
+                                        <Tippy content={`Path of this value : ${date.pathLabels.slice(1).join(' / ')}`} arrow={true}>
                                             <span
                                                 className="btn-link"
                                                 onClick={() => this.openStatementBrowser(date.resourceId, date.label)}
@@ -77,7 +77,7 @@ class TableCell extends Component {
                                 ) : (
                                         <span key={`value-${index}`}>
                                             {index > 0 && <ItemInnerSeparator />}
-                                            <Tippy content={date.pathLabels.join(' / ')} arrow={true}>
+                                            <Tippy content={`Path of this value : ${date.pathLabels.slice(1).join(' / ')}`} arrow={true}>
                                                 <span>
                                                     <ValuePlugins type={'literal'}>{date.label}</ValuePlugins>
                                                 </span>
