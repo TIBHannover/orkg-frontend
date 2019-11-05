@@ -11,20 +11,13 @@ class Home extends Component {
         document.title = 'Open Research Knowledge Graph'
     }
 
-    render = () => {
-        const showWarning = process.env.REACT_APP_SERVER_URL.includes('labs.tib.eu');
-        
+    render = () => {       
         return (
             <div>
                 <Container className="p-0">
                     <h1 className="h4 mt-4 mb-4">Homepage</h1>
                 </Container>
                 <Container className="box pt-4 pb-4 pl-5 pr-5">
-                    {showWarning &&
-                        <Alert color="info">
-                            <strong>Warning: </strong> The ORKG is currently in an alpha stage. Data you enter in the system can be deleted without any notice.
-                        </Alert>
-                    }
                     <Icon icon={faInfoCircle} className="text-primary" /> The <strong>Open Research Knowledge Graph</strong> - or - ORKG aims to describe research papers and contributions in a structured manner. With ORKG research contributions become findable and comparable. In order to add your own research, or to contribute,
                 {' '}<a href="https://projects.tib.eu/orkg/" target="_blank" rel="noopener noreferrer">learn more <Icon icon={faExternalLinkAlt} /></a>
                 </Container>
