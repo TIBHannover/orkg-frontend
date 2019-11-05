@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 const FooterWrapper = styled.div`
     background: #e0e2ea;
-    margin-top: 55px;
+    margin-top: 75px;
     border-top: 1px #d1d3d9 solid;
 `;
 
