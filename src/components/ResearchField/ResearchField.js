@@ -44,8 +44,9 @@ class ResearchField extends Component {
     loadResearchFieldData = () => {
         // Get the research field
         getResource(this.props.match.params.researchFieldId).then((result) => {
-            this.setState({ researchField: result, papers: [], loading: false })
-            document.title = `${this.state.researchField.label} - ORKG`
+            this.setState({ researchField: result, papers: [], loading: false }, () => {
+                document.title = `${this.state.researchField.label} - ORKG`
+            })
         });
     }
 
