@@ -179,7 +179,7 @@ class ComparisonTable extends Component {
                     showNextButton: true,
                 });
             }
-        }else{
+        } else {
             if (this.props.properties.filter(property => property.active).length > 3) {
                 this.setState({
                     showNextButton: true,
@@ -225,7 +225,7 @@ class ComparisonTable extends Component {
                                         return (
                                             <ItemHeader key={`contribution${index}`}>
                                                 <ItemHeaderInner>
-                                                    <Link to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: contribution.paperId, contributionId: contribution.id })}>
+                                                    <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: contribution.paperId, contributionId: contribution.id })}>
                                                         {contribution.title ? contribution.title : <em>No title</em>}
                                                     </Link>
                                                     <br />
@@ -291,7 +291,7 @@ class ComparisonTable extends Component {
                                     <Row key={`row${index}`}>
                                         <Properties>
                                             <PropertiesInner transpose={this.props.transpose}>
-                                                <Link to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: contribution.paperId, contributionId: contribution.id })}>
+                                                <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: contribution.paperId, contributionId: contribution.id })}>
                                                     {contribution.title ? contribution.title : <em>No title</em>}
                                                 </Link>
                                                 <br />

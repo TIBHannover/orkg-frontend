@@ -1,22 +1,47 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
-import Tooltip from '../Utils/Tooltip';
 import { connect } from 'react-redux';
 import { deleteProperty, toggleEditPropertyLabel } from '../../actions/statementBrowser';
+import { deleteStatementById } from '../../network';
 import Confirm from 'reactstrap-confirm';
+import { toast } from 'react-toastify';
+import Tippy from '@tippy.js/react';
+import 'tippy.js/dist/tippy.css';
 import PropTypes from 'prop-types';
 
 class StatementOptions extends Component {
 
-    toggleDeleteStatement = async () => {
+    toggleDeleteStatement = async (e) => {
+        e.stopPropagation();
+
+        let property = this.props.properties.byId[this.props.id];
+        let title = '';
+        let message = '';
+        if (property.valueIds.length === 0) {
+            title = (<>Delete the <i>{property.label}</i> property?</>);
+            message = 'Are you sure you want to delete this property?'
+        } else {
+            title = (<>Delete the <i>{property.label}</i> property and all related values?</>);
+            message = `Also, ${property.valueIds.length} related ${property.valueIds.length === 1 ? 'value' : 'values'} will be deleted.`;
+        }
         let result = await Confirm({
-            title: 'Are you sure?',
-            message: 'Are you sure you want to delete this statement and its related values?',
+            title: title,
+            message: message,
             cancelColor: 'light'
         });
 
         if (result) {
+            if (this.props.syncBackend) {
+                // Delete All related statements
+                if (property.valueIds.length > 0) {
+                    for (let valueId of property.valueIds) {
+                        let value = this.props.values.byId[valueId];
+                        deleteStatementById(value.statementId);
+                    }
+                    toast.success(`${property.valueIds.length} ${property.valueIds.length === 1 ? 'Statement' : 'Statements'} deleted successfully`);
+                }
+            }
             this.props.deleteProperty({
                 id: this.props.id,
                 resourceId: this.props.selectedResource,
@@ -27,18 +52,18 @@ class StatementOptions extends Component {
     render() {
         return (
             <>
-                <span className={'deletePredicate float-right mr-4'} onClick={this.toggleDeleteStatement}>
-                    <Tooltip message="Delete statement" hideDefaultIcon={true}>
-                        <Icon icon={faTrash} /> Delete
-                    </Tooltip>
+                {!this.props.isEditing && (
+                    <span className={'deletePredicate mr-3'} onClick={(e) => { e.stopPropagation(); this.props.toggleEditPropertyLabel({ id: this.props.id }); }}>
+                        <Tippy content="Edit property">
+                            <span><Icon icon={faPen} /> Edit</span>
+                        </Tippy>
+                    </span>)
+                }
+                <span className={'deletePredicate mr-4'} onClick={this.toggleDeleteStatement}>
+                    <Tippy content="Delete statement">
+                        <span><Icon icon={faTrash} /> Delete</span>
+                    </Tippy>
                 </span>
-                {!this.props.existingPredicateId && !this.props.isEditing && (
-                    <span className={'deletePredicate float-right mr-4'} onClick={(e) => { e.stopPropagation(); this.props.toggleEditPropertyLabel({ id: this.props.id }); }}>
-                        <Tooltip message="Edit property label" hideDefaultIcon={true}>
-                            <Icon icon={faPen} /> Edit
-                        </Tooltip>
-                    </span>)}
-
             </>
         );
     }
@@ -49,13 +74,17 @@ StatementOptions.propTypes = {
     selectedResource: PropTypes.string.isRequired,
     deleteProperty: PropTypes.func.isRequired,
     toggleEditPropertyLabel: PropTypes.func.isRequired,
-    existingPredicateId: PropTypes.bool.isRequired,
+    syncBackend: PropTypes.bool.isRequired,
     isEditing: PropTypes.bool.isRequired,
+    properties: PropTypes.object.isRequired,
+    values: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => {
     return {
         selectedResource: state.statementBrowser.selectedResource,
+        properties: state.statementBrowser.properties,
+        values: state.statementBrowser.values,
     }
 };
 

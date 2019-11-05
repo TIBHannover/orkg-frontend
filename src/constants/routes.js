@@ -8,8 +8,7 @@ export default {
    ADD_PAPER: {
       GENERAL_DATA: '/add-paper'
    },
-   VIEW_PAPER_CONTRIBUTION: '/paper/:resourceId/:contributionId',
-   VIEW_PAPER: '/paper/:resourceId',
+   VIEW_PAPER: '/paper/:resourceId/:contributionId?',
    COMPARISON_SHORTLINK: '/c/:shortCode',
    COMPARISON: '/comparison/',
    PAPERS: '/papers',

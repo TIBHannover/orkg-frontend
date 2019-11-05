@@ -66,6 +66,27 @@ export const toggleEditPropertyLabel = (data) => dispatch => {
     })
 }
 
+export const changeProperty = (data) => dispatch => {
+    dispatch({
+        type: type.CHANGE_PROPERTY,
+        payload: data
+    })
+}
+
+export const isSavingProperty = (data) => dispatch => {
+    dispatch({
+        type: type.IS_SAVING_PROPERTY,
+        payload: data
+    })
+}
+
+export const doneSavingProperty = (data) => dispatch => {
+    dispatch({
+        type: type.DONE_SAVING_PROPERTY,
+        payload: data
+    })
+}
+
 export const updatePropertyLabel = (data) => dispatch => {
     dispatch({
         type: type.UPDATE_PROPERTY_LABEL,
@@ -92,6 +113,27 @@ export const toggleEditValue = (data) => dispatch => {
     })
 }
 
+export const changeValue = (data) => dispatch => {
+    dispatch({
+        type: type.CHANGE_VALUE,
+        payload: data
+    })
+}
+
+export const isSavingValue = (data) => dispatch => {
+    dispatch({
+        type: type.IS_SAVING_VALUE,
+        payload: data
+    })
+}
+
+export const doneSavingValue = (data) => dispatch => {
+    dispatch({
+        type: type.DONE_SAVING_VALUE,
+        payload: data
+    })
+}
+
 export const updateValueLabel = (data) => dispatch => {
     dispatch({
         type: type.UPDATE_VALUE_LABEL,
@@ -112,7 +154,8 @@ export const createResource = (data) => dispatch => {
         payload: {
             resourceId: data.resourceId ? data.resourceId : guid(),
             label: data.label,
-            existingResourceId: data.existingResourceId
+            existingResourceId: data.existingResourceId,
+            shared: data.shared ? data.shared : 1
         }
     })
 }
@@ -155,7 +198,6 @@ export const fetchStatementsForResource = (data) => {
         dispatch({
             type: type.IS_FETCHING_STATEMENTS
         });
-
         return network.getStatementsBySubject({ id: existingResourceId })
             .then(
                 response => {
@@ -169,12 +211,12 @@ export const fetchStatementsForResource = (data) => {
                     for (let statement of response) {
                         let propertyId = guid();
                         const valueId = guid();
-
                         // filter out research problem to show differently
                         if (isContribution && statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM) {
                             researchProblems.push({
                                 label: statement.object.label,
                                 id: statement.object.id,
+                                statementId: statement.id
                             });
                         } else {
                             // check whether there already exist a property for this, then combine 
@@ -205,6 +247,8 @@ export const fetchStatementsForResource = (data) => {
                                 classes: statement.object.classes ? statement.object.classes : [],
                                 isExistingValue: true,
                                 existingStatement: true,
+                                statementId: statement.id,
+                                shared: statement.object.shared
                             }));
                         }
 
