@@ -34,7 +34,7 @@ export default class Resources extends Component {
         getAllResources({
             page: this.state.page,
             items: this.pageSize,
-            sortBy: 'id',
+            sortBy: 'created_at',
             desc: true
         }).then((resources) => {
             if (resources.length > 0) {

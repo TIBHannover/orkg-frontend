@@ -34,7 +34,7 @@ export default class Predicates extends Component {
         getAllPredicates({
             page: this.state.page,
             items: this.pageSize,
-            sortBy: 'id',
+            sortBy: 'created_at',
             desc: true
         }).then((predicates) => {
             if (predicates.length > 0) {
