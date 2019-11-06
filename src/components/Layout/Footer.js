@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 const FooterWrapper = styled.div`
     background: #e0e2ea;
-    margin-top:10px;
+    margin-top: 75px;
     border-top: 1px #d1d3d9 solid;
 `;
 
@@ -31,7 +31,7 @@ const FooterCol = styled(Col)`
 `;
 
 const Footer = () => (
-    <FooterWrapper className="mt-5">
+    <FooterWrapper>
         <Container>
             <footer className="pt-4 pb-4">
 
@@ -68,7 +68,7 @@ const Footer = () => (
                         <ul className={'p-0'} style={{ listStyle: 'none' }}>
                             <li><Link to={ROUTES.LICENSE}>License</Link></li>
                             <li><a href="https://projects.tib.eu/orkg/contact/" target="_blank" rel="noopener noreferrer">Contact us</a></li>
-                            <li><i className={'mr-3'}>Version</i> <Badge color="info">V0.4.1</Badge></li>
+                            <li><i className={'mr-3'}>Version</i> <Badge color="info">GIT_VERSION</Badge></li>
                         </ul>
                     </FooterCol>
                 </Row>
