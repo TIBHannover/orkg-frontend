@@ -86,6 +86,13 @@ class AuthorsInput extends Component {
             })
         }
 
+        const CustomOption = (props) => {
+            console.log(props);
+            return !props.isDisabled ? (
+                <div {...props.innerProps}>{/* your component internals */}</div>
+            ) : null
+        };
+
         return (
             <StyledAuthorsInputFormControl className={'form-control clearfix'}>
                 <CreatableSelect
@@ -103,6 +110,7 @@ class AuthorsInput extends Component {
                     placeholder={'Type an author fullname ...'}
                     noOptionsMessage={() => 'Enter both the first and last name.'}
                     formatCreateLabel={userInput => `Add the author : "${userInput}"`}
+                    components={{ CustomOption }}
                 />
             </StyledAuthorsInputFormControl>
         );

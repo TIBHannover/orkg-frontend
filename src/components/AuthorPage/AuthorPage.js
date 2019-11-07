@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { Container, Button, Card, CardText, CardBody, CardHeader, CardFooter, Row, Col } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Container, Row, Col } from 'reactstrap';
 import { getStatementsByObject, getResource, getStatementsBySubject } from '../../network';
-import { reverse } from 'named-urls';
-import ROUTES from '../../constants/routes.js';
 import PaperCard from '../PaperCard/PaperCard'
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
