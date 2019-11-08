@@ -79,7 +79,7 @@ class AuthorPage extends Component {
             // Papers
             if (result.length > 0) {
                 // Fetch the data of each paper
-                let papers = result.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD)
+                let papers = result.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR)
                     .map((paper) => {
                         return getStatementsBySubject({ id: paper.subject.id }).then((paperStatements) => {
                             // publication year
@@ -96,21 +96,13 @@ class AuthorPage extends Component {
                             } else {
                                 publicationMonth = ''
                             }
-                            // authors
-                            let authors = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
-                            let authorNamesArray = [];
-                            if (authors.length > 0) {
-                                for (let author of authors) {
-                                    let authorName = author.object.label;
-                                    authorNamesArray.push(authorName);
-                                }
-                            }
-                            paper.data = {
+
+                            paper.subject.data = {
                                 publicationYear,
                                 publicationMonth,
-                                authorNames: authorNamesArray.reverse(),
+                                authorNames: [], // just to hide authors
                             }
-                            return paper;
+                            return paper.subject;
                         })
                     });
                 return Promise.all(papers).then((papers) => {
@@ -149,24 +141,20 @@ class AuthorPage extends Component {
                                 <Col className="col-4">
                                     <div className={'box p-4'}>
                                         <AuthorMetaInfo>
-                                            <div className={'key'}>Given name</div>
-                                            <div className={'value'}>Richard</div>
-                                        </AuthorMetaInfo>
-                                        <AuthorMetaInfo>
-                                            <div className={'key'}>Family name</div>
-                                            <div className={'value'}>Heeks</div>
+                                            <div className={'key'}>Full name</div>
+                                            <div className={'value'}>{this.state.author.label}</div>
                                         </AuthorMetaInfo>
                                         <AuthorMetaInfo>
                                             <div className={'key'}>Date of birth</div>
-                                            <div className={'value'}>Richard</div>
+                                            <div className={'value'}>Date</div>
                                         </AuthorMetaInfo>
                                         <AuthorMetaInfo>
                                             <div className={'key'}>Place of birth</div>
-                                            <div className={'value'}>UK</div>
+                                            <div className={'value'}>Coutnry</div>
                                         </AuthorMetaInfo>
                                         <AuthorMetaInfo>
                                             <div className={'key'}>Occupation</div>
-                                            <div className={'value'}>British academic</div>
+                                            <div className={'value'}>Lab</div>
                                         </AuthorMetaInfo>
                                     </div>
                                 </Col>
@@ -200,19 +188,19 @@ class AuthorPage extends Component {
                                             <Col className="col-6">
                                                 <AuthorIdentifier>
                                                     <div className={'key'}>ORCID</div>
-                                                    <div className={'value'}>Richard</div>
+                                                    <div className={'value'}>ORCID link</div>
                                                 </AuthorIdentifier>
                                             </Col>
                                             <Col className="col-6">
                                                 <AuthorIdentifier>
                                                     <div className={'key'}>Scopus Author ID</div>
-                                                    <div className={'value'}>Richard</div>
+                                                    <div className={'value'}>Scopus link</div>
                                                 </AuthorIdentifier>
                                             </Col>
                                             <Col className="col-6">
                                                 <AuthorIdentifier>
                                                     <div className={'key'}>Google Scholar author ID</div>
-                                                    <div className={'value'}>Richard</div>
+                                                    <div className={'value'}>Google Scholar link</div>
                                                 </AuthorIdentifier>
                                             </Col>
                                         </Row>

@@ -106,6 +106,8 @@ class ViewPaper extends Component {
                     for (let author of authors) {
                         authorNamesArray.push({
                             id: author.id,
+                            resourceId: author.object.id,
+                            class: author.object._class,
                             label: author.object.label
                         });
                     }
@@ -340,10 +342,16 @@ class ViewPaper extends Component {
                                             </span>
                                         </Link>)
                                     }
-                                    {this.props.viewPaper.authors.map((author, index) => (
-                                        <span className="badge badge-lightblue mr-2 mb-2" key={index}>
-                                            <Icon icon={faUser} className="text-primary" /> {author.label}
-                                        </span>
+                                    {this.props.viewPaper.authors.map((author, index) => (author.class !== 'literal' ? (
+                                        <Link key={index} to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.resourceId })} >
+                                            <span className="badge badge-lightblue mr-2 mb-2" key={index}>
+                                                <Icon icon={faUser} className="text-primary" /> {author.label}
+                                            </span>
+                                        </Link>) : (
+                                            <span className="badge badge-lightblue mr-2 mb-2" key={index}>
+                                                <Icon icon={faUser} className="text-primary" /> {author.label}
+                                            </span>
+                                        )
                                     ))}
                                     <br />
                                     <div className="d-flex justify-content-end align-items-center">
