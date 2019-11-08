@@ -57,7 +57,7 @@
         "react-transition-group": "^2.9.0",
         "reactour": "^1.15.0",
         "reactstrap": "^8.0.1",
-        "reactstrap-confirm": "git://github.com/algm/reactstrap-confirm.git#pull/11/head",
+        "reactstrap-confirm": "^1.2.0",
         "redux": "^4.0.4",
         "redux-thunk": "^2.3.0",
         "strict-mode": "^1.1.3",
