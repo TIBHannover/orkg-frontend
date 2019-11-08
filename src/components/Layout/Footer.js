@@ -41,7 +41,7 @@ const Footer = () => (
                         <hr className={'mr-5'} />
                         <Row >
                             <div className={'float-left ml-3'} ><Link to={ROUTES.HOME}><Logo style={{ height: '80px' }} /></Link></div>
-                            <div className={'col-md-8 description'}>We aim to describe research papers and contributions in a structred manner</div>
+                            <div className={'col-md-8 description'}>We aim to describe research papers and contributions in a structured manner</div>
                         </Row>
                     </FooterCol>
                     <FooterCol md={3}>
