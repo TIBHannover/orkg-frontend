@@ -272,13 +272,20 @@ export default (state = initialState, action) => {
         case type.ADD_RESOURCE_HISTORY: {
             let { payload } = action;
             let resourceId = payload.resourceId ? payload.resourceId : null; //state.contributions.byId[state.selectedContribution].resourceId
+            let lastResourceId = state.resourceHistory.allIds[state.resourceHistory.allIds.length - 1]
 
             let newState = dotProp.set(state, 'resourceHistory.byId', ids => ({
                 ...ids,
                 [resourceId]: {
                     id: resourceId,
                     label: payload.label,
-                }
+                },
+                ...lastResourceId ? {
+                    [lastResourceId]: {
+                        ...state.resourceHistory.byId[lastResourceId],
+                        selectedProperty: state.selectedProperty,
+                    }
+                } : {}
             }));
 
             newState = dotProp.set(newState, 'resourceHistory.allIds', ids => [...ids, resourceId]);
@@ -294,6 +301,7 @@ export default (state = initialState, action) => {
                 ...state,
                 level: payload.historyIndex,
                 selectedResource: payload.id,
+                selectedProperty: state.resourceHistory.byId[payload.id].selectedProperty,
                 resourceHistory: {
                     allIds: ids,
                     byId: {

@@ -178,10 +178,6 @@ export const selectResource = (data) => dispatch => { // use redux thunk for asy
         }
     });
 
-    dispatch({
-        type: type.CLEAR_SELECTED_PROPERTY
-    });
-
     if (data.resetLevel) {
         dispatch({
             type: type.RESET_LEVEL
@@ -278,9 +274,5 @@ export const goToResourceHistory = (data) => dispatch => {
     dispatch({
         type: type.GOTO_RESOURCE_HISTORY,
         payload: data
-    });
-
-    dispatch({
-        type: type.CLEAR_SELECTED_PROPERTY
     });
 }
