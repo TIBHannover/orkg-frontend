@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input } from 'reactstrap';
+import { Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faExternalLinkAlt, faTable } from '@fortawesome/free-solid-svg-icons';
 import { StyledValueItem } from '../../AddPaper/Contributions/styled';
@@ -20,8 +20,17 @@ import 'tippy.js/dist/tippy.css';
 import { toast } from 'react-toastify';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { StyledAutoCompleteInputFormControl } from '../AutoComplete';
+import styled from 'styled-components';
 import { guid } from '../../../utils';
 
+
+const StyledInput = styled(Input)`
+    
+    &:focus{
+        outline: 0 none;
+        box-shadow:none !important;
+    }
+`;
 
 class ValueItem extends Component {
     constructor(props) {
@@ -374,27 +383,51 @@ class ValueItem extends Component {
                                                 />
                                             </StyledAutoCompleteInputFormControl>
                                         ) : (
-                                                <Input
+                                                <InputGroup>
+                                                    <StyledInput
+                                                        value={this.props.label}
+                                                        onChange={(e) => this.handleChangeLabel(e, false)}
+                                                        onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
+                                                        onBlur={(e) => { this.handleChangeLabel(e, true); this.props.toggleEditValue({ id: this.props.id }) }}
+                                                        autoFocus
+                                                        bsSize="sm"
+                                                    //onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
+                                                    />
+                                                    <InputGroupAddon addonType="append">
+                                                        <Button
+                                                            outline
+                                                            color="primary"
+                                                            size="sm"
+                                                            onClick={(e) => { this.handleChangeLabel(e, true); this.props.toggleEditValue({ id: this.props.id }) }}
+                                                        >
+                                                            Save
+                                                        </Button>
+                                                    </InputGroupAddon>
+                                                </InputGroup>
+                                            )
+                                        )
+                                        : (
+                                            <InputGroup>
+                                                <StyledInput
                                                     value={this.props.label}
-                                                    onChange={(e) => this.handleChangeLabel(e, false)}
-                                                    onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
-                                                    onBlur={(e) => { this.handleChangeLabel(e, true); this.props.toggleEditValue({ id: this.props.id }) }}
+                                                    onChange={(e) => this.handleChangeLiteral(e, false)}
+                                                    onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()}
+                                                    onBlur={(e) => { this.handleChangeLiteral(e, true); this.props.toggleEditValue({ id: this.props.id }) }}
                                                     autoFocus
                                                     bsSize="sm"
                                                 //onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
                                                 />
-                                            )
-                                        )
-                                        : (
-                                            <Input
-                                                value={this.props.label}
-                                                onChange={(e) => this.handleChangeLiteral(e, false)}
-                                                onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()}
-                                                onBlur={(e) => { this.handleChangeLiteral(e, true); this.props.toggleEditValue({ id: this.props.id }) }}
-                                                autoFocus
-                                                bsSize="sm"
-                                            //onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
-                                            />
+                                                <InputGroupAddon addonType="append">
+                                                    <Button
+                                                        outline
+                                                        color="primary"
+                                                        size="sm"
+                                                        onClick={(e) => { this.handleChangeLiteral(e, true); this.props.toggleEditValue({ id: this.props.id }) }}
+                                                    >
+                                                        Save
+                                                    </Button>
+                                                </InputGroupAddon>
+                                            </InputGroup>
                                         )
                                     )
                                 ) :
