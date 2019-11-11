@@ -5,6 +5,8 @@ import { Cookies } from 'react-cookie';
 
 const initialState = {
     isTourOpen: false,
+    showAbstractDialog: false,
+    abstractDialogView: 'annotator', // annotator | input | list
     currentStep: 1,
     shouldBlockNavigation: false,
     tourCurrentStep: 1,
@@ -207,6 +209,15 @@ export default (state = initialState, action) => {
             }
 
             return merge({}, state, contribution, selectedContribution);
+        }
+
+        case type.TOGGLE_ABSTRACT_DIALOG: {
+            return dotProp.set(state, 'showAbstractDialog', v => !v);
+        }
+
+        case type.SET_ABSTRACT_DIALOG_VIEW: {
+            let { payload } = action;
+            return dotProp.set(state, 'abstractDialogView', payload.value);
         }
 
         case type.DELETE_CONTRIBUTION: {

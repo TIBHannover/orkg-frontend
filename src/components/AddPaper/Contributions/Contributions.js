@@ -8,11 +8,14 @@ import { compose } from 'redux';
 import {
     nextStep, previousStep, createContribution, deleteContribution,
     selectContribution, updateContributionLabel, saveAddPaper, openTour,
-    updateTourCurrentStep
+    updateTourCurrentStep, toggleAbstractDialog
 } from '../../../actions/addPaper';
+import Abstract from './../Abstract/Abstract';
 import Confirm from 'reactstrap-confirm';
 import Contribution from './Contribution';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faMagic } from '@fortawesome/free-solid-svg-icons';
 import styled, { withTheme } from 'styled-components';
 import { withCookies } from 'react-cookie';
 import PropTypes from 'prop-types';
@@ -124,8 +127,16 @@ class Contributions extends Component {
 
         return (
             <div>
-                <h2 className="h4 mt-4 mb-5"><Tooltip message={<span>Specify the research contributions that this paper makes. A paper can have multiple contributions and each contribution addresses at least one research problem. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(1)}>Learn more</span></span>}>Specify research contributions</Tooltip></h2>
-
+                <div className={'d-flex align-items-center mt-4 mb-5'}>
+                    <h2 className="flex-shrink-0">
+                        <Tooltip message={<span>Specify the research contributions that this paper makes. A paper can have multiple contributions and each contribution addresses at least one research problem. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(1)}>Learn more</span></span>}>
+                            Specify research contributions
+                        </Tooltip>
+                    </h2>
+                    <Button onClick={this.props.toggleAbstractDialog} style={{ marginLeft: 'auto' }} outline size={'sm'} className="flex-shrink-0">
+                        <Icon icon={faMagic} /> Abstract annotator
+                    </Button>
+                </div>
                 <Container>
                     <Row noGutters={true}>
                         <Col xs="3">
@@ -166,6 +177,9 @@ class Contributions extends Component {
                 </Container>
 
                 <hr className="mt-5 mb-3" />
+
+                <Abstract />
+
                 <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Finish</Button>
                 <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>Previous step</Button>
             </div >
@@ -201,6 +215,7 @@ Contributions.propTypes = {
     theme: PropTypes.object.isRequired,
     openTour: PropTypes.func.isRequired,
     updateTourCurrentStep: PropTypes.func.isRequired,
+    toggleAbstractDialog: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -229,6 +244,7 @@ const mapDispatchToProps = dispatch => ({
     saveAddPaper: (data) => dispatch(saveAddPaper(data)),
     openTour: (data) => dispatch(openTour(data)),
     updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
+    toggleAbstractDialog: () => dispatch(toggleAbstractDialog()),
 });
 
 export default compose(
