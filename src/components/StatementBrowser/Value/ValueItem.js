@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import StatementBrowserDialog from '../StatementBrowserDialog';
 import RDFDataCube from '../../RDFDataCube/RDFDataCube';
 import ValuePlugins from '../../ValuePlugins/ValuePlugins';
-import { deleteStatementById, updateLiteral, submitGetRequest, resourcesUrl, updateStatement, createResource as createResourceAPICall } from '../../../network';
+import { deleteStatementById, updateLiteral, submitGetRequest, resourcesUrl, updateStatement, createResource as createResourceAPICall, updateResource } from '../../../network';
 import Tippy from '@tippy.js/react';
 import 'tippy.js/dist/tippy.css';
 import { toast } from 'react-toastify';
@@ -54,14 +54,22 @@ class ValueItem extends Component {
         }
     };
 
-    // @param sync : to update the resource label
-    handleChangeLabel = (e) => {
+    // @param sync : to update the resource label on the backend.
+    handleChangeLabel = async (e, sync = false) => {
         // Check if the user changed the label
         if (e.target.value !== this.props.label) {
             this.props.updateValueLabel({
                 label: e.target.value,
                 valueId: this.props.id,
             });
+        }
+        if (sync && this.props.syncBackend) {
+            this.props.isSavingValue({ id: this.props.id }); // To show the saving message instead of the value label
+            if (this.props.resourceId) {
+                await updateResource(this.props.resourceId, this.props.label);
+                toast.success('Resource label updated successfully');
+            }
+            this.props.doneSavingValue({ id: this.props.id });
         }
     };
 
@@ -368,9 +376,9 @@ class ValueItem extends Component {
                                         ) : (
                                                 <Input
                                                     value={this.props.label}
-                                                    onChange={(e) => this.handleChangeLabel(e)}
+                                                    onChange={(e) => this.handleChangeLabel(e, false)}
                                                     onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
-                                                    onBlur={(e) => { this.props.toggleEditValue({ id: this.props.id }) }}
+                                                    onBlur={(e) => { this.handleChangeLabel(e, true); this.props.toggleEditValue({ id: this.props.id }) }}
                                                     autoFocus
                                                     bsSize="sm"
                                                 //onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
