@@ -45,18 +45,14 @@ class StatementItem extends Component {
         if (this.props.predicateLabel !== selectedOption.label || (property.existingPredicateId !== selectedOption.id)) {
             this.props.isSavingProperty({ id: this.props.id }); // Show the saving message instead of the property label
             if (a.action === 'select-option') {
-                this.changePredicate(selectedOption);
+                this.changePredicate({ ...selectedOption, isExistingProperty: true });
             } else if (a.action === 'create-option') {
                 let newPredicate = null;
                 if (this.props.syncBackend) {
                     newPredicate = await createPredicate(selectedOption.label);
+                    newPredicate['isExistingProperty'] = true
                 } else {
-                    newPredicate = { id: guid(), label: selectedOption.label }
-                    this.props.createProperty({
-                        propertyId: newPredicate.id,
-                        resourceId: this.props.selectedResource,
-                        label: newPredicate.label,
-                    });
+                    newPredicate = { id: guid(), label: selectedOption.label, isExistingProperty: false }
                 }
                 this.changePredicate(newPredicate);
             }
@@ -161,6 +157,7 @@ class StatementItem extends Component {
             statementActive: isCollapsed,
             statementItem: true,
             selectable: true,
+            'd-flex': true,
             'rounded-bottom': this.props.isLastItem && !isCollapsed && !this.props.enableEdit,
         });
 
@@ -198,7 +195,8 @@ class StatementItem extends Component {
                 height: 'auto',
                 background: '#fff',
                 display: 'inline-block',
-                width: '70%',
+                width: '100%',
+                marginRight: 15,
                 '&>div:first-of-type': {
                     padding: 0
                 }
@@ -206,7 +204,7 @@ class StatementItem extends Component {
             menu: (provided) => ({
                 ...provided,
                 zIndex: 10,
-                width: '70%',
+                width: '50%',
                 color: '#000'
             }),
             option: (provided) => ({
@@ -216,6 +214,7 @@ class StatementItem extends Component {
             }),
             indicatorsContainer: (provided) => ({
                 ...provided,
+                cursor: 'pointer',
                 '&>div:last-child': {
                     padding: '0 8px'
                 }
@@ -224,67 +223,74 @@ class StatementItem extends Component {
                 ...provided,
                 margin: '0 4px',
             }),
+            placeholder: (provided) => ({
+                ...provided,
+                opacity: 0.7,
+                paddingLeft: 5,
+                fontStyle: 'italic'
+            }),
         }
 
 
         return (
             <>
                 <StyledStatementItem active={isCollapsed} onClick={() => !this.props.isEditing ? this.props.togglePropertyCollapse(this.props.id) : undefined} className={listGroupClass}>
-                    {!this.props.isSaving ?
-                        (!this.props.isEditing ?
-                            this.state.predicateLabel :
-                            <AsyncCreatableSelect
-                                loadOptions={this.loadOptions}
-                                noOptionsMessage={this.noResults}
-                                styles={customStyles}
-                                autoFocus
-                                getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
-                                getOptionValue={({ id }) => id}
-                                defaultOptions={[{
-                                    label: this.props.predicateLabel,
-                                    id: this.props.properties.byId[this.props.id].existingPredicateId
-                                }]}
-                                defaultValue={{
-                                    label: this.props.predicateLabel,
-                                    id: this.props.properties.byId[this.props.id].existingPredicateId
-                                }}
-                                cacheOptions
-                                onChange={(selectedOption, a) => { this.handleChange(selectedOption, a); this.props.toggleEditPropertyLabel({ id: this.props.id }); }}
-                                onBlur={(e) => { this.props.toggleEditPropertyLabel({ id: this.props.id }) }}
-                            />
-                        ) :
-                        'Saving ...'
-                    }
-
-                    {valueIds.length === 1 && !isCollapsed ? (
-                        <>
-                            :{' '}
-                            <em className="text-muted">
-                                <ValueItem
-                                    label={this.props.values.byId[valueIds[0]].label}
-                                    id={valueIds[0]}
-                                    type={this.props.values.byId[valueIds[0]].type}
-                                    classes={this.props.values.byId[valueIds[0]].classes}
-                                    resourceId={this.props.values.byId[valueIds[0]].resourceId}
-                                    propertyId={this.props.id}
-                                    existingStatement={this.props.values.byId[valueIds[0]].existingStatement}
-                                    inline
-                                    isExistingValue={this.props.values.byId[valueIds[0]].isExistingValue}
-                                    isEditing={false}
-                                    isSaving={false}
-                                    enableEdit={false}
-                                    syncBackend={false}
+                    <div className="flex-grow-1 mr-4">
+                        {!this.props.isSaving ?
+                            (!this.props.isEditing ?
+                                this.state.predicateLabel :
+                                <AsyncCreatableSelect
+                                    className="form-control"
+                                    loadOptions={this.loadOptions}
+                                    noOptionsMessage={this.noResults}
+                                    styles={customStyles}
+                                    autoFocus
+                                    getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
+                                    getOptionValue={({ id }) => id}
+                                    defaultOptions={[{
+                                        label: this.props.predicateLabel,
+                                        id: this.props.properties.byId[this.props.id].existingPredicateId
+                                    }]}
+                                    placeholder={this.props.predicateLabel}
+                                    cacheOptions
+                                    onChange={(selectedOption, a) => { this.handleChange(selectedOption, a); this.props.toggleEditPropertyLabel({ id: this.props.id }); }}
+                                    onBlur={(e) => { this.props.toggleEditPropertyLabel({ id: this.props.id }) }}
+                                    onKeyDown={e => (e.keyCode === 27) && e.target.blur()}
                                 />
-                            </em>
-                        </>
-                    ) : valueIds.length > 1 && !isCollapsed ? (
-                        <>
-                            : <em className="text-muted">{valueIds.length} values</em>
-                        </>
-                    ) : (
-                                ''
-                            )}
-                    <Icon icon={isCollapsed ? faChevronCircleUp : faChevronCircleDown} className={chevronClass} />
+                            ) :
+                            'Saving ...'
+                        }
+
+                        {valueIds.length === 1 && !isCollapsed ? (
+                            <>
+                                :{' '}
+                                <em className="text-muted">
+                                    <ValueItem
+                                        label={this.props.values.byId[valueIds[0]].label}
+                                        id={valueIds[0]}
+                                        type={this.props.values.byId[valueIds[0]].type}
+                                        classes={this.props.values.byId[valueIds[0]].classes}
+                                        resourceId={this.props.values.byId[valueIds[0]].resourceId}
+                                        propertyId={this.props.id}
+                                        existingStatement={this.props.values.byId[valueIds[0]].existingStatement}
+                                        inline
+                                        isExistingValue={this.props.values.byId[valueIds[0]].isExistingValue}
+                                        isEditing={false}
+                                        isSaving={false}
+                                        enableEdit={false}
+                                        syncBackend={false}
+                                        shared={1}
+                                    />
+                                </em>
+                            </>
+                        ) : valueIds.length > 1 && !isCollapsed ? (
+                            <>
+                                : <em className="text-muted">{valueIds.length} values</em>
+                            </>
+                        ) : (
+                                    ''
+                                )}
+                    </div>
 
                     {this.props.enableEdit ? (
                         <StatementOptions
@@ -292,6 +298,8 @@ class StatementItem extends Component {
                             syncBackend={this.props.syncBackend}
                             isEditing={this.props.isEditing}
                         />) : ''}
+
+                    <Icon icon={isCollapsed ? faChevronCircleUp : faChevronCircleDown} className={chevronClass} />
                 </StyledStatementItem>
 
                 <Collapse isOpen={isCollapsed}>
@@ -317,6 +325,7 @@ class StatementItem extends Component {
                                         isEditing={value.isEditing}
                                         isSaving={value.isSaving}
                                         statementId={value.statementId}
+                                        shared={value.shared}
                                     />
                                 );
                             })}

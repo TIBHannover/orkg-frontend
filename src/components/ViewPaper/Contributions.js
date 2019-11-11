@@ -172,9 +172,11 @@ class Contributions extends Component {
                                     {this.props.contributions.map((contribution, index) => {
                                         return (
                                             <li className={contribution.id === selectedContributionId ? 'activeContribution' : ''} key={contribution.id}>
-                                                <Link to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: this.props.paperId, contributionId: contribution.id })} className={'selectContribution'}>
-                                                    {contribution.label}
-                                                </Link>
+                                                {(contribution.id !== selectedContributionId) ? (
+                                                    <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paperId, contributionId: contribution.id })} className={'selectContribution'}>
+                                                        {contribution.label}
+                                                    </Link>
+                                                ) : contribution.label}
                                             </li>
                                         )
                                     })}
@@ -254,7 +256,7 @@ class Contributions extends Component {
                                                         ))
                                                         }
                                                         {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].length === 0 && (
-                                                            <i>No informations about the research problems. Please contribute by  <Button color="link" style={{ verticalAlign: 'None' }} className={'m-0 p-0'} onClick={() => this.props.toggleEditMode()}>editing</Button> the paper.</i>
+                                                            <i>No research problems added yet. Please contribute by  <Button color="link" style={{ verticalAlign: 'None', fontStyle: 'italic' }} className={'m-0 p-0'} onClick={() => this.props.toggleEditMode()}>editing</Button> the paper.</i>
                                                         )}
                                                     </>
                                                 )

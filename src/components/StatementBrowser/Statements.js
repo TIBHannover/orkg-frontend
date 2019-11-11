@@ -30,6 +30,7 @@ class Statements extends Component {
 
     statements = () => {
         let propertyIds = Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource ? this.props.resources.byId[this.props.selectedResource].propertyIds : [];
+        let shared = Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource ? this.props.resources.byId[this.props.selectedResource].shared : 1;
 
         return (
             <ListGroup className={'listGroupEnlarge'}>
@@ -45,7 +46,7 @@ class Statements extends Component {
                                     key={'statement-' + index}
                                     index={index}
                                     isExistingProperty={property.isExistingProperty ? true : false}
-                                    enableEdit={this.props.enableEdit}
+                                    enableEdit={shared <= 1 ? this.props.enableEdit : false}
                                     syncBackend={this.props.syncBackend}
                                     isLastItem={propertyIds.length === index + 1}
                                     openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
@@ -61,7 +62,7 @@ class Statements extends Component {
                         </StyledStatementItem>
                     )}
 
-                {this.props.enableEdit ? <AddProperty syncBackend={this.props.syncBackend} /> : ''}
+                {shared <= 1 & this.props.enableEdit ? <AddProperty syncBackend={this.props.syncBackend} /> : ''}
             </ListGroup>
         );
     }
