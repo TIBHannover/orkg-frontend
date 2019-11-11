@@ -33,7 +33,7 @@ class Home extends Component {
                         <div className="flex-grow-1">
                             <h1 style={{fontSize: '2rem'}}>Open Research Knowledge Graph</h1>
                             <div className="mt-4" style={{maxWidth: 800}}>
-                                <p className="mb-0">The ORKG aims to describe research papers and contributions in a structured manner. With ORKG research contributions become findable and comparable. In order to add your own research, or to contribute,</p>
+                                <p className="mb-0">The ORKG aims to describe research papers and contributions in a structured manner. With the ORKG research contributions become findable and comparable. Click the button on the right to learn more.</p>
                             </div>
                         </div>
                         <div className="about-link flex-shrink-0 justify-content-center d-flex align-items-center">
