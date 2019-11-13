@@ -163,8 +163,7 @@ class Abstract extends Component {
     return false;
   }
 
-  handleNextClick = () => {
-    //TODO: add the annotated words as statements for the next step
+  handleInsertData = () => {
     let classesID = {};
     let createdProperties = {};
     let statements = { properties: [], values: [] };
@@ -204,11 +203,8 @@ class Abstract extends Component {
         return null;
       });
     }
-
     // Add the statements to the selected contribution
     this.props.prefillStatements({ statements, resourceId: this.props.contributions.byId[this.props.selectedContribution].resourceId });
-
-    //TODO: add the annotated words as statements in a specific contribution
     this.props.toggleAbstractDialog();
   };
 
@@ -238,75 +234,41 @@ class Abstract extends Component {
   };
 
   render() {
-    let rangeArray = toArray(this.props.ranges).filter(
-      (r) => (r.certainty >= this.state.certaintyThreshold)
-    );
-    let rangesClasses = [...new Set(rangeArray.map((r) => r.class.label))];
     return (
       <Modal isOpen={this.props.showAbstractDialog} toggle={this.props.toggleAbstractDialog} size="lg">
         <ModalHeader toggle={this.props.toggleAbstractDialog}>Abstract annotation</ModalHeader>
         <ModalBody>
           <div className={'clearfix'}>
-            {this.props.abstract &&
-              this.props.abstractDialogView === 'annotator' &&
-              !this.state.isAnnotationLoading &&
-              !this.state.isAnnotationFailedLoading && (
-                <div>
-                  {rangesClasses.length > 0 && (
-                    <Alert color="info">
-                      <strong>Info:</strong> we automatically annotated the abstract for you. Please remove
-                      any incorrect annotations
-                    </Alert>
-                  )}
-                  {rangesClasses.length === 0 && (
-                    <Alert color="info">
-                      <strong>Info:</strong> we could not find any concepts on the abstract. Please insert more text in the abstract.
-                    </Alert>
-                  )}
-                </div>
-              )}
-
-            {this.props.abstractDialogView === 'annotator' && !this.state.isAnnotationLoading && this.state.isAnnotationFailedLoading && (
-              <Alert color="light">
-                {this.state.annotationError ? this.state.annotationError : 'Failed to connect to the annotation service, please try again later'}
-              </Alert>
-            )}
-
-            {this.props.abstractDialogView === 'input' && !this.state.isAbstractLoading && this.state.isAbstractFailedLoading && (
-              <Alert color="light">
-                We couldn't fetch the abstract of the paper, please enter it manually or skip this step.
-              </Alert>
-            )}
-
-            <div>
-              <div>
-                {(this.state.isAbstractLoading || this.state.isAnnotationLoading) && (
-                  <div className="text-center text-primary">
-                    <span style={{ fontSize: 80 }}>
-                      <Icon icon={faSpinner} spin />
-                    </span>
-                    <br />
-                    <h2 className="h5">{this.state.isAbstractLoading ? 'Loading abstract...' : 'Loading annotations...'}</h2>
-                  </div>
-                )}
-
-
-                {this.props.abstractDialogView === 'annotator' ? (
-                  <AbstractAnnotatorView
-                    certaintyThreshold={this.state.certaintyThreshold}
-                    isAbstractLoading={this.state.isAbstractLoading}
-                    isAnnotationLoading={this.state.isAnnotationLoading}
-                    isAnnotationFailedLoading={this.state.isAnnotationFailedLoading}
-                    handleChangeCertaintyThreshold={this.handleChangeCertaintyThreshold}
-                    classOptions={this.state.classOptions}
-                    handleChangeClassOptions={this.handleChangeClassOptions}
-                  />
-                ) : (
-                    <AbstractInputView validation={this.state.validation} classOptions={this.state.classOptions} />
-                  )}
+            {(this.state.isAbstractLoading || this.state.isAnnotationLoading) && (
+              <div className="text-center text-primary">
+                <span style={{ fontSize: 80 }}>
+                  <Icon icon={faSpinner} spin />
+                </span>
+                <br />
+                <h2 className="h5">{this.state.isAbstractLoading ? 'Loading abstract...' : 'Loading annotations...'}</h2>
               </div>
-            </div>
+            )}
 
+
+            {this.props.abstractDialogView === 'annotator' ? (
+              <AbstractAnnotatorView
+                certaintyThreshold={this.state.certaintyThreshold}
+                isAbstractLoading={this.state.isAbstractLoading}
+                isAnnotationLoading={this.state.isAnnotationLoading}
+                isAnnotationFailedLoading={this.state.isAnnotationFailedLoading}
+                handleChangeCertaintyThreshold={this.handleChangeCertaintyThreshold}
+                classOptions={this.state.classOptions}
+                handleChangeClassOptions={this.handleChangeClassOptions}
+                annotationError={this.state.annotationError}
+              />
+            ) : (
+                <AbstractInputView
+                  validation={this.state.validation}
+                  classOptions={this.state.classOptions}
+                  isAbstractLoading={this.state.isAbstractLoading}
+                  isAbstractFailedLoading={this.state.isAbstractFailedLoading}
+                />
+              )}
           </div>
           <hr className="mt-5 mb-3" />
 
@@ -319,7 +281,7 @@ class Abstract extends Component {
             </>
           ) : (
               <>
-                <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>
+                <Button color="primary" className="float-right mb-4" onClick={this.handleInsertData}>
                   Insert Data
                 </Button>
 

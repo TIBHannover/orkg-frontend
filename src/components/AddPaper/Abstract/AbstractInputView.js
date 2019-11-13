@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Label, FormFeedback } from 'reactstrap';
+import { Label, FormFeedback, Alert } from 'reactstrap';
 import Textarea from 'react-textarea-autosize';
 import { updateAbstract } from '../../../actions/addPaper';
 import { connect } from 'react-redux';
@@ -28,6 +28,12 @@ class AbstractInputView extends Component {
     render() {
         return (
             <div>
+                {!this.props.isAbstractLoading && this.props.isAbstractFailedLoading && (
+                    <Alert color="light">
+                        We couldn't fetch the abstract of the paper, please enter it manually or skip this step.
+                    </Alert>
+                )}
+
                 <Label for="paperAbstract">
                     <Tooltip message="Enter the paper abstract to get automatically generated concepts for you paper.">
                         Enter the paper abstract
@@ -56,6 +62,8 @@ AbstractInputView.propTypes = {
     abstract: PropTypes.string.isRequired,
     updateAbstract: PropTypes.func.isRequired,
     validation: PropTypes.bool.isRequired,
+    isAbstractLoading: PropTypes.bool.isRequired,
+    isAbstractFailedLoading: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({

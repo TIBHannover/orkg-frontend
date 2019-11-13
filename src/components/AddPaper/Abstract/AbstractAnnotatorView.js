@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Tooltip from '../../Utils/Tooltip';
 import { submitGetRequest, createPredicate, predicatesUrl } from '../../../network';
-import { Badge } from 'reactstrap';
+import { Badge, Alert } from 'reactstrap';
 import capitalize from 'capitalize';
 import Tippy from '@tippy.js/react';
 import { connect } from 'react-redux';
@@ -84,6 +84,29 @@ class AbstractAnnotatorView extends Component {
         let rangesClasses = [...new Set(rangeArray.map((r) => r.class.label))];
         return (
             <div className="pl-2 pr-2">
+                {this.props.abstract &&
+                    !this.props.isAnnotationLoading &&
+                    !this.props.isAnnotationFailedLoading && (
+                        <div>
+                            {rangesClasses.length > 0 && (
+                                <Alert color="info">
+                                    <strong>Info:</strong> we automatically annotated the abstract for you. Please remove
+                                    any incorrect annotations
+                                </Alert>
+                            )}
+                            {rangesClasses.length === 0 && (
+                                <Alert color="info">
+                                    <strong>Info:</strong> we could not find any concepts on the abstract. Please insert more text in the abstract.
+                                </Alert>
+                            )}
+                        </div>
+                    )}
+
+                {!this.props.isAnnotationLoading && this.props.isAnnotationFailedLoading && (
+                    <Alert color="light">
+                        {this.props.annotationError ? this.props.annotationError : 'Failed to connect to the annotation service, please try again later'}
+                    </Alert>
+                )}
                 {!this.props.isAbstractLoading && !this.props.isAnnotationLoading && (
                     <div>
 
@@ -194,6 +217,7 @@ class AbstractAnnotatorView extends Component {
 
 
 AbstractAnnotatorView.propTypes = {
+    abstract: PropTypes.string.isRequired,
     ranges: PropTypes.object.isRequired,
     certaintyThreshold: PropTypes.array.isRequired,
     classOptions: PropTypes.array.isRequired,
@@ -203,10 +227,12 @@ AbstractAnnotatorView.propTypes = {
     handleChangeCertaintyThreshold: PropTypes.func.isRequired,
     handleChangeClassOptions: PropTypes.func.isRequired,
     theme: PropTypes.object.isRequired,
+    annotationError: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
     ranges: state.addPaper.ranges,
+    abstract: state.addPaper.abstract,
 });
 
 const mapDispatchToProps = (dispatch) => ({
