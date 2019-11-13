@@ -39,6 +39,10 @@ const Help = styled.div`
         line-height: 56px; 
         font-size: large;
     }
+
+    .white{
+        color:#fff;
+    }
 `;
 
 const HelpIcon = styled(Icon)`
@@ -237,7 +241,7 @@ class AddPaper extends Component {
                     <HelpIcon
                         icon={faQuestion}
                     />
-                    <div className={'text'}>Help</div>
+                    <div className={'text ' + (this.props.showAbstractDialog ? 'white' : '')}>Help</div>
                 </Help>
 
 
@@ -257,7 +261,8 @@ AddPaper.propTypes = {
     openTour: PropTypes.func.isRequired,
     closeTour: PropTypes.func.isRequired,
     blockNavigation: PropTypes.func.isRequired,
-    theme: PropTypes.object.isRequired
+    theme: PropTypes.object.isRequired,
+    showAbstractDialog: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -267,6 +272,7 @@ const mapStateToProps = (state) => ({
     authors: state.addPaper.authors,
     shouldBlockNavigation: state.addPaper.shouldBlockNavigation,
     paperNewResourceId: state.addPaper.paperNewResourceId,
+    showAbstractDialog: state.addPaper.showAbstractDialog,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -6,7 +6,6 @@ import {
   updateAbstract, nextStep, previousStep, createContribution, prefillStatements, createAnnotation, clearAnnotations,
   toggleAbstractDialog, setAbstractDialogView
 } from '../../../actions/addPaper';
-import { withCookies, Cookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import AbstractAnnotator from './AbstractAnnotator';
@@ -20,6 +19,7 @@ import { Range, getTrackBackground } from 'react-range';
 import toArray from 'lodash/toArray';
 import randomcolor from 'randomcolor';
 import capitalize from 'capitalize';
+import Tippy from '@tippy.js/react';
 
 
 class Abstract extends Component {
@@ -267,6 +267,12 @@ class Abstract extends Component {
     this.setState({ validation: true });
   };
 
+
+  handleViewListAnnotation = () => {
+    this.props.setAbstractDialogView('list');
+  };
+
+
   handleChange = (event) => {
     this.props.updateAbstract(event.target.value);
   };
@@ -306,179 +312,181 @@ class Abstract extends Component {
       <Modal isOpen={this.props.showAbstractDialog} toggle={this.props.toggleAbstractDialog} size="lg">
         <ModalHeader toggle={this.props.toggleAbstractDialog}>Abstract annotation</ModalHeader>
         <ModalBody>
-          {this.props.abstract &&
-            this.props.abstractDialogView === 'annotator' &&
-            !this.state.isAnnotationLoading &&
-            !this.state.isAnnotationFailedLoading && (
-              <div>
-                {rangesClasses.length > 0 && (
-                  <Alert color="info">
-                    <strong>Info:</strong> we automatically annotated the abstract for you. Please remove
-                    any incorrect annotations
-                  </Alert>
-                )}
-                {rangesClasses.length === 0 && (
-                  <Alert color="info">
-                    <strong>Info:</strong> we could not find any concepts on the abstract. Please insert more text in the abstract.
-                  </Alert>
-                )}
-              </div>
-            )}
-
-          {this.props.abstractDialogView === 'annotator' && !this.state.isAnnotationLoading && this.state.isAnnotationFailedLoading && (
-            <Alert color="light">
-              {this.state.annotationError ? this.state.annotationError : 'Failed to connect to the annotation service, please try again later'}
-            </Alert>
-          )}
-
-          {this.props.abstractDialogView === 'input' && !this.state.isAbstractLoading && this.state.isAbstractFailedLoading && (
-            <Alert color="light">
-              We couldn't fetch the abstract of the paper, please enter it manually or skip this step.
-            </Alert>
-          )}
-
-          <div>
-            <div>
-              {(this.state.isAbstractLoading || this.state.isAnnotationLoading) && (
-                <div className="text-center text-primary">
-                  <span style={{ fontSize: 80 }}>
-                    <Icon icon={faSpinner} spin />
-                  </span>
-                  <br />
-                  <h2 className="h5">{this.state.isAbstractLoading ? 'Loading abstract...' : 'Loading annotations...'}</h2>
+          <div className={'clearfix'}>
+            {this.props.abstract &&
+              this.props.abstractDialogView === 'annotator' &&
+              !this.state.isAnnotationLoading &&
+              !this.state.isAnnotationFailedLoading && (
+                <div>
+                  {rangesClasses.length > 0 && (
+                    <Alert color="info">
+                      <strong>Info:</strong> we automatically annotated the abstract for you. Please remove
+                      any incorrect annotations
+                    </Alert>
+                  )}
+                  {rangesClasses.length === 0 && (
+                    <Alert color="info">
+                      <strong>Info:</strong> we could not find any concepts on the abstract. Please insert more text in the abstract.
+                    </Alert>
+                  )}
                 </div>
               )}
 
+            {this.props.abstractDialogView === 'annotator' && !this.state.isAnnotationLoading && this.state.isAnnotationFailedLoading && (
+              <Alert color="light">
+                {this.state.annotationError ? this.state.annotationError : 'Failed to connect to the annotation service, please try again later'}
+              </Alert>
+            )}
 
-              {this.props.abstractDialogView === 'annotator' ? (
-                <div className="pl-2 pr-2">
-                  {!this.state.isAbstractLoading && !this.state.isAnnotationLoading && (
-                    <div>
+            {this.props.abstractDialogView === 'input' && !this.state.isAbstractLoading && this.state.isAbstractFailedLoading && (
+              <Alert color="light">
+                We couldn't fetch the abstract of the paper, please enter it manually or skip this step.
+              </Alert>
+            )}
 
-                      <div id="annotationBadges">
-                        <Tooltip className={'mr-2'} message="Annotation labels are the properties that will be used in the contribution data.">
-                          Annotation labels
-                        </Tooltip>
-                        <span className={'mr-1 ml-1'} />
-                        {rangesClasses.length > 0 &&
-                          rangesClasses.map((c) => {
-                            let aconcept = c ? this.automaticAnnotationConcepts.filter(function (e) { return e.label.toLowerCase() === c.toLowerCase(); }) : []
-                            if (c && aconcept.length > 0) {
-                              return (
-                                <Tooltip hideDefaultIcon={true} message={aconcept[0].description}>
+            <div>
+              <div>
+                {(this.state.isAbstractLoading || this.state.isAnnotationLoading) && (
+                  <div className="text-center text-primary">
+                    <span style={{ fontSize: 80 }}>
+                      <Icon icon={faSpinner} spin />
+                    </span>
+                    <br />
+                    <h2 className="h5">{this.state.isAbstractLoading ? 'Loading abstract...' : 'Loading annotations...'}</h2>
+                  </div>
+                )}
+
+
+                {this.props.abstractDialogView === 'annotator' ? (
+                  <div className="pl-2 pr-2">
+                    {!this.state.isAbstractLoading && !this.state.isAnnotationLoading && (
+                      <div>
+
+                        <div id="annotationBadges">
+                          <Tooltip className={'mr-2'} message="Annotation labels are the properties that will be used in the contribution data.">
+                            Annotation labels
+                          </Tooltip>
+                          <span className={'mr-1 ml-1'} />
+                          {rangesClasses.length > 0 &&
+                            rangesClasses.map((c) => {
+                              let aconcept = c ? this.automaticAnnotationConcepts.filter(function (e) { return e.label.toLowerCase() === c.toLowerCase(); }) : []
+                              if (c && aconcept.length > 0) {
+                                return (
+                                  <Tippy key={`c${c}`} hideDefaultIcon={true} content={aconcept[0].description}>
+                                    <span>
+                                      <Badge
+                                        className={'mr-2'}
+                                        style={{ cursor: 'pointer', marginBottom: '4px', color: '#333', background: this.getClassColor(c) }}
+                                      >
+                                        {c ? capitalize(c) : 'Unlabeled'} <Badge pill color="secondary">{rangeArray.filter((rc) => rc.class.label === c).length}</Badge>
+                                      </Badge>
+                                    </span>
+                                  </Tippy>
+                                );
+                              } else {
+                                return (
                                   <Badge
                                     className={'mr-2'}
                                     key={`c${c}`}
-                                    style={{ cursor: 'pointer', marginBottom: '4px', color: '#333', background: this.getClassColor(c) }}
+                                    style={{ marginBottom: '4px', color: '#333', background: this.getClassColor(c) }}
                                   >
                                     {c ? capitalize(c) : 'Unlabeled'} <Badge pill color="secondary">{rangeArray.filter((rc) => rc.class.label === c).length}</Badge>
                                   </Badge>
-                                </Tooltip>
-                              );
-                            } else {
-                              return (
-                                <Badge
-                                  className={'mr-2'}
-                                  key={`c${c}`}
-                                  style={{ marginBottom: '4px', color: '#333', background: this.getClassColor(c) }}
-                                >
-                                  {c ? capitalize(c) : 'Unlabeled'} <Badge pill color="secondary">{rangeArray.filter((rc) => rc.class.label === c).length}</Badge>
-                                </Badge>
-                              );
-                            }
-                          })}
+                                );
+                              }
+                            })}
+                        </div>
+                        <AbstractAnnotator
+                          certaintyThreshold={this.state.certaintyThreshold[0]}
+                          classOptions={this.state.classOptions}
+                          getClassColor={this.getClassColor}
+                        />
                       </div>
-                      <AbstractAnnotator
-                        certaintyThreshold={this.state.certaintyThreshold[0]}
-                        classOptions={this.state.classOptions}
-                        getClassColor={this.getClassColor}
+                    )}
+                  </div>
+                ) : (
+                    <div>
+                      <Label for="paperAbstract">
+                        <Tooltip message="Enter the paper abstract to get automatically generated concepts for you paper.">
+                          Enter the paper abstract
+                        </Tooltip>
+                      </Label>
+                      <Textarea
+                        id="paperAbstract"
+                        className={`form-control pl-2 pr-2 ${!this.state.validation ? 'is-invalid' : ''}`}
+                        minRows={5}
+                        value={this.props.abstract}
+                        onChange={this.handleChange}
+                        onPaste={this.stripLineBreaks}
                       />
+                      {!this.state.validation &&
+                        <FormFeedback className="order-1">
+                          Please enter the abstract or skip this step.
+                        </FormFeedback>
+                      }
                     </div>
                   )}
-                </div>
-              ) : (
-                  <div>
-                    <Label for="paperAbstract">
-                      <Tooltip message="Enter the paper abstract to get automatically generated concepts for you paper.">
-                        Enter the paper abstract
-                      </Tooltip>
-                    </Label>
-                    <Textarea
-                      id="paperAbstract"
-                      className={`form-control pl-2 pr-2 ${!this.state.validation ? 'is-invalid' : ''}`}
-                      minRows={5}
-                      value={this.props.abstract}
-                      onChange={this.handleChange}
-                      onPaste={this.stripLineBreaks}
-                    />
-                    {!this.state.validation &&
-                      <FormFeedback className="order-1">
-                        Please enter the abstract or skip this step.
-                      </FormFeedback>
-                    }
-                  </div>
-                )}
-            </div>
-          </div>
-
-          {this.props.abstractDialogView === 'annotator' && !this.state.isAbstractLoading && !this.state.isAnnotationLoading &&
-            !this.state.isAnnotationFailedLoading && toArray(this.props.ranges).length > 0 && (
-              <div className={'col-3 float-right'}>
-                <div className={'mt-4'}>
-                  <Range
-                    step={0.025}
-                    min={0}
-                    max={1}
-                    values={this.state.certaintyThreshold}
-                    onChange={(values) => this.setState({ certaintyThreshold: values })}
-                    renderTrack={({ props, children }) => (
-                      <div
-                        {...props}
-                        style={{
-                          ...props.style,
-                          height: '6px',
-                          width: '100%',
-                          background: getTrackBackground({
-                            values: this.state.certaintyThreshold,
-                            colors: [
-                              this.props.theme.orkgPrimaryColor,
-                              this.props.theme.ultraLightBlueDarker,
-                            ],
-                            min: 0,
-                            max: 1,
-                          }),
-                        }}
-                      >
-                        {children}
-                      </div>
-                    )}
-                    renderThumb={({ props }) => (
-                      <div
-                        {...props}
-                        style={{
-                          ...props.style,
-                          height: '20px',
-                          width: '20px',
-                          borderRadius: '4px',
-                          backgroundColor: '#FFF',
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          boxShadow: '0px 2px 6px #AAA',
-                        }}
-                      />
-                    )}
-                  />
-                  <div className={'mt-2 text-center'}>
-                    <span className={'mr-2'}>Certainty {this.state.certaintyThreshold[0].toFixed(2)}</span>
-                    <Tooltip trigger={'click'} hideDefaultIcon={true} message="Here you can adjust the certainty value, that means at which level you accept the confidence ratio of automatic annotations. Only the shown annotations will be used to create the contribution data in the next step.">
-                      <Icon style={{ cursor: 'pointer' }} className={'text-primary'} icon={faQuestionCircle} />
-                    </Tooltip>
-                  </div>
-                </div>
               </div>
-            )}
+            </div>
 
+            {this.props.abstractDialogView === 'annotator' && !this.state.isAbstractLoading && !this.state.isAnnotationLoading &&
+              !this.state.isAnnotationFailedLoading && toArray(this.props.ranges).length > 0 && (
+                <div className={'col-3 float-right'}>
+                  <div className={'mt-4'}>
+                    <Range
+                      step={0.025}
+                      min={0}
+                      max={1}
+                      values={this.state.certaintyThreshold}
+                      onChange={(values) => this.setState({ certaintyThreshold: values })}
+                      renderTrack={({ props, children }) => (
+                        <div
+                          {...props}
+                          style={{
+                            ...props.style,
+                            height: '6px',
+                            width: '100%',
+                            background: getTrackBackground({
+                              values: this.state.certaintyThreshold,
+                              colors: [
+                                this.props.theme.orkgPrimaryColor,
+                                this.props.theme.ultraLightBlueDarker,
+                              ],
+                              min: 0,
+                              max: 1,
+                            }),
+                          }}
+                        >
+                          {children}
+                        </div>
+                      )}
+                      renderThumb={({ props }) => (
+                        <div
+                          {...props}
+                          style={{
+                            ...props.style,
+                            height: '20px',
+                            width: '20px',
+                            borderRadius: '4px',
+                            backgroundColor: '#FFF',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            boxShadow: '0px 2px 6px #AAA',
+                          }}
+                        />
+                      )}
+                    />
+                    <div className={'mt-2 text-center'}>
+                      <span className={'mr-2'}>Certainty {this.state.certaintyThreshold[0].toFixed(2)}</span>
+                      <Tooltip trigger={'click'} hideDefaultIcon={true} message="Here you can adjust the certainty value, that means at which level you accept the confidence ratio of automatic annotations. Only the shown annotations will be used to create the contribution data in the next step.">
+                        <Icon style={{ cursor: 'pointer' }} className={'text-primary'} icon={faQuestionCircle} />
+                      </Tooltip>
+                    </div>
+                  </div>
+                </div>
+              )}
+          </div>
           <hr className="mt-5 mb-3" />
 
 
@@ -524,7 +532,6 @@ Abstract.propTypes = {
   resources: PropTypes.object.isRequired,
   properties: PropTypes.object.isRequired,
   values: PropTypes.object.isRequired,
-  cookies: PropTypes.instanceOf(Cookies).isRequired,
   showAbstractDialog: PropTypes.bool.isRequired,
   toggleAbstractDialog: PropTypes.func.isRequired,
   setAbstractDialogView: PropTypes.func.isRequired,
@@ -562,6 +569,5 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps,
   ),
-  withTheme,
-  withCookies
+  withTheme
 )(Abstract);
