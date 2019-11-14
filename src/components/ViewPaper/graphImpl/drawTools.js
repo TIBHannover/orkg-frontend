@@ -297,6 +297,6 @@ function shapeBasedIntersectionPoint(config, element, offsetDirection, distOffse
         IntPoint.y = element.y + (scale * distanceToBorderY * offsetDirection.y);
         return IntPoint;
     }
-}
+}// end of function definition;
 
 

@@ -6,9 +6,7 @@ import Edge from './elements/Edges'
 import Property from './elements/Property'
 import MinimumSpanningTree from './mst';
 import Layout from './Layout'
-
 import Navigation from './Navigation';
-// import options from './options';
 
 export default class GraphVis {
     constructor(props) {
@@ -36,14 +34,12 @@ export default class GraphVis {
         this.createRenderingElements = this.createRenderingElements.bind(this);
         this.drawRenderingElements = this.drawRenderingElements.bind(this);
 
-
         this.drawGraph = this.drawGraph.bind(this);
         this.computeDepth = this.computeDepth.bind(this);
         this.clearGraphData = this.clearGraphData.bind(this);
 
         this.zoomToExtent = this.zoomToExtent.bind(this);
         this.getMaxDepth = this.getMaxDepth.bind(this);
-
 
         this.filterGraphByDepth = this.filterGraphByDepth.bind(this);
         this.redrawGraph = this.redrawGraph.bind(this);
@@ -52,13 +48,9 @@ export default class GraphVis {
 
         this.renderedNodes = undefined;
         this.maxDepth = -1;
-        // this.currentRenderedDepth = -1;
-
     }
 
-
     updateLayout(value) {
-        console.log('>>> Updating Layout to ' + value);
         this.layout.layoutType(value);
         this.layout.initializeLayoutEngine();
         this.layout.initializePositions(this.mst.getRoot(), true);
@@ -66,7 +58,6 @@ export default class GraphVis {
     }
 
     filterGraphByDepth(depth) {
-        console.log('want to filter graph by depth ' + depth);
         let newNodes = [];
         this.classNodes.forEach(node => {
             if (node.getDepth() > depth) {
@@ -159,7 +150,6 @@ export default class GraphVis {
 
     }
 
-
     zoomToExtent() {
         // forwarding function to bee called form outside;
         this.nav.zoomToExtent();
@@ -196,10 +186,8 @@ export default class GraphVis {
         }
 
         if (this.nodes.length > 0) {
-
             // create the nodes and edges using the provided data;
             let classNodes = [];
-            // lets create a single node;
             let iterator = 0;
             this.nodes.forEach(node => {
                 const aNode = this.createNode(node);
@@ -220,9 +208,7 @@ export default class GraphVis {
 
 
             const rootNode = this.computeDepth();
-            console.log(rootNode);
             this.layout.initializePositions(rootNode);
-            // this.currentRenderedDepth = this.maxDepth;
             this.drawGraph();
 
             this.layout.initializeLayoutEngine();
@@ -231,9 +217,6 @@ export default class GraphVis {
     }
 
     computeDepth() {
-        console.log('Computing Depth');
-        console.log(this.classNodes);
-        console.log(this.links);
         this.mst.setNodes(this.classNodes);
         this.mst.setLinks(this.links);
         this.maxDepth = this.mst.computeMinimumSpanningTree();
@@ -260,7 +243,6 @@ export default class GraphVis {
             } else {
                 d3.select(this).remove();
             }
-            // console.log(item.id() + ' has pos' + item.x + ' ' + item.y);
         });
     }
 
@@ -297,7 +279,6 @@ export default class GraphVis {
     }
 
     createEdge(edge_data, iterator) {
-
         const property = new Property({configObject: this.graphOptions.edgeConfig()});
         property.setLabel(edge_data.label);
         property.id(property.id() + iterator);
@@ -313,13 +294,11 @@ export default class GraphVis {
         property.setPosition(rx * 300, ry * 300);
 
         // create that link;
-
         const link = new Edge({configObject: this.graphOptions.edgeConfig()});
         link.domainNode(srcNode);
         link.propertyNode(property);
         link.rangeNode(tarNode);
         if (tarNode.type() === 'literal') {
-            console.log('Setting This link to be DatatypeLink');
             link.type('datatypeLink');
             link.setConfigObj(this.graphOptions.datatypeLinkConfig());
             property.type('datatypeProperty');
@@ -335,11 +314,9 @@ export default class GraphVis {
         tarNode.addLinkElement(property);
 
         property.linkElement(link);
-
         this.links.push(link);
 
         return property;
-
     }
 
     createNode(node_data) {
@@ -353,7 +330,6 @@ export default class GraphVis {
                 node.visible(false);
             }
         }
-
         // append to map;
         this.nodeMap[node_data.id] = node;
         return node;
@@ -363,4 +339,4 @@ export default class GraphVis {
         this.nav.initializeRendering();
     }
 
-}
+}// end of class definition

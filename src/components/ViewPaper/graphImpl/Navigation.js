@@ -1,13 +1,11 @@
 import * as d3 from 'd3';
 
-
 export default class Navigation {
     constructor(props) {
         this.graph = props.graph;
         this.layout = props.graph.layout;
 
         // variables;
-
         this.dragBehaviour = undefined;
         this.zoom = undefined;
 
@@ -23,19 +21,14 @@ export default class Navigation {
 
         this.clearData = this.clearData.bind(this);
 
-
         //helper functions
-
         this.waitForForce = this.waitForForce.bind(this);
-
         this.transform = this.transform.bind(this);
         this.getWorldPosFromScreen = this.getWorldPosFromScreen.bind(this);
-
 
         this.intervalTimer = null;
         this.intervalWaiter = this.intervalWaiter.bind(this);
         this.clearIterativeWaiter = this.clearIterativeWaiter.bind(this);
-
     }
 
     clearIterativeWaiter() {
@@ -68,10 +61,8 @@ export default class Navigation {
     clearData() {
         delete this.dragBehaviour;
         delete this.zoom;
-        // delete references to graph?
         delete this.graph;
         delete this.layout;
-
     }
 
     getDragBehaviour() {
@@ -114,9 +105,7 @@ export default class Navigation {
                 d.fixed = false;
             });
 
-
         // Apply the zooming factor.
-
         this.zoom = d3.behavior.zoom()
             .duration(150)
             .scaleExtent([0.02, 5])
@@ -140,7 +129,6 @@ export default class Navigation {
         if (graph.graphRoot) {
             that.zoom.event(graph.graphRoot);
         }
-
     }
 
     zoomed() {
@@ -188,7 +176,6 @@ export default class Navigation {
             this.waitForForce();
             return;
         }
-
         // save some vars
         const graph = this.graph;
         const that = this;
@@ -273,7 +260,6 @@ export default class Navigation {
     }
 
     /** Helper functions **/
-
     getWorldPosFromScreen(x, y, translate, scale) {
         // have to check if scale is array or value >> temp variable
         let temp = scale[0], xn, yn;
@@ -295,6 +281,4 @@ export default class Navigation {
         parent.zoom.scale(parent.zoomFactor);
         return 'translate(' + parent.graphTranslation[0] + ',' + parent.graphTranslation[1] + ')scale(' + parent.zoomFactor + ')';
     }
-
-
-}
+} // end of class definition

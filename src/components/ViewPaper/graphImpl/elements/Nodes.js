@@ -49,7 +49,6 @@ export default class Node extends BaseElement {
         }).attr('transform', 'translate(' + f_x + ',' + f_y + ')');
     }
 
-
     filterCollapsedLinks() {
         let linksToDraw = [];
         this.outgoingLink.forEach(link => {

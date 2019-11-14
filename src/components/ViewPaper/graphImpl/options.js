@@ -1,6 +1,5 @@
 export default class Options {
     constructor() {
-
         this.layerObject = [];
         this._renderingStyle = 'vowl'; // possible vowl, uml
 
@@ -11,11 +10,8 @@ export default class Options {
         this.edgeConfig = this.edgeConfig.bind(this);
         this.datatypeConfig = this.datatypeConfig.bind(this);
         this.datatypeLinkConfig = this.datatypeLinkConfig.bind(this);
-
         this.renderingStyle = this.renderingStyle.bind(this);
-
     }
-
 
     renderingStyle(val) {
         if (!arguments.length) {
@@ -27,7 +23,6 @@ export default class Options {
     loadDefaultOptions() {
         this.loadLayerOptions();
     }
-
 
     loadLayerOptions() {
         // defines on which layer nodes/links and the properties

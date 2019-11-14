@@ -1,12 +1,10 @@
 import DrawTools from './drawTools';
 import * as d3 from 'd3';
 
-
 export default class Layout {
     constructor(props) {
         // prop Vars;
         this.graph = props.graph;
-
 
         this._layoutType = 'treeH'; // possible force, treeH, treeV;
         this.layoutSize = [0, 0];
@@ -15,7 +13,6 @@ export default class Layout {
         this.forceNodes = [];
         this.tree = undefined;
         this.treeData = [];
-
         this.treeMap = {};
 
         // functions
@@ -32,7 +29,6 @@ export default class Layout {
         this.updateLayoutSize = this.updateLayoutSize.bind(this);
     }
 
-
     resumeForce() {
         if (this.force) {
             this.force.resume();
@@ -48,15 +44,12 @@ export default class Layout {
             delete this.graph;
             delete this.treeData;
             delete this.treeMap;
-            console.log('Deleted layout data');
         }
     }
 
     createTreeData() {
         // get the root node
         let rootNode = this.graph.mst.getRoot();
-        console.log('We have root node');
-        console.log(rootNode);
 
         // create the tree data for that thing;
         this.treeData = [];
@@ -122,11 +115,8 @@ export default class Layout {
                 rootNode.px = rootNode.x;
                 rootNode.py = rootNode.y;
 
-                // This could be a part of setting the center of gravity for the layout >> need d3.v5 or so
-                // if (this.force) {
-                //   console.log('Setting that Center for the force layout');
-                //   this.force.center([rootNode.x, rootNode.y]);
-                // }
+                // TODO: This could be a part of setting the center of gravity for the layout >> need d3.v5 or so
+                // the call should be this.force.center([rootNode.x, rootNode.y]);
             }
             let expandArray = [];
             expandArray.push(rootNode);
@@ -147,13 +137,11 @@ export default class Layout {
         }
         if (this._layoutType === 'treeH' || this._layoutType === 'treeV') {
             if (!this.tree) {
-                console.log('Okay this is somehow strange');
                 this.createTreeData();
             }
             this.tree.size(this.layoutSize); // updates if there is something new
 
             let rt = this.treeData[0];
-
 
             if (this._layoutType === 'treeV') {
                 this.tree.nodeSize([220, 200]);
@@ -163,7 +151,6 @@ export default class Layout {
             }
 
             let temp = this.tree.nodes(rt).reverse();
-
 
             // set positions;
             temp.forEach(item => {
@@ -176,13 +163,10 @@ export default class Layout {
                 }
             });
 
-
             if (layoutChange) {
                 this.makeLayoutTransition();
                 this.graph.nav.zoomToExtent();
             }
-
-
         }
     }
 
@@ -191,16 +175,13 @@ export default class Layout {
         let max = this.graph.classNodes.length - 1;
         this.graph.classNodes.forEach(node => {
             node.startLayoutTransition(id++, max, this.graph.zoomToExtent);
-
-
-        })
-
+        });
     }
 
     recalculatePositions() {
         this.graph.classNodes.forEach(node => {
             node.updateDrawPosition();
-        })
+        });
     }
 
     createForceElements() {
@@ -262,8 +243,6 @@ export default class Layout {
         if (node.incommingLink.length > 1) {
             multiParent = true;
         }
-
-
         if (children.length !== 0) {
             if (parent === undefined && multiParent === false) { // we dont have any other restrictions, use the full  circle
                 // compute new positions;
@@ -280,7 +259,6 @@ export default class Layout {
                     }
                 });
             } else { // we have to see our direction;
-
                 let angularSpace = [];
                 // do we have only one parent?
                 if (singleParent && parent) {
@@ -330,7 +308,6 @@ export default class Layout {
                         }
                     }
 
-
                     let startAngle = 0;
                     let aOffset = (maxDistance - 0.5 * maxDistance) / (children.length);
                     if (indexInSpace === angularDistances.length - 1) {
@@ -360,5 +337,4 @@ export default class Layout {
         }
     }
 
-
-}
+}// end of class definition

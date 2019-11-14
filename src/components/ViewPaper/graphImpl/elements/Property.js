@@ -28,20 +28,19 @@ export default class Property extends BaseElement {
         this.link = d;
     };
 
-
     domainNode = function (d) {
         if (!arguments.length) {
             return this.domain;
         }
         this.domain = d;
     };
+
     rangeNode = function (r) {
         if (!arguments.length) {
             return this.range;
         }
         this.range = r;
     };
-
 
     render(parentNode) {
         this.svgRoot = parentNode;

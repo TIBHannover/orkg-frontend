@@ -141,7 +141,6 @@ export default class BaseElement {
         console.log('to be inherited from others');
     };
 
-
     getExpectedShapeSize(cfg) {
         let retValue = {};
         if (cfg.fontSizeOverWritesShapeSize === 'true') {
@@ -176,7 +175,6 @@ export default class BaseElement {
         return retValue;
     }
 
-
     updateTextPosition() {
         if (this.renderingText) {
             const textWidth = DrawTools().measureTextWidth(this.renderingText.text(), this.renderConfig.fontFamily, this.renderConfig.fontSize);
@@ -208,4 +206,4 @@ export default class BaseElement {
     };
 
 
-}
+} // end of class definition

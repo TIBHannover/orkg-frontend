@@ -11,11 +11,11 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes';
 import moment from 'moment'
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import ComparisonPopup from './ComparisonPopup';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import { loadPaper, selectContribution } from '../../actions/viewPaper';
-import GraphViewModal from './GraphViewModal';
+// import GraphViewModal from './GraphViewModal'; // old Graph View Modal
 import GizmoGraphViewModal from './GizmoGraphViewModal';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
@@ -210,9 +210,9 @@ class ViewPaper extends Component {
 
     handleCreateContribution = async () => {
         let newContribution = await createResource(`Contribution ${this.state.contributions.length + 1}`);
-        let statement = await createResourceStatement(this.props.match.params.resourceId, process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION, newContribution.id)
-        this.setState({ contributions: [...this.state.contributions, { ...statement.object, statementId: statement.id }] })
-        toast.success('Contribution cratead successfully');
+        let statement = await createResourceStatement(this.props.match.params.resourceId, process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION, newContribution.id);
+        this.setState({ contributions: [...this.state.contributions, { ...statement.object, statementId: statement.id }] });
+        toast.success('Contribution created successfully');
     };
 
     toggleDeleteContribution = async (contributionId) => {

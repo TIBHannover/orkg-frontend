@@ -33,6 +33,7 @@ export default class MinimumSpanningTree {
     computeMinimumSpanningTree() {
         // find root node;
         let rootCandidates = [];
+        let propagateArray = [];
         this.nodes.forEach(node => {
             if (node.incommingLink.length === 0) {
                 rootCandidates.push(node);
@@ -42,7 +43,7 @@ export default class MinimumSpanningTree {
         if (rootCandidates.length === 1) {
             this.rootNode = rootCandidates[0];
         }
-        let propagateArray = [];
+
         rootCandidates.forEach(root => {
             root.setDepth(1);
             propagateArray.push(root);

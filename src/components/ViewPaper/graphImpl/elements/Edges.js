@@ -78,4 +78,4 @@ export default class Edge extends BaseElement {
         return [fixPoint1, fixPoint2, fixPoint3];
     }
 
-}
+} // end of class definition

@@ -8,7 +8,6 @@ import {Modal, ModalHeader, ModalBody, Input, Form, FormGroup, Label, Button} fr
 import uniqBy from 'lodash/uniqBy';
 import {FontAwesomeIcon as Icon} from '@fortawesome/react-fontawesome';
 import {faSpinner, faProjectDiagram, faAngleDoubleLeft, faAngleDoubleUp} from '@fortawesome/free-solid-svg-icons';
-// import 'vis-network/dist/vis-network.min.css';
 import {Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
 
 class GraphView extends Component {
@@ -38,7 +37,6 @@ class GraphView extends Component {
         window.addEventListener('resize', this.updateDimensions);
         this.updateDimensions();
         this.seenDepth = this.state.depth;
-
     };
 
     componentDidUpdate = (prevProps, prevState) => {
@@ -48,22 +46,16 @@ class GraphView extends Component {
                 // console.log('Blocking reloading the data stuff ');
                 this.child.current.filterGraphByDepth(this.state.depth);
             } else {
-                // console.log('>>>>>>> Required to reload data ');
-                // console.log('this.state.seenFullGraph ' + this.state.seenFullGraph);
-                // console.log('prevState.depth ' + prevState.depth);
-                // console.log('this.state.depth ' + this.state.depth);
-                // console.log('Seen Depth uis ' + this.seenDepth);
                 if (this.seenDepth < this.state.depth) {
                     this.loadStatements().then(() => {
                         this.seenDepth = this.state.depth;
                     });
                 } else {
-                    // console.log('Already seen that thing>>> The child should take care of that');
+                    // console.log('Already seen that depth, let the vis module take care of that');
                     this.child.current.filterGraphByDepth(this.state.depth);
                 }
             }
         }
-
     };
 
     componentWillUnmount() {
@@ -71,7 +63,7 @@ class GraphView extends Component {
     };
 
     updateDepthRange(value, fullGraph) {
-        // console.log('The child tells me that my max depth is ' + value);
+        // called from the child to ensure that the depth has correct range
         if (fullGraph) {
             this.surpressComponentUpdate = true;
             this.setState({maxDepth: value, depth: value, seenFullGraph: true});
@@ -83,7 +75,7 @@ class GraphView extends Component {
             this.setState({depth: value});
         } else {
             if (!fullGraph && this.state.seenFullGraph === false) {
-                // console.log('Case we have want to Load More Data');
+                // console.log('Case we want to load more data');
                 this.surpressComponentUpdate = false;
                 this.setState({depth: value, seenFullGraph: false});
             } else {
@@ -91,9 +83,7 @@ class GraphView extends Component {
                 this.surpressComponentUpdate = true;
                 this.setState({maxDepth: value, seenFullGraph: true});
             }
-
         }
-
     }
 
     loadStatements = async () => {
@@ -109,6 +99,7 @@ class GraphView extends Component {
                 const objectLabel = statement.object.label.substring(0, 20);
 
                 nodes.push({id: statement.subject.id, label: subjectLabel, title: statement.subject.label});
+                // check if node type is resource or literal
                 if (statement.object._class === 'resource') {
                     nodes.push({id: statement.object.id, label: objectLabel, title: statement.object.label});
                 } else {
@@ -121,7 +112,6 @@ class GraphView extends Component {
                 }
                 edges.push({from: statement.subject.id, to: statement.object.id, label: statement.predicate.label});
             }
-
             // remove duplicate nodes
             nodes = uniqBy(nodes, 'id');
 
@@ -261,9 +251,9 @@ class GraphView extends Component {
     }
 
     updateDimensions = () => {
+        // test
         const offset = 28 * 2 + 65;
         this.setState({windowHeight: window.innerHeight - offset});
-
     };
 
 
@@ -314,10 +304,10 @@ class GraphView extends Component {
                    onOpened={this.loadStatements}
                    style={{maxWidth: '90%'}}
             >
-                <ModalHeader toggle={this.props.toggle} >Paper graph visualization
+                <ModalHeader toggle={this.props.toggle}>Paper graph visualization
                     {this.props.paperId && (
                         <>
-                            <Form style={{display: 'inline-flex'}} >
+                            <Form style={{display: 'inline-flex'}}>
                                 <FormGroup className="d-flex" style={{
                                     marginBottom: -40,
                                     position: 'absolute',
@@ -326,16 +316,16 @@ class GraphView extends Component {
                                     marginTop: '-28px'
                                 }}
                                 >
-                                    <Label for="depth" className="align-self-center mb-0 mr-2" >
+                                    <Label for="depth" className="align-self-center mb-0 mr-2">
                                         Depth
-                                    </Label >
+                                    </Label>
                                     <Input type="number" name="select" id="depth" onChange={this.handleDepthChange}
                                            value={this.state.depth} style={{width: 60}} min="1"
                                            max={this.state.maxDepth}
                                     />
-                                </FormGroup >
-                            </Form >
-                            <div style={{display: 'inline-flex', position: 'absolute', left: '450px'}} >
+                                </FormGroup>
+                            </Form>
+                            <div style={{display: 'inline-flex', position: 'absolute', left: '450px'}}>
                                 <Button
                                     color="darkblue"
                                     size="sm"
@@ -344,7 +334,7 @@ class GraphView extends Component {
                                     onClick={this.centerGraph}
                                 >
                                     <Icon icon={faProjectDiagram} className="mr-1" /> Center Graph
-                                </Button >
+                                </Button>
 
                                 {/*/!*<Button*!/*/}
                                 {/*/!*  color='darkblue'*!/*/}
@@ -364,13 +354,13 @@ class GraphView extends Component {
                                     this.setState({layoutSelectionOpen: !this.state.layoutSelectionOpen})
                                 }}
                                 >
-                                    <DropdownToggle caret color="darkblue" >
+                                    <DropdownToggle caret color="darkblue">
                                         Layout:
                                         <Icon icon={this.getLayoutIcon()} className="mr-1"
                                               style={{width: '40px'}}
                                         />
-                                    </DropdownToggle >
-                                    <DropdownMenu >
+                                    </DropdownToggle>
+                                    <DropdownMenu>
                                         <DropdownItem onClick={
                                             () => {
                                                 this.setState({layout: 'force'});
@@ -378,28 +368,28 @@ class GraphView extends Component {
                                         >
                                             <Icon icon={faProjectDiagram} className="mr-1" style={{width: '40px'}} />
                                             Force Directed
-                                        </DropdownItem >
+                                        </DropdownItem>
                                         <DropdownItem onClick={() => {
                                             this.setState({layout: 'treeH'});
                                         }}
                                         >
                                             <Icon icon={faAngleDoubleLeft} className="mr-1" style={{width: '40px'}} />
                                             Horizontal Tree
-                                        </DropdownItem >
+                                        </DropdownItem>
                                         <DropdownItem onClick={() => {
                                             this.setState({layout: 'treeV'});
                                         }}
                                         >
                                             <Icon icon={faAngleDoubleUp} className="mr-1" style={{width: '40px'}} />
                                             Vertical Tree
-                                        </DropdownItem >
-                                    </DropdownMenu >
-                                </Dropdown >
-                            </div >
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </Dropdown>
+                            </div>
                         </>
                     )}
-                </ModalHeader >
-                <ModalBody style={{padding: '0', minHeight: '100px', height: this.state.windowHeight}} >
+                </ModalHeader>
+                <ModalBody style={{padding: '0', minHeight: '100px', height: this.state.windowHeight}}>
                     {!this.state.isLoadingStatements && (
                         <GizmoGraph
                             ref={this.child} isLoadingStatements={this.state.isLoadingStatements}
@@ -409,17 +399,17 @@ class GraphView extends Component {
                         />
                     )}
                     {this.state.isLoadingStatements && (
-                        <div className="text-center text-primary mt-4 mb-4" >
+                        <div className="text-center text-primary mt-4 mb-4">
                             {/*using a manual fixed scale value for the sinner scale! */}
-                            <span style={{fontSize: this.state.windowHeight / 5}} >
+                            <span style={{fontSize: this.state.windowHeight / 5}}>
                                 <Icon icon={faSpinner} spin />
-                            </span >
+                            </span>
                             <br />
-                            <h2 className="h5" >Loading graph...</h2 >
-                        </div >
+                            <h2 className="h5">Loading graph...</h2>
+                        </div>
                     )}
-                </ModalBody >
-            </Modal >
+                </ModalBody>
+            </Modal>
         );
     }
 }
