@@ -132,7 +132,7 @@ class GraphView extends Component {
     };
 
     // Code is not very organized, structure can be improved
-    visualizeAddPaper = async () => {
+    visualizeAddPaper = () => {
         let nodes = [];
         let edges = [];
         const {title, authors, doi, publicationMonth, publicationYear, selectedResearchField, contributions} = this.props.addPaper;
