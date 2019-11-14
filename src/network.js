@@ -388,7 +388,7 @@ export const signInWithEmailAndPassword = async (email, password) => {
   }*/
 }
 
-export const registerWithEmailAndPassword = (email, password, name) => {
+export const registerWithEmailAndPassword = (email, password, matching_password, name) => {
   const headers = {
     'Content-Type': 'application/json',
   };
@@ -396,8 +396,8 @@ export const registerWithEmailAndPassword = (email, password, name) => {
   const data = {
     display_name: name,
     email: email,
-    password,
-    matching_password: password, //TODO: do we want a confirm password in the UI, or leave it like this?
+    password: password,
+    matching_password: matching_password
   }
 
   return submitPostRequest(`${authenticationUrl}auth/register`, headers, data, true, false);

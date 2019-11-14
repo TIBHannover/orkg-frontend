@@ -71,6 +71,14 @@ class Header extends Component {
     this.getUserInformation();
   }
 
+  componentDidUpdate() {
+    if (this.state.redirectLogout) {
+      this.setState({
+        redirectLogout: false,
+      });
+    }
+  }
+
   getUserInformation = async () => {
     const cookies = new Cookies();
     let token = cookies.get('token') ? cookies.get('token') : null;
@@ -114,10 +122,6 @@ class Header extends Component {
 
   render() {
     if (this.state.redirectLogout) {
-      this.setState({
-        redirectLogout: false,
-      });
-
       return <Redirect to={{ pathname: '/', state: { signedOut: true } }} />;
     }
     const email = this.props.user && this.props.user.email ? this.props.user.email : 'example@example.com';

@@ -1,4 +1,4 @@
-import { Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
+import { Button, Form, FormGroup, Input, Label, Alert, FormFeedback } from 'reactstrap';
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
@@ -7,6 +7,7 @@ import { toggleAuthDialog, updateAuth } from '../../actions/auth';
 import { registerWithEmailAndPassword, signInWithEmailAndPassword } from '../../network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { get_error_message } from 'utils';
 import { Cookies } from 'react-cookie';
 const cookies = new Cookies();
 
@@ -18,8 +19,9 @@ class SignUp extends Component {
       name: '',
       email: '',
       password: '',
+      matching_password: '',
       loading: false,
-      error: null,
+      errors: null,
     };
   }
 
@@ -30,25 +32,19 @@ class SignUp extends Component {
   }
 
   signUp = async () => {
-    const { email, password, name } = this.state;
-
-    if (!email || !password || !name) {
-      this.setState({
-        error: 'Please fill out all fields',
-      });
-      return;
-    }
+    const { email, password, matching_password, name } = this.state;
 
     this.setState({
       loading: true,
+      errors: null,
     });
 
-    registerWithEmailAndPassword(email, password, name).then(() => {
+    registerWithEmailAndPassword(email, password, matching_password, name).then(() => {
       signInWithEmailAndPassword(email, password).then(
         (token) => {
           cookies.set('token', token.access_token, { path: '/', maxAge: token.expires_in });
           this.props.toggleAuthDialog();
-          this.setState({ loading: false, error: null });
+          this.setState({ loading: false, errors: null });
           window.location.reload();
         }
       ).catch((e) => {
@@ -57,7 +53,7 @@ class SignUp extends Component {
     }).catch((e) => {
       this.setState({
         loading: false,
-        error: 'An error has occurred, please try again'
+        errors: e
       });
     });
   };
@@ -66,9 +62,9 @@ class SignUp extends Component {
     return (
       <>
         <Form className="pl-3 pr-3 pt-2">
-          {this.state.error && (
+          {Boolean(get_error_message(this.state.errors)) && (
             <Alert color="danger">
-              {this.state.error}
+              {get_error_message(this.state.errors)}
             </Alert>)
           }
           <FormGroup>
@@ -80,18 +76,26 @@ class SignUp extends Component {
               name="name"
               id="name"
               placeholder="Name"
+              invalid={Boolean(get_error_message(this.state.errors, 'display_name'))}
             />
+            {Boolean(get_error_message(this.state.errors, 'display_name')) && (
+              <FormFeedback>{get_error_message(this.state.errors, 'display_name')}</FormFeedback>
+            )}
           </FormGroup>
           <FormGroup>
             <Label for="Email">Email address</Label>
             <Input
               onChange={this.handleInputChange}
               value={this.state.email}
-              type="email"
+              type="text"
               name="email"
               id="Email"
               placeholder="Email address"
+              invalid={Boolean(get_error_message(this.state.errors, 'email'))}
             />
+            {Boolean(get_error_message(this.state.errors, 'email')) && (
+              <FormFeedback>{get_error_message(this.state.errors, 'email')}</FormFeedback>
+            )}
           </FormGroup>
           <FormGroup>
             <Label for="Password">Password</Label>
@@ -102,7 +106,26 @@ class SignUp extends Component {
               name="password"
               id="Password"
               placeholder="Password"
+              invalid={Boolean(get_error_message(this.state.errors, 'password'))}
             />
+            {Boolean(get_error_message(this.state.errors, 'password')) && (
+              <FormFeedback>{get_error_message(this.state.errors, 'password')}</FormFeedback>
+            )}
+          </FormGroup>
+          <FormGroup>
+            <Label for="Password">Confirm Password</Label>
+            <Input
+              onChange={this.handleInputChange}
+              value={this.state.matching_password}
+              type="password"
+              name="matching_password"
+              id="matching_password"
+              placeholder="Confirm password"
+              invalid={Boolean(get_error_message(this.state.errors, 'matching_password'))}
+            />
+            {Boolean(get_error_message(this.state.errors, 'matching_password')) && (
+              <FormFeedback>{get_error_message(this.state.errors, 'matching_password')}</FormFeedback>
+            )}
           </FormGroup>
           <Button
             color="primary"

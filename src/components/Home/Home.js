@@ -27,7 +27,7 @@ class Home extends Component {
     document.title = 'Open Research Knowledge Graph'
   }
 
-  checkSignOutMessage = () => {
+  componentDidUpdate() {
     const showSignOutMessage = this.props.location.state && this.props.location.state.signedOut;
 
     if (showSignOutMessage) {
@@ -38,8 +38,6 @@ class Home extends Component {
   }
 
   render = () => {
-
-    this.checkSignOutMessage();
 
     return (
       <div>

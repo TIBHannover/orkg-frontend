@@ -24,6 +24,22 @@ const StyledFooter = styled.div`
     flex-shrink: 0;
 `
 
+function CloseToastButton({ closeToast }) {
+    return (
+        <span
+            onClick={e => {
+                e.stopPropagation();
+                closeToast(e);
+            }}
+        >
+            <Icon icon={faTimes} />
+        </span>
+    );
+}
+CloseToastButton.propTypes = {
+    closeToast: PropTypes.func
+};
+
 class DefaultLayout extends Component {
     constructor(props) {
         super(props);
@@ -48,7 +64,7 @@ class DefaultLayout extends Component {
                     hideProgressBar
                     transition={Slide}
                     className="toast-container"
-                    closeButton={<Icon icon={faTimes} />}
+                    closeButton={<CloseToastButton />}
                 />
 
                 <Header />
