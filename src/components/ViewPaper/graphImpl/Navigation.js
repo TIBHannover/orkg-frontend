@@ -274,11 +274,13 @@ export default class Navigation {
     }
 
     transform(p, cx, cy, parent) {
-        // one iteration step for the locate target animation
-        parent.zoomFactor = parent.graph.svgRoot.node().getBoundingClientRect().height / p[2];
-        parent.graphTranslation = [(cx - p[0] * parent.zoomFactor), (cy - p[1] * parent.zoomFactor)];
-        parent.zoom.translate(parent.graphTranslation);
-        parent.zoom.scale(parent.zoomFactor);
-        return 'translate(' + parent.graphTranslation[0] + ',' + parent.graphTranslation[1] + ')scale(' + parent.zoomFactor + ')';
+        if (parent && parent.graph) {
+            // one iteration step for the locate target animation
+            parent.zoomFactor = parent.graph.svgRoot.node().getBoundingClientRect().height / p[2];
+            parent.graphTranslation = [(cx - p[0] * parent.zoomFactor), (cy - p[1] * parent.zoomFactor)];
+            parent.zoom.translate(parent.graphTranslation);
+            parent.zoom.scale(parent.zoomFactor);
+            return 'translate(' + parent.graphTranslation[0] + ',' + parent.graphTranslation[1] + ')scale(' + parent.zoomFactor + ')';
+        }
     }
 } // end of class definition

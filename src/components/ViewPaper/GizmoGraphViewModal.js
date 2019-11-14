@@ -23,7 +23,7 @@ class GraphView extends Component {
         nodes: [],
         edges: [],
         statements: [],
-        depth: 2,
+        depth: 5,
 
         isLoadingStatements: false,
         maxDepth: 25,
@@ -40,6 +40,12 @@ class GraphView extends Component {
     };
 
     componentDidUpdate = (prevProps, prevState) => {
+        if (prevProps.showDialog === false) {
+            // reset some variables so data reloading is enabled;
+            this.surpressComponentUpdate = false;
+            this.seenDepth = -1
+        }
+
         // load statements again if depth is changed
         if (prevState.depth !== this.state.depth) {
             if (this.surpressComponentUpdate === true) {
