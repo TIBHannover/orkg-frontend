@@ -76,6 +76,13 @@ export const createAnnotation = (data) => (dispatch) => {
   });
 };
 
+export const toggleEditAnnotation = (data) => dispatch => {
+  dispatch({
+    type: type.TOGGLE_EDIT_ANNOTATION,
+    payload: data
+  })
+}
+
 export const removeAnnotation = (data) => (dispatch) => {
   dispatch({
     type: type.REMOVE_ANNOTATION,

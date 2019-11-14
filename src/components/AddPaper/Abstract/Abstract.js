@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Alert, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { semanticScholarUrl, submitGetRequest, getAnnotations } from '../../../network';
 import { connect } from 'react-redux';
 import {
@@ -7,14 +7,28 @@ import {
   toggleAbstractDialog, setAbstractDialogView
 } from '../../../actions/addPaper';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faThList, faMagic } from '@fortawesome/free-solid-svg-icons';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import randomcolor from 'randomcolor';
+import styled from 'styled-components';
 import AbstractInputView from './AbstractInputView';
 import AbstractAnnotatorView from './AbstractAnnotatorView';
+import AbstractRangesList from './AbstractRangesList';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { guid } from '../../../utils';
 import toArray from 'lodash/toArray';
 
+const AnimationContainer = styled(CSSTransition)`
+    &.fadeIn-enter {
+        opacity: 0;
+    }
+
+    &.fadeIn-enter.fadeIn-enter-active {
+        opacity: 1;
+        transition: 1s opacity;
+    }
+`;
 
 class Abstract extends Component {
   constructor(props) {
@@ -30,6 +44,12 @@ class Abstract extends Component {
       classOptions: [],
       certaintyThreshold: [0.5],
       validation: true,
+      classColors: {
+        'process': '#7fa2ff',
+        'data': '	#9df28a',
+        'material': '#EAB0A2',
+        'method': '#D2B8E5',
+      },
     };
   }
 
@@ -62,6 +82,7 @@ class Abstract extends Component {
                   end: entity[2][0][1] - 1,
                   certainty: entity[3],
                   class: rangeClass,
+                  isEditing: false,
                 };
                 return ranges[entity[0]];
               } else {
@@ -78,7 +99,9 @@ class Abstract extends Component {
         );
         this.setState({
           isAnnotationLoading: false,
-          isSimilaireContributionsLoading: true,
+          isAnnotationFailedLoading: false,
+          isAbstractLoading: false,
+          isAbstractFailedLoading: false,
         });
       })
       .catch((e) => {
@@ -128,6 +151,19 @@ class Abstract extends Component {
       this.getAnnotation();
     }
   };
+
+  getClassColor = (rangeClass) => {
+    if (!rangeClass) {
+      return '#ffb7b7';
+    }
+    if (this.state.classColors[rangeClass.toLowerCase()]) {
+      return this.state.classColors[rangeClass.toLowerCase()];
+    } else {
+      let newColor = randomcolor({ luminosity: 'light', seed: rangeClass.toLowerCase() });
+      this.setState({ classColors: { ...this.state.classColors, [rangeClass.toLowerCase()]: newColor } });
+      return newColor;
+    }
+  }
 
   getExistingPredicateId = (property) => {
     if (this.props.properties.allIds.length > 0) {
@@ -229,14 +265,62 @@ class Abstract extends Component {
   };
 
 
-  handleViewListAnnotation = () => {
-    this.props.setAbstractDialogView('list');
+  handleChangeView = (view) => {
+    this.props.setAbstractDialogView(view);
   };
 
   render() {
+    let currentStepDetails;
+    switch (this.props.abstractDialogView) {
+      case 'annotator':
+      default:
+        currentStepDetails = (
+          <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+            <AbstractAnnotatorView
+              certaintyThreshold={this.state.certaintyThreshold}
+              isAbstractLoading={this.state.isAbstractLoading}
+              isAnnotationLoading={this.state.isAnnotationLoading}
+              isAnnotationFailedLoading={this.state.isAnnotationFailedLoading}
+              handleChangeCertaintyThreshold={this.handleChangeCertaintyThreshold}
+              classOptions={this.state.classOptions}
+              handleChangeClassOptions={this.handleChangeClassOptions}
+              annotationError={this.state.annotationError}
+              getClassColor={this.getClassColor}
+            />
+          </AnimationContainer>
+        );
+        break;
+      case 'input':
+        currentStepDetails = (
+          <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+            <AbstractInputView
+              validation={this.state.validation}
+              classOptions={this.state.classOptions}
+              isAbstractLoading={this.state.isAbstractLoading}
+              isAbstractFailedLoading={this.state.isAbstractFailedLoading}
+            />
+          </AnimationContainer>
+        );
+        break;
+      case 'list':
+        currentStepDetails = (
+          <AnimationContainer key={3} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+            <AbstractRangesList
+              certaintyThreshold={this.state.certaintyThreshold}
+              classOptions={this.state.classOptions}
+              getClassColor={this.getClassColor}
+            />
+          </AnimationContainer>
+        );
+        break;
+    }
+
+
     return (
       <Modal isOpen={this.props.showAbstractDialog} toggle={this.props.toggleAbstractDialog} size="lg">
-        <ModalHeader toggle={this.props.toggleAbstractDialog}>Abstract annotation</ModalHeader>
+        <ModalHeader toggle={this.props.toggleAbstractDialog}>
+          Abstract annotation
+        </ModalHeader>
         <ModalBody>
           <div className={'clearfix'}>
             {(this.state.isAbstractLoading || this.state.isAnnotationLoading) && (
@@ -249,29 +333,11 @@ class Abstract extends Component {
               </div>
             )}
 
-
-            {this.props.abstractDialogView === 'annotator' ? (
-              <AbstractAnnotatorView
-                certaintyThreshold={this.state.certaintyThreshold}
-                isAbstractLoading={this.state.isAbstractLoading}
-                isAnnotationLoading={this.state.isAnnotationLoading}
-                isAnnotationFailedLoading={this.state.isAnnotationFailedLoading}
-                handleChangeCertaintyThreshold={this.handleChangeCertaintyThreshold}
-                classOptions={this.state.classOptions}
-                handleChangeClassOptions={this.handleChangeClassOptions}
-                annotationError={this.state.annotationError}
-              />
-            ) : (
-                <AbstractInputView
-                  validation={this.state.validation}
-                  classOptions={this.state.classOptions}
-                  isAbstractLoading={this.state.isAbstractLoading}
-                  isAbstractFailedLoading={this.state.isAbstractFailedLoading}
-                />
-              )}
+            <TransitionGroup exit={false}>
+              {currentStepDetails}
+            </TransitionGroup>
           </div>
           <hr className="mt-5 mb-3" />
-
 
           {this.props.abstractDialogView === 'input' ? (
             <>
@@ -279,17 +345,35 @@ class Abstract extends Component {
                 Annotate Abstract
               </Button>
             </>
-          ) : (
-              <>
-                <Button color="primary" className="float-right mb-4" onClick={this.handleInsertData}>
-                  Insert Data
-                </Button>
+          ) : (this.props.abstractDialogView === 'list') ? (
+            <>
+              <Button color="secondary" outline className="float-left mb-4" onClick={() => this.handleChangeView('annotator')}>
+                <Icon icon={faMagic} /> Annotator
+              </Button>
 
-                <Button color="light" className="float-right mb-4 mr-2" onClick={this.handleChangeAbstract}>
-                  Change abstract
-                </Button>
-              </>
-            )
+              <Button color="primary" className="float-right mb-4" onClick={this.handleInsertData}>
+                Insert Data
+              </Button>
+
+              <Button color="light" className="float-right mb-4 mr-2" onClick={this.handleChangeAbstract}>
+                Change abstract
+              </Button>
+            </>
+          ) : (
+                <>
+                  <Button color="secondary" outline className="float-left mb-4" onClick={() => this.handleChangeView('list')}>
+                    <Icon icon={faThList} /> List of annotations
+                  </Button>
+
+                  <Button color="primary" className="float-right mb-4" onClick={this.handleInsertData}>
+                    Insert Data
+                  </Button>
+
+                  <Button color="light" className="float-right mb-4 mr-2" onClick={this.handleChangeAbstract}>
+                    Change abstract
+                  </Button>
+                </>
+              )
           }
         </ModalBody>
       </Modal >

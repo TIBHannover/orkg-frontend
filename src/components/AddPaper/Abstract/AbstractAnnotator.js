@@ -206,6 +206,7 @@ class AbstractAnnotator extends Component {
             text: text,
             class: { id: null, label: null },
             certainty: 1,
+            isEditing: false,
         };
         this.props.createAnnotation(range);
         window.getSelection().empty();

@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import AbstractAnnotator from './AbstractAnnotator';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import randomcolor from 'randomcolor';
+
 import { Range, getTrackBackground } from 'react-range';
 import { withTheme } from 'styled-components';
 import toArray from 'lodash/toArray';
@@ -19,15 +19,6 @@ import { compose } from 'redux';
 class AbstractAnnotatorView extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            classColors: {
-                'process': '#7fa2ff',
-                'data': '	#9df28a',
-                'material': '#EAB0A2',
-                'method': '#D2B8E5',
-            },
-        };
 
         this.automaticAnnotationConcepts = [
             { label: 'Process', description: 'Natural phenomenon, or independent/dependent activities.E.g., growing(Bio), cured(MS), flooding(ES).' },
@@ -62,19 +53,6 @@ class AbstractAnnotatorView extends Component {
             );
         })
         this.props.handleChangeClassOptions(options)
-    }
-
-    getClassColor = (rangeClass) => {
-        if (!rangeClass) {
-            return '#ffb7b7';
-        }
-        if (this.state.classColors[rangeClass.toLowerCase()]) {
-            return this.state.classColors[rangeClass.toLowerCase()];
-        } else {
-            let newColor = randomcolor({ luminosity: 'light', seed: rangeClass.toLowerCase() });
-            this.setState({ classColors: { ...this.state.classColors, [rangeClass.toLowerCase()]: newColor } });
-            return newColor;
-        }
     }
 
     render() {
@@ -124,7 +102,7 @@ class AbstractAnnotatorView extends Component {
                                                 <span>
                                                     <Badge
                                                         className={'mr-2'}
-                                                        style={{ cursor: 'pointer', marginBottom: '4px', color: '#333', background: this.getClassColor(c) }}
+                                                        style={{ cursor: 'pointer', marginBottom: '4px', color: '#333', background: this.props.getClassColor(c) }}
                                                     >
                                                         {c ? capitalize(c) : 'Unlabeled'} <Badge pill color="secondary">{rangeArray.filter((rc) => rc.class.label === c).length}</Badge>
                                                     </Badge>
@@ -136,7 +114,7 @@ class AbstractAnnotatorView extends Component {
                                             <Badge
                                                 className={'mr-2'}
                                                 key={`c${c}`}
-                                                style={{ marginBottom: '4px', color: '#333', background: this.getClassColor(c) }}
+                                                style={{ marginBottom: '4px', color: '#333', background: this.props.getClassColor(c) }}
                                             >
                                                 {c ? capitalize(c) : 'Unlabeled'} <Badge pill color="secondary">{rangeArray.filter((rc) => rc.class.label === c).length}</Badge>
                                             </Badge>
@@ -147,7 +125,7 @@ class AbstractAnnotatorView extends Component {
                         <AbstractAnnotator
                             certaintyThreshold={this.props.certaintyThreshold[0]}
                             classOptions={this.props.classOptions}
-                            getClassColor={this.getClassColor}
+                            getClassColor={this.props.getClassColor}
                         />
                     </div>
                 )}
@@ -226,6 +204,7 @@ AbstractAnnotatorView.propTypes = {
     isAnnotationFailedLoading: PropTypes.bool.isRequired,
     handleChangeCertaintyThreshold: PropTypes.func.isRequired,
     handleChangeClassOptions: PropTypes.func.isRequired,
+    getClassColor: PropTypes.func.isRequired,
     theme: PropTypes.object.isRequired,
     annotationError: PropTypes.string,
 };

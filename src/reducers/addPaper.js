@@ -142,6 +142,13 @@ export default (state = initialState, action) => {
             };
         }
 
+        case type.TOGGLE_EDIT_ANNOTATION: {
+            let { payload } = action;
+            return {
+                ...dotProp.set(state, `ranges.${payload}.isEditing`, v => !v),
+            };
+        }
+
         case type.VALIDATE_ANNOTATION: {
             let { payload } = action;
             return {
