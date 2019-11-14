@@ -126,13 +126,13 @@ class GraphView extends Component {
                 edges,
             });
         } else {
-            this.visualizeAddPaper();
+            await this.visualizeAddPaper();
         }
         this.setState({isLoadingStatements: false});
     };
 
     // Code is not very organized, structure can be improved
-    visualizeAddPaper = () => {
+    visualizeAddPaper = async () => {
         let nodes = [];
         let edges = [];
         const {title, authors, doi, publicationMonth, publicationYear, selectedResearchField, contributions} = this.props.addPaper;

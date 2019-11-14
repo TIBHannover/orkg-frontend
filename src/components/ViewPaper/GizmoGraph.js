@@ -11,7 +11,6 @@ class GizMOGraph extends Component {
         this.graphRoot = undefined;
         this.graphVis = null;
         this.graphInitialized = false;
-
         // parent functions called by child
         this.updateDepthRange = props.updateDepthRange;
 
@@ -35,7 +34,6 @@ class GizMOGraph extends Component {
         if (!this.state.isLoadingStatements && this.updateDepthRange) {
             // check if there is data;
             if (this.state.nodes.length > 0) {
-                // console.log('we have data and should be able to do what we want!');
                 this.graphRoot = d3.select('#graphRendering').append('svg');
                 this.initializeGraphSize();
             }

@@ -13,11 +13,12 @@ import { withCookies } from 'react-cookie';
 import { connect } from 'react-redux';
 import styled, { withTheme } from 'styled-components';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import { openTour, closeTour, blockNavigation } from '../../actions/addPaper';
-import GraphViewModal from '../ViewPaper/GraphViewModal';
+// import GraphViewModal from '../ViewPaper/GraphViewModal';
 import { Prompt } from 'react-router'
+import GizmoGraphViewModal from '../ViewPaper/GizmoGraphViewModal';
 
 const Help = styled.div`
     box-sizing: border-box;
@@ -219,13 +220,18 @@ class AddPaper extends Component {
                     </TransitionGroup>
                 </Container>
 
-                <GraphViewModal
+                {/*<GraphViewModal*/}
+                {/*    showDialog={this.state.showGraphModal}*/}
+                {/*    toggle={() => this.toggle('showGraphModal')}*/}
+                {/*//paperId={this.props.match.params.resourceId}*/}
+                {/*/>*/}
+
+                <GizmoGraphViewModal
                     showDialog={this.state.showGraphModal}
                     toggle={() => this.toggle('showGraphModal')}
-                //paperId={this.props.match.params.resourceId}
                 />
-
-                <Help onClick={() => {
+                {/*the style display node will hide the help button when the graph view is activated*/}
+                <Help style={this.state.showGraphModal? {display:'none'}:{}} onClick={() => {
                     this.toggleTour();
                 }} id="helpIcon"
                 >
@@ -235,8 +241,6 @@ class AddPaper extends Component {
                     />
                     <div style={{ cursor: 'pointer', display: 'inline-block', marginLeft: '8px', fontWeight: 'bold', lineHeight: '56px', fontSize: 'large' }}>Help</div>
                 </Help>
-
-
             </div >
         );
     }
