@@ -67,7 +67,7 @@ export default class Papers extends Component {
                             publicationYear,
                             publicationMonth,
                             authorNames: authorNamesArray.reverse(),
-                        }
+                        };
                         return paper;
                     })
                 });

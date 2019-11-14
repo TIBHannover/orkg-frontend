@@ -16,6 +16,7 @@ import ComparisonPopup from './ComparisonPopup';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import { loadPaper, selectContribution } from '../../actions/viewPaper';
 import GraphViewModal from './GraphViewModal';
+import GizmoGraphViewModal from './GizmoGraphViewModal';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
 import Confirm from 'reactstrap-confirm';
@@ -45,7 +46,7 @@ class ViewPaper extends Component {
         dropdownOpen: false,
         showGraphModal: false,
         editMode: false,
-    }
+    };
 
     componentDidMount() {
         this.loadPaperData();
@@ -57,7 +58,7 @@ class ViewPaper extends Component {
         } else if (this.props.match.params.contributionId !== prevProps.match.params.contributionId) {
             this.setState({ selectedContribution: this.props.match.params.contributionId });
         }
-    }
+    };
 
     loadPaperData = () => {
         this.setState({ loading: true });
@@ -177,13 +178,13 @@ class ViewPaper extends Component {
         }).catch(error => {
             this.setState({ loading: false, loading_failed: true })
         });
-    }
+    };
 
     toggle = (type) => {
         this.setState(prevState => ({
             [type]: !prevState[type],
         }));
-    }
+    };
 
     // @param sync : to update the contribution label on the backend.
     handleChangeContributionLabel = async (contributionId, label, sync = false) => {
@@ -205,14 +206,14 @@ class ViewPaper extends Component {
             toast.success('Contribution name updated successfully');
         }
 
-    }
+    };
 
     handleCreateContribution = async () => {
         let newContribution = await createResource(`Contribution ${this.state.contributions.length + 1}`);
         let statement = await createResourceStatement(this.props.match.params.resourceId, process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION, newContribution.id)
         this.setState({ contributions: [...this.state.contributions, { ...statement.object, statementId: statement.id }] })
         toast.success('Contribution cratead successfully');
-    }
+    };
 
     toggleDeleteContribution = async (contributionId) => {
         let result = await Confirm({
@@ -226,22 +227,22 @@ class ViewPaper extends Component {
             let statementId = this.state.contributions[objIndex].statementId;
             let newContributions = this.state.contributions.filter(function (contribution) {
                 return contribution.id !== contributionId
-            })
+            });
             this.setState({
                 selectedContribution: newContributions[0].id,
             }, () => {
                 this.setState({ contributions: newContributions });
-            })
-            await deleteStatementById(statementId)
+            });
+            await deleteStatementById(statementId);
             toast.success('Contribution deleted successfully');
         }
-    }
+    };
 
     toggleDropdown = () => {
         this.setState(prevState => ({
             dropdownOpen: !prevState.dropdownOpen
         }));
-    }
+    };
 
     render() {
         let comingFromWizard = queryString.parse(this.props.location.search);
@@ -384,7 +385,7 @@ class ViewPaper extends Component {
                     </>
                 )}
 
-                <GraphViewModal
+                <GizmoGraphViewModal
                     showDialog={this.state.showGraphModal}
                     toggle={() => this.toggle('showGraphModal')}
                     paperId={this.props.match.params.resourceId}
@@ -406,7 +407,7 @@ ViewPaper.propTypes = {
     location: PropTypes.object.isRequired,
     viewPaper: PropTypes.object.isRequired,
     loadPaper: PropTypes.func.isRequired,
-}
+};
 
 const mapStateToProps = state => ({
     viewPaper: state.viewPaper,

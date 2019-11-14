@@ -1,0 +1,43 @@
+
+
+Memory Management:
+ --> clear graph data [x]
+ --> clear graph from gizmoGraph.js [x]
+ --> more tests;
+
+
+Organize Code [x];
+GraphVis
+   Options
+     >> Holds configuration aspects
+   Navigation
+     >> holds all navigation related aspects
+       >> zoom, translate, drag
+   Layout
+     >> holds all layout aspects
+        >> force layout, recalculate positions, tree layouts
+
+
+[x] add hovering properties
+[x] add depth filtering
+
+// add uml-style
+  -> visibility flags;
+
+[] verify depth filtering for the datatype nodes;
+  -> when uml rendering is activated it has a different behaviour
+
+[] modal header elements alignment
+  >> when width is to small the header becomes ill aligned
+
+
+
+[]
+
+
+// Breaking changes will be when updating from d3.v3 >> d3.v5
+  >> we will need this most likely for the force.center function
+
+
+[x] fix force layout when changing depth
+ >> currently the nodes are jumping
