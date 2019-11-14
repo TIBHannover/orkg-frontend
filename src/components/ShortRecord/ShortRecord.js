@@ -1,14 +1,31 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+const StyledShortRecord = styled.div`
+    border: 1px solid #c8ccd1;
+    margin-bottom: 2em;
+    position: relative;
+    width: 100%;
+    .shortRecord-header {
+        background-color: #eaecf0;
+        position: relative;
+        width: 100%;
+    }
+    .shortRecord-content {
+        width: 100%;
+    }
+
+`;
 
 class ShortRecord extends Component {
 
     render() {
         return (
-            <div className="shortRecord">
+            <StyledShortRecord>
                 <div className="shortRecord-header"><a href={this.props.href}>{this.props.header}</a></div>
                 <div className="shortRecord-content">{this.props.children}</div>
-            </div>
+            </StyledShortRecord>
         )
     }
 

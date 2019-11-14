@@ -68,7 +68,7 @@ const ColoredStatsBox = (props) => {
         <StatsBoxStyled className={`box ${props.className} ${props.color}`}>
             <IconContainer className={props.color}><Icon icon={props.icon} /></IconContainer>
             <LabelWrapper>
-                <Number><NumberFormat value={props.number} displayType={'text'} thousandSeparator={' '} /></Number>
+                {!props.isLoading ? (<Number><NumberFormat value={props.number} displayType={'text'} thousandSeparator={' '} /></Number>) : 'Loading...'}
                 <Label>{props.label}</Label>
             </LabelWrapper>
         </StatsBoxStyled>
@@ -81,6 +81,7 @@ ColoredStatsBox.propTypes = {
     color: PropTypes.oneOf(['blue', 'green', 'orange', 'black']).isRequired,
     number: PropTypes.number,
     className: PropTypes.string,
+    isLoading: PropTypes.bool,
 };
 
 ColoredStatsBox.defaultProps = {

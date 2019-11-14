@@ -7,6 +7,22 @@ import Footer from './Footer';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import styled from 'styled-components';
+
+const StyledBody = styled.div`
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    padding-top: 100px;
+`
+
+const StyledAppContent = styled.div`
+    flex: 1 0 auto;
+`
+
+const StyledFooter = styled.div`
+    flex-shrink: 0;
+`
 
 class DefaultLayout extends Component {
     constructor(props) {
@@ -25,20 +41,24 @@ class DefaultLayout extends Component {
 
     render() {
         return (
-            <div className="body">
+            <StyledBody className="body">
                 <ToastContainer
                     position="top-right"
                     autoClose={parseInt(popupDelay)}
                     hideProgressBar
                     transition={Slide}
                     className="toast-container"
-                    closeButton={<Icon icon={faTimes} />} 
+                    closeButton={<Icon icon={faTimes} />}
                 />
 
                 <Header />
-                {this.props.children}
-                <Footer />
-            </div>
+                <StyledAppContent>
+                    {this.props.children}
+                </StyledAppContent>
+                <StyledFooter>
+                    <Footer />
+                </StyledFooter>
+            </StyledBody>
         );
     }
 }

@@ -24,8 +24,8 @@ const Label = styled.div`
 
 const InlineStatsBox = (props) => {
     return (
-        <StatsBoxStyled className={props.className} style={props.hideBorder ? {border: 0} : {}}>
-            <Number><NumberFormat value={props.number} displayType={'text'} thousandSeparator={' '} /></Number>
+        <StatsBoxStyled className={props.className} style={props.hideBorder ? { border: 0 } : {}}>
+            {!props.isLoading ? (<Number><NumberFormat value={props.number} displayType={'text'} thousandSeparator={' '} /></Number>) : 'Loading...'}
             <Label>{props.label}</Label>
         </StatsBoxStyled>
     );
@@ -36,6 +36,7 @@ InlineStatsBox.propTypes = {
     className: PropTypes.string,
     number: PropTypes.number,
     hideBorder: PropTypes.bool,
+    isLoading: PropTypes.bool,
 };
 
 InlineStatsBox.defaultProps = {

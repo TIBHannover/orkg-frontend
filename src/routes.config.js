@@ -64,11 +64,6 @@ const routes = [
     component: AddPaper
   },
   {
-    path: ROUTES.VIEW_PAPER_CONTRIBUTION,
-    exact: true,
-    component: ViewPaper
-  },
-  {
     /* TODO: slug for the paper title */
     path: ROUTES.VIEW_PAPER,
     exact: true,

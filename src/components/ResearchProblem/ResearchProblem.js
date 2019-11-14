@@ -42,8 +42,9 @@ class ResearchProblem extends Component {
   loadResearchProblemData = () => {
     // Get the research problem
     getResource(this.props.match.params.researchProblemId).then((result) => {
-      this.setState({ researchProblem: result, contributions: [], loading: false })
-      document.title = `${this.state.researchProblem.label} - ORKG`
+      this.setState({ researchProblem: result, contributions: [], loading: false }, () => {
+        document.title = `${this.state.researchProblem.label} - ORKG`
+      })
     });
   }
 

@@ -9,11 +9,39 @@ const initialState = {
         byId: {},
         allIds: []
     },
+    title: '',
+    paperResourceId: 0,
+    authors: [],
+    publicationMonth: 0,
+    publicationMonthResourceId: 0,
+    publicationYear: 0,
+    publicationYearResourceId: 0,
+    doi: '',
+    doiResourceId: 0,
+    researchField: '',
 }
 const cookies = new Cookies();
 
 export default (state = initialState, action) => {
     switch (action.type) {
+
+        case type.LOAD_PAPER: {
+            let { payload } = action;
+
+            return {
+                ...state,
+                title: typeof payload.title ? payload.title : state.title,
+                paperResourceId: typeof payload.paperResourceId !== 'undefined' ? payload.paperResourceId : state.paperResourceId,
+                authors: typeof payload.authors !== 'undefined' ? payload.authors : state.authors,
+                publicationMonth: typeof payload.publicationMonth !== 'undefined' ? payload.publicationMonth : state.publicationMonth,
+                publicationMonthResourceId: typeof payload.publicationMonthResourceId !== 'undefined' ? payload.publicationMonthResourceId : state.publicationMonthResourceId,
+                publicationYear: typeof payload.publicationYear !== 'undefined' ? payload.publicationYear : state.publicationYear,
+                publicationYearResourceId: typeof payload.publicationYearResourceId !== 'undefined' ? payload.publicationYearResourceId : state.publicationYearResourceId,
+                doi: typeof payload.doi !== 'undefined' ? payload.doi : state.doi,
+                doiResourceId: typeof payload.doiResourceId !== 'undefined' ? payload.doiResourceId : state.doiResourceId,
+                researchField: typeof payload.researchField !== 'undefined' ? payload.researchField : state.researchField,
+            }
+        }
 
         case type.SET_RESEARCH_PROBLEMS: {
             let { payload } = action;
@@ -26,6 +54,12 @@ export default (state = initialState, action) => {
             return {
                 ...newState,
             }
+        }
+
+        case type.UPDATE_RESEARCH_PROBLEMS: {
+            let { payload } = action;
+
+            return dotProp.set(state, `researchProblems.${payload.contributionId}`, payload.problemsArray);
         }
 
         case type.LOAD_COMPARISON_FROM_COOKIE: {

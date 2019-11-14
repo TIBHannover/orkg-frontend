@@ -3,7 +3,6 @@ import {
   Button, ButtonDropdown, Collapse, Container, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem,
   NavLink, Navbar, NavbarToggler, Tooltip, ButtonGroup, Row, Badge
 } from 'reactstrap';
-import styled from 'styled-components';
 import { Link, NavLink as RouterNavLink } from 'react-router-dom';
 import { ReactComponent as Logo } from '../../../assets/img/logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,7 +18,12 @@ import { openAuthDialog, updateAuth, resetAuth } from '../../../actions/auth';
 import { Redirect } from 'react-router-dom';
 import { getUserInformation } from '../../../network';
 import greetingTime from 'greeting-time';
+import styled from 'styled-components';
 
+const StyledLink = styled(Link)`
+    :focus {outline:none;}
+    ::-moz-focus-inner {border:0;}
+`;
 
 const StyledGravatar = styled(Gravatar)`
   border: 3px solid ${(props) => props.theme.avatarBorderColor};
@@ -122,9 +126,9 @@ class Header extends Component {
     return (
       <Navbar color="light" expand="md" fixed="top" id="main-navbar" light>
         <Container>
-          <Link to={ROUTES.HOME} className="mr-5 navbar-brand">
+          <StyledLink to={ROUTES.HOME} className="mr-5 p-0">
             <Logo />
-          </Link>
+          </StyledLink>
 
           <NavbarToggler onClick={this.toggle} />
 
