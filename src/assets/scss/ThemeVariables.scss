@@ -1,28 +1,27 @@
 // ORKG theme variables
-$ORKG-border-radius: 12px; // General border radius on inputs, buttons, boxes etc. 
-$ORKG-primary-color: #E86161; // Primary color for buttons, icons, links etc.
-$ORKG-border-width: 2px; // Width of border for buttons, inputs 
+$ORKG-border-radius: 12px; // General border radius on inputs, buttons, boxes etc.
+$ORKG-primary-color: #e86161; // Primary color for buttons, icons, links etc.
+$ORKG-border-width: 2px; // Width of border for buttons, inputs
 
 // Theme variables
 $primary: $ORKG-primary-color;
-$darkblue: #80869B;
+$darkblue: #80869b;
 $darkblueDarker: darken($darkblue, 20%);
 //$secondary: #3C4C58;
-$light: #E6E6E6;
-$ultra-light-blue: #F8F9FB;
-$ultra-light-blue-darker: #DBDDE5;
-$body-bg: #E9EBF2;
+$light: #e6e6e6;
+$ultra-light-blue: #f8f9fb;
+$ultra-light-blue-darker: #dbdde5;
+$body-bg: #e9ebf2;
 $body-color: #646464;
 $border-width: $ORKG-border-width;
 $border-radius: $ORKG-border-radius;
 
 // Add a new theme color
 $theme-colors: (
-    lightblue: $body-bg,
-    darkblue: $darkblue,
-    darkblueDarker: $darkblueDarker,
-    primaryDarker: darken($ORKG-primary-color, 20%),
-    
+  lightblue: $body-bg,
+  darkblue: $darkblue,
+  darkblueDarker: $darkblueDarker,
+  primaryDarker: darken($ORKG-primary-color, 20%),
 );
 
 // Forms
@@ -35,27 +34,29 @@ $btn-border-radius: $ORKG-border-radius;
 $btn-border-radius: $ORKG-border-radius;
 $btn-border-radius-sm: $btn-border-radius;
 $btn-border-radius-lg: $btn-border-radius;
-$input-bg: #F7F7F7;
+$input-bg: #f7f7f7;
 $input-btn-padding-x: 30px;
-$input-padding-x: .75rem;
+$input-padding-x: 0.75rem;
 $btn-padding-x-sm: 1.25rem;
 $dropdown-link-hover-bg: rgb(233, 233, 233);
-$custom-checkbox-indicator-border-radius: 3px; //ensure checkboxes are not round 
+$custom-checkbox-indicator-border-radius: 3px; //ensure checkboxes are not round
 
 // Headings
 $headings-font-weight: 400;
-$headings-color:#373F45;
+$headings-color: #373f45;
 
 // Modal
 $modal-content-border-radius: 11px;
 $modal-content-border-width: 3px;
 
 // Badges
-$badge-font-size:85%;
+$badge-font-size: 85%;
 $badge-font-weight: 500;
 $badge-padding-y: 0.3rem;
 $badge-padding-x: 0.8rem;
 
 // Bootstrap Vars
-$list-group-border-color:rgba(0, 0, 0, 0.125);
+$list-group-border-color: rgba(0, 0, 0, 0.125);
 
+$button-dark: #5b6176;
+$avatar-border-color: #676d81;
