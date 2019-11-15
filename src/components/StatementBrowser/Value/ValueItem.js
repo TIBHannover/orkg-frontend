@@ -267,7 +267,7 @@ class ValueItem extends Component {
                 queryParams = '&exact=true';
             }
 
-            let responseJson = await submitGetRequest(resourcesUrl + '?q=' + encodeURIComponent(value) + queryParams);
+            let responseJson = await submitGetRequest(resourcesUrl + '?q=' + encodeURIComponent(value) + queryParams + `&exclude=${encodeURIComponent(process.env.REACT_APP_CLASSES_CONTRIBUTION + ',' + process.env.REACT_APP_CLASSES_PROBLEM)}`);
             responseJson = await this.IdMatch(value, responseJson);
 
             if (responseJson.length > this.maxResults) {

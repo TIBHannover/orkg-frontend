@@ -98,6 +98,9 @@ class GeneralData extends Component {
 
     //TODO this logic should be placed inside an action creator
     handleLookupClick = async () => {
+        if (this.props.isTourOpen) {
+            this.requestCloseTour();
+        }
         this.setState({
             entry: this.state.entry.trim(),
             showLookupTable: false,
@@ -205,6 +208,9 @@ class GeneralData extends Component {
     };
 
     handleInputChange = (e) => {
+        if (this.props.isTourOpen) {
+            this.requestCloseTour();
+        }
         this.setState({
             [e.target.name]: e.target.value,
         });
@@ -543,8 +549,8 @@ class GeneralData extends Component {
                 <hr className="mt-5 mb-3" />
                 {this.state.errors && this.state.errors.length > 0 &&
                     <ul className="float-left mb-4 text-danger">
-                        {this.state.errors.map(e => {
-                            return <li>{e}</li>
+                        {this.state.errors.map((e, index) => {
+                            return <li key={index}>{e}</li>
                         })}
                     </ul>
                 }
@@ -560,18 +566,19 @@ class GeneralData extends Component {
                     <Tour
                         onAfterOpen={this.disableBody}
                         onBeforeClose={this.enableBody}
-                        steps={[
-                            {
+                        steps={
+                            [...(this.state.dataEntry === 'doi') ? [{
                                 selector: '#doiInputGroup',
                                 content: 'Start by entering the DOI or the BibTeX of the paper you want to add. Then, click on "Lookup" to fetch paper meta-data automatically.',
                                 style: { borderTop: '4px solid #E86161' },
-                            },
+                                action: node => node ? node.focus() : null,
+                            }] : [],
                             {
                                 selector: '#entryOptions',
                                 content: 'In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button on the right.',
                                 style: { borderTop: '4px solid #E86161' },
-                            }
-                        ]}
+                            }]
+                        }
                         showNumber={false}
                         accentColor={this.props.theme.orkgPrimaryColor}
                         rounded={10}
@@ -584,6 +591,7 @@ class GeneralData extends Component {
                 )}
                 {this.state.showHelpButton && (
                     <Tour
+                        disableInteraction={false}
                         onAfterOpen={this.disableBody}
                         onBeforeClose={this.enableBody}
                         steps={[

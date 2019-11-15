@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Container, Row, Col } from 'reactstrap';
-import { submitGetRequest, url } from '../../network';
+import { getResourcesByClass, getAllPredicates, getAllResources } from '../../network';
 import ROUTES from '../../constants/routes.js';
 import { reverse } from 'named-urls';
 import dotProp from 'dot-prop-immutable';
@@ -17,6 +17,8 @@ class Search extends Component {
 
         let value = this.props.match.params.searchTerm;
 
+        this.itemsPerFilter = 10;
+
         // use a map so we have an ordered object
         this.filters = new Map([
             [
@@ -29,12 +31,19 @@ class Search extends Component {
             [
                 2,
                 {
+                    label: 'Research Problem',
+                    class: process.env.REACT_APP_CLASSES_PROBLEM
+                }
+            ],
+            [
+                3,
+                {
                     label: 'Resource',
                     class: 'resource'
                 }
             ],
             [
-                3,
+                4,
                 {
                     label: 'Predicate',
                     class: 'predicate'
@@ -48,22 +57,69 @@ class Search extends Component {
             value,
             selectedFilters,
             resources: [],
+            isResourcesNextPageLoading: false,
+            hasResourcesNextPage: false,
+            resourcesPage: 1,
+            isResourcesLastPageReached: false,
+
+            predicates: [],
+            isPredicatesNextPageLoading: false,
+            hasPredicatesNextPage: false,
+            predicatesPage: 1,
+            isPredicatesLastPageReached: false,
+
             papers: [],
-            loading: false,
+            isPapersNextPageLoading: false,
+            hasPapersNextPage: false,
+            papersPage: 1,
+            isPapersLastPageReached: false,
+
+            problems: [],
+            isProblemsNextPageLoading: false,
+            hasProblemsNextPage: false,
+            problemsPage: 1,
+            isProblemsLastPageReached: false,
         }
     }
 
     componentDidMount() {
         document.title = 'Search - ORKG';
-        this.searchResources(this.state.value);
+        this.loadMoreResources(this.state.value);
+        this.loadMorePapers(this.state.value);
+        this.loadMoreProblems(this.state.value);
+        this.loadMorePredicates(this.state.value);
     }
 
     componentDidUpdate = (prevProps, prevState) => {
         if (this.props.match.params.searchTerm !== prevProps.match.params.searchTerm) {
             this.setState({
                 value: this.props.match.params.searchTerm,
+                resources: [],
+                isResourcesNextPageLoading: false,
+                hasResourcesNextPage: false,
+                resourcesPage: 1,
+                isResourcesLastPageReached: false,
+                predicates: [],
+                isPredicatesNextPageLoading: false,
+                hasPredicatesNextPage: false,
+                predicatesPage: 1,
+                isPredicatesLastPageReached: false,
+                papers: [],
+                isPapersNextPageLoading: false,
+                hasPapersNextPage: false,
+                papersPage: 1,
+                isPapersLastPageReached: false,
+                problems: [],
+                isProblemsNextPageLoading: false,
+                hasProblemsNextPage: false,
+                problemsPage: 1,
+                isProblemsLastPageReached: false,
+            }, () => {
+                this.loadMoreResources(this.state.value);
+                this.loadMorePapers(this.state.value);
+                this.loadMoreProblems(this.state.value);
+                this.loadMorePredicates(this.state.value);
             })
-            this.searchResources(this.props.match.params.searchTerm);
         }
     }
 
@@ -71,34 +127,122 @@ class Search extends Component {
         this.setState({ value: event.target.value });
     }
 
-    searchResources = async (searchQuery) => {
-        if (!searchQuery || searchQuery.length === 0) {
+    loadMoreResources = (searchQuery) => {
+        if (searchQuery.length === 0) {
             return;
         }
-
-        this.setState({
-            loading: true,
+        this.setState({ isResourcesNextPageLoading: true })
+        getAllResources({
+            page: this.state.resourcesPage,
+            items: this.itemsPerFilter,
+            sortBy: 'id',
+            desc: true,
+            q: searchQuery,
+            exclude: process.env.REACT_APP_CLASSES_CONTRIBUTION + ',' + process.env.REACT_APP_CLASSES_PAPER + ',' + process.env.REACT_APP_CLASSES_PROBLEM,
+        }).then((resources) => {
+            if (resources.length > 0) {
+                this.setState({
+                    resources: [...this.state.resources, ...resources],
+                    isResourcesNextPageLoading: false,
+                    hasResourcesNextPage: resources.length < this.itemsPerFilter ? false : true,
+                    resourcesPage: this.state.resourcesPage + 1
+                });
+            } else {
+                this.setState({
+                    isResourcesNextPageLoading: false,
+                    hasResourcesNextPage: false,
+                    isResourcesLastPageReached: true
+                });
+            }
         });
+    }
 
-        let resources = await submitGetRequest(`${url}resources/?q=${searchQuery}`);
-
-        // add resource class when there is no class for a resource
-        resources.forEach((resource, index) => {
-            resources[index].classes = resources[index].classes.length > 0 ? resources[index].classes : ['resource'];
+    loadMorePapers = (searchQuery) => {
+        if (searchQuery.length === 0) {
+            return;
+        }
+        this.setState({ isPapersNextPageLoading: true })
+        getResourcesByClass({
+            page: this.state.papersPage,
+            items: this.itemsPerFilter,
+            sortBy: 'id',
+            desc: true,
+            q: searchQuery,
+            id: process.env.REACT_APP_CLASSES_PAPER,
+        }).then((papers) => {
+            if (papers.length > 0) {
+                this.setState({
+                    papers: [...this.state.papers, ...papers],
+                    isPapersNextPageLoading: false,
+                    hasPapersNextPage: papers.length < this.itemsPerFilter ? false : true,
+                    papersPage: this.state.papersPage + 1
+                });
+            } else {
+                this.setState({
+                    isPapersNextPageLoading: false,
+                    hasPapersNextPage: false,
+                    isPapersLastPageReached: true
+                });
+            }
         });
+    }
 
-        const predicates = await submitGetRequest(`${url}predicates/?q=${searchQuery}`);
-
-        // add resource class when there is no class for a resource
-        predicates.forEach((predicate, index) => {
-            predicates[index].classes = ['predicate'];
+    loadMoreProblems = (searchQuery) => {
+        if (searchQuery.length === 0) {
+            return;
+        }
+        this.setState({ isProblemsNextPageLoading: true })
+        getResourcesByClass({
+            page: this.state.problemsPage,
+            items: this.itemsPerFilter,
+            sortBy: 'id',
+            desc: true,
+            q: searchQuery,
+            id: process.env.REACT_APP_CLASSES_PROBLEM,
+        }).then((problems) => {
+            if (problems.length > 0) {
+                this.setState({
+                    problems: [...this.state.problems, ...problems],
+                    isProblemsNextPageLoading: false,
+                    hasProblemsNextPage: problems.length < this.itemsPerFilter ? false : true,
+                    problemsPage: this.state.problemsPage + 1
+                });
+            } else {
+                this.setState({
+                    isProblemsNextPageLoading: false,
+                    hasProblemsNextPage: false,
+                    isProblemsLastPageReached: true
+                });
+            }
         });
+    }
 
-        resources = resources.concat(predicates);
-
-        this.setState({
-            loading: false,
-            resources
+    loadMorePredicates = (searchQuery) => {
+        if (searchQuery.length === 0) {
+            return;
+        }
+        this.setState({ isPredicatesNextPageLoading: true })
+        getAllPredicates({
+            page: this.state.predicatesPage,
+            items: this.itemsPerFilter,
+            sortBy: 'id',
+            desc: true,
+            q: searchQuery,
+        }).then((predicates) => {
+            if (predicates.length > 0) {
+                this.setState({
+                    predicates: [...this.state.predicates, ...predicates],
+                    isPredicatesNextPageLoading: false,
+                    hasPredicatesNextPage: predicates.length < this.itemsPerFilter ? false : true,
+                    predicatesPage: this.state.predicatesPage + 1
+                });
+            } else {
+                this.setState({
+                    isPredicatesNextPageLoading: false,
+                    hasPredicatesNextPage: false,
+                    isPredicatesLastPageReached: true
+                });
+            }
         });
     }
 
@@ -117,25 +261,6 @@ class Search extends Component {
         this.setState({
             selectedFilters
         });
-    }
-
-    countFilteredResources = (filterClass) => {
-        return this.state.resources.filter((resource) => resource.classes.includes(filterClass)).length;
-    }
-
-    countResources = () => {
-        let count = 0;
-
-        if (this.state.selectedFilters.length > 0) {
-            // count only the resources within the filters
-            count = this.state.selectedFilters.reduce((previous, currentValue) => {
-                return previous + this.countFilteredResources(this.filters.get(currentValue).class)
-            }, 0);
-        } else {
-            count = this.state.resources.length;
-        }
-
-        return count;
     }
 
     handleInputChange = (e) => {
@@ -170,13 +295,11 @@ class Search extends Component {
                     <Row>
                         <Col className="col-sm-4 px-0">
                             <div className="box mr-4 p-4 h-100">
-                                <Filters 
+                                <Filters
                                     loading={this.state.loading}
                                     value={this.state.value}
-                                    countFilteredResources={this.countFilteredResources}
                                     filters={this.filters}
                                     selectedFilters={this.state.selectedFilters}
-                                    resources={this.state.resources}
                                     handleInputChange={this.handleInputChange}
                                     toggleFilter={this.toggleFilter}
                                 />
@@ -184,14 +307,46 @@ class Search extends Component {
                         </Col>
                         <Col className="col-sm-8 px-0">
                             <div className="box p-4 h-100">
-                                <Results 
-                                    loading={this.state.loading}
-                                    countResources={this.countResources}
-                                    countFilteredResources={this.countFilteredResources}
-                                    filters={this.filters}
-                                    selectedFilters={this.state.selectedFilters}
-                                    resources={this.state.resources}
-                                />
+                                {((this.state.selectedFilters.length === 0) || (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(1))) && (
+                                    <Results
+                                        loading={this.state.isPapersNextPageLoading}
+                                        hasNextPage={this.state.hasPapersNextPage}
+                                        loadMore={this.loadMorePapers}
+                                        items={this.state.papers}
+                                        label={'Papers'}
+                                        class={process.env.REACT_APP_CLASSES_PAPER}
+                                    />
+                                )}
+                                {((this.state.selectedFilters.length === 0) || (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(2))) && (
+                                    <Results
+                                        loading={this.state.isProblemsNextPageLoading}
+                                        hasNextPage={this.state.hasProblemsNextPage}
+                                        loadMore={this.loadMoreProblems}
+                                        items={this.state.problems}
+                                        label={'Research problems'}
+                                        class={process.env.REACT_APP_CLASSES_PROBLEM}
+                                    />
+                                )}
+                                {((this.state.selectedFilters.length === 0) || (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(3))) && (
+                                    <Results
+                                        loading={this.state.isResourcesNextPageLoading}
+                                        hasNextPage={this.state.hasResourcesNextPage}
+                                        loadMore={this.loadMoreResources}
+                                        items={this.state.resources}
+                                        label={'Resources'}
+                                        class={'resource'}
+                                    />
+                                )}
+                                {((this.state.selectedFilters.length === 0) || (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(4))) && (
+                                    <Results
+                                        loading={this.state.isPredicatesNextPageLoading}
+                                        hasNextPage={this.state.hasPredicatesNextPage}
+                                        loadMore={this.loadMorePredicates}
+                                        items={this.state.predicates}
+                                        label={'Predicates'}
+                                        class={'predicate'}
+                                    />
+                                )}
                             </div>
                         </Col>
                     </Row>

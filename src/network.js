@@ -230,16 +230,16 @@ export const getResource = (id) => {
   return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`);
 };
 
-export const getAllResources = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
+export const getAllResources = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null, exclude = null }) => {
 
-  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
+  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc, ...(q) ? { q: q } : {}, ...(exclude) ? { exclude: exclude } : {} })
 
   return submitGetRequest(`${resourcesUrl}?${params}`);
 };
 
-export const getAllPredicates = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
+export const getAllPredicates = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null }) => {
 
-  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
+  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc, ...(q) ? { q: q } : {} })
 
   return submitGetRequest(`${predicatesUrl}?${params}`);
 };
@@ -275,9 +275,9 @@ export const getStatementsByObject = async ({ id, page = 1, items = 9999, sortBy
   return statements;
 };
 
-export const getResourcesByClass = async ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
+export const getResourcesByClass = async ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null }) => {
 
-  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
+  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc, ...(q) ? { q: q } : {} })
 
   let resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/?${params}`);
 
