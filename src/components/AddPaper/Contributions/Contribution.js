@@ -89,6 +89,7 @@ class Contribution extends Component {
                 <Tour
                     onAfterOpen={this.disableBody}
                     onBeforeClose={this.enableBody}
+                    disableInteraction={false}
                     steps={
                         [
                             ...(!this.props.showAbstractDialog) ? [
@@ -106,16 +107,19 @@ class Contribution extends Component {
                                             </ul>
                                         </span>,
                                     style: { borderTop: '4px solid #E86161' },
+                                    action: node => node ? node.focus() : null,
                                 },
                                 {
                                     selector: '#contributionsList',
                                     content: <span>You can enter multiple contributions, and you can specify a name for each contribution. It's just a handy label. <br /><br />Some papers only have one research contribution, while others have multiple. If you are not sure about this, it is fine to just use one contribution.</span>,
                                     style: { borderTop: '4px solid #E86161' },
+                                    action: node => node ? node.focus() : null,
                                 },
                                 {
                                     selector: '.listGroupEnlarge',
                                     content: <span>Entering contribution data is the most important part of adding a paper (this part takes around 10-20 minutes). In this section you enter the data relevant to your paper. The challenge here is to capture the most important aspects of your paper and to represent this here. <br /><br />The data is entered in a <strong>property and value </strong> structure. First you choose a property (e.g. method) and afterwards you add a value to this property (e.g. semi-structured interviews). <br /><br /><span className="btn btn-link p-0" onClick={this.toggleVideoDialog}>Open example video</span></span>,
                                     style: { borderTop: '4px solid #E86161' },
+                                    action: node => node ? node.focus() : null,
                                 },
                             ] : [],
                             ...(this.props.showAbstractDialog) ? [
@@ -127,6 +131,7 @@ class Contribution extends Component {
                                         </div>
                                     ),
                                     style: { borderTop: '4px solid #E86161' },
+                                    action: node => node ? node.focus() : null,
                                     position: 'right',
                                 } : {
                                         selector: '#annotatedText',
@@ -144,6 +149,7 @@ class Contribution extends Component {
                                         ),
                                         style: { borderTop: '4px solid #E86161' },
                                         position: 'right',
+                                        action: node => node ? node.focus() : null,
                                     }
                             ] : []
                         ]
