@@ -17,20 +17,26 @@ class Statements extends Component {
         if (this.props.initialResourceId) {
             this.props.initializeWithoutContribution({
                 resourceId: this.props.initialResourceId,
-                label: this.props.initialResourceLabel,
-            })
+                label: this.props.initialResourceLabel
+            });
         }
     }
 
-    handleInputChange = (e) => {
+    handleInputChange = e => {
         this.setState({
             [e.target.name]: e.target.value
         });
-    }
+    };
 
     statements = () => {
-        let propertyIds = Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource ? this.props.resources.byId[this.props.selectedResource].propertyIds : [];
-        let shared = Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource ? this.props.resources.byId[this.props.selectedResource].shared : 1;
+        let propertyIds =
+            Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource
+                ? this.props.resources.byId[this.props.selectedResource].propertyIds
+                : [];
+        let shared =
+            Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource
+                ? this.props.resources.byId[this.props.selectedResource].shared
+                : 1;
 
         return (
             <ListGroup className={'listGroupEnlarge'}>
@@ -53,19 +59,21 @@ class Statements extends Component {
                                     isEditing={property.isEditing}
                                     isSaving={property.isSaving}
                                 />
-                            )
-                        }))
-                        : <StyledStatementItem >No values</StyledStatementItem>
+                            );
+                        })
+                    ) : (
+                        <StyledStatementItem>No values</StyledStatementItem>
+                    )
                 ) : (
-                        <StyledStatementItem>
-                            <Icon icon={faSpinner} spin /> Loading
-                        </StyledStatementItem>
-                    )}
+                    <StyledStatementItem>
+                        <Icon icon={faSpinner} spin /> Loading
+                    </StyledStatementItem>
+                )}
 
-                {shared <= 1 & this.props.enableEdit ? <AddProperty syncBackend={this.props.syncBackend} /> : ''}
+                {(shared <= 1) & this.props.enableEdit ? <AddProperty syncBackend={this.props.syncBackend} /> : ''}
             </ListGroup>
         );
-    }
+    };
 
     addLevel = (level, maxLevel) => {
         return maxLevel !== 0 ? (
@@ -73,8 +81,10 @@ class Statements extends Component {
                 {maxLevel !== level + 1 && this.addLevel(level + 1, maxLevel)}
                 {maxLevel === level + 1 && this.statements()}
             </StyledLevelBox>
-        ) : this.statements();
-    }
+        ) : (
+            this.statements()
+        );
+    };
 
     render() {
         let elements = this.addLevel(0, this.props.level);
@@ -85,7 +95,9 @@ class Statements extends Component {
                     <>
                         <Breadcrumbs />
                     </>
-                ) : ''}
+                ) : (
+                    ''
+                )}
 
                 {elements}
             </>
@@ -104,14 +116,14 @@ Statements.propTypes = {
     initializeWithoutContribution: PropTypes.func.isRequired,
     initialResourceId: PropTypes.string,
     initialResourceLabel: PropTypes.string,
-    openExistingResourcesInDialog: PropTypes.bool,
+    openExistingResourcesInDialog: PropTypes.bool
 };
 
 Statements.defaultProps = {
     openExistingResourcesInDialog: false,
     initialResourceId: null,
     initialResourceLabel: null,
-    syncBackend: false,
+    syncBackend: false
 };
 
 const mapStateToProps = state => {
@@ -120,12 +132,12 @@ const mapStateToProps = state => {
         resources: state.statementBrowser.resources,
         properties: state.statementBrowser.properties,
         isFetchingStatements: state.statementBrowser.isFetchingStatements,
-        selectedResource: state.statementBrowser.selectedResource,
-    }
+        selectedResource: state.statementBrowser.selectedResource
+    };
 };
 
 const mapDispatchToProps = dispatch => ({
-    initializeWithoutContribution: (data) => dispatch(initializeWithoutContribution(data)),
+    initializeWithoutContribution: data => dispatch(initializeWithoutContribution(data))
 });
 
 export default connect(

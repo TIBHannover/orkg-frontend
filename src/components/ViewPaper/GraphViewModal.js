@@ -15,7 +15,7 @@ class GraphView extends Component {
         edges: [],
         statements: [],
         depth: 5,
-        isLoadingStatements: false,
+        isLoadingStatements: false
     };
 
     componentDidUpdate = (prevProps, prevState) => {
@@ -47,7 +47,7 @@ class GraphView extends Component {
 
             this.setState({
                 nodes,
-                edges,
+                edges
             });
         } else {
             this.visualizeAddPaper();
@@ -114,7 +114,7 @@ class GraphView extends Component {
 
         this.setState({
             nodes,
-            edges,
+            edges
         });
     };
 
@@ -145,11 +145,11 @@ class GraphView extends Component {
 
         return {
             nodes,
-            edges,
+            edges
         };
     };
 
-    handleDepthChange = (event) => {
+    handleDepthChange = event => {
         this.setState({ depth: event.target.value });
     };
 
@@ -178,37 +178,37 @@ class GraphView extends Component {
     render() {
         const graph = {
             nodes: this.state.nodes,
-            edges: this.state.edges,
+            edges: this.state.edges
         };
 
         const options = {
             nodes: {
                 color: '#80869B',
                 font: {
-                    color: '#fff',
-                },
+                    color: '#fff'
+                }
             },
 
             layout: {
                 hierarchical: {
                     direction: 'LR',
                     sortMethod: 'directed',
-                    levelSeparation: 300,
-                },
+                    levelSeparation: 300
+                }
             },
             physics: {
                 hierarchicalRepulsion: {
-                    nodeDistance: 140,
+                    nodeDistance: 140
                 },
                 barnesHut: {
-                    avoidOverlap: 1,
-                },
+                    avoidOverlap: 1
+                }
             },
             edges: {
                 color: '#000000',
-                smooth: false,
+                smooth: false
             },
-            height: '700px',
+            height: '700px'
         };
 
         /*const events = {
@@ -226,7 +226,16 @@ class GraphView extends Component {
                                 <Label for="depth" className="align-self-center mb-0 mr-2">
                                     Depth
                                 </Label>
-                                <Input type="number" name="select" id="depth" onChange={this.handleDepthChange} value={this.state.depth} style={{ width: 60 }} min="1" max="25" />
+                                <Input
+                                    type="number"
+                                    name="select"
+                                    id="depth"
+                                    onChange={this.handleDepthChange}
+                                    value={this.state.depth}
+                                    style={{ width: 60 }}
+                                    min="1"
+                                    max="25"
+                                />
                             </FormGroup>
                         </Form>
                     )}
@@ -234,7 +243,7 @@ class GraphView extends Component {
                         <Graph
                             graph={graph}
                             options={options}
-                        //events={events}
+                            //events={events}
                         />
                     )}
                     {this.state.isLoadingStatements && (
@@ -257,12 +266,12 @@ GraphView.propTypes = {
     toggle: PropTypes.func.isRequired,
     addPaper: PropTypes.object.isRequired,
     statementBrowser: PropTypes.object.isRequired,
-    paperId: PropTypes.string,
+    paperId: PropTypes.string
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     addPaper: state.addPaper,
-    statementBrowser: state.statementBrowser,
+    statementBrowser: state.statementBrowser
 });
 
 export default connect(mapStateToProps)(GraphView);

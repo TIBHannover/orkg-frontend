@@ -6,32 +6,33 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faBug } from '@fortawesome/free-solid-svg-icons';
 
 class NotFound extends Component {
-
     componentDidMount = () => {
-        document.title = 'Page not found - ORKG'
-    }
+        document.title = 'Page not found - ORKG';
+    };
 
     render() {
         return (
-        <div>
-            <Container className="p-0">
-                <h1 className="h4 mt-4 mb-4">An error has occurred</h1>
-            </Container>
-            <Container className="box pt-4 pb-4 pl-5 pr-5">
-                <div className="container">
-                    <div className="row justify-content-center">
-                        <div className="col-md-12 text-center">
-                            <span className="display-1 d-block">404</span>
-                            <Icon icon={faBug} className="text-primary mt-3 mb-3" style={{fontSize: 25}} />
-                            <div className="mb-4 lead">The page you are looking for was not found.</div>
-                            <Link to={ROUTES.HOME}>
-                                <Button color="primary" className="mr-3">Back to home</Button>
-                            </Link>
+            <div>
+                <Container className="p-0">
+                    <h1 className="h4 mt-4 mb-4">An error has occurred</h1>
+                </Container>
+                <Container className="box pt-4 pb-4 pl-5 pr-5">
+                    <div className="container">
+                        <div className="row justify-content-center">
+                            <div className="col-md-12 text-center">
+                                <span className="display-1 d-block">404</span>
+                                <Icon icon={faBug} className="text-primary mt-3 mb-3" style={{ fontSize: 25 }} />
+                                <div className="mb-4 lead">The page you are looking for was not found.</div>
+                                <Link to={ROUTES.HOME}>
+                                    <Button color="primary" className="mr-3">
+                                        Back to home
+                                    </Button>
+                                </Link>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </Container>
-        </div>
+                </Container>
+            </div>
         );
     }
 }

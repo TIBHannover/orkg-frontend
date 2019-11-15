@@ -18,10 +18,10 @@ $border-radius: $ORKG-border-radius;
 
 // Add a new theme color
 $theme-colors: (
-  lightblue: $body-bg,
-  darkblue: $darkblue,
-  darkblueDarker: $darkblueDarker,
-  primaryDarker: darken($ORKG-primary-color, 20%),
+    lightblue: $body-bg,
+    darkblue: $darkblue,
+    darkblueDarker: $darkblueDarker,
+    primaryDarker: darken($ORKG-primary-color, 20%)
 );
 
 // Forms

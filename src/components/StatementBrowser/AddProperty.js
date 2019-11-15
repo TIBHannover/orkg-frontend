@@ -15,35 +15,35 @@ class AddProperty extends Component {
             showAddProperty: false,
             newPredicateValue: '',
             confirmNewPropertyModal: false,
-            newPropertyLabel: '',
-        }
+            newPropertyLabel: ''
+        };
     }
 
     handleShowAddProperty = () => {
         this.setState({
-            showAddProperty: true,
+            showAddProperty: true
         });
-    }
+    };
 
     handleHideAddProperty = () => {
         this.setState({
             showAddProperty: false,
-            newPredicateValue: '',
+            newPredicateValue: ''
         });
-    }
+    };
 
-    handleInputChange = (e) => {
+    handleInputChange = e => {
         this.setState({
             [e.target.name]: e.target.value
         });
-    }
+    };
 
-    toggleConfirmNewProperty = (propertyLabel) => {
+    toggleConfirmNewProperty = propertyLabel => {
         this.setState(prevState => ({
             confirmNewPropertyModal: !prevState.confirmNewPropertyModal,
             newPropertyLabel: propertyLabel
         }));
-    }
+    };
 
     handlePropertySelect = ({ id, value: label }) => {
         this.setState({
@@ -53,9 +53,9 @@ class AddProperty extends Component {
         this.props.createProperty({
             resourceId: this.props.selectedResource,
             existingPredicateId: id,
-            label: label,
+            label: label
         });
-    }
+    };
 
     handleNewProperty = async () => {
         this.setState({
@@ -69,15 +69,15 @@ class AddProperty extends Component {
             this.props.createProperty({
                 resourceId: this.props.selectedResource,
                 existingPredicateId: newPredicate.id,
-                label: newPredicate.label,
+                label: newPredicate.label
             });
         } else {
             this.props.createProperty({
                 resourceId: this.props.selectedResource,
-                label: this.state.newPropertyLabel,
+                label: this.state.newPropertyLabel
             });
         }
-    }
+    };
 
     getNewProperties = () => {
         let propertyList = [];
@@ -88,13 +88,13 @@ class AddProperty extends Component {
             if (!property.existingPredicateId) {
                 propertyList.push({
                     id: null,
-                    label: property.label,
-                })
+                    label: property.label
+                });
             }
         }
 
         return propertyList;
-    }
+    };
 
     getDefaultProperties = () => {
         return [
@@ -121,27 +121,26 @@ class AddProperty extends Component {
             {
                 label: 'Has value',
                 id: 'HAS_VALUE'
-            }
-            ,
+            },
             {
                 label: 'Has metric',
                 id: 'HAS_METRIC'
             }
-        ]
-    }
+        ];
+    };
 
     render() {
         return (
             <>
                 <StyledStatementItem>
-                    {this.state.showAddProperty ?
+                    {this.state.showAddProperty ? (
                         <StyledAddProperty>
                             <AutoComplete
                                 requestUrl={predicatesUrl}
                                 placeholder="Select or type to enter a property"
                                 onItemSelected={this.handlePropertySelect}
                                 onNewItemSelected={this.toggleConfirmNewProperty}
-                                onKeyUp={() => { }}
+                                onKeyUp={() => {}}
                                 additionalData={this.getNewProperties()}
                                 disableBorderRadiusRight
                                 allowCreate
@@ -149,14 +148,16 @@ class AddProperty extends Component {
                             />
 
                             <InputGroupAddon addonType="append">
-                                <Button color="light" className={'addPropertyActionButton'} onClick={this.handleHideAddProperty}>Cancel</Button>
+                                <Button color="light" className={'addPropertyActionButton'} onClick={this.handleHideAddProperty}>
+                                    Cancel
+                                </Button>
                             </InputGroupAddon>
                         </StyledAddProperty>
-                        :
+                    ) : (
                         <span className="btn btn-link p-0 border-0 align-baseline" onClick={this.handleShowAddProperty}>
                             + Add property
                         </span>
-                    }
+                    )}
                 </StyledStatementItem>
 
                 <Modal isOpen={this.state.confirmNewPropertyModal} toggle={this.toggleConfirmNewProperty}>
@@ -165,8 +166,12 @@ class AddProperty extends Component {
                         Often there are existing properties that you can use as well. It is better to use existing properties than new ones.
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="light" onClick={this.toggleConfirmNewProperty}>Cancel</Button>{' '}
-                        <Button color="primary" onClick={this.handleNewProperty}>Create new property</Button>
+                        <Button color="light" onClick={this.toggleConfirmNewProperty}>
+                            Cancel
+                        </Button>{' '}
+                        <Button color="primary" onClick={this.handleNewProperty}>
+                            Create new property
+                        </Button>
                     </ModalFooter>
                 </Modal>
             </>
@@ -178,18 +183,18 @@ AddProperty.propTypes = {
     createProperty: PropTypes.func.isRequired,
     selectedResource: PropTypes.string.isRequired,
     newProperties: PropTypes.object.isRequired,
-    syncBackend: PropTypes.bool.isRequired,
+    syncBackend: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => {
     return {
         selectedResource: state.statementBrowser.selectedResource,
         newProperties: state.statementBrowser.properties.byId
-    }
+    };
 };
 
 const mapDispatchToProps = dispatch => ({
-    createProperty: (data) => dispatch(createProperty(data)),
+    createProperty: data => dispatch(createProperty(data))
 });
 
 export default connect(

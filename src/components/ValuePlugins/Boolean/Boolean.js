@@ -6,13 +6,13 @@ import styled from 'styled-components';
 import { renderToString } from 'react-dom/server';
 
 const Check = styled.span`
-    color: #329A0C;
-    font-size:18px;
+    color: #329a0c;
+    font-size: 18px;
 `;
 
 const Cross = styled.span`
-    color: #F02500;
-    font-size:20px;
+    color: #f02500;
+    font-size: 20px;
 `;
 
 class Boolean extends Component {
@@ -56,11 +56,7 @@ class Boolean extends Component {
 }
 
 Boolean.propTypes = {
-    children: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.object,
-    ]).isRequired,
+    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired
 };
-
 
 export default Boolean;

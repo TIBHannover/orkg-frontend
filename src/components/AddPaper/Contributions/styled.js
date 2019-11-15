@@ -31,15 +31,15 @@ export const StyledContributionsList = styled.ul`
             color: #fff;
             cursor: initial !important;
         }
-        &.activeContribution a{
+        &.activeContribution a {
             color: #fff;
         }
         .deleteContribution {
             cursor: pointer;
-            color:#fff;
+            color: #fff;
         }
         .selectContribution {
-            cursor:pointer;
+            cursor: pointer;
 
             &:hover {
                 text-decoration: underline;
@@ -61,11 +61,11 @@ export const StyledResearchFieldsInputFormControl = styled.div`
     padding: 0 !important;
 
     & input {
-    border: 0;
-    background: transparent;
-    max-width: 100%;
-    outline: 0;
-    margin: 5px 2px;
+        border: 0;
+        background: transparent;
+        max-width: 100%;
+        outline: 0;
+        margin: 5px 2px;
     }
 `;
 
@@ -80,8 +80,8 @@ export const StyledResearchFieldBrowser = styled.div`
 export const StyledStatementItem = styled(ListGroupItem)`
     padding: 0.5rem 0.75rem !important;
     cursor: default;
-    background-color: ${props => props.theme.ultraLightBlue} !important; 
-    border-color: ${props => props.theme.ultraLightBlueDarker} !important; 
+    background-color: ${props => props.theme.ultraLightBlue} !important;
+    border-color: ${props => props.theme.ultraLightBlueDarker} !important;
 
     &.selectable {
         cursor: pointer;
@@ -107,8 +107,8 @@ export const StyledStatementItem = styled(ListGroupItem)`
     }
 
     &.statementActive {
-        background-color: ${props => props.theme.darkblue}  !important;
-        border-color: ${props => props.theme.darkblue}  !important;
+        background-color: ${props => props.theme.darkblue} !important;
+        border-color: ${props => props.theme.darkblue} !important;
         color: #fff;
 
         & .deletePredicate {
@@ -119,7 +119,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
 
 /*addProperty*/
 export const StyledAddProperty = styled(InputGroup)`
-    & input[type="text"] {
+    & input[type='text'] {
         background: #fff !important;
     }
     & .addPropertyActionButton {
@@ -135,21 +135,20 @@ export const StyledListGroupOpen = styled.div`
     border-right-width: ${props => props.theme.borderWidth};
     border-left-style: solid;
     border-right-style: solid;
-    border-left-color: #DFDFDF; /*don't use default color, since it is partially transparent $list-group-border-color;$list-group-border-color;*/
-    border-right-color: #DFDFDF; /*don't use default color, since it is partially transparent $list-group-border-color; $list-group-border-color;*/
+    border-left-color: #dfdfdf; /*don't use default color, since it is partially transparent $list-group-border-color;$list-group-border-color;*/
+    border-right-color: #dfdfdf; /*don't use default color, since it is partially transparent $list-group-border-color; $list-group-border-color;*/
     padding: 10px 20px;
 
     &.listGroupOpenBorderBottom {
         border-bottom-width: ${props => props.theme.borderWidth};
         border-bottom-style: solid;
-        border-bottom-color: #DFDFDF; /*don't use default color, since it is partially transparent $list-group-border-color;$list-group-border-color;*/
+        border-bottom-color: #dfdfdf; /*don't use default color, since it is partially transparent $list-group-border-color;$list-group-border-color;*/
     }
 `;
 
-
 /*levelBox*/
 export const StyledLevelBox = styled.div`
-    border-color: #DFDFDF; /*don't use default color, since it is partially transparent $list-group-border-color;*/
+    border-color: #dfdfdf; /*don't use default color, since it is partially transparent $list-group-border-color;*/
     border-radius: ${props => props.theme.borderRadius};
     padding-left: 8px;
     border-style: solid;
@@ -163,7 +162,7 @@ export const StyledLevelBox = styled.div`
         margin-top: -2px;
         margin-right: -2px;
         margin-bottom: -2px;
-        display:block;
+        display: block;
     }
 `;
 

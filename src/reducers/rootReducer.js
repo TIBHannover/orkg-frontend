@@ -5,10 +5,11 @@ import auth from './auth';
 import statementBrowser from './statementBrowser';
 import viewPaper from './viewPaper';
 
-export default history => combineReducers({
-  router: history ? connectRouter(history) : null,
-  addPaper,
-  viewPaper,
-  statementBrowser,
-  auth,
-});
+export default history =>
+    combineReducers({
+        router: history ? connectRouter(history) : null,
+        addPaper,
+        viewPaper,
+        statementBrowser,
+        auth
+    });

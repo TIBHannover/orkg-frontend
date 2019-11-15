@@ -6,12 +6,7 @@ import { predicatesUrl, submitGetRequest } from '../../../network';
 import { connect } from 'react-redux';
 import AnnotationTootip from './AnnotationTootip';
 
-import {
-    createAnnotation,
-    updateAnnotationClass,
-    removeAnnotation,
-    validateAnnotation
-} from '../../../actions/addPaper';
+import { createAnnotation, updateAnnotationClass, removeAnnotation, validateAnnotation } from '../../../actions/addPaper';
 
 function getAllIndexes(arr, val) {
     var indexes = [],
@@ -29,7 +24,7 @@ class AbstractAnnotator extends Component {
         this.annotatorRef = React.createRef();
 
         this.state = {
-            defaultOptions: [],
+            defaultOptions: []
         };
     }
 
@@ -64,7 +59,7 @@ class AbstractAnnotator extends Component {
         return responseJson;
     };
 
-    loadOptions = async (value) => {
+    loadOptions = async value => {
         try {
             if (value === '' || value.trim() === '') {
                 return [];
@@ -93,11 +88,11 @@ class AbstractAnnotator extends Component {
 
             let options = [];
 
-            responseJson.map((item) =>
+            responseJson.map(item =>
                 options.push({
                     label: item.label,
-                    id: item.id,
-                }),
+                    id: item.id
+                })
             );
 
             return options;
@@ -108,17 +103,22 @@ class AbstractAnnotator extends Component {
         }
     };
 
-    renderCharNode = (charIndex) => {
+    renderCharNode = charIndex => {
         return (
             <span key={`c${charIndex}`} data-position={charIndex}>
                 {this.props.abstract[charIndex]}
             </span>
         );
-    }
+    };
 
-    getRange = (charPosition) => {
-        return this.props.ranges && Object.values(this.props.ranges).find((range) => (charPosition >= range.start) && (charPosition <= range.end) && (range.certainty >= this.props.certaintyThreshold));
-    }
+    getRange = charPosition => {
+        return (
+            this.props.ranges &&
+            Object.values(this.props.ranges).find(
+                range => charPosition >= range.start && charPosition <= range.end && range.certainty >= this.props.certaintyThreshold
+            )
+        );
+    };
 
     tooltipRenderer = (lettersNode, range) => {
         return (
@@ -131,7 +131,8 @@ class AbstractAnnotator extends Component {
                 handleValidateAnnotation={this.props.validateAnnotation}
                 defaultOptions={this.state.defaultOptions}
                 getClassColor={this.props.getClassColor}
-            />);
+            />
+        );
     };
 
     getAnnotatedText = () => {
@@ -152,7 +153,7 @@ class AbstractAnnotator extends Component {
             annotatedText.push(this.tooltipRenderer(annotationGroup, range));
         }
         return annotatedText;
-    }
+    };
 
     handleChangeAnnotationClass = (selectedOption, { action }, range) => {
         if (action === 'select-option') {
@@ -160,7 +161,7 @@ class AbstractAnnotator extends Component {
         } else if (action === 'create-option') {
             const newOption = {
                 label: selectedOption.label,
-                id: selectedOption.label,
+                id: selectedOption.label
             };
             this.props.updateAnnotationClass({ range, selectedOption: newOption });
             this.setState({ defaultOptions: [...this.state.defaultOptions, newOption] });
@@ -193,7 +194,7 @@ class AbstractAnnotator extends Component {
         if (pos === undefined || pos.length === 0) {
             return null;
         }
-        var closest = pos.reduce(function (prev, curr) {
+        var closest = pos.reduce(function(prev, curr) {
             return Math.abs(curr - start) < Math.abs(prev - start) ? curr : prev;
         }, 0);
         // Update position of selection
@@ -206,7 +207,7 @@ class AbstractAnnotator extends Component {
             text: text,
             class: { id: null, label: null },
             certainty: 1,
-            isEditing: false,
+            isEditing: false
         };
         this.props.createAnnotation(range);
         window.getSelection().empty();
@@ -224,7 +225,6 @@ class AbstractAnnotator extends Component {
     }
 }
 
-
 AbstractAnnotator.propTypes = {
     ranges: PropTypes.object,
     abstract: PropTypes.string,
@@ -234,26 +234,26 @@ AbstractAnnotator.propTypes = {
     updateAnnotationClass: PropTypes.func.isRequired,
     certaintyThreshold: PropTypes.number,
     classOptions: PropTypes.array.isRequired,
-    getClassColor: PropTypes.func.isRequired,
+    getClassColor: PropTypes.func.isRequired
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     abstract: state.addPaper.abstract,
     ranges: state.addPaper.ranges,
     rangeIdIndex: state.addPaper.rangeIdIndex,
-    tourCurrentStep: state.addPaper.tourCurrentStep,
+    tourCurrentStep: state.addPaper.tourCurrentStep
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    createAnnotation: (data) => dispatch(createAnnotation(data)),
-    validateAnnotation: (data) => dispatch(validateAnnotation(data)),
-    removeAnnotation: (data) => dispatch(removeAnnotation(data)),
-    updateAnnotationClass: (data) => dispatch(updateAnnotationClass(data))
+const mapDispatchToProps = dispatch => ({
+    createAnnotation: data => dispatch(createAnnotation(data)),
+    validateAnnotation: data => dispatch(validateAnnotation(data)),
+    removeAnnotation: data => dispatch(removeAnnotation(data)),
+    updateAnnotationClass: data => dispatch(updateAnnotationClass(data))
 });
 
 export default compose(
     connect(
         mapStateToProps,
-        mapDispatchToProps,
+        mapDispatchToProps
     )
 )(AbstractAnnotator);

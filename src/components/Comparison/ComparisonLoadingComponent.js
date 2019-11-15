@@ -1,16 +1,16 @@
-import React, { Component } from 'react'
-import ContentLoader from 'react-content-loader'
+import React, { Component } from 'react';
+import ContentLoader from 'react-content-loader';
 import styled from 'styled-components';
 
 const BorderTopRaduis = styled.div.attrs(props => ({
-    className: 'mr-2 ml-2',
+    className: 'mr-2 ml-2'
 }))`
     border-radius: 11px 11px 0 0;
     overflow: hidden;
 `;
 
 const BorderBottomRaduis = styled.div.attrs(props => ({
-    className: 'mr-2 ml-2',
+    className: 'mr-2 ml-2'
 }))`
     border-radius: 0 0 11px 11px;
     overflow: hidden;
@@ -24,108 +24,60 @@ export default class ComparisonLoadingComponent extends Component {
                 <table className="mb-0 mt-3 table">
                     <tbody className="table-borderless">
                         <tr className="table-borderless">
-                            <td className="p-0" >
+                            <td className="p-0">
                                 <BorderTopRaduis>
-                                    <ContentLoader
-                                        height={20}
-                                        width={100}
-                                        speed={2}
-                                        primaryColor="#80869B"
-                                        secondaryColor="#ecebeb"
-                                    >
+                                    <ContentLoader height={20} width={100} speed={2} primaryColor="#80869B" secondaryColor="#ecebeb">
                                         <rect x="0" y="0" rx="0" ry="0" width="100" height="20" />
                                     </ContentLoader>
                                 </BorderTopRaduis>
                             </td>
-                            <td className="p-0" >
+                            <td className="p-0">
                                 <BorderTopRaduis>
-                                    <ContentLoader
-                                        height={20}
-                                        width={100}
-                                        speed={2}
-                                        primaryColor="#E86161"
-                                        secondaryColor="#ecebeb"
-                                    >
+                                    <ContentLoader height={20} width={100} speed={2} primaryColor="#E86161" secondaryColor="#ecebeb">
                                         <rect x="0" y="0" rx="0" ry="0" width="100" height="20" />
                                     </ContentLoader>
                                 </BorderTopRaduis>
                             </td>
-                            <td className="p-0" >
+                            <td className="p-0">
                                 <BorderTopRaduis>
-                                    <ContentLoader
-                                        height={20}
-                                        width={100}
-                                        speed={2}
-                                        primaryColor="#E86161"
-                                        secondaryColor="#ecebeb"
-                                    >
+                                    <ContentLoader height={20} width={100} speed={2} primaryColor="#E86161" secondaryColor="#ecebeb">
                                         <rect x="0" y="0" rx="0" ry="0" width="100" height="20" />
                                     </ContentLoader>
                                 </BorderTopRaduis>
                             </td>
-                            <td className="p-0" >
+                            <td className="p-0">
                                 <BorderTopRaduis>
-                                    <ContentLoader
-                                        height={20}
-                                        width={100}
-                                        speed={2}
-                                        primaryColor="#E86161"
-                                        secondaryColor="#ecebeb"
-                                    >
+                                    <ContentLoader height={20} width={100} speed={2} primaryColor="#E86161" secondaryColor="#ecebeb">
                                         <rect x="0" y="0" rx="0" ry="0" width="100" height="20" />
                                     </ContentLoader>
                                 </BorderTopRaduis>
                             </td>
                         </tr>
                         <tr className="table-borderless">
-                            <td className="p-0" >
+                            <td className="p-0">
                                 <BorderBottomRaduis>
-                                    <ContentLoader
-                                        height={60}
-                                        width={100}
-                                        speed={2}
-                                        primaryColor="#80869B"
-                                        secondaryColor="#ecebeb"
-                                    >
+                                    <ContentLoader height={60} width={100} speed={2} primaryColor="#80869B" secondaryColor="#ecebeb">
                                         <rect x="0" y="0" rx="0" ry="0" width="100" height="60" />
                                     </ContentLoader>
                                 </BorderBottomRaduis>
                             </td>
-                            <td className="p-0" >
+                            <td className="p-0">
                                 <BorderBottomRaduis>
-                                    <ContentLoader
-                                        height={60}
-                                        width={100}
-                                        speed={2}
-                                        primaryColor="#f3f3f3"
-                                        secondaryColor="#ecebeb"
-                                    >
+                                    <ContentLoader height={60} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
                                         <rect x="0" y="0" rx="0" ry="0" width="100" height="60" />
                                     </ContentLoader>
                                 </BorderBottomRaduis>
                             </td>
-                            <td className="p-0" >
+                            <td className="p-0">
                                 <BorderBottomRaduis>
-                                    <ContentLoader
-                                        height={60}
-                                        width={100}
-                                        speed={2}
-                                        primaryColor="#f3f3f3"
-                                        secondaryColor="#ecebeb"
-                                    >
+                                    <ContentLoader height={60} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
                                         <rect x="0" y="0" rx="0" ry="0" width="100" height="60" />
                                     </ContentLoader>
                                 </BorderBottomRaduis>
                             </td>
-                            <td className="p-0" >
+                            <td className="p-0">
                                 <BorderBottomRaduis>
-                                    <ContentLoader
-                                        height={60}
-                                        width={100}
-                                        speed={2}
-                                        primaryColor="#f3f3f3"
-                                        secondaryColor="#ecebeb"
-                                    >
+                                    <ContentLoader height={60} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
                                         <rect x="0" y="0" rx="0" ry="0" width="100" height="60" />
                                     </ContentLoader>
                                 </BorderBottomRaduis>
@@ -134,6 +86,6 @@ export default class ComparisonLoadingComponent extends Component {
                     </tbody>
                 </table>
             </div>
-        )
+        );
     }
 }

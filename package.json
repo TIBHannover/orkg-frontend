@@ -84,10 +84,14 @@
         "enzyme": "^3.10.0",
         "enzyme-adapter-react-16": "^1.14.0",
         "enzyme-to-json": "^3.4.0",
+        "eslint": "^6.5.1",
+        "eslint-config-prettier": "^6.4.0",
+        "eslint-plugin-prettier": "^3.1.1",
         "husky": "^3.0.7",
         "jest-canvas-mock": "^2.1.1",
         "lint-staged": "^9.4.1",
         "named-urls": "^1.4.0",
+        "prettier": "^1.18.2",
         "react-test-renderer": "^16.9.0",
         "sass-extract": "^2.1.0",
         "sass-extract-js": "^0.4.0",
@@ -122,8 +126,17 @@
         }
     },
     "eslintConfig": {
-        "extends": "react-app",
+        "extends": [
+            "react-app",
+            "prettier"
+        ],
+        "plugins": [
+            "prettier"
+        ],
         "rules": {
+            "prettier/prettier": [
+                "error"
+            ],
             "react/jsx-closing-bracket-location": [
                 "error"
             ],
@@ -156,10 +169,6 @@
             ],
             "react/prop-types": [
                 "error"
-            ],
-            "quotes": [
-                2,
-                "single"
             ]
         }
     }

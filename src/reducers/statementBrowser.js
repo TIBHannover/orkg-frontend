@@ -8,21 +8,21 @@ const initialState = {
     isFetchingStatements: false,
     resources: {
         byId: {},
-        allIds: [],
+        allIds: []
     },
     properties: {
         byId: {},
-        allIds: [],
+        allIds: []
     },
     values: {
         byId: {},
-        allIds: [],
+        allIds: []
     },
     resourceHistory: {
         byId: {},
-        allIds: [],
+        allIds: []
     }
-}
+};
 
 export default (state = initialState, action) => {
     switch (action.type) {
@@ -35,7 +35,7 @@ export default (state = initialState, action) => {
                     label: payload.label ? payload.label : '',
                     existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
                     shared: payload.shared ? payload.shared : 1,
-                    propertyIds: [],
+                    propertyIds: []
                 }
             }));
 
@@ -55,7 +55,10 @@ export default (state = initialState, action) => {
             let { payload } = action;
             let newState;
             if (dotProp.get(state, `resources.byId.${payload.resourceId}`)) {
-                newState = dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, propertyIds => [...propertyIds, payload.propertyId]);
+                newState = dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, propertyIds => [
+                    ...propertyIds,
+                    payload.propertyId
+                ]);
                 newState = dotProp.set(newState, 'properties.byId', ids => ({
                     ...ids,
                     [payload.propertyId]: {
@@ -64,7 +67,7 @@ export default (state = initialState, action) => {
                         valueIds: [],
                         isExistingProperty: payload.isExistingProperty ? payload.isExistingProperty : false,
                         isEditing: false,
-                        isSaving: false,
+                        isSaving: false
                     }
                 }));
                 newState = dotProp.set(newState, 'properties.allIds', ids => [...ids, payload.propertyId]);
@@ -97,7 +100,11 @@ export default (state = initialState, action) => {
         case type.CHANGE_PROPERTY: {
             let { payload } = action;
             let newState = dotProp.set(state, `properties.byId.${payload.propertyId}.label`, payload.newProperty.label);
-            newState = dotProp.set(newState, `properties.byId.${payload.propertyId}.existingPredicateId`, payload.newProperty.isExistingProperty ? payload.newProperty.id : false);
+            newState = dotProp.set(
+                newState,
+                `properties.byId.${payload.propertyId}.existingPredicateId`,
+                payload.newProperty.isExistingProperty ? payload.newProperty.id : false
+            );
             newState = dotProp.set(newState, `properties.byId.${payload.propertyId}.isExistingProperty`, payload.newProperty.isExistingProperty);
             return newState;
         }
@@ -138,13 +145,13 @@ export default (state = initialState, action) => {
                         statementId: payload.statementId,
                         isEditing: false,
                         isSaving: false,
-                        shared: payload.shared ? payload.shared : 1,
+                        shared: payload.shared ? payload.shared : 1
                     }
                 }));
 
                 newState = dotProp.set(newState, 'values.allIds', ids => [...ids, payload.valueId]);
 
-                // TODO: is the same as creating a resource in the contributions, so make a function 
+                // TODO: is the same as creating a resource in the contributions, so make a function
                 // add a new resource when a object value is created
 
                 //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
@@ -158,7 +165,7 @@ export default (state = initialState, action) => {
                             id: payload.resourceId,
                             label: payload.label,
                             shared: payload.shared ? payload.shared : 1,
-                            propertyIds: [],
+                            propertyIds: []
                         }
                     }));
                 }
@@ -194,7 +201,7 @@ export default (state = initialState, action) => {
                     statementId: payload.statementId ? payload.statementId : null,
                     isEditing: v.isEditing,
                     isSaving: v.isSaving,
-                    shared: payload.shared ? payload.shared : 1,
+                    shared: payload.shared ? payload.shared : 1
                 }));
                 //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
                 if (!state.resources.byId[payload.resourceId]) {
@@ -207,7 +214,7 @@ export default (state = initialState, action) => {
                             id: payload.resourceId,
                             label: payload.label,
                             shared: payload.shared ? payload.shared : 1,
-                            propertyIds: [],
+                            propertyIds: []
                         }
                     }));
                 }
@@ -258,34 +265,36 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 selectedResource: payload.resourceId,
-                level: level > 0 ? level : 0,
+                level: level > 0 ? level : 0
             };
         }
 
         case type.RESET_LEVEL: {
             return {
                 ...state,
-                level: 0,
+                level: 0
             };
         }
 
         case type.ADD_RESOURCE_HISTORY: {
             let { payload } = action;
             let resourceId = payload.resourceId ? payload.resourceId : null; //state.contributions.byId[state.selectedContribution].resourceId
-            let lastResourceId = state.resourceHistory.allIds[state.resourceHistory.allIds.length - 1]
+            let lastResourceId = state.resourceHistory.allIds[state.resourceHistory.allIds.length - 1];
 
             let newState = dotProp.set(state, 'resourceHistory.byId', ids => ({
                 ...ids,
                 [resourceId]: {
                     id: resourceId,
-                    label: payload.label,
+                    label: payload.label
                 },
-                ...lastResourceId ? {
-                    [lastResourceId]: {
-                        ...state.resourceHistory.byId[lastResourceId],
-                        selectedProperty: state.selectedProperty,
-                    }
-                } : {}
+                ...(lastResourceId
+                    ? {
+                          [lastResourceId]: {
+                              ...state.resourceHistory.byId[lastResourceId],
+                              selectedProperty: state.selectedProperty
+                          }
+                      }
+                    : {})
             }));
 
             newState = dotProp.set(newState, 'resourceHistory.allIds', ids => [...ids, resourceId]);
@@ -316,7 +325,7 @@ export default (state = initialState, action) => {
                 ...state,
                 resourceHistory: {
                     byId: {},
-                    allIds: [],
+                    allIds: []
                 }
             };
         }
@@ -324,14 +333,14 @@ export default (state = initialState, action) => {
         case type.CLEAR_SELECTED_PROPERTY: {
             return {
                 ...state,
-                selectedProperty: '',
+                selectedProperty: ''
             };
         }
 
         case type.ADD_FETCHED_STATEMENT: {
             return {
-                ...state,
-            }
+                ...state
+            };
         }
 
         case type.SET_STATEMENT_IS_FECHTED: {
@@ -340,40 +349,39 @@ export default (state = initialState, action) => {
             let newState = dotProp.set(state, `resources.byId.${resourceId}.isFechted`, true);
 
             return {
-                ...newState,
-            }
+                ...newState
+            };
         }
 
         case type.IS_FETCHING_STATEMENTS: {
-
             return {
                 ...state,
-                isFetchingStatements: true,
-            }
+                isFetchingStatements: true
+            };
         }
 
         case type.DONE_FETCHING_STATEMENTS: {
-
             return {
                 ...state,
-                isFetchingStatements: false,
-            }
+                isFetchingStatements: false
+            };
         }
 
         case type.RESET_STATEMENT_BROWSER: {
             return {
                 ...initialState
-            }
+            };
         }
 
-        case '@@router/LOCATION_CHANGE': { //from connected-react-router, reset the wizard when the page is changed
+        case '@@router/LOCATION_CHANGE': {
+            //from connected-react-router, reset the wizard when the page is changed
             return {
                 ...initialState
-            }
+            };
         }
 
         default: {
-            return state
+            return state;
         }
     }
-}
+};

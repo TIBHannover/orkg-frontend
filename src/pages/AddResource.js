@@ -7,12 +7,12 @@ export default class AddResource extends Component {
     state = {
         value: '',
         /* Possible values: 'edit', 'loading'. */
-        editorState: 'edit',
+        editorState: 'edit'
     };
 
     doi = null;
 
-    setEditorState = (editorState) => {
+    setEditorState = editorState => {
         this.setState({ editorState: editorState });
     };
 
@@ -41,23 +41,23 @@ export default class AddResource extends Component {
         }
     };
 
-    handleInput = (event) => {
+    handleInput = event => {
         this.setState({ value: event.target.value.trim() });
     };
 
-    handleKeyUp = async (event) => {
+    handleKeyUp = async event => {
         event.preventDefault();
         if (event.keyCode === 13) {
             await this.handleAdd();
         }
     };
 
-    handleLiteralStatementCreationError = (error) => {
+    handleLiteralStatementCreationError = error => {
         console.error(error);
         toast.error(`Error creating literal statement ${error.message}`);
     };
 
-    createNewResource = async (usingDoi) => {
+    createNewResource = async usingDoi => {
         const value = this.state.value;
         if (value && value.length !== 0) {
             try {
@@ -77,7 +77,7 @@ export default class AddResource extends Component {
         }
     };
 
-    navigateToResource = (resourceId) => {
+    navigateToResource = resourceId => {
         this.setEditorState('edit');
         document.location.href = `${process.env.PUBLIC_URL}/resource/${resourceId}`;
     };
@@ -95,27 +95,29 @@ export default class AddResource extends Component {
         return (
             <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5">
                 <div className="input-group mb-3">
-                    <input type="text" className="form-control" placeholder="Research contribution title or DOI"
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Research contribution title or DOI"
                         disabled={loading}
                         onInput={this.handleInput}
                         onKeyUp={this.handleKeyUp}
-                        aria-label="Resource title or DOI" aria-describedby="basic-addon2"
+                        aria-label="Resource title or DOI"
+                        aria-describedby="basic-addon2"
                     />
-                    {
-                        !loading ? (
-                            <div className="input-group-append">
-                                <button className="btn btn-outline-primary" type="button" onClick={this.handleAdd}>Add</button>
-                            </div>
-                        )
-                            : (
-                                <div className="container vertical-centered">
-                                    <span className="fa fa-spinner fa-spin" />
-                                </div>
-                            )
-                    }
+                    {!loading ? (
+                        <div className="input-group-append">
+                            <button className="btn btn-outline-primary" type="button" onClick={this.handleAdd}>
+                                Add
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="container vertical-centered">
+                            <span className="fa fa-spinner fa-spin" />
+                        </div>
+                    )}
                 </div>
             </Container>
         );
     }
-
 }

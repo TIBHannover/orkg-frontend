@@ -7,7 +7,6 @@ import { compose } from 'redux';
 import { addToComparison, removeFromComparison } from '../../actions/viewPaper';
 
 class AddToComparison extends Component {
-
     toggleCompare = () => {
         const { contributionId, comparison } = this.props;
 
@@ -19,11 +18,11 @@ class AddToComparison extends Component {
                 contributionData: {
                     paperId: this.props.paperId,
                     paperTitle: this.props.paperTitle,
-                    contributionTitle: this.props.contributionTitle,
+                    contributionTitle: this.props.contributionTitle
                 }
             });
         }
-    }
+    };
 
     render() {
         return (
@@ -48,16 +47,16 @@ AddToComparison.propTypes = {
     addToComparison: PropTypes.func.isRequired,
     removeFromComparison: PropTypes.func.isRequired,
     comparison: PropTypes.object.isRequired,
-    cookies: PropTypes.object,
+    cookies: PropTypes.object
 };
 
 const mapStateToProps = state => ({
-    comparison: state.viewPaper.comparison,
+    comparison: state.viewPaper.comparison
 });
 
 const mapDispatchToProps = dispatch => ({
-    addToComparison: (data) => dispatch(addToComparison(data)),
-    removeFromComparison: (data) => dispatch(removeFromComparison(data))
+    addToComparison: data => dispatch(addToComparison(data)),
+    removeFromComparison: data => dispatch(removeFromComparison(data))
 });
 
 export default compose(

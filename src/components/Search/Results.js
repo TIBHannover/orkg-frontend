@@ -9,32 +9,31 @@ import ContentLoader from 'react-content-loader';
 import styled from 'styled-components';
 
 const StyledLoadMoreButton = styled.div`
-    padding-top:0;
-    & span{
+    padding-top: 0;
+    & span {
         cursor: pointer;
         border: 2px solid rgba(0, 0, 0, 0.125);
-        border-top:0;
+        border-top: 0;
         border-top-right-radius: 0;
         border-top-left-radius: 0;
         border-bottom-right-radius: 12px;
         border-bottom-left-radius: 12px;
     }
-    &.action:hover span{
+    &.action:hover span {
         z-index: 1;
-        color:#495057;
+        color: #495057;
         text-decoration: underline;
-        background-color:#f8f9fa;
+        background-color: #f8f9fa;
     }
-
 `;
 
 const StyledListGroupItem = styled(ListGroupItem)`
-    &:last-child{
-        border-bottom-right-radius: ${props => props.rounded === 'true' ? '0 !important' : ''};
+    &:last-child {
+        border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
     }
 `;
 
-const Results = (props) => {
+const Results = props => {
     const getResourceLink = (filterClass, resourceId) => {
         let link = '';
 
@@ -62,17 +61,12 @@ const Results = (props) => {
         }
 
         return link;
-    }
+    };
 
     return (
         <div>
             {props.loading && props.items === 0 && (
-                <ContentLoader
-                    height={210}
-                    speed={2}
-                    primaryColor="#f3f3f3"
-                    secondaryColor="#ecebeb"
-                >
+                <ContentLoader height={210} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
                     <rect x="0" y="8" width="50" height="15" />
                     <rect x="0" y="25" width="100%" height="15" />
                     <rect x="0" y="42" width="100%" height="15" />
@@ -102,11 +96,9 @@ const Results = (props) => {
                             {props.items.map((item, index) => {
                                 return (
                                     <StyledListGroupItem rounded={props.hasNextPage.toString()} action key={`result-${index}`} className="pt-1 pb-1">
-                                        <Link to={getResourceLink(props.class, item.id)}>
-                                            {item.label}
-                                        </Link>
+                                        <Link to={getResourceLink(props.class, item.id)}>{item.label}</Link>
                                     </StyledListGroupItem>
-                                )
+                                );
                             })}
                         </ListGroup>
                         {!props.loading && props.hasNextPage && (
@@ -125,11 +117,10 @@ const Results = (props) => {
                         )}
                     </div>
                 </div>
-            )
-            }
-        </div >
-    )
-}
+            )}
+        </div>
+    );
+};
 
 Results.propTypes = {
     loading: PropTypes.bool.isRequired,
@@ -137,7 +128,7 @@ Results.propTypes = {
     class: PropTypes.string.isRequired,
     items: PropTypes.array.isRequired,
     loadMore: PropTypes.func.isRequired,
-    hasNextPage: PropTypes.bool.isRequired,
-}
+    hasNextPage: PropTypes.bool.isRequired
+};
 
 export default withRouter(Results);

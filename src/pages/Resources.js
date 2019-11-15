@@ -7,7 +7,6 @@ import { getAllResources } from '../network';
 import { Container } from 'reactstrap';
 
 export default class Resources extends Component {
-
     constructor(props) {
         super(props);
 
@@ -19,7 +18,7 @@ export default class Resources extends Component {
             isNextPageLoading: false,
             hasNextPage: false,
             page: 1,
-            isLastPageReached: false,
+            isLastPageReached: false
         };
     }
 
@@ -30,13 +29,13 @@ export default class Resources extends Component {
     }
 
     loadMoreResources = () => {
-        this.setState({ isNextPageLoading: true })
+        this.setState({ isNextPageLoading: true });
         getAllResources({
             page: this.state.page,
             items: this.pageSize,
             sortBy: 'created_at',
             desc: true
-        }).then((resources) => {
+        }).then(resources => {
             if (resources.length > 0) {
                 this.setState({
                     resources: [...this.state.resources, ...resources],
@@ -52,7 +51,7 @@ export default class Resources extends Component {
                 });
             }
         });
-    }
+    };
 
     render() {
         return (
@@ -66,39 +65,41 @@ export default class Resources extends Component {
                             <span className="fa fa-plus" /> add new resource
                         </Link>
                     </div>
-                    {this.state.resources.length > 0 &&
+                    {this.state.resources.length > 0 && (
                         <div>
-                            {this.state.resources.map(
-                                (predicate) => {
-                                    return (
-                                        <ShortRecord
-                                            key={predicate.id}
-                                            header={predicate.id}
-                                            href={`${process.env.PUBLIC_URL}/resource/${encodeURIComponent(predicate.id)}`}
-                                        >
-                                            {predicate.label}
-                                        </ShortRecord>
-                                    )
-                                }
-                            )}
+                            {this.state.resources.map(predicate => {
+                                return (
+                                    <ShortRecord
+                                        key={predicate.id}
+                                        header={predicate.id}
+                                        href={`${process.env.PUBLIC_URL}/resource/${encodeURIComponent(predicate.id)}`}
+                                    >
+                                        {predicate.label}
+                                    </ShortRecord>
+                                );
+                            })}
                         </div>
-                    }
-                    {this.state.resources.length === 0 && !this.state.isNextPageLoading &&
-                        <div className="text-center mt-4 mb-4">No Resources</div>
-                    }
-                    {this.state.isNextPageLoading && <div className="text-center mt-4 mb-4"><Icon icon={faSpinner} spin /> Loading</div>}
+                    )}
+                    {this.state.resources.length === 0 && !this.state.isNextPageLoading && <div className="text-center mt-4 mb-4">No Resources</div>}
+                    {this.state.isNextPageLoading && (
+                        <div className="text-center mt-4 mb-4">
+                            <Icon icon={faSpinner} spin /> Loading
+                        </div>
+                    )}
                     {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                        <div style={{ cursor: 'pointer' }} className="list-group-item list-group-item-action text-center mt-2" onClick={!this.state.isNextPageLoading ? this.loadMoreResources : undefined}>
+                        <div
+                            style={{ cursor: 'pointer' }}
+                            className="list-group-item list-group-item-action text-center mt-2"
+                            onClick={!this.state.isNextPageLoading ? this.loadMoreResources : undefined}
+                        >
                             Load more resources
                         </div>
                     )}
                     {!this.state.hasNextPage && this.state.isLastPageReached && (
-                        <div className="text-center mt-3">
-                            You have reached the last page.
-                        </div>)
-                    }
+                        <div className="text-center mt-3">You have reached the last page.</div>
+                    )}
                 </Container>
             </>
-        )
+        );
     }
 }

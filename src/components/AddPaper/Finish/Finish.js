@@ -11,7 +11,8 @@ import ROUTES from '../../../constants/routes.js';
 
 class Finish extends Component {
     render() {
-        if (!this.props.paperNewResourceId) { // no ID yet, thus loading...
+        if (!this.props.paperNewResourceId) {
+            // no ID yet, thus loading...
             return (
                 <div className="text-center text-primary">
                     <span style={{ fontSize: 80 }}>
@@ -19,9 +20,8 @@ class Finish extends Component {
                     </span>
                     <br />
                     <h2 className="h5">Loading...</h2> <br />
-
                 </div>
-            )
+            );
         } else {
             return (
                 <div className="text-center text-primary">
@@ -32,26 +32,26 @@ class Finish extends Component {
                     <h2 className="h5">Paper has been added successfully</h2>
                     <br />
                     <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paperNewResourceId }) + '?comingFromWizard=true'}>
-                        <Button color="primary" className="mb-4">View paper</Button>
+                        <Button color="primary" className="mb-4">
+                            View paper
+                        </Button>
                     </Link>
                 </div>
-            )
+            );
         }
     }
 }
 
 Finish.propTypes = {
-    paperNewResourceId: PropTypes.string,
+    paperNewResourceId: PropTypes.string
 };
 
 Finish.defaultProps = {
-    paperNewResourceId: null,
+    paperNewResourceId: null
 };
 
 const mapStateToProps = state => ({
-    paperNewResourceId: state.addPaper.paperNewResourceId,
+    paperNewResourceId: state.addPaper.paperNewResourceId
 });
 
-export default connect(
-    mapStateToProps,
-)(Finish);
+export default connect(mapStateToProps)(Finish);
