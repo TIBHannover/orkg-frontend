@@ -24,4 +24,5 @@ export default {
   SEARCH: '/search/:searchTerm?',
   TPDL: '/tpdl',
   STATS: '/stats',
+  CHANGELOG: '/changelog'
 }

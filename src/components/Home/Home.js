@@ -38,7 +38,6 @@ class Home extends Component {
   }
 
   render = () => {
-
     return (
       <div>
         <StyledAbout>
@@ -71,7 +70,7 @@ class Home extends Component {
             </Col>
           </Row>
         </Container>
-      </div>
+      </div >
     );
   }
 }

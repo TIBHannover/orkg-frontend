@@ -1,34 +1,34 @@
 import React, { Component } from 'react';
-import { Button, Alert, Card, CardBody, Label, Badge, FormFeedback } from 'reactstrap';
-import { semanticScholarUrl, submitGetRequest, getAnnotations, createPredicate, predicatesUrl } from '../../../network';
+import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
+import { semanticScholarUrl, submitGetRequest, getAnnotations } from '../../../network';
 import { connect } from 'react-redux';
 import {
-  updateAbstract,
-  nextStep,
-  previousStep,
-  createContribution,
-  prefillStatements,
-  createAnnotation,
-  clearAnnotations,
-  openTour, closeTour, updateTourCurrentStep
+  updateAbstract, nextStep, previousStep, createContribution, prefillStatements, createAnnotation, clearAnnotations,
+  toggleAbstractDialog, setAbstractDialogView
 } from '../../../actions/addPaper';
-import { withCookies, Cookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import AbstractAnnotator from './AbstractAnnotator';
+import { faSpinner, faThList, faMagic } from '@fortawesome/free-solid-svg-icons';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import randomcolor from 'randomcolor';
+import styled from 'styled-components';
+import AbstractInputView from './AbstractInputView';
+import AbstractAnnotatorView from './AbstractAnnotatorView';
+import AbstractRangesList from './AbstractRangesList';
 import PropTypes from 'prop-types';
-import Textarea from 'react-textarea-autosize';
-import Tooltip from '../../Utils/Tooltip';
 import { compose } from 'redux';
 import { guid } from '../../../utils';
-import { withTheme } from 'styled-components';
-import { Range, getTrackBackground } from 'react-range';
-import Tour from 'reactour';
 import toArray from 'lodash/toArray';
-import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
-import randomcolor from 'randomcolor';
-import capitalize from 'capitalize';
 
+const AnimationContainer = styled(CSSTransition)`
+    &.fadeIn-enter {
+        opacity: 0;
+    }
+
+    &.fadeIn-enter.fadeIn-enter-active {
+        opacity: 1;
+        transition: 1s opacity;
+    }
+`;
 
 class Abstract extends Component {
   constructor(props) {
@@ -41,66 +41,20 @@ class Abstract extends Component {
       isAnnotationFailedLoading: false,
       annotationError: null,
       showError: false,
-      changeAbstract: false,
       classOptions: [],
+      certaintyThreshold: [0.5],
+      validation: true,
       classColors: {
         'process': '#7fa2ff',
         'data': '	#9df28a',
         'material': '#EAB0A2',
         'method': '#D2B8E5',
       },
-      certaintyThreshold: [0.5],
-      validation: true,
     };
-
-    this.automaticAnnotationConcepts = [
-      { label: 'Process', description: 'Natural phenomenon, or independent/dependent activities.E.g., growing(Bio), cured(MS), flooding(ES).' },
-      { label: 'Data', description: 'The data themselves, or quantitative or qualitative characteristics of entities. E.g., rotational energy (Eng), tensile strength (MS), the Chern character (Mat).' },
-      { label: 'Material', description: 'A physical or digital entity used for scientific experiments. E.g., soil (Agr), the moon (Ast), the set (Mat).' },
-      { label: 'Method', description: 'A commonly used procedure that acts on entities. E.g., powder X-ray (Che), the PRAM analysis (CS), magnetoencephalography (Med).' }
-    ];
-
-    // check if a cookie of take a tour exist 
-    if (this.props.cookies && this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 1
-      && !this.props.cookies.get('showedAbstract')) {
-      this.props.openTour(0);
-      this.props.cookies.set('showedAbstract', true, { path: '/', maxAge: 3600000 });
-    }
   }
 
   componentDidMount() {
-    this.loadClassOptions();
     this.fetchAbstract();
-  }
-
-  componentWillUnmount() {
-    clearAllBodyScrollLocks();
-  }
-
-  disableBody = target => disableBodyScroll(target)
-  enableBody = target => enableBodyScroll(target)
-
-  loadClassOptions = () => {
-    // Fetch the predicates used in the NLP model
-    let nLPPredicates = this.automaticAnnotationConcepts.map((classOption) => {
-      return submitGetRequest(predicatesUrl + '?q=' + classOption.label + '&exact=true').then(predicates => {
-        if (predicates.length > 0) {
-          return predicates[0]; // Use the first predicate that match the label
-        } else {
-          return createPredicate(classOption.label) // Create the predicate if it doesn't exist
-        }
-      })
-    })
-    let options = [];
-    Promise.all(nLPPredicates).then((results) => {
-      results.map((item) =>
-        options.push({
-          label: item.label,
-          id: item.id,
-        }),
-      );
-    })
-    this.setState({ classOptions: options });
   }
 
   getAnnotation = () => {
@@ -128,6 +82,7 @@ class Abstract extends Component {
                   end: entity[2][0][1] - 1,
                   certainty: entity[3],
                   class: rangeClass,
+                  isEditing: false,
                 };
                 return ranges[entity[0]];
               } else {
@@ -144,7 +99,9 @@ class Abstract extends Component {
         );
         this.setState({
           isAnnotationLoading: false,
-          isSimilaireContributionsLoading: true,
+          isAnnotationFailedLoading: false,
+          isAbstractLoading: false,
+          isAbstractFailedLoading: false,
         });
       })
       .catch((e) => {
@@ -166,9 +123,7 @@ class Abstract extends Component {
         DOI = false
       }
       if (!this.props.title || !DOI) {
-        this.setState({
-          changeAbstract: true,
-        });
+        this.props.setAbstractDialogView('input');
         return;
       }
       this.setState({
@@ -196,6 +151,19 @@ class Abstract extends Component {
       this.getAnnotation();
     }
   };
+
+  getClassColor = (rangeClass) => {
+    if (!rangeClass) {
+      return '#ffb7b7';
+    }
+    if (this.state.classColors[rangeClass.toLowerCase()]) {
+      return this.state.classColors[rangeClass.toLowerCase()];
+    } else {
+      let newColor = randomcolor({ luminosity: 'light', seed: rangeClass.toLowerCase() });
+      this.setState({ classColors: { ...this.state.classColors, [rangeClass.toLowerCase()]: newColor } });
+      return newColor;
+    }
+  }
 
   getExistingPredicateId = (property) => {
     if (this.props.properties.allIds.length > 0) {
@@ -231,8 +199,7 @@ class Abstract extends Component {
     return false;
   }
 
-  handleNextClick = () => {
-    //TODO: add the annotated words as statements for the next step
+  handleInsertData = () => {
     let classesID = {};
     let createdProperties = {};
     let statements = { properties: [], values: [] };
@@ -272,118 +239,90 @@ class Abstract extends Component {
         return null;
       });
     }
-    if (this.props.contributions.allIds.length === 0) {
-      this.props.createContribution({
-        selectAfterCreation: true,
-        prefillStatements: true,
-        statements: statements,
-      });
-    } else {
-      // Add the statements to the first contribution
-      this.props.prefillStatements({ statements, resourceId: this.props.contributions.byId[this.props.contributions.allIds[0]].resourceId });
-    }
-    //TODO: add the annotated words as statements in a specific contribution
-
-    this.props.nextStep();
+    // Add the statements to the selected contribution
+    this.props.prefillStatements({ statements, resourceId: this.props.contributions.byId[this.props.selectedContribution].resourceId });
+    this.props.toggleAbstractDialog();
   };
 
   handleChangeAbstract = () => {
-    if (this.state.changeAbstract) {
+    if (this.props.abstractDialogView === 'input') {
       if (this.props.abstract.replace(/^\s+|\s+$/g, '') === '' || this.props.abstract.replace(/^\s+|\s+$/g, '').split(' ').length <= 1) {
         this.setState({ validation: false });
         return;
       }
       this.getAnnotation();
     }
-    this.setState((prevState) => ({
-      changeAbstract: !prevState.changeAbstract,
-      validation: true
-    }));
+    this.props.setAbstractDialogView(this.props.abstractDialogView === 'input' ? 'annotator' : 'input')
+    this.setState({ validation: true });
   };
 
-  handleChange = (event) => {
-    this.props.updateAbstract(event.target.value);
+  handleChangeCertaintyThreshold = (values) => {
+    this.setState({ certaintyThreshold: values })
   };
 
-  stripLineBreaks = (event) => {
-    event.preventDefault();
-    var text = '';
-    if (event.clipboardData || event.originalEvent.clipboardData) {
-      text = (event.originalEvent || event).clipboardData.getData('text/plain');
-    } else if (window.clipboardData) {
-      text = window.clipboardData.getData('Text');
-    }
-    // strip line breaks
-    text = text.replace(/\r?\n|\r/g, ' ')
-    this.props.updateAbstract(text);
+  handleChangeClassOptions = (options) => {
+    this.setState({ classOptions: options });
   };
 
-  requestCloseTour = () => {
-    this.enableBody();
-    if (this.props.cookies.get('taketourClosed')) {
-      this.props.closeTour();
-    } else {
-      this.setState({ isClosed: true });
-    }
-  };
 
-  getClassColor = (rangeClass) => {
-    if (!rangeClass) {
-      return '#ffb7b7';
-    }
-    if (this.state.classColors[rangeClass.toLowerCase()]) {
-      return this.state.classColors[rangeClass.toLowerCase()];
-    } else {
-      let newColor = randomcolor({ luminosity: 'light', seed: rangeClass.toLowerCase() });
-      this.setState({ classColors: { ...this.state.classColors, [rangeClass.toLowerCase()]: newColor } });
-      return newColor;
-    }
-  }
+  handleChangeView = (view) => {
+    this.props.setAbstractDialogView(view);
+  };
 
   render() {
-    let rangeArray = toArray(this.props.ranges).filter(
-      (r) => (r.certainty >= this.state.certaintyThreshold)
-    );
-    let rangesClasses = [...new Set(rangeArray.map((r) => r.class.label))];
+    let currentStepDetails;
+    switch (this.props.abstractDialogView) {
+      case 'annotator':
+      default:
+        currentStepDetails = (
+          <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+            <AbstractAnnotatorView
+              certaintyThreshold={this.state.certaintyThreshold}
+              isAbstractLoading={this.state.isAbstractLoading}
+              isAnnotationLoading={this.state.isAnnotationLoading}
+              isAnnotationFailedLoading={this.state.isAnnotationFailedLoading}
+              handleChangeCertaintyThreshold={this.handleChangeCertaintyThreshold}
+              classOptions={this.state.classOptions}
+              handleChangeClassOptions={this.handleChangeClassOptions}
+              annotationError={this.state.annotationError}
+              getClassColor={this.getClassColor}
+            />
+          </AnimationContainer>
+        );
+        break;
+      case 'input':
+        currentStepDetails = (
+          <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+            <AbstractInputView
+              validation={this.state.validation}
+              classOptions={this.state.classOptions}
+              isAbstractLoading={this.state.isAbstractLoading}
+              isAbstractFailedLoading={this.state.isAbstractFailedLoading}
+            />
+          </AnimationContainer>
+        );
+        break;
+      case 'list':
+        currentStepDetails = (
+          <AnimationContainer key={3} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+            <AbstractRangesList
+              certaintyThreshold={this.state.certaintyThreshold}
+              classOptions={this.state.classOptions}
+              getClassColor={this.getClassColor}
+            />
+          </AnimationContainer>
+        );
+        break;
+    }
+
+
     return (
-      <div>
-        <h2 className="h4 mt-4 mb-3 clearfix">Abstract annotation
-        <Button id="skipStepButton" outline color="primary" className="float-right" onClick={this.props.nextStep}>
-            Skip this step
-        </Button>
-        </h2>
-
-        {this.props.abstract &&
-          !this.state.changeAbstract &&
-          !this.state.isAnnotationLoading &&
-          !this.state.isAnnotationFailedLoading && (
-            <div>
-              {rangesClasses.length > 0 &&
-                <Alert color="info">
-                  <strong>Info:</strong> we automatically annotated the abstract for you. Please remove
-                  any incorrect annotations
-                </Alert>}
-              {rangesClasses.length === 0 &&
-                <Alert color="info">
-                  <strong>Info:</strong> we could not find any concepts on the abstract. Please insert more text in the abstract.
-                </Alert>}
-            </div>
-          )}
-
-        {!this.state.changeAbstract && !this.state.isAnnotationLoading && this.state.isAnnotationFailedLoading && (
-          <Alert color="light">
-            {this.state.annotationError ? this.state.annotationError : 'Failed to connect to the annotation service, please try again later'}
-          </Alert>
-        )}
-
-        {this.state.changeAbstract && !this.state.isAbstractLoading && this.state.isAbstractFailedLoading && (
-          <Alert color="light">
-            We couldn't fetch the abstract of the paper, please enter it manually or skip this step.
-          </Alert>
-        )}
-
-        <Card>
-          <CardBody>
+      <Modal isOpen={this.props.showAbstractDialog} toggle={this.props.toggleAbstractDialog} size="lg">
+        <ModalHeader toggle={this.props.toggleAbstractDialog}>
+          Abstract annotator
+        </ModalHeader>
+        <ModalBody>
+          <div className={'clearfix'}>
             {(this.state.isAbstractLoading || this.state.isAnnotationLoading) && (
               <div className="text-center text-primary">
                 <span style={{ fontSize: 80 }}>
@@ -394,174 +333,50 @@ class Abstract extends Component {
               </div>
             )}
 
+            <TransitionGroup exit={false}>
+              {currentStepDetails}
+            </TransitionGroup>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          {this.props.abstractDialogView === 'input' ? (
+            <>
+              <Button color="primary" className="float-right" onClick={this.handleChangeAbstract}>
+                Annotate Abstract
+              </Button>
+            </>
+          ) : (this.props.abstractDialogView === 'list') ? (
+            <>
+              <Button color="secondary" outline className="float-left" onClick={() => this.handleChangeView('annotator')}>
+                <Icon icon={faMagic} /> Annotator
+              </Button>
 
-            {!this.state.changeAbstract ? (
-              <div className="pl-2 pr-2">
-                {!this.state.isAbstractLoading && !this.state.isAnnotationLoading && (
-                  <div>
+              <Button color="primary" className="float-right" onClick={this.handleInsertData}>
+                Insert Data
+              </Button>
 
-                    <div id="annotationBadges">
-                      <Tooltip className={'mr-2'} message="Annotation labels are the properties that will be used in the contribution data.">
-                        Annotation labels
-                      </Tooltip>
-                      <span className={'mr-1 ml-1'} />
-                      {rangesClasses.length > 0 &&
-                        rangesClasses.map((c) => {
-                          let aconcept = c ? this.automaticAnnotationConcepts.filter(function (e) { return e.label.toLowerCase() === c.toLowerCase(); }) : []
-                          if (c && aconcept.length > 0) {
-                            return (
-                              <Tooltip hideDefaultIcon={true} message={aconcept[0].description}>
-                                <Badge
-                                  className={'mr-2'}
-                                  key={`c${c}`}
-                                  style={{ cursor: 'pointer', marginBottom: '4px', color: '#333', background: this.getClassColor(c) }}
-                                >
-                                  {c ? capitalize(c) : 'Unlabeled'} <Badge pill color="secondary">{rangeArray.filter((rc) => rc.class.label === c).length}</Badge>
-                                </Badge>
-                              </Tooltip>
-                            );
-                          } else {
-                            return (
-                              <Badge
-                                className={'mr-2'}
-                                key={`c${c}`}
-                                style={{ marginBottom: '4px', color: '#333', background: this.getClassColor(c) }}
-                              >
-                                {c ? capitalize(c) : 'Unlabeled'} <Badge pill color="secondary">{rangeArray.filter((rc) => rc.class.label === c).length}</Badge>
-                              </Badge>
-                            );
-                          }
-                        })}
-                    </div>
-                    <AbstractAnnotator
-                      certaintyThreshold={this.state.certaintyThreshold[0]}
-                      classOptions={this.state.classOptions}
-                      getClassColor={this.getClassColor}
-                    />
-                  </div>
-                )}
-              </div>
-            ) : (
-                <div>
-                  <Label for="paperAbstract">
-                    <Tooltip message="Enter the paper abstract to get automatically generated concepts for you paper.">
-                      Enter the paper abstract
-                    </Tooltip>
-                  </Label>
-                  <Textarea
-                    id="paperAbstract"
-                    className={`form-control pl-2 pr-2 ${!this.state.validation ? 'is-invalid' : ''}`}
-                    minRows={5}
-                    value={this.props.abstract}
-                    onChange={this.handleChange}
-                    onPaste={this.stripLineBreaks}
-                  />
-                  {!this.state.validation &&
-                    <FormFeedback className="order-1">
-                      Please enter the abstract or skip this step.
-                    </FormFeedback>
-                  }
-                  <Tour
-                    onAfterOpen={this.disableBody}
-                    onBeforeClose={this.enableBody}
-                    steps={[
-                      {
-                        selector: '#paperAbstract',
-                        content: ({ goTo }) => (
-                          <div>
-                            Enter the paper abstract to get automatically generated concepts for you paper.
-                          </div>
-                        ),
-                        style: { borderTop: '4px solid #E86161' },
-                        position: 'right',
-                      }
-                    ]}
-                    showNumber={false}
-                    accentColor={this.props.theme.orkgPrimaryColor}
-                    rounded={10}
-                    onRequestClose={this.requestCloseTour}
-                    isOpen={this.props.isTourOpen}
-                    startAt={0}
-                    getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); }}
-                    showButtons={false}
-                    showNavigation={false}
-                    maskClassName="reactourMask"
-                  />
-                </div>
-              )}
-          </CardBody>
-        </Card>
+              <Button color="light" className="float-right mr-2" onClick={this.handleChangeAbstract}>
+                Change abstract
+              </Button>
+            </>
+          ) : (
+                <>
+                  <Button color="secondary" outline className="float-left" onClick={() => this.handleChangeView('list')}>
+                    <Icon icon={faThList} /> List of annotations
+                  </Button>
 
-        <Button color="light" className="mb-2 mt-2" onClick={this.handleChangeAbstract}>
-          {this.state.changeAbstract ? 'Annotate abstract' : 'Change abstract'}
-        </Button>
-        {!this.state.changeAbstract && !this.state.isAbstractLoading && !this.state.isAnnotationLoading &&
-          !this.state.isAnnotationFailedLoading && toArray(this.props.ranges).length > 0 && (
-            <div className={'col-3 float-right'}>
-              <div className={'mt-4'}>
-                <Range
-                  step={0.025}
-                  min={0}
-                  max={1}
-                  values={this.state.certaintyThreshold}
-                  onChange={(values) => this.setState({ certaintyThreshold: values })}
-                  renderTrack={({ props, children }) => (
-                    <div
-                      {...props}
-                      style={{
-                        ...props.style,
-                        height: '6px',
-                        width: '100%',
-                        background: getTrackBackground({
-                          values: this.state.certaintyThreshold,
-                          colors: [
-                            this.props.theme.orkgPrimaryColor,
-                            this.props.theme.ultraLightBlueDarker,
-                          ],
-                          min: 0,
-                          max: 1,
-                        }),
-                      }}
-                    >
-                      {children}
-                    </div>
-                  )}
-                  renderThumb={({ props }) => (
-                    <div
-                      {...props}
-                      style={{
-                        ...props.style,
-                        height: '20px',
-                        width: '20px',
-                        borderRadius: '4px',
-                        backgroundColor: '#FFF',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        boxShadow: '0px 2px 6px #AAA',
-                      }}
-                    />
-                  )}
-                />
-                <div className={'mt-2 text-center'}>
-                  <span className={'mr-2'}>Certainty {this.state.certaintyThreshold[0].toFixed(2)}</span>
-                  <Tooltip trigger={'click'} hideDefaultIcon={true} message="Here you can adjust the certainty value, that means at which level you accept the confidence ratio of automatic annotations. Only the shown annotations will be used to create the contribution data in the next step.">
-                    <Icon style={{ cursor: 'pointer' }} className={'text-primary'} icon={faQuestionCircle} />
-                  </Tooltip>
-                </div>
-              </div>
-            </div>
-          )}
+                  <Button color="primary" className="float-right" onClick={this.handleInsertData}>
+                    Insert Data
+                  </Button>
 
-        <hr className="mt-5 mb-3" />
-
-        <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>
-          Next step
-        </Button>
-        <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>
-          Previous step
-        </Button>
-      </div>
+                  <Button color="light" className="float-right mr-2" onClick={this.handleChangeAbstract}>
+                    Change abstract
+                  </Button>
+                </>
+              )
+          }
+        </ModalFooter>
+      </Modal >
     );
   }
 }
@@ -580,17 +395,13 @@ Abstract.propTypes = {
   prefillStatements: PropTypes.func.isRequired,
   createAnnotation: PropTypes.func.isRequired,
   clearAnnotations: PropTypes.func.isRequired,
-  theme: PropTypes.object.isRequired,
   resources: PropTypes.object.isRequired,
   properties: PropTypes.object.isRequired,
   values: PropTypes.object.isRequired,
-  cookies: PropTypes.instanceOf(Cookies).isRequired,
-  openTour: PropTypes.func.isRequired,
-  closeTour: PropTypes.func.isRequired,
-  updateTourCurrentStep: PropTypes.func.isRequired,
-  isTourOpen: PropTypes.bool.isRequired,
-  tourCurrentStep: PropTypes.number.isRequired,
-  tourStartAt: PropTypes.number.isRequired,
+  showAbstractDialog: PropTypes.bool.isRequired,
+  toggleAbstractDialog: PropTypes.func.isRequired,
+  setAbstractDialogView: PropTypes.func.isRequired,
+  abstractDialogView: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -603,9 +414,8 @@ const mapStateToProps = (state) => ({
   resources: state.statementBrowser.resources,
   properties: state.statementBrowser.properties,
   values: state.statementBrowser.values,
-  isTourOpen: state.addPaper.isTourOpen,
-  tourCurrentStep: state.addPaper.tourCurrentStep,
-  tourStartAt: state.addPaper.tourStartAt,
+  showAbstractDialog: state.addPaper.showAbstractDialog,
+  abstractDialogView: state.addPaper.abstractDialogView,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -616,16 +426,13 @@ const mapDispatchToProps = (dispatch) => ({
   prefillStatements: (data) => dispatch(prefillStatements(data)),
   createAnnotation: (data) => dispatch(createAnnotation(data)),
   clearAnnotations: () => dispatch(clearAnnotations()),
-  updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
-  openTour: (data) => dispatch(openTour(data)),
-  closeTour: () => dispatch(closeTour()),
+  toggleAbstractDialog: () => dispatch(toggleAbstractDialog()),
+  setAbstractDialogView: (data) => dispatch(setAbstractDialogView(data)),
 });
 
 export default compose(
   connect(
     mapStateToProps,
     mapDispatchToProps,
-  ),
-  withTheme,
-  withCookies
+  )
 )(Abstract);

@@ -8,7 +8,7 @@
         "@fortawesome/free-regular-svg-icons": "^5.11.1",
         "@fortawesome/free-solid-svg-icons": "^5.11.1",
         "@fortawesome/react-fontawesome": "^0.1.4",
-        "@tippy.js/react": "^3.1.0",
+        "@tippy.js/react": "^3.1.1",
         "array-move": "^2.1.0",
         "babel-preset-es2018": "^1.0.0",
         "body-scroll-lock": "^2.6.4",
@@ -24,6 +24,8 @@
         "html2canvas": "1.0.0-alpha.12",
         "jspdf": "^1.5.3",
         "make-latex": "^0.1.0",
+        "markdown-into-html": "^1.0.3",
+        "marked": "^0.7.0",
         "moment": "^2.24.0",
         "node-sass": "^4.12.0",
         "olap-cube": "^1.0.0",
@@ -92,7 +94,7 @@
         "sass-extract-loader": "^1.1.0"
     },
     "auto-changelog": {
-        "template": "keepachangelog",
+        "template": "./keepachangelog.hbs",
         "unreleased": false,
         "commitLimit": 0,
         "tagPattern": ".+"
