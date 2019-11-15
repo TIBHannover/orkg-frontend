@@ -41,45 +41,54 @@ class ValueItem extends Component {
             modalDataset: false,
             dialogResourceId: null,
             dialogResourceLabel: null,
+            draftLabel: this.props.label
         }
     }
 
-    // @param sync : to update the literal label on the backend.
-    handleChangeLiteral = async (e, sync = false) => {
+    componentDidUpdate(prevProps) {
+        if (this.props.label !== prevProps.label) {
+            this.setState({ draftLabel: this.props.label })
+        }
+    }
+
+    commitChangeLiteral = async () => {
         // Check if the user changed the label
-        if (e.target.value !== this.props.label) {
+        if (this.state.draftLabel !== this.props.label) {
             this.props.updateValueLabel({
-                label: e.target.value,
+                label: this.state.draftLabel,
                 valueId: this.props.id,
             });
-        }
-        if (sync && this.props.syncBackend) {
-            this.props.isSavingValue({ id: this.props.id }); // To show the saving message instead of the value label
-            if (this.props.resourceId) {
-                await updateLiteral(this.props.resourceId, this.props.label);
-                toast.success('Literal label updated successfully');
+            if (this.props.syncBackend) {
+                this.props.isSavingValue({ id: this.props.id }); // To show the saving message instead of the value label
+                if (this.props.resourceId) {
+                    await updateLiteral(this.props.resourceId, this.props.label);
+                    toast.success('Literal label updated successfully');
+                }
+                this.props.doneSavingValue({ id: this.props.id });
             }
-            this.props.doneSavingValue({ id: this.props.id });
         }
     };
 
-    // @param sync : to update the resource label on the backend.
-    handleChangeLabel = async (e, sync = false) => {
+    commitChangeLabel = async () => {
         // Check if the user changed the label
-        if (e.target.value !== this.props.label) {
+        if (this.state.draftLabel !== this.props.label) {
             this.props.updateValueLabel({
-                label: e.target.value,
+                label: this.state.draftLabel,
                 valueId: this.props.id,
             });
-        }
-        if (sync && this.props.syncBackend) {
-            this.props.isSavingValue({ id: this.props.id }); // To show the saving message instead of the value label
-            if (this.props.resourceId) {
-                await updateResource(this.props.resourceId, this.props.label);
-                toast.success('Resource label updated successfully');
+            if (this.props.syncBackend) {
+                this.props.isSavingValue({ id: this.props.id }); // To show the saving message instead of the value label
+                if (this.props.resourceId) {
+                    await updateResource(this.props.resourceId, this.props.label);
+                    toast.success('Resource label updated successfully');
+                }
+                this.props.doneSavingValue({ id: this.props.id });
             }
-            this.props.doneSavingValue({ id: this.props.id });
         }
+    };
+
+    handleChangeLabel = event => {
+        this.setState({ draftLabel: event.target.value });
     };
 
     handleChangeResource = async (selectedOption, a) => {
@@ -385,20 +394,19 @@ class ValueItem extends Component {
                                         ) : (
                                                 <InputGroup>
                                                     <StyledInput
-                                                        value={this.props.label}
-                                                        onChange={(e) => this.handleChangeLabel(e, false)}
+                                                        value={this.state.draftLabel}
+                                                        onChange={this.handleChangeLabel}
                                                         onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
-                                                        onBlur={(e) => { this.handleChangeLabel(e, true); this.props.toggleEditValue({ id: this.props.id }) }}
+                                                        onBlur={(e) => { this.commitChangeLabel(); this.props.toggleEditValue({ id: this.props.id }) }}
                                                         autoFocus
                                                         bsSize="sm"
-                                                    //onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
                                                     />
                                                     <InputGroupAddon addonType="append">
                                                         <Button
                                                             outline
                                                             color="primary"
                                                             size="sm"
-                                                            onClick={(e) => { this.handleChangeLabel(e, true); this.props.toggleEditValue({ id: this.props.id }) }}
+                                                            onClick={(e) => { this.commitChangeLabel(); this.props.toggleEditValue({ id: this.props.id }) }}
                                                         >
                                                             Save
                                                         </Button>
@@ -409,20 +417,19 @@ class ValueItem extends Component {
                                         : (
                                             <InputGroup>
                                                 <StyledInput
-                                                    value={this.props.label}
-                                                    onChange={(e) => this.handleChangeLiteral(e, false)}
+                                                    value={this.state.draftLabel}
+                                                    onChange={this.handleChangeLabel}
                                                     onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()}
-                                                    onBlur={(e) => { this.handleChangeLiteral(e, true); this.props.toggleEditValue({ id: this.props.id }) }}
+                                                    onBlur={(e) => { this.commitChangeLiteral(); this.props.toggleEditValue({ id: this.props.id }) }}
                                                     autoFocus
                                                     bsSize="sm"
-                                                //onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
                                                 />
                                                 <InputGroupAddon addonType="append">
                                                     <Button
                                                         outline
                                                         color="primary"
                                                         size="sm"
-                                                        onClick={(e) => { this.handleChangeLiteral(e, true); this.props.toggleEditValue({ id: this.props.id }) }}
+                                                        onClick={(e) => { this.commitChangeLiteral(); this.props.toggleEditValue({ id: this.props.id }) }}
                                                     >
                                                         Save
                                                     </Button>
