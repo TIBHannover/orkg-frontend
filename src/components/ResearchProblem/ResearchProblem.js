@@ -49,64 +49,64 @@ class ResearchProblem extends Component {
   }
 
   loadMorePapers = () => {
-    this.setState({ isNextPageLoading: true })
-    // Get the statements that contains the research field as an object
-    getStatementsByObject({
-      id: this.props.match.params.researchProblemId,
-      page: this.state.page,
-      items: this.pageSize,
-      sortBy: 'id',
-      desc: true
-    }).then((result) => {
-      // Papers
-      if (result.length > 0) {
-        // Get the papers of each contribution
-        var papers = result.map((contribution) => {
-          return getStatementsByObject({
-            id: contribution.subject.id,
-            order: 'desc',
-          }).then((papers) => {
-            // Fetch the data of each paper
-            var papers_data = papers.map((paper) => {
-              return getStatementsBySubject({ id: paper.subject.id }).then((paperStatements) => {
-                // publication year
-                let publicationYear = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
-                if (publicationYear.length > 0) {
-                  publicationYear = publicationYear[0].object.label
-                }
-                else {
-                  publicationYear = ''
-                }
-                // publication month
-                let publicationMonth = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
-                if (publicationMonth.length > 0) {
-                  publicationMonth = publicationMonth[0].object.label
-                } else {
-                  publicationMonth = ''
-                }
-                // authors
-                let authors = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
-                let authorNamesArray = [];
-                if (authors.length > 0) {
-                  for (let author of authors) {
-                    let authorName = author.object.label;
-                    authorNamesArray.push(authorName);
-                  }
-                }
-                paper.data = {
-                  publicationYear,
-                  publicationMonth,
-                  authorNames: authorNamesArray.reverse(),
-                }
-                return paper;
-              })
-            });
-            return Promise.all(papers_data).then((results) => {
-              contribution.papers = results;
-              return contribution.papers.length > 0 ? contribution : null
-            })
-          });
-        })
+        this.setState({ isNextPageLoading: true })
+        // Get the statements that contains the research field as an object
+        getStatementsByObject({
+            id: this.props.match.params.researchProblemId,
+            page: this.state.page,
+            items: this.pageSize,
+            sortBy: 'created_at',
+            desc: true
+        }).then((result) => {
+            // Papers
+            if (result.length > 0) {
+                // Get the papers of each contribution
+                var papers = result.map((contribution) => {
+                    return getStatementsByObject({
+                        id: contribution.subject.id,
+                        order: 'desc',
+                    }).then((papers) => {
+                        // Fetch the data of each paper
+                        var papers_data = papers.map((paper) => {
+                            return getStatementsBySubject({ id: paper.subject.id }).then((paperStatements) => {
+                                // publication year
+                                let publicationYear = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
+                                if (publicationYear.length > 0) {
+                                    publicationYear = publicationYear[0].object.label
+                                }
+                                else {
+                                    publicationYear = ''
+                                }
+                                // publication month
+                                let publicationMonth = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
+                                if (publicationMonth.length > 0) {
+                                    publicationMonth = publicationMonth[0].object.label
+                                } else {
+                                    publicationMonth = ''
+                                }
+                                // authors
+                                let authors = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
+                                let authorNamesArray = [];
+                                if (authors.length > 0) {
+                                    for (let author of authors) {
+                                        let authorName = author.object.label;
+                                        authorNamesArray.push(authorName);
+                                    }
+                                }
+                                paper.data = {
+                                    publicationYear,
+                                    publicationMonth,
+                                    authorNames: authorNamesArray.reverse(),
+                                }
+                                return paper;
+                            })
+                        });
+                        return Promise.all(papers_data).then((results) => {
+                            contribution.papers = results;
+                            return contribution.papers.length > 0 ? contribution : null
+                        })
+                    });
+                })
 
         Promise.all(papers).then((results) => {
           this.setState({
