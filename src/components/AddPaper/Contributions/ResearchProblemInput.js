@@ -24,7 +24,7 @@ class ResearchProblemInput extends Component {
                 id: process.env.REACT_APP_CLASSES_PROBLEM,
                 page: 1,
                 items: 999,
-                sortBy: 'id',
+                sortBy: 'created_at',
                 desc: true,
                 q: value
             })

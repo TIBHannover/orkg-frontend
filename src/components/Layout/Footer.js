@@ -57,7 +57,7 @@ const Footer = () => (
                         <h5>Technical</h5>
                         <hr className={'mr-5'} />
                         <ul className={'p-0'} style={{ listStyle: 'none' }}>
-                            <li>Changelog</li>
+                            <li><Link to={ROUTES.CHANGELOG}>Changelog</Link></li>
                             <li>Contributors</li>
                             <li><a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/" target="_blank" rel="noopener noreferrer">Gitlab</a></li>
                         </ul>

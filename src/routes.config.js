@@ -4,6 +4,7 @@ import AddResource from './pages/AddResource';
 import Comparison from './components/Comparison/Comparison';
 import Home from './components/Home/Home';
 import License from './components/StaticPages/License';
+import Changelog from './components/StaticPages/Changelog';
 import NotFound from './components/StaticPages/NotFound';
 import Papers from './pages/Papers';
 import PredicateDetails from './pages/PredicateDetails'
@@ -85,6 +86,10 @@ const routes = [
     {
         path: ROUTES.LICENSE,
         component: License
+    },
+    {
+        path: ROUTES.CHANGELOG,
+        component: Changelog
     },
     {
         path: ROUTES.SEARCH,

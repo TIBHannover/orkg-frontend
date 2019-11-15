@@ -194,21 +194,21 @@ export const getResource = (id) => {
   return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`);
 };
 
-export const getAllResources = ({ page = 1, items = 9999, sortBy = 'id', desc = true, q = null, exclude = null }) => {
+export const getAllResources = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null, exclude = null }) => {
 
   let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc, ...(q) ? { q: q } : {}, ...(exclude) ? { exclude: exclude } : {} })
 
   return submitGetRequest(`${resourcesUrl}?${params}`);
 };
 
-export const getAllPredicates = ({ page = 1, items = 9999, sortBy = 'id', desc = true, q = null }) => {
+export const getAllPredicates = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null }) => {
 
   let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc, ...(q) ? { q: q } : {} })
 
   return submitGetRequest(`${predicatesUrl}?${params}`);
 };
 
-export const getAllStatements = ({ page = 1, items = 9999, sortBy = 'id', desc = true }) => {
+export const getAllStatements = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
 
   let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
 
@@ -223,50 +223,32 @@ export const deleteStatementById = (id) => {
   return submitDeleteRequest(statementsUrl + encodeURIComponent(id));
 };
 
-export const getStatementsBySubject = ({ id, page = 1, items = 9999, sortBy = 'id', desc = true }) => {
+export const getStatementsBySubject = ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
 
   let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
 
   return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`);
 };
 
-export const getStatementsByObject = async ({ id, page = 1, items = 9999, sortBy = 'id', desc = true }) => {
+export const getStatementsByObject = async ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
 
   let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
 
   let statements = await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/?${params}`);
 
-  // TODO: replace sorting and limit by backend functionalities when ready
-  statements.sort((a, b) => {
-    if (!desc) {
-      return parseInt(a.id.replace('S', '')) - parseInt(b.id.replace('S', ''));
-    } else {
-      return parseInt(b.id.replace('S', '')) - parseInt(a.id.replace('S', ''));
-    }
-  });
-
   return statements;
 };
 
-export const getResourcesByClass = async ({ id, page = 1, items = 9999, sortBy = 'id', desc = true, q = null }) => {
+export const getResourcesByClass = async ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null }) => {
 
   let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc, ...(q) ? { q: q } : {} })
 
   let resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/?${params}`);
 
-  // TODO: replace sorting and limit by backend functionalities when ready
-  resources.sort((a, b) => {
-    if (!desc) {
-      return parseInt(a.id.replace('R', '')) - parseInt(b.id.replace('R', ''));
-    } else {
-      return parseInt(b.id.replace('R', '')) - parseInt(a.id.replace('R', ''));
-    }
-  });
-
   return resources;
 };
 
-export const getStatementsByPredicate = ({ id, page = 1, items = 9999, sortBy = 'id', desc = true }) => {
+export const getStatementsByPredicate = ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
 
   let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
 
