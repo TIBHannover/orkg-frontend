@@ -128,12 +128,12 @@ class Contributions extends Component {
         return (
             <div>
                 <div className={'d-flex align-items-center mt-4 mb-5'}>
-                    <h2 className="flex-shrink-0">
+                    <h2 className="h4 flex-shrink-0">
                         <Tooltip message={<span>Specify the research contributions that this paper makes. A paper can have multiple contributions and each contribution addresses at least one research problem. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(1)}>Learn more</span></span>}>
                             Specify research contributions
                         </Tooltip>
                     </h2>
-                    <Button onClick={this.props.toggleAbstractDialog} style={{ marginLeft: 'auto' }} outline size={'sm'} className="flex-shrink-0">
+                    <Button onClick={this.props.toggleAbstractDialog} outline size={'sm'} className="flex-shrink-0 ml-auto" color="darkblue">
                         <Icon icon={faMagic} /> Abstract annotator
                     </Button>
                 </div>

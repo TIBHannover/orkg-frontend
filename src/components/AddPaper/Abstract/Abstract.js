@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 import { semanticScholarUrl, submitGetRequest, getAnnotations } from '../../../network';
 import { connect } from 'react-redux';
 import {
@@ -319,7 +319,7 @@ class Abstract extends Component {
     return (
       <Modal isOpen={this.props.showAbstractDialog} toggle={this.props.toggleAbstractDialog} size="lg">
         <ModalHeader toggle={this.props.toggleAbstractDialog}>
-          Abstract annotation
+          Abstract annotator
         </ModalHeader>
         <ModalBody>
           <div className={'clearfix'}>
@@ -337,45 +337,45 @@ class Abstract extends Component {
               {currentStepDetails}
             </TransitionGroup>
           </div>
-          <hr className="mt-5 mb-3" />
-
+        </ModalBody>
+        <ModalFooter>
           {this.props.abstractDialogView === 'input' ? (
             <>
-              <Button color="primary" className="float-right mb-4" onClick={this.handleChangeAbstract}>
+              <Button color="primary" className="float-right" onClick={this.handleChangeAbstract}>
                 Annotate Abstract
               </Button>
             </>
           ) : (this.props.abstractDialogView === 'list') ? (
             <>
-              <Button color="secondary" outline className="float-left mb-4" onClick={() => this.handleChangeView('annotator')}>
+              <Button color="secondary" outline className="float-left" onClick={() => this.handleChangeView('annotator')}>
                 <Icon icon={faMagic} /> Annotator
               </Button>
 
-              <Button color="primary" className="float-right mb-4" onClick={this.handleInsertData}>
+              <Button color="primary" className="float-right" onClick={this.handleInsertData}>
                 Insert Data
               </Button>
 
-              <Button color="light" className="float-right mb-4 mr-2" onClick={this.handleChangeAbstract}>
+              <Button color="light" className="float-right mr-2" onClick={this.handleChangeAbstract}>
                 Change abstract
               </Button>
             </>
           ) : (
                 <>
-                  <Button color="secondary" outline className="float-left mb-4" onClick={() => this.handleChangeView('list')}>
+                  <Button color="secondary" outline className="float-left" onClick={() => this.handleChangeView('list')}>
                     <Icon icon={faThList} /> List of annotations
                   </Button>
 
-                  <Button color="primary" className="float-right mb-4" onClick={this.handleInsertData}>
+                  <Button color="primary" className="float-right" onClick={this.handleInsertData}>
                     Insert Data
                   </Button>
 
-                  <Button color="light" className="float-right mb-4 mr-2" onClick={this.handleChangeAbstract}>
+                  <Button color="light" className="float-right mr-2" onClick={this.handleChangeAbstract}>
                     Change abstract
                   </Button>
                 </>
               )
           }
-        </ModalBody>
+        </ModalFooter>
       </Modal >
     );
   }

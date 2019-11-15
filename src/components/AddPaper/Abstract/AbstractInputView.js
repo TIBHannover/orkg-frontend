@@ -33,7 +33,9 @@ class AbstractInputView extends Component {
                         We couldn't fetch the abstract of the paper, please enter it manually or skip this step.
                     </Alert>
                 )}
-
+                <Alert color="info">
+                    The abstract annotator automatically extracts concepts from paper abstracts. This is an <em>experimental feature</em>, which can produce incorrect results. 
+                </Alert>
                 <Label for="paperAbstract">
                     <Tooltip message="Enter the paper abstract to get automatically generated concepts for you paper.">
                         Enter the paper abstract
@@ -42,7 +44,7 @@ class AbstractInputView extends Component {
                 <Textarea
                     id="paperAbstract"
                     className={`form-control pl-2 pr-2 ${!this.props.validation ? 'is-invalid' : ''}`}
-                    minRows={5}
+                    minRows={8}
                     value={this.props.abstract}
                     onChange={this.handleChange}
                     onPaste={this.stripLineBreaks}
