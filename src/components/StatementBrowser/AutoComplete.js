@@ -64,7 +64,7 @@ class AutoComplete extends Component {
                 queryParams = '&exact=true';
             }
 
-            let responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value) + queryParams);
+            let responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value) + queryParams + (this.props.excludeClasses ? '&exclude=' + encodeURIComponent(this.props.excludeClasses) : ''));
             responseJson = await this.IdMatch(value, responseJson);
 
             if (this.props.additionalData && this.props.additionalData.length > 0) {
@@ -83,9 +83,9 @@ class AutoComplete extends Component {
             responseJson.map((item) => options.push({
                 label: item.label,
                 id: item.id,
-                ...item.shared ? { shared: item.shared } : {}
+                ...item.shared ? { shared: item.shared } : {},
+                ...item.classes ? { classes: item.classes } : {}
             }));
-
             return options;
         } catch (err) {
             console.error(err);
@@ -115,6 +115,7 @@ class AutoComplete extends Component {
                 id: selected.id,
                 value: selected.label,
                 shared: selected.shared,
+                classes: selected.classes
             });
         } else if (action.action === 'create-option') {
             this.props.onNewItemSelected && this.props.onNewItemSelected(selected.label);
@@ -192,6 +193,7 @@ class AutoComplete extends Component {
 
 AutoComplete.propTypes = {
     requestUrl: PropTypes.string.isRequired,
+    excludeClasses: PropTypes.string,
     placeholder: PropTypes.string.isRequired,
     onItemSelected: PropTypes.func.isRequired,
     allowCreate: PropTypes.bool,

@@ -5,7 +5,6 @@ import ProgressBar from './ProgressBar';
 import GeneralData from './GeneralData/GeneralData';
 import ResearchField from './ResearchField/ResearchField';
 import Contributions from './Contributions/Contributions';
-import Abstract from './Abstract/Abstract';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestion, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
 import Finish from './Finish/Finish';
@@ -31,12 +30,25 @@ const Help = styled.div`
     bottom: 24px;
     right: 24px;
     color: '#80869b';
+
+    .text{
+        cursor: pointer,;
+        display: inline-block;
+        margin-left: 8px; 
+        font-weight: bold; 
+        line-height: 56px; 
+        font-size: large;
+    }
+
+    .white{
+        color:#fff;
+    }
 `;
 
 const HelpIcon = styled(Icon)`
     vertical-align: middle;
-    height: 56px;
-    width: 56px;
+    height:48px;
+    width: 48px !important;
     z-index: 9999;
     background-color: ${(props) => props.theme.orkgPrimaryColor};
     display: inline-flex;
@@ -50,7 +62,7 @@ const HelpIcon = styled(Icon)`
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
     cursor: pointer;
     outline: none;
-    padding: 0;
+    padding: 12px;
     -webkit-user-drag: none;
     font-weight: bold;
     color: #f1f1f1;
@@ -159,12 +171,9 @@ class AddPaper extends Component {
                 );
                 break;
             case 3:
-                currentStepDetails = <AnimationContainer key={3} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}><Abstract /></AnimationContainer>
+                currentStepDetails = <AnimationContainer key={3} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}><Contributions /></AnimationContainer>
                 break;
             case 4:
-                currentStepDetails = <AnimationContainer key={4} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}><Contributions /></AnimationContainer>
-                break;
-            case 5:
                 currentStepDetails = <AnimationContainer key={5} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}><Finish /></AnimationContainer>
                 break;
         }
@@ -230,10 +239,9 @@ class AddPaper extends Component {
                 }} id="helpIcon"
                 >
                     <HelpIcon
-                        style={{ padding: '12px', height: '48px', width: '48px' }}
                         icon={faQuestion}
                     />
-                    <div style={{ cursor: 'pointer', display: 'inline-block', marginLeft: '8px', fontWeight: 'bold', lineHeight: '56px', fontSize: 'large' }}>Help</div>
+                    <div className={'text ' + (this.props.showAbstractDialog ? 'white' : '')}>Help</div>
                 </Help>
 
 
@@ -253,7 +261,8 @@ AddPaper.propTypes = {
     openTour: PropTypes.func.isRequired,
     closeTour: PropTypes.func.isRequired,
     blockNavigation: PropTypes.func.isRequired,
-    theme: PropTypes.object.isRequired
+    theme: PropTypes.object.isRequired,
+    showAbstractDialog: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -263,6 +272,7 @@ const mapStateToProps = (state) => ({
     authors: state.addPaper.authors,
     shouldBlockNavigation: state.addPaper.shouldBlockNavigation,
     paperNewResourceId: state.addPaper.paperNewResourceId,
+    showAbstractDialog: state.addPaper.showAbstractDialog,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -188,7 +188,7 @@ class ViewPaper extends Component {
     }
 
     // @param sync : to update the contribution label on the backend.
-    handleChangeContributionLabel = async (contributionId, label, sync = false) => {
+    handleChangeContributionLabel = async (contributionId, label) => {
         //find the index of contribution 
         const objIndex = this.state.contributions.findIndex(obj => obj.id === contributionId);
         if (this.state.contributions[objIndex].label !== label) {
@@ -201,8 +201,6 @@ class ViewPaper extends Component {
                 ...this.state.contributions.slice(objIndex + 1),
             ];
             this.setState({ contributions: newContributions })
-        }
-        if (sync) {
             await updateResource(contributionId, label);
             toast.success('Contribution name updated successfully');
         }

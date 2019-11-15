@@ -55,7 +55,7 @@ class AddValue extends Component {
         });
     }
 
-    handleValueSelect = async ({ id, value, shared }) => {
+    handleValueSelect = async ({ id, value, shared, classes }) => {
         if (this.props.syncBackend) {
             let predicate = this.props.properties.byId[this.props.selectedProperty]
             let newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, id);
@@ -63,6 +63,7 @@ class AddValue extends Component {
                 label: value,
                 type: this.state.valueType,
                 propertyId: this.props.selectedProperty,
+                classes: classes,
                 existingResourceId: id,
                 isExistingValue: true,
                 statementId: newStatement.id,
@@ -73,6 +74,7 @@ class AddValue extends Component {
                 label: value,
                 type: this.state.valueType,
                 propertyId: this.props.selectedProperty,
+                classes: classes,
                 existingResourceId: id,
                 isExistingValue: true,
                 shared: shared
@@ -160,6 +162,7 @@ class AddValue extends Component {
                                 (
                                     <AutoComplete
                                         requestUrl={resourcesUrl}
+                                        excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM}`}
                                         placeholder="Enter an object"
                                         onItemSelected={this.handleValueSelect}
                                         onInput={this.handleInputChange}

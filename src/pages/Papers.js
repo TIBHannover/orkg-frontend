@@ -33,7 +33,7 @@ export default class Papers extends Component {
             id: process.env.REACT_APP_CLASSES_PAPER,
             page: this.state.page,
             items: this.pageSize,
-            sortBy: 'id',
+            sortBy: 'created_at',
             desc: true
         }).then((papers) => {
             if (papers.length > 0) {

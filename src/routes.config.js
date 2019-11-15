@@ -1,3 +1,5 @@
+import React from 'react';
+import { Redirect } from 'react-router-dom';
 import ResourceDetails from './pages/ResourceDetails'
 import AddPaper from './components/AddPaper/AddPaper'
 import AuthorPage from 'components/AuthorPage/AuthorPage'
@@ -5,13 +7,12 @@ import AddResource from './pages/AddResource';
 import Comparison from './components/Comparison/Comparison';
 import Home from './components/Home/Home';
 import License from './components/StaticPages/License';
+import Changelog from './components/StaticPages/Changelog';
 import NotFound from './components/StaticPages/NotFound';
 import Papers from './pages/Papers';
-import PredicateDetails from './pages/PredicateDetails'
+import PredicateDetails from './pages/PredicateDetails';
 import Predicates from './pages/Predicates';
-import ROUTES from './constants/routes.js';
-import React from 'react';
-import { Redirect } from 'react-router-dom';
+import ROUTES from './constants/routes';
 import RedirectShortLinks from './components/Comparison/RedirectShortLinks';
 import ResearchField from './components/ResearchField/ResearchField'
 import ResearchProblem from './components/ResearchProblem/ResearchProblem'
@@ -19,6 +20,8 @@ import Resources from './pages/Resources'
 import SearchResults from './components/Search/Search'
 import ViewPaper from './components/ViewPaper/ViewPaper';
 import Stats from './components/Stats/Stats';
+import UserSettings from './components/UserSettings/UserSettings';
+import UserProfile from './components/UserProfile/UserProfile';
 
 
 const routes = [
@@ -41,6 +44,16 @@ const routes = [
         path: ROUTES.PREDICATES,
         exact: true,
         component: Predicates
+    },
+    {
+      path: ROUTES.USER_SETTINGS,
+      exact: true,
+      component: UserSettings,
+    },
+    {
+      path: ROUTES.USER_PROFILE,
+      exact: true,
+      component: UserProfile,
     },
     {
         path: ROUTES.ADD_PAPER.GENERAL_DATA,
@@ -92,6 +105,10 @@ const routes = [
         component: License
     },
     {
+        path: ROUTES.CHANGELOG,
+        component: Changelog
+    },
+    {
         path: ROUTES.SEARCH,
         component: SearchResults
     },
@@ -118,4 +135,4 @@ const routes = [
     }
 ]
 
-export default routes
+export default routes;

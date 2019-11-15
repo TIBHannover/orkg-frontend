@@ -44,10 +44,17 @@ class ContributionItemList extends Component {
             modalDataset: false,
             dialogResourceId: null,
             dialogResourceLabel: null,
-            isEditing: false
+            isEditing: false,
+            draftLabel: this.props.contribution.label
         }
 
         this.inputRefs = React.createRef();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.contribution.label !== prevProps.contribution.label) {
+            this.setState({ draftLabel: this.props.contribution.label })
+        }
     }
 
     toggleEditLabelContribution = () => {
@@ -59,6 +66,10 @@ class ContributionItemList extends Component {
         }
     };
 
+    handleChangeLabel = event => {
+        this.setState({ draftLabel: event.target.value });
+    };
+
     render() {
         return (
             <li className={this.props.isSelected ? 'activeContribution' : ''} >
@@ -67,10 +78,10 @@ class ContributionItemList extends Component {
                         <StyledInput
                             bsSize="sm"
                             innerRef={this.inputRefs}
-                            value={this.props.contribution.label}
-                            onChange={(e) => this.props.handleChangeContributionLabel(this.props.contribution.id, e.target.value, false)}
+                            value={this.state.draftLabel}
+                            onChange={this.handleChangeLabel}
                             onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
-                            onBlur={(e) => { this.props.handleChangeContributionLabel(this.props.contribution.id, this.props.contribution.label, true); this.toggleEditLabelContribution() }}
+                            onBlur={(e) => { this.props.handleChangeContributionLabel(this.props.contribution.id, this.state.draftLabel); this.toggleEditLabelContribution() }}
                             onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
                         />)}
                     {!this.state.isEditing && (

@@ -41,7 +41,7 @@ const Footer = () => (
                         <hr className={'mr-5'} />
                         <Row >
                             <div className={'float-left ml-3'} ><Link to={ROUTES.HOME}><Logo style={{ height: '80px' }} /></Link></div>
-                            <div className={'col-md-8 description'}>We aim to describe research papers and contributions in a structred manner</div>
+                            <div className={'col-md-8 description'}>We aim to describe research papers and contributions in a structured manner</div>
                         </Row>
                     </FooterCol>
                     <FooterCol md={3}>
@@ -57,7 +57,7 @@ const Footer = () => (
                         <h5>Technical</h5>
                         <hr className={'mr-5'} />
                         <ul className={'p-0'} style={{ listStyle: 'none' }}>
-                            <li>Changelog</li>
+                            <li><Link to={ROUTES.CHANGELOG}>Changelog</Link></li>
                             <li>Contributors</li>
                             <li><a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/" target="_blank" rel="noopener noreferrer">Gitlab</a></li>
                         </ul>

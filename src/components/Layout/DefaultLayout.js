@@ -5,6 +5,8 @@ import { popupDelay } from '../../utils';
 import Header from './Header/Header';
 import Footer from './Footer';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 
 const StyledBody = styled.div`
@@ -21,6 +23,22 @@ const StyledAppContent = styled.div`
 const StyledFooter = styled.div`
     flex-shrink: 0;
 `
+
+function CloseToastButton({ closeToast }) {
+    return (
+        <span
+            onClick={e => {
+                e.stopPropagation();
+                closeToast(e);
+            }}
+        >
+            <Icon icon={faTimes} />
+        </span>
+    );
+}
+CloseToastButton.propTypes = {
+    closeToast: PropTypes.func
+};
 
 class DefaultLayout extends Component {
     constructor(props) {
@@ -45,6 +63,8 @@ class DefaultLayout extends Component {
                     autoClose={parseInt(popupDelay)}
                     hideProgressBar
                     transition={Slide}
+                    className="toast-container"
+                    closeButton={<CloseToastButton />}
                 />
 
                 <Header />

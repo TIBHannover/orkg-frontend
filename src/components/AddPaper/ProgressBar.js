@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 */
 
 const labelStyle = {
-    width: '25%',
+    width: '33.33%',
     float: 'left',
     textAlign: 'center',
     position: 'relative'
@@ -65,7 +65,6 @@ class ProgressBar extends Component {
         let styleSelectedOne = this.props.currentStep >= '1' ? selectedStyle : {};
         let styleSelectedTwo = this.props.currentStep >= '2' ? selectedStyle : {};
         let styleSelectedThree = this.props.currentStep >= '3' ? selectedStyle : {};
-        let styleSelectedFour = this.props.currentStep >= '4' ? selectedStyle : {};
 
         return (
             <div style={{ height: 65, margin: '30px 0 30px', position: 'relative' }}>
@@ -84,16 +83,9 @@ class ProgressBar extends Component {
                     </div>
                     <div style={labelStyle}>
                         <div style={{ ...lineStyle, ...styleSelectedThree }} />
-                        <div style={{ ...lineStyle, ...lineLeftStyle, ...styleSelectedFour }} />
                         <div style={{ ...numberStyle, ...styleSelectedThree }}>3</div>
-                        <div style={textStyle}>Abstract</div>
-                    </div>
-                    <div style={labelStyle}>
-                        <div style={{ ...lineStyle, ...styleSelectedFour }} />
-                        <div style={{ ...numberStyle, ...styleSelectedFour }}>4</div>
                         <div style={textStyle}>Contributions</div>
                     </div>
-
                 </div>
             </div>
         );
