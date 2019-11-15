@@ -101,7 +101,7 @@ const submitDeleteRequest = (url, headers, data) => {
         if (!response.ok) {
           reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
         } else {
-            return resolve();
+          return resolve();
         }
       })
       .catch(reject);
@@ -119,6 +119,14 @@ export const updateResource = (id, label) => {
 export const updateLiteral = (id, label) => {
   return submitPutRequest(
     `${literalsUrl}${id}`,
+    { 'Content-Type': 'application/json' },
+    { label: label },
+  );
+};
+
+export const updatePredicate = (id, label) => {
+  return submitPutRequest(
+    `${predicatesUrl}${id}`,
     { 'Content-Type': 'application/json' },
     { label: label },
   );
@@ -162,6 +170,18 @@ export const createLiteralStatement = (subjectId, predicateId, property) => {
   );
 };
 
+export const updateStatement = (id, { subject_id = null, predicate_id = null, object_id = null }) => {
+  return submitPutRequest(
+    `${statementsUrl}${id}`,
+    { 'Content-Type': 'application/json' },
+    {
+      ...subject_id ? { subject_id: subject_id } : null,
+      ...predicate_id ? { predicate_id: predicate_id } : null,
+      ...object_id ? { object_id: object_id } : null,
+    },
+  );
+};
+
 export const createPredicate = (label) => {
   return submitPostRequest(predicatesUrl, { 'Content-Type': 'application/json' }, { label: label });
 };
@@ -179,6 +199,13 @@ export const getAllResources = ({ page = 1, items = 9999, sortBy = 'id', desc = 
   let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
 
   return submitGetRequest(`${resourcesUrl}?${params}`);
+};
+
+export const getAllPredicates = ({ page = 1, items = 9999, sortBy = 'id', desc = true }) => {
+
+  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
+
+  return submitGetRequest(`${predicatesUrl}?${params}`);
 };
 
 export const getAllStatements = ({ page = 1, items = 9999, sortBy = 'id', desc = true }) => {
@@ -282,11 +309,4 @@ export const getAllClasses = () => {
 
 export const saveFullPaper = (data) => {
   return submitPostRequest(`${url}papers/`, { 'Content-Type': 'application/json' }, data);
-};
-
-export const getAllPredicates = ({ page = 1, items = 9999, sortBy = 'id', desc = true }) => {
-
-  let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc })
-
-  return submitGetRequest(`${predicatesUrl}?${params}`);
 };

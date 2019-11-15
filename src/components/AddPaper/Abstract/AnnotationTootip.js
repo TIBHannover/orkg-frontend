@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { withTheme } from 'styled-components';
 import PropTypes from 'prop-types';
-import Tippy from '@tippy.js/react'
+import Tippy from '@tippy.js/react';
+import { followCursor } from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
 
 class AnnotationTootip extends Component {
     constructor(props) {
@@ -51,6 +53,7 @@ class AnnotationTootip extends Component {
                 <Tippy
                     placement={'top'}
                     followCursor={true}
+                    plugins={[followCursor]}
                     arrow={true}
                     interactive={true}
                     onCreate={instance => (this.tippyInstance.current = instance)}

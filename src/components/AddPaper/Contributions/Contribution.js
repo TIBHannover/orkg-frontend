@@ -6,7 +6,7 @@ import { StyledContribution } from './styled';
 import StatementBrowser from '../../StatementBrowser/Statements';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { updateResearchProblems, openTour, closeTour, updateTourCurrentStep, } from '../../../actions/addPaper';
+import { updateResearchProblems, openTour, closeTour, updateTourCurrentStep } from '../../../actions/addPaper';
 import { withCookies, Cookies } from 'react-cookie';
 import { withTheme } from 'styled-components';
 import PropTypes from 'prop-types';
@@ -45,7 +45,7 @@ class Contribution extends Component {
         }
     };
 
-    handleResearchProblemsChange = (problemsArray) => {
+    handleResearchProblemsChange = (problemsArray, a) => {
         problemsArray = problemsArray ? problemsArray : [];
         this.props.updateResearchProblems({
             problemsArray,
@@ -82,46 +82,83 @@ class Contribution extends Component {
                         <StatementBrowser
                             enableEdit={true}
                             openExistingResourcesInDialog={true}
+                            syncBackend={false}
                         />
                     </FormGroup>
                 </Form>
                 <Tour
                     onAfterOpen={this.disableBody}
                     onBeforeClose={this.enableBody}
-                    steps={[
-                        {
-                            selector: '#researchProblemFormControl',
-                            content:
-                                <span>
-                                    Specify the research problem that this contribution addresses. Normally, a research problem consists of <strong>very few words</strong> (around 2 or 3).
-                                    <br /><br />
-                                    Examples of research problems:
-                                    <ul>
-                                        <li>Named entity recognition</li>
-                                        <li>HCI performance evaluations</li>
-                                        <li>Triple store benchmarking</li>
-                                    </ul>
-                                </span>,
-                            style: { borderTop: '4px solid #E86161' },
-                        },
-                        {
-                            selector: '#contributionsList',
-                            content: <span>You can enter multiple contributions, and you can specify a name for each contribution. It's just a handy label. <br /><br />Some papers only have one research contribution, while others have multiple. If you are not sure about this, it is fine to just use one contribution.</span>,
-                            style: { borderTop: '4px solid #E86161' },
-                        },
-                        {
-                            selector: '.listGroupEnlarge',
-                            content: <span>Entering contribution data is the most important part of adding a paper (this part takes around 10-20 minutes). In this section you enter the data relevant to your paper. The challenge here is to capture the most important aspects of your paper and to represent this here. <br /><br />The data is entered in a <strong>property and value </strong> structure. First you choose a property (e.g. method) and afterwards you add a value to this property (e.g. semi-structured interviews). <br /><br /><span className="btn btn-link p-0" onClick={this.toggleVideoDialog}>Open example video</span></span>,
-                            style: { borderTop: '4px solid #E86161' },
-                        },
-                    ]}
+                    steps={
+                        [
+                            ...(!this.props.showAbstractDialog) ? [
+                                {
+                                    selector: '#researchProblemFormControl',
+                                    content:
+                                        <span>
+                                            Specify the research problem that this contribution addresses. Normally, a research problem consists of <strong>very few words</strong> (around 2 or 3).
+                                            <br /><br />
+                                            Examples of research problems:
+                                            <ul>
+                                                <li>Named entity recognition</li>
+                                                <li>HCI performance evaluations</li>
+                                                <li>Triple store benchmarking</li>
+                                            </ul>
+                                        </span>,
+                                    style: { borderTop: '4px solid #E86161' },
+                                },
+                                {
+                                    selector: '#contributionsList',
+                                    content: <span>You can enter multiple contributions, and you can specify a name for each contribution. It's just a handy label. <br /><br />Some papers only have one research contribution, while others have multiple. If you are not sure about this, it is fine to just use one contribution.</span>,
+                                    style: { borderTop: '4px solid #E86161' },
+                                },
+                                {
+                                    selector: '.listGroupEnlarge',
+                                    content: <span>Entering contribution data is the most important part of adding a paper (this part takes around 10-20 minutes). In this section you enter the data relevant to your paper. The challenge here is to capture the most important aspects of your paper and to represent this here. <br /><br />The data is entered in a <strong>property and value </strong> structure. First you choose a property (e.g. method) and afterwards you add a value to this property (e.g. semi-structured interviews). <br /><br /><span className="btn btn-link p-0" onClick={this.toggleVideoDialog}>Open example video</span></span>,
+                                    style: { borderTop: '4px solid #E86161' },
+                                },
+                            ] : [],
+                            ...(this.props.showAbstractDialog) ? [
+                                (this.props.abstractDialogView === 'input') ? {
+                                    selector: '#paperAbstract',
+                                    content: ({ goTo }) => (
+                                        <div>
+                                            Enter the paper abstract to get automatically generated concepts for you paper.
+                                        </div>
+                                    ),
+                                    style: { borderTop: '4px solid #E86161' },
+                                    position: 'right',
+                                } : {
+                                        selector: '#annotatedText',
+                                        content: ({ goTo }) => (
+                                            <div>
+                                                This an automatically annotated abstract. Feel free to edit and add new annotation by highlighting the text.<br />
+                                                When you hover on one of the annotations, you get this 3 options in a tooltip: <br />
+                                                <img src={require('../../../assets/img/annotationTooltip.png')} alt="" className="img-responsive" /><br />
+                                                <ol>
+                                                    <li>Change the annotation label.</li>
+                                                    <li>Remove the annotation.</li>
+                                                    <li>Show the list of label options.</li>
+                                                </ol>
+                                            </div>
+                                        ),
+                                        style: { borderTop: '4px solid #E86161' },
+                                        position: 'right',
+                                    }
+                            ] : []
+                        ]
+                    }
                     showNumber={false}
                     accentColor={this.props.theme.orkgPrimaryColor}
                     rounded={10}
                     onRequestClose={this.requestCloseTour}
                     isOpen={this.props.isTourOpen}
-                    startAt={this.props.tourStartAt}
+                    startAt={0}
                     maskClassName="reactourMask"
+
+                    getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); }}
+                    showButtons={!this.props.showAbstractDialog}
+                    showNavigation={!this.props.showAbstractDialog}
                 />
 
                 <Modal isOpen={this.state.showVideoDialog} toggle={this.toggleVideoDialog} size="lg">
@@ -149,6 +186,8 @@ Contribution.propTypes = {
     isTourOpen: PropTypes.bool.isRequired,
     tourCurrentStep: PropTypes.number.isRequired,
     tourStartAt: PropTypes.number.isRequired,
+    showAbstractDialog: PropTypes.bool.isRequired,
+    abstractDialogView: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -157,6 +196,8 @@ const mapStateToProps = (state, ownProps) => {
         isTourOpen: state.addPaper.isTourOpen,
         tourCurrentStep: state.addPaper.tourCurrentStep,
         tourStartAt: state.addPaper.tourStartAt,
+        showAbstractDialog: state.addPaper.showAbstractDialog,
+        abstractDialogView: state.addPaper.abstractDialogView,
     }
 };
 

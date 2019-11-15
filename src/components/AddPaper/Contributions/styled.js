@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import ContentEditable from 'react-contenteditable'
 import { ListGroupItem, InputGroup, DropdownItem } from 'reactstrap';
 
 /*contribution*/
@@ -52,18 +51,6 @@ export const StyledContributionsList = styled.ul`
     }
 `;
 
-/*contributionsList*/
-export const StyledContentEditable = styled(ContentEditable)`
-    &:focus {
-    background: #fff;
-    color: ${props => props.theme.orkgPrimaryColor};
-    outline: 0;
-    border: dotted 2px ${props => props.theme.listGroupBorderColor};
-    padding: 0 4px;
-    display: block;
-  }
-`;
-
 /*researchFieldsInput*/
 export const StyledResearchFieldsInputFormControl = styled.div`
     padding-top: 0 !important;
@@ -89,7 +76,7 @@ export const StyledResearchFieldBrowser = styled.div`
     cursor: text;
 `;
 
-/*statementItem*/
+/*propertyItem*/
 export const StyledStatementItem = styled(ListGroupItem)`
     padding: 0.5rem 0.75rem !important;
     cursor: default;
@@ -122,6 +109,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
     &.statementActive {
         background-color: ${props => props.theme.darkblue}  !important;
         border-color: ${props => props.theme.darkblue}  !important;
+        color: #fff;
 
         & .deletePredicate {
             display: inline-block !important;
@@ -129,12 +117,12 @@ export const StyledStatementItem = styled(ListGroupItem)`
     }
 `;
 
-/*addStatement*/
-export const StyledAddStatement = styled(InputGroup)`
+/*addProperty*/
+export const StyledAddProperty = styled(InputGroup)`
     & input[type="text"] {
         background: #fff !important;
     }
-    & .addStatementActionButton {
+    & .addPropertyActionButton {
         padding: 0 15px;
         font-size: 95%;
         border-color: ${props => props.theme.listGroupBorderColor};
@@ -196,6 +184,10 @@ export const StyledValueItem = styled(ListGroupItem)`
 
         &:hover {
             text-decoration: underline;
+        }
+        &.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
     }
     &:hover {

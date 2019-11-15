@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Container, Button, Alert, UncontrolledAlert } from 'reactstrap';
-import { getStatementsBySubject, getResource } from '../../network';
+import { Container, Button, Alert, UncontrolledAlert, ButtonGroup } from 'reactstrap';
+import { getStatementsBySubject, getResource, updateResource, createResource, createResourceStatement, deleteStatementById } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faBars, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faCalendar, faBars, faProjectDiagram, faPen, faCheck } from '@fortawesome/free-solid-svg-icons';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader'
 import Contributions from './Contributions';
@@ -14,21 +14,37 @@ import moment from 'moment'
 import PropTypes from 'prop-types';
 import ComparisonPopup from './ComparisonPopup';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
+import { loadPaper, selectContribution } from '../../actions/viewPaper';
 import GraphViewModal from './GraphViewModal';
 import queryString from 'query-string';
+import { toast } from 'react-toastify';
+import Confirm from 'reactstrap-confirm';
+import EditPaperDialog from './EditDialog/EditPaperDialog';
+import styled from 'styled-components';
+
+export const EditModeHeader = styled(Container)`
+    background-color: #80869B!important;
+    color:#fff;
+    padding: 8px 25px!important;
+    display:flex;
+    align-items: center;
+`;
+
+export const Title = styled.div`
+    font-size:1.1rem;
+    flex-grow:1;
+`;
 
 class ViewPaper extends Component {
     state = {
         loading: true,
         loading_failed: false,
         unfoundContribution: false,
-        id: null,
-        title: '',
-        authorNames: [],
         contributions: [],
         selectedContribution: '',
         dropdownOpen: false,
         showGraphModal: false,
+        editMode: false,
     }
 
     componentDidMount() {
@@ -64,40 +80,50 @@ class ViewPaper extends Component {
                 }
 
                 // publication year
-                let publicationYear = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
-
-                if (publicationYear.length > 0) {
-                    publicationYear = publicationYear[0].object.label
+                let publicationYearStatements = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
+                let publicationYearResourceId = 0;
+                let publicationYear = 0;
+                if (publicationYearStatements.length > 0) {
+                    publicationYear = publicationYearStatements[0].object.label;
+                    publicationYearResourceId = publicationYearStatements[0].object.id;
                 }
 
                 // publication month
-                let publicationMonth = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
+                let publicationMonthStatements = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
+                let publicationMonthResourceId = 0;
+                let publicationMonth = 0;
 
-                if (publicationMonth.length > 0) {
-                    publicationMonth = publicationMonth[0].object.label
+                if (publicationMonthStatements.length > 0) {
+                    publicationMonth = publicationMonthStatements[0].object.label;
+                    publicationMonthResourceId = publicationMonthStatements[0].object.id;
                 }
 
                 // authors
                 let authors = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
-
                 let authorNamesArray = [];
 
                 if (authors.length > 0) {
                     for (let author of authors) {
-                        let authorName = author.object.label;
-                        authorNamesArray.push(authorName);
+                        authorNamesArray.push({
+                            id: author.id,
+                            label: author.object.label
+                        });
                     }
                 }
 
                 // DOI
-                let publicationDOI = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
-                if (publicationDOI.length > 0) {
-                    publicationDOI = publicationDOI[0].object.label;
-                    if (publicationDOI.includes('10.') && !publicationDOI.startsWith('10.')) {
-                        publicationDOI = publicationDOI.substring(publicationDOI.indexOf('10.'));
+                let doi = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
+                let doiResourceId = 0;
+
+                if (doi.length > 0) {
+                    doiResourceId = doi[0].object.id;
+                    doi = doi[0].object.label;
+
+                    if (doi.includes('10.') && !doi.startsWith('10.')) {
+                        doi = doi.substring(doi.indexOf('10.'));
                     }
                 } else {
-                    publicationDOI = null;
+                    doi = null;
                 }
 
                 // contributions
@@ -107,22 +133,28 @@ class ViewPaper extends Component {
 
                 if (contributions.length > 0) {
                     for (let contribution of contributions) {
-                        contributionArray.push(contribution.object);
+                        contributionArray.push({ ...contribution.object, statementId: contribution.id });
                     }
                 }
 
                 // Set document title
-                document.title = `${paperResource.label} - ORKG`
+                document.title = `${paperResource.label} - ORKG`;
+
+                this.props.loadPaper({
+                    title: paperResource.label,
+                    paperResourceId: paperResource.id,
+                    authors: authorNamesArray.reverse(), // statements are ordered desc, so first author is last => thus reverse
+                    publicationMonth: parseInt(publicationMonth),
+                    publicationMonthResourceId,
+                    publicationYear: parseInt(publicationYear),
+                    publicationYearResourceId,
+                    doi,
+                    doiResourceId,
+                    researchField,
+                });
 
                 this.setState({
                     loading: false,
-                    id: this.props.match.params.resourceId,
-                    title: paperResource.label,
-                    publicationYear,
-                    publicationMonth,
-                    researchField,
-                    publicationDOI: publicationDOI,
-                    authorNames: authorNamesArray.reverse(), // statements are ordered desc, so first author is last => thus reverse
                     contributions: contributionArray.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
                 });
             }).then((e) => {
@@ -153,6 +185,56 @@ class ViewPaper extends Component {
         }));
     }
 
+    // @param sync : to update the contribution label on the backend.
+    handleChangeContributionLabel = async (contributionId, label) => {
+        //find the index of contribution 
+        const objIndex = this.state.contributions.findIndex(obj => obj.id === contributionId);
+        if (this.state.contributions[objIndex].label !== label) {
+            // set the label of the contribution
+            const updatedObj = { ...this.state.contributions[objIndex], label: label };
+            // update the contributions array
+            let newContributions = [
+                ...this.state.contributions.slice(0, objIndex),
+                updatedObj,
+                ...this.state.contributions.slice(objIndex + 1),
+            ];
+            this.setState({ contributions: newContributions })
+            await updateResource(contributionId, label);
+            toast.success('Contribution name updated successfully');
+        }
+
+    }
+
+    handleCreateContribution = async () => {
+        let newContribution = await createResource(`Contribution ${this.state.contributions.length + 1}`);
+        let statement = await createResourceStatement(this.props.match.params.resourceId, process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION, newContribution.id)
+        this.setState({ contributions: [...this.state.contributions, { ...statement.object, statementId: statement.id }] })
+        toast.success('Contribution cratead successfully');
+    }
+
+    toggleDeleteContribution = async (contributionId) => {
+        let result = await Confirm({
+            title: 'Are you sure?',
+            message: 'Are you sure you want to delete this contribution?',
+            cancelColor: 'light'
+        });
+
+        if (result) {
+            const objIndex = this.state.contributions.findIndex(obj => obj.id === contributionId);
+            let statementId = this.state.contributions[objIndex].statementId;
+            let newContributions = this.state.contributions.filter(function (contribution) {
+                return contribution.id !== contributionId
+            })
+            this.setState({
+                selectedContribution: newContributions[0].id,
+            }, () => {
+                this.setState({ contributions: newContributions });
+            })
+            await deleteStatementById(statementId)
+            toast.success('Contribution deleted successfully');
+        }
+    }
+
     toggleDropdown = () => {
         this.setState(prevState => ({
             dropdownOpen: !prevState.dropdownOpen
@@ -170,10 +252,51 @@ class ViewPaper extends Component {
                 )}
                 {!this.state.loading_failed && (
                     <>
-                        <Container className="p-0">
-                            <h1 className="h4 mt-4 mb-4">View paper</h1>
+                        <Container className="p-0 d-flex align-items-center">
+                            <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
+                            <ButtonGroup className="flex-shrink-0">
+                                <Button
+                                    className="flex-shrink-0"
+                                    color="darkblue"
+                                    size="sm"
+                                    onClick={() => this.toggle('showGraphModal')}
+                                >
+                                    <Icon icon={faProjectDiagram} style={{ margin: '2px 4px 0 0' }} /> Graph view
+                                </Button>
+
+                                {!this.state.editMode ?
+                                    <Button
+                                        className="flex-shrink-0"
+                                        style={{ marginLeft: 1 }}
+                                        color="darkblue"
+                                        size="sm"
+                                        onClick={() => this.toggle('editMode')}
+                                    >
+                                        <Icon icon={faPen} /> Edit
+                                    </Button>
+                                    :
+                                    <Button
+                                        className="flex-shrink-0"
+                                        style={{ marginLeft: 1 }}
+                                        color="darkblueDarker"
+                                        size="sm"
+                                        onClick={() => this.toggle('editMode')}
+                                    >
+                                        <Icon icon={faCheck} /> Finish
+                                    </Button>
+                                }
+
+                            </ButtonGroup>
                         </Container>
+
+
+                        {this.state.editMode && (
+                            <EditModeHeader className="box">
+                                <Title>Edit mode</Title>
+                            </EditModeHeader>
+                        )}
                         <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
+
                             {this.state.loading && (
                                 <ContentLoader
                                     height={38}
@@ -197,48 +320,36 @@ class ViewPaper extends Component {
                                             </UncontrolledAlert>
                                         )}
                                     <div className="d-flex align-items-start">
-                                        <h2 className="h4 mt-4 mb-3 flex-grow-1">{this.state.title ? this.state.title : <em>No title</em>}</h2>
-
-                                        {/*<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} className="mb-4 mt-4" style={{ marginLeft: 'auto' }}>
-                                            <DropdownToggle color="darkblue" size="sm" >
-                                                <span className="mr-2">View</span> <Icon icon={faEllipsisV} />
-                                            </DropdownToggle>
-                                            <DropdownMenu>
-                                                <DropdownItem onClick={() => this.toggle('showGraphModal')}>Show graph visualization</DropdownItem>
-                                            </DropdownMenu>
-                                        </Dropdown>*/}
-
-                                        <Button
-                                            color="darkblue"
-                                            size="sm"
-                                            className="mb-4 mt-4 ml-2 flex-shrink-0"
-                                            style={{ marginLeft: 'auto' }}
-                                            onClick={() => this.toggle('showGraphModal')}
-                                        >
-                                            <Icon icon={faProjectDiagram} className="mr-1" /> View graph
-                                        </Button>
+                                        <h2 className="h4 mt-4 mb-3 flex-grow-1">{this.props.viewPaper.title ? this.props.viewPaper.title : <em>No title</em>}</h2>
                                     </div>
 
                                     <div className="clearfix" />
 
                                     {/* TODO: change links of badges  */}
-                                    <span className="badge badge-lightblue mr-2">
-                                        <Icon icon={faCalendar} className="text-primary" /> {this.state.publicationMonth && this.state.publicationMonth.length > 0 && moment(this.state.publicationMonth, 'M').format('MMMM')} {this.state.publicationYear}
-                                    </span>
-                                    {this.state.researchField && this.state.researchField.object && (
-                                        <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.researchField.object.id })} >
+                                    {(this.props.viewPaper.publicationMonth || this.props.viewPaper.publicationYear) ? (
+                                        <span className="badge badge-lightblue mr-2">
+                                            <Icon icon={faCalendar} className="text-primary" /> {this.props.viewPaper.publicationMonth ? moment(this.props.viewPaper.publicationMonth, 'M').format('MMMM') : ''} {this.props.viewPaper.publicationYear ? this.props.viewPaper.publicationYear : ''}
+                                        </span>
+                                    ) : ''}
+                                    {this.props.viewPaper.researchField && this.props.viewPaper.researchField.object && (
+                                        <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.props.viewPaper.researchField.object.id })} >
                                             <span className="badge badge-lightblue mr-2 mb-2">
-                                                <Icon icon={faBars} className="text-primary" /> {this.state.researchField.object.label}
+                                                <Icon icon={faBars} className="text-primary" /> {this.props.viewPaper.researchField.object.label}
                                             </span>
                                         </Link>)
                                     }
-                                    {this.state.authorNames.map((author, index) => (
+                                    {this.props.viewPaper.authors.map((author, index) => (
                                         <span className="badge badge-lightblue mr-2 mb-2" key={index}>
-                                            <Icon icon={faUser} className="text-primary" /> {author}
+                                            <Icon icon={faUser} className="text-primary" /> {author.label}
                                         </span>
                                     ))}
                                     <br />
-                                    {this.state.publicationDOI && this.state.publicationDOI.startsWith('10.') && <div style={{ textAlign: 'right' }}><small>DOI: <a href={`https://doi.org/${this.state.publicationDOI}`} target="_blank" rel="noopener noreferrer">{this.state.publicationDOI}</a></small></div>}
+                                    <div className="d-flex justify-content-end align-items-center">
+                                        {this.state.editMode && (
+                                            <EditPaperDialog />
+                                        )}
+                                        {this.props.viewPaper.doi && this.props.viewPaper.doi.startsWith('10.') && <div className="flex-shrink-0"><small>DOI: <a href={`https://doi.org/${this.props.viewPaper.doi}`} target="_blank" rel="noopener noreferrer">{this.props.viewPaper.doi}</a></small></div>}
+                                    </div>
                                 </>
                             )}
                             {!this.state.loading_failed && !this.state.unfoundContribution && (
@@ -248,7 +359,12 @@ class ViewPaper extends Component {
                                         selectedContribution={this.state.selectedContribution}
                                         contributions={this.state.contributions}
                                         paperId={this.props.match.params.resourceId}
-                                        paperTitle={this.state.title}
+                                        paperTitle={this.props.viewPaper.title}
+                                        enableEdit={this.state.editMode}
+                                        toggleEditMode={() => this.toggle('editMode')}
+                                        handleChangeContributionLabel={this.handleChangeContributionLabel}
+                                        handleCreateContribution={this.handleCreateContribution}
+                                        toggleDeleteContribution={this.toggleDeleteContribution}
                                     />
 
                                     <ComparisonPopup />
@@ -284,7 +400,10 @@ ViewPaper.propTypes = {
         }).isRequired,
     }).isRequired,
     resetStatementBrowser: PropTypes.func.isRequired,
+    selectContribution: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
+    viewPaper: PropTypes.object.isRequired,
+    loadPaper: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
@@ -293,6 +412,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     resetStatementBrowser: () => dispatch(resetStatementBrowser()),
+    loadPaper: (payload) => dispatch(loadPaper(payload)),
+    selectContribution: (payload) => dispatch(selectContribution(payload)),
 });
 
 export default connect(

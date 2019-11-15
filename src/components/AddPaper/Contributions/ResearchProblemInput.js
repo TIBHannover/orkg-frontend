@@ -45,12 +45,12 @@ class ResearchProblemInput extends Component {
         }
     }
 
-    handleCreate = (inputValue) => {
+    handleCreate = (inputValue, val) => {
         const newOption = {
             label: inputValue,
             id: inputValue,
         };
-        this.props.handler([...this.props.value, newOption])
+        this.props.handler([...this.props.value, newOption], val)
     };
 
     closeProblemBrowser = () => {
@@ -71,7 +71,7 @@ class ResearchProblemInput extends Component {
     onInputChange = (inputValue, val) => {
         if (val.action === 'input-blur') {
             if (this.state.inputValue !== '') {
-                this.handleCreate(this.state.inputValue); //inputvalue is not provided on blur, so use the state value
+                this.handleCreate(this.state.inputValue, { action: 'create-option', createdOptionLabel: this.state.inputValue }); //inputvalue is not provided on blur, so use the state value
             }
             this.setState({
                 inputValue: '',
@@ -145,22 +145,23 @@ class ResearchProblemInput extends Component {
                 <StyledResearchFieldsInputFormControl id="researchProblemFormControl" className="form-control">
                     <AsyncCreatableSelect
                         value={this.props.value}
+                        inputValue={this.state.inputValue}
+                        onInputChange={this.onInputChange}
                         getOptionLabel={({ label }) => label}
                         getOptionValue={({ id }) => id}
                         onChange={this.props.handler}
                         key={({ id }) => id}
-                        isClearable
+                        isClearable={false}
                         isMulti
                         openMenuOnClick={false}
                         placeholder="Select or type something..."
                         styles={customStyles}
                         components={{ Menu, MultiValueLabel }}
                         onKeyDown={this.onKeyDown}
-                        onInputChange={this.onInputChange}
-                        onCreateOption={this.handleCreate}
-                        inputValue={this.state.inputValue}
                         cacheOptions
                         loadOptions={this.loadOptions}
+                        onCreateOption={(inputValue) => this.handleCreate(inputValue, { action: 'create-option', createdOptionLabel: inputValue })}
+                        getNewOptionData={(inputValue, optionLabel) => ({ label: `Create a research problem : "${inputValue}"`, id: inputValue })}
                     />
                 </StyledResearchFieldsInputFormControl>
                 {

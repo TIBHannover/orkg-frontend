@@ -67,7 +67,7 @@ class SimilarContributions extends Component {
                             return (
                                 <Card
                                     key={`s${contribution.contributionId}`}
-                                    to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: contribution.paperId, contributionId: contribution.contributionId })}
+                                    to={reverse(ROUTES.VIEW_PAPER, { resourceId: contribution.paperId, contributionId: contribution.contributionId })}
                                     className="justify-content-center"
                                     role="button"
                                 >
