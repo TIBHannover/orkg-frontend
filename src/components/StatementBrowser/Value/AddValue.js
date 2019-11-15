@@ -162,6 +162,7 @@ class AddValue extends Component {
                                 (
                                     <AutoComplete
                                         requestUrl={resourcesUrl}
+                                        excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM}`}
                                         placeholder="Enter an object"
                                         onItemSelected={this.handleValueSelect}
                                         onInput={this.handleInputChange}

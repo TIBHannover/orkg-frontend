@@ -6,34 +6,45 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import ContentLoader from 'react-content-loader';
+import styled from 'styled-components';
 
-const Results = (props) => {
-    const filteredResults = (filterClass) => {
-        return (
-            <ListGroup className="mb-3">
-                {props.resources.map((resource, index) => {
-                    if (!resource.classes.includes(filterClass)) {
-                        return [];
-                    }
-
-                    return (
-                        <ListGroupItem action key={`result-${index}`} className="pt-1 pb-1">
-                            <Link to={getResourceLink(filterClass, resource.id)}>
-                                {resource.label}
-                            </Link>
-                        </ListGroupItem>
-                    )
-                })}
-            </ListGroup>
-        );
+const StyledLoadMoreButton = styled.div`
+    padding-top:0;
+    & span{
+        cursor: pointer;
+        border: 2px solid rgba(0, 0, 0, 0.125);
+        border-top:0;
+        border-top-right-radius: 0;
+        border-top-left-radius: 0;
+        border-bottom-right-radius: 12px;
+        border-bottom-left-radius: 12px;
+    }
+    &.action:hover span{
+        z-index: 1;
+        color:#495057;
+        text-decoration: underline;
+        background-color:#f8f9fa;
     }
 
+`;
+
+const StyledListGroupItem = styled(ListGroupItem)`
+    &:last-child{
+        border-bottom-right-radius: ${props => props.rounded === 'true' ? '0 !important' : ''};
+    }
+`;
+
+const Results = (props) => {
     const getResourceLink = (filterClass, resourceId) => {
         let link = '';
 
         switch (filterClass) {
             case process.env.REACT_APP_CLASSES_PAPER: {
                 link = reverse(ROUTES.VIEW_PAPER, { resourceId: resourceId });
+                break;
+            }
+            case process.env.REACT_APP_CLASSES_PROBLEM: {
+                link = reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: resourceId });
                 break;
             }
             case 'resource': {
@@ -55,7 +66,7 @@ const Results = (props) => {
 
     return (
         <div>
-            {props.loading && (
+            {props.loading && props.items === 0 && (
                 <ContentLoader
                     height={210}
                     speed={2}
@@ -76,33 +87,57 @@ const Results = (props) => {
                 </ContentLoader>
             )}
 
-            {!props.loading && props.countResources() === 0 && (
-                <div className="text-center mt-5">There are no results, please try a different search term</div>
+            {!props.loading && props.items.length === 0 && (
+                <div>
+                    <h2 className="h5">{props.label}</h2>
+                    <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
+                </div>
             )}
 
-            {!props.loading && Array.from(props.filters, ([key, filter]) => {
-                if ((props.selectedFilters.length > 0 && !props.selectedFilters.includes(key)) || props.countFilteredResources(filter.class) === 0) {
-                    return [];
-                }
-
-                return (
-                    <div key={`results-${key}`}>
-                        <h2 className="h5">{filter.label}</h2>
-                        {filteredResults(filter.class)}
+            {props.items.length > 0 && (
+                <div>
+                    <h2 className="h5">{props.label}</h2>
+                    <div className="mb-3">
+                        <ListGroup>
+                            {props.items.map((item, index) => {
+                                return (
+                                    <StyledListGroupItem rounded={props.hasNextPage.toString()} action key={`result-${index}`} className="pt-1 pb-1">
+                                        <Link to={getResourceLink(props.class, item.id)}>
+                                            {item.label}
+                                        </Link>
+                                    </StyledListGroupItem>
+                                )
+                            })}
+                        </ListGroup>
+                        {!props.loading && props.hasNextPage && (
+                            <StyledLoadMoreButton className="text-right action">
+                                <span className="btn btn-link btn-sm" onClick={props.loadMore}>
+                                    + Load more
+                                </span>
+                            </StyledLoadMoreButton>
+                        )}
+                        {props.loading && props.hasNextPage && (
+                            <StyledLoadMoreButton className="text-right action">
+                                <span className="btn btn-link btn-sm" onClick={props.loadMore}>
+                                    Loading...
+                                </span>
+                            </StyledLoadMoreButton>
+                        )}
                     </div>
-                );
-            })}
-        </div>
+                </div>
+            )
+            }
+        </div >
     )
 }
 
 Results.propTypes = {
     loading: PropTypes.bool.isRequired,
-    countResources: PropTypes.func.isRequired,
-    countFilteredResources: PropTypes.func.isRequired,
-    filters: PropTypes.object.isRequired,
-    selectedFilters: PropTypes.array.isRequired,
-    resources: PropTypes.array.isRequired,
+    label: PropTypes.string.isRequired,
+    class: PropTypes.string.isRequired,
+    items: PropTypes.array.isRequired,
+    loadMore: PropTypes.func.isRequired,
+    hasNextPage: PropTypes.bool.isRequired,
 }
 
 export default withRouter(Results);

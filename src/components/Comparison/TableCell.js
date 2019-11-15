@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
 import ValuePlugins from '../ValuePlugins/ValuePlugins';
+import Tippy from '@tippy.js/react'
 
 const Item = styled.td`
     padding-right:10px;
@@ -63,17 +64,24 @@ class TableCell extends Component {
                                 date.type === 'resource' ? (
                                     <span key={`value-${index}`}>
                                         {index > 0 && <ItemInnerSeparator />}
-                                        <span
-                                            className="btn-link"
-                                            onClick={() => this.openStatementBrowser(date.resourceId, date.label)}
-                                            style={{ cursor: 'pointer' }}
-                                        >
-                                            <ValuePlugins type={'resource'}>{date.label}</ValuePlugins>
-                                        </span>
+                                        <Tippy content={`Path of this value : ${date.pathLabels.slice(1).join(' / ')}`} arrow={true}>
+                                            <span
+                                                className="btn-link"
+                                                onClick={() => this.openStatementBrowser(date.resourceId, date.label)}
+                                                style={{ cursor: 'pointer' }}
+                                            >
+                                                <ValuePlugins type={'resource'}>{date.label}</ValuePlugins>
+                                            </span>
+                                        </Tippy>
                                     </span>
                                 ) : (
                                         <span key={`value-${index}`}>
-                                            {index > 0 && <ItemInnerSeparator />}<ValuePlugins type={'literal'}>{date.label}</ValuePlugins>
+                                            {index > 0 && <ItemInnerSeparator />}
+                                            <Tippy content={`Path of this value : ${date.pathLabels.slice(1).join(' / ')}`} arrow={true}>
+                                                <span>
+                                                    <ValuePlugins type={'literal'}>{date.label}</ValuePlugins>
+                                                </span>
+                                            </Tippy>
                                         </span>
                                     )
                                 : <span className="font-italic" key={`value-${index}`}>Empty</span>
