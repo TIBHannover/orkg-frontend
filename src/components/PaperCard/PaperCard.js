@@ -45,7 +45,11 @@ class PaperCard extends Component {
                             </Link>)}
                         <br />
                         <small>
-                            <Icon size={'sm'} icon={faUser} /> {this.props.paper.authorNames.join(', ')} -
+                            {this.props.paper.authorNames.length > 0 && (
+                                <>
+                                    <Icon size={'sm'} icon={faUser} /> {this.props.paper.authorNames.join(', ')} -
+                                </>
+                            )}
                             <i>
                                 {this.props.paper.publicationMonth && this.props.paper.publicationMonth.length > 0 && moment(this.props.paper.publicationMonth, 'M').format('MMMM')} {this.props.paper.publicationYear}
                             </i>

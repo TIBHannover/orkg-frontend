@@ -1,3 +1,5 @@
+import capitalize from 'capitalize';
+
 export const popupDelay = process.env.REACT_APP_POPUP_DELAY;
 
 export function hashCode(s) {
@@ -87,4 +89,23 @@ export function timeoutPromise(ms, promise) {
             }
         );
     })
+}
+
+/**
+ * Parse error response body (originating from server) by field name
+ *
+ * Not specifying a `field` name will return the global `errors.message`
+ *
+ * @param {Object} errors
+ * @param {String} field
+ */
+export const get_error_message = (errors, field = null) => {
+    if (!errors) {
+        return null
+    }
+    if (field === null) {
+        return Boolean(errors.message) ? capitalize(errors.message) : null;
+    }
+    let field_error = errors.errors ? errors.errors.find(e => e.field === field) : null
+    return field_error ? capitalize(field_error.message) : null
 }

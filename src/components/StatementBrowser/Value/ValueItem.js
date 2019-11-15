@@ -49,7 +49,7 @@ class ValueItem extends Component {
         if (this.props.label !== prevProps.label) {
             this.setState({ draftLabel: this.props.label })
         }
-    }
+    };
 
     commitChangeLiteral = async () => {
         // Check if the user changed the label
