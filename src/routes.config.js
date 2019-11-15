@@ -2,6 +2,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import ResourceDetails from './pages/ResourceDetails'
 import AddPaper from './components/AddPaper/AddPaper'
+import AuthorPage from 'components/AuthorPage/AuthorPage'
 import AddResource from './pages/AddResource';
 import Comparison from './components/Comparison/Comparison';
 import Home from './components/Home/Home';
@@ -94,6 +95,10 @@ const routes = [
     {
         path: ROUTES.RESEARCH_FIELD,
         component: ResearchField
+    },
+    {
+        path: ROUTES.AUTHOR_PAGE,
+        component: AuthorPage
     },
     {
         path: ROUTES.LICENSE,
