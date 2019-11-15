@@ -5,7 +5,7 @@ import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import styled from 'styled-components';
 
-const StyledAutoCompleteInputFormControl = styled.div`
+export const StyledAutoCompleteInputFormControl = styled.div`
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     height: auto !important;
@@ -82,7 +82,8 @@ class AutoComplete extends Component {
 
             responseJson.map((item) => options.push({
                 label: item.label,
-                id: item.id
+                id: item.id,
+                ...item.shared ? { shared: item.shared } : {}
             }));
 
             return options;
@@ -113,6 +114,7 @@ class AutoComplete extends Component {
             this.props.onItemSelected({
                 id: selected.id,
                 value: selected.label,
+                shared: selected.shared,
             });
         } else if (action.action === 'create-option') {
             this.props.onNewItemSelected && this.props.onNewItemSelected(selected.label);
