@@ -76,6 +76,13 @@ export const createAnnotation = (data) => (dispatch) => {
   });
 };
 
+export const toggleEditAnnotation = (data) => dispatch => {
+  dispatch({
+    type: type.TOGGLE_EDIT_ANNOTATION,
+    payload: data
+  })
+}
+
 export const removeAnnotation = (data) => (dispatch) => {
   dispatch({
     type: type.REMOVE_ANNOTATION,
@@ -193,6 +200,21 @@ export const prefillStatements = ({ statements, resourceId }) => (dispatch) => {
             label: 'Implementation',
         }));
     }*/
+};
+
+export const toggleAbstractDialog = (data) => (dispatch) => {
+  dispatch({
+    type: type.TOGGLE_ABSTRACT_DIALOG,
+  });
+};
+
+export const setAbstractDialogView = (data) => (dispatch) => {
+  dispatch({
+    type: type.SET_ABSTRACT_DIALOG_VIEW,
+    payload: {
+      value: data,
+    },
+  });
 };
 
 export const deleteContribution = (data) => (dispatch) => {
