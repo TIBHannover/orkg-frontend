@@ -3,14 +3,20 @@ import { ListGroup, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { StyledStatementItem, StyledListGroupOpen } from '../AddPaper/Contributions/styled';
-import { getResource } from '../../network';
+import { getResource, predicatesUrl, submitGetRequest, updateStatement, createPredicate } from '../../network';
 import classNames from 'classnames';
 import ValueItem from './Value/ValueItem';
 import AddValue from './Value/AddValue';
-import DeleteStatement from './DeleteStatement';
+import StatementOptions from './StatementOptions';
 import { connect } from 'react-redux';
-import { togglePropertyCollapse } from '../../actions/statementBrowser';
+import {
+    togglePropertyCollapse, toggleEditPropertyLabel, updatePropertyLabel,
+    changeProperty, isSavingProperty, doneSavingProperty, createProperty
+} from '../../actions/statementBrowser';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
+import AsyncCreatableSelect from 'react-select/async-creatable';
+import { guid } from '../../utils';
 
 class StatementItem extends Component {
     constructor(props) {
@@ -33,6 +39,44 @@ class StatementItem extends Component {
         }
     }
 
+    handleChange = async (selectedOption, a) => {
+        let property = this.props.properties.byId[this.props.id];
+        // Check if the user changed the property
+        if (this.props.predicateLabel !== selectedOption.label || (property.existingPredicateId !== selectedOption.id)) {
+            this.props.isSavingProperty({ id: this.props.id }); // Show the saving message instead of the property label
+            if (a.action === 'select-option') {
+                this.changePredicate({ ...selectedOption, isExistingProperty: true });
+            } else if (a.action === 'create-option') {
+                let newPredicate = null;
+                if (this.props.syncBackend) {
+                    newPredicate = await createPredicate(selectedOption.label);
+                    newPredicate['isExistingProperty'] = true
+                } else {
+                    newPredicate = { id: guid(), label: selectedOption.label, isExistingProperty: false }
+                }
+                this.changePredicate(newPredicate);
+            }
+        }
+    };
+
+    changePredicate = async (newProperty) => {
+        if (this.props.syncBackend) {
+            let predicate = this.props.properties.byId[this.props.id];
+            let existingPredicateId = predicate ? predicate.existingPredicateId : false;
+            if (existingPredicateId) {
+                let values = predicate.valueIds;
+                for (let value of values) {
+                    await updateStatement(this.props.values.byId[value].statementId, { predicate_id: newProperty.id })
+                }
+                this.props.changeProperty({ propertyId: this.props.id, newProperty: newProperty });
+                toast.success('Property updated successfully');
+            }
+        } else {
+            this.props.changeProperty({ propertyId: this.props.id, newProperty: newProperty });
+        }
+        this.props.doneSavingProperty({ id: this.props.id });
+    };
+
     getPredicateLabel = () => {
         if (this.props.predicateLabel.match(new RegExp('^R[0-9]*$'))) {
             getResource(this.props.predicateLabel)
@@ -53,6 +97,59 @@ class StatementItem extends Component {
         }));
     };
 
+    IdMatch = async (value, responseJson) => {
+        if (value.startsWith('#')) {
+            const valueWithoutHashtag = value.substr(1);
+
+            if (valueWithoutHashtag.length > 0) {
+                let responseJsonExact;
+
+                try {
+                    responseJsonExact = await submitGetRequest(predicatesUrl + encodeURIComponent(valueWithoutHashtag));
+                } catch (err) {
+                    responseJsonExact = null;
+                }
+
+                if (responseJsonExact) {
+                    responseJson.unshift(responseJsonExact);
+                }
+            }
+        }
+
+        return responseJson;
+    }
+
+    loadOptions = async (value) => {
+        try {
+            let queryParams = '';
+
+            if (value.startsWith('"') && value.endsWith('"') && value.length > 2) {
+                value = value.substring(1, value.length - 1);
+                queryParams = '&exact=true';
+            }
+
+            let responseJson = await submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(value) + queryParams);
+            responseJson = await this.IdMatch(value, responseJson);
+
+            if (responseJson.length > this.maxResults) {
+                responseJson = responseJson.slice(0, this.maxResults);
+            }
+
+            let options = [];
+
+            responseJson.map((item) => options.push({
+                label: item.label,
+                id: item.id
+            }));
+
+            return options;
+        } catch (err) {
+            console.error(err);
+
+            return [];
+        }
+    }
+
     render() {
         const isCollapsed = this.props.selectedProperty === this.props.id;
 
@@ -60,6 +157,7 @@ class StatementItem extends Component {
             statementActive: isCollapsed,
             statementItem: true,
             selectable: true,
+            'd-flex': true,
             'rounded-bottom': this.props.isLastItem && !isCollapsed && !this.props.enableEdit,
         });
 
@@ -76,34 +174,132 @@ class StatementItem extends Component {
 
         let valueIds = Object.keys(this.props.properties.byId).length !== 0 ? this.props.properties.byId[this.props.id].valueIds : [];
 
+        let customStyles = {
+            control: (provided, state) => ({
+                ...provided,
+                background: 'inherit',
+                boxShadow: state.isFocused ? 0 : 0,
+                border: 0,
+                paddingLeft: 0,
+                paddingRight: 0,
+                cursor: 'text',
+                minHeight: 'initial',
+                borderRadius: 'inherit',
+                padding: 0,
+                '&>div:first-of-type': {
+                    padding: 0
+                }
+            }),
+            container: (provided) => ({
+                padding: 0,
+                height: 'auto',
+                background: '#fff',
+                display: 'inline-block',
+                width: '100%',
+                marginRight: 15,
+                '&>div:first-of-type': {
+                    padding: 0
+                }
+            }),
+            menu: (provided) => ({
+                ...provided,
+                zIndex: 10,
+                width: '50%',
+                color: '#000'
+            }),
+            option: (provided) => ({
+                ...provided,
+                cursor: 'pointer',
+                whiteSpace: 'normal',
+            }),
+            indicatorsContainer: (provided) => ({
+                ...provided,
+                cursor: 'pointer',
+                '&>div:last-child': {
+                    padding: '0 8px'
+                }
+            }),
+            input: (provided) => ({
+                ...provided,
+                margin: '0 4px',
+            }),
+            placeholder: (provided) => ({
+                ...provided,
+                opacity: 0.7,
+                paddingLeft: 5,
+                fontStyle: 'italic'
+            }),
+        }
+
+
         return (
             <>
-                <StyledStatementItem active={isCollapsed} onClick={() => this.props.togglePropertyCollapse(this.props.id)} className={listGroupClass}>
-                    {this.state.predicateLabel}
-                    {valueIds.length === 1 && !isCollapsed ? (
-                        <>
-                            :{' '}
-                            <em className="text-muted">
-                                <ValueItem
-                                    label={this.props.values.byId[valueIds[0]].label}
-                                    id={valueIds[0]}
-                                    type={this.props.values.byId[valueIds[0]].type}
-                                    classes={this.props.values.byId[valueIds[0]].classes}
-                                    resourceId={this.props.values.byId[valueIds[0]].resourceId}
-                                    propertyId={this.props.id}
-                                    existingStatement={this.props.values.byId[valueIds[0]].existingStatement}
-                                    inline
+                <StyledStatementItem active={isCollapsed} onClick={() => !this.props.isEditing ? this.props.togglePropertyCollapse(this.props.id) : undefined} className={listGroupClass}>
+                    <div className="flex-grow-1 mr-4">
+                        {!this.props.isSaving ?
+                            (!this.props.isEditing ?
+                                this.state.predicateLabel :
+                                <AsyncCreatableSelect
+                                    className="form-control"
+                                    loadOptions={this.loadOptions}
+                                    noOptionsMessage={this.noResults}
+                                    styles={customStyles}
+                                    autoFocus
+                                    getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
+                                    getOptionValue={({ id }) => id}
+                                    defaultOptions={[{
+                                        label: this.props.predicateLabel,
+                                        id: this.props.properties.byId[this.props.id].existingPredicateId
+                                    }]}
+                                    placeholder={this.props.predicateLabel}
+                                    cacheOptions
+                                    onChange={(selectedOption, a) => { this.handleChange(selectedOption, a); this.props.toggleEditPropertyLabel({ id: this.props.id }); }}
+                                    onBlur={(e) => { this.props.toggleEditPropertyLabel({ id: this.props.id }) }}
+                                    onKeyDown={e => (e.keyCode === 27) && e.target.blur()}
                                 />
-                            </em>
-                        </>
-                    ) : valueIds.length > 1 && !isCollapsed ? (
-                        <>
-                            : <em className="text-muted">{valueIds.length} values</em>
-                        </>
-                    ) : (
-                                ''
-                            )}
-                    <Icon icon={isCollapsed ? faChevronCircleUp : faChevronCircleDown} className={chevronClass} /> {!this.props.isExistingProperty ? <DeleteStatement id={this.props.id} /> : ''}
+                            ) :
+                            'Saving ...'
+                        }
+
+                        {valueIds.length === 1 && !isCollapsed ? (
+                            <>
+                                :{' '}
+                                <em className="text-muted">
+                                    <ValueItem
+                                        label={this.props.values.byId[valueIds[0]].label}
+                                        id={valueIds[0]}
+                                        type={this.props.values.byId[valueIds[0]].type}
+                                        classes={this.props.values.byId[valueIds[0]].classes}
+                                        resourceId={this.props.values.byId[valueIds[0]].resourceId}
+                                        propertyId={this.props.id}
+                                        existingStatement={this.props.values.byId[valueIds[0]].existingStatement}
+                                        inline
+                                        isExistingValue={this.props.values.byId[valueIds[0]].isExistingValue}
+                                        isEditing={false}
+                                        isSaving={false}
+                                        enableEdit={false}
+                                        syncBackend={false}
+                                        shared={1}
+                                    />
+                                </em>
+                            </>
+                        ) : valueIds.length > 1 && !isCollapsed ? (
+                            <>
+                                : <em className="text-muted">{valueIds.length} values</em>
+                            </>
+                        ) : (
+                                    ''
+                                )}
+                    </div>
+
+                    {this.props.enableEdit ? (
+                        <StatementOptions
+                            id={this.props.id}
+                            syncBackend={this.props.syncBackend}
+                            isEditing={this.props.isEditing}
+                        />) : ''}
+
+                    <Icon icon={isCollapsed ? faChevronCircleUp : faChevronCircleDown} className={chevronClass} />
                 </StyledStatementItem>
 
                 <Collapse isOpen={isCollapsed}>
@@ -119,15 +315,22 @@ class StatementItem extends Component {
                                         id={valueId}
                                         type={value.type}
                                         classes={value.classes}
+                                        enableEdit={this.props.enableEdit}
+                                        syncBackend={this.props.syncBackend}
                                         resourceId={value.resourceId}
                                         propertyId={this.props.id}
                                         existingStatement={value.existingStatement}
                                         openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
+                                        isExistingValue={value.isExistingValue}
+                                        isEditing={value.isEditing}
+                                        isSaving={value.isSaving}
+                                        statementId={value.statementId}
+                                        shared={value.shared}
                                     />
                                 );
                             })}
 
-                            {this.props.enableEdit ? <AddValue /> : ''}
+                            {this.props.enableEdit ? <AddValue syncBackend={this.props.syncBackend} /> : ''}
                         </ListGroup>
                     </StyledListGroupOpen>
                 </Collapse>
@@ -142,17 +345,28 @@ StatementItem.propTypes = {
     index: PropTypes.number.isRequired,
     isExistingProperty: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
+    syncBackend: PropTypes.bool.isRequired,
     isLastItem: PropTypes.bool.isRequired,
     togglePropertyCollapse: PropTypes.func.isRequired,
     selectedProperty: PropTypes.string.isRequired,
     properties: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
+    isEditing: PropTypes.bool.isRequired,
+    isSaving: PropTypes.bool.isRequired,
+    toggleEditPropertyLabel: PropTypes.func.isRequired,
+    updatePropertyLabel: PropTypes.func.isRequired,
+    changeProperty: PropTypes.func.isRequired,
+    isSavingProperty: PropTypes.func.isRequired,
+    doneSavingProperty: PropTypes.func.isRequired,
+    selectedResource: PropTypes.string.isRequired,
+    createProperty: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
     return {
         selectedProperty: state.statementBrowser.selectedProperty,
+        selectedResource: state.statementBrowser.selectedResource,
         properties: state.statementBrowser.properties,
         values: state.statementBrowser.values,
     };
@@ -160,6 +374,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
     togglePropertyCollapse: (id) => dispatch(togglePropertyCollapse(id)),
+    toggleEditPropertyLabel: (data) => dispatch(toggleEditPropertyLabel(data)),
+    updatePropertyLabel: (data) => dispatch(updatePropertyLabel(data)),
+    changeProperty: (data) => dispatch(changeProperty(data)),
+    isSavingProperty: (data) => dispatch(isSavingProperty(data)),
+    doneSavingProperty: (data) => dispatch(doneSavingProperty(data)),
+    createProperty: (data) => dispatch(createProperty(data)),
 });
 
 export default connect(

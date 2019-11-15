@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
-import { Nav, NavItem, NavLink, Navbar, NavbarToggler, Collapse, Container, Button, ButtonDropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'reactstrap';
+import { Nav, NavItem, NavLink, Navbar, NavbarToggler, Collapse, Container, Button, ButtonDropdown, DropdownToggle, DropdownItem, DropdownMenu, Badge } from 'reactstrap';
 import SearchForm from './SearchForm';
 import { ReactComponent as Logo } from '../../../assets/img/logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { Link, NavLink as RouterNavLink } from 'react-router-dom';
 import ROUTES from '../../../constants/routes.js';
+import styled from 'styled-components';
+
+const StyledLink = styled(Link)`
+    :focus {outline:none;}
+    ::-moz-focus-inner {border:0;}
+`;
 
 class Header extends Component {
     constructor(props) {
@@ -36,9 +42,9 @@ class Header extends Component {
             return (
                 <Navbar color="light" expand="md" fixed="top" id="main-navbar" light>
                     <Container>
-                        <Link to={ROUTES.HOME} className="mr-5 navbar-brand">
+                        <StyledLink to={ROUTES.HOME} className="mr-5 p-0">
                             <Logo />
-                        </Link>
+                        </StyledLink>
 
                         <NavbarToggler onClick={this.toggle} />
 
@@ -46,14 +52,15 @@ class Header extends Component {
                             <Nav className="mr-auto" navbar>
                                 <NavItem>
                                     <NavLink tag={RouterNavLink} exact to={ROUTES.PAPERS}>
-                                        View all papers{/* TODO: add taxonomy "Browse by research field" <FontAwesomeIcon icon={faSortDown} pull="right" /> */} 
+                                        View all papers
                                     </NavLink>
                                 </NavItem>
                                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.dropdownOpen} nav inNavbar>
-                                    <DropdownToggle nav className="ml-4">Debug <FontAwesomeIcon icon={faSortDown} pull="right" /></DropdownToggle>
+                                    <DropdownToggle nav className="ml-4">Tools <FontAwesomeIcon icon={faSortDown} pull="right" /></DropdownToggle>
                                     <DropdownMenu right>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>All Resources</DropdownItem>
-                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>All Predicates</DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS}>Statistics</DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>Resources <small><Badge color="info">Beta</Badge></small></DropdownItem>
+                                        <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>Predicates <small><Badge color="info">Beta</Badge></small></DropdownItem>
                                     </DropdownMenu>
                                 </ButtonDropdown>
                             </Nav>

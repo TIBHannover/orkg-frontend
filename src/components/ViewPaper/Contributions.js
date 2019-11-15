@@ -1,8 +1,7 @@
-import { Alert, Col, Container, Form, FormGroup, Row } from 'reactstrap';
 import React, { Component } from 'react';
+import { Alert, Col, Container, Form, FormGroup, Row, Button } from 'reactstrap';
 import { StyledContribution, StyledContributionsList } from '../AddPaper/Contributions/styled';
-import { getResource, getSimilaireContribution } from '../../network';
-
+import { getResource, getSimilaireContribution, deleteStatementById, createResource, createResourceStatement } from '../../network';
 import AddToComparison from './AddToComparison';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ContentLoader from 'react-content-loader'
@@ -11,9 +10,12 @@ import PropTypes from 'prop-types';
 import ROUTES from '../../constants/routes';
 import SimilarContributions from './SimilarContributions';
 import StatementBrowser from '../StatementBrowser/Statements';
+import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProblemInput';
+import ContributionItemList from 'components/AddPaper/Contributions/ContributionItemList';
 import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
-import { selectContribution } from '../../actions/viewPaper';
+import { toast } from 'react-toastify';
+import { selectContribution, updateResearchProblems } from '../../actions/viewPaper';
 import styled from 'styled-components';
 
 const Title = styled.div`
@@ -47,12 +49,16 @@ const AnimationContainer = styled(CSSTransition)`
 // Dependent on the future look/functionalitiy of this page, the reducers should split and renamed so viewing
 // a paper is not needing a reducer that is called: addPaper (e.g. make a reducer for the statement browser?)
 class Contributions extends Component {
-    state = {
-        selectedContribution: '',
-        loading: true,
-        similaireContributions: [],
-        isSimilaireContributionsLoading: true,
-        isSimilaireContributionsFailedLoading: false
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedContribution: '',
+            loading: true,
+            similaireContributions: [],
+            isSimilaireContributionsLoading: true,
+            isSimilaireContributionsFailedLoading: false,
+        }
     }
 
     componentDidUpdate = (prevProps) => {
@@ -91,6 +97,45 @@ class Contributions extends Component {
         this.setState({ loading: false });
     }
 
+    handleResearchProblemsChange = async (problemsArray, a) => {
+        problemsArray = problemsArray ? problemsArray : [];
+        if (a.action === 'select-option') {
+            let statement = await createResourceStatement(this.state.selectedContribution, process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM, a.option.id)
+            //find the index of research problem 
+            const objIndex = problemsArray.findIndex(obj => obj.id === a.option.id);
+            // set the statement of the research problem
+            const updatedObj = { ...problemsArray[objIndex], statementId: statement.id };
+            // update the rsearch problem array
+            problemsArray = [
+                ...problemsArray.slice(0, objIndex),
+                updatedObj,
+                ...problemsArray.slice(objIndex + 1),
+            ];
+            toast.success('Research problem added successfully');
+        } else if (a.action === 'create-option') {
+            let newResource = await createResource(a.createdOptionLabel);
+            let statement = await createResourceStatement(this.state.selectedContribution, process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM, newResource.id)
+            //find the index of research problem 
+            const objIndex = problemsArray.findIndex(obj => obj.id === a.createdOptionLabel);
+            // set the statement of the research problem
+            const updatedObj = { ...problemsArray[objIndex], statementId: statement.id };
+            // update the research problem array
+            problemsArray = [
+                ...problemsArray.slice(0, objIndex),
+                updatedObj,
+                ...problemsArray.slice(objIndex + 1),
+            ];
+            toast.success('Research problem added successfully');
+        } else if (a.action === 'remove-value') {
+            await deleteStatementById(a.removedValue.statementId)
+            toast.success('Research problem deleted successfully');
+        }
+        this.props.updateResearchProblems({
+            problemsArray,
+            contributionId: this.state.selectedContribution,
+        });
+    }
+
     render() {
         let selectedContributionId = this.state.selectedContribution;
 
@@ -122,19 +167,44 @@ class Contributions extends Component {
                                     </ContentLoader>
                                 </div>
                             )}
-                            {!this.state.loading && (
+                            {!this.state.loading && !this.props.enableEdit && (
                                 <StyledContributionsList>
                                     {this.props.contributions.map((contribution, index) => {
                                         return (
                                             <li className={contribution.id === selectedContributionId ? 'activeContribution' : ''} key={contribution.id}>
-                                                <Link to={reverse(ROUTES.VIEW_PAPER_CONTRIBUTION, { resourceId: this.props.paperId, contributionId: contribution.id })} className={'selectContribution'}>
-                                                    {contribution.label}
-                                                </Link>
+                                                {(contribution.id !== selectedContributionId) ? (
+                                                    <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paperId, contributionId: contribution.id })} className={'selectContribution'}>
+                                                        {contribution.label}
+                                                    </Link>
+                                                ) : contribution.label}
                                             </li>
                                         )
                                     })}
                                 </StyledContributionsList>
                             )}
+                            {!this.state.loading && this.props.enableEdit &&
+                                (
+                                    <StyledContributionsList>
+                                        {this.props.contributions.map((contribution, index) => {
+                                            return (
+                                                <ContributionItemList
+                                                    paperId={this.props.paperId}
+                                                    handleChangeContributionLabel={this.props.handleChangeContributionLabel}
+                                                    isSelected={contribution.id === selectedContributionId}
+                                                    canDelete={this.props.contributions.length !== 1}
+                                                    selectedContributionId={this.state.selectedContribution}
+                                                    contribution={contribution}
+                                                    key={contribution.id}
+                                                    toggleDeleteContribution={this.props.toggleDeleteContribution}
+                                                />
+                                            )
+                                        })}
+                                        <li className={'addContribution text-primary'}>
+                                            <span onClick={() => this.props.handleCreateContribution()}>+ Add another contribution</span>
+                                        </li>
+                                    </StyledContributionsList>
+                                )
+                            }
                         </Col>
                         <TransitionGroup
                             className="col-9"
@@ -171,21 +241,33 @@ class Contributions extends Component {
                                                     </ContentLoader>
                                                 </div>
                                             )}
-                                            {!this.state.loading && (
-                                                <>
-                                                    {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].map((problem, index) => (
-                                                        <span key={index}>
-                                                            <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>
-                                                                <span style={{ whiteSpace: 'normal', textAlign: 'left' }} className="btn btn-link p-0 border-0 align-baseline">
-                                                                    {problem.label}
-                                                                </span>
-                                                            </Link>
-                                                            <br />
-                                                        </span>
-                                                    ))
-                                                    }
-                                                </>
-                                            )}
+                                            {!this.state.loading && !this.props.enableEdit &&
+                                                (
+                                                    <>
+                                                        {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].length > 0 && this.props.researchProblems[selectedContributionId].map((problem, index) => (
+                                                            <span key={index}>
+                                                                <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>
+                                                                    <span style={{ whiteSpace: 'normal', textAlign: 'left' }} className="btn btn-link p-0 border-0 align-baseline">
+                                                                        {problem.label}
+                                                                    </span>
+                                                                </Link>
+                                                                <br />
+                                                            </span>
+                                                        ))
+                                                        }
+                                                        {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].length === 0 && (
+                                                            <i>No research problems added yet. Please contribute by  <Button color="link" style={{ verticalAlign: 'None', fontStyle: 'italic' }} className={'m-0 p-0'} onClick={() => this.props.toggleEditMode()}>editing</Button> the paper.</i>
+                                                        )}
+                                                    </>
+                                                )
+                                            }
+                                            {!this.state.loading && this.props.enableEdit &&
+                                                (
+                                                    <>
+                                                        <ResearchProblemInput handler={this.handleResearchProblemsChange} value={this.props.researchProblems[selectedContributionId]} />
+                                                    </>
+                                                )
+                                            }
                                         </FormGroup>
 
                                         <FormGroup>
@@ -205,7 +287,8 @@ class Contributions extends Component {
                                             )}
                                             {!this.state.loading && (
                                                 <StatementBrowser
-                                                    enableEdit={false}
+                                                    enableEdit={this.props.enableEdit}
+                                                    syncBackend={this.props.enableEdit}
                                                     openExistingResourcesInDialog={false}
                                                 />
                                             )}
@@ -251,7 +334,7 @@ class Contributions extends Component {
                         </TransitionGroup>
                     </Row>
                 </Container>
-            </div>
+            </div >
         );
     }
 }
@@ -261,9 +344,15 @@ Contributions.propTypes = {
     resources: PropTypes.object.isRequired,
     selectedContribution: PropTypes.string.isRequired,
     selectContribution: PropTypes.func.isRequired,
+    toggleEditMode: PropTypes.func.isRequired,
     contributions: PropTypes.array.isRequired,
     paperId: PropTypes.string.isRequired,
     paperTitle: PropTypes.string.isRequired,
+    enableEdit: PropTypes.bool.isRequired,
+    updateResearchProblems: PropTypes.func.isRequired,
+    handleChangeContributionLabel: PropTypes.func.isRequired,
+    handleCreateContribution: PropTypes.func.isRequired,
+    toggleDeleteContribution: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -273,6 +362,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     selectContribution: (data) => dispatch(selectContribution(data)),
+    updateResearchProblems: (data) => dispatch(updateResearchProblems(data)),
 });
 
 export default connect(

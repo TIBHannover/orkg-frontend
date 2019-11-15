@@ -1,10 +1,10 @@
-import ResourceDetails, { descriptionSection } from './pages/ResourceDetails'
-
+import ResourceDetails from './pages/ResourceDetails'
 import AddPaper from './components/AddPaper/AddPaper'
 import AddResource from './pages/AddResource';
 import Comparison from './components/Comparison/Comparison';
 import Home from './components/Home/Home';
 import License from './components/StaticPages/License';
+import Changelog from './components/StaticPages/Changelog';
 import NotFound from './components/StaticPages/NotFound';
 import Papers from './pages/Papers';
 import PredicateDetails from './pages/PredicateDetails'
@@ -18,6 +18,8 @@ import ResearchProblem from './components/ResearchProblem/ResearchProblem'
 import Resources from './pages/Resources'
 import SearchResults from './components/Search/Search'
 import ViewPaper from './components/ViewPaper/ViewPaper';
+import Stats from './components/Stats/Stats';
+
 
 const routes = [
     {
@@ -44,11 +46,6 @@ const routes = [
         path: ROUTES.ADD_PAPER.GENERAL_DATA,
         exact: true,
         component: AddPaper
-    },
-    {
-        path: ROUTES.VIEW_PAPER_CONTRIBUTION,
-        exact: true,
-        component: ViewPaper
     },
     {
         /* TODO: slug for the paper title */
@@ -90,6 +87,18 @@ const routes = [
         path: ROUTES.LICENSE,
         component: License
     },
+    {
+        path: ROUTES.CHANGELOG,
+        component: Changelog
+    },
+    {
+        path: ROUTES.SEARCH,
+        component: SearchResults
+    },
+    {
+        path: ROUTES.STATS,
+        component: Stats
+    },
     /* Legacy routes, only used for debugging now */
     {
         path: ROUTES.RESSOURCE_DETAILS,
@@ -98,16 +107,6 @@ const routes = [
     {
         path: ROUTES.PREDICATE_DETAILS,
         component: PredicateDetails
-    },
-    {
-        path: ROUTES.SEARCH,
-        component: SearchResults
-    },
-    {
-        path: '/resource/:resourceId',
-        exact: true,
-        // eslint-disable-next-line react/prop-types
-        component: ({ match }) => <Redirect to={`/resource/${match.params.resourceId}/${descriptionSection}`} />
     },
     {
         path: ROUTES.TPDL,

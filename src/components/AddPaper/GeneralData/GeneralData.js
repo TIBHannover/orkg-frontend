@@ -119,7 +119,14 @@ class GeneralData extends Component {
             isFetching: true,
         });
 
-        await Cite.async(this.state.entry.trim())
+        let entry;
+        if (this.state.entry.trim().startsWith('http')) {
+            entry = this.state.entry.trim().substring(this.state.entry.trim().indexOf('10.'));
+        } else {
+            entry = this.state.entry.trim();
+        }
+
+        await Cite.async(entry)
             .catch((e) => {
                 let validation;
                 switch (e.message) {
@@ -154,27 +161,33 @@ class GeneralData extends Component {
                 if (paper) {
                     let paperTitle = '',
                         paperAuthors = [],
-                        paperPublicationMonth = null,
-                        paperPublicationYear = null,
+                        paperPublicationMonth = '',
+                        paperPublicationYear = '',
                         doi = '';
                     try {
                         paperTitle = paper.data[0].title;
-                        if (paper.data[0].subtitle.length > 0) { // include the subtitle
+                        if (paper.data[0].subtitle && paper.data[0].subtitle.length > 0) { // include the subtitle
                             paperTitle = `${paperTitle}: ${paper.data[0].subtitle[0]}`
                         }
-                        paperAuthors = paper.data[0].author.map((author, index) => {
-                            let fullname = [author.given, author.family].join(' ').trim();
-                            if (!fullname) {
-                                fullname = author.literal ? author.literal : '';
-                            }
-                            const newAuthor = {
-                                label: fullname,
-                                id: fullname,
-                            };
-                            return newAuthor;
-                        });
-                        paperPublicationMonth = paper.data[0].issued['date-parts'][0][1];
-                        paperPublicationYear = paper.data[0].issued['date-parts'][0][0];
+                        if (paper.data[0].author) {
+                            paperAuthors = paper.data[0].author.map((author, index) => {
+                                let fullname = [author.given, author.family].join(' ').trim();
+                                if (!fullname) {
+                                    fullname = author.literal ? author.literal : '';
+                                }
+                                const newAuthor = {
+                                    label: fullname,
+                                    id: fullname,
+                                };
+                                return newAuthor;
+                            });
+                        }
+                        if (paper.data[0].issued['date-parts'][0][1]) {
+                            paperPublicationMonth = paper.data[0].issued['date-parts'][0][1];
+                        }
+                        if (paper.data[0].issued['date-parts'][0][0]) {
+                            paperPublicationYear = paper.data[0].issued['date-parts'][0][0];
+                        }
                         doi = paper.data[0].DOI ? paper.data[0].DOI : '';
                     } catch (e) {
                         console.log('Error setting paper data: ', e);

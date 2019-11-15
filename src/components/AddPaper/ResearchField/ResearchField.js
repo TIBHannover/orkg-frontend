@@ -86,7 +86,7 @@ class ResearchField extends Component {
     }
 
     getFields(fieldId, level) {
-        getStatementsBySubject(fieldId).then((res) => {
+        getStatementsBySubject({ id: fieldId }).then((res) => {
             let researchFields = [];
 
             res.forEach((elm) => {

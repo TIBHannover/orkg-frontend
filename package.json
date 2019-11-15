@@ -8,6 +8,7 @@
         "@fortawesome/free-regular-svg-icons": "^5.11.1",
         "@fortawesome/free-solid-svg-icons": "^5.11.1",
         "@fortawesome/react-fontawesome": "^0.1.4",
+        "@tippy.js/react": "^3.1.1",
         "array-move": "^2.1.0",
         "babel-preset-es2018": "^1.0.0",
         "body-scroll-lock": "^2.6.4",
@@ -22,6 +23,8 @@
         "html2canvas": "1.0.0-alpha.12",
         "jspdf": "^1.5.3",
         "make-latex": "^0.1.0",
+        "markdown-into-html": "^1.0.3",
+        "marked": "^0.7.0",
         "moment": "^2.24.0",
         "node-sass": "^4.12.0",
         "olap-cube": "^1.0.0",
@@ -36,9 +39,12 @@
         "react-copy-to-clipboard": "^5.0.1",
         "react-csv": "^1.1.1",
         "react-dom": "^16.9.0",
-        "react-graph-vis": "github:crubier/react-graph-vis#pull/74/head",
-        "react-hot-loader": "^4.12.12",
+        "react-graph-vis": "^1.0.5",
+        "react-hot-loader": "^4.12.13",
         "react-input-autosize": "^2.2.1",
+        "react-loading-overlay": "^1.0.1",
+        "react-mathjax-preview": "^0.1.16",
+        "react-number-format": "^4.3.0",
         "react-range": "^1.3.0",
         "react-redux": "^6.0.1",
         "react-router-config": "^5.0.1",
@@ -53,7 +59,7 @@
         "react-transition-group": "^2.9.0",
         "reactour": "^1.15.0",
         "reactstrap": "^8.0.1",
-        "reactstrap-confirm": "^1.1.0",
+        "reactstrap-confirm": "^1.2.0",
         "redux": "^4.0.4",
         "redux-thunk": "^2.3.0",
         "strict-mode": "^1.1.3",
@@ -67,9 +73,11 @@
         "eject": "react-scripts eject",
         "flow": "flow",
         "lint": "eslint 'src/**/*.{js,jsx}'",
-        "lint:fix": "eslint 'src/**/*.{js,jsx}' --fix"
+        "lint:fix": "eslint 'src/**/*.{js,jsx}' --fix",
+        "version": "auto-changelog && git add CHANGELOG.md"
     },
     "devDependencies": {
+        "auto-changelog": "^1.16.2",
         "babel-preset-env": "^1.7.0",
         "enzyme": "^3.10.0",
         "enzyme-adapter-react-16": "^1.14.0",
@@ -83,6 +91,12 @@
         "sass-extract-js": "^0.4.0",
         "sass-extract-loader": "^1.1.0"
     },
+    "auto-changelog": {
+        "template": "./keepachangelog.hbs",
+        "unreleased": false,
+        "commitLimit": 0,
+        "tagPattern": ".+"
+    },
     "lint-staged": {
         "src/**/*.{js,jsx}": [
             "npm run --silent lint:fix",
@@ -91,7 +105,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "lint-staged"
+            "pre-commit": "lint-staged && npm run version"
         }
     },
     "browserslist": [

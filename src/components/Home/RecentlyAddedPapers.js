@@ -16,8 +16,10 @@ class RecentlyAddedPapers extends Component {
     async componentDidMount() {
         let paperStatements = await getResourcesByClass({
             id: process.env.REACT_APP_CLASSES_PAPER,
-            limit: 4,
-            order: 'desc',
+            page: 1,
+            items: 4,
+            sortBy: 'id',
+            desc: true
         });
 
         await Promise.all(
@@ -30,7 +32,7 @@ class RecentlyAddedPapers extends Component {
                     firstAuthor: null,
                 };
 
-                let statements = await getStatementsBySubject(paper.id);
+                let statements = await getStatementsBySubject({ id: paper.id });
                 statements = statements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR || statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
 
                 statements.reverse(); // order statements to ensure that the first author statements is ordered at the top

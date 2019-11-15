@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ListGroup } from 'reactstrap';
 import { StyledLevelBox, StyledStatementItem } from '../AddPaper/Contributions/styled';
 import StatementItem from './StatementItem';
-import AddStatement from './AddStatement';
+import AddProperty from './AddProperty';
 import { connect } from 'react-redux';
 import Breadcrumbs from './Breadcrumbs';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -30,6 +30,7 @@ class Statements extends Component {
 
     statements = () => {
         let propertyIds = Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource ? this.props.resources.byId[this.props.selectedResource].propertyIds : [];
+        let shared = Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource ? this.props.resources.byId[this.props.selectedResource].shared : 1;
 
         return (
             <ListGroup className={'listGroupEnlarge'}>
@@ -45,9 +46,12 @@ class Statements extends Component {
                                     key={'statement-' + index}
                                     index={index}
                                     isExistingProperty={property.isExistingProperty ? true : false}
-                                    enableEdit={this.props.enableEdit}
+                                    enableEdit={shared <= 1 ? this.props.enableEdit : false}
+                                    syncBackend={this.props.syncBackend}
                                     isLastItem={propertyIds.length === index + 1}
                                     openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
+                                    isEditing={property.isEditing}
+                                    isSaving={property.isSaving}
                                 />
                             )
                         }))
@@ -58,7 +62,7 @@ class Statements extends Component {
                         </StyledStatementItem>
                     )}
 
-                {this.props.enableEdit ? <AddStatement /> : ''}
+                {shared <= 1 & this.props.enableEdit ? <AddProperty syncBackend={this.props.syncBackend} /> : ''}
             </ListGroup>
         );
     }
@@ -96,6 +100,7 @@ Statements.propTypes = {
     isFetchingStatements: PropTypes.bool.isRequired,
     selectedResource: PropTypes.string.isRequired,
     enableEdit: PropTypes.bool.isRequired,
+    syncBackend: PropTypes.bool.isRequired,
     initializeWithoutContribution: PropTypes.func.isRequired,
     initialResourceId: PropTypes.string,
     initialResourceLabel: PropTypes.string,
@@ -106,6 +111,7 @@ Statements.defaultProps = {
     openExistingResourcesInDialog: false,
     initialResourceId: null,
     initialResourceLabel: null,
+    syncBackend: false,
 };
 
 const mapStateToProps = state => {

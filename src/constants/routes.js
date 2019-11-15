@@ -8,8 +8,7 @@ export default {
    ADD_PAPER: {
       GENERAL_DATA: '/add-paper'
    },
-   VIEW_PAPER_CONTRIBUTION: '/paper/:resourceId/:contributionId',
-   VIEW_PAPER: '/paper/:resourceId',
+   VIEW_PAPER: '/paper/:resourceId/:contributionId?',
    COMPARISON_SHORTLINK: '/c/:shortCode',
    COMPARISON: '/comparison/',
    PAPERS: '/papers',
@@ -17,8 +16,10 @@ export default {
    RESEARCH_FIELD: '/field/:researchFieldId',
    LICENSE: '/license',
    /* Legacy routes, only used for debugging now */
-   RESSOURCE_DETAILS: '/resource/:resourceId/:sectionName',
+   RESSOURCE_DETAILS: '/resource/:resourceId',
    PREDICATE_DETAILS: '/predicate/:predicateId',
    SEARCH: '/search/:searchTerm?',
    TPDL: '/tpdl',
+   STATS: '/stats',
+   CHANGELOG: '/changelog'
 }

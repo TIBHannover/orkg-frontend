@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Button } from 'reactstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
+import ContributionItemList from './ContributionItemList'
 import Tooltip from '../../Utils/Tooltip';
-import { StyledContributionsList, StyledContentEditable } from './styled';
+import { StyledContributionsList } from './styled';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import {
     nextStep, previousStep, createContribution, deleteContribution,
     selectContribution, updateContributionLabel, saveAddPaper, openTour,
-    updateTourCurrentStep
+    updateTourCurrentStep, toggleAbstractDialog
 } from '../../../actions/addPaper';
+import Abstract from './../Abstract/Abstract';
 import Confirm from 'reactstrap-confirm';
 import Contribution from './Contribution';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faMagic } from '@fortawesome/free-solid-svg-icons';
 import styled, { withTheme } from 'styled-components';
 import { withCookies } from 'react-cookie';
 import PropTypes from 'prop-types';
@@ -55,37 +57,20 @@ class Contributions extends Component {
     }
 
     handleNextClick = async () => {
-        let result = await Confirm({
-            title: (
-                <div>
-                    Are you sure you want to save this paper?
-                </div>
-            ),
-            message: (
-                <div>
-                    You will no longer be able to edit this paper once it's saved!<br />
-                </div>
-            ),
-            confirmText: 'Save and lock',
-            cancelColor: 'light'
+        // save add paper 
+        this.props.saveAddPaper({
+            title: this.props.title,
+            authors: this.props.authors,
+            publicationMonth: this.props.publicationMonth,
+            publicationYear: this.props.publicationYear,
+            doi: this.props.doi,
+            selectedResearchField: this.props.selectedResearchField,
+            contributions: this.props.contributions,
+            resources: this.props.resources,
+            properties: this.props.properties,
+            values: this.props.values,
         });
-        //
-        if (result) {
-            // save add paper 
-            this.props.saveAddPaper({
-                title: this.props.title,
-                authors: this.props.authors,
-                publicationMonth: this.props.publicationMonth,
-                publicationYear: this.props.publicationYear,
-                doi: this.props.doi,
-                selectedResearchField: this.props.selectedResearchField,
-                contributions: this.props.contributions,
-                resources: this.props.resources,
-                properties: this.props.properties,
-                values: this.props.values,
-            });
-            this.props.nextStep();
-        }
+        this.props.nextStep();
     }
 
     toggleDeleteContribution = async (id) => {
@@ -126,9 +111,9 @@ class Contributions extends Component {
         });
     }
 
-    handleChange = (contributionId, e) => {
+    handleChange = (contributionId, label) => {
         this.props.updateContributionLabel({
-            label: e.target.value,
+            label: label,
             contributionId: contributionId,
         });
     };
@@ -142,48 +127,34 @@ class Contributions extends Component {
 
         return (
             <div>
-                <h2 className="h4 mt-4 mb-5"><Tooltip message={<span>Specify the research contributions that this paper makes. A paper can have multiple contributions and each contribution addresses at least one research problem. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(1)}>Learn more</span></span>}>Specify research contributions</Tooltip></h2>
-
+                <div className={'d-flex align-items-center mt-4 mb-5'}>
+                    <h2 className="h4 flex-shrink-0">
+                        <Tooltip message={<span>Specify the research contributions that this paper makes. A paper can have multiple contributions and each contribution addresses at least one research problem. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(1)}>Learn more</span></span>}>
+                            Specify research contributions
+                        </Tooltip>
+                    </h2>
+                    <Button onClick={this.props.toggleAbstractDialog} outline size={'sm'} className="flex-shrink-0 ml-auto" color="darkblue">
+                        <Icon icon={faMagic} /> Abstract annotator
+                    </Button>
+                </div>
                 <Container>
                     <Row noGutters={true}>
                         <Col xs="3">
                             <StyledContributionsList id="contributionsList">
-                                {this.props.contributions.allIds.map((contribution, index) => {
-                                    let contributionId = this.props.contributions.byId[contribution]['id'];
+                                {this.props.contributions.allIds.map((contributionId, index) => {
+                                    let contribution = this.props.contributions.byId[contributionId];
 
                                     return (
-                                        <li className={contributionId === this.props.selectedContribution ? 'activeContribution' : ''} key={contributionId}>
-                                            <span className={'selectContribution'} onClick={() => this.handleSelectContribution(contributionId)}>
-                                                {/* TODO: add the contenteditable into a seperate component */}
-                                                <StyledContentEditable
-                                                    innerRef={(input) => { this.inputRefs[contribution] = input; }}
-                                                    html={this.props.contributions.byId[contribution]['label']}
-                                                    disabled={!this.state.editing[contribution]}
-                                                    onChange={(e) => this.handleChange(contributionId, e)}
-                                                    tagName="span"
-                                                    onPaste={this.pasteAsPlainText}
-                                                    onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
-                                                    onBlur={(e) => this.toggleEditLabelContribution(contributionId)}
-                                                    onFocus={(e) => setTimeout(() => { document.execCommand('selectAll', false, null) }, 0)} // Highlights the entire label when edit
-                                                />
-                                                {!this.state.editing[contribution] && (
-                                                    <>
-                                                        {this.props.contributions.allIds.length !== 1 && (
-                                                            <span className={`deleteContribution float-right mr-1 ${contributionId !== this.props.selectedContribution && 'd-none'}`}>
-                                                                <Tooltip message="Delete contribution" hideDefaultIcon={true}>
-                                                                    <Icon icon={faTrash} onClick={() => this.toggleDeleteContribution(contributionId)} />
-                                                                </Tooltip>
-                                                            </span>
-                                                        )}
-                                                        <span className={`deleteContribution float-right mr-1 ${contributionId !== this.props.selectedContribution && 'd-none'}`}>
-                                                            <Tooltip message="Edit the contribution label" hideDefaultIcon={true}>
-                                                                <Icon icon={faPen} onClick={(e) => this.toggleEditLabelContribution(contributionId, e)} />
-                                                            </Tooltip>
-                                                        </span>
-                                                    </>
-                                                )}
-                                            </span>
-                                        </li>
+                                        <ContributionItemList
+                                            handleChangeContributionLabel={this.handleChange}
+                                            isSelected={contributionId === selectedResourceId}
+                                            canDelete={this.props.contributions.allIds.length !== 1}
+                                            selectedContributionId={this.state.selectedContribution}
+                                            contribution={contribution}
+                                            key={contributionId}
+                                            toggleDeleteContribution={this.toggleDeleteContribution}
+                                            handleSelectContribution={this.handleSelectContribution}
+                                        />
                                     )
                                 })}
 
@@ -206,6 +177,9 @@ class Contributions extends Component {
                 </Container>
 
                 <hr className="mt-5 mb-3" />
+
+                <Abstract />
+
                 <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Finish</Button>
                 <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>Previous step</Button>
             </div >
@@ -241,6 +215,7 @@ Contributions.propTypes = {
     theme: PropTypes.object.isRequired,
     openTour: PropTypes.func.isRequired,
     updateTourCurrentStep: PropTypes.func.isRequired,
+    toggleAbstractDialog: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -269,6 +244,7 @@ const mapDispatchToProps = dispatch => ({
     saveAddPaper: (data) => dispatch(saveAddPaper(data)),
     openTour: (data) => dispatch(openTour(data)),
     updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
+    toggleAbstractDialog: () => dispatch(toggleAbstractDialog()),
 });
 
 export default compose(
