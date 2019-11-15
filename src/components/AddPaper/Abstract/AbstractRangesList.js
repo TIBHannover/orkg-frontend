@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { ListGroup, ListGroupItem, Badge } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -15,12 +15,12 @@ import toArray from 'lodash/toArray';
 import { compose } from 'redux';
 
 const ListGroupItemStyle = styled(ListGroupItem)`
-    .rangeOption{
+    .rangeOption {
         display: none;
         cursor: pointer;
     }
 
-    &:hover .rangeOption{
+    &:hover .rangeOption {
         display: inline-block !important;
     }
 `;
@@ -37,14 +37,12 @@ const RangeItemOption = styled.div`
     }
 `;
 
-
 class AbstractRangesList extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
-            defaultOptions: [],
-        }
+            defaultOptions: []
+        };
     }
 
     componentDidMount() {
@@ -79,7 +77,7 @@ class AbstractRangesList extends Component {
         } else if (action === 'create-option') {
             const newOption = {
                 label: selectedOption.label,
-                id: selectedOption.label,
+                id: selectedOption.label
             };
             this.props.updateAnnotationClass({ range, selectedOption: newOption });
             this.setState({ defaultOptions: [...this.state.defaultOptions, newOption] });
@@ -88,7 +86,7 @@ class AbstractRangesList extends Component {
         }
     };
 
-    loadOptions = async (value) => {
+    loadOptions = async value => {
         try {
             if (value === '' || value.trim() === '') {
                 return [];
@@ -117,11 +115,11 @@ class AbstractRangesList extends Component {
 
             let options = [];
 
-            responseJson.map((item) =>
+            responseJson.map(item =>
                 options.push({
                     label: item.label,
-                    id: item.id,
-                }),
+                    id: item.id
+                })
             );
 
             return options;
@@ -133,9 +131,7 @@ class AbstractRangesList extends Component {
     };
 
     render() {
-        let rangeArray = toArray(this.props.ranges).filter(
-            (r) => (r.certainty >= this.props.certaintyThreshold)
-        );
+        let rangeArray = toArray(this.props.ranges).filter(r => r.certainty >= this.props.certaintyThreshold);
         return (
             <div>
                 <ListGroup>
@@ -146,56 +142,63 @@ class AbstractRangesList extends Component {
                                     <div className="flex-grow-1">
                                         {!range.isEditing ? (
                                             <>
-                                                {capitalize(range.text)} <Badge pill style={{ color: '#333', background: this.props.getClassColor(range.class.label) }}>{range.class.label}</Badge>
+                                                {capitalize(range.text)}{' '}
+                                                <Badge pill style={{ color: '#333', background: this.props.getClassColor(range.class.label) }}>
+                                                    {range.class.label}
+                                                </Badge>
                                                 <RangeItemOption className={'float-right'}>
                                                     <span className={'rangeOption mr-3'} onClick={() => this.props.toggleEditAnnotation(range.id)}>
                                                         <Tippy content="Edit label">
-                                                            <span><Icon icon={faPen} /> Edit</span>
+                                                            <span>
+                                                                <Icon icon={faPen} /> Edit
+                                                            </span>
                                                         </Tippy>
                                                     </span>
                                                     <span className={'rangeOption mr-2'} onClick={() => this.props.removeAnnotation(range)}>
                                                         <Tippy content="Delete Annotation">
-                                                            <span><Icon icon={faTrash} /> Delete</span>
+                                                            <span>
+                                                                <Icon icon={faTrash} /> Delete
+                                                            </span>
                                                         </Tippy>
                                                     </span>
                                                 </RangeItemOption>
                                             </>
-                                        ) :
-                                            (
-                                                <AsyncCreatableSelect
-                                                    loadOptions={this.loadOptions}
-                                                    value={{
-                                                        label: range.class.label,
-                                                        id: range.class.id,
-                                                        certainty: range.certainty,
-                                                        range_id: range.id,
-                                                        isEditing: range.isEditing,
-                                                    }}
-                                                    getOptionLabel={({ label }) => label}
-                                                    getOptionValue={({ id }) => id}
-                                                    onChange={(e, a) => { this.handleChangeAnnotationClass(e, a, range); this.props.toggleEditAnnotation(range.id) }}
-                                                    key={(value) => value}
-                                                    cacheOptions
-                                                    defaultOptions={this.state.defaultOptions}
-                                                    isClearable
-                                                    openMenuOnClick={false}
-                                                    placeholder="Select or type something..."
-                                                />
-                                            )
-                                        }
+                                        ) : (
+                                            <AsyncCreatableSelect
+                                                loadOptions={this.loadOptions}
+                                                value={{
+                                                    label: range.class.label,
+                                                    id: range.class.id,
+                                                    certainty: range.certainty,
+                                                    range_id: range.id,
+                                                    isEditing: range.isEditing
+                                                }}
+                                                getOptionLabel={({ label }) => label}
+                                                getOptionValue={({ id }) => id}
+                                                onChange={(e, a) => {
+                                                    this.handleChangeAnnotationClass(e, a, range);
+                                                    this.props.toggleEditAnnotation(range.id);
+                                                }}
+                                                key={value => value}
+                                                cacheOptions
+                                                defaultOptions={this.state.defaultOptions}
+                                                isClearable
+                                                openMenuOnClick={false}
+                                                placeholder="Select or type something..."
+                                            />
+                                        )}
                                     </div>
                                 </ListGroupItemStyle>
-                            )
+                            );
                         })
                     ) : (
-                            <StyledStatementItem >No annotations</StyledStatementItem>
-                        )}
+                        <StyledStatementItem>No annotations</StyledStatementItem>
+                    )}
                 </ListGroup>
-            </div >
-        )
+            </div>
+        );
     }
 }
-
 
 AbstractRangesList.propTypes = {
     abstract: PropTypes.string.isRequired,
@@ -205,24 +208,24 @@ AbstractRangesList.propTypes = {
     getClassColor: PropTypes.func.isRequired,
     removeAnnotation: PropTypes.func.isRequired,
     toggleEditAnnotation: PropTypes.func.isRequired,
-    updateAnnotationClass: PropTypes.func.isRequired,
+    updateAnnotationClass: PropTypes.func.isRequired
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     ranges: state.addPaper.ranges,
-    abstract: state.addPaper.abstract,
+    abstract: state.addPaper.abstract
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    removeAnnotation: (data) => dispatch(removeAnnotation(data)),
-    toggleEditAnnotation: (data) => dispatch(toggleEditAnnotation(data)),
-    updateAnnotationClass: (data) => dispatch(updateAnnotationClass(data)),
+const mapDispatchToProps = dispatch => ({
+    removeAnnotation: data => dispatch(removeAnnotation(data)),
+    toggleEditAnnotation: data => dispatch(toggleEditAnnotation(data)),
+    updateAnnotationClass: data => dispatch(updateAnnotationClass(data))
 });
 
 export default compose(
     connect(
         mapStateToProps,
-        mapDispatchToProps,
+        mapDispatchToProps
     ),
     withTheme
 )(AbstractRangesList);

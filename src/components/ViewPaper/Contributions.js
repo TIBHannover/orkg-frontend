@@ -4,7 +4,7 @@ import { StyledContribution, StyledContributionsList } from '../AddPaper/Contrib
 import { getResource, getSimilaireContribution, deleteStatementById, createResource, createResourceStatement } from '../../network';
 import AddToComparison from './AddToComparison';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import ContentLoader from 'react-content-loader'
+import ContentLoader from 'react-content-loader';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ROUTES from '../../constants/routes';
@@ -19,29 +19,29 @@ import { selectContribution, updateResearchProblems } from '../../actions/viewPa
 import styled from 'styled-components';
 
 const Title = styled.div`
-    font-size:18px;
-    font-weight:500;
-    margin-top:30px;
-    margin-bottom:5px;
+    font-size: 18px;
+    font-weight: 500;
+    margin-top: 30px;
+    margin-bottom: 5px;
 
     a {
-        margin-left:15px;
+        margin-left: 15px;
         span {
-            font-size:80%;
+            font-size: 80%;
         }
     }
 `;
 
 const AnimationContainer = styled(CSSTransition)`
-    transition: 0.3s background-color,  0.3s border-color;
+    transition: 0.3s background-color, 0.3s border-color;
 
     &.fadeIn-enter {
-        opacity:0;
+        opacity: 0;
     }
 
     &.fadeIn-enter.fadeIn-enter-active {
-        opacity:1;
-        transition:0.5s opacity;
+        opacity: 1;
+        transition: 0.5s opacity;
     }
 `;
 
@@ -49,7 +49,6 @@ const AnimationContainer = styled(CSSTransition)`
 // Dependent on the future look/functionalitiy of this page, the reducers should split and renamed so viewing
 // a paper is not needing a reducer that is called: addPaper (e.g. make a reducer for the statement browser?)
 class Contributions extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -57,84 +56,85 @@ class Contributions extends Component {
             loading: true,
             similaireContributions: [],
             isSimilaireContributionsLoading: true,
-            isSimilaireContributionsFailedLoading: false,
-        }
+            isSimilaireContributionsFailedLoading: false
+        };
     }
 
-    componentDidUpdate = (prevProps) => {
+    componentDidUpdate = prevProps => {
         if (this.props.paperId !== prevProps.paperId) {
             this.setState({ loading: true });
         }
         if (this.props.selectedContribution !== '' && this.props.selectedContribution !== this.state.selectedContribution) {
             this.setState({ selectedContribution: this.props.selectedContribution }, () => {
                 this.handleSelectContribution(this.state.selectedContribution);
-            })
+            });
         }
-    }
+    };
 
-    handleSelectContribution = (contributionId) => {
+    handleSelectContribution = contributionId => {
         this.setState({ loading: true, isSimilaireContributionsLoading: true });
         let contributionIsLoaded = this.props.resources.byId[contributionId] ? true : false;
         this.props.selectContribution({
             contributionId,
             contributionIsLoaded
         });
-        getSimilaireContribution(this.state.selectedContribution).then((similaireContributions) => {
-            var similaireContributionsData = similaireContributions.map((paper) => {
-                // Fetch the data of each paper
-                return getResource(paper.paperId).then((paperResource) => {
-                    paper.title = paperResource.label;
-                    return paper;
-                })
-
-            });
-            Promise.all(similaireContributionsData).then((results) => {
-                this.setState({ similaireContributions: results, isSimilaireContributionsLoading: false })
+        getSimilaireContribution(this.state.selectedContribution)
+            .then(similaireContributions => {
+                var similaireContributionsData = similaireContributions.map(paper => {
+                    // Fetch the data of each paper
+                    return getResource(paper.paperId).then(paperResource => {
+                        paper.title = paperResource.label;
+                        return paper;
+                    });
+                });
+                Promise.all(similaireContributionsData).then(results => {
+                    this.setState({ similaireContributions: results, isSimilaireContributionsLoading: false });
+                });
             })
-        }).catch((error) => {
-            this.setState({ isSimilaireContributionsLoading: false, isSimilaireContributionsFailedLoading: true })
-        });
+            .catch(error => {
+                this.setState({ isSimilaireContributionsLoading: false, isSimilaireContributionsFailedLoading: true });
+            });
         this.setState({ loading: false });
-    }
+    };
 
     handleResearchProblemsChange = async (problemsArray, a) => {
         problemsArray = problemsArray ? problemsArray : [];
         if (a.action === 'select-option') {
-            let statement = await createResourceStatement(this.state.selectedContribution, process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM, a.option.id)
-            //find the index of research problem 
+            let statement = await createResourceStatement(
+                this.state.selectedContribution,
+                process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM,
+                a.option.id
+            );
+            //find the index of research problem
             const objIndex = problemsArray.findIndex(obj => obj.id === a.option.id);
             // set the statement of the research problem
             const updatedObj = { ...problemsArray[objIndex], statementId: statement.id };
             // update the rsearch problem array
-            problemsArray = [
-                ...problemsArray.slice(0, objIndex),
-                updatedObj,
-                ...problemsArray.slice(objIndex + 1),
-            ];
+            problemsArray = [...problemsArray.slice(0, objIndex), updatedObj, ...problemsArray.slice(objIndex + 1)];
             toast.success('Research problem added successfully');
         } else if (a.action === 'create-option') {
             let newResource = await createResource(a.createdOptionLabel);
-            let statement = await createResourceStatement(this.state.selectedContribution, process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM, newResource.id)
-            //find the index of research problem 
+            let statement = await createResourceStatement(
+                this.state.selectedContribution,
+                process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM,
+                newResource.id
+            );
+            //find the index of research problem
             const objIndex = problemsArray.findIndex(obj => obj.id === a.createdOptionLabel);
             // set the statement of the research problem
             const updatedObj = { ...problemsArray[objIndex], statementId: statement.id };
             // update the research problem array
-            problemsArray = [
-                ...problemsArray.slice(0, objIndex),
-                updatedObj,
-                ...problemsArray.slice(objIndex + 1),
-            ];
+            problemsArray = [...problemsArray.slice(0, objIndex), updatedObj, ...problemsArray.slice(objIndex + 1)];
             toast.success('Research problem added successfully');
         } else if (a.action === 'remove-value') {
-            await deleteStatementById(a.removedValue.statementId)
+            await deleteStatementById(a.removedValue.statementId);
             toast.success('Research problem deleted successfully');
         }
         this.props.updateResearchProblems({
             problemsArray,
-            contributionId: this.state.selectedContribution,
+            contributionId: this.state.selectedContribution
         });
-    }
+    };
 
     render() {
         let selectedContributionId = this.state.selectedContribution;
@@ -146,22 +146,10 @@ class Contributions extends Component {
                         <Col xs="3">
                             {this.state.loading && (
                                 <div>
-                                    <ContentLoader
-                                        height={20}
-                                        width={100}
-                                        speed={2}
-                                        primaryColor="#E86161"
-                                        secondaryColor="#ecebeb"
-                                    >
+                                    <ContentLoader height={20} width={100} speed={2} primaryColor="#E86161" secondaryColor="#ecebeb">
                                         <rect x="0" y="5" rx="0" ry="0" width={100} height="15" />
                                     </ContentLoader>
-                                    <ContentLoader
-                                        height={40}
-                                        width={100}
-                                        speed={2}
-                                        primaryColor="#f3f3f3"
-                                        secondaryColor="#ecebeb"
-                                    >
+                                    <ContentLoader height={40} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
                                         <rect x="0" y="5" rx="0" ry="0" width={100} height="15" />
                                         <rect x="0" y="25" rx="0" ry="0" width={100} height="15" />
                                     </ContentLoader>
@@ -171,57 +159,63 @@ class Contributions extends Component {
                                 <StyledContributionsList>
                                     {this.props.contributions.map((contribution, index) => {
                                         return (
-                                            <li className={contribution.id === selectedContributionId ? 'activeContribution' : ''} key={contribution.id}>
-                                                {(contribution.id !== selectedContributionId) ? (
-                                                    <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paperId, contributionId: contribution.id })} className={'selectContribution'}>
+                                            <li
+                                                className={contribution.id === selectedContributionId ? 'activeContribution' : ''}
+                                                key={contribution.id}
+                                            >
+                                                {contribution.id !== selectedContributionId ? (
+                                                    <Link
+                                                        to={reverse(ROUTES.VIEW_PAPER, {
+                                                            resourceId: this.props.paperId,
+                                                            contributionId: contribution.id
+                                                        })}
+                                                        className={'selectContribution'}
+                                                    >
                                                         {contribution.label}
                                                     </Link>
-                                                ) : contribution.label}
+                                                ) : (
+                                                    contribution.label
+                                                )}
                                             </li>
-                                        )
+                                        );
                                     })}
                                 </StyledContributionsList>
                             )}
-                            {!this.state.loading && this.props.enableEdit &&
-                                (
-                                    <StyledContributionsList>
-                                        {this.props.contributions.map((contribution, index) => {
-                                            return (
-                                                <ContributionItemList
-                                                    paperId={this.props.paperId}
-                                                    handleChangeContributionLabel={this.props.handleChangeContributionLabel}
-                                                    isSelected={contribution.id === selectedContributionId}
-                                                    canDelete={this.props.contributions.length !== 1}
-                                                    selectedContributionId={this.state.selectedContribution}
-                                                    contribution={contribution}
-                                                    key={contribution.id}
-                                                    toggleDeleteContribution={this.props.toggleDeleteContribution}
-                                                />
-                                            )
-                                        })}
-                                        <li className={'addContribution text-primary'}>
-                                            <span onClick={() => this.props.handleCreateContribution()}>+ Add another contribution</span>
-                                        </li>
-                                    </StyledContributionsList>
-                                )
-                            }
+                            {!this.state.loading && this.props.enableEdit && (
+                                <StyledContributionsList>
+                                    {this.props.contributions.map((contribution, index) => {
+                                        return (
+                                            <ContributionItemList
+                                                paperId={this.props.paperId}
+                                                handleChangeContributionLabel={this.props.handleChangeContributionLabel}
+                                                isSelected={contribution.id === selectedContributionId}
+                                                canDelete={this.props.contributions.length !== 1}
+                                                selectedContributionId={this.state.selectedContribution}
+                                                contribution={contribution}
+                                                key={contribution.id}
+                                                toggleDeleteContribution={this.props.toggleDeleteContribution}
+                                            />
+                                        );
+                                    })}
+                                    <li className={'addContribution text-primary'}>
+                                        <span onClick={() => this.props.handleCreateContribution()}>+ Add another contribution</span>
+                                    </li>
+                                </StyledContributionsList>
+                            )}
                         </Col>
-                        <TransitionGroup
-                            className="col-9"
-                            exit={false}
-                        >
-                            <AnimationContainer
-                                key={selectedContributionId}
-                                classNames="fadeIn"
-                                timeout={{ enter: 500, exit: 0 }}
-                            >
+                        <TransitionGroup className="col-9" exit={false}>
+                            <AnimationContainer key={selectedContributionId} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
                                 <StyledContribution>
                                     {!this.state.loading && (
                                         <AddToComparison
                                             contributionId={selectedContributionId}
                                             paperId={this.props.paperId}
                                             paperTitle={this.props.paperTitle}
-                                            contributionTitle={this.props.contributions.find(function (c) { return c.id === selectedContributionId; }).label}
+                                            contributionTitle={
+                                                this.props.contributions.find(function(c) {
+                                                    return c.id === selectedContributionId;
+                                                }).label
+                                            }
                                         />
                                     )}
                                     <Form>
@@ -229,58 +223,61 @@ class Contributions extends Component {
                                             <Title style={{ marginTop: 0 }}>Research problems</Title>
                                             {this.state.loading && (
                                                 <div>
-                                                    <ContentLoader
-                                                        height={7}
-                                                        width={100}
-                                                        speed={2}
-                                                        primaryColor="#f3f3f3"
-                                                        secondaryColor="#ecebeb"
-                                                    >
+                                                    <ContentLoader height={7} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
                                                         <rect x="0" y="0" width="40" height="3" />
                                                         <rect x="0" y="4" width="40" height="3" />
                                                     </ContentLoader>
                                                 </div>
                                             )}
-                                            {!this.state.loading && !this.props.enableEdit &&
-                                                (
-                                                    <>
-                                                        {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].length > 0 && this.props.researchProblems[selectedContributionId].map((problem, index) => (
+                                            {!this.state.loading && !this.props.enableEdit && (
+                                                <>
+                                                    {this.props.researchProblems[selectedContributionId] &&
+                                                        this.props.researchProblems[selectedContributionId].length > 0 &&
+                                                        this.props.researchProblems[selectedContributionId].map((problem, index) => (
                                                             <span key={index}>
                                                                 <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>
-                                                                    <span style={{ whiteSpace: 'normal', textAlign: 'left' }} className="btn btn-link p-0 border-0 align-baseline">
+                                                                    <span
+                                                                        style={{ whiteSpace: 'normal', textAlign: 'left' }}
+                                                                        className="btn btn-link p-0 border-0 align-baseline"
+                                                                    >
                                                                         {problem.label}
                                                                     </span>
                                                                 </Link>
                                                                 <br />
                                                             </span>
-                                                        ))
-                                                        }
-                                                        {this.props.researchProblems[selectedContributionId] && this.props.researchProblems[selectedContributionId].length === 0 && (
-                                                            <i>No research problems added yet. Please contribute by  <Button color="link" style={{ verticalAlign: 'None', fontStyle: 'italic' }} className={'m-0 p-0'} onClick={() => this.props.toggleEditMode()}>editing</Button> the paper.</i>
+                                                        ))}
+                                                    {this.props.researchProblems[selectedContributionId] &&
+                                                        this.props.researchProblems[selectedContributionId].length === 0 && (
+                                                            <i>
+                                                                No research problems added yet. Please contribute by{' '}
+                                                                <Button
+                                                                    color="link"
+                                                                    style={{ verticalAlign: 'None', fontStyle: 'italic' }}
+                                                                    className={'m-0 p-0'}
+                                                                    onClick={() => this.props.toggleEditMode()}
+                                                                >
+                                                                    editing
+                                                                </Button>{' '}
+                                                                the paper.
+                                                            </i>
                                                         )}
-                                                    </>
-                                                )
-                                            }
-                                            {!this.state.loading && this.props.enableEdit &&
-                                                (
-                                                    <>
-                                                        <ResearchProblemInput handler={this.handleResearchProblemsChange} value={this.props.researchProblems[selectedContributionId]} />
-                                                    </>
-                                                )
-                                            }
+                                                </>
+                                            )}
+                                            {!this.state.loading && this.props.enableEdit && (
+                                                <>
+                                                    <ResearchProblemInput
+                                                        handler={this.handleResearchProblemsChange}
+                                                        value={this.props.researchProblems[selectedContributionId]}
+                                                    />
+                                                </>
+                                            )}
                                         </FormGroup>
 
                                         <FormGroup>
                                             <Title>Contribution data</Title>
                                             {this.state.loading && (
                                                 <div>
-                                                    <ContentLoader
-                                                        height={6}
-                                                        width={100}
-                                                        speed={2}
-                                                        primaryColor="#f3f3f3"
-                                                        secondaryColor="#ecebeb"
-                                                    >
+                                                    <ContentLoader height={6} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
                                                         <rect x="0" y="0" rx="2" ry="2" width="90" height="6" />
                                                     </ContentLoader>
                                                 </div>
@@ -295,18 +292,10 @@ class Contributions extends Component {
                                         </FormGroup>
 
                                         <FormGroup>
-                                            <Title>
-                                                Similar contributions
-                                            </Title>
+                                            <Title>Similar contributions</Title>
                                             {this.state.isSimilaireContributionsLoading && (
                                                 <div>
-                                                    <ContentLoader
-                                                        height={10}
-                                                        width={100}
-                                                        speed={2}
-                                                        primaryColor="#f3f3f3"
-                                                        secondaryColor="#ecebeb"
-                                                    >
+                                                    <ContentLoader height={10} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
                                                         <rect x="0" y="0" rx="2" ry="2" width="32" height="10" />
                                                         <rect x="33" y="0" rx="2" ry="2" width="32" height="10" />
                                                         <rect x="66" y="0" rx="2" ry="2" width="32" height="10" />
@@ -315,26 +304,44 @@ class Contributions extends Component {
                                             )}
                                             {!this.state.isSimilaireContributionsLoading && (
                                                 <>
-                                                    {!this.state.isSimilaireContributionsFailedLoading ?
-                                                        <SimilarContributions similaireContributions={this.state.similaireContributions.slice(0, 3)} />
-                                                        : <Alert color="light">Failed to connect to the similarity service, please try again later</Alert>
-                                                    }
+                                                    {!this.state.isSimilaireContributionsFailedLoading ? (
+                                                        <SimilarContributions
+                                                            similaireContributions={this.state.similaireContributions.slice(0, 3)}
+                                                        />
+                                                    ) : (
+                                                        <Alert color="light">
+                                                            Failed to connect to the similarity service, please try again later
+                                                        </Alert>
+                                                    )}
                                                 </>
                                             )}
                                             {this.state.similaireContributions.length > 0 && (
-                                                <Link className="clearfix" to={`${ROUTES.COMPARISON}?contributions=${selectedContributionId},${this.state.similaireContributions.slice(0, 3).map(s => s.contributionId).join(',')}`}>{/* TODO: use constants for URL */}
-                                                    <span style={{ margin: '7px 5px 0 0', fontSize: '95%' }} className="float-right btn btn-link p-0 border-0 align-baseline">Compare these contributions</span>
+                                                <Link
+                                                    className="clearfix"
+                                                    to={`${
+                                                        ROUTES.COMPARISON
+                                                    }?contributions=${selectedContributionId},${this.state.similaireContributions
+                                                        .slice(0, 3)
+                                                        .map(s => s.contributionId)
+                                                        .join(',')}`}
+                                                >
+                                                    {/* TODO: use constants for URL */}
+                                                    <span
+                                                        style={{ margin: '7px 5px 0 0', fontSize: '95%' }}
+                                                        className="float-right btn btn-link p-0 border-0 align-baseline"
+                                                    >
+                                                        Compare these contributions
+                                                    </span>
                                                 </Link>
                                             )}
                                         </FormGroup>
                                     </Form>
                                 </StyledContribution>
-
                             </AnimationContainer>
                         </TransitionGroup>
                     </Row>
                 </Container>
-            </div >
+            </div>
         );
     }
 }
@@ -352,17 +359,17 @@ Contributions.propTypes = {
     updateResearchProblems: PropTypes.func.isRequired,
     handleChangeContributionLabel: PropTypes.func.isRequired,
     handleCreateContribution: PropTypes.func.isRequired,
-    toggleDeleteContribution: PropTypes.func.isRequired,
+    toggleDeleteContribution: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
     researchProblems: state.viewPaper.researchProblems,
-    resources: state.statementBrowser.resources,
+    resources: state.statementBrowser.resources
 });
 
 const mapDispatchToProps = dispatch => ({
-    selectContribution: (data) => dispatch(selectContribution(data)),
-    updateResearchProblems: (data) => dispatch(updateResearchProblems(data)),
+    selectContribution: data => dispatch(selectContribution(data)),
+    updateResearchProblems: data => dispatch(updateResearchProblems(data))
 });
 
 export default connect(

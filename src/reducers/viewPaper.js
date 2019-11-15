@@ -18,13 +18,12 @@ const initialState = {
     publicationYearResourceId: 0,
     doi: '',
     doiResourceId: 0,
-    researchField: '',
-}
+    researchField: ''
+};
 const cookies = new Cookies();
 
 export default (state = initialState, action) => {
     switch (action.type) {
-
         case type.LOAD_PAPER: {
             let { payload } = action;
 
@@ -34,13 +33,15 @@ export default (state = initialState, action) => {
                 paperResourceId: typeof payload.paperResourceId !== 'undefined' ? payload.paperResourceId : state.paperResourceId,
                 authors: typeof payload.authors !== 'undefined' ? payload.authors : state.authors,
                 publicationMonth: typeof payload.publicationMonth !== 'undefined' ? payload.publicationMonth : state.publicationMonth,
-                publicationMonthResourceId: typeof payload.publicationMonthResourceId !== 'undefined' ? payload.publicationMonthResourceId : state.publicationMonthResourceId,
+                publicationMonthResourceId:
+                    typeof payload.publicationMonthResourceId !== 'undefined' ? payload.publicationMonthResourceId : state.publicationMonthResourceId,
                 publicationYear: typeof payload.publicationYear !== 'undefined' ? payload.publicationYear : state.publicationYear,
-                publicationYearResourceId: typeof payload.publicationYearResourceId !== 'undefined' ? payload.publicationYearResourceId : state.publicationYearResourceId,
+                publicationYearResourceId:
+                    typeof payload.publicationYearResourceId !== 'undefined' ? payload.publicationYearResourceId : state.publicationYearResourceId,
                 doi: typeof payload.doi !== 'undefined' ? payload.doi : state.doi,
                 doiResourceId: typeof payload.doiResourceId !== 'undefined' ? payload.doiResourceId : state.doiResourceId,
-                researchField: typeof payload.researchField !== 'undefined' ? payload.researchField : state.researchField,
-            }
+                researchField: typeof payload.researchField !== 'undefined' ? payload.researchField : state.researchField
+            };
         }
 
         case type.SET_RESEARCH_PROBLEMS: {
@@ -52,8 +53,8 @@ export default (state = initialState, action) => {
             }));
 
             return {
-                ...newState,
-            }
+                ...newState
+            };
         }
 
         case type.UPDATE_RESEARCH_PROBLEMS: {
@@ -64,11 +65,11 @@ export default (state = initialState, action) => {
 
         case type.LOAD_COMPARISON_FROM_COOKIE: {
             let { payload } = action;
-            let newComparison = payload
+            let newComparison = payload;
             return {
                 ...state,
                 comparison: newComparison
-            }
+            };
         }
 
         case type.ADD_TO_COMPARISON: {
@@ -78,18 +79,18 @@ export default (state = initialState, action) => {
                 [payload.contributionId]: {
                     paperId: payload.contributionData.paperId,
                     paperTitle: payload.contributionData.paperTitle,
-                    contributionTitle: payload.contributionData.contributionTitle,
+                    contributionTitle: payload.contributionData.contributionTitle
                 }
             });
             let newComparison = {
                 allIds: [...state.comparison.allIds, payload.contributionId],
                 byId: comparisonContributions
-            }
+            };
             cookies.set('comparison', newComparison, { path: '/', maxAge: 604800 });
             return {
                 ...state,
                 comparison: newComparison
-            }
+            };
         }
 
         case type.REMOVE_FROM_COMPARISON: {
@@ -99,17 +100,17 @@ export default (state = initialState, action) => {
             let newState = dotProp.delete(state, `comparison.allIds.${valueIndex}`);
             let newComparison = {
                 allIds: newState.comparison.allIds,
-                byId: dotProp.delete(state.comparison.byId, payload.id),
-            }
+                byId: dotProp.delete(state.comparison.byId, payload.id)
+            };
             cookies.set('comparison', newComparison, { path: '/', maxAge: 604800 });
             return {
                 ...newState,
                 comparison: newComparison
-            }
+            };
         }
 
         default: {
-            return state
+            return state;
         }
     }
-}
+};

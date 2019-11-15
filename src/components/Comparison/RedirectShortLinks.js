@@ -4,23 +4,21 @@ import PropTypes from 'prop-types';
 import { getLongLink } from '../../network';
 
 class RedirectShortLinks extends Component {
-
     constructor(props) {
         super(props);
 
         this.state = {
             loading: true,
             longURL: null
-        }
-
+        };
     }
 
     componentDidMount = () => {
-        getLongLink(this.props.match.params.shortCode).then((data) => {
-            window.location.href = data.long_url; 
+        getLongLink(this.props.match.params.shortCode).then(data => {
+            window.location.href = data.long_url;
             return null;
-        })
-    }
+        });
+    };
 
     render() {
         return (
@@ -39,10 +37,8 @@ RedirectShortLinks.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
             shortCode: PropTypes.string.isRequired
-        }).isRequired,
-    }).isRequired,
-}
-
-
+        }).isRequired
+    }).isRequired
+};
 
 export default RedirectShortLinks;

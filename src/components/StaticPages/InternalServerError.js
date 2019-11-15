@@ -6,10 +6,9 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faBug } from '@fortawesome/free-solid-svg-icons';
 
 class InternalServerError extends Component {
-
     componentDidMount = () => {
-        document.title = 'Internal Server Error - ORKG'
-    }
+        document.title = 'Internal Server Error - ORKG';
+    };
 
     render() {
         return (
@@ -25,7 +24,9 @@ class InternalServerError extends Component {
                                 <Icon icon={faBug} className="text-primary mt-3 mb-3" style={{ fontSize: 25 }} />
                                 <div className="mb-4 lead">Internal Server Error.</div>
                                 <Link to={ROUTES.HOME}>
-                                    <Button color="primary" className="mr-3">Back to home</Button>
+                                    <Button color="primary" className="mr-3">
+                                        Back to home
+                                    </Button>
                                 </Link>
                             </div>
                         </div>

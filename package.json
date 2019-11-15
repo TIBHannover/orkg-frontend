@@ -126,7 +126,10 @@
         }
     },
     "eslintConfig": {
-        "extends": ["react-app", "prettier"],
+        "extends": [
+            "react-app",
+            "prettier"
+        ],
         "plugins": [
             "prettier"
         ],

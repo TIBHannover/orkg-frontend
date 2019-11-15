@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Button } from 'reactstrap';
-import ContributionItemList from './ContributionItemList'
+import ContributionItemList from './ContributionItemList';
 import Tooltip from '../../Utils/Tooltip';
 import { StyledContributionsList } from './styled';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import {
-    nextStep, previousStep, createContribution, deleteContribution,
-    selectContribution, updateContributionLabel, saveAddPaper, openTour,
-    updateTourCurrentStep, toggleAbstractDialog
+    nextStep,
+    previousStep,
+    createContribution,
+    deleteContribution,
+    selectContribution,
+    updateContributionLabel,
+    saveAddPaper,
+    openTour,
+    updateTourCurrentStep,
+    toggleAbstractDialog
 } from '../../../actions/addPaper';
 import Abstract from './../Abstract/Abstract';
 import Confirm from 'reactstrap-confirm';
@@ -20,29 +27,26 @@ import styled, { withTheme } from 'styled-components';
 import { withCookies } from 'react-cookie';
 import PropTypes from 'prop-types';
 
-
-
 const AnimationContainer = styled(CSSTransition)`
-    transition: 0.3s background-color,  0.3s border-color;
+    transition: 0.3s background-color, 0.3s border-color;
 
     &.fadeIn-enter {
-        opacity:0;
+        opacity: 0;
     }
 
     &.fadeIn-enter.fadeIn-enter-active {
-        opacity:1;
-        transition:0.5s opacity;
+        opacity: 1;
+        transition: 0.5s opacity;
     }
 `;
 
 class Contributions extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
             editing: {}
         };
-        this.inputRefs = {}
+        this.inputRefs = {};
     }
 
     componentDidMount() {
@@ -51,13 +55,13 @@ class Contributions extends Component {
             this.props.createContribution({
                 selectAfterCreation: true,
                 prefillStatements: true,
-                researchField: this.props.selectedResearchField,
+                researchField: this.props.selectedResearchField
             });
         }
     }
 
     handleNextClick = async () => {
-        // save add paper 
+        // save add paper
         this.props.saveAddPaper({
             title: this.props.title,
             authors: this.props.authors,
@@ -68,12 +72,12 @@ class Contributions extends Component {
             contributions: this.props.contributions,
             resources: this.props.resources,
             properties: this.props.properties,
-            values: this.props.values,
+            values: this.props.values
         });
         this.props.nextStep();
-    }
+    };
 
-    toggleDeleteContribution = async (id) => {
+    toggleDeleteContribution = async id => {
         let result = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure you want to delete this contribution?',
@@ -81,46 +85,48 @@ class Contributions extends Component {
         });
 
         if (result) {
-            // delete the contribution and select the first one in the remaining list 
+            // delete the contribution and select the first one in the remaining list
             let selectedId = this.props.contributions.allIds.filter(i => i !== id)[0];
             this.props.deleteContribution({ id, selectAfterDeletion: this.props.contributions.byId[selectedId] });
         }
-    }
+    };
 
     toggleEditLabelContribution = (contributionId, e) => {
         if (this.state.editing[contributionId]) {
-            this.setState({ editing: { ...this.state.editing, [contributionId]: false } })
+            this.setState({ editing: { ...this.state.editing, [contributionId]: false } });
         } else {
             // enable editing and focus on the input
-            this.setState({ editing: { ...this.state.editing, [contributionId]: true } }, () => { this.inputRefs[contributionId].focus(); })
+            this.setState({ editing: { ...this.state.editing, [contributionId]: true } }, () => {
+                this.inputRefs[contributionId].focus();
+            });
         }
     };
 
     pasteAsPlainText = event => {
-        event.preventDefault()
-        const text = event.clipboardData.getData('text/plain')
-        document.execCommand('insertHTML', false, text)
-    }
+        event.preventDefault();
+        const text = event.clipboardData.getData('text/plain');
+        document.execCommand('insertHTML', false, text);
+    };
 
-    handleSelectContribution = (contributionId) => {
+    handleSelectContribution = contributionId => {
         const resourceId = this.props.contributions.byId[contributionId].resourceId;
 
         this.props.selectContribution({
             id: contributionId,
             resourceId
         });
-    }
+    };
 
     handleChange = (contributionId, label) => {
         this.props.updateContributionLabel({
             label: label,
-            contributionId: contributionId,
+            contributionId: contributionId
         });
     };
 
-    handleLearnMore = (step) => {
+    handleLearnMore = step => {
         this.props.openTour(step);
-    }
+    };
 
     render() {
         let selectedResourceId = this.props.selectedContribution;
@@ -129,7 +135,17 @@ class Contributions extends Component {
             <div>
                 <div className={'d-flex align-items-center mt-4 mb-5'}>
                     <h2 className="h4 flex-shrink-0">
-                        <Tooltip message={<span>Specify the research contributions that this paper makes. A paper can have multiple contributions and each contribution addresses at least one research problem. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(1)}>Learn more</span></span>}>
+                        <Tooltip
+                            message={
+                                <span>
+                                    Specify the research contributions that this paper makes. A paper can have multiple contributions and each
+                                    contribution addresses at least one research problem.{' '}
+                                    <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(1)}>
+                                        Learn more
+                                    </span>
+                                </span>
+                            }
+                        >
                             Specify research contributions
                         </Tooltip>
                     </h2>
@@ -155,7 +171,7 @@ class Contributions extends Component {
                                             toggleDeleteContribution={this.toggleDeleteContribution}
                                             handleSelectContribution={this.handleSelectContribution}
                                         />
-                                    )
+                                    );
                                 })}
 
                                 <li className={'addContribution text-primary'}>
@@ -165,11 +181,7 @@ class Contributions extends Component {
                         </Col>
 
                         <TransitionGroup className="col-9" exit={false}>
-                            <AnimationContainer
-                                classNames="fadeIn"
-                                timeout={{ enter: 500, exit: 0 }}
-                                key={selectedResourceId}
-                            >
+                            <AnimationContainer classNames="fadeIn" timeout={{ enter: 500, exit: 0 }} key={selectedResourceId}>
                                 <Contribution id={selectedResourceId} />
                             </AnimationContainer>
                         </TransitionGroup>
@@ -180,9 +192,13 @@ class Contributions extends Component {
 
                 <Abstract />
 
-                <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Finish</Button>
-                <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>Previous step</Button>
-            </div >
+                <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>
+                    Finish
+                </Button>
+                <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>
+                    Previous step
+                </Button>
+            </div>
         );
     }
 }
@@ -190,14 +206,8 @@ class Contributions extends Component {
 Contributions.propTypes = {
     title: PropTypes.string.isRequired,
     authors: PropTypes.array.isRequired,
-    publicationMonth: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number
-    ]).isRequired,
-    publicationYear: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number
-    ]).isRequired,
+    publicationMonth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    publicationYear: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     doi: PropTypes.string.isRequired,
     selectedResearchField: PropTypes.string.isRequired,
     contributions: PropTypes.object.isRequired,
@@ -215,7 +225,7 @@ Contributions.propTypes = {
     theme: PropTypes.object.isRequired,
     openTour: PropTypes.func.isRequired,
     updateTourCurrentStep: PropTypes.func.isRequired,
-    toggleAbstractDialog: PropTypes.func.isRequired,
+    toggleAbstractDialog: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -230,27 +240,27 @@ const mapStateToProps = state => {
         selectedContribution: state.addPaper.selectedContribution,
         resources: state.statementBrowser.resources,
         properties: state.statementBrowser.properties,
-        values: state.statementBrowser.values,
-    }
+        values: state.statementBrowser.values
+    };
 };
 
 const mapDispatchToProps = dispatch => ({
     nextStep: () => dispatch(nextStep()),
     previousStep: () => dispatch(previousStep()),
-    createContribution: (data) => dispatch(createContribution(data)),
-    deleteContribution: (data) => dispatch(deleteContribution(data)),
-    selectContribution: (id) => dispatch(selectContribution(id)),
-    updateContributionLabel: (data) => dispatch(updateContributionLabel(data)),
-    saveAddPaper: (data) => dispatch(saveAddPaper(data)),
-    openTour: (data) => dispatch(openTour(data)),
-    updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
-    toggleAbstractDialog: () => dispatch(toggleAbstractDialog()),
+    createContribution: data => dispatch(createContribution(data)),
+    deleteContribution: data => dispatch(deleteContribution(data)),
+    selectContribution: id => dispatch(selectContribution(id)),
+    updateContributionLabel: data => dispatch(updateContributionLabel(data)),
+    saveAddPaper: data => dispatch(saveAddPaper(data)),
+    openTour: data => dispatch(openTour(data)),
+    updateTourCurrentStep: data => dispatch(updateTourCurrentStep(data)),
+    toggleAbstractDialog: () => dispatch(toggleAbstractDialog())
 });
 
 export default compose(
     connect(
         mapStateToProps,
-        mapDispatchToProps,
+        mapDispatchToProps
     ),
     withTheme,
     withCookies

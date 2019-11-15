@@ -4,8 +4,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { unregister } from './registerServiceWorker';
-import { Provider } from 'react-redux'
-import configureStore, { history } from './store'
+import { Provider } from 'react-redux';
+import configureStore, { history } from './store';
 import { AppContainer } from 'react-hot-loader';
 import rootReducer from './reducers/rootReducer';
 import { CookiesProvider } from 'react-cookie';
@@ -29,7 +29,7 @@ const render = () => {
         </AppContainer>,
         document.getElementById('root')
     );
-}
+};
 
 render();
 unregister();
@@ -37,10 +37,10 @@ unregister();
 // Hot reloading components and reducers
 if (module.hot) {
     module.hot.accept('./App', () => {
-        render()
+        render();
     });
 
     module.hot.accept('./reducers/rootReducer', () => {
-        store.replaceReducer(rootReducer(history))
+        store.replaceReducer(rootReducer(history));
     });
 }

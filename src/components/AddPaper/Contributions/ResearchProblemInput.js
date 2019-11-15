@@ -5,19 +5,17 @@ import AsyncCreatableSelect from 'react-select/async-creatable';
 import { components } from 'react-select';
 import { getResourcesByClass } from '../../../network';
 
-
 class ResearchProblemInput extends Component {
-
     constructor(props) {
-        super(props)
+        super(props);
 
         this.state = {
             problemBrowser: null,
-            inputValue: '',
-        }
+            inputValue: ''
+        };
     }
 
-    loadOptions = async (value) => {
+    loadOptions = async value => {
         try {
             // Get the resoures that contains 'Problem' as a class
             let responseJson = await getResourcesByClass({
@@ -27,8 +25,8 @@ class ResearchProblemInput extends Component {
                 sortBy: 'created_at',
                 desc: true,
                 q: value
-            })
-            return responseJson.map((item) => ({
+            });
+            return responseJson.map(item => ({
                 label: item.label,
                 id: item.id
             }));
@@ -36,21 +34,21 @@ class ResearchProblemInput extends Component {
             console.error(err);
             return [];
         }
-    }
+    };
 
     handleCreate = (inputValue, val) => {
         const newOption = {
             label: inputValue,
-            id: inputValue,
+            id: inputValue
         };
-        this.props.handler([...this.props.value, newOption], val)
+        this.props.handler([...this.props.value, newOption], val);
     };
 
     closeProblemBrowser = () => {
         this.setState({ problemBrowser: null });
-    }
+    };
 
-    onKeyDown = (event) => {
+    onKeyDown = event => {
         switch (event.keyCode) {
             case 13: // ENTER
                 event.target.value.trim() === '' && event.preventDefault();
@@ -59,7 +57,7 @@ class ResearchProblemInput extends Component {
                 break;
             }
         }
-    }
+    };
 
     onInputChange = (inputValue, val) => {
         if (val.action === 'input-blur') {
@@ -67,7 +65,7 @@ class ResearchProblemInput extends Component {
                 this.handleCreate(this.state.inputValue, { action: 'create-option', createdOptionLabel: this.state.inputValue }); //inputvalue is not provided on blur, so use the state value
             }
             this.setState({
-                inputValue: '',
+                inputValue: ''
             });
         } else if (val.action === 'input-change') {
             this.setState({
@@ -75,13 +73,12 @@ class ResearchProblemInput extends Component {
             });
         } else if (val.action === 'set-value') {
             this.setState({
-                inputValue: '',
+                inputValue: ''
             });
         }
-    }
+    };
 
     render() {
-
         const customStyles = {
             control: (provided, state) => ({
                 ...provided,
@@ -89,28 +86,28 @@ class ResearchProblemInput extends Component {
                 boxShadow: state.isFocused ? 0 : 0,
                 border: 0,
                 paddingLeft: 0,
-                paddingRight: 0,
+                paddingRight: 0
             }),
-            multiValue: (provided) => ({
+            multiValue: provided => ({
                 ...provided
             }),
-            menu: (provided) => ({
+            menu: provided => ({
                 ...provided,
                 zIndex: 10
             }),
-            multiValueLabel: (provided) => ({
+            multiValueLabel: provided => ({
                 ...provided,
-                whiteSpace: 'normal',
+                whiteSpace: 'normal'
             }),
-            option: (provided) => ({
+            option: provided => ({
                 ...provided,
-                whiteSpace: 'normal',
+                whiteSpace: 'normal'
             }),
-            input: (provided) => ({
+            input: provided => ({
                 ...provided,
-                whiteSpace: 'normal',
+                whiteSpace: 'normal'
             })
-        }
+        };
 
         const Menu = props => {
             return (
@@ -122,11 +119,12 @@ class ResearchProblemInput extends Component {
 
         const MultiValueLabel = props => {
             return (
-                <div onClick={() => {
-                    this.setState({
-                        problemBrowser: props.data
-                    });
-                }}
+                <div
+                    onClick={() => {
+                        this.setState({
+                            problemBrowser: props.data
+                        });
+                    }}
                 >
                     <components.MultiValueLabel {...props} />
                 </div>
@@ -153,19 +151,26 @@ class ResearchProblemInput extends Component {
                         onKeyDown={this.onKeyDown}
                         cacheOptions
                         loadOptions={this.loadOptions}
-                        onCreateOption={(inputValue) => this.handleCreate(inputValue, { action: 'create-option', createdOptionLabel: inputValue })}
+                        onCreateOption={inputValue => this.handleCreate(inputValue, { action: 'create-option', createdOptionLabel: inputValue })}
                         getNewOptionData={(inputValue, optionLabel) => ({ label: `Create a research problem : "${inputValue}"`, id: inputValue })}
                     />
                 </StyledResearchFieldsInputFormControl>
-                {
-                    false && (
-                        <StyledResearchFieldBrowser className="form-control">
-                            <button type="button" className={'close'} onClick={this.closeProblemBrowser}><span>×</span></button>
-                            <>Problem browser :</><br />
-                            <><b>ID</b> {this.state.problemBrowser.id}</><br />
-                            <><b>Label</b> {this.state.problemBrowser.label}</>
-                        </StyledResearchFieldBrowser>)
-                }
+                {false && (
+                    <StyledResearchFieldBrowser className="form-control">
+                        <button type="button" className={'close'} onClick={this.closeProblemBrowser}>
+                            <span>×</span>
+                        </button>
+                        <>Problem browser :</>
+                        <br />
+                        <>
+                            <b>ID</b> {this.state.problemBrowser.id}
+                        </>
+                        <br />
+                        <>
+                            <b>Label</b> {this.state.problemBrowser.label}
+                        </>
+                    </StyledResearchFieldBrowser>
+                )}
             </>
         );
     }
@@ -173,7 +178,7 @@ class ResearchProblemInput extends Component {
 
 ResearchProblemInput.propTypes = {
     handler: PropTypes.func.isRequired,
-    value: PropTypes.array.isRequired,
-}
+    value: PropTypes.array.isRequired
+};
 
 export default ResearchProblemInput;

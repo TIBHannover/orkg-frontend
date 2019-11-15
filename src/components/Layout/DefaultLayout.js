@@ -14,15 +14,15 @@ const StyledBody = styled.div`
     min-height: 100vh;
     flex-direction: column;
     padding-top: 100px;
-`
+`;
 
 const StyledAppContent = styled.div`
     flex: 1 0 auto;
-`
+`;
 
 const StyledFooter = styled.div`
     flex-shrink: 0;
-`
+`;
 
 function CloseToastButton({ closeToast }) {
     return (
@@ -68,9 +68,7 @@ class DefaultLayout extends Component {
                 />
 
                 <Header />
-                <StyledAppContent>
-                    {this.props.children}
-                </StyledAppContent>
+                <StyledAppContent>{this.props.children}</StyledAppContent>
                 <StyledFooter>
                     <Footer />
                 </StyledFooter>
@@ -80,7 +78,7 @@ class DefaultLayout extends Component {
 }
 
 DefaultLayout.propTypes = {
-    children: PropTypes.array.isRequired,
+    children: PropTypes.array.isRequired
 };
 
 export default DefaultLayout;

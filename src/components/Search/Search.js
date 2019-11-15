@@ -11,7 +11,6 @@ import Results from './Results';
 import Filters from './Filters';
 
 class Search extends Component {
-
     constructor(props) {
         super(props);
 
@@ -78,8 +77,8 @@ class Search extends Component {
             isProblemsNextPageLoading: false,
             hasProblemsNextPage: false,
             problemsPage: 1,
-            isProblemsLastPageReached: false,
-        }
+            isProblemsLastPageReached: false
+        };
     }
 
     componentDidMount() {
@@ -92,54 +91,58 @@ class Search extends Component {
 
     componentDidUpdate = (prevProps, prevState) => {
         if (this.props.match.params.searchTerm !== prevProps.match.params.searchTerm) {
-            this.setState({
-                value: this.props.match.params.searchTerm,
-                resources: [],
-                isResourcesNextPageLoading: false,
-                hasResourcesNextPage: false,
-                resourcesPage: 1,
-                isResourcesLastPageReached: false,
-                predicates: [],
-                isPredicatesNextPageLoading: false,
-                hasPredicatesNextPage: false,
-                predicatesPage: 1,
-                isPredicatesLastPageReached: false,
-                papers: [],
-                isPapersNextPageLoading: false,
-                hasPapersNextPage: false,
-                papersPage: 1,
-                isPapersLastPageReached: false,
-                problems: [],
-                isProblemsNextPageLoading: false,
-                hasProblemsNextPage: false,
-                problemsPage: 1,
-                isProblemsLastPageReached: false,
-            }, () => {
-                this.loadMoreResources(this.state.value);
-                this.loadMorePapers(this.state.value);
-                this.loadMoreProblems(this.state.value);
-                this.loadMorePredicates(this.state.value);
-            })
+            this.setState(
+                {
+                    value: this.props.match.params.searchTerm,
+                    resources: [],
+                    isResourcesNextPageLoading: false,
+                    hasResourcesNextPage: false,
+                    resourcesPage: 1,
+                    isResourcesLastPageReached: false,
+                    predicates: [],
+                    isPredicatesNextPageLoading: false,
+                    hasPredicatesNextPage: false,
+                    predicatesPage: 1,
+                    isPredicatesLastPageReached: false,
+                    papers: [],
+                    isPapersNextPageLoading: false,
+                    hasPapersNextPage: false,
+                    papersPage: 1,
+                    isPapersLastPageReached: false,
+                    problems: [],
+                    isProblemsNextPageLoading: false,
+                    hasProblemsNextPage: false,
+                    problemsPage: 1,
+                    isProblemsLastPageReached: false
+                },
+                () => {
+                    this.loadMoreResources(this.state.value);
+                    this.loadMorePapers(this.state.value);
+                    this.loadMoreProblems(this.state.value);
+                    this.loadMorePredicates(this.state.value);
+                }
+            );
         }
-    }
+    };
 
     handleChange(event) {
         this.setState({ value: event.target.value });
     }
 
-    loadMoreResources = (searchQuery) => {
+    loadMoreResources = searchQuery => {
         if (searchQuery.length === 0) {
             return;
         }
-        this.setState({ isResourcesNextPageLoading: true })
+        this.setState({ isResourcesNextPageLoading: true });
         getAllResources({
             page: this.state.resourcesPage,
             items: this.itemsPerFilter,
             sortBy: 'id',
             desc: true,
             q: searchQuery,
-            exclude: process.env.REACT_APP_CLASSES_CONTRIBUTION + ',' + process.env.REACT_APP_CLASSES_PAPER + ',' + process.env.REACT_APP_CLASSES_PROBLEM,
-        }).then((resources) => {
+            exclude:
+                process.env.REACT_APP_CLASSES_CONTRIBUTION + ',' + process.env.REACT_APP_CLASSES_PAPER + ',' + process.env.REACT_APP_CLASSES_PROBLEM
+        }).then(resources => {
             if (resources.length > 0) {
                 this.setState({
                     resources: [...this.state.resources, ...resources],
@@ -155,21 +158,21 @@ class Search extends Component {
                 });
             }
         });
-    }
+    };
 
-    loadMorePapers = (searchQuery) => {
+    loadMorePapers = searchQuery => {
         if (searchQuery.length === 0) {
             return;
         }
-        this.setState({ isPapersNextPageLoading: true })
+        this.setState({ isPapersNextPageLoading: true });
         getResourcesByClass({
             page: this.state.papersPage,
             items: this.itemsPerFilter,
             sortBy: 'id',
             desc: true,
             q: searchQuery,
-            id: process.env.REACT_APP_CLASSES_PAPER,
-        }).then((papers) => {
+            id: process.env.REACT_APP_CLASSES_PAPER
+        }).then(papers => {
             if (papers.length > 0) {
                 this.setState({
                     papers: [...this.state.papers, ...papers],
@@ -185,21 +188,21 @@ class Search extends Component {
                 });
             }
         });
-    }
+    };
 
-    loadMoreProblems = (searchQuery) => {
+    loadMoreProblems = searchQuery => {
         if (searchQuery.length === 0) {
             return;
         }
-        this.setState({ isProblemsNextPageLoading: true })
+        this.setState({ isProblemsNextPageLoading: true });
         getResourcesByClass({
             page: this.state.problemsPage,
             items: this.itemsPerFilter,
             sortBy: 'id',
             desc: true,
             q: searchQuery,
-            id: process.env.REACT_APP_CLASSES_PROBLEM,
-        }).then((problems) => {
+            id: process.env.REACT_APP_CLASSES_PROBLEM
+        }).then(problems => {
             if (problems.length > 0) {
                 this.setState({
                     problems: [...this.state.problems, ...problems],
@@ -215,20 +218,20 @@ class Search extends Component {
                 });
             }
         });
-    }
+    };
 
-    loadMorePredicates = (searchQuery) => {
+    loadMorePredicates = searchQuery => {
         if (searchQuery.length === 0) {
             return;
         }
-        this.setState({ isPredicatesNextPageLoading: true })
+        this.setState({ isPredicatesNextPageLoading: true });
         getAllPredicates({
             page: this.state.predicatesPage,
             items: this.itemsPerFilter,
             sortBy: 'id',
             desc: true,
-            q: searchQuery,
-        }).then((predicates) => {
+            q: searchQuery
+        }).then(predicates => {
             if (predicates.length > 0) {
                 this.setState({
                     predicates: [...this.state.predicates, ...predicates],
@@ -244,9 +247,9 @@ class Search extends Component {
                 });
             }
         });
-    }
+    };
 
-    toggleFilter = (filterClass) => {
+    toggleFilter = filterClass => {
         let selectedFilters = [];
 
         if (this.state.selectedFilters.includes(filterClass)) {
@@ -261,13 +264,13 @@ class Search extends Component {
         this.setState({
             selectedFilters
         });
-    }
+    };
 
-    handleInputChange = (e) => {
+    handleInputChange = e => {
         this.setState({
-            [e.target.name]: e.target.value,
+            [e.target.name]: e.target.value
         });
-    }
+    };
 
     getTypesFromUrl = () => {
         let types = queryString.parse(this.props.location.search, { arrayFormat: 'comma' }).types;
@@ -283,7 +286,7 @@ class Search extends Component {
         types = types.map(n => parseInt(n));
 
         return types;
-    }
+    };
 
     render() {
         return (
@@ -307,7 +310,8 @@ class Search extends Component {
                         </Col>
                         <Col className="col-sm-8 px-0">
                             <div className="box p-4 h-100">
-                                {((this.state.selectedFilters.length === 0) || (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(1))) && (
+                                {(this.state.selectedFilters.length === 0 ||
+                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(1))) && (
                                     <Results
                                         loading={this.state.isPapersNextPageLoading}
                                         hasNextPage={this.state.hasPapersNextPage}
@@ -317,7 +321,8 @@ class Search extends Component {
                                         class={process.env.REACT_APP_CLASSES_PAPER}
                                     />
                                 )}
-                                {((this.state.selectedFilters.length === 0) || (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(2))) && (
+                                {(this.state.selectedFilters.length === 0 ||
+                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(2))) && (
                                     <Results
                                         loading={this.state.isProblemsNextPageLoading}
                                         hasNextPage={this.state.hasProblemsNextPage}
@@ -327,7 +332,8 @@ class Search extends Component {
                                         class={process.env.REACT_APP_CLASSES_PROBLEM}
                                     />
                                 )}
-                                {((this.state.selectedFilters.length === 0) || (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(3))) && (
+                                {(this.state.selectedFilters.length === 0 ||
+                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(3))) && (
                                     <Results
                                         loading={this.state.isResourcesNextPageLoading}
                                         hasNextPage={this.state.hasResourcesNextPage}
@@ -337,7 +343,8 @@ class Search extends Component {
                                         class={'resource'}
                                     />
                                 )}
-                                {((this.state.selectedFilters.length === 0) || (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(4))) && (
+                                {(this.state.selectedFilters.length === 0 ||
+                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(4))) && (
                                     <Results
                                         loading={this.state.isPredicatesNextPageLoading}
                                         hasNextPage={this.state.hasPredicatesNextPage}
@@ -361,9 +368,9 @@ Search.propTypes = {
     history: PropTypes.object.isRequired,
     match: PropTypes.shape({
         params: PropTypes.shape({
-            searchTerm: PropTypes.string,
-        }).isRequired,
-    }).isRequired,
-}
+            searchTerm: PropTypes.string
+        }).isRequired
+    }).isRequired
+};
 
 export default withRouter(Search);

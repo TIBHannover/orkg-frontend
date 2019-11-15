@@ -11,7 +11,7 @@ const labelStyle = {
     float: 'left',
     textAlign: 'center',
     position: 'relative'
-}
+};
 
 const numberStyle = {
     zZndex: 1,
@@ -30,13 +30,13 @@ const numberStyle = {
 const textStyle = {
     display: 'inline-block',
     width: '100%',
-    marginTop: 35,
-}
+    marginTop: 35
+};
 
 const labelGroupStyle = {
     position: 'absolute',
-    width: '100%',
-}
+    width: '100%'
+};
 
 const lineStyle = {
     height: 4,
@@ -48,20 +48,19 @@ const lineStyle = {
     top: 13,
     zIndex: 0,
     transition: '.7s background'
-}
+};
 
 const lineLeftStyle = {
-    left: '50%',
-}
+    left: '50%'
+};
 
 const selectedStyle = {
     background: '#E86161',
     color: '#fff'
-}
+};
 
 class ProgressBar extends Component {
     render() {
-
         let styleSelectedOne = this.props.currentStep >= '1' ? selectedStyle : {};
         let styleSelectedTwo = this.props.currentStep >= '2' ? selectedStyle : {};
         let styleSelectedThree = this.props.currentStep >= '3' ? selectedStyle : {};

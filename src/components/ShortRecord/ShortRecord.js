@@ -15,26 +15,25 @@ const StyledShortRecord = styled.div`
     .shortRecord-content {
         width: 100%;
     }
-
 `;
 
 class ShortRecord extends Component {
-
     render() {
         return (
             <StyledShortRecord>
-                <div className="shortRecord-header"><a href={this.props.href}>{this.props.header}</a></div>
+                <div className="shortRecord-header">
+                    <a href={this.props.href}>{this.props.header}</a>
+                </div>
                 <div className="shortRecord-content">{this.props.children}</div>
             </StyledShortRecord>
-        )
+        );
     }
-
 }
 
 ShortRecord.propTypes = {
     href: PropTypes.string.isRequired,
     children: PropTypes.string.isRequired,
-    header: PropTypes.string.isRequired,
-}
+    header: PropTypes.string.isRequired
+};
 
 export default ShortRecord;

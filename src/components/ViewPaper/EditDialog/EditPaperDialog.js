@@ -15,7 +15,6 @@ const LoadingOverlayStyled = styled(LoadingOverlay)`
     //overflow: hidden;
 `;
 class EditPaperDialog extends Component {
-
     constructor(props) {
         super(props);
 
@@ -24,7 +23,7 @@ class EditPaperDialog extends Component {
             openItem: 'title',
             isLoading: false,
             ...this.getStateFromRedux()
-        }
+        };
     }
 
     getStateFromRedux = () => {
@@ -33,28 +32,27 @@ class EditPaperDialog extends Component {
             publicationMonth: this.props.viewPaper.publicationMonth,
             publicationYear: this.props.viewPaper.publicationYear,
             doi: this.props.viewPaper.doi,
-            authors: this.props.viewPaper.authors,
-        }
-    }
+            authors: this.props.viewPaper.authors
+        };
+    };
 
     toggleDialog = () => {
         if (!this.state.showDialog) {
             this.setState({
                 showDialog: true,
                 openItem: 'title',
-                ...this.getStateFromRedux(),
+                ...this.getStateFromRedux()
             });
         } else {
             this.setState({
-                showDialog: false,
+                showDialog: false
             });
         }
-
-    }
+    };
 
     handleChange = (event, name) => {
         this.setState({ [name]: event.target.value });
-    }
+    };
 
     handleSave = async () => {
         this.setState({
@@ -62,7 +60,7 @@ class EditPaperDialog extends Component {
         });
         let loadPaper = {};
 
-        //title 
+        //title
         updateResource(this.props.viewPaper.paperResourceId, this.state.title);
 
         //authors
@@ -72,21 +70,21 @@ class EditPaperDialog extends Component {
         this.updateOrCreateLiteral({
             reducerName: 'publicationMonthResourceId',
             value: this.state.publicationMonth,
-            predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH,
+            predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH
         });
 
         //publication year
         this.updateOrCreateLiteral({
             reducerName: 'publicationYearResourceId',
             value: this.state.publicationYear,
-            predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR,
+            predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR
         });
 
         //doi
         this.updateOrCreateLiteral({
             reducerName: 'doiResourceId',
             value: this.state.doi,
-            predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_DOI,
+            predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_DOI
         });
 
         //update redux state with changes, so it is updated on the view paper page
@@ -96,7 +94,7 @@ class EditPaperDialog extends Component {
             publicationMonth: this.state.publicationMonth,
             publicationYear: this.state.publicationYear,
             doi: this.state.doi,
-            authors: this.state.authors,
+            authors: this.state.authors
         });
 
         this.setState({
@@ -104,18 +102,19 @@ class EditPaperDialog extends Component {
         });
 
         this.toggleDialog();
-    }
+    };
 
     updateOrCreateLiteral = async ({ reducerName, value, predicateIdForCreate }) => {
         const literalId = this.props.viewPaper[reducerName];
 
         if (literalId) {
             updateLiteral(literalId, value);
-        } else if (value) { // only create a new literal if a value has been provided
+        } else if (value) {
+            // only create a new literal if a value has been provided
             let newLiteral = await this.createNewLiteral(this.props.viewPaper.paperResourceId, predicateIdForCreate, value);
             loadPaper[reducerName] = newLiteral.literalId;
         }
-    }
+    };
 
     createNewLiteral = async (resourceId, predicateId, label) => {
         let newLiteral = await createLiteral(label);
@@ -123,11 +122,11 @@ class EditPaperDialog extends Component {
 
         return {
             literalId: newLiteral.id,
-            statementId: statement.id,
+            statementId: statement.id
         };
-    }
+    };
 
-    // TODO: improve code by using reduce function 
+    // TODO: improve code by using reduce function
     updateAuthors = async () => {
         // check which authors to remove
         for (let author of this.props.viewPaper.authors) {
@@ -154,26 +153,30 @@ class EditPaperDialog extends Component {
             }
 
             if (!authorExists) {
-                let authorLiteral = await this.createNewLiteral(this.props.viewPaper.paperResourceId, process.env.REACT_APP_PREDICATES_HAS_AUTHOR, author.label);
+                let authorLiteral = await this.createNewLiteral(
+                    this.props.viewPaper.paperResourceId,
+                    process.env.REACT_APP_PREDICATES_HAS_AUTHOR,
+                    author.label
+                );
                 authors[i].id = authorLiteral.statementId;
             }
         }
 
         this.setState({
-            authors,
-        })
-    }
+            authors
+        });
+    };
 
-    toggleItem = (type) => {
+    toggleItem = type => {
         this.setState(prevState => ({
-            openItem: prevState.openItem !== type ? type : null,
+            openItem: prevState.openItem !== type ? type : null
         }));
-    }
+    };
 
-    handleAuthorsChange = (tags) => {
+    handleAuthorsChange = tags => {
         tags = tags ? tags : [];
         this.setState({
-            authors: tags,
+            authors: tags
         });
     };
 
@@ -181,17 +184,10 @@ class EditPaperDialog extends Component {
         return (
             <>
                 <div className="flex-grow-1">
-                <Button
-                    color="darkblue"
-                    size="sm"
-                    className="mt-2"
-                    style={{ marginLeft: 'auto' }}
-                    onClick={this.toggleDialog}
-                >
-                    <Icon icon={faPen} /> Edit data
-                </Button>
+                    <Button color="darkblue" size="sm" className="mt-2" style={{ marginLeft: 'auto' }} onClick={this.toggleDialog}>
+                        <Icon icon={faPen} /> Edit data
+                    </Button>
                 </div>
-
 
                 <Modal isOpen={this.state.showDialog} toggle={this.toggleDialog} size="lg">
                     <LoadingOverlayStyled
@@ -199,7 +195,7 @@ class EditPaperDialog extends Component {
                         spinner
                         text="Saving..."
                         styles={{
-                            overlay: (base) => ({
+                            overlay: base => ({
                                 ...base,
                                 borderRadius: 7,
                                 overflow: 'hidden',
@@ -219,7 +215,7 @@ class EditPaperDialog extends Component {
                                     label="Title"
                                     type="text"
                                     value={this.state.title}
-                                    onChange={(e) => this.handleChange(e, 'title')}
+                                    onChange={e => this.handleChange(e, 'title')}
                                     toggleItem={() => this.toggleItem('title')}
                                 />
                                 <EditItem
@@ -227,7 +223,7 @@ class EditPaperDialog extends Component {
                                     label="Publication month"
                                     type="month"
                                     value={this.state.publicationMonth}
-                                    onChange={(e) => this.handleChange(e, 'publicationMonth')}
+                                    onChange={e => this.handleChange(e, 'publicationMonth')}
                                     toggleItem={() => this.toggleItem('month')}
                                 />
                                 <EditItem
@@ -235,7 +231,7 @@ class EditPaperDialog extends Component {
                                     label="Publication year"
                                     type="year"
                                     value={this.state.publicationYear}
-                                    onChange={(e) => this.handleChange(e, 'publicationYear')}
+                                    onChange={e => this.handleChange(e, 'publicationYear')}
                                     toggleItem={() => this.toggleItem('year')}
                                 />
                                 <EditItem
@@ -252,12 +248,14 @@ class EditPaperDialog extends Component {
                                     label="DOI"
                                     type="text"
                                     value={this.state.doi}
-                                    onChange={(e) => this.handleChange(e, 'doi')}
+                                    onChange={e => this.handleChange(e, 'doi')}
                                     toggleItem={() => this.toggleItem('doi')}
                                 />
                             </ListGroup>
 
-                            <Button color="primary" className="float-right mt-2 mb-2" onClick={this.handleSave}>Save</Button>
+                            <Button color="primary" className="float-right mt-2 mb-2" onClick={this.handleSave}>
+                                Save
+                            </Button>
                         </ModalBody>
                     </LoadingOverlayStyled>
                 </Modal>
@@ -277,18 +275,18 @@ EditPaperDialog.propTypes = {
         authors: PropTypes.arrayOf(
             PropTypes.shape({
                 id: PropTypes.string.isRequired,
-                label: PropTypes.string.isRequired,
+                label: PropTypes.string.isRequired
             }).isRequired
-        ).isRequired,
-    }).isRequired,
-}
+        ).isRequired
+    }).isRequired
+};
 
 const mapStateToProps = state => ({
-    viewPaper: state.viewPaper,
+    viewPaper: state.viewPaper
 });
 
 const mapDispatchToProps = dispatch => ({
-    loadPaper: (payload) => dispatch(loadPaper(payload)),
+    loadPaper: payload => dispatch(loadPaper(payload))
 });
 
 export default connect(

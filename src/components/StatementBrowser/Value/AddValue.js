@@ -17,35 +17,35 @@ class AddValue extends Component {
             dropdownValueTypeOpen: false,
             showAddValue: false,
             valueType: 'object',
-            inputValue: '',
-        }
+            inputValue: ''
+        };
     }
 
     toggleDropDownValueType = () => {
         this.setState({
             dropdownValueTypeOpen: !this.state.dropdownValueTypeOpen
         });
-    }
+    };
 
     handleShowAddValue = () => {
         this.setState({
-            showAddValue: true,
+            showAddValue: true
         });
-    }
+    };
 
     handleHideAddValue = () => {
         this.setState({
             showAddValue: false,
             inputValue: '',
-            valueType: 'object',
+            valueType: 'object'
         });
-    }
+    };
 
-    handleDropdownSelect = (valueType) => {
+    handleDropdownSelect = valueType => {
         this.setState({
             valueType
         });
-    }
+    };
 
     handleInputChange = (e, value) => {
         let inputValue = e ? e.target.value : value;
@@ -53,11 +53,11 @@ class AddValue extends Component {
         this.setState({
             inputValue
         });
-    }
+    };
 
     handleValueSelect = async ({ id, value, shared, classes }) => {
         if (this.props.syncBackend) {
-            let predicate = this.props.properties.byId[this.props.selectedProperty]
+            let predicate = this.props.properties.byId[this.props.selectedProperty];
             let newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, id);
             this.props.createValue({
                 label: value,
@@ -82,13 +82,13 @@ class AddValue extends Component {
         }
 
         this.handleHideAddValue();
-    }
+    };
 
     handleAddValue = async () => {
         if (this.props.syncBackend) {
-            let predicate = this.props.properties.byId[this.props.selectedProperty]
-            let newObject = null
-            let newStatement = null
+            let predicate = this.props.properties.byId[this.props.selectedProperty];
+            let newObject = null;
+            let newStatement = null;
             if (this.state.valueType === 'object') {
                 newObject = await createResource(this.state.inputValue);
                 newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
@@ -115,7 +115,7 @@ class AddValue extends Component {
         }
 
         this.handleHideAddValue();
-    }
+    };
 
     getNewResources = () => {
         let resourceList = [];
@@ -126,72 +126,77 @@ class AddValue extends Component {
             if (!resource.existingResourceId) {
                 resourceList.push({
                     id: resource.id,
-                    label: resource.label,
-                })
+                    label: resource.label
+                });
             }
         }
 
         return resourceList;
-    }
+    };
 
     render() {
         return (
             <>
                 <StyledValueItem>
-                    {this.state.showAddValue ?
+                    {this.state.showAddValue ? (
                         <InputGroup>
-                            <InputGroupButtonDropdown addonType="prepend" isOpen={this.state.dropdownValueTypeOpen} toggle={this.toggleDropDownValueType}>
+                            <InputGroupButtonDropdown
+                                addonType="prepend"
+                                isOpen={this.state.dropdownValueTypeOpen}
+                                toggle={this.toggleDropDownValueType}
+                            >
                                 <DropdownToggle caret color="primary" className={'valueTypeDropdown'}>
                                     {this.state.valueType.charAt(0).toUpperCase() + this.state.valueType.slice(1)}
                                 </DropdownToggle>
                                 <DropdownMenu>
                                     <StyledDropdownItem onClick={() => this.handleDropdownSelect('object')}>
-                                        <Tooltip message="Choose object to link this to an object, which can contain values on its own" >
+                                        <Tooltip message="Choose object to link this to an object, which can contain values on its own">
                                             Object
                                         </Tooltip>
                                     </StyledDropdownItem>
                                     <StyledDropdownItem onClick={() => this.handleDropdownSelect('literal')}>
-                                        <Tooltip message="Choose literal for values like numbers or plain text" >
-                                            Literal
-                                        </Tooltip>
+                                        <Tooltip message="Choose literal for values like numbers or plain text">Literal</Tooltip>
                                     </StyledDropdownItem>
                                 </DropdownMenu>
                             </InputGroupButtonDropdown>
 
-                            {this.state.valueType === 'object' ?
-                                (
-                                    <AutoComplete
-                                        requestUrl={resourcesUrl}
-                                        excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM}`}
-                                        placeholder="Enter an object"
-                                        onItemSelected={this.handleValueSelect}
-                                        onInput={this.handleInputChange}
-                                        value={this.state.inputValue}
-                                        additionalData={this.getNewResources()}
-                                        disableBorderRadiusRight
-                                        disableBorderRadiusLeft
-                                    />
-                                ) : (
-                                    <Input
-                                        placeholder="Enter a value"
-                                        name="literalValue"
-                                        value={this.state.inputValue}
-                                        onChange={this.handleInputChange}
-                                    />
-                                )
-                            }
+                            {this.state.valueType === 'object' ? (
+                                <AutoComplete
+                                    requestUrl={resourcesUrl}
+                                    excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM}`}
+                                    placeholder="Enter an object"
+                                    onItemSelected={this.handleValueSelect}
+                                    onInput={this.handleInputChange}
+                                    value={this.state.inputValue}
+                                    additionalData={this.getNewResources()}
+                                    disableBorderRadiusRight
+                                    disableBorderRadiusLeft
+                                />
+                            ) : (
+                                <Input
+                                    placeholder="Enter a value"
+                                    name="literalValue"
+                                    value={this.state.inputValue}
+                                    onChange={this.handleInputChange}
+                                />
+                            )}
 
                             <InputGroupAddon addonType="append">
-                                <Button color="light" className={'valueActionButton'} onClick={this.handleHideAddValue}>Cancel</Button>
-                                <Button color="light" className={'valueActionButton'} onClick={this.handleAddValue}>Create</Button>
+                                <Button color="light" className={'valueActionButton'} onClick={this.handleHideAddValue}>
+                                    Cancel
+                                </Button>
+                                <Button color="light" className={'valueActionButton'} onClick={this.handleAddValue}>
+                                    Create
+                                </Button>
                             </InputGroupAddon>
                         </InputGroup>
-                        :
-                        <span className="btn btn-link p-0" onClick={this.handleShowAddValue}>+ Add value</span>
-                    }
+                    ) : (
+                        <span className="btn btn-link p-0" onClick={this.handleShowAddValue}>
+                            + Add value
+                        </span>
+                    )}
                 </StyledValueItem>
             </>
-
         );
     }
 }
@@ -211,11 +216,11 @@ const mapStateToProps = state => {
         selectedResource: state.statementBrowser.selectedResource,
         newResources: state.statementBrowser.resources.byId,
         properties: state.statementBrowser.properties
-    }
+    };
 };
 
 const mapDispatchToProps = dispatch => ({
-    createValue: (data) => dispatch(createValue(data)),
+    createValue: data => dispatch(createValue(data))
 });
 
 export default connect(

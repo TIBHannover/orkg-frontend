@@ -10,8 +10,13 @@ import AddValue from './Value/AddValue';
 import StatementOptions from './StatementOptions';
 import { connect } from 'react-redux';
 import {
-    togglePropertyCollapse, toggleEditPropertyLabel, updatePropertyLabel,
-    changeProperty, isSavingProperty, doneSavingProperty, createProperty
+    togglePropertyCollapse,
+    toggleEditPropertyLabel,
+    updatePropertyLabel,
+    changeProperty,
+    isSavingProperty,
+    doneSavingProperty,
+    createProperty
 } from '../../actions/statementBrowser';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -28,7 +33,6 @@ class StatementItem extends Component {
         };
     }
 
-
     componentDidMount() {
         this.getPredicateLabel();
     }
@@ -42,7 +46,7 @@ class StatementItem extends Component {
     handleChange = async (selectedOption, a) => {
         let property = this.props.properties.byId[this.props.id];
         // Check if the user changed the property
-        if (this.props.predicateLabel !== selectedOption.label || (property.existingPredicateId !== selectedOption.id)) {
+        if (this.props.predicateLabel !== selectedOption.label || property.existingPredicateId !== selectedOption.id) {
             this.props.isSavingProperty({ id: this.props.id }); // Show the saving message instead of the property label
             if (a.action === 'select-option') {
                 this.changePredicate({ ...selectedOption, isExistingProperty: true });
@@ -50,23 +54,23 @@ class StatementItem extends Component {
                 let newPredicate = null;
                 if (this.props.syncBackend) {
                     newPredicate = await createPredicate(selectedOption.label);
-                    newPredicate['isExistingProperty'] = true
+                    newPredicate['isExistingProperty'] = true;
                 } else {
-                    newPredicate = { id: guid(), label: selectedOption.label, isExistingProperty: false }
+                    newPredicate = { id: guid(), label: selectedOption.label, isExistingProperty: false };
                 }
                 this.changePredicate(newPredicate);
             }
         }
     };
 
-    changePredicate = async (newProperty) => {
+    changePredicate = async newProperty => {
         if (this.props.syncBackend) {
             let predicate = this.props.properties.byId[this.props.id];
             let existingPredicateId = predicate ? predicate.existingPredicateId : false;
             if (existingPredicateId) {
                 let values = predicate.valueIds;
                 for (let value of values) {
-                    await updateStatement(this.props.values.byId[value].statementId, { predicate_id: newProperty.id })
+                    await updateStatement(this.props.values.byId[value].statementId, { predicate_id: newProperty.id });
                 }
                 this.props.changeProperty({ propertyId: this.props.id, newProperty: newProperty });
                 toast.success('Property updated successfully');
@@ -80,20 +84,21 @@ class StatementItem extends Component {
     getPredicateLabel = () => {
         if (this.props.predicateLabel.match(new RegExp('^R[0-9]*$'))) {
             getResource(this.props.predicateLabel)
-                .catch((e) => {
+                .catch(e => {
                     console.log(e);
-                    this.setState({ predicateLabel: this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1) })
-                }).then((r) => {
-                    this.setState({ predicateLabel: `${r.label.charAt(0).toUpperCase() + r.label.slice(1)} (${this.props.predicateLabel})` })
+                    this.setState({ predicateLabel: this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1) });
                 })
+                .then(r => {
+                    this.setState({ predicateLabel: `${r.label.charAt(0).toUpperCase() + r.label.slice(1)} (${this.props.predicateLabel})` });
+                });
         } else {
-            this.setState({ predicateLabel: this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1) })
+            this.setState({ predicateLabel: this.props.predicateLabel.charAt(0).toUpperCase() + this.props.predicateLabel.slice(1) });
         }
-    }
+    };
 
     toggleDeleteContribution = () => {
-        this.setState((prevState) => ({
-            deleteContributionModal: !prevState.deleteContributionModal,
+        this.setState(prevState => ({
+            deleteContributionModal: !prevState.deleteContributionModal
         }));
     };
 
@@ -117,9 +122,9 @@ class StatementItem extends Component {
         }
 
         return responseJson;
-    }
+    };
 
-    loadOptions = async (value) => {
+    loadOptions = async value => {
         try {
             let queryParams = '';
 
@@ -137,10 +142,12 @@ class StatementItem extends Component {
 
             let options = [];
 
-            responseJson.map((item) => options.push({
-                label: item.label,
-                id: item.id
-            }));
+            responseJson.map(item =>
+                options.push({
+                    label: item.label,
+                    id: item.id
+                })
+            );
 
             return options;
         } catch (err) {
@@ -148,7 +155,7 @@ class StatementItem extends Component {
 
             return [];
         }
-    }
+    };
 
     render() {
         const isCollapsed = this.props.selectedProperty === this.props.id;
@@ -158,18 +165,18 @@ class StatementItem extends Component {
             statementItem: true,
             selectable: true,
             'd-flex': true,
-            'rounded-bottom': this.props.isLastItem && !isCollapsed && !this.props.enableEdit,
+            'rounded-bottom': this.props.isLastItem && !isCollapsed && !this.props.enableEdit
         });
 
         const chevronClass = classNames({
             statementItemIcon: true,
             open: isCollapsed,
-            'float-right': true,
+            'float-right': true
         });
 
         const openBoxClass = classNames({
             listGroupOpenBorderBottom: this.props.isLastItem && !this.props.enableEdit,
-            'rounded-bottom': this.props.isLastItem && !this.props.enableEdit,
+            'rounded-bottom': this.props.isLastItem && !this.props.enableEdit
         });
 
         let valueIds = Object.keys(this.props.properties.byId).length !== 0 ? this.props.properties.byId[this.props.id].valueIds : [];
@@ -190,7 +197,7 @@ class StatementItem extends Component {
                     padding: 0
                 }
             }),
-            container: (provided) => ({
+            container: provided => ({
                 padding: 0,
                 height: 'auto',
                 background: '#fff',
@@ -201,44 +208,48 @@ class StatementItem extends Component {
                     padding: 0
                 }
             }),
-            menu: (provided) => ({
+            menu: provided => ({
                 ...provided,
                 zIndex: 10,
                 width: '50%',
                 color: '#000'
             }),
-            option: (provided) => ({
+            option: provided => ({
                 ...provided,
                 cursor: 'pointer',
-                whiteSpace: 'normal',
+                whiteSpace: 'normal'
             }),
-            indicatorsContainer: (provided) => ({
+            indicatorsContainer: provided => ({
                 ...provided,
                 cursor: 'pointer',
                 '&>div:last-child': {
                     padding: '0 8px'
                 }
             }),
-            input: (provided) => ({
+            input: provided => ({
                 ...provided,
-                margin: '0 4px',
+                margin: '0 4px'
             }),
-            placeholder: (provided) => ({
+            placeholder: provided => ({
                 ...provided,
                 opacity: 0.7,
                 paddingLeft: 5,
                 fontStyle: 'italic'
-            }),
-        }
-
+            })
+        };
 
         return (
             <>
-                <StyledStatementItem active={isCollapsed} onClick={() => !this.props.isEditing ? this.props.togglePropertyCollapse(this.props.id) : undefined} className={listGroupClass}>
+                <StyledStatementItem
+                    active={isCollapsed}
+                    onClick={() => (!this.props.isEditing ? this.props.togglePropertyCollapse(this.props.id) : undefined)}
+                    className={listGroupClass}
+                >
                     <div className="flex-grow-1 mr-4">
-                        {!this.props.isSaving ?
-                            (!this.props.isEditing ?
-                                this.state.predicateLabel :
+                        {!this.props.isSaving ? (
+                            !this.props.isEditing ? (
+                                this.state.predicateLabel
+                            ) : (
                                 <AsyncCreatableSelect
                                     className="form-control"
                                     loadOptions={this.loadOptions}
@@ -247,19 +258,27 @@ class StatementItem extends Component {
                                     autoFocus
                                     getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
                                     getOptionValue={({ id }) => id}
-                                    defaultOptions={[{
-                                        label: this.props.predicateLabel,
-                                        id: this.props.properties.byId[this.props.id].existingPredicateId
-                                    }]}
+                                    defaultOptions={[
+                                        {
+                                            label: this.props.predicateLabel,
+                                            id: this.props.properties.byId[this.props.id].existingPredicateId
+                                        }
+                                    ]}
                                     placeholder={this.props.predicateLabel}
                                     cacheOptions
-                                    onChange={(selectedOption, a) => { this.handleChange(selectedOption, a); this.props.toggleEditPropertyLabel({ id: this.props.id }); }}
-                                    onBlur={(e) => { this.props.toggleEditPropertyLabel({ id: this.props.id }) }}
-                                    onKeyDown={e => (e.keyCode === 27) && e.target.blur()}
+                                    onChange={(selectedOption, a) => {
+                                        this.handleChange(selectedOption, a);
+                                        this.props.toggleEditPropertyLabel({ id: this.props.id });
+                                    }}
+                                    onBlur={e => {
+                                        this.props.toggleEditPropertyLabel({ id: this.props.id });
+                                    }}
+                                    onKeyDown={e => e.keyCode === 27 && e.target.blur()}
                                 />
-                            ) :
+                            )
+                        ) : (
                             'Saving ...'
-                        }
+                        )}
 
                         {valueIds.length === 1 && !isCollapsed ? (
                             <>
@@ -288,16 +307,15 @@ class StatementItem extends Component {
                                 : <em className="text-muted">{valueIds.length} values</em>
                             </>
                         ) : (
-                                    ''
-                                )}
+                            ''
+                        )}
                     </div>
 
                     {this.props.enableEdit ? (
-                        <StatementOptions
-                            id={this.props.id}
-                            syncBackend={this.props.syncBackend}
-                            isEditing={this.props.isEditing}
-                        />) : ''}
+                        <StatementOptions id={this.props.id} syncBackend={this.props.syncBackend} isEditing={this.props.isEditing} />
+                    ) : (
+                        ''
+                    )}
 
                     <Icon icon={isCollapsed ? faChevronCircleUp : faChevronCircleDown} className={chevronClass} />
                 </StyledStatementItem>
@@ -360,29 +378,29 @@ StatementItem.propTypes = {
     isSavingProperty: PropTypes.func.isRequired,
     doneSavingProperty: PropTypes.func.isRequired,
     selectedResource: PropTypes.string.isRequired,
-    createProperty: PropTypes.func.isRequired,
+    createProperty: PropTypes.func.isRequired
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     return {
         selectedProperty: state.statementBrowser.selectedProperty,
         selectedResource: state.statementBrowser.selectedResource,
         properties: state.statementBrowser.properties,
-        values: state.statementBrowser.values,
+        values: state.statementBrowser.values
     };
 };
 
-const mapDispatchToProps = (dispatch) => ({
-    togglePropertyCollapse: (id) => dispatch(togglePropertyCollapse(id)),
-    toggleEditPropertyLabel: (data) => dispatch(toggleEditPropertyLabel(data)),
-    updatePropertyLabel: (data) => dispatch(updatePropertyLabel(data)),
-    changeProperty: (data) => dispatch(changeProperty(data)),
-    isSavingProperty: (data) => dispatch(isSavingProperty(data)),
-    doneSavingProperty: (data) => dispatch(doneSavingProperty(data)),
-    createProperty: (data) => dispatch(createProperty(data)),
+const mapDispatchToProps = dispatch => ({
+    togglePropertyCollapse: id => dispatch(togglePropertyCollapse(id)),
+    toggleEditPropertyLabel: data => dispatch(toggleEditPropertyLabel(data)),
+    updatePropertyLabel: data => dispatch(updatePropertyLabel(data)),
+    changeProperty: data => dispatch(changeProperty(data)),
+    isSavingProperty: data => dispatch(isSavingProperty(data)),
+    doneSavingProperty: data => dispatch(doneSavingProperty(data)),
+    createProperty: data => dispatch(createProperty(data))
 });
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps,
+    mapDispatchToProps
 )(StatementItem);

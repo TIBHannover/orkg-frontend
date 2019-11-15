@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import { openTour, closeTour, blockNavigation } from '../../actions/addPaper';
 import GraphViewModal from '../ViewPaper/GraphViewModal';
-import { Prompt } from 'react-router'
+import { Prompt } from 'react-router';
 
 const Help = styled.div`
     box-sizing: border-box;
@@ -31,26 +31,26 @@ const Help = styled.div`
     right: 24px;
     color: '#80869b';
 
-    .text{
-        cursor: pointer,;
+    .text {
+        cursor: pointer;
         display: inline-block;
-        margin-left: 8px; 
-        font-weight: bold; 
-        line-height: 56px; 
+        margin-left: 8px;
+        font-weight: bold;
+        line-height: 56px;
         font-size: large;
     }
 
-    .white{
-        color:#fff;
+    .white {
+        color: #fff;
     }
 `;
 
 const HelpIcon = styled(Icon)`
     vertical-align: middle;
-    height:48px;
+    height: 48px;
     width: 48px !important;
     z-index: 9999;
-    background-color: ${(props) => props.theme.orkgPrimaryColor};
+    background-color: ${props => props.theme.orkgPrimaryColor};
     display: inline-flex;
     -webkit-justify-content: center;
     justify-content: center;
@@ -81,11 +81,11 @@ const AnimationContainer = styled(CSSTransition)`
 `;
 
 const SubtitleSeperator = styled.div`
-    background: ${(props) => props.theme.darkblue};
-    width:2px;
-    height:30px;
-    margin:0 15px;
-    content: "";
+    background: ${props => props.theme.darkblue};
+    width: 2px;
+    height: 30px;
+    margin: 0 15px;
+    content: '';
     display: block;
     opacity: 0.7;
 `;
@@ -94,7 +94,7 @@ const PaperTitle = styled.div`
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    margin-right:20px;
+    margin-right: 20px;
     color: #62687d;
 `;
 
@@ -104,7 +104,7 @@ class AddPaper extends Component {
 
         this.state = {
             showGraphModal: false,
-            dropdownOpen: false,
+            dropdownOpen: false
         };
     }
 
@@ -131,14 +131,14 @@ class AddPaper extends Component {
     }
 
     toggleDropdown = () => {
-        this.setState((prevState) => ({
-            dropdownOpen: !prevState.dropdownOpen,
+        this.setState(prevState => ({
+            dropdownOpen: !prevState.dropdownOpen
         }));
     };
 
-    toggle = (type) => {
-        this.setState((prevState) => ({
-            [type]: !prevState[type],
+    toggle = type => {
+        this.setState(prevState => ({
+            [type]: !prevState[type]
         }));
     };
 
@@ -171,19 +171,24 @@ class AddPaper extends Component {
                 );
                 break;
             case 3:
-                currentStepDetails = <AnimationContainer key={3} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}><Contributions /></AnimationContainer>
+                currentStepDetails = (
+                    <AnimationContainer key={3} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+                        <Contributions />
+                    </AnimationContainer>
+                );
                 break;
             case 4:
-                currentStepDetails = <AnimationContainer key={5} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}><Finish /></AnimationContainer>
+                currentStepDetails = (
+                    <AnimationContainer key={5} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+                        <Finish />
+                    </AnimationContainer>
+                );
                 break;
         }
 
         return (
             <div>
-                <Prompt
-                    when={this.props.shouldBlockNavigation}
-                    message="You have unsaved changes, are you sure you want to leave?"
-                />
+                <Prompt when={this.props.shouldBlockNavigation} message="You have unsaved changes, are you sure you want to leave?" />
                 <Container className="p-0 mt-4 mb-4 d-flex align-items-center">
                     <h1 className="h4 flex-shrink-0 mb-0">Add paper</h1>
 
@@ -191,9 +196,7 @@ class AddPaper extends Component {
                         <>
                             <SubtitleSeperator />
 
-                            <PaperTitle>
-                                {this.props.title}
-                            </PaperTitle>
+                            <PaperTitle>{this.props.title}</PaperTitle>
                         </>
                     )}
 
@@ -223,29 +226,25 @@ class AddPaper extends Component {
 
                     <hr />
 
-                    <TransitionGroup exit={false}>
-                        {currentStepDetails}
-                    </TransitionGroup>
+                    <TransitionGroup exit={false}>{currentStepDetails}</TransitionGroup>
                 </Container>
 
                 <GraphViewModal
                     showDialog={this.state.showGraphModal}
                     toggle={() => this.toggle('showGraphModal')}
-                //paperId={this.props.match.params.resourceId}
+                    //paperId={this.props.match.params.resourceId}
                 />
 
-                <Help onClick={() => {
-                    this.toggleTour();
-                }} id="helpIcon"
+                <Help
+                    onClick={() => {
+                        this.toggleTour();
+                    }}
+                    id="helpIcon"
                 >
-                    <HelpIcon
-                        icon={faQuestion}
-                    />
+                    <HelpIcon icon={faQuestion} />
                     <div className={'text ' + (this.props.showAbstractDialog ? 'white' : '')}>Help</div>
                 </Help>
-
-
-            </div >
+            </div>
         );
     }
 }
@@ -265,27 +264,27 @@ AddPaper.propTypes = {
     showAbstractDialog: PropTypes.bool.isRequired
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     currentStep: state.addPaper.currentStep,
     isTourOpen: state.addPaper.isTourOpen,
     title: state.addPaper.title,
     authors: state.addPaper.authors,
     shouldBlockNavigation: state.addPaper.shouldBlockNavigation,
     paperNewResourceId: state.addPaper.paperNewResourceId,
-    showAbstractDialog: state.addPaper.showAbstractDialog,
+    showAbstractDialog: state.addPaper.showAbstractDialog
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
     resetStatementBrowser: () => dispatch(resetStatementBrowser()),
     openTour: () => dispatch(openTour()),
     closeTour: () => dispatch(closeTour()),
-    blockNavigation: () => dispatch(blockNavigation()),
+    blockNavigation: () => dispatch(blockNavigation())
 });
 
 export default compose(
     connect(
         mapStateToProps,
-        mapDispatchToProps,
+        mapDispatchToProps
     ),
     withTheme,
     withCookies

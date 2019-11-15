@@ -7,14 +7,30 @@ import classNames from 'classnames';
 import Confirm from 'reactstrap-confirm';
 import { connect } from 'react-redux';
 import {
-    selectResource, fetchStatementsForResource, deleteValue, toggleEditValue,
-    updateValueLabel, createValue, createResource, doneSavingValue, isSavingValue, changeValue
+    selectResource,
+    fetchStatementsForResource,
+    deleteValue,
+    toggleEditValue,
+    updateValueLabel,
+    createValue,
+    createResource,
+    doneSavingValue,
+    isSavingValue,
+    changeValue
 } from '../../../actions/statementBrowser';
 import PropTypes from 'prop-types';
 import StatementBrowserDialog from '../StatementBrowserDialog';
 import RDFDataCube from '../../RDFDataCube/RDFDataCube';
 import ValuePlugins from '../../ValuePlugins/ValuePlugins';
-import { deleteStatementById, updateLiteral, submitGetRequest, resourcesUrl, updateStatement, createResource as createResourceAPICall, updateResource } from '../../../network';
+import {
+    deleteStatementById,
+    updateLiteral,
+    submitGetRequest,
+    resourcesUrl,
+    updateStatement,
+    createResource as createResourceAPICall,
+    updateResource
+} from '../../../network';
 import Tippy from '@tippy.js/react';
 import 'tippy.js/dist/tippy.css';
 import { toast } from 'react-toastify';
@@ -23,12 +39,10 @@ import { StyledAutoCompleteInputFormControl } from '../AutoComplete';
 import styled from 'styled-components';
 import { guid } from '../../../utils';
 
-
 const StyledInput = styled(Input)`
-    
-    &:focus{
+    &:focus {
         outline: 0 none;
-        box-shadow:none !important;
+        box-shadow: none !important;
     }
 `;
 
@@ -42,21 +56,21 @@ class ValueItem extends Component {
             dialogResourceId: null,
             dialogResourceLabel: null,
             draftLabel: this.props.label
-        }
+        };
     }
 
     componentDidUpdate(prevProps) {
         if (this.props.label !== prevProps.label) {
-            this.setState({ draftLabel: this.props.label })
+            this.setState({ draftLabel: this.props.label });
         }
-    };
+    }
 
     commitChangeLiteral = async () => {
         // Check if the user changed the label
         if (this.state.draftLabel !== this.props.label) {
             this.props.updateValueLabel({
                 label: this.state.draftLabel,
-                valueId: this.props.id,
+                valueId: this.props.id
             });
             if (this.props.syncBackend) {
                 this.props.isSavingValue({ id: this.props.id }); // To show the saving message instead of the value label
@@ -74,7 +88,7 @@ class ValueItem extends Component {
         if (this.state.draftLabel !== this.props.label) {
             this.props.updateValueLabel({
                 label: this.state.draftLabel,
-                valueId: this.props.id,
+                valueId: this.props.id
             });
             if (this.props.syncBackend) {
                 this.props.isSavingValue({ id: this.props.id }); // To show the saving message instead of the value label
@@ -101,9 +115,9 @@ class ValueItem extends Component {
                 let newResource = null;
                 if (this.props.syncBackend) {
                     newResource = await createResourceAPICall(selectedOption.label);
-                    newResource['isExistingValue'] = true
+                    newResource['isExistingValue'] = true;
                 } else {
-                    newResource = { id: guid(), isExistingValue: false, label: selectedOption.label, type: 'object', classes: [], shared: 1 }
+                    newResource = { id: guid(), isExistingValue: false, label: selectedOption.label, type: 'object', classes: [], shared: 1 };
                 }
                 await this.changeValueinStatementBrowser(newResource);
             }
@@ -111,9 +125,9 @@ class ValueItem extends Component {
         }
     };
 
-    changeValueinStatementBrowser = async (newResource) => {
+    changeValueinStatementBrowser = async newResource => {
         if (this.props.syncBackend && this.props.statementId) {
-            await updateStatement(this.props.statementId, { object_id: newResource.id })
+            await updateStatement(this.props.statementId, { object_id: newResource.id });
             this.props.changeValue({
                 valueId: this.props.id,
                 ...{
@@ -124,7 +138,7 @@ class ValueItem extends Component {
                     isExistingValue: newResource.isExistingValue,
                     existingStatement: true,
                     statementId: this.props.statementId,
-                    shared: newResource.shared,
+                    shared: newResource.shared
                 }
             });
             toast.success('Value updated successfully');
@@ -139,7 +153,7 @@ class ValueItem extends Component {
                     isExistingValue: newResource.isExistingValue,
                     existingStatement: false,
                     statementId: null,
-                    shared: newResource.shared,
+                    shared: newResource.shared
                 }
             });
         }
@@ -149,7 +163,7 @@ class ValueItem extends Component {
         let result = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure you want to delete this value?',
-            cancelColor: 'light',
+            cancelColor: 'light'
         });
 
         if (result) {
@@ -159,49 +173,46 @@ class ValueItem extends Component {
             }
             this.props.deleteValue({
                 id: this.props.id,
-                propertyId: this.props.propertyId,
+                propertyId: this.props.propertyId
             });
         }
     };
 
-    handleResourceClick = (e) => {
+    handleResourceClick = e => {
         let resource = this.props.resources.byId[this.props.resourceId];
         let existingResourceId = resource.existingResourceId;
 
         if (existingResourceId && !resource.isFechted) {
             this.props.fetchStatementsForResource({
                 resourceId: this.props.resourceId,
-                existingResourceId,
+                existingResourceId
             });
         }
 
         this.props.selectResource({
             increaseLevel: true,
             resourceId: this.props.resourceId,
-            label: this.props.label,
+            label: this.props.label
         });
     };
 
-    handleDatasetResourceClick = (ressource) => {
-
+    handleDatasetResourceClick = ressource => {
         this.props.createResource({
             label: ressource.rlabel ? ressource.rlabel : ressource.label,
             existingResourceId: ressource.id,
-            resourceId: ressource.id,
+            resourceId: ressource.id
         });
 
         this.props.selectResource({
             increaseLevel: true,
             resourceId: ressource.id,
-            label: ressource.rlabel ? ressource.rlabel : ressource.label,
+            label: ressource.rlabel ? ressource.rlabel : ressource.label
         });
 
         this.props.fetchStatementsForResource({
             resourceId: ressource.id,
-            existingResourceId: ressource.id,
+            existingResourceId: ressource.id
         });
-
-
     };
 
     handleExistingResourceClick = () => {
@@ -210,7 +221,7 @@ class ValueItem extends Component {
         this.setState({
             modal: true,
             dialogResourceId: existingResourceId,
-            dialogResourceLabel: resource.label,
+            dialogResourceLabel: resource.label
         });
     };
 
@@ -220,19 +231,19 @@ class ValueItem extends Component {
         this.setState({
             modalDataset: true,
             dialogResourceId: existingResourceId,
-            dialogResourceLabel: resource.label,
+            dialogResourceLabel: resource.label
         });
     };
 
     toggleModal = () => {
-        this.setState((prevState) => ({
-            modal: !prevState.modal,
+        this.setState(prevState => ({
+            modal: !prevState.modal
         }));
     };
 
     toggleModalDataset = () => {
-        this.setState((prevState) => ({
-            modalDataset: !prevState.modalDataset,
+        this.setState(prevState => ({
+            modalDataset: !prevState.modalDataset
         }));
     };
 
@@ -256,9 +267,9 @@ class ValueItem extends Component {
         }
 
         return responseJson;
-    }
+    };
 
-    loadOptions = async (value) => {
+    loadOptions = async value => {
         try {
             let queryParams = '';
 
@@ -267,7 +278,13 @@ class ValueItem extends Component {
                 queryParams = '&exact=true';
             }
 
-            let responseJson = await submitGetRequest(resourcesUrl + '?q=' + encodeURIComponent(value) + queryParams + `&exclude=${encodeURIComponent(process.env.REACT_APP_CLASSES_CONTRIBUTION + ',' + process.env.REACT_APP_CLASSES_PROBLEM)}`);
+            let responseJson = await submitGetRequest(
+                resourcesUrl +
+                    '?q=' +
+                    encodeURIComponent(value) +
+                    queryParams +
+                    `&exclude=${encodeURIComponent(process.env.REACT_APP_CLASSES_CONTRIBUTION + ',' + process.env.REACT_APP_CLASSES_PROBLEM)}`
+            );
             responseJson = await this.IdMatch(value, responseJson);
 
             if (responseJson.length > this.maxResults) {
@@ -276,13 +293,15 @@ class ValueItem extends Component {
 
             let options = [];
 
-            responseJson.map((item) => options.push({
-                label: item.label,
-                id: item.id,
-                classes: item.classes,
-                shared: item.shared,
-                type: 'object'
-            }));
+            responseJson.map(item =>
+                options.push({
+                    label: item.label,
+                    id: item.id,
+                    classes: item.classes,
+                    shared: item.shared,
+                    type: 'object'
+                })
+            );
 
             return options;
         } catch (err) {
@@ -290,11 +309,11 @@ class ValueItem extends Component {
 
             return [];
         }
-    }
+    };
 
     render() {
         const labelClass = classNames({
-            objectLink: this.props.type === 'object' && !this.props.isEditing,
+            objectLink: this.props.type === 'object' && !this.props.isEditing
         });
 
         let resource = this.props.resources.byId[this.props.resourceId];
@@ -323,7 +342,7 @@ class ValueItem extends Component {
                     padding: 0
                 }
             }),
-            container: (provided) => ({
+            container: provided => ({
                 padding: 0,
                 height: 'auto',
                 borderTopLeftRadius: 0,
@@ -335,119 +354,135 @@ class ValueItem extends Component {
                     padding: 0
                 }
             }),
-            menu: (provided) => ({
+            menu: provided => ({
                 ...provided,
                 zIndex: 10,
                 color: '#000'
             }),
-            option: (provided) => ({
+            option: provided => ({
                 ...provided,
                 cursor: 'pointer',
-                whiteSpace: 'normal',
+                whiteSpace: 'normal'
             }),
-            indicatorsContainer: (provided) => ({
+            indicatorsContainer: provided => ({
                 ...provided,
                 '&>div:last-child': {
                     padding: '0 8px'
                 }
             }),
-            input: (provided) => ({
+            input: provided => ({
                 ...provided,
-                margin: '0 4px',
-            }),
-        }
+                margin: '0 4px'
+            })
+        };
 
         return (
             <>
                 {!this.props.inline ? (
                     <StyledValueItem>
                         <span className={labelClass} onClick={!this.props.isEditing ? onClick : undefined}>
-                            {!this.props.isSaving ?
-                                (!this.props.isEditing ?
-                                    <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>{this.props.label}</ValuePlugins> :
-                                    (this.props.type === 'object' ?
-
-                                        (existingResourceId && this.props.shared > 1 ? (
-                                            <StyledAutoCompleteInputFormControl className="form-control" style={{ borderRadius: 0 }} >
-                                                <AsyncCreatableSelect
-                                                    loadOptions={this.loadOptions}
-                                                    noOptionsMessage={this.noResults}
-                                                    styles={customStyles}
-                                                    autoFocus
-                                                    getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
-                                                    getOptionValue={({ id }) => id}
-                                                    defaultOptions={[{
+                            {!this.props.isSaving ? (
+                                !this.props.isEditing ? (
+                                    <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>{this.props.label}</ValuePlugins>
+                                ) : this.props.type === 'object' ? (
+                                    existingResourceId && this.props.shared > 1 ? (
+                                        <StyledAutoCompleteInputFormControl className="form-control" style={{ borderRadius: 0 }}>
+                                            <AsyncCreatableSelect
+                                                loadOptions={this.loadOptions}
+                                                noOptionsMessage={this.noResults}
+                                                styles={customStyles}
+                                                autoFocus
+                                                getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
+                                                getOptionValue={({ id }) => id}
+                                                defaultOptions={[
+                                                    {
                                                         label: this.props.label,
                                                         id: this.props.values.byId[this.props.id].resourceId
-                                                    }]}
-                                                    defaultValue={{
-                                                        label: this.props.label,
-                                                        id: this.props.values.byId[this.props.id].resourceId
+                                                    }
+                                                ]}
+                                                defaultValue={{
+                                                    label: this.props.label,
+                                                    id: this.props.values.byId[this.props.id].resourceId
+                                                }}
+                                                cacheOptions
+                                                onChange={(selectedOption, a) => {
+                                                    this.handleChangeResource(selectedOption, a);
+                                                    this.props.toggleEditValue({ id: this.props.id });
+                                                }}
+                                                onBlur={e => {
+                                                    this.props.toggleEditValue({ id: this.props.id });
+                                                }}
+                                                isValidNewOption={inputValue => inputValue.length !== 0 && inputValue.trim().length !== 0}
+                                                createOptionPosition={'first'}
+                                            />
+                                        </StyledAutoCompleteInputFormControl>
+                                    ) : (
+                                        <InputGroup>
+                                            <StyledInput
+                                                value={this.state.draftLabel}
+                                                onChange={this.handleChangeLabel}
+                                                onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
+                                                onBlur={e => {
+                                                    this.commitChangeLabel();
+                                                    this.props.toggleEditValue({ id: this.props.id });
+                                                }}
+                                                autoFocus
+                                                bsSize="sm"
+                                            />
+                                            <InputGroupAddon addonType="append">
+                                                <Button
+                                                    outline
+                                                    color="primary"
+                                                    size="sm"
+                                                    onClick={e => {
+                                                        this.commitChangeLabel();
+                                                        this.props.toggleEditValue({ id: this.props.id });
                                                     }}
-                                                    cacheOptions
-                                                    onChange={(selectedOption, a) => { this.handleChangeResource(selectedOption, a); this.props.toggleEditValue({ id: this.props.id }); }}
-                                                    onBlur={(e) => { this.props.toggleEditValue({ id: this.props.id }) }}
-                                                    isValidNewOption={(inputValue) => inputValue.length !== 0 && inputValue.trim().length !== 0}
-                                                    createOptionPosition={'first'}
-                                                />
-                                            </StyledAutoCompleteInputFormControl>
-                                        ) : (
-                                                <InputGroup>
-                                                    <StyledInput
-                                                        value={this.state.draftLabel}
-                                                        onChange={this.handleChangeLabel}
-                                                        onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
-                                                        onBlur={(e) => { this.commitChangeLabel(); this.props.toggleEditValue({ id: this.props.id }) }}
-                                                        autoFocus
-                                                        bsSize="sm"
-                                                    />
-                                                    <InputGroupAddon addonType="append">
-                                                        <Button
-                                                            outline
-                                                            color="primary"
-                                                            size="sm"
-                                                            onClick={(e) => { this.commitChangeLabel(); this.props.toggleEditValue({ id: this.props.id }) }}
-                                                        >
-                                                            Save
-                                                        </Button>
-                                                    </InputGroupAddon>
-                                                </InputGroup>
-                                            )
-                                        )
-                                        : (
-                                            <InputGroup>
-                                                <StyledInput
-                                                    value={this.state.draftLabel}
-                                                    onChange={this.handleChangeLabel}
-                                                    onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()}
-                                                    onBlur={(e) => { this.commitChangeLiteral(); this.props.toggleEditValue({ id: this.props.id }) }}
-                                                    autoFocus
-                                                    bsSize="sm"
-                                                />
-                                                <InputGroupAddon addonType="append">
-                                                    <Button
-                                                        outline
-                                                        color="primary"
-                                                        size="sm"
-                                                        onClick={(e) => { this.commitChangeLiteral(); this.props.toggleEditValue({ id: this.props.id }) }}
-                                                    >
-                                                        Save
-                                                    </Button>
-                                                </InputGroupAddon>
-                                            </InputGroup>
-                                        )
+                                                >
+                                                    Save
+                                                </Button>
+                                            </InputGroupAddon>
+                                        </InputGroup>
                                     )
-                                ) :
+                                ) : (
+                                    <InputGroup>
+                                        <StyledInput
+                                            value={this.state.draftLabel}
+                                            onChange={this.handleChangeLabel}
+                                            onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()}
+                                            onBlur={e => {
+                                                this.commitChangeLiteral();
+                                                this.props.toggleEditValue({ id: this.props.id });
+                                            }}
+                                            autoFocus
+                                            bsSize="sm"
+                                        />
+                                        <InputGroupAddon addonType="append">
+                                            <Button
+                                                outline
+                                                color="primary"
+                                                size="sm"
+                                                onClick={e => {
+                                                    this.commitChangeLiteral();
+                                                    this.props.toggleEditValue({ id: this.props.id });
+                                                }}
+                                            >
+                                                Save
+                                            </Button>
+                                        </InputGroupAddon>
+                                    </InputGroup>
+                                )
+                            ) : (
                                 'Saving ...'
-                            }
+                            )}
                             {!this.props.isEditing && existingResourceId && this.props.openExistingResourcesInDialog ? (
                                 <span>
                                     {' '}
                                     <Icon icon={faExternalLinkAlt} />
                                 </span>
                             ) : (
-                                    ''
-                                )}
+                                ''
+                            )}
                         </span>
                         {!this.props.isEditing && this.props.classes && this.props.classes.includes(process.env.REACT_APP_QB_DATASET_CLASS) && (
                             <Tippy content="Visualize data in tabular form">
@@ -455,10 +490,9 @@ class ValueItem extends Component {
                                     {' '}
                                     <Icon icon={faTable} />
                                 </span>
-
                             </Tippy>
                         )}
-                        {(!this.props.isEditing && this.props.enableEdit) ? (
+                        {!this.props.isEditing && this.props.enableEdit ? (
                             <>
                                 <span className={'deleteValue float-right'} onClick={this.toggleDeleteContribution}>
                                     <Tippy content="Delete value">
@@ -467,50 +501,59 @@ class ValueItem extends Component {
                                         </span>
                                     </Tippy>
                                 </span>
-                                {(!existingResourceId || this.props.shared <= 1) &&
-                                    <span className={'mr-3 deleteValue float-right'} onClick={() => { this.props.toggleEditValue({ id: this.props.id }); }}>
+                                {(!existingResourceId || this.props.shared <= 1) && (
+                                    <span
+                                        className={'mr-3 deleteValue float-right'}
+                                        onClick={() => {
+                                            this.props.toggleEditValue({ id: this.props.id });
+                                        }}
+                                    >
                                         <Tippy content="Edit label">
                                             <span>
                                                 <Icon icon={faPen} /> Edit
                                             </span>
                                         </Tippy>
-                                    </span>}
+                                    </span>
+                                )}
 
-                                {existingResourceId && this.props.shared > 1 &&
-                                    <span className={'mr-3 deleteValue float-right disabled'} >
+                                {existingResourceId && this.props.shared > 1 && (
+                                    <span className={'mr-3 deleteValue float-right disabled'}>
                                         <Tippy content="A shared resource cannot be edited directly">
                                             <span>
                                                 <Icon icon={faPen} /> Edit
                                             </span>
                                         </Tippy>
-                                    </span>}
+                                    </span>
+                                )}
                             </>
                         ) : (
-                                ''
-                            )}
-                    </StyledValueItem>
-                ) : this.props.label
-                }
-
-                {
-                    this.state.modal ? (
-                        <StatementBrowserDialog show={this.state.modal} toggleModal={this.toggleModal} resourceId={this.state.dialogResourceId} resourceLabel={this.state.dialogResourceLabel} />
-                    ) : (
                             ''
-                        )
-                }
+                        )}
+                    </StyledValueItem>
+                ) : (
+                    this.props.label
+                )}
 
-                {
-                    this.state.modalDataset && (
-                        <RDFDataCube
-                            show={this.state.modalDataset}
-                            handleResourceClick={this.handleDatasetResourceClick}
-                            toggleModal={this.toggleModalDataset}
-                            resourceId={this.state.dialogResourceId}
-                            resourceLabel={this.state.dialogResourceLabel}
-                        />
-                    )
-                }
+                {this.state.modal ? (
+                    <StatementBrowserDialog
+                        show={this.state.modal}
+                        toggleModal={this.toggleModal}
+                        resourceId={this.state.dialogResourceId}
+                        resourceLabel={this.state.dialogResourceLabel}
+                    />
+                ) : (
+                    ''
+                )}
+
+                {this.state.modalDataset && (
+                    <RDFDataCube
+                        show={this.state.modalDataset}
+                        handleResourceClick={this.handleDatasetResourceClick}
+                        toggleModal={this.toggleModalDataset}
+                        resourceId={this.state.dialogResourceId}
+                        resourceLabel={this.state.dialogResourceLabel}
+                    />
+                )}
             </>
         );
     }
@@ -545,36 +588,36 @@ ValueItem.propTypes = {
     resourceId: PropTypes.string,
     statementId: PropTypes.string,
     inline: PropTypes.bool,
-    openExistingResourcesInDialog: PropTypes.bool,
+    openExistingResourcesInDialog: PropTypes.bool
 };
 
 ValueItem.defaultProps = {
     inline: false,
-    resourceId: null,
+    resourceId: null
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     return {
         resources: state.statementBrowser.resources,
         values: state.statementBrowser.values,
-        selectedProperty: state.statementBrowser.selectedProperty,
+        selectedProperty: state.statementBrowser.selectedProperty
     };
 };
 
-const mapDispatchToProps = (dispatch) => ({
-    createValue: (data) => dispatch(createValue(data)),
-    createResource: (data) => dispatch(createResource(data)),
-    selectResource: (data) => dispatch(selectResource(data)),
-    fetchStatementsForResource: (data) => dispatch(fetchStatementsForResource(data)),
-    deleteValue: (data) => dispatch(deleteValue(data)),
-    toggleEditValue: (data) => dispatch(toggleEditValue(data)),
-    updateValueLabel: (data) => dispatch(updateValueLabel(data)),
-    isSavingValue: (data) => dispatch(isSavingValue(data)),
-    doneSavingValue: (data) => dispatch(doneSavingValue(data)),
-    changeValue: (data) => dispatch(changeValue(data)),
+const mapDispatchToProps = dispatch => ({
+    createValue: data => dispatch(createValue(data)),
+    createResource: data => dispatch(createResource(data)),
+    selectResource: data => dispatch(selectResource(data)),
+    fetchStatementsForResource: data => dispatch(fetchStatementsForResource(data)),
+    deleteValue: data => dispatch(deleteValue(data)),
+    toggleEditValue: data => dispatch(toggleEditValue(data)),
+    updateValueLabel: data => dispatch(updateValueLabel(data)),
+    isSavingValue: data => dispatch(isSavingValue(data)),
+    doneSavingValue: data => dispatch(doneSavingValue(data)),
+    changeValue: data => dispatch(changeValue(data))
 });
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps,
+    mapDispatchToProps
 )(ValueItem);

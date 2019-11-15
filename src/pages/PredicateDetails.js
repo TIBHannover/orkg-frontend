@@ -4,13 +4,12 @@ import PropTypes from 'prop-types';
 import { Container } from 'reactstrap';
 
 class PredicateDetails extends Component {
-
     constructor(props) {
         super(props);
 
         this.state = {
             error: null,
-            title: null,
+            title: null
         };
     }
 
@@ -22,22 +21,26 @@ class PredicateDetails extends Component {
         try {
             const responseJson = await submitGetRequest(predicatesUrl + encodeURIComponent(this.props.match.params.predicateId));
             this.setState({
-                title: responseJson.label,
+                title: responseJson.label
             });
         } catch (err) {
             console.error(err);
             this.setState({
                 title: null,
-                error: err.message,
+                error: err.message
             });
         }
     };
 
     render() {
-        const resultsPresent = this.state.error || (this.state.title);
+        const resultsPresent = this.state.error || this.state.title;
 
         if (this.state.error) {
-            return <p><strong>Error:</strong> {this.state.error} </p>;
+            return (
+                <p>
+                    <strong>Error:</strong> {this.state.error}{' '}
+                </p>
+            );
         }
 
         if (resultsPresent) {
@@ -45,29 +48,26 @@ class PredicateDetails extends Component {
             const titleJsx = titleText && (
                 <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
                     <h1 className="h2">{titleText}</h1>
-                </div>);
+                </div>
+            );
 
             return (
                 <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">
-                    <div className="entityView-main">
-                        {titleJsx}
-                    </div>
+                    <div className="entityView-main">{titleJsx}</div>
                 </Container>
-            )
+            );
         } else {
             return null;
         }
     }
 }
 
-
 PredicateDetails.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
-            predicateId: PropTypes.string.isRequired,
-        }).isRequired,
-    }).isRequired,
+            predicateId: PropTypes.string.isRequired
+        }).isRequired
+    }).isRequired
 };
-
 
 export default PredicateDetails;

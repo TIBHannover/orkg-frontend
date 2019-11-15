@@ -6,7 +6,6 @@ import { getAllPredicates } from '../network';
 import { Container } from 'reactstrap';
 
 export default class Predicates extends Component {
-
     constructor(props) {
         super(props);
 
@@ -17,7 +16,7 @@ export default class Predicates extends Component {
             isNextPageLoading: false,
             hasNextPage: false,
             page: 1,
-            isLastPageReached: false,
+            isLastPageReached: false
         };
     }
 
@@ -27,15 +26,14 @@ export default class Predicates extends Component {
         this.loadMorePredicates();
     }
 
-
     loadMorePredicates = () => {
-        this.setState({ isNextPageLoading: true })
+        this.setState({ isNextPageLoading: true });
         getAllPredicates({
             page: this.state.page,
             items: this.pageSize,
             sortBy: 'created_at',
             desc: true
-        }).then((predicates) => {
+        }).then(predicates => {
             if (predicates.length > 0) {
                 this.setState({
                     predicates: [...this.state.predicates, ...predicates],
@@ -51,7 +49,7 @@ export default class Predicates extends Component {
                 });
             }
         });
-    }
+    };
 
     render() {
         return (
@@ -60,39 +58,43 @@ export default class Predicates extends Component {
                     <h1 className="h4 mt-4 mb-4">View all predicates</h1>
                 </Container>
                 <Container className={'box pt-4 pb-4 pl-5 pr-5 clearfix'}>
-                    {this.state.predicates.length > 0 &&
+                    {this.state.predicates.length > 0 && (
                         <div>
-                            {this.state.predicates.map(
-                                (predicate) => {
-                                    return (
-                                        <ShortRecord
-                                            key={predicate.id}
-                                            header={predicate.id}
-                                            href={`${process.env.PUBLIC_URL}/predicate/${encodeURIComponent(predicate.id)}`}
-                                        >
-                                            {predicate.label}
-                                        </ShortRecord>
-                                    )
-                                }
-                            )}
+                            {this.state.predicates.map(predicate => {
+                                return (
+                                    <ShortRecord
+                                        key={predicate.id}
+                                        header={predicate.id}
+                                        href={`${process.env.PUBLIC_URL}/predicate/${encodeURIComponent(predicate.id)}`}
+                                    >
+                                        {predicate.label}
+                                    </ShortRecord>
+                                );
+                            })}
                         </div>
-                    }
-                    {this.state.predicates.length === 0 && !this.state.isNextPageLoading &&
+                    )}
+                    {this.state.predicates.length === 0 && !this.state.isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">No Predicates</div>
-                    }
-                    {this.state.isNextPageLoading && <div className="text-center mt-4 mb-4"><Icon icon={faSpinner} spin /> Loading</div>}
+                    )}
+                    {this.state.isNextPageLoading && (
+                        <div className="text-center mt-4 mb-4">
+                            <Icon icon={faSpinner} spin /> Loading
+                        </div>
+                    )}
                     {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                        <div style={{ cursor: 'pointer' }} className="list-group-item list-group-item-action text-center mt-2" onClick={!this.state.isNextPageLoading ? this.loadMorePredicates : undefined}>
+                        <div
+                            style={{ cursor: 'pointer' }}
+                            className="list-group-item list-group-item-action text-center mt-2"
+                            onClick={!this.state.isNextPageLoading ? this.loadMorePredicates : undefined}
+                        >
                             Load more predicates
                         </div>
                     )}
                     {!this.state.hasNextPage && this.state.isLastPageReached && (
-                        <div className="text-center mt-3">
-                            You have reached the last page.
-                        </div>)
-                    }
+                        <div className="text-center mt-3">You have reached the last page.</div>
+                    )}
                 </Container>
             </>
-        )
+        );
     }
 }

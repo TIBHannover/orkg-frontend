@@ -7,17 +7,17 @@ import { range } from 'utils';
 import AuthorsInput from '../../Utils/AuthorsInput';
 import PropTypes from 'prop-types';
 
-const EditItem = (props) => {
+const EditItem = props => {
     const listGroupClass = classNames({
         statementActive: props.open,
         statementItem: true,
         selectable: true,
-        'rounded-bottom': props.isLastItem && !props.open,
+        'rounded-bottom': props.isLastItem && !props.open
     });
 
     const openBoxClass = classNames({
         listGroupOpenBorderBottom: props.isLastItem,
-        'rounded-bottom': props.isLastItem,
+        'rounded-bottom': props.isLastItem
     });
 
     let input;
@@ -26,11 +26,7 @@ const EditItem = (props) => {
         input = <Input value={props.value} onChange={props.onChange} />;
     } else if (props.type === 'month') {
         input = (
-            <Input
-                type="select"
-                value={props.value}
-                onChange={props.onChange}
-            >
+            <Input type="select" value={props.value} onChange={props.onChange}>
                 {moment.months().map((el, index) => {
                     return (
                         <option value={index + 1} key={index + 1}>
@@ -42,25 +38,16 @@ const EditItem = (props) => {
         );
     } else if (props.type === 'year') {
         input = (
-            <Input
-                type="select"
-                value={props.value}
-                onChange={props.onChange}
-            >
+            <Input type="select" value={props.value} onChange={props.onChange}>
                 {range(1900, moment().year())
                     .reverse()
-                    .map((year) => (
+                    .map(year => (
                         <option key={year}>{year}</option>
                     ))}
             </Input>
         );
     } else if (props.type === 'authors') {
-        input = (
-            <AuthorsInput
-                value={props.value}
-                handler={props.onChange}
-            />
-        );
+        input = <AuthorsInput value={props.value} handler={props.onChange} />;
     }
 
     return (
@@ -69,31 +56,25 @@ const EditItem = (props) => {
                 {props.label}
             </StyledStatementItem>
             <Collapse isOpen={props.open}>
-                <StyledListGroupOpen className={openBoxClass}>
-                    {input}
-                </StyledListGroupOpen>
+                <StyledListGroupOpen className={openBoxClass}>{input}</StyledListGroupOpen>
             </Collapse>
         </>
     );
-}
+};
 
 EditItem.propTypes = {
     open: PropTypes.bool.isRequired,
     label: PropTypes.string.isRequired,
     toggleItem: PropTypes.func.isRequired,
-    value: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number,
-        PropTypes.array,
-    ]),
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array]),
     onChange: PropTypes.func.isRequired,
     type: PropTypes.oneOf(['text', 'month', 'year', 'authors']).isRequired,
-    isLastItem: PropTypes.bool,
-}
+    isLastItem: PropTypes.bool
+};
 
 EditItem.defaultProps = {
     isLastItem: false,
-    value: '',
-}
+    value: ''
+};
 
 export default EditItem;

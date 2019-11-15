@@ -26,7 +26,7 @@ class AutoComplete extends Component {
         selectedItemId: null,
         dropdownMenuJsx: null,
         inputValue: '',
-        defaultOptions: this.props.defaultOptions ? this.props.defaultOptions : [],
+        defaultOptions: this.props.defaultOptions ? this.props.defaultOptions : []
     };
 
     IdMatch = async (value, responseJson) => {
@@ -49,9 +49,9 @@ class AutoComplete extends Component {
         }
 
         return responseJson;
-    }
+    };
 
-    loadOptions = async (value) => {
+    loadOptions = async value => {
         try {
             if (value === '' || value.trim() === '') {
                 return this.props.defaultOptions ? this.props.defaultOptions : [];
@@ -64,7 +64,13 @@ class AutoComplete extends Component {
                 queryParams = '&exact=true';
             }
 
-            let responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value) + queryParams + (this.props.excludeClasses ? '&exclude=' + encodeURIComponent(this.props.excludeClasses) : ''));
+            let responseJson = await submitGetRequest(
+                this.props.requestUrl +
+                    '?q=' +
+                    encodeURIComponent(value) +
+                    queryParams +
+                    (this.props.excludeClasses ? '&exclude=' + encodeURIComponent(this.props.excludeClasses) : '')
+            );
             responseJson = await this.IdMatch(value, responseJson);
 
             if (this.props.additionalData && this.props.additionalData.length > 0) {
@@ -80,34 +86,36 @@ class AutoComplete extends Component {
 
             let options = [];
 
-            responseJson.map((item) => options.push({
-                label: item.label,
-                id: item.id,
-                ...item.shared ? { shared: item.shared } : {},
-                ...item.classes ? { classes: item.classes } : {}
-            }));
+            responseJson.map(item =>
+                options.push({
+                    label: item.label,
+                    id: item.id,
+                    ...(item.shared ? { shared: item.shared } : {}),
+                    ...(item.classes ? { classes: item.classes } : {})
+                })
+            );
             return options;
         } catch (err) {
             console.error(err);
 
             return [];
         }
-    }
+    };
 
     // this fixes a problem (or a bug by design) from react-select
-    // options were lost after bluring and then focusing the select menu 
-    // probably because the inputvalue is controlled by this component 
+    // options were lost after bluring and then focusing the select menu
+    // probably because the inputvalue is controlled by this component
     loadDefaultOptions = async inputValue => {
-        const defaultOptions = await this.loadOptions(inputValue)
+        const defaultOptions = await this.loadOptions(inputValue);
 
         this.setState({
             defaultOptions
         });
     };
 
-    noResults = (value) => {
+    noResults = value => {
         return value.inputValue !== '' ? 'No results found' : 'Start typing to find results';
-    }
+    };
 
     handleChange = (selected, action) => {
         if (action.action === 'select-option') {
@@ -120,7 +128,7 @@ class AutoComplete extends Component {
         } else if (action.action === 'create-option') {
             this.props.onNewItemSelected && this.props.onNewItemSelected(selected.label);
         }
-    }
+    };
 
     handleInputChange = (inputValue, action) => {
         if (action.action === 'input-change') {
@@ -134,7 +142,7 @@ class AutoComplete extends Component {
         } else if (action.action === 'menu-close') {
             this.loadDefaultOptions(this.state.inputValue);
         }
-    }
+    };
 
     render() {
         this.customStyles = {
@@ -147,9 +155,9 @@ class AutoComplete extends Component {
                 paddingRight: 0,
                 cursor: 'text',
                 minHeight: 'initial',
-                borderRadius: 'inherit',
+                borderRadius: 'inherit'
             }),
-            container: (provided) => ({
+            container: provided => ({
                 ...provided,
                 padding: 0,
                 height: 'auto',
@@ -157,23 +165,23 @@ class AutoComplete extends Component {
                 borderBottomLeftRadius: this.props.disableBorderRadiusLeft ? 0 : 'inherit',
                 borderTopRightRadius: this.props.disableBorderRadiusRight ? 0 : 'inherit',
                 borderBottomRightRadius: this.props.disableBorderRadiusRight ? 0 : 'inherit',
-                background: '#fff',
+                background: '#fff'
             }),
-            menu: (provided) => ({
+            menu: provided => ({
                 ...provided,
                 zIndex: 10
             }),
-            option: (provided) => ({
+            option: provided => ({
                 ...provided,
                 cursor: 'pointer',
-                whiteSpace: 'normal',
-            }),
-        }
+                whiteSpace: 'normal'
+            })
+        };
 
         const Select = this.props.allowCreate ? AsyncCreatableSelect : AsyncSelect;
 
         return (
-            <StyledAutoCompleteInputFormControl className="form-control" >
+            <StyledAutoCompleteInputFormControl className="form-control">
                 <Select
                     loadOptions={this.loadOptions}
                     noOptionsMessage={this.noResults}
@@ -205,7 +213,7 @@ AutoComplete.propTypes = {
     disableBorderRadiusLeft: PropTypes.bool,
     onInput: PropTypes.func,
     value: PropTypes.string,
-    hideAfterSelection: PropTypes.bool,
+    hideAfterSelection: PropTypes.bool
 };
 
 export default AutoComplete;

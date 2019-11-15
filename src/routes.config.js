@@ -1,8 +1,8 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import ResourceDetails from './pages/ResourceDetails'
-import AddPaper from './components/AddPaper/AddPaper'
-import AuthorPage from 'components/AuthorPage/AuthorPage'
+import ResourceDetails from './pages/ResourceDetails';
+import AddPaper from './components/AddPaper/AddPaper';
+import AuthorPage from 'components/AuthorPage/AuthorPage';
 import AddResource from './pages/AddResource';
 import Comparison from './components/Comparison/Comparison';
 import Home from './components/Home/Home';
@@ -14,15 +14,14 @@ import PredicateDetails from './pages/PredicateDetails';
 import Predicates from './pages/Predicates';
 import ROUTES from './constants/routes';
 import RedirectShortLinks from './components/Comparison/RedirectShortLinks';
-import ResearchField from './components/ResearchField/ResearchField'
-import ResearchProblem from './components/ResearchProblem/ResearchProblem'
-import Resources from './pages/Resources'
-import SearchResults from './components/Search/Search'
+import ResearchField from './components/ResearchField/ResearchField';
+import ResearchProblem from './components/ResearchProblem/ResearchProblem';
+import Resources from './pages/Resources';
+import SearchResults from './components/Search/Search';
 import ViewPaper from './components/ViewPaper/ViewPaper';
 import Stats from './components/Stats/Stats';
 import UserSettings from './components/UserSettings/UserSettings';
 import UserProfile from './components/UserProfile/UserProfile';
-
 
 const routes = [
     {
@@ -46,14 +45,14 @@ const routes = [
         component: Predicates
     },
     {
-      path: ROUTES.USER_SETTINGS,
-      exact: true,
-      component: UserSettings,
+        path: ROUTES.USER_SETTINGS,
+        exact: true,
+        component: UserSettings
     },
     {
-      path: ROUTES.USER_PROFILE,
-      exact: true,
-      component: UserProfile,
+        path: ROUTES.USER_PROFILE,
+        exact: true,
+        component: UserProfile
     },
     {
         path: ROUTES.ADD_PAPER.GENERAL_DATA,
@@ -81,7 +80,15 @@ const routes = [
         path: ROUTES.COMPARISON + '*',
         exact: true,
         // eslint-disable-next-line react/prop-types
-        component: ({ match, location }) => <Redirect to={`${ROUTES.COMPARISON}?contributions=${match.params[0].split('/').join(',')}${location.search ? '&' + (location.search.charAt(0) === '?' ? location.search.substr(1) : location.search) : ''}`} />
+        component: ({ match, location }) => (
+            <Redirect
+                // eslint-disable-next-line react/prop-types
+                to={`${ROUTES.COMPARISON}?contributions=${match.params[0].split('/').join(',')}${
+                    // eslint-disable-next-line react/prop-types
+                    location.search ? '&' + (location.search.charAt(0) === '?' ? location.search.substr(1) : location.search) : ''
+                }`}
+            />
+        )
     },
     {
         path: ROUTES.PAPERS,
@@ -133,6 +140,6 @@ const routes = [
     {
         component: NotFound
     }
-]
+];
 
 export default routes;
