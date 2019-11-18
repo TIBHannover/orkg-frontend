@@ -186,7 +186,7 @@ class Header extends Component {
 
                         <SearchForm placeholder="Search..." />
 
-                        <Button color="primary" className="mr-3 pl-4 pr-4" tag={Link} to={ROUTES.ADD_PAPER.GENERAL_DATA}>
+                        <Button color="primary" className="pl-4 pr-4" tag={Link} to={ROUTES.ADD_PAPER.GENERAL_DATA}>
                             Add paper
                         </Button>
 
@@ -228,12 +228,12 @@ class Header extends Component {
                             </div>
                         )}
 
-                        {!this.props.user && (
+                        {/*!this.props.user && (
                             <Button color="darkblue" className="pl-4 pr-4" outline onClick={() => this.props.openAuthDialog('signin')}>
                                 {' '}
                                 <FontAwesomeIcon className="mr-1" icon={faUser} /> Sign in
                             </Button>
-                        )}
+                        )*/}
                     </Collapse>
 
                     <Authentication />
