@@ -364,7 +364,7 @@ class ViewPaper extends Component {
                                         </Link>
                                     )}
                                     {this.props.viewPaper.authors.map((author, index) =>
-                                        author.class !== 'literal' ? (
+                                        false ? (
                                             <Link key={index} to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.resourceId })}>
                                                 <span className="badge badge-lightblue mr-2 mb-2" key={index}>
                                                     <Icon icon={faUser} className="text-primary" /> {author.label}
