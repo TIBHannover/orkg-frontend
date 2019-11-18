@@ -10,6 +10,16 @@ export const StyledContribution = styled.div`
     padding: 15px 30px;
 `;
 
+/*contribution*/
+export const StyledHorizontalContribution = styled.div`
+    border-radius: ${props => props.theme.borderRadius};
+    border-width: ${props => props.theme.borderWidth};
+    border-color: ${props => props.theme.ultraLightBlueDarker};
+    border-style: solid;
+    border-top-left-radius: 0;
+    padding: 15px 30px;
+`;
+
 /*contributionsList*/
 export const StyledContributionsList = styled.ul`
     list-style: none;
@@ -47,6 +57,70 @@ export const StyledContributionsList = styled.ul`
         }
         &.addContribution span:hover {
             text-decoration: underline;
+        }
+    }
+`;
+
+export const StyledHorizontalContributionsList = styled.ul`
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+
+    > li {
+        &:nth-last-child(2) {
+            border-top-right-radius: ${props => props.theme.borderRadius};
+        }
+
+        &:first-child {
+            border-top-left-radius: ${props => props.theme.borderRadius};
+        }
+
+        border: 2px solid ${props => props.theme.ultraLightBlueDarker};
+        background-color: ${props => props.theme.ultraLightBlue};
+        margin-right: 2px;
+        border-bottom: 0;
+        margin-bottom: -2px;
+        position: relative;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        display: inline-block;
+        padding: 9px 15px 9px 15px;
+        transition: 0.3s background;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: none;
+        }
+        &.activeContribution {
+            background: ${props => props.theme.orkgPrimaryColor};
+            border: 2px solid ${props => props.theme.orkgPrimaryColor};
+            color: #fff;
+            cursor: initial !important;
+        }
+        &.activeContribution a {
+            color: #fff;
+        }
+        .deleteContribution {
+            cursor: pointer;
+            color: #fff;
+        }
+        &.addContribution {
+            & span {
+                padding: 1px 8px;
+                display: inline-block;
+            }
+            padding: 0;
+            border: 2px solid ${props => props.theme.ultraLightBlueDarker};
+            border-radius: 60px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        &.addContribution:hover {
+            background-color: ${props => props.theme.orkgPrimaryColor};
+            border: 2px solid ${props => props.theme.orkgPrimaryColor};
+            color: #fff;
         }
     }
 `;

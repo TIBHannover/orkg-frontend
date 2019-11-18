@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Form, FormGroup, Label, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import Tooltip from '../../Utils/Tooltip';
 import ResearchProblemInput from './ResearchProblemInput';
-import { StyledContribution } from './styled';
+import { StyledHorizontalContribution } from './styled';
 import StatementBrowser from '../../StatementBrowser/Statements';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -65,7 +65,7 @@ class Contribution extends Component {
 
     render() {
         return (
-            <StyledContribution>
+            <StyledHorizontalContribution>
                 <Form>
                     <FormGroup>
                         <Label>
@@ -236,7 +236,7 @@ class Contribution extends Component {
                         </a>
                     </ModalBody>
                 </Modal>
-            </StyledContribution>
+            </StyledHorizontalContribution>
         );
     }
 }

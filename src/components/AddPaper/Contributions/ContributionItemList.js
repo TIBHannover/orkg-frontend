@@ -20,7 +20,7 @@ export const StyledInput = styled(Input)`
     border-radius: 0;
     padding: 0 4px;
     display: block;
-    height: calc(1.5em + 0.5rem);
+    height: calc(1em + 0.5rem) !important;
 
     &:focus {
         background: #fff;
@@ -100,7 +100,6 @@ class ContributionItemList extends Component {
                                 </Link>
                             ) : (
                                 <span
-                                    className={'selectContribution'}
                                     onClick={() =>
                                         this.props.handleSelectContribution
                                             ? this.props.handleSelectContribution(this.props.contribution.id)
@@ -129,7 +128,7 @@ class ContributionItemList extends Component {
                                     </Tippy>
                                 </span>
                             )}
-                            <span className={`deleteContribution float-right mr-1 ${!this.props.isSelected && 'd-none'}`}>
+                            <span className={`deleteContribution float-right mr-1 ml-1 ${!this.props.isSelected && 'd-none'}`}>
                                 <Tippy content="Edit the contribution label">
                                     <span>
                                         <Icon
