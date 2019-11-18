@@ -97,7 +97,6 @@ class ResearchFieldCards extends Component {
                             id: fieldId,
                             page: 1,
                             items: 24,
-                            sortBy: 'created_at',
                             desc: true
                         });
 

@@ -54,7 +54,6 @@ class ResearchProblem extends Component {
             id: this.props.match.params.researchProblemId,
             page: this.state.page,
             items: this.pageSize,
-            sortBy: 'created_at',
             desc: true
         }).then(result => {
             // Papers

@@ -18,7 +18,6 @@ class RecentlyAddedPapers extends Component {
             id: process.env.REACT_APP_CLASSES_PAPER,
             page: 1,
             items: 4,
-            sortBy: 'created_at',
             desc: true
         });
 
