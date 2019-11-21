@@ -20,7 +20,7 @@ export const StyledInput = styled(Input)`
     border-radius: 0;
     padding: 0 4px;
     display: block;
-    height: calc(1em + 0.5rem) !important;
+    height: calc(1em + 0.6rem) !important;
 
     &:focus {
         background: #fff;
