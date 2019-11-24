@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ListGroupItem, InputGroup, DropdownItem } from 'reactstrap';
+import { ListGroupItem, InputGroup, DropdownItem, Button, DropdownToggle } from 'reactstrap';
 
 /*contribution*/
 export const StyledContribution = styled.div`
@@ -289,5 +289,154 @@ export const StyledDropdownItem = styled(DropdownItem)`
     }
     &:hover svg {
         display: inline-block;
+    }
+`;
+
+/* Template Wizzard */
+export const StyledButton = styled(Button)`
+    border-top-right-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+    border-color: #ced4da !important;
+    color: ${props => props.theme.buttonDark} !important;
+    background: ${props => props.theme.ultraLightBlueDarker} !important;
+    &:hover {
+        color: #fff !important;
+        background-color: ${props => props.theme.darkblue} !important;
+        border-color: ${props => props.theme.darkblue} !important;
+    }
+`;
+
+export const StyledDropdownToggle = styled(DropdownToggle)`
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+    background: ${props => props.theme.ultraLightBlueDarker} !important;
+    color: ${props => props.theme.buttonDark} !important;
+    border-color: #ced4da !important;
+    &:hover {
+        color: #fff !important;
+        background-color: ${props => props.theme.darkblue} !important;
+        border-color: ${props => props.theme.darkblue} !important;
+    }
+`;
+
+export const ValueItemStyle = styled.div`
+    background-color: #fff;
+    margin-bottom: 10px;
+    &:hover .valueOptions {
+        display: inline-block !important;
+    }
+    &.editingLabel {
+        margin-bottom: 1px !important;
+    }
+    & input,
+    & input:focus {
+        outline: 0 !important;
+        box-shadow: none !important;
+        border-color: #ced4da !important;
+        border-top-left-radius: 4px !important;
+        border-bottom-left-radius: 4px !important;
+    }
+    & .btn {
+    }
+    .valueLabel {
+        display: inline;
+        margin-right: 4px;
+        text-decoration: underline;
+    }
+    .valueOptions {
+        display: none;
+    }
+`;
+
+export const AddPropertyStyle = styled.div`
+    &.inTemplate {
+        background-color: transparent;
+        border: 0;
+        margin: -16.5px 10px;
+        padding: 0;
+    }
+`;
+
+export const AddPropertyContentStyle = styled.span`
+    display: inline-block !important;
+    position: relative;
+    z-index: 10px;
+    border-radius: 4px;
+    max-width: 33.33%;
+    font-size: small;
+    color: ${props => props.theme.darkblue};
+    transition: 0.3s max-width;
+    cursor: pointer;
+
+    &.noTemplate {
+        &.large {
+            width: 100%;
+            padding: 0;
+            border: 0 !important;
+        }
+    }
+
+    &.inTemplate {
+        padding: 5px 10px;
+        width: 30%;
+        text-align: center;
+        background-color: ${props => props.theme.ultraLightBlue};
+        border: 2px solid rgba(0, 0, 0, 0.125) !important;
+        &.large {
+            width: 100%;
+            padding: 0;
+            border: 0 !important;
+            .icon {
+                color: ${props => props.theme.darkblue};
+            }
+        }
+        &:hover {
+            background-color: ${props => props.theme.darkblue};
+            color: #fff;
+        }
+    }
+`;
+
+export const AddPropertyButton = styled.div`
+    border-radius: 4px;
+    line-height: 19px;
+
+    &.noTemplate {
+        background-color: ${props => props.theme.darkblue};
+        color: #fff;
+        border: 2px solid ${props => props.theme.darkblue};
+        padding: 5px 14px;
+        &:hover {
+            background-color: ${props => props.theme.ultraLightBlue};
+            border: 2px solid rgba(0, 0, 0, 0.125) !important;
+            color: ${props => props.theme.darkblue};
+        }
+    }
+`;
+
+export const AddPropertyFormStyle = styled.div`
+    & input,
+    & input:focus {
+        border-left: 0;
+        outline: 0;
+        box-shadow: none;
+    }
+
+    .input-group-prepend {
+        background-color: ${props => props.theme.ultraLightBlue};
+        cursor: default;
+        display: inline-block;
+        text-align: center;
+        border: 2px solid rgba(0, 0, 0, 0.125);
+        border-bottom-left-radius: 4px;
+        border-top-left-radius: 4px;
+        width: 24px;
+        padding: 0.25rem 0.5rem 0;
+        .icon {
+            padding: 0;
+            margin: 0;
+            line-height: 40px;
+            font-size: 12px;
+        }
     }
 `;

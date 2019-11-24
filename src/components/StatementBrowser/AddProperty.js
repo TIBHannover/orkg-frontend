@@ -1,7 +1,17 @@
 import React, { Component } from 'react';
 import { predicatesUrl, createPredicate } from '../../network';
-import { InputGroupAddon, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { StyledStatementItem, StyledAddProperty } from '../AddPaper/Contributions/styled';
+import { InputGroupAddon, Button, Modal, ModalHeader, ModalBody, ModalFooter, InputGroup, Input } from 'reactstrap';
+import {
+    StyledStatementItem,
+    StyledAddProperty,
+    AddPropertyStyle,
+    AddPropertyContentStyle,
+    AddPropertyButton,
+    AddPropertyFormStyle,
+    StyledButton
+} from '../AddPaper/Contributions/styled';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from './AutoComplete';
 import { connect } from 'react-redux';
 import { createProperty } from '../../actions/statementBrowser';
@@ -132,33 +142,79 @@ class AddProperty extends Component {
     render() {
         return (
             <>
-                <StyledStatementItem>
-                    {this.state.showAddProperty ? (
-                        <StyledAddProperty>
-                            <AutoComplete
-                                requestUrl={predicatesUrl}
-                                placeholder="Select or type to enter a property"
-                                onItemSelected={this.handlePropertySelect}
-                                onNewItemSelected={this.toggleConfirmNewProperty}
-                                onKeyUp={() => {}}
-                                additionalData={this.getNewProperties()}
-                                disableBorderRadiusRight
-                                allowCreate
-                                defaultOptions={this.getDefaultProperties()}
-                            />
+                {this.props.contextStyle === 'StatementBrowser' ? (
+                    <StyledStatementItem>
+                        {this.state.showAddProperty ? (
+                            <StyledAddProperty>
+                                <AutoComplete
+                                    requestUrl={predicatesUrl}
+                                    placeholder="Select or type to enter a property"
+                                    onItemSelected={this.handlePropertySelect}
+                                    onNewItemSelected={this.toggleConfirmNewProperty}
+                                    onKeyUp={() => {}}
+                                    additionalData={this.getNewProperties()}
+                                    disableBorderRadiusRight
+                                    allowCreate
+                                    defaultOptions={this.getDefaultProperties()}
+                                />
 
-                            <InputGroupAddon addonType="append">
-                                <Button color="light" className={'addPropertyActionButton'} onClick={this.handleHideAddProperty}>
-                                    Cancel
-                                </Button>
-                            </InputGroupAddon>
-                        </StyledAddProperty>
-                    ) : (
-                        <span className="btn btn-link p-0 border-0 align-baseline" onClick={this.handleShowAddProperty}>
-                            + Add property
-                        </span>
-                    )}
-                </StyledStatementItem>
+                                <InputGroupAddon addonType="append">
+                                    <Button color="light" className={'addPropertyActionButton'} onClick={this.handleHideAddProperty}>
+                                        Cancel
+                                    </Button>
+                                </InputGroupAddon>
+                            </StyledAddProperty>
+                        ) : (
+                            <span className="btn btn-link p-0 border-0 align-baseline" onClick={this.handleShowAddProperty}>
+                                + Add property
+                            </span>
+                        )}
+                    </StyledStatementItem>
+                ) : (
+                    <AddPropertyStyle className={this.props.inTemplate ? 'inTemplate' : 'mt-5'}>
+                        <AddPropertyContentStyle
+                            onClick={() => (this.props.inTemplate && !this.state.showAddProperty ? this.handleShowAddProperty() : undefined)}
+                            className={`${this.props.inTemplate ? 'inTemplate' : 'noTemplate'} ${this.state.showAddProperty ? 'col-12 large' : ''}`}
+                        >
+                            {!this.state.showAddProperty ? (
+                                <AddPropertyButton
+                                    className={`${this.props.inTemplate ? 'inTemplate' : 'noTemplate'}`}
+                                    onClick={() => (!this.props.inTemplate ? this.handleShowAddProperty() : undefined)}
+                                >
+                                    <Icon className={'icon'} size="xs" icon={faPlus} /> Add property
+                                </AddPropertyButton>
+                            ) : (
+                                <AddPropertyFormStyle>
+                                    <InputGroup size="sm">
+                                        <InputGroupAddon addonType="prepend">
+                                            <Icon className={'icon'} icon={faPlus} />
+                                        </InputGroupAddon>
+                                        <AutoComplete
+                                            cssClasses={'form-control-sm'}
+                                            requestUrl={predicatesUrl}
+                                            placeholder="Select or type to enter a property"
+                                            onItemSelected={this.handlePropertySelect}
+                                            onNewItemSelected={this.toggleConfirmNewProperty}
+                                            onKeyUp={() => {}}
+                                            additionalData={this.getNewProperties()}
+                                            disableBorderRadiusRight
+                                            allowCreate
+                                            defaultOptions={this.getDefaultProperties()}
+                                        />
+                                        <InputGroupAddon addonType="append">
+                                            <StyledButton outline onClick={() => this.handleShowAddProperty()}>
+                                                Create
+                                            </StyledButton>
+                                            <StyledButton outline onClick={() => this.handleHideAddProperty()}>
+                                                Cancel
+                                            </StyledButton>
+                                        </InputGroupAddon>
+                                    </InputGroup>
+                                </AddPropertyFormStyle>
+                            )}
+                        </AddPropertyContentStyle>
+                    </AddPropertyStyle>
+                )}
 
                 <Modal isOpen={this.state.confirmNewPropertyModal} toggle={this.toggleConfirmNewProperty}>
                     <ModalHeader toggle={this.toggleConfirmNewProperty}>Are you sure you need a new property?</ModalHeader>
@@ -183,7 +239,14 @@ AddProperty.propTypes = {
     createProperty: PropTypes.func.isRequired,
     selectedResource: PropTypes.string.isRequired,
     newProperties: PropTypes.object.isRequired,
-    syncBackend: PropTypes.bool.isRequired
+    syncBackend: PropTypes.bool.isRequired,
+    contextStyle: PropTypes.string.isRequired,
+    inTemplate: PropTypes.bool.isRequired
+};
+
+AddProperty.defaultProps = {
+    contextStyle: 'StatementBrowser',
+    inTemplate: false
 };
 
 const mapStateToProps = state => {

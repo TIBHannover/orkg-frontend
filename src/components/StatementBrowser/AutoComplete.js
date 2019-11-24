@@ -8,8 +8,10 @@ import styled from 'styled-components';
 export const StyledAutoCompleteInputFormControl = styled.div`
     padding-top: 0 !important;
     padding-bottom: 0 !important;
-    height: auto !important;
-    min-height: calc(1.8125rem + 4px);
+    &.default {
+        height: auto !important;
+        min-height: calc(1.8125rem + 4px);
+    }
     cursor: text;
     padding: 0 !important;
 `;
@@ -155,7 +157,10 @@ class AutoComplete extends Component {
                 paddingRight: 0,
                 cursor: 'text',
                 minHeight: 'initial',
-                borderRadius: 'inherit'
+                borderRadius: 'inherit',
+                '&>div:first-of-type': {
+                    ...(this.props.cssClasses && this.props.cssClasses.includes('form-control-sm') ? { padding: '0 8px !important' } : {})
+                }
             }),
             container: provided => ({
                 ...provided,
@@ -166,6 +171,13 @@ class AutoComplete extends Component {
                 borderTopRightRadius: this.props.disableBorderRadiusRight ? 0 : 'inherit',
                 borderBottomRightRadius: this.props.disableBorderRadiusRight ? 0 : 'inherit',
                 background: '#fff'
+            }),
+            indicatorsContainer: provided => ({
+                ...provided,
+                cursor: 'pointer',
+                '&>div:last-of-type': {
+                    ...(this.props.cssClasses && this.props.cssClasses.includes('form-control-sm') ? { padding: '4px !important' } : {})
+                }
             }),
             menu: provided => ({
                 ...provided,
@@ -181,7 +193,7 @@ class AutoComplete extends Component {
         const Select = this.props.allowCreate ? AsyncCreatableSelect : AsyncSelect;
 
         return (
-            <StyledAutoCompleteInputFormControl className="form-control">
+            <StyledAutoCompleteInputFormControl className={`form-control ${this.props.cssClasses ? this.props.cssClasses : 'default'}`}>
                 <Select
                     loadOptions={this.loadOptions}
                     noOptionsMessage={this.noResults}
@@ -213,7 +225,11 @@ AutoComplete.propTypes = {
     disableBorderRadiusLeft: PropTypes.bool,
     onInput: PropTypes.func,
     value: PropTypes.string,
+    cssClasses: PropTypes.string,
     hideAfterSelection: PropTypes.bool
 };
 
+AutoComplete.defaultProps = {
+    cssClasses: ''
+};
 export default AutoComplete;
