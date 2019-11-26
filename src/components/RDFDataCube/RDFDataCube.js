@@ -90,6 +90,7 @@ class RDFDataCube extends Component {
                     getStatementsByObject({
                         id: this.props.resourceId,
                         items: 9999,
+                        sortBy: 'created_at',
                         desc: true
                     }).then(statements => {
                         // Filter observations
