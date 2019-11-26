@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faExternalLinkAlt, faTable } from '@fortawesome/free-solid-svg-icons';
-import { StyledValueItem } from '../../AddPaper/Contributions/styled';
+import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizzard/TemplateOptionButton';
+import { StyledValueItem, StyledButton, ValueItemStyle } from '../../AddPaper/Contributions/styled';
 import classNames from 'classnames';
 import Confirm from 'reactstrap-confirm';
 import { connect } from 'react-redux';
@@ -320,7 +321,11 @@ class ValueItem extends Component {
         let existingResourceId = resource ? resource.existingResourceId : false;
         let onClick = null;
 
-        if (this.props.type === 'object' && existingResourceId && this.props.openExistingResourcesInDialog) {
+        if (
+            this.props.type === 'object' &&
+            (existingResourceId || this.props.contextStyle !== 'StatementBrowser') &&
+            this.props.openExistingResourcesInDialog
+        ) {
             onClick = this.handleExistingResourceClick;
         } else if (this.props.type === 'object') {
             onClick = this.handleResourceClick;
@@ -378,162 +383,232 @@ class ValueItem extends Component {
 
         return (
             <>
-                {!this.props.inline ? (
-                    <StyledValueItem>
-                        <span className={labelClass} onClick={!this.props.isEditing ? onClick : undefined}>
-                            {!this.props.isSaving ? (
-                                !this.props.isEditing ? (
-                                    <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>{this.props.label}</ValuePlugins>
-                                ) : this.props.type === 'object' ? (
-                                    existingResourceId && this.props.shared > 1 ? (
-                                        <StyledAutoCompleteInputFormControl className="form-control" style={{ borderRadius: 0 }}>
-                                            <AsyncCreatableSelect
-                                                loadOptions={this.loadOptions}
-                                                noOptionsMessage={this.noResults}
-                                                styles={customStyles}
-                                                autoFocus
-                                                getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
-                                                getOptionValue={({ id }) => id}
-                                                defaultOptions={[
-                                                    {
-                                                        label: this.props.label,
-                                                        id: this.props.values.byId[this.props.id].resourceId
-                                                    }
-                                                ]}
-                                                defaultValue={{
-                                                    label: this.props.label,
-                                                    id: this.props.values.byId[this.props.id].resourceId
-                                                }}
-                                                cacheOptions
-                                                onChange={(selectedOption, a) => {
-                                                    this.handleChangeResource(selectedOption, a);
-                                                    this.props.toggleEditValue({ id: this.props.id });
-                                                }}
-                                                onBlur={e => {
-                                                    this.props.toggleEditValue({ id: this.props.id });
-                                                }}
-                                                isValidNewOption={inputValue => inputValue.length !== 0 && inputValue.trim().length !== 0}
-                                                createOptionPosition={'first'}
-                                            />
-                                        </StyledAutoCompleteInputFormControl>
-                                    ) : (
-                                        <InputGroup>
-                                            <StyledInput
-                                                value={this.state.draftLabel}
-                                                onChange={this.handleChangeLabel}
-                                                onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
-                                                onBlur={e => {
-                                                    this.commitChangeLabel();
-                                                    this.props.toggleEditValue({ id: this.props.id });
-                                                }}
-                                                autoFocus
-                                                bsSize="sm"
-                                            />
-                                            <InputGroupAddon addonType="append">
-                                                <Button
-                                                    outline
-                                                    color="primary"
-                                                    size="sm"
-                                                    onClick={e => {
-                                                        this.commitChangeLabel();
+                {this.props.contextStyle === 'StatementBrowser' ? (
+                    <>
+                        {!this.props.inline ? (
+                            <StyledValueItem>
+                                <span className={labelClass} onClick={!this.props.isEditing ? onClick : undefined}>
+                                    {!this.props.isSaving ? (
+                                        !this.props.isEditing ? (
+                                            <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>
+                                                {this.props.label}
+                                            </ValuePlugins>
+                                        ) : this.props.type === 'object' ? (
+                                            existingResourceId && this.props.shared > 1 ? (
+                                                <StyledAutoCompleteInputFormControl className="form-control" style={{ borderRadius: 0 }}>
+                                                    <AsyncCreatableSelect
+                                                        loadOptions={this.loadOptions}
+                                                        noOptionsMessage={this.noResults}
+                                                        styles={customStyles}
+                                                        autoFocus
+                                                        getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
+                                                        getOptionValue={({ id }) => id}
+                                                        defaultOptions={[
+                                                            {
+                                                                label: this.props.label,
+                                                                id: this.props.values.byId[this.props.id].resourceId
+                                                            }
+                                                        ]}
+                                                        defaultValue={{
+                                                            label: this.props.label,
+                                                            id: this.props.values.byId[this.props.id].resourceId
+                                                        }}
+                                                        cacheOptions
+                                                        onChange={(selectedOption, a) => {
+                                                            this.handleChangeResource(selectedOption, a);
+                                                            this.props.toggleEditValue({ id: this.props.id });
+                                                        }}
+                                                        onBlur={e => {
+                                                            this.props.toggleEditValue({ id: this.props.id });
+                                                        }}
+                                                        isValidNewOption={inputValue => inputValue.length !== 0 && inputValue.trim().length !== 0}
+                                                        createOptionPosition={'first'}
+                                                    />
+                                                </StyledAutoCompleteInputFormControl>
+                                            ) : (
+                                                <InputGroup>
+                                                    <StyledInput
+                                                        value={this.state.draftLabel}
+                                                        onChange={this.handleChangeLabel}
+                                                        onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
+                                                        onBlur={e => {
+                                                            this.commitChangeLabel();
+                                                            this.props.toggleEditValue({ id: this.props.id });
+                                                        }}
+                                                        autoFocus
+                                                        bsSize="sm"
+                                                    />
+                                                    <InputGroupAddon addonType="append">
+                                                        <Button
+                                                            outline
+                                                            color="primary"
+                                                            size="sm"
+                                                            onClick={e => {
+                                                                this.commitChangeLabel();
+                                                                this.props.toggleEditValue({ id: this.props.id });
+                                                            }}
+                                                        >
+                                                            Save
+                                                        </Button>
+                                                    </InputGroupAddon>
+                                                </InputGroup>
+                                            )
+                                        ) : (
+                                            <InputGroup>
+                                                <StyledInput
+                                                    value={this.state.draftLabel}
+                                                    onChange={this.handleChangeLabel}
+                                                    onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()}
+                                                    onBlur={e => {
+                                                        this.commitChangeLiteral();
                                                         this.props.toggleEditValue({ id: this.props.id });
                                                     }}
-                                                >
-                                                    Save
-                                                </Button>
-                                            </InputGroupAddon>
-                                        </InputGroup>
-                                    )
-                                ) : (
-                                    <InputGroup>
-                                        <StyledInput
-                                            value={this.state.draftLabel}
-                                            onChange={this.handleChangeLabel}
-                                            onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()}
-                                            onBlur={e => {
-                                                this.commitChangeLiteral();
-                                                this.props.toggleEditValue({ id: this.props.id });
-                                            }}
-                                            autoFocus
-                                            bsSize="sm"
-                                        />
-                                        <InputGroupAddon addonType="append">
-                                            <Button
-                                                outline
-                                                color="primary"
-                                                size="sm"
-                                                onClick={e => {
-                                                    this.commitChangeLiteral();
+                                                    autoFocus
+                                                    bsSize="sm"
+                                                />
+                                                <InputGroupAddon addonType="append">
+                                                    <Button
+                                                        outline
+                                                        color="primary"
+                                                        size="sm"
+                                                        onClick={e => {
+                                                            this.commitChangeLiteral();
+                                                            this.props.toggleEditValue({ id: this.props.id });
+                                                        }}
+                                                    >
+                                                        Save
+                                                    </Button>
+                                                </InputGroupAddon>
+                                            </InputGroup>
+                                        )
+                                    ) : (
+                                        'Saving ...'
+                                    )}
+                                    {!this.props.isEditing && existingResourceId && this.props.openExistingResourcesInDialog ? (
+                                        <span>
+                                            {' '}
+                                            <Icon icon={faExternalLinkAlt} />
+                                        </span>
+                                    ) : (
+                                        ''
+                                    )}
+                                </span>
+                                {!this.props.isEditing && this.props.classes && this.props.classes.includes(process.env.REACT_APP_QB_DATASET_CLASS) && (
+                                    <Tippy content="Visualize data in tabular form">
+                                        <span style={{ cursor: 'pointer' }} onClick={this.handleDatasetClick}>
+                                            {' '}
+                                            <Icon icon={faTable} />
+                                        </span>
+                                    </Tippy>
+                                )}
+                                {!this.props.isEditing && this.props.enableEdit ? (
+                                    <>
+                                        <span className={'deleteValue float-right'} onClick={this.toggleDeleteContribution}>
+                                            <Tippy content="Delete value">
+                                                <span>
+                                                    <Icon icon={faTrash} /> Delete
+                                                </span>
+                                            </Tippy>
+                                        </span>
+                                        {(!existingResourceId || this.props.shared <= 1) && (
+                                            <span
+                                                className={'mr-3 deleteValue float-right'}
+                                                onClick={() => {
                                                     this.props.toggleEditValue({ id: this.props.id });
                                                 }}
                                             >
-                                                Save
-                                            </Button>
-                                        </InputGroupAddon>
-                                    </InputGroup>
-                                )
-                            ) : (
-                                'Saving ...'
-                            )}
-                            {!this.props.isEditing && existingResourceId && this.props.openExistingResourcesInDialog ? (
-                                <span>
-                                    {' '}
-                                    <Icon icon={faExternalLinkAlt} />
-                                </span>
-                            ) : (
-                                ''
-                            )}
-                        </span>
-                        {!this.props.isEditing && this.props.classes && this.props.classes.includes(process.env.REACT_APP_QB_DATASET_CLASS) && (
-                            <Tippy content="Visualize data in tabular form">
-                                <span style={{ cursor: 'pointer' }} onClick={this.handleDatasetClick}>
-                                    {' '}
-                                    <Icon icon={faTable} />
-                                </span>
-                            </Tippy>
+                                                <Tippy content="Edit label">
+                                                    <span>
+                                                        <Icon icon={faPen} /> Edit
+                                                    </span>
+                                                </Tippy>
+                                            </span>
+                                        )}
+
+                                        {existingResourceId && this.props.shared > 1 && (
+                                            <span className={'mr-3 deleteValue float-right disabled'}>
+                                                <Tippy content="A shared resource cannot be edited directly">
+                                                    <span>
+                                                        <Icon icon={faPen} /> Edit
+                                                    </span>
+                                                </Tippy>
+                                            </span>
+                                        )}
+                                    </>
+                                ) : (
+                                    ''
+                                )}
+                            </StyledValueItem>
+                        ) : (
+                            this.props.label
                         )}
-                        {!this.props.isEditing && this.props.enableEdit ? (
-                            <>
-                                <span className={'deleteValue float-right'} onClick={this.toggleDeleteContribution}>
-                                    <Tippy content="Delete value">
+                    </>
+                ) : (
+                    <ValueItemStyle className={this.state.editValueLabel ? 'editingLabel' : ''}>
+                        {!this.props.isEditing ? (
+                            <div>
+                                <div className={`${this.props.type === 'literal' ? 'literalLabel' : 'objectLabel'}`} onClick={onClick}>
+                                    <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>{this.props.label}</ValuePlugins>
+                                    {existingResourceId && this.props.openExistingResourcesInDialog ? (
                                         <span>
-                                            <Icon icon={faTrash} /> Delete
+                                            {' '}
+                                            <Icon icon={faExternalLinkAlt} />
                                         </span>
-                                    </Tippy>
-                                </span>
-                                {(!existingResourceId || this.props.shared <= 1) && (
-                                    <span
-                                        className={'mr-3 deleteValue float-right'}
-                                        onClick={() => {
+                                    ) : (
+                                        ''
+                                    )}
+                                </div>
+                                <div className={'valueOptions'}>
+                                    {!this.props.isEditing &&
+                                        this.props.classes &&
+                                        this.props.classes.includes(process.env.REACT_APP_QB_DATASET_CLASS) && (
+                                            <TemplateOptionButton
+                                                title={'Visualize data in tabular form'}
+                                                icon={faTable}
+                                                action={this.handleDatasetClick}
+                                            />
+                                        )}
+                                    {(!existingResourceId || this.props.shared <= 1) && (
+                                        <TemplateOptionButton
+                                            title={'Edit value'}
+                                            icon={faPen}
+                                            action={() => this.props.toggleEditValue({ id: this.props.id })}
+                                        />
+                                    )}
+
+                                    <TemplateOptionButton title={'Delete value'} icon={faTrash} action={this.toggleDeleteContribution} />
+                                </div>
+                            </div>
+                        ) : (
+                            <div>
+                                <InputGroup size="sm">
+                                    <Input
+                                        bsSize="sm"
+                                        value={this.state.draftLabel}
+                                        onChange={this.handleChangeLabel}
+                                        onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
+                                        onBlur={e => {
+                                            this.commitChangeLabel();
                                             this.props.toggleEditValue({ id: this.props.id });
                                         }}
-                                    >
-                                        <Tippy content="Edit label">
-                                            <span>
-                                                <Icon icon={faPen} /> Edit
-                                            </span>
-                                        </Tippy>
-                                    </span>
-                                )}
-
-                                {existingResourceId && this.props.shared > 1 && (
-                                    <span className={'mr-3 deleteValue float-right disabled'}>
-                                        <Tippy content="A shared resource cannot be edited directly">
-                                            <span>
-                                                <Icon icon={faPen} /> Edit
-                                            </span>
-                                        </Tippy>
-                                    </span>
-                                )}
-                            </>
-                        ) : (
-                            ''
+                                        autoFocus
+                                    />
+                                    <InputGroupAddon addonType="append">
+                                        <StyledButton
+                                            outline
+                                            onClick={e => {
+                                                this.commitChangeLabel();
+                                                this.props.toggleEditValue({ id: this.props.id });
+                                            }}
+                                        >
+                                            Done
+                                        </StyledButton>
+                                    </InputGroupAddon>
+                                </InputGroup>
+                            </div>
                         )}
-                    </StyledValueItem>
-                ) : (
-                    this.props.label
+                    </ValueItemStyle>
                 )}
-
                 {this.state.modal ? (
                     <StatementBrowserDialog
                         show={this.state.modal}
@@ -588,12 +663,14 @@ ValueItem.propTypes = {
     resourceId: PropTypes.string,
     statementId: PropTypes.string,
     inline: PropTypes.bool,
-    openExistingResourcesInDialog: PropTypes.bool
+    openExistingResourcesInDialog: PropTypes.bool,
+    contextStyle: PropTypes.string.isRequired
 };
 
 ValueItem.defaultProps = {
     inline: false,
-    resourceId: null
+    resourceId: null,
+    contextStyle: 'StatementBrowser'
 };
 
 const mapStateToProps = state => {

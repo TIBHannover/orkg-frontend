@@ -164,7 +164,8 @@ export const prefillStatements = ({ statements, resourceId }) => dispatch => {
                 propertyId: property.propertyId,
                 existingPredicateId: property.existingPredicateId,
                 resourceId: resourceId,
-                label: property.label
+                label: property.label,
+                isTemplate: property.isTemplate ? property.isTemplate : false
             })
         );
     }
@@ -173,6 +174,7 @@ export const prefillStatements = ({ statements, resourceId }) => dispatch => {
     for (let value of statements.values) {
         dispatch(
             createValue({
+                valueId: value.valueId,
                 label: value.label,
                 type: 'object',
                 propertyId: value.propertyId

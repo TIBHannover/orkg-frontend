@@ -2,66 +2,71 @@ import React, { Component } from 'react';
 import { Input } from 'reactstrap';
 import { faTrash, faPen, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizzard/TemplateOptionButton';
-import styled from 'styled-components';
+import { TemplateHeaderStyle } from 'components/AddPaper/Contributions/styled';
+import Confirm from 'reactstrap-confirm';
+import { deleteStatementById, updateResource } from 'network';
+import { connect } from 'react-redux';
+import { deleteValue, toggleEditValue, updateValueLabel, isSavingValue, doneSavingValue, deleteProperty } from 'actions/statementBrowser';
+import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
-
-export const TemplateHeaderStyle = styled.div`
-    cursor: default;
-    background-color: ${props => props.theme.darkblue};
-    border-color: ${props => props.theme.darkblue};
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    color: #fff;
-    position: relative;
-    display: block;
-    padding: 0.75rem 1.25rem;
-
-    .form-control {
-        border-width: 0;
-        border-radius: 0 !important;
-        height: calc(1em + 0.25rem + 4px) !important;
-        padding: 0 0.5rem;
-        outline: 0;
-
-        &:focus {
-            outline: 0;
-            border: 1px dashed ${props => props.theme.ultraLightBlueDarker};
-            box-shadow: none;
-        }
-    }
-    & .type {
-        font-size: small;
-        color: ${props => props.theme.ultraLightBlueDarker};
-        .span {
-            background-color: ${props => props.theme.buttonDark};
-            color: ${props => props.theme.darkblue};
-        }
-    }
-`;
 
 class TemplateHeader extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            predicateLabel: this.props.label,
-            editPredicateLabel: false
+            draftLabel: this.props.label
         };
-        this.inputRefs = React.createRef();
     }
 
-    handleEditPredicateLabel = () => {
-        if (this.state.editPredicateLabel) {
-            this.setState({ editPredicateLabel: false });
-        } else {
-            // enable editing and focus on the input
-            this.setState({ editPredicateLabel: true }, () => {
-                this.inputRefs.current.focus();
+    componentDidUpdate(prevProps) {
+        if (this.props.label !== prevProps.label) {
+            this.setState({ draftLabel: this.props.label });
+        }
+    }
+
+    commitChangeLabel = async () => {
+        // Check if the user changed the label
+        if (this.state.draftLabel !== this.props.label) {
+            this.props.updateValueLabel({
+                label: this.state.draftLabel,
+                valueId: this.props.id
             });
+            if (this.props.syncBackend) {
+                this.props.isSavingValue({ id: this.props.id }); // To show the saving message instead of the value label
+                if (this.props.resourceId) {
+                    await updateResource(this.props.resourceId, this.props.label);
+                    toast.success('Resource label updated successfully');
+                }
+                this.props.doneSavingValue({ id: this.props.id });
+            }
         }
     };
 
     handleChangeLabel = event => {
-        this.setState({ predicateLabel: event.target.value });
+        this.setState({ draftLabel: event.target.value });
+    };
+
+    toggleDeleteTemplate = async () => {
+        let result = await Confirm({
+            title: 'Are you sure?',
+            message: 'Are you sure you want to delete this template with its statements?',
+            cancelColor: 'light'
+        });
+
+        if (result) {
+            if (this.props.syncBackend) {
+                await deleteStatementById(this.props.statementId);
+                toast.success('Statement deleted successfully');
+            }
+            this.props.deleteValue({
+                id: this.props.id,
+                propertyId: this.props.propertyId
+            });
+            this.props.deleteProperty({
+                id: this.props.propertyId,
+                resourceId: this.props.selectedResource
+            });
+        }
     };
 
     render() {
@@ -69,24 +74,33 @@ class TemplateHeader extends Component {
             <div>
                 <TemplateHeaderStyle className={'d-flex'}>
                     <div className="flex-grow-1 mr-4">
-                        {!this.state.editPredicateLabel ? (
+                        {!this.props.isEditing ? (
                             <>
-                                {this.state.predicateLabel}
+                                {this.props.label}
                                 <div className={'headerOptions'}>
-                                    <TemplateOptionButton title={'Edit label'} icon={faPen} action={() => this.handleEditPredicateLabel()} />
-                                    <TemplateOptionButton title={'Delete Statements'} icon={faTrash} action={() => null} />
+                                    <TemplateOptionButton
+                                        title={'Edit label'}
+                                        icon={faPen}
+                                        action={() => this.props.toggleEditValue({ id: this.props.id })}
+                                    />
+                                    <TemplateOptionButton
+                                        title={'Delete the template with its statements'}
+                                        icon={faTrash}
+                                        action={this.toggleDeleteTemplate}
+                                    />
                                 </div>
                             </>
                         ) : (
                             <>
                                 <Input
-                                    value={this.state.predicateLabel}
-                                    innerRef={this.inputRefs}
+                                    value={this.state.draftLabel}
                                     onChange={this.handleChangeLabel}
-                                    onKeyDown={e => e.keyCode === 13 && e.target.blur()} // Disable multiline Input
+                                    onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
                                     onBlur={e => {
-                                        this.handleEditPredicateLabel();
+                                        this.commitChangeLabel();
+                                        this.props.toggleEditValue({ id: this.props.id });
                                     }}
+                                    autoFocus
                                 />
                             </>
                         )}
@@ -110,7 +124,39 @@ class TemplateHeader extends Component {
 }
 
 TemplateHeader.propTypes = {
-    label: PropTypes.string.isRequired
+    deleteValue: PropTypes.func.isRequired,
+    deleteProperty: PropTypes.func.isRequired,
+    selectedResource: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    resourceId: PropTypes.string,
+    propertyId: PropTypes.string.isRequired,
+    statementId: PropTypes.string,
+    syncBackend: PropTypes.bool.isRequired,
+    toggleEditValue: PropTypes.func.isRequired,
+    isSaving: PropTypes.bool,
+    isEditing: PropTypes.bool,
+    isSavingValue: PropTypes.func.isRequired,
+    doneSavingValue: PropTypes.func.isRequired,
+    updateValueLabel: PropTypes.func.isRequired
 };
 
-export default TemplateHeader;
+const mapStateToProps = state => {
+    return {
+        selectedResource: state.statementBrowser.selectedResource
+    };
+};
+
+const mapDispatchToProps = dispatch => ({
+    toggleEditValue: data => dispatch(toggleEditValue(data)),
+    deleteValue: data => dispatch(deleteValue(data)),
+    deleteProperty: data => dispatch(deleteProperty(data)),
+    updateValueLabel: data => dispatch(updateValueLabel(data)),
+    isSavingValue: data => dispatch(isSavingValue(data)),
+    doneSavingValue: data => dispatch(doneSavingValue(data))
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(TemplateHeader);

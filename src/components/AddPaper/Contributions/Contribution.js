@@ -2,13 +2,9 @@ import React, { Component } from 'react';
 import { Form, FormGroup, Label, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import Tooltip from '../../Utils/Tooltip';
 import ResearchProblemInput from './ResearchProblemInput';
-import ContributionTemplate from './TemplateWizzard/ContributionTemplate';
-import AddProperty from 'components/StatementBrowser/AddProperty';
 import AddTemplateButton from './TemplateWizzard/AddTemplateButton';
-import PropertyItem from './TemplateWizzard/PropertyItem';
-import { initializeWithoutContribution } from 'actions/statementBrowser';
+import TemplateWizzard from './TemplateWizzard/TemplateWizzard';
 import { StyledHorizontalContribution } from './styled';
-import StatementBrowser from '../../StatementBrowser/Statements';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { updateResearchProblems, openTour, closeTour, updateTourCurrentStep } from '../../../actions/addPaper';
@@ -18,7 +14,7 @@ import PropTypes from 'prop-types';
 import Tour from 'reactour';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
 class Contribution extends Component {
     state = {
@@ -26,22 +22,32 @@ class Contribution extends Component {
         templates: [
             {
                 id: 1,
+                predicateId: 'HAS_IMPLEMENTATION',
+                predicateLabel: 'Has implementation',
                 label: 'Implementation'
             },
             {
                 id: 2,
+                predicateId: 'HAS_EVALUATION',
+                predicateLabel: 'Has evaluation',
                 label: 'Evaluation'
             },
             {
                 id: 3,
+                predicateId: 'HAS_APPROACH',
+                predicateLabel: 'Has approach',
                 label: 'Approach'
             },
             {
                 id: 4,
+                predicateId: 'HAS_RESULTS',
+                predicateLabel: 'Has result',
                 label: 'Results'
             },
             {
                 id: 5,
+                predicateId: 'HAS_METHOD',
+                predicateLabel: 'Has method',
                 label: 'Method'
             }
         ]
@@ -91,15 +97,6 @@ class Contribution extends Component {
     };
 
     render() {
-        let propertyIds =
-            Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource
-                ? this.props.resources.byId[this.props.selectedResource].propertyIds
-                : [];
-        let shared =
-            Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource
-                ? this.props.resources.byId[this.props.selectedResource].shared
-                : 1;
-
         return (
             <StyledHorizontalContribution>
                 <Form>
@@ -132,82 +129,18 @@ class Contribution extends Component {
                                     </span>
                                 }
                             >
-                                Contribution data
+                                Data
                             </Tooltip>
                         </Label>
 
-                        <StatementBrowser enableEdit={true} openExistingResourcesInDialog={true} syncBackend={false} />
-
-                        {!this.props.isFetchingStatements ? (
-                            propertyIds.length > 0 ? (
-                                propertyIds.map((propertyId, index) => {
-                                    let property = this.props.properties.byId[propertyId];
-
-                                    return (
-                                        <PropertyItem
-                                            id={propertyId}
-                                            label={property.label}
-                                            predicateLabel={property.label}
-                                            key={'statement-' + index}
-                                            index={index}
-                                            isExistingProperty={property.isExistingProperty ? true : false}
-                                            enableEdit={shared <= 1 ? this.props.enableEdit : false}
-                                            syncBackend={this.props.syncBackend}
-                                            isLastItem={propertyIds.length === index + 1}
-                                            openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
-                                            isEditing={property.isEditing}
-                                            isSaving={property.isSaving}
-                                        />
-                                    );
-                                })
-                            ) : (
-                                <div>No values</div>
-                            )
-                        ) : (
-                            <div>
-                                <Icon icon={faSpinner} spin /> Loading
-                            </div>
-                        )}
-
-                        <ContributionTemplate
-                            key={`ct1`}
-                            label={'Implementation'}
-                            properties={[
-                                { label: 'Programming languages', values: [{ id: 1, label: 'Python' }, { id: 2, label: 'Java' }] },
-                                {
-                                    label: 'Dataset',
-                                    values: [
-                                        { id: 1, label: 'Google Scholar' },
-                                        {
-                                            id: 2,
-                                            label: 'TIB AV Portal Data'
-                                        }
-                                    ]
-                                }
-                            ]}
-                        />
-                        <ContributionTemplate
-                            key={`ct2`}
-                            label={'Evaluation'}
-                            properties={[
-                                { label: 'Type', values: [] },
-                                {
-                                    label: 'Participants',
-                                    values: []
-                                }
-                            ]}
-                        />
-                        <ContributionTemplate key={`ct3`} />
-                        <PropertyItem label={'Imported'} values={[{ id: 1, label: 'IoT' }, { id: 2, label: 'Embadded systems' }]} />
-
-                        <AddProperty contextStyle="Template" />
+                        <TemplateWizzard enableEdit={true} openExistingResourcesInDialog={true} syncBackend={false} />
 
                         <Label className={'mt-4'}>
-                            <Tooltip message={`Select a templete to use it in your contribution data`}>Add template</Tooltip>
+                            <Tooltip message={`Select a template to use it in your contribution data`}>Add template</Tooltip>
                         </Label>
                         <div className={'mt-2'}>
                             {this.state.templates.map(t => (
-                                <AddTemplateButton key={`t${t.id}`} label={t.label} />
+                                <AddTemplateButton key={`t${t.id}`} label={t.label} predicateId={t.predicateId} predicateLabel={t.predicateLabel} />
                             ))}
                         </div>
                     </FormGroup>
@@ -363,19 +296,7 @@ Contribution.propTypes = {
     tourCurrentStep: PropTypes.number.isRequired,
     tourStartAt: PropTypes.number.isRequired,
     showAbstractDialog: PropTypes.bool.isRequired,
-    abstractDialogView: PropTypes.string.isRequired,
-
-    level: PropTypes.number.isRequired,
-    resources: PropTypes.object.isRequired,
-    properties: PropTypes.object.isRequired,
-    isFetchingStatements: PropTypes.bool.isRequired,
-    selectedResource: PropTypes.string.isRequired,
-    enableEdit: PropTypes.bool.isRequired,
-    syncBackend: PropTypes.bool.isRequired,
-    initializeWithoutContribution: PropTypes.func.isRequired,
-    initialResourceId: PropTypes.string,
-    initialResourceLabel: PropTypes.string,
-    openExistingResourcesInDialog: PropTypes.bool
+    abstractDialogView: PropTypes.string.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -385,13 +306,7 @@ const mapStateToProps = (state, ownProps) => {
         tourCurrentStep: state.addPaper.tourCurrentStep,
         tourStartAt: state.addPaper.tourStartAt,
         showAbstractDialog: state.addPaper.showAbstractDialog,
-        abstractDialogView: state.addPaper.abstractDialogView,
-
-        level: state.statementBrowser.level,
-        resources: state.statementBrowser.resources,
-        properties: state.statementBrowser.properties,
-        isFetchingStatements: state.statementBrowser.isFetchingStatements,
-        selectedResource: state.statementBrowser.selectedResource
+        abstractDialogView: state.addPaper.abstractDialogView
     };
 };
 
@@ -399,9 +314,7 @@ const mapDispatchToProps = dispatch => ({
     updateResearchProblems: data => dispatch(updateResearchProblems(data)),
     updateTourCurrentStep: data => dispatch(updateTourCurrentStep(data)),
     openTour: data => dispatch(openTour(data)),
-    closeTour: () => dispatch(closeTour()),
-
-    initializeWithoutContribution: data => dispatch(initializeWithoutContribution(data))
+    closeTour: () => dispatch(closeTour())
 });
 
 export default compose(

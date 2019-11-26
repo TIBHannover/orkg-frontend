@@ -1,50 +1,48 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import styled from 'styled-components';
+import { AddTemplateStyle } from './../styled';
 import PropTypes from 'prop-types';
-
-export const AddTemplateStyle = styled.div`
-    display: inline-block;
-    margin-right: 8px;
-    cursor: pointer;
-    overflow: hidden;
-    background-color: ${props => props.theme.ultraLightBlue};
-    border-color: ${props => props.theme.darkblue};
-    border: 1px solid ${props => props.theme.ultraLightBlueDarker};
-    border-radius: 12px;
-    .iconWrapper {
-        display: inline-block;
-        color: ${props => props.theme.darkblue};
-        background-color: ${props => props.theme.ultraLightBlueDarker};
-        padding: 2px 8px;
-        font-size: smaller;
-        line-height: 23px;
-    }
-    .labelWrapper {
-        display: inline-block;
-        background-color: ${props => props.theme.ultraLightBlue};
-        padding: 2px 14px;
-        font-size: smaller;
-        line-height: 23px;
-    }
-    &:hover {
-        border: 1px solid ${props => props.theme.ultraLightBlueDarker};
-        .iconWrapper {
-            color: #fff;
-            background-color: ${props => props.theme.ultraLightBlueDarker};
-        }
-        .labelWrapper {
-            color: #fff;
-            background-color: ${props => props.theme.darkblue};
-        }
-    }
-`;
+import { createProperty } from 'actions/statementBrowser';
+import { prefillStatements } from 'actions/addPaper';
+import { guid } from 'utils';
+import { connect } from 'react-redux';
 
 class AddTemplateButton extends Component {
+    add_template = () => {
+        let statements = { properties: [], values: [] };
+        let pID = guid();
+        let vID = guid();
+        statements['properties'].push({
+            propertyId: pID,
+            existingPredicateId: this.props.predicateId,
+            label: this.props.predicateLabel,
+            isTemplate: true
+        });
+
+        statements['values'].push({
+            valueId: vID,
+            label: this.props.label,
+            type: 'object',
+            propertyId: pID
+        });
+
+        this.props.prefillStatements({ statements, resourceId: this.props.selectedResource });
+        // TODO: Add properties!
+        statements = { properties: [], values: [] };
+        statements['properties'].push({
+            existingPredicateId: 'P21',
+            label: 'programming language'
+        });
+        this.props.prefillStatements({ statements, resourceId: vID });
+    };
     render() {
         return (
-            <AddTemplateStyle onClick={this.props.action}>
+            <AddTemplateStyle
+                onClick={() => {
+                    this.add_template();
+                }}
+            >
                 <span className="iconWrapper">
                     <Icon size="xs" icon={faPlus} />
                 </span>
@@ -55,12 +53,30 @@ class AddTemplateButton extends Component {
 }
 
 AddTemplateButton.propTypes = {
-    label: PropTypes.string.isRequired,
-    action: PropTypes.func
+    createProperty: PropTypes.func.isRequired,
+    prefillStatements: PropTypes.func.isRequired,
+    selectedResource: PropTypes.string.isRequired,
+    predicateId: PropTypes.string.isRequired,
+    predicateLabel: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired
 };
 
 AddTemplateButton.defaultProps = {
     label: ''
 };
 
-export default AddTemplateButton;
+const mapStateToProps = state => {
+    return {
+        selectedResource: state.statementBrowser.selectedResource
+    };
+};
+
+const mapDispatchToProps = dispatch => ({
+    createProperty: data => dispatch(createProperty(data)),
+    prefillStatements: data => dispatch(prefillStatements(data))
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AddTemplateButton);

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { predicatesUrl, createPredicate } from '../../network';
-import { InputGroupAddon, Button, Modal, ModalHeader, ModalBody, ModalFooter, InputGroup, Input } from 'reactstrap';
+import { InputGroupAddon, Button, Modal, ModalHeader, ModalBody, ModalFooter, InputGroup } from 'reactstrap';
 import {
     StyledStatementItem,
     StyledAddProperty,
@@ -61,9 +61,10 @@ class AddProperty extends Component {
         });
 
         this.props.createProperty({
-            resourceId: this.props.selectedResource,
+            resourceId: this.props.resourceId ? this.props.resourceId : this.props.selectedResource,
             existingPredicateId: id,
-            label: label
+            label: label,
+            isTemplate: false
         });
     };
 
@@ -77,14 +78,16 @@ class AddProperty extends Component {
         if (this.props.syncBackend) {
             let newPredicate = await createPredicate(this.state.newPropertyLabel);
             this.props.createProperty({
-                resourceId: this.props.selectedResource,
+                resourceId: this.props.resourceId ? this.props.resourceId : this.props.selectedResource,
                 existingPredicateId: newPredicate.id,
-                label: newPredicate.label
+                label: newPredicate.label,
+                isTemplate: false
             });
         } else {
             this.props.createProperty({
-                resourceId: this.props.selectedResource,
-                label: this.state.newPropertyLabel
+                resourceId: this.props.resourceId ? this.props.resourceId : this.props.selectedResource,
+                label: this.state.newPropertyLabel,
+                isTemplate: false
             });
         }
     };
@@ -171,7 +174,7 @@ class AddProperty extends Component {
                         )}
                     </StyledStatementItem>
                 ) : (
-                    <AddPropertyStyle className={this.props.inTemplate ? 'inTemplate' : 'mt-5'}>
+                    <AddPropertyStyle className={this.props.inTemplate ? 'inTemplate' : 'mt-4'}>
                         <AddPropertyContentStyle
                             onClick={() => (this.props.inTemplate && !this.state.showAddProperty ? this.handleShowAddProperty() : undefined)}
                             className={`${this.props.inTemplate ? 'inTemplate' : 'noTemplate'} ${this.state.showAddProperty ? 'col-12 large' : ''}`}
@@ -202,9 +205,6 @@ class AddProperty extends Component {
                                             defaultOptions={this.getDefaultProperties()}
                                         />
                                         <InputGroupAddon addonType="append">
-                                            <StyledButton outline onClick={() => this.handleShowAddProperty()}>
-                                                Create
-                                            </StyledButton>
                                             <StyledButton outline onClick={() => this.handleHideAddProperty()}>
                                                 Cancel
                                             </StyledButton>
@@ -238,6 +238,7 @@ class AddProperty extends Component {
 AddProperty.propTypes = {
     createProperty: PropTypes.func.isRequired,
     selectedResource: PropTypes.string.isRequired,
+    resourceId: PropTypes.string,
     newProperties: PropTypes.object.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     contextStyle: PropTypes.string.isRequired,

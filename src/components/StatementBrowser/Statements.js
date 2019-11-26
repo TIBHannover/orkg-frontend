@@ -22,12 +22,6 @@ class Statements extends Component {
         }
     }
 
-    handleInputChange = e => {
-        this.setState({
-            [e.target.name]: e.target.value
-        });
-    };
-
     statements = () => {
         let propertyIds =
             Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource

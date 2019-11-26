@@ -280,6 +280,12 @@ export const StyledValueItem = styled(ListGroupItem)`
     }
 `;
 
+export const StyledEmptyData = styled(ListGroupItem)`
+    padding: 8px 8px;
+    margin-top: 8px;
+    border-radius: 4px !important;
+`;
+
 /*dropdownItem*/
 export const StyledDropdownItem = styled(DropdownItem)`
     outline: 0;
@@ -338,11 +344,19 @@ export const ValueItemStyle = styled.div`
     }
     & .btn {
     }
-    .valueLabel {
+    .objectLabel {
         display: inline;
         margin-right: 4px;
         text-decoration: underline;
+        cursor: pointer;
     }
+    .literalLabel {
+        display: inline;
+        margin-right: 4px;
+        text-decoration: none;
+        cursor: default;
+    }
+
     .valueOptions {
         display: none;
     }
@@ -431,12 +445,137 @@ export const AddPropertyFormStyle = styled.div`
         border-bottom-left-radius: 4px;
         border-top-left-radius: 4px;
         width: 24px;
-        padding: 0.25rem 0.5rem 0;
+        padding: 0.25rem 0.25rem 0;
         .icon {
             padding: 0;
             margin: 0;
             line-height: 40px;
             font-size: 12px;
+        }
+    }
+`;
+
+export const StatementsGroupStyle = styled(ListGroupItem)`
+    position: relative;
+    padding: 0 !important;
+    :last-of-type {
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+    &.inTemplate:first-of-type {
+        border-top: 0;
+    }
+    &.noTemplate {
+        border-top: 2px solid rgba(0, 0, 0, 0.125);
+        border-radius: 4px !important;
+    }
+    & .propertyOptions {
+        visibility: hidden;
+    }
+    &:hover .propertyOptions {
+        visibility: visible;
+        span {
+            color: ${props => props.theme.buttonDark};
+        }
+    }
+`;
+
+export const PropertyStyle = styled.div`
+    background-color: ${props => props.theme.ultraLightBlue};
+    & > div {
+        padding: 8px;
+    }
+    .propertyLabel {
+        margin-right: 4px;
+        font-weight: 500;
+    }
+    & input,
+    & input:focus {
+        outline: 0 !important;
+        box-shadow: none !important;
+        border-color: #ced4da !important;
+        border-top-left-radius: 4px !important;
+        border-bottom-left-radius: 4px !important;
+    }
+
+    &.editingLabel {
+        padding-bottom: 15px !important;
+    }
+`;
+export const ValuesStyle = styled.div`
+    & > div {
+        padding: 8px;
+    }
+    background-color: #fff;
+`;
+
+export const TemplateHeaderStyle = styled.div`
+    cursor: default;
+    background-color: ${props => props.theme.darkblue};
+    border-color: ${props => props.theme.darkblue};
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    color: #fff;
+    position: relative;
+    display: block;
+    padding: 0.75rem 1.25rem;
+
+    .form-control {
+        border-width: 0;
+        border-radius: 0 !important;
+        height: calc(1em + 0.25rem + 4px) !important;
+        padding: 0 0.5rem;
+        outline: 0;
+
+        &:focus {
+            outline: 0;
+            border: 1px dashed ${props => props.theme.ultraLightBlueDarker};
+            box-shadow: none;
+        }
+    }
+    & .type {
+        font-size: small;
+        color: ${props => props.theme.ultraLightBlueDarker};
+        .span {
+            background-color: ${props => props.theme.buttonDark};
+            color: ${props => props.theme.darkblue};
+        }
+    }
+`;
+
+export const AddTemplateStyle = styled.div`
+    display: inline-block;
+    margin-right: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    background-color: ${props => props.theme.ultraLightBlue};
+    border-color: ${props => props.theme.darkblue};
+    border: 1px solid ${props => props.theme.ultraLightBlueDarker};
+    border-radius: 12px;
+    .iconWrapper {
+        display: inline-block;
+        color: ${props => props.theme.darkblue};
+        background-color: ${props => props.theme.ultraLightBlueDarker};
+        padding: 2px 8px;
+        font-size: smaller;
+        line-height: 23px;
+    }
+    .labelWrapper {
+        display: inline-block;
+        background-color: ${props => props.theme.ultraLightBlue};
+        padding: 2px 14px;
+        font-size: smaller;
+        line-height: 23px;
+    }
+    &:hover {
+        border: 1px solid ${props => props.theme.ultraLightBlueDarker};
+        .iconWrapper {
+            color: #fff;
+            background-color: ${props => props.theme.ultraLightBlueDarker};
+        }
+        .labelWrapper {
+            color: #fff;
+            background-color: ${props => props.theme.darkblue};
         }
     }
 `;

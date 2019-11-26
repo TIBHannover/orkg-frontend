@@ -229,7 +229,8 @@ export const fetchStatementsForResource = data => {
                                     resourceId: resourceId,
                                     existingPredicateId: statement.predicate.id,
                                     label: statement.predicate.label,
-                                    isExistingProperty: true
+                                    isExistingProperty: true,
+                                    isTemplate: false
                                 })
                             );
 

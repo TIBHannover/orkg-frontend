@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Button } from 'reactstrap';
+import { Row, Col, Button } from 'reactstrap';
 import ContributionItemList from './ContributionItemList';
 import Tooltip from '../../Utils/Tooltip';
 import { StyledHorizontalContributionsList } from './styled';

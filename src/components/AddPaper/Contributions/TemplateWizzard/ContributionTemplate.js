@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 import AddProperty from 'components/StatementBrowser/AddProperty';
 import TemplateHeader from 'components/AddPaper/Contributions/TemplateWizzard/TemplateHeader';
-import PropertyItem from 'components/AddPaper/Contributions/TemplateWizzard/PropertyItem';
+import StatementItem from 'components/StatementBrowser/StatementItem';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -31,30 +32,53 @@ export const AddPropertWrapper = styled(ListGroupItem)`
 `;
 
 class ContributionTemplate extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            editPropertyLabel: false,
-            editValueLabel: true
-        };
-        this.inputRefs = React.createRef();
-        this.inputRefsValue = React.createRef();
-        this.inputRefsProperty = React.createRef();
-    }
-
     render() {
+        let propertyIds =
+            Object.keys(this.props.resources.byId).length !== 0 && this.props.resourceId
+                ? this.props.resources.byId[this.props.resourceId].propertyIds
+                : [];
+        let shared =
+            Object.keys(this.props.resources.byId).length !== 0 && this.props.resourceId
+                ? this.props.resources.byId[this.props.resourceId].shared
+                : 1;
         return (
             <TemplateStyle className={'mt-3 mb-5'}>
-                <TemplateHeader label={this.props.label} />
-                {this.props.properties.map((p, index) => (
-                    <PropertyItem key={`pi${index}`} label={p.label} inTemplate={true} values={p.values} />
-                ))}
+                <TemplateHeader
+                    syncBackend={this.props.syncBackend}
+                    label={this.props.label}
+                    id={this.props.id}
+                    isEditing={this.props.isEditing}
+                    propertyId={this.props.propertyId}
+                />
+                {propertyIds.map((propertyId, index) => {
+                    let property = this.props.properties.byId[propertyId];
+
+                    return (
+                        <StatementItem
+                            id={propertyId}
+                            label={property.label}
+                            predicateLabel={property.label}
+                            key={'statement-' + index}
+                            index={index}
+                            isExistingProperty={property.isExistingProperty ? true : false}
+                            enableEdit={shared <= 1 ? this.props.enableEdit : false}
+                            syncBackend={this.props.syncBackend}
+                            isLastItem={propertyIds.length === index + 1}
+                            openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
+                            isEditing={property.isEditing}
+                            isSaving={property.isSaving}
+                            inTemplate={true}
+                            resourceId={this.props.resourceId}
+                            contextStyle={'Template'}
+                        />
+                    );
+                })}
 
                 <AddPropertWrapper>
                     <div className={'row no-gutters'}>
                         <div className={'col-4 propertyHolder'} />
                     </div>
-                    <AddProperty inTemplate={true} contextStyle="Template" />
+                    <AddProperty syncBackend={this.props.syncBackend} inTemplate={true} contextStyle="Template" resourceId={this.props.resourceId} />
                 </AddPropertWrapper>
             </TemplateStyle>
         );
@@ -62,9 +86,17 @@ class ContributionTemplate extends Component {
 }
 
 ContributionTemplate.propTypes = {
+    id: PropTypes.string.isRequired,
+    propertyId: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-    properties: PropTypes.array.isRequired,
-    inTemplate: PropTypes.bool.isRequired
+    isEditing: PropTypes.bool.isRequired,
+    resourceId: PropTypes.string.isRequired,
+    resources: PropTypes.object.isRequired,
+    properties: PropTypes.object.isRequired,
+    inTemplate: PropTypes.bool.isRequired,
+    syncBackend: PropTypes.bool.isRequired,
+    enableEdit: PropTypes.bool.isRequired,
+    openExistingResourcesInDialog: PropTypes.bool
 };
 
 ContributionTemplate.defaultProps = {
@@ -73,4 +105,17 @@ ContributionTemplate.defaultProps = {
     properties: []
 };
 
-export default ContributionTemplate;
+const mapStateToProps = state => {
+    return {
+        properties: state.statementBrowser.properties,
+        values: state.statementBrowser.values,
+        resources: state.statementBrowser.resources
+    };
+};
+
+const mapDispatchToProps = dispatch => ({});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ContributionTemplate);
