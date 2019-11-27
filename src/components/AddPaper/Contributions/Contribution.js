@@ -24,31 +24,62 @@ class Contribution extends Component {
                 id: 1,
                 predicateId: 'HAS_IMPLEMENTATION',
                 predicateLabel: 'Has implementation',
-                label: 'Implementation'
+                label: 'Implementation',
+                properties: [
+                    {
+                        id: 'P21',
+                        label: 'programming language'
+                    },
+                    {
+                        id: 'P1003',
+                        label: 'Uses Library'
+                    },
+                    {
+                        id: 'P2000',
+                        label: 'Dataset'
+                    }
+                ]
             },
             {
                 id: 2,
                 predicateId: 'HAS_EVALUATION',
                 predicateLabel: 'Has evaluation',
-                label: 'Evaluation'
+                label: 'Evaluation',
+                properties: [
+                    {
+                        id: 'P2001',
+                        label: 'Type'
+                    },
+                    {
+                        id: 'P2002',
+                        label: 'Participants'
+                    },
+                    {
+                        id: 'P2000',
+                        label: 'Dataset'
+                    }
+                ]
             },
             {
                 id: 3,
                 predicateId: 'HAS_APPROACH',
                 predicateLabel: 'Has approach',
-                label: 'Approach'
+                label: 'Approach',
+                properties: []
             },
             {
                 id: 4,
                 predicateId: 'HAS_RESULTS',
                 predicateLabel: 'Has result',
-                label: 'Results'
+                label: 'Results',
+                properties: []
             },
             {
                 id: 5,
                 predicateId: 'HAS_METHOD',
                 predicateLabel: 'Has method',
-                label: 'Method'
+                label: 'Method',
+                properties: []
             }
         ]
     };
@@ -140,7 +171,13 @@ class Contribution extends Component {
                         </Label>
                         <div className={'mt-2'}>
                             {this.state.templates.map(t => (
-                                <AddTemplateButton key={`t${t.id}`} label={t.label} predicateId={t.predicateId} predicateLabel={t.predicateLabel} />
+                                <AddTemplateButton
+                                    key={`t${t.id}`}
+                                    label={t.label}
+                                    predicateId={t.predicateId}
+                                    predicateLabel={t.predicateLabel}
+                                    properties={t.properties}
+                                />
                             ))}
                         </div>
                     </FormGroup>

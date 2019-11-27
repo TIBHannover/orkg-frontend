@@ -9,10 +9,11 @@ import { guid } from 'utils';
 import { connect } from 'react-redux';
 
 class AddTemplateButton extends Component {
-    add_template = () => {
+    addTemplate = () => {
         let statements = { properties: [], values: [] };
         let pID = guid();
         let vID = guid();
+        let rID = guid();
         statements['properties'].push({
             propertyId: pID,
             existingPredicateId: this.props.predicateId,
@@ -23,24 +24,28 @@ class AddTemplateButton extends Component {
         statements['values'].push({
             valueId: vID,
             label: this.props.label,
+            existingResourceId: rID,
             type: 'object',
             propertyId: pID
         });
-
         this.props.prefillStatements({ statements, resourceId: this.props.selectedResource });
-        // TODO: Add properties!
-        statements = { properties: [], values: [] };
-        statements['properties'].push({
-            existingPredicateId: 'P21',
-            label: 'programming language'
-        });
-        this.props.prefillStatements({ statements, resourceId: vID });
+        // Add properties
+        if (this.props.properties && this.props.properties.length > 0) {
+            let statements = { properties: [], values: [] };
+            for (let property of this.props.properties) {
+                statements['properties'].push({
+                    existingPredicateId: property.id,
+                    label: property.label
+                });
+            }
+            this.props.prefillStatements({ statements, resourceId: rID });
+        }
     };
     render() {
         return (
             <AddTemplateStyle
                 onClick={() => {
-                    this.add_template();
+                    this.addTemplate();
                 }}
             >
                 <span className="iconWrapper">
@@ -58,7 +63,8 @@ AddTemplateButton.propTypes = {
     selectedResource: PropTypes.string.isRequired,
     predicateId: PropTypes.string.isRequired,
     predicateLabel: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired
+    label: PropTypes.string.isRequired,
+    properties: PropTypes.array
 };
 
 AddTemplateButton.defaultProps = {
