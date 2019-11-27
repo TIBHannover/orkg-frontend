@@ -218,7 +218,8 @@ class ValueItem extends Component {
 
     handleExistingResourceClick = () => {
         let resource = this.props.resources.byId[this.props.resourceId];
-        let existingResourceId = resource.existingResourceId;
+        let existingResourceId = resource.existingResourceId ? resource.existingResourceId : this.props.resourceId;
+
         this.setState({
             modal: true,
             dialogResourceId: existingResourceId,
@@ -615,6 +616,8 @@ class ValueItem extends Component {
                         toggleModal={this.toggleModal}
                         resourceId={this.state.dialogResourceId}
                         resourceLabel={this.state.dialogResourceLabel}
+                        newStore={this.props.contextStyle === 'StatementBrowser'}
+                        enableEdit={this.props.enableEdit && this.props.contextStyle !== 'StatementBrowser' && !existingResourceId}
                     />
                 ) : (
                     ''

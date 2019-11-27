@@ -35,6 +35,23 @@ export const initializeWithoutContribution = data => dispatch => {
     );
 };
 
+export const initializeWithResource = data => dispatch => {
+    const label = data.label;
+    const resourceId = data.resourceId;
+
+    dispatch({
+        type: type.CLEAR_RESOURCE_HISTORY
+    });
+
+    dispatch(
+        selectResource({
+            increaseLevel: false,
+            resourceId: resourceId,
+            label: label
+        })
+    );
+};
+
 export const resetStatementBrowser = () => dispatch => {
     dispatch({
         type: type.RESET_STATEMENT_BROWSER

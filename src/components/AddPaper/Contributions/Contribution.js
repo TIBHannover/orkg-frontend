@@ -163,9 +163,12 @@ class Contribution extends Component {
                                 Data
                             </Tooltip>
                         </Label>
-
-                        <TemplateWizzard enableEdit={true} openExistingResourcesInDialog={true} syncBackend={false} />
-
+                        <TemplateWizzard
+                            enableEdit={true}
+                            openExistingResourcesInDialog={true}
+                            syncBackend={false}
+                            initialResourceId={this.props.resourceId}
+                        />
                         <Label className={'mt-4'}>
                             <Tooltip message={`Select a template to use it in your contribution data`}>Add template</Tooltip>
                         </Label>
@@ -333,12 +336,14 @@ Contribution.propTypes = {
     tourCurrentStep: PropTypes.number.isRequired,
     tourStartAt: PropTypes.number.isRequired,
     showAbstractDialog: PropTypes.bool.isRequired,
-    abstractDialogView: PropTypes.string.isRequired
+    abstractDialogView: PropTypes.string.isRequired,
+    resourceId: PropTypes.string.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {
     return {
         researchProblems: state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].researchProblems : [],
+        resourceId: state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].resourceId : null,
         isTourOpen: state.addPaper.isTourOpen,
         tourCurrentStep: state.addPaper.tourCurrentStep,
         tourStartAt: state.addPaper.tourStartAt,
