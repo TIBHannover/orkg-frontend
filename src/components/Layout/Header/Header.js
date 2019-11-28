@@ -33,6 +33,8 @@ import { Redirect } from 'react-router-dom';
 import { getUserInformation } from '../../../network';
 import greetingTime from 'greeting-time';
 import styled from 'styled-components';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
 const StyledLink = styled(Link)`
     :focus {
@@ -145,7 +147,7 @@ class Header extends Component {
 
         return (
             <Navbar color="light" expand="md" fixed="top" id="main-navbar" light>
-                <Container>
+                <Container fluid>
                     <StyledLink to={ROUTES.HOME} className="mr-5 p-0">
                         <Logo />
                     </StyledLink>
@@ -160,6 +162,13 @@ class Header extends Component {
                                     {/* TODO: add taxonomy "Browse by research field" <FontAwesomeIcon icon={faSortDown} pull="right" /> */}
                                 </NavLink>
                             </NavItem>
+
+                            <NavItem className="ml-4">
+                                <NavLink href="https://projects.tib.eu/orkg/" target="_blank" rel="noopener noreferrer">
+                                    About <Icon size="sm" icon={faExternalLinkAlt} />
+                                </NavLink>
+                            </NavItem>
+
                             <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.dropdownOpen} nav inNavbar>
                                 <DropdownToggle nav className="ml-4">
                                     Tools <FontAwesomeIcon icon={faSortDown} pull="right" />
