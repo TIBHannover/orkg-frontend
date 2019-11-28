@@ -37,12 +37,19 @@ class Search extends Component {
             [
                 3,
                 {
+                    label: 'Author',
+                    class: process.env.REACT_APP_CLASSES_AUTHOR
+                }
+            ],
+            [
+                4,
+                {
                     label: 'Resource',
                     class: 'resource'
                 }
             ],
             [
-                4,
+                5,
                 {
                     label: 'Predicate',
                     class: 'predicate'
@@ -77,7 +84,13 @@ class Search extends Component {
             isProblemsNextPageLoading: false,
             hasProblemsNextPage: false,
             problemsPage: 1,
-            isProblemsLastPageReached: false
+            isProblemsLastPageReached: false,
+
+            authors: [],
+            isAuthorsNextPageLoading: false,
+            hasAuthorsNextPage: false,
+            authorsPage: 1,
+            isAuthorsLastPageReached: false
         };
     }
 
@@ -86,6 +99,7 @@ class Search extends Component {
         this.loadMoreResources(this.state.value);
         this.loadMorePapers(this.state.value);
         this.loadMoreProblems(this.state.value);
+        this.loadMoreAuthors(this.state.value);
         this.loadMorePredicates(this.state.value);
     }
 
@@ -113,12 +127,18 @@ class Search extends Component {
                     isProblemsNextPageLoading: false,
                     hasProblemsNextPage: false,
                     problemsPage: 1,
-                    isProblemsLastPageReached: false
+                    isProblemsLastPageReached: false,
+                    authors: [],
+                    isAuthorsNextPageLoading: false,
+                    hasAuthorsNextPage: false,
+                    authorsPage: 1,
+                    isAuthorsLastPageReached: false
                 },
                 () => {
                     this.loadMoreResources(this.state.value);
                     this.loadMorePapers(this.state.value);
                     this.loadMoreProblems(this.state.value);
+                    this.loadMoreAuthors(this.state.value);
                     this.loadMorePredicates(this.state.value);
                 }
             );
@@ -215,6 +235,36 @@ class Search extends Component {
                     isProblemsNextPageLoading: false,
                     hasProblemsNextPage: false,
                     isProblemsLastPageReached: true
+                });
+            }
+        });
+    };
+
+    loadMoreAuthors = searchQuery => {
+        if (searchQuery.length === 0) {
+            return;
+        }
+        this.setState({ isAuthorsNextPageLoading: true });
+        getResourcesByClass({
+            page: this.state.authorsPage,
+            items: this.itemsPerFilter,
+            sortBy: 'id',
+            desc: true,
+            q: searchQuery,
+            id: process.env.REACT_APP_CLASSES_AUTHOR
+        }).then(authors => {
+            if (authors.length > 0) {
+                this.setState({
+                    authors: [...this.state.authors, ...authors],
+                    isAuthorsNextPageLoading: false,
+                    hasAuthorsNextPage: authors.length < this.itemsPerFilter ? false : true,
+                    authorsPage: this.state.authorsPage + 1
+                });
+            } else {
+                this.setState({
+                    isAuthorsNextPageLoading: false,
+                    hasAuthorsNextPage: false,
+                    isAuthorsLastPageReached: true
                 });
             }
         });
@@ -335,6 +385,17 @@ class Search extends Component {
                                 {(this.state.selectedFilters.length === 0 ||
                                     (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(3))) && (
                                     <Results
+                                        loading={this.state.isAuthorsNextPageLoading}
+                                        hasNextPage={this.state.hasAuthorsNextPage}
+                                        loadMore={this.loadMoreAuthors}
+                                        items={this.state.authors}
+                                        label={'Authors'}
+                                        class={process.env.REACT_APP_CLASSES_AUTHOR}
+                                    />
+                                )}
+                                {(this.state.selectedFilters.length === 0 ||
+                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(4))) && (
+                                    <Results
                                         loading={this.state.isResourcesNextPageLoading}
                                         hasNextPage={this.state.hasResourcesNextPage}
                                         loadMore={this.loadMoreResources}
@@ -344,7 +405,7 @@ class Search extends Component {
                                     />
                                 )}
                                 {(this.state.selectedFilters.length === 0 ||
-                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(4))) && (
+                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(5))) && (
                                     <Results
                                         loading={this.state.isPredicatesNextPageLoading}
                                         hasNextPage={this.state.hasPredicatesNextPage}
