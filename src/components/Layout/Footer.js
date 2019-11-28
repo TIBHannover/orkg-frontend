@@ -14,14 +14,16 @@ const FooterWrapper = styled.div`
 const FooterCol = styled(Col)`
     color: ${props => props.theme.darkblueDarker};
     margin: 10px 0;
+    font-size: 0.95rem;
 
     h5 {
         font-weight: 500;
         text-transform: uppercase;
         color: ${props => props.theme.darkblueDarker};
+        font-size: 1.1rem;
     }
     .description {
-        font-size: smaller;
+        font-size: 0.85rem;
     }
     a {
         color: ${props => props.theme.darkblueDarker};
@@ -42,7 +44,9 @@ const Footer = () => (
                                     <Logo style={{ height: '80px' }} />
                                 </Link>
                             </div>
-                            <div className={'col-md-8 description'}>We aim to describe research papers and contributions in a structured manner</div>
+                            <div className={'col-md-8 description'}>
+                                The Open Research Knowledge Graph aims to describe research papers in a structured manner
+                            </div>
                         </Row>
                     </FooterCol>
                     <FooterCol md={3}>
