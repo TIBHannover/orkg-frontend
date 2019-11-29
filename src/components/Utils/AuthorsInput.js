@@ -121,7 +121,7 @@ class AuthorsInput extends Component {
     getFullname = name => {
         let fullName = name['family-name'] && name['family-name'].value ? name['family-name'].value : '';
         fullName = name['given-names'] && name['given-names'].value ? `${name['given-names'].value} ${fullName}` : fullName;
-        return fullName;
+        return fullName.trim();
     };
 
     saveAuthor = () => {
