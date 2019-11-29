@@ -113,8 +113,8 @@ class ViewPaper extends Component {
                         if (authors.length > 0) {
                             for (let author of authors) {
                                 authorNamesArray.push({
-                                    id: author.id,
-                                    resourceId: author.object.id,
+                                    id: author.object.id,
+                                    statementId: author.id,
                                     class: author.object._class,
                                     label: author.object.label,
                                     classes: author.object.classes
@@ -178,7 +178,7 @@ class ViewPaper extends Component {
                             authors = this.props.viewPaper.authors
                                 .filter(author => author.classes && author.classes.includes(process.env.REACT_APP_CLASSES_AUTHOR))
                                 .map(author => {
-                                    return getStatementsBySubject({ id: author.resourceId }).then(authorStatements => {
+                                    return getStatementsBySubject({ id: author.id }).then(authorStatements => {
                                         return authorStatements.find(
                                             statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_ORCID
                                         );
@@ -188,7 +188,7 @@ class ViewPaper extends Component {
                         return Promise.all(authors).then(authorsORCID => {
                             let authorsArray = [];
                             for (let author of this.props.viewPaper.authors) {
-                                let orcid = authorsORCID.find(a => a.subject.id === author.resourceId);
+                                let orcid = authorsORCID.find(a => a.subject.id === author.id);
                                 if (orcid) {
                                     author.orcid = orcid.object.label;
                                     authorsArray.push(author);
@@ -397,7 +397,7 @@ class ViewPaper extends Component {
                                     )}
                                     {this.props.viewPaper.authors.map((author, index) =>
                                         author.classes && author.classes.includes(process.env.REACT_APP_CLASSES_AUTHOR) ? (
-                                            <Link key={index} to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.resourceId })}>
+                                            <Link key={index} to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}>
                                                 <span className="badge badge-lightblue mr-2 mb-2" key={index}>
                                                     <Icon icon={faUser} className="text-primary" /> {author.label}
                                                 </span>

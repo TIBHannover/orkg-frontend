@@ -96,21 +96,6 @@ class AuthorsInput extends Component {
         this.setState({ [event.target.name]: event.target.value });
     };
 
-    getAuthorByORCID = async event => {
-        let responseJson = await submitGetRequest(literalsUrl + '?q=' + encodeURIComponent(event.target.value) + '&exact=true');
-        if (responseJson.length > 0) {
-            let author = '';
-            getStatementsByObject({ id: responseJson[0].id }).then(statments => {
-                let author = statments.find(s => s.predicate.id === process.env.REACT_APP_PREDICATES_HAS_ORCID);
-                if (author) {
-                    this.setState({ authorName: author.subject.label });
-                } else {
-                    author = '';
-                }
-            });
-        }
-    };
-
     isORCID = value => {
         /** Regular expression to check whether an input string is a valid ORCID id.  */
         let ORCID_REGEX = '^\\s*(?:(?:https?://)?orcid.org/)?([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?([0-9]{4})\\s*$';
@@ -137,7 +122,11 @@ class AuthorsInput extends Component {
                         const newAuthor = {
                             label: authorName,
                             id: authorName,
-                            orcid: orcid
+                            orcid: orcid,
+                            statementId:
+                                this.state.editMode && this.props.value[this.state.editIndex] && this.props.value[this.state.editIndex].statementId
+                                    ? this.props.value[this.state.editIndex].statementId
+                                    : ''
                         };
                         if (this.state.editMode) {
                             this.props.handler([
@@ -166,7 +155,11 @@ class AuthorsInput extends Component {
                 const newAuthor = {
                     label: this.state.authorInput,
                     id: this.state.authorInput,
-                    orcid: ''
+                    orcid: '',
+                    statementId:
+                        this.state.editMode && this.props.value[this.state.editIndex] && this.props.value[this.state.editIndex].statementId
+                            ? this.props.value[this.state.editIndex].statementId
+                            : ''
                 };
                 if (this.state.editMode) {
                     this.props.handler([
