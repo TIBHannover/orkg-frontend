@@ -19,7 +19,7 @@ import Confirm from 'reactstrap-confirm';
 import classNames from 'classnames';
 import ValueItem from './Value/ValueItem';
 import AddValue from './Value/AddValue';
-import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizzard/TemplateOptionButton';
+import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizard/TemplateOptionButton';
 import { StyledStatementItem, StyledListGroupOpen, StatementsGroupStyle, PropertyStyle, ValuesStyle } from '../AddPaper/Contributions/styled';
 import StatementOptions from './StatementOptions';
 import { connect } from 'react-redux';

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 import AddProperty from 'components/StatementBrowser/AddProperty';
-import TemplateHeader from 'components/AddPaper/Contributions/TemplateWizzard/TemplateHeader';
+import TemplateHeader from 'components/AddPaper/Contributions/TemplateWizard/TemplateHeader';
 import StatementItem from 'components/StatementBrowser/StatementItem';
 import { connect } from 'react-redux';
 import styled from 'styled-components';

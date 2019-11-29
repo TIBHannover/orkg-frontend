@@ -303,10 +303,8 @@ export const StyledDropdownItem = styled(DropdownItem)`
     }
 `;
 
-/* Template Wizzard */
+/* Template Wizard */
 export const StyledButton = styled(Button)`
-    border-top-right-radius: 4px !important;
-    border-bottom-right-radius: 4px !important;
     border-color: #ced4da !important;
     color: ${props => props.theme.buttonDark} !important;
     background: ${props => props.theme.ultraLightBlueDarker} !important;
@@ -355,8 +353,6 @@ export const ValueItemStyle = styled.div`
         outline: 0 !important;
         box-shadow: none !important;
         border-color: #ced4da !important;
-        border-top-left-radius: 4px !important;
-        border-bottom-left-radius: 4px !important;
     }
 
     .objectLabel {
@@ -404,11 +400,14 @@ export const AddPropertyContentStyle = styled.span`
     }
 
     &.inTemplate {
-        padding: 2px 10px;
         width: 30%;
-        text-align: center;
-        background-color: ${props => props.theme.ultraLightBlue};
-        border: 1px solid rgba(0, 0, 0, 0.125) !important;
+
+        button {
+            padding: 2px 10px;
+            width: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.125);
+        }
+
         &.large {
             width: 100%;
             padding: 0;
@@ -416,10 +415,6 @@ export const AddPropertyContentStyle = styled.span`
             .icon {
                 color: ${props => props.theme.darkblue};
             }
-        }
-        &:hover {
-            background-color: ${props => props.theme.darkblue};
-            color: #fff;
         }
     }
 `;

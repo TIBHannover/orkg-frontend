@@ -180,10 +180,10 @@ class AddProperty extends Component {
                         >
                             {!this.state.showAddProperty ? (
                                 <Button
-                                    className={this.props.inTemplate ? 'p-0' : 'darkblue'}
-                                    color={this.props.inTemplate ? 'none' : 'darkblue'}
+                                    //className={this.props.inTemplate ? 'p-0' : ''}
+                                    color={this.props.inTemplate ? 'light' : 'darkblue'}
                                     onClick={() => (!this.props.inTemplate ? this.handleShowAddProperty() : undefined)}
-                                    style={this.props.inTemplate ? { color: 'inherit' } : undefined}
+                                    //style={this.props.inTemplate ? { color: 'inherit' } : undefined}
                                     size="sm"
                                 >
                                     <Icon className={'icon'} size="sm" icon={faPlus} /> Add property

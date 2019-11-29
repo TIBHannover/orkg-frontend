@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Input } from 'reactstrap';
 import { faTrash, faPen, faQuestion } from '@fortawesome/free-solid-svg-icons';
-import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizzard/TemplateOptionButton';
+import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizard/TemplateOptionButton';
 import { TemplateHeaderStyle } from 'components/AddPaper/Contributions/styled';
 import Confirm from 'reactstrap-confirm';
 import { deleteStatementById, updateResource } from 'network';
