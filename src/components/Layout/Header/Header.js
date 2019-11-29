@@ -20,7 +20,7 @@ import {
 import { Link, NavLink as RouterNavLink } from 'react-router-dom';
 import { ReactComponent as Logo } from '../../../assets/img/logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSortDown, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faUser } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from '../../../constants/routes.js';
 import { Cookies } from 'react-cookie';
 import Gravatar from 'react-gravatar';
@@ -33,6 +33,8 @@ import { Redirect } from 'react-router-dom';
 import { getUserInformation } from '../../../network';
 import greetingTime from 'greeting-time';
 import styled from 'styled-components';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
 const StyledLink = styled(Link)`
     :focus {
@@ -145,8 +147,8 @@ class Header extends Component {
 
         return (
             <Navbar color="light" expand="md" fixed="top" id="main-navbar" light>
-                <Container>
-                    <StyledLink to={ROUTES.HOME} className="mr-5 p-0">
+                <Container className="p-0">
+                    <StyledLink to={ROUTES.HOME} className="mr-4 p-0">
                         <Logo />
                     </StyledLink>
 
@@ -160,9 +162,10 @@ class Header extends Component {
                                     {/* TODO: add taxonomy "Browse by research field" <FontAwesomeIcon icon={faSortDown} pull="right" /> */}
                                 </NavLink>
                             </NavItem>
+
                             <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.dropdownOpen} nav inNavbar>
-                                <DropdownToggle nav className="ml-4">
-                                    Tools <FontAwesomeIcon icon={faSortDown} pull="right" />
+                                <DropdownToggle nav className="ml-2">
+                                    Tools <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS}>
@@ -182,6 +185,12 @@ class Header extends Component {
                                     </DropdownItem>
                                 </DropdownMenu>
                             </ButtonDropdown>
+
+                            <NavItem className="ml-2 ">
+                                <NavLink href="https://projects.tib.eu/orkg/" target="_blank" rel="noopener noreferrer">
+                                    About <Icon size="sm" icon={faExternalLinkAlt} />
+                                </NavLink>
+                            </NavItem>
                         </Nav>
 
                         <SearchForm placeholder="Search..." />
