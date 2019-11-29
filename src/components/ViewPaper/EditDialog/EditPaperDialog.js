@@ -3,7 +3,7 @@ import { Button, Modal, ModalHeader, ModalBody, ListGroup } from 'reactstrap';
 import {
     updateResource,
     updateLiteral,
-    createLiteral,
+    createLiteral as createLiteralAPI,
     createLiteralStatement,
     deleteStatementById,
     submitGetRequest,
@@ -129,7 +129,7 @@ class EditPaperDialog extends Component {
     };
 
     createNewLiteral = async (resourceId, predicateId, label) => {
-        let newLiteral = await createLiteral(label);
+        let newLiteral = await createLiteralAPI(label);
         let statement = await createLiteralStatement(resourceId, predicateId, newLiteral.id);
 
         return {
@@ -191,8 +191,8 @@ class EditPaperDialog extends Component {
                         // Author resource doesn't exist
                         // Create resource author
                         let authorResource = await createResource(author.label, [process.env.REACT_APP_CLASSES_AUTHOR]);
-                        let createLiteral = await createResource(author.orcid);
-                        await createResourceStatement(authorResource.id, process.env.REACT_APP_PREDICATES_HAS_ORCID, createLiteral.id);
+                        let createLiteral = await createLiteralAPI(author.orcid);
+                        await createLiteralStatement(authorResource.id, process.env.REACT_APP_PREDICATES_HAS_ORCID, createLiteral.id);
                         let authorStatement = null;
                         if (author.statementId) {
                             // update the statement
@@ -209,7 +209,7 @@ class EditPaperDialog extends Component {
                     }
                 } else {
                     // Author resource doesn't exist
-                    let newLiteral = await createLiteral(author.label);
+                    let newLiteral = await createLiteralAPI(author.label);
                     let authorStatement = null;
                     if (author.statementId) {
                         // update the statement
