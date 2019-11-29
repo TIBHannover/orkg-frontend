@@ -149,7 +149,7 @@ class Contribution extends Component {
                         <ResearchProblemInput handler={this.handleResearchProblemsChange} value={this.props.researchProblems} />
                     </FormGroup>
                     <FormGroup>
-                        <Label>
+                        <Label className="mb-0">
                             <Tooltip
                                 message={
                                     <span>

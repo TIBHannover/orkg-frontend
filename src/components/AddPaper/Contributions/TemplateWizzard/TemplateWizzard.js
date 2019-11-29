@@ -63,10 +63,10 @@ class TemplateWizzard extends Component {
                         }
                     })
                 ) : (
-                    <StyledEmptyData>
-                        No data yet!
+                    <StyledEmptyData className="text-muted mt-3">
+                        No data yet
                         <br />
-                        <small>Start by creating properties or add one of the suggested templates bellow.</small>
+                        <span style={{ fontSize: '0.875rem' }}>Start by adding a template or a property from below</span>
                         <br />
                     </StyledEmptyData>
                 )}

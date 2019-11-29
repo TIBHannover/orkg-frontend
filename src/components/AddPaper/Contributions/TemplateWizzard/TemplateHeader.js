@@ -76,7 +76,7 @@ class TemplateHeader extends Component {
                     <div className="flex-grow-1 mr-4">
                         {!this.props.isEditing ? (
                             <>
-                                {this.props.label}
+                                {this.props.label}{' '}
                                 <div className={'headerOptions'}>
                                     <TemplateOptionButton
                                         title={'Edit label'}
@@ -106,7 +106,7 @@ class TemplateHeader extends Component {
                         )}
                     </div>
                     <div className={'type'}>
-                        Template
+                        Template{' '}
                         <TemplateOptionButton
                             title={
                                 'A template is a defined structure of a contribution, this stucture is mostly shared between papers in the same research field.'

@@ -6,7 +6,6 @@ import {
     StyledAddProperty,
     AddPropertyStyle,
     AddPropertyContentStyle,
-    AddPropertyButton,
     AddPropertyFormStyle,
     StyledButton
 } from '../AddPaper/Contributions/styled';
@@ -180,12 +179,15 @@ class AddProperty extends Component {
                             className={`${this.props.inTemplate ? 'inTemplate' : 'noTemplate'} ${this.state.showAddProperty ? 'col-12 large' : ''}`}
                         >
                             {!this.state.showAddProperty ? (
-                                <AddPropertyButton
-                                    className={`${this.props.inTemplate ? 'inTemplate' : 'noTemplate'}`}
+                                <Button
+                                    className={this.props.inTemplate ? 'p-0' : 'darkblue'}
+                                    color={this.props.inTemplate ? 'none' : 'darkblue'}
                                     onClick={() => (!this.props.inTemplate ? this.handleShowAddProperty() : undefined)}
+                                    style={this.props.inTemplate ? { color: 'inherit' } : undefined}
+                                    size="sm"
                                 >
-                                    <Icon className={'icon'} size="xs" icon={faPlus} /> Add property
-                                </AddPropertyButton>
+                                    <Icon className={'icon'} size="sm" icon={faPlus} /> Add property
+                                </Button>
                             ) : (
                                 <AddPropertyFormStyle>
                                     <InputGroup size="sm">

@@ -17,7 +17,7 @@ export const StyledHorizontalContribution = styled.div`
     border-color: ${props => props.theme.ultraLightBlueDarker};
     border-style: solid;
     border-top-left-radius: 0;
-    padding: 15px 30px;
+    padding: 25px 30px;
 `;
 
 /*contributionsList*/
@@ -76,17 +76,17 @@ export const StyledHorizontalContributionsList = styled.ul`
             border-top-left-radius: ${props => props.theme.borderRadius};
         }
 
-        border: 2px solid ${props => props.theme.ultraLightBlueDarker};
+        border: 1px solid ${props => props.theme.ultraLightBlueDarker};
         background-color: ${props => props.theme.ultraLightBlue};
         margin-right: 2px;
         border-bottom: 0;
-        margin-bottom: -2px;
+        margin-bottom: -1px;
         position: relative;
         box-sizing: border-box;
         -moz-box-sizing: border-box;
         -webkit-box-sizing: border-box;
         display: inline-block;
-        padding: 9px 15px 9px 15px;
+        padding: 7px 15px 7px 15px;
         transition: 0.3s background;
         cursor: pointer;
 
@@ -95,7 +95,7 @@ export const StyledHorizontalContributionsList = styled.ul`
         }
         &.activeContribution {
             background: ${props => props.theme.orkgPrimaryColor};
-            border: 2px solid ${props => props.theme.orkgPrimaryColor};
+            border: 1px solid ${props => props.theme.orkgPrimaryColor};
             color: #fff;
             cursor: initial !important;
         }
@@ -107,19 +107,23 @@ export const StyledHorizontalContributionsList = styled.ul`
             color: #fff;
         }
         &.addContribution {
-            & span {
-                padding: 1px 8px;
-                display: inline-block;
-            }
             padding: 0;
-            border: 2px solid ${props => props.theme.ultraLightBlueDarker};
+            border: 1px solid ${props => props.theme.ultraLightBlueDarker};
             border-radius: 60px;
             margin: 0 5px;
             cursor: pointer;
+
+            span {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 25px;
+                height: 25px;
+            }
         }
         &.addContribution:hover {
             background-color: ${props => props.theme.orkgPrimaryColor};
-            border: 2px solid ${props => props.theme.orkgPrimaryColor};
+            border: 1px solid ${props => props.theme.orkgPrimaryColor};
             color: #fff;
         }
     }
@@ -283,7 +287,8 @@ export const StyledValueItem = styled(ListGroupItem)`
 export const StyledEmptyData = styled(ListGroupItem)`
     padding: 8px 8px;
     margin-top: 8px;
-    border-radius: 4px !important;
+    border-radius: 6px !important;
+    border-style: dashed !important;
 `;
 
 /*dropdownItem*/
@@ -328,12 +333,23 @@ export const StyledDropdownToggle = styled(DropdownToggle)`
 export const ValueItemStyle = styled.div`
     background-color: #fff;
     margin-bottom: 10px;
-    &:hover .valueOptions {
+
+    .valueOptions {
+        visibility: hidden;
         display: inline-block !important;
+        transition: visibility 0.2s, opacity 0.2s;
+        opacity: 0;
     }
+
+    &:hover .valueOptions {
+        visibility: visible;
+        opacity: 1;
+    }
+
     &.editingLabel {
         margin-bottom: 1px !important;
     }
+
     & input,
     & input:focus {
         outline: 0 !important;
@@ -342,23 +358,19 @@ export const ValueItemStyle = styled.div`
         border-top-left-radius: 4px !important;
         border-bottom-left-radius: 4px !important;
     }
-    & .btn {
-    }
+
     .objectLabel {
         display: inline;
         margin-right: 4px;
         text-decoration: underline;
         cursor: pointer;
     }
+
     .literalLabel {
         display: inline;
         margin-right: 4px;
         text-decoration: none;
         cursor: default;
-    }
-
-    .valueOptions {
-        display: none;
     }
 `;
 
@@ -366,8 +378,9 @@ export const AddPropertyStyle = styled.div`
     &.inTemplate {
         background-color: transparent;
         border: 0;
-        margin: -16.5px 10px;
+        margin: -14.5px 10px;
         padding: 0;
+        height: 30px; /* fixed height: prevents bug in chrome that moves items around, even though the height doesn't change */
     }
 `;
 
@@ -377,7 +390,7 @@ export const AddPropertyContentStyle = styled.span`
     z-index: 10px;
     border-radius: 4px;
     max-width: 33.33%;
-    font-size: small;
+    font-size: 0.875rem;
     color: ${props => props.theme.darkblue};
     transition: 0.3s max-width;
     cursor: pointer;
@@ -391,11 +404,11 @@ export const AddPropertyContentStyle = styled.span`
     }
 
     &.inTemplate {
-        padding: 5px 10px;
+        padding: 2px 10px;
         width: 30%;
         text-align: center;
         background-color: ${props => props.theme.ultraLightBlue};
-        border: 2px solid rgba(0, 0, 0, 0.125) !important;
+        border: 1px solid rgba(0, 0, 0, 0.125) !important;
         &.large {
             width: 100%;
             padding: 0;
@@ -411,24 +424,9 @@ export const AddPropertyContentStyle = styled.span`
     }
 `;
 
-export const AddPropertyButton = styled.div`
-    border-radius: 4px;
-    line-height: 19px;
-
-    &.noTemplate {
-        background-color: ${props => props.theme.darkblue};
-        color: #fff;
-        border: 2px solid ${props => props.theme.darkblue};
-        padding: 5px 14px;
-        &:hover {
-            background-color: ${props => props.theme.ultraLightBlue};
-            border: 2px solid rgba(0, 0, 0, 0.125) !important;
-            color: ${props => props.theme.darkblue};
-        }
-    }
-`;
-
 export const AddPropertyFormStyle = styled.div`
+    text-align: left;
+
     & input,
     & input:focus {
         border-left: 0;
@@ -439,19 +437,13 @@ export const AddPropertyFormStyle = styled.div`
     .input-group-prepend {
         background-color: ${props => props.theme.ultraLightBlue};
         cursor: default;
-        display: inline-block;
-        text-align: center;
-        border: 2px solid rgba(0, 0, 0, 0.125);
+        display: flex;
+        border: 1px solid rgba(0, 0, 0, 0.125);
         border-bottom-left-radius: 4px;
         border-top-left-radius: 4px;
-        width: 24px;
-        padding: 0.25rem 0.25rem 0;
-        .icon {
-            padding: 0;
-            margin: 0;
-            line-height: 40px;
-            font-size: 12px;
-        }
+        width: 28px;
+        align-items: center;
+        justify-content: center;
     }
 `;
 
@@ -466,17 +458,8 @@ export const StatementsGroupStyle = styled(ListGroupItem)`
         border-top: 0;
     }
     &.noTemplate {
-        border-top: 2px solid rgba(0, 0, 0, 0.125);
+        border-top: 1px solid rgba(0, 0, 0, 0.125);
         border-radius: 4px !important;
-    }
-    & .propertyOptions {
-        visibility: hidden;
-    }
-    &:hover .propertyOptions {
-        visibility: visible;
-        span {
-            color: ${props => props.theme.buttonDark};
-        }
     }
 `;
 
@@ -501,6 +484,19 @@ export const PropertyStyle = styled.div`
     &.editingLabel {
         padding-bottom: 15px !important;
     }
+
+    & .propertyOptions {
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0.2s, opacity 0.2s;
+    }
+    &:hover .propertyOptions {
+        visibility: visible;
+        opacity: 1;
+        span {
+            color: ${props => props.theme.buttonDark};
+        }
+    }
 `;
 export const ValuesStyle = styled.div`
     & > div {
@@ -513,12 +509,29 @@ export const TemplateHeaderStyle = styled.div`
     cursor: default;
     background-color: ${props => props.theme.darkblue};
     border-color: ${props => props.theme.darkblue};
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
     color: #fff;
     position: relative;
     display: block;
-    padding: 0.75rem 1.25rem;
+    padding: 0.55rem 1.25rem;
+
+    .headerOptions {
+        visibility: none;
+        transition: visibility 0.2s, opacity 0.2s;
+        opacity: 0;
+        display: inline-block;
+
+        span {
+            background-color: ${props => props.theme.buttonDark};
+            color: ${props => props.theme.ultraLightBlue};
+        }
+    }
+
+    &:hover .headerOptions {
+        visibility: visible;
+        opacity: 1;
+    }
 
     .form-control {
         border-width: 0;
@@ -534,48 +547,12 @@ export const TemplateHeaderStyle = styled.div`
         }
     }
     & .type {
-        font-size: small;
+        font-size: 0.9rem;
         color: ${props => props.theme.ultraLightBlueDarker};
+        opacity: 0.9;
         .span {
             background-color: ${props => props.theme.buttonDark};
             color: ${props => props.theme.darkblue};
-        }
-    }
-`;
-
-export const AddTemplateStyle = styled.div`
-    display: inline-block;
-    margin-right: 8px;
-    cursor: pointer;
-    overflow: hidden;
-    background-color: ${props => props.theme.ultraLightBlue};
-    border-color: ${props => props.theme.darkblue};
-    border: 1px solid ${props => props.theme.ultraLightBlueDarker};
-    border-radius: 12px;
-    .iconWrapper {
-        display: inline-block;
-        color: ${props => props.theme.darkblue};
-        background-color: ${props => props.theme.ultraLightBlueDarker};
-        padding: 2px 8px;
-        font-size: smaller;
-        line-height: 23px;
-    }
-    .labelWrapper {
-        display: inline-block;
-        background-color: ${props => props.theme.ultraLightBlue};
-        padding: 2px 14px;
-        font-size: smaller;
-        line-height: 23px;
-    }
-    &:hover {
-        border: 1px solid ${props => props.theme.ultraLightBlueDarker};
-        .iconWrapper {
-            color: #fff;
-            background-color: ${props => props.theme.ultraLightBlueDarker};
-        }
-        .labelWrapper {
-            color: #fff;
-            background-color: ${props => props.theme.darkblue};
         }
     }
 `;

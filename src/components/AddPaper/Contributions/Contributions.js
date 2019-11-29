@@ -35,9 +35,9 @@ const AnimationContainer = styled(CSSTransition)`
         opacity: 0;
     }
 
-    &.fadeIn-enter.fadeIn-enter-active {
+    &.fadeIn-enter-active {
         opacity: 1;
-        transition: 0.5s opacity;
+        transition: 0.7s opacity;
     }
 `;
 
@@ -175,7 +175,7 @@ class Contributions extends Component {
                             })}
 
                             <li className={'addContribution'} onClick={this.props.createContribution}>
-                                <Tippy content="Add another contribution">
+                                <Tippy content="Add contribution">
                                     <span>
                                         <Icon size="xs" icon={faPlus} />
                                     </span>
@@ -185,8 +185,10 @@ class Contributions extends Component {
                     </Col>
 
                     <TransitionGroup className="col-md-9" exit={false}>
-                        <AnimationContainer classNames="fadeIn" timeout={{ enter: 500, exit: 0 }} key={selectedResourceId}>
-                            <Contribution id={selectedResourceId} />
+                        <AnimationContainer classNames="fadeIn" timeout={{ enter: 700, exit: 0 }} key={selectedResourceId}>
+                            <div>
+                                <Contribution id={selectedResourceId} />
+                            </div>
                         </AnimationContainer>
                     </TransitionGroup>
                 </Row>

@@ -6,19 +6,7 @@ import StatementItem from 'components/StatementBrowser/StatementItem';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-
-export const TemplateStyle = styled(ListGroup)`
-    .headerOptions {
-        display: none;
-    }
-    &:hover .headerOptions {
-        display: inline-block;
-        span {
-            background-color: ${props => props.theme.buttonDark};
-            color: ${props => props.theme.ultraLightBlue};
-        }
-    }
-`;
+import { CSSTransition } from 'react-transition-group';
 
 export const AddPropertWrapper = styled(ListGroupItem)`
     border-top: 0 !important;
@@ -26,8 +14,21 @@ export const AddPropertWrapper = styled(ListGroupItem)`
     border-bottom-left-radius: 4px !important;
     border-bottom-right-radius: 4px !important;
     & .propertyHolder {
-        height: 30px;
+        height: 20px;
         background-color: ${props => props.theme.ultraLightBlue};
+    }
+`;
+const AnimationContainer = styled(CSSTransition)`
+    &.fadeIn-enter,
+    &.fadeIn-appear {
+        overflow: hidden;
+        transition: max-height 1s ease-out; // note that we're transitioning max-height, not height!
+        height: auto;
+        max-height: 0;
+    }
+    &.fadeIn-enter-active,
+    &.fadeIn-appear-active {
+        max-height: 1000px;
     }
 `;
 
@@ -42,45 +43,51 @@ class ContributionTemplate extends Component {
                 ? this.props.resources.byId[this.props.resourceId].shared
                 : 1;
         return (
-            <TemplateStyle className={'mt-3 mb-5'}>
-                <TemplateHeader
-                    syncBackend={this.props.syncBackend}
-                    label={this.props.label}
-                    id={this.props.id}
-                    isEditing={this.props.isEditing}
-                    propertyId={this.props.propertyId}
-                />
-                {propertyIds.map((propertyId, index) => {
-                    let property = this.props.properties.byId[propertyId];
+            <AnimationContainer classNames="fadeIn" className="mt-3 pb-3" in={true} timeout={{ enter: 700 }} appear>
+                <ListGroup>
+                    <TemplateHeader
+                        syncBackend={this.props.syncBackend}
+                        label={this.props.label}
+                        id={this.props.id}
+                        isEditing={this.props.isEditing}
+                        propertyId={this.props.propertyId}
+                    />
+                    {propertyIds.map((propertyId, index) => {
+                        let property = this.props.properties.byId[propertyId];
 
-                    return (
-                        <StatementItem
-                            id={propertyId}
-                            label={property.label}
-                            predicateLabel={property.label}
-                            key={'statement-' + index}
-                            index={index}
-                            isExistingProperty={property.isExistingProperty ? true : false}
-                            enableEdit={shared <= 1 ? this.props.enableEdit : false}
+                        return (
+                            <StatementItem
+                                id={propertyId}
+                                label={property.label}
+                                predicateLabel={property.label}
+                                key={'statement-' + index}
+                                index={index}
+                                isExistingProperty={property.isExistingProperty ? true : false}
+                                enableEdit={shared <= 1 ? this.props.enableEdit : false}
+                                syncBackend={this.props.syncBackend}
+                                isLastItem={propertyIds.length === index + 1}
+                                openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
+                                isEditing={property.isEditing}
+                                isSaving={property.isSaving}
+                                inTemplate={true}
+                                resourceId={this.props.resourceId}
+                                contextStyle={'Template'}
+                            />
+                        );
+                    })}
+                    <AddPropertWrapper>
+                        <div className={'row no-gutters'}>
+                            <div className={'col-4 propertyHolder'} />
+                        </div>
+                        <AddProperty
                             syncBackend={this.props.syncBackend}
-                            isLastItem={propertyIds.length === index + 1}
-                            openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
-                            isEditing={property.isEditing}
-                            isSaving={property.isSaving}
                             inTemplate={true}
+                            contextStyle="Template"
                             resourceId={this.props.resourceId}
-                            contextStyle={'Template'}
                         />
-                    );
-                })}
-
-                <AddPropertWrapper>
-                    <div className={'row no-gutters'}>
-                        <div className={'col-4 propertyHolder'} />
-                    </div>
-                    <AddProperty syncBackend={this.props.syncBackend} inTemplate={true} contextStyle="Template" resourceId={this.props.resourceId} />
-                </AddPropertWrapper>
-            </TemplateStyle>
+                    </AddPropertWrapper>
+                </ListGroup>
+            </AnimationContainer>
         );
     }
 }

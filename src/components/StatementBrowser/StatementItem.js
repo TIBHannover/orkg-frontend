@@ -413,11 +413,11 @@ class StatementItem extends Component {
                                     <div className={'propertyLabel'}>{this.state.predicateLabel}</div>
                                     <div className={'propertyOptions'}>
                                         <TemplateOptionButton
-                                            title={'Edit Property'}
+                                            title={'Edit property'}
                                             icon={faPen}
                                             action={() => this.props.toggleEditPropertyLabel({ id: this.props.id })}
                                         />
-                                        <TemplateOptionButton title={'Delete Property'} icon={faTrash} action={this.toggleDeleteStatement} />
+                                        <TemplateOptionButton title={'Delete property'} icon={faTrash} action={this.toggleDeleteStatement} />
                                     </div>
                                 </div>
                             ) : (
