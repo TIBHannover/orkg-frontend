@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { FormGroup, Label, Input, Button, Modal, ModalBody, ModalHeader, ModalFooter, FormFeedback } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import styled, { withTheme } from 'styled-components';
+import { literalsUrl, submitGetRequest, getStatementsByObject } from 'network';
 import { get_error_message } from 'utils';
 import PropTypes from 'prop-types';
 
@@ -76,11 +77,9 @@ class AuthorsInput extends Component {
         super(props);
 
         this.state = {
-            authors: [],
-            inputValue: '',
             showAuthorForm: false,
-            authorName: '',
-            authorORCID: '',
+            authorInput: '',
+            authorNameLoading: false,
             errors: null,
             editMode: false,
             editIndex: 0
@@ -97,53 +96,92 @@ class AuthorsInput extends Component {
         this.setState({ [event.target.name]: event.target.value });
     };
 
-    validateForm = () => {
+    getAuthorByORCID = async event => {
+        let responseJson = await submitGetRequest(literalsUrl + '?q=' + encodeURIComponent(event.target.value) + '&exact=true');
+        if (responseJson.length > 0) {
+            let author = '';
+            getStatementsByObject({ id: responseJson[0].id }).then(statments => {
+                let author = statments.find(s => s.predicate.id === process.env.REACT_APP_PREDICATES_HAS_ORCID);
+                if (author) {
+                    this.setState({ authorName: author.subject.label });
+                } else {
+                    author = '';
+                }
+            });
+        }
+    };
+
+    isORCID = value => {
         /** Regular expression to check whether an input string is a valid ORCID id.  */
         let ORCID_REGEX = '^\\s*(?:(?:https?://)?orcid.org/)?([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?([0-9]{4})\\s*$';
         let supportedORCID = new RegExp(ORCID_REGEX);
-        let errors = [];
-        if (this.state.authorORCID && !this.state.authorORCID.match(supportedORCID)) {
-            errors.push({ field: 'authorORCID', message: 'Invalid ORCID ID' });
-        }
-        if (!this.state.authorName) {
-            errors.push({ field: 'authorName', message: 'Please enter the author name' });
-        }
-        return errors;
+        return Boolean(value && value.match(supportedORCID));
     };
 
-    addAuthor = () => {
-        let errors = this.validateForm();
-        if (errors.length === 0) {
-            const newAuthor = {
-                label: this.state.authorName,
-                id: this.state.authorName,
-                orcid: this.state.authorORCID
-            };
-            this.setState({ authorName: '', authorORCID: '', errors: null, editMode: false });
-            this.props.handler([...this.props.value, newAuthor]);
-            this.toggle('showAuthorForm');
-        } else {
-            this.setState({ errors: { errors: errors } });
-        }
+    getFullname = name => {
+        let fullName = name['family-name'] && name['family-name'].value ? name['family-name'].value : '';
+        fullName = name['given-names'] && name['given-names'].value ? `${name['given-names'].value} ${fullName}` : fullName;
+        return fullName;
     };
 
     saveAuthor = () => {
-        let errors = this.validateForm();
-        if (errors.length === 0) {
-            const updatedAuthor = {
-                label: this.state.authorName,
-                id: this.state.authorName,
-                orcid: this.state.authorORCID
-            };
-            this.setState({ authorName: '', authorORCID: '', errors: null, editMode: false });
-            this.props.handler([
-                ...this.props.value.slice(0, this.state.editIndex),
-                updatedAuthor,
-                ...this.props.value.slice(this.state.editIndex + 1)
-            ]);
-            this.toggle('showAuthorForm');
+        if (this.state.authorInput) {
+            if (this.isORCID(this.state.authorInput)) {
+                this.setState({ authorNameLoading: true });
+                // Get the full name from ORCID API
+                let orcid = this.state.authorInput.match(/([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?([0-9]{4})/g)[0];
+                let ORCIDLink = 'https://pub.orcid.org/v2.0/' + orcid + '/person';
+                submitGetRequest(ORCIDLink, { Accept: 'application/orcid+json' })
+                    .then(response => {
+                        let authorName = this.getFullname(response.name);
+                        const newAuthor = {
+                            label: authorName,
+                            id: authorName,
+                            orcid: orcid
+                        };
+                        if (this.state.editMode) {
+                            this.props.handler([
+                                ...this.props.value.slice(0, this.state.editIndex),
+                                newAuthor,
+                                ...this.props.value.slice(this.state.editIndex + 1)
+                            ]);
+                        } else {
+                            this.props.handler([...this.props.value, newAuthor]);
+                        }
+                        this.setState({
+                            authorNameLoading: false,
+                            authorInput: '',
+                            errors: null,
+                            editMode: false
+                        });
+                        this.toggle('showAuthorForm');
+                    })
+                    .catch(e => {
+                        this.setState({
+                            authorNameLoading: false,
+                            errors: { errors: [{ field: 'authorInput', message: 'Invalid ORCID ID. Please enter the author name' }] }
+                        });
+                    });
+            } else {
+                const newAuthor = {
+                    label: this.state.authorInput,
+                    id: this.state.authorInput,
+                    orcid: ''
+                };
+                if (this.state.editMode) {
+                    this.props.handler([
+                        ...this.props.value.slice(0, this.state.editIndex),
+                        newAuthor,
+                        ...this.props.value.slice(this.state.editIndex + 1)
+                    ]);
+                } else {
+                    this.props.handler([...this.props.value, newAuthor]);
+                }
+                this.setState({ authorInput: '', errors: null, editMode: false });
+                this.toggle('showAuthorForm');
+            }
         } else {
-            this.setState({ errors: { errors: errors } });
+            this.setState({ errors: { errors: [{ field: 'authorInput', message: 'Please enter the author name' }] } });
         }
     };
 
@@ -158,8 +196,7 @@ class AuthorsInput extends Component {
     editAuthor = key => {
         this.setState({
             editIndex: key,
-            authorName: this.props.value[key].label,
-            authorORCID: this.props.value[key].orcid,
+            authorInput: this.props.value[key].orcid ? this.props.value[key].orcid : this.props.value[key].label,
             errors: null,
             editMode: true
         });
@@ -177,7 +214,7 @@ class AuthorsInput extends Component {
                                     <AuthorTag>
                                         <div className={'name'} onClick={e => this.editAuthor(index)}>
                                             {author.label}
-                                            {author.orcid && <Icon style={{ margin: '2px' }} icon={faOrcid} />}
+                                            {author.orcid && <Icon style={{ margin: '4px 2px 0' }} icon={faOrcid} />}
                                         </div>
                                         <div className={'delete'} onClick={e => this.removeAuthor(author.id)}>
                                             <Icon icon={faTimes} />
@@ -209,39 +246,26 @@ class AuthorsInput extends Component {
                     <ModalHeader toggle={this.toggleVideoDialog}>{this.state.editMode ? 'Edit author' : 'Add author'}</ModalHeader>
                     <ModalBody>
                         <FormGroup>
-                            <Label for="authorName">Name</Label>
+                            <Label for="authorInput">
+                                Name <b>or</b> ORCID <Icon color={'#A6CE39'} icon={faOrcid} />
+                            </Label>
                             <Input
                                 onChange={this.handleChange}
                                 type="text"
-                                name="authorName"
-                                id="authorName"
-                                placeholder="Enter author name"
-                                value={this.state.authorName}
-                                invalid={Boolean(get_error_message(this.state.errors, 'authorName'))}
+                                name="authorInput"
+                                id="authorInput"
+                                placeholder="Enter author name or ORCID"
+                                value={this.state.authorInput}
+                                invalid={Boolean(get_error_message(this.state.errors, 'authorInput'))}
                             />
-                            {Boolean(get_error_message(this.state.errors, 'authorName')) && (
-                                <FormFeedback>{get_error_message(this.state.errors, 'authorName')}</FormFeedback>
-                            )}
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="authorORCID">ORCID (optional)</Label>
-                            <Input
-                                onChange={this.handleChange}
-                                type="text"
-                                name="authorORCID"
-                                id="authorORCID"
-                                placeholder="Enter author ORCID"
-                                value={this.state.authorORCID}
-                                invalid={Boolean(get_error_message(this.state.errors, 'authorORCID'))}
-                            />
-                            {Boolean(get_error_message(this.state.errors, 'authorORCID')) && (
-                                <FormFeedback>{get_error_message(this.state.errors, 'authorORCID')}</FormFeedback>
+                            {Boolean(get_error_message(this.state.errors, 'authorInput')) && (
+                                <FormFeedback>{get_error_message(this.state.errors, 'authorInput')}</FormFeedback>
                             )}
                         </FormGroup>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={() => (this.state.editMode ? this.saveAuthor() : this.addAuthor())}>
-                            {this.state.editMode ? 'Save' : 'Add'}
+                        <Button disabled={this.state.authorNameLoading} color="primary" onClick={() => this.saveAuthor()}>
+                            {!this.state.authorNameLoading ? this.state.editMode ? 'Save' : 'Add' : <Icon icon={faSpinner} spin />}
                         </Button>{' '}
                         <Button color="secondary" onClick={() => this.toggle('showAuthorForm')}>
                             Cancel
