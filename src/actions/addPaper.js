@@ -1,7 +1,7 @@
 import * as network from '../network';
 import * as type from './types.js';
 import { guid } from '../utils';
-import { mergeWith, isArray } from 'lodash';
+import { mergeWith, isArray, uniqBy } from 'lodash';
 import { createResource, selectResource, createProperty, createValue } from './statementBrowser';
 import { toast } from 'react-toastify';
 
@@ -271,7 +271,7 @@ function customizer(objValue, srcValue) {
     }
 }
 
-export const getResourceObject = (data, resourceId) => {
+export const getResourceObject = (data, resourceId, newProperties) => {
     // Make a list of new resources ids
     let newResources = data.values.allIds
         .filter(valueId => !data.values.byId[valueId].isExistingValue)
@@ -282,7 +282,10 @@ export const getResourceObject = (data, resourceId) => {
             let property = data.properties.byId[propertyId];
             return {
                 // Map properties of resource
-                [property.existingPredicateId ? property.existingPredicateId : `_${propertyId}`]: property.valueIds.map(valueId => {
+                /* Use the temp id from unique list of new properties */
+                [property.existingPredicateId
+                    ? property.existingPredicateId
+                    : newProperties.find(p => p[property.label])[property.label]]: property.valueIds.map(valueId => {
                     let value = data.values.byId[valueId];
                     if (value.type === 'literal' && !value.isExistingValue) {
                         return {
@@ -295,7 +298,7 @@ export const getResourceObject = (data, resourceId) => {
                             return {
                                 '@temp': `_${value.resourceId}`,
                                 label: value.label,
-                                values: Object.assign({}, getResourceObject(data, value.resourceId))
+                                values: Object.assign({}, getResourceObject(data, value.resourceId, newProperties))
                             };
                         } else {
                             return {
@@ -314,17 +317,14 @@ export const getResourceObject = (data, resourceId) => {
 export const saveAddPaper = data => {
     return async dispatch => {
         const researchProblemPredicate = process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM;
-
+        // Get new properties (ensure that  no duplicate labels are in the new properties)
+        let newProperties = data.properties.allIds.filter(propertyId => !data.properties.byId[propertyId].existingPredicateId);
+        newProperties = newProperties.map(propertyId => ({ id: propertyId, label: data.properties.byId[propertyId].label }));
+        newProperties = uniqBy(newProperties, 'label');
+        newProperties = newProperties.map(property => ({ [property.label]: `_${property.id}` }));
         let paperObj = {
             // Set new predicates label and temp ID
-            predicates: data.properties.allIds
-                .filter(propertyId => !data.properties.byId[propertyId].existingPredicateId)
-                .map(propertyId => {
-                    let property = data.properties.byId[propertyId];
-                    return {
-                        [property.label]: `_${propertyId}`
-                    };
-                }),
+            predicates: newProperties,
             // Set the paper metadata
             paper: {
                 title: data.title,
@@ -347,7 +347,7 @@ export const saveAddPaper = data => {
                     };
                     return {
                         name: contribution.label,
-                        values: Object.assign({}, researhProblem, getResourceObject(data, contribution.resourceId))
+                        values: Object.assign({}, researhProblem, getResourceObject(data, contribution.resourceId, newProperties))
                     };
                 })
             }
