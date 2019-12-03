@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Container, Button, Card, CardText, CardBody, CardHeader, CardFooter } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { getStatementsByObject, getResource, getStatementsBySubject } from '../../network';
+import { getStatementsByObject, getResource, getStatementsBySubjects } from '../../network';
 import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
 import PaperCard from '../PaperCard/PaperCard';
+import { get_paper_data } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
@@ -34,6 +35,16 @@ class ResearchField extends Component {
 
     componentDidUpdate = prevProps => {
         if (this.props.match.params.researchFieldId !== prevProps.match.params.researchFieldId) {
+            this.setState({
+                loading: true,
+                isNextPageLoading: false,
+                hasNextPage: false,
+                page: 1,
+                researchField: null,
+                papers: [],
+                parentResearchField: null,
+                isLastPageReached: false
+            });
             this.loadResearchFieldData();
             this.loadMorePapers();
         }
@@ -60,56 +71,31 @@ class ResearchField extends Component {
         }).then(result => {
             // Papers
             if (result.length > 0) {
-                // Fetch the data of each paper
-                let papers = result
-                    .filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD)
-                    .map(paper => {
-                        return getStatementsBySubject({ id: paper.subject.id }).then(paperStatements => {
-                            // publication year
-                            let publicationYear = paperStatements.filter(
-                                statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR
-                            );
-                            if (publicationYear.length > 0) {
-                                publicationYear = publicationYear[0].object.label;
-                            } else {
-                                publicationYear = '';
-                            }
-                            // publication month
-                            let publicationMonth = paperStatements.filter(
-                                statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH
-                            );
-                            if (publicationMonth.length > 0) {
-                                publicationMonth = publicationMonth[0].object.label;
-                            } else {
-                                publicationMonth = '';
-                            }
-                            // authors
-                            let authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
-                            let authorNamesArray = [];
-                            if (authors.length > 0) {
-                                for (let author of authors) {
-                                    let authorName = author.object.label;
-                                    authorNamesArray.push(authorName);
-                                }
-                            }
-                            paper.data = {
-                                publicationYear,
-                                publicationMonth,
-                                authorNames: authorNamesArray.reverse()
-                            };
-                            return paper;
-                        });
-                    });
                 let parentResearchField = result.find(statement => statement.predicate.id === 'P36');
-                return Promise.all(papers).then(papers => {
-                    this.setState({
-                        papers: [...this.state.papers, ...papers],
-                        parentResearchField: parentResearchField,
-                        isNextPageLoading: false,
-                        hasNextPage: papers.length < this.pageSize || papers.length === 0 ? false : true,
-                        page: this.state.page + 1
+                // Fetch the data of each paper
+                getStatementsBySubjects(
+                    result.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD).map(p => p.subject.id)
+                )
+                    .then(papersStatements => {
+                        let papers = papersStatements.map(paperStatements => {
+                            return get_paper_data(paperStatements.statements);
+                        });
+                        this.setState({
+                            papers: [...this.state.papers, ...papers],
+                            parentResearchField: parentResearchField,
+                            isNextPageLoading: false,
+                            hasNextPage: papers.length < this.pageSize || papers.length === 0 ? false : true,
+                            page: this.state.page + 1
+                        });
+                    })
+                    .catch(error => {
+                        this.setState({
+                            isNextPageLoading: false,
+                            hasNextPage: false,
+                            isLastPageReached: true
+                        });
+                        console.log(error);
                     });
-                });
             } else {
                 this.setState({
                     isNextPageLoading: false,
@@ -161,12 +147,7 @@ class ResearchField extends Component {
                             {this.state.papers.length > 0 && (
                                 <div>
                                     {this.state.papers.map(resource => {
-                                        return (
-                                            <PaperCard
-                                                paper={{ id: resource.subject.id, title: resource.subject.label, ...resource.data }}
-                                                key={`pc${resource.id}`}
-                                            />
-                                        );
+                                        return <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />;
                                     })}
                                 </div>
                             )}

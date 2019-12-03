@@ -275,6 +275,10 @@ export const getStatementsBySubject = ({ id, page = 1, items = 9999, sortBy = 'c
     return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`);
 };
 
+export const getStatementsBySubjects = ids => {
+    return submitGetRequest(`${statementsUrl}subjects/?ids=${ids.join()}`);
+};
+
 export const getStatementsByObject = async ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
     let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
 
