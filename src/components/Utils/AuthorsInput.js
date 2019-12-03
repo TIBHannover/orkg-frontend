@@ -4,7 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import styled, { withTheme } from 'styled-components';
-import { literalsUrl, submitGetRequest, getStatementsByObject } from 'network';
+import { submitGetRequest } from 'network';
 import { get_error_message } from 'utils';
 import PropTypes from 'prop-types';
 
@@ -204,7 +204,7 @@ class AuthorsInput extends Component {
                         {this.props.value.length > 0 ? (
                             this.props.value.map((author, index) => {
                                 return (
-                                    <AuthorTag>
+                                    <AuthorTag key={`author-${index}`}>
                                         <div className={'name'} onClick={e => this.editAuthor(index)}>
                                             {author.label}
                                             {author.orcid && <Icon style={{ margin: '4px 2px 0' }} icon={faOrcid} />}
