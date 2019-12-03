@@ -3,7 +3,7 @@ import { ListGroup, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { StyledStatementItem, StyledListGroupOpen } from '../AddPaper/Contributions/styled';
-import { getResource, predicatesUrl, submitGetRequest, updateStatement, createPredicate } from '../../network';
+import { getResource, predicatesUrl, submitGetRequest, updateStatements, createPredicate } from '../../network';
 import classNames from 'classnames';
 import ValueItem from './Value/ValueItem';
 import AddValue from './Value/AddValue';
@@ -68,10 +68,11 @@ class StatementItem extends Component {
             let predicate = this.props.properties.byId[this.props.id];
             let existingPredicateId = predicate ? predicate.existingPredicateId : false;
             if (existingPredicateId) {
-                let values = predicate.valueIds;
-                for (let value of values) {
-                    await updateStatement(this.props.values.byId[value].statementId, { predicate_id: newProperty.id });
+                let statementsIds = [];
+                for (let value of predicate.valueIds) {
+                    statementsIds.push(this.props.values.byId[value].statementId);
                 }
+                await updateStatements(statementsIds, { predicate_id: newProperty.id });
                 this.props.changeProperty({ propertyId: this.props.id, newProperty: newProperty });
                 toast.success('Property updated successfully');
             }
