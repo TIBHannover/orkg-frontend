@@ -71,7 +71,7 @@ class TemplateWizzard extends Component {
                     </StyledEmptyData>
                 )}
 
-                <AddProperty contextStyle="Template" syncBackend={false} />
+                <AddProperty contextStyle="Template" syncBackend={false} resourceId={this.props.initialResourceId} />
             </div>
         );
     }

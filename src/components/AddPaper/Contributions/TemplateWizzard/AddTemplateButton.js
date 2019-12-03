@@ -71,11 +71,7 @@ AddTemplateButton.defaultProps = {
     label: ''
 };
 
-const mapStateToProps = state => {
-    return {
-        selectedResource: state.statementBrowser.selectedResource
-    };
-};
+const mapStateToProps = state => {};
 
 const mapDispatchToProps = dispatch => ({
     createProperty: data => dispatch(createProperty(data)),

@@ -180,6 +180,7 @@ class Contribution extends Component {
                                     predicateId={t.predicateId}
                                     predicateLabel={t.predicateLabel}
                                     properties={t.properties}
+                                    selectedResource={this.props.resourceId}
                                 />
                             ))}
                         </div>
