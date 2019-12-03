@@ -265,6 +265,10 @@ export const deleteStatementById = id => {
     return submitDeleteRequest(statementsUrl + encodeURIComponent(id));
 };
 
+export const deleteStatementsByIds = ids => {
+    return submitDeleteRequest(`${statementsUrl}?ids=${ids.join()}`);
+};
+
 export const getStatementsBySubject = ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
     let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
 
