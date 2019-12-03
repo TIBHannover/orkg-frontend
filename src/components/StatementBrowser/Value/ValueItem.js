@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faExternalLinkAlt, faTable } from '@fortawesome/free-solid-svg-icons';
-import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizzard/TemplateOptionButton';
+import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizard/TemplateOptionButton';
 import { StyledValueItem, StyledButton, ValueItemStyle } from '../../AddPaper/Contributions/styled';
 import classNames from 'classnames';
 import Confirm from 'reactstrap-confirm';

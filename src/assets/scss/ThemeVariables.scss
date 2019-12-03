@@ -1,18 +1,18 @@
 // ORKG theme variables
-$ORKG-border-radius: 12px; // General border radius on inputs, buttons, boxes etc.
+$ORKG-border-radius: 6px; // General border radius on inputs, buttons, boxes etc.
 $ORKG-primary-color: #e86161; // Primary color for buttons, icons, links etc.
-$ORKG-border-width: 2px; // Width of border for buttons, inputs
+$ORKG-border-width: 1px; // Width of border for buttons, inputs
 
 // Theme variables
 $primary: $ORKG-primary-color;
 $darkblue: #80869b;
 $darkblueDarker: darken($darkblue, 20%);
 //$secondary: #3C4C58;
-$light: #e6e6e6;
+$light: #e9ebf2;
 $ultra-light-blue: #f8f9fb;
 $ultra-light-blue-darker: #dbdde5;
 $body-bg: #e9ebf2;
-$body-color: #646464;
+$body-color: #4f4f4f; //#646464;
 $border-width: $ORKG-border-width;
 $border-radius: $ORKG-border-radius;
 

@@ -1,4 +1,4 @@
-@import '../../assets/scss/ThemeVariables.scss';
+@import "../../assets/scss/ThemeVariables.scss";
 
 body {
     color: #646464;
@@ -24,7 +24,7 @@ body {
         }
 
         button {
-            border: 2px solid #ced4da;
+            border: 1px solid #ced4da;
             border-left: 0 !important;
             background: $input-bg;
         }

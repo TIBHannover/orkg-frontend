@@ -5,7 +5,7 @@ import Tooltip from '../../Utils/Tooltip';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars } from '@fortawesome/free-solid-svg-icons';
 import { StyledValueItem, StyledDropdownItem, StyledButton, StyledDropdownToggle, ValueItemStyle } from '../../AddPaper/Contributions/styled';
-import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizzard/TemplateOptionButton';
+import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizard/TemplateOptionButton';
 import AutoComplete from '../AutoComplete';
 import { connect } from 'react-redux';
 import { createValue } from '../../../actions/statementBrowser';
@@ -168,7 +168,7 @@ class AddValue extends Component {
                                     <AutoComplete
                                         requestUrl={resourcesUrl}
                                         excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM}`}
-                                        placeholder="Enter an object"
+                                        placeholder="Enter a resource"
                                         onItemSelected={this.handleValueSelect}
                                         onInput={this.handleInputChange}
                                         value={this.state.inputValue}
@@ -186,11 +186,11 @@ class AddValue extends Component {
                                 )}
 
                                 <InputGroupAddon addonType="append">
-                                    <Button color="light" className={'valueActionButton'} onClick={this.handleHideAddValue}>
-                                        Cancel
-                                    </Button>
                                     <Button color="light" className={'valueActionButton'} onClick={this.handleAddValue}>
                                         Create
+                                    </Button>
+                                    <Button color="light" className={'valueActionButton'} onClick={this.handleHideAddValue}>
+                                        Cancel
                                     </Button>
                                 </InputGroupAddon>
                             </InputGroup>
@@ -224,7 +224,7 @@ class AddValue extends Component {
                                         <AutoComplete
                                             requestUrl={resourcesUrl}
                                             excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM}`}
-                                            placeholder="Enter an object"
+                                            placeholder="Enter a resource"
                                             onItemSelected={this.handleValueSelect}
                                             onInput={this.handleInputChange}
                                             value={this.state.inputValue}
@@ -244,11 +244,11 @@ class AddValue extends Component {
                                     )}
 
                                     <InputGroupAddon addonType="append">
-                                        <StyledButton outline onClick={this.handleAddValue}>
-                                            Create
-                                        </StyledButton>
                                         <StyledButton outline onClick={this.handleHideAddValue}>
                                             Cancel
+                                        </StyledButton>
+                                        <StyledButton outline onClick={this.handleAddValue}>
+                                            Create
                                         </StyledButton>
                                     </InputGroupAddon>
                                 </InputGroup>

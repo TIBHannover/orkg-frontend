@@ -72,7 +72,14 @@ class ContributionItemList extends Component {
 
     render() {
         return (
-            <li className={this.props.isSelected ? 'activeContribution' : ''}>
+            <li
+                className={this.props.isSelected ? 'activeContribution' : ''}
+                onClick={
+                    !this.props.paperId
+                        ? () => (this.props.handleSelectContribution ? this.props.handleSelectContribution(this.props.contribution.id) : undefined)
+                        : undefined
+                }
+            >
                 <span className={'selectContribution'}>
                     {this.state.isEditing && (
                         <StyledInput
@@ -99,15 +106,7 @@ class ContributionItemList extends Component {
                                     {this.props.contribution.label}
                                 </Link>
                             ) : (
-                                <span
-                                    onClick={() =>
-                                        this.props.handleSelectContribution
-                                            ? this.props.handleSelectContribution(this.props.contribution.id)
-                                            : undefined
-                                    }
-                                >
-                                    {this.props.contribution.label}
-                                </span>
+                                this.props.contribution.label
                             )}
                         </span>
                     )}

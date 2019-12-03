@@ -16,6 +16,9 @@ export const OptionButton = styled.div`
         cursor: pointer;
         color: ${props => props.theme.buttonDark};
         margin-right: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         .icon {
             padding: 0;
             margin: 0;

@@ -3,7 +3,7 @@ import { submitGetRequest } from '../../network';
 import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 
 export const StyledAutoCompleteInputFormControl = styled.div`
     padding-top: 0 !important;
@@ -150,7 +150,7 @@ class AutoComplete extends Component {
         this.customStyles = {
             control: (provided, state) => ({
                 ...provided,
-                background: 'inherit',
+                background: this.props.theme.inputBg,
                 boxShadow: state.isFocused ? 0 : 0,
                 border: 0,
                 paddingLeft: 0,
@@ -160,7 +160,8 @@ class AutoComplete extends Component {
                 borderRadius: 'inherit',
                 '&>div:first-of-type': {
                     ...(this.props.cssClasses && this.props.cssClasses.includes('form-control-sm') ? { padding: '0 8px !important' } : {})
-                }
+                },
+                whiteSpace: 'nowrap' /* ensure the placeholder is not wrapped when animating the width */
             }),
             container: provided => ({
                 ...provided,
@@ -226,10 +227,11 @@ AutoComplete.propTypes = {
     onInput: PropTypes.func,
     value: PropTypes.string,
     cssClasses: PropTypes.string,
-    hideAfterSelection: PropTypes.bool
+    hideAfterSelection: PropTypes.bool,
+    theme: PropTypes.object.isRequired
 };
 
 AutoComplete.defaultProps = {
     cssClasses: ''
 };
-export default AutoComplete;
+export default withTheme(AutoComplete);

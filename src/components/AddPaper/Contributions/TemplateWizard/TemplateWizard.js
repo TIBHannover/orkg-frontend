@@ -6,7 +6,7 @@ import ContributionTemplate from './ContributionTemplate';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-class TemplateWizzard extends Component {
+class TemplateWizard extends Component {
     render() {
         let propertyIds =
             Object.keys(this.props.resources.byId).length !== 0 && this.props.initialResourceId
@@ -63,10 +63,10 @@ class TemplateWizzard extends Component {
                         }
                     })
                 ) : (
-                    <StyledEmptyData>
-                        No data yet!
+                    <StyledEmptyData className="text-muted mt-3">
+                        No data yet
                         <br />
-                        <small>Start by creating properties or add one of the suggested templates bellow.</small>
+                        <span style={{ fontSize: '0.875rem' }}>Start by adding a template or a property from below</span>
                         <br />
                     </StyledEmptyData>
                 )}
@@ -77,7 +77,7 @@ class TemplateWizzard extends Component {
     }
 }
 
-TemplateWizzard.propTypes = {
+TemplateWizard.propTypes = {
     resources: PropTypes.object.isRequired,
     properties: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
@@ -100,4 +100,4 @@ const mapDispatchToProps = dispatch => ({});
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(TemplateWizzard);
+)(TemplateWizard);

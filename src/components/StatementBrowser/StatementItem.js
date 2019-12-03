@@ -19,7 +19,7 @@ import Confirm from 'reactstrap-confirm';
 import classNames from 'classnames';
 import ValueItem from './Value/ValueItem';
 import AddValue from './Value/AddValue';
-import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizzard/TemplateOptionButton';
+import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizard/TemplateOptionButton';
 import { StyledStatementItem, StyledListGroupOpen, StatementsGroupStyle, PropertyStyle, ValuesStyle } from '../AddPaper/Contributions/styled';
 import StatementOptions from './StatementOptions';
 import { connect } from 'react-redux';
@@ -413,11 +413,11 @@ class StatementItem extends Component {
                                     <div className={'propertyLabel'}>{this.state.predicateLabel}</div>
                                     <div className={'propertyOptions'}>
                                         <TemplateOptionButton
-                                            title={'Edit Property'}
+                                            title={'Edit property'}
                                             icon={faPen}
                                             action={() => this.props.toggleEditPropertyLabel({ id: this.props.id })}
                                         />
-                                        <TemplateOptionButton title={'Delete Property'} icon={faTrash} action={this.toggleDeleteStatement} />
+                                        <TemplateOptionButton title={'Delete property'} icon={faTrash} action={this.toggleDeleteStatement} />
                                     </div>
                                 </div>
                             ) : (
