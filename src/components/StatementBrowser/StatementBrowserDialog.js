@@ -23,6 +23,7 @@ class StatementBrowserDialog extends Component {
                                 enableEdit={false}
                                 initialResourceId={this.props.resourceId}
                                 initialResourceLabel={this.props.resourceLabel}
+                                newStore={this.props.newStore}
                             />
                         </Provider>
                     ) : (

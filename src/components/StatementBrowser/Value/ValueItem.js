@@ -160,7 +160,7 @@ class ValueItem extends Component {
         }
     };
 
-    toggleDeleteContribution = async () => {
+    toggleDeleteValue = async () => {
         let result = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure you want to delete this value?',
@@ -219,7 +219,7 @@ class ValueItem extends Component {
     handleExistingResourceClick = () => {
         let resource = this.props.resources.byId[this.props.resourceId];
         let existingResourceId = resource.existingResourceId ? resource.existingResourceId : this.props.resourceId;
-
+        console.log(existingResourceId);
         this.setState({
             modal: true,
             dialogResourceId: existingResourceId,
@@ -504,7 +504,7 @@ class ValueItem extends Component {
                                 )}
                                 {!this.props.isEditing && this.props.enableEdit ? (
                                     <>
-                                        <span className={'deleteValue float-right'} onClick={this.toggleDeleteContribution}>
+                                        <span className={'deleteValue float-right'} onClick={this.toggleDeleteValue}>
                                             <Tippy content="Delete value">
                                                 <span>
                                                     <Icon icon={faTrash} /> Delete
@@ -577,7 +577,15 @@ class ValueItem extends Component {
                                         />
                                     )}
 
-                                    <TemplateOptionButton title={'Delete value'} icon={faTrash} action={this.toggleDeleteContribution} />
+                                    {existingResourceId && this.props.shared > 1 && (
+                                        <TemplateOptionButton
+                                            title={'A shared resource cannot be edited directly'}
+                                            icon={faPen}
+                                            action={() => null}
+                                        />
+                                    )}
+
+                                    <TemplateOptionButton title={'Delete value'} icon={faTrash} action={this.toggleDeleteValue} />
                                 </div>
                             </div>
                         ) : (
@@ -616,7 +624,7 @@ class ValueItem extends Component {
                         toggleModal={this.toggleModal}
                         resourceId={this.state.dialogResourceId}
                         resourceLabel={this.state.dialogResourceLabel}
-                        newStore={this.props.contextStyle === 'StatementBrowser'}
+                        newStore={Boolean(this.props.contextStyle === 'StatementBrowser' || existingResourceId)}
                         enableEdit={this.props.enableEdit && this.props.contextStyle !== 'StatementBrowser' && !existingResourceId}
                     />
                 ) : (
