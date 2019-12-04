@@ -147,70 +147,72 @@ class Comparison extends Component {
     };
 
     performComparison = () => {
-        this.setState({
-            isLoading: true
-        });
-
         let response_hash = this.getResonseHashFromUrl();
         const contributionIds = this.getContributionIdsFromUrl(this.props.location);
 
-        submitGetRequest(`${comparisonUrl}${this.props.location.search}`)
-            .then(comparisonData => {
-                // mocking function to allow for deletion of contributions via the url
-                let contributions = [];
-                for (let i = 0; i < comparisonData.contributions.length; i++) {
-                    let contribution = comparisonData.contributions[i];
-
-                    if (contributionIds.includes(contribution.id)) {
-                        contributions.push(contribution);
-                    }
-                }
-
-                const propertyIds = this.getPropertyIdsFromUrl();
-
-                // if there are properties in the query string
-                if (propertyIds.length > 0) {
-                    // sort properties based on query string (is not presented in query string, sort at the bottom)
-                    // TODO: sort by label when is not active
-                    comparisonData.properties.sort((a, b) => {
-                        let index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
-                        let index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
-                        return index1 - index2;
-                    });
-                    // hide properties based on query string
-                    comparisonData.properties.forEach((property, index) => {
-                        if (!propertyIds.includes(property.id)) {
-                            comparisonData.properties[index].active = false;
-                        } else {
-                            comparisonData.properties[index].active = true;
-                        }
-                    });
-                } else {
-                    //no properties ids in the url, but the ones from the api still need to be sorted
-                    comparisonData.properties.sort((a, b) => {
-                        if (a.active === b.active) {
-                            return a.label.toLowerCase().localeCompare(b.label.toLowerCase());
-                        } else {
-                            return !a.active ? 1 : -1;
-                        }
-                    });
-                }
-
-                this.setState({
-                    contributions: contributions,
-                    properties: comparisonData.properties,
-                    data: comparisonData.data,
-                    response_hash: comparisonData.response_hash ? comparisonData.response_hash : response_hash,
-                    transpose: this.getTransposeOptionFromUrl(),
-                    isLoading: false
-                });
-            })
-            .catch(error => {
-                this.setState({
-                    loadingFailed: true,
-                    isLoading: false
-                });
+        if (contributionIds.length > 1) {
+            this.setState({
+                isLoading: true
             });
+
+            submitGetRequest(`${comparisonUrl}${this.props.location.search}`)
+                .then(comparisonData => {
+                    // mocking function to allow for deletion of contributions via the url
+                    let contributions = [];
+                    for (let i = 0; i < comparisonData.contributions.length; i++) {
+                        let contribution = comparisonData.contributions[i];
+
+                        if (contributionIds.includes(contribution.id)) {
+                            contributions.push(contribution);
+                        }
+                    }
+
+                    const propertyIds = this.getPropertyIdsFromUrl();
+
+                    // if there are properties in the query string
+                    if (propertyIds.length > 0) {
+                        // sort properties based on query string (is not presented in query string, sort at the bottom)
+                        // TODO: sort by label when is not active
+                        comparisonData.properties.sort((a, b) => {
+                            let index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
+                            let index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
+                            return index1 - index2;
+                        });
+                        // hide properties based on query string
+                        comparisonData.properties.forEach((property, index) => {
+                            if (!propertyIds.includes(property.id)) {
+                                comparisonData.properties[index].active = false;
+                            } else {
+                                comparisonData.properties[index].active = true;
+                            }
+                        });
+                    } else {
+                        //no properties ids in the url, but the ones from the api still need to be sorted
+                        comparisonData.properties.sort((a, b) => {
+                            if (a.active === b.active) {
+                                return a.label.toLowerCase().localeCompare(b.label.toLowerCase());
+                            } else {
+                                return !a.active ? 1 : -1;
+                            }
+                        });
+                    }
+
+                    this.setState({
+                        contributions: contributions,
+                        properties: comparisonData.properties,
+                        data: comparisonData.data,
+                        response_hash: comparisonData.response_hash ? comparisonData.response_hash : response_hash,
+                        transpose: this.getTransposeOptionFromUrl(),
+                        isLoading: false
+                    });
+                })
+                .catch(error => {
+                    this.setState({
+                        loadingFailed: true,
+                        isLoading: false
+                    });
+                });
+        }
     };
 
     toggleDropdown = () => {
@@ -400,7 +402,7 @@ class Comparison extends Component {
                             ) : (
                                 <>
                                     <div className="clearfix" />
-                                    <Alert color="info">Please select a minimum of two research contributions to compare on</Alert>
+                                    <Alert color="info">Please select a minimum of two research contributions to compare on.</Alert>
                                 </>
                             )}
                         </>
