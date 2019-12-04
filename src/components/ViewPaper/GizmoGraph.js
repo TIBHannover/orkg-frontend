@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
 
 class GizMOGraph extends Component {
@@ -15,7 +15,7 @@ class GizMOGraph extends Component {
         this.clearGraphData = this.clearGraphData.bind(this);
         this.filterGraphByDepth = this.filterGraphByDepth.bind(this);
         this.propagateDepthMaxValue = this.propagateDepthMaxValue.bind(this);
-    };
+    }
 
     componentDidMount() {
         if (this.props.initializeGraph && this.graphVis.graphInitialized() === false) {
@@ -25,9 +25,9 @@ class GizMOGraph extends Component {
         if (this.graphVis.graphInitialized()) {
             this.graphVis.redrawGraphWithReset(this.props);
         }
-    };
+    }
 
-    componentDidUpdate = (prevProps) => {
+    componentDidUpdate = prevProps => {
         // checking if some properties have changed (excluding the 'graph')
         let nonEqualItems = 0;
         for (let name in prevProps) {
@@ -55,7 +55,6 @@ class GizMOGraph extends Component {
         }
     };
 
-
     componentWillUnmount() {
         console.log('GizMO Graph un mounting');
         this.graphVis.stopBackgroundProcesses();
@@ -67,7 +66,7 @@ class GizMOGraph extends Component {
         //     this.clearGraphData();
         //     delete this.graphVis; // removes the reference to the object ;
         // }
-    };
+    }
 
     propagateDepthMaxValue(maxValue) {
         if (maxValue < 0) {
@@ -76,29 +75,25 @@ class GizMOGraph extends Component {
         if (this.props.depth > maxValue) {
             this.updateDepthRange(maxValue, true);
         }
-    };
+    }
 
     filterGraphByDepth(depth) {
         const val = parseInt(depth) + 1; // make sure it is int and reflects the backend depth value;
         this.graphVis.filterGraphByDepth(val);
-    };
+    }
 
     centerGraphEvent() {
         this.graphVis.zoomToExtent();
-    };
+    }
 
     clearGraphData() {
         this.graphVis.clearGraphData();
-    };
-
+    }
 
     /** Component Rendering Function **/
     render() {
-        return (
-            <div id="graphRendering" style={{width: '100%', height: '100%', backgroundColor: 'gray'}} />
-        );
-    };
-
+        return <div id="graphRendering" style={{ width: '100%', height: '100%', backgroundColor: 'gray' }} />;
+    }
 }
 
 /** Property Type Validation **/

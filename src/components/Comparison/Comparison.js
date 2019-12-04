@@ -29,7 +29,6 @@ import queryString from 'query-string';
 `;*/
 
 class Comparison extends Component {
-
     constructor(props) {
         super(props);
 
@@ -47,30 +46,34 @@ class Comparison extends Component {
             showShareDialog: false,
             showLatexDialog: false,
             isLoading: false,
-            loadingFailed: false,
-        }
+            loadingFailed: false
+        };
     }
 
     componentDidMount = () => {
         this.performComparison();
-        document.title = 'Comparison - ORKG'
-    }
+        document.title = 'Comparison - ORKG';
+    };
 
     componentDidUpdate = (prevProps, prevState) => {
         // check if the csv export data needs an update
-        if (this.state.properties !== prevState.properties || this.state.contributions !== prevState.contributions || this.state.data !== prevState.data) {
+        if (
+            this.state.properties !== prevState.properties ||
+            this.state.contributions !== prevState.contributions ||
+            this.state.data !== prevState.data
+        ) {
             this.generateMatrixOfComparison();
         }
 
-        let prevContributions = this.getContributionIdsFromUrl(prevProps.location)
-        let currentContributions = this.getContributionIdsFromUrl(this.props.location)
-        // perform comparison again when contribution ids are removed 
-        if ((prevContributions.length !== currentContributions.length) || !currentContributions.every( e => prevContributions.includes(e))) {
+        let prevContributions = this.getContributionIdsFromUrl(prevProps.location);
+        let currentContributions = this.getContributionIdsFromUrl(this.props.location);
+        // perform comparison again when contribution ids are removed
+        if (prevContributions.length !== currentContributions.length || !currentContributions.every(e => prevContributions.includes(e))) {
             this.performComparison();
         }
-    }
+    };
 
-    getContributionIdsFromUrl = (location) => {
+    getContributionIdsFromUrl = location => {
         let ids = queryString.parse(location.search, { arrayFormat: 'comma' }).contributions;
         if (!ids) {
             return [];
@@ -80,7 +83,7 @@ class Comparison extends Component {
         }
         ids = ids.filter(n => n); //filter out empty elementsids
         return ids;
-    }
+    };
 
     getPropertyIdsFromUrl = () => {
         let ids = queryString.parse(this.props.location.search).properties;
@@ -92,7 +95,7 @@ class Comparison extends Component {
         ids = ids.filter(n => n); //filter out empty elements
 
         return ids;
-    }
+    };
 
     getTransposeOptionFromUrl = () => {
         let transpose = queryString.parse(this.props.location.search).transpose;
@@ -100,7 +103,7 @@ class Comparison extends Component {
             return false;
         }
         return true;
-    }
+    };
 
     getResonseHashFromUrl = () => {
         let response_hash = queryString.parse(this.props.location.search).response_hash;
@@ -108,7 +111,7 @@ class Comparison extends Component {
             return response_hash;
         }
         return null;
-    }
+    };
 
     generateMatrixOfComparison = () => {
         let header = ['Title'];
@@ -130,7 +133,7 @@ class Comparison extends Component {
                     let value = '';
                     if (this.state.data[property.id]) {
                         // separate labels with comma
-                        value = this.state.data[property.id][i].map(entry => entry.label).join(', ')
+                        value = this.state.data[property.id][i].map(entry => entry.label).join(', ');
                         row.push(value);
                     }
                 }
@@ -139,12 +142,9 @@ class Comparison extends Component {
         }
 
         this.setState({
-            csvData: [
-                header,
-                ...rows
-            ]
+            csvData: [header, ...rows]
         });
-    }
+    };
 
     performComparison = () => {
         this.setState({
@@ -154,79 +154,78 @@ class Comparison extends Component {
         let response_hash = this.getResonseHashFromUrl();
         const contributionIds = this.getContributionIdsFromUrl(this.props.location);
 
-        submitGetRequest(`${comparisonUrl}${this.props.location.search}`).then((comparisonData) => {
-            // mocking function to allow for deletion of contributions via the url
-            let contributions = [];
-            for (let i = 0; i < comparisonData.contributions.length; i++) {
-                let contribution = comparisonData.contributions[i];
+        submitGetRequest(`${comparisonUrl}${this.props.location.search}`)
+            .then(comparisonData => {
+                // mocking function to allow for deletion of contributions via the url
+                let contributions = [];
+                for (let i = 0; i < comparisonData.contributions.length; i++) {
+                    let contribution = comparisonData.contributions[i];
 
-                if (contributionIds.includes(contribution.id)) {
-                    contributions.push(contribution)
+                    if (contributionIds.includes(contribution.id)) {
+                        contributions.push(contribution);
+                    }
                 }
-            }
 
-            const propertyIds = this.getPropertyIdsFromUrl();
+                const propertyIds = this.getPropertyIdsFromUrl();
 
-            // if there are properties in the query string 
-            if (propertyIds.length > 0) {
+                // if there are properties in the query string
+                if (propertyIds.length > 0) {
+                    // sort properties based on query string (is not presented in query string, sort at the bottom)
+                    // TODO: sort by label when is not active
+                    comparisonData.properties.sort((a, b) => {
+                        let index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
+                        let index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
+                        return index1 - index2;
+                    });
+                    // hide properties based on query string
+                    comparisonData.properties.forEach((property, index) => {
+                        if (!propertyIds.includes(property.id)) {
+                            comparisonData.properties[index].active = false;
+                        } else {
+                            comparisonData.properties[index].active = true;
+                        }
+                    });
+                } else {
+                    //no properties ids in the url, but the ones from the api still need to be sorted
+                    comparisonData.properties.sort((a, b) => {
+                        if (a.active === b.active) {
+                            return a.label.toLowerCase().localeCompare(b.label.toLowerCase());
+                        } else {
+                            return !a.active ? 1 : -1;
+                        }
+                    });
+                }
 
-                // sort properties based on query string (is not presented in query string, sort at the bottom)
-                // TODO: sort by label when is not active
-                comparisonData.properties.sort((a, b) => {
-                    let index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
-                    let index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
-                    return index1 - index2;
+                this.setState({
+                    contributions: contributions,
+                    properties: comparisonData.properties,
+                    data: comparisonData.data,
+                    response_hash: comparisonData.response_hash ? comparisonData.response_hash : response_hash,
+                    transpose: this.getTransposeOptionFromUrl(),
+                    isLoading: false
                 });
-                // hide properties based on query string
-                comparisonData.properties.forEach((property, index) => {
-                    if (!propertyIds.includes(property.id)) {
-                        comparisonData.properties[index].active = false;
-                    } else {
-                        comparisonData.properties[index].active = true;
-                    }
+            })
+            .catch(error => {
+                this.setState({
+                    loadingFailed: true,
+                    isLoading: false
                 });
-            } else {
-                //no properties ids in the url, but the ones from the api still need to be sorted
-                comparisonData.properties.sort((a, b) => {
-                    if (a.active === b.active) {
-                        return a.label.toLowerCase().localeCompare(b.label.toLowerCase());
-                    } else {
-                        return !a.active ? 1 : -1;
-                    }
-                });
-            }
-
-            this.setState({
-                contributions: contributions,
-                properties: comparisonData.properties,
-                data: comparisonData.data,
-                response_hash: comparisonData.response_hash ? comparisonData.response_hash : response_hash,
-                transpose: this.getTransposeOptionFromUrl(),
-                isLoading: false,
             });
-        }).catch((error) => {
-            this.setState({
-                loadingFailed: true,
-                isLoading: false,
-            });
-        });
-
-
-    }
+    };
 
     toggleDropdown = () => {
         this.setState(prevState => ({
             dropdownOpen: !prevState.dropdownOpen
         }));
-    }
+    };
 
-    exportAsCsv = (e) => {
+    exportAsCsv = e => {
         this.setState({
-            dropdownOpen: false,
-        })
-    }
+            dropdownOpen: false
+        });
+    };
 
-    removeContribution = (contributionId) => {
+    removeContribution = contributionId => {
         let contributionIds = this.getContributionIdsFromUrl(this.props.location);
         let index = contributionIds.indexOf(contributionId);
 
@@ -235,28 +234,31 @@ class Comparison extends Component {
         }
 
         this.generateUrl(contributionIds.join(','));
-    }
+    };
 
-    toggle = (type) => {
+    toggle = type => {
         this.setState(prevState => ({
-            [type]: !prevState[type],
+            [type]: !prevState[type]
         }));
-    }
+    };
 
     onSortEnd = ({ oldIndex, newIndex }) => {
-        this.setState(({ properties }) => ({
-            properties: arrayMove(properties, oldIndex, newIndex),
-        }), () => {
-            this.generateUrl();
-        });
-    }
+        this.setState(
+            ({ properties }) => ({
+                properties: arrayMove(properties, oldIndex, newIndex)
+            }),
+            () => {
+                this.generateUrl();
+            }
+        );
+    };
 
     // code is a bit ugly because the properties inside an array and not an object
-    toggleProperty = (id) => {
+    toggleProperty = id => {
         let newState = dotProp.set(this.state, 'properties', properties => {
             properties.forEach((property, index) => {
                 if (property.id === id) {
-                    properties[index].active = !properties[index].active
+                    properties[index].active = !properties[index].active;
                 }
             });
 
@@ -267,15 +269,18 @@ class Comparison extends Component {
             this.generateMatrixOfComparison();
             this.generateUrl();
         });
-    }
+    };
 
     toggleTranpose = () => {
-        this.setState(prevState => ({
-            'transpose': !prevState.transpose,
-        }), () => {
-            this.generateUrl();
-        });
-    }
+        this.setState(
+            prevState => ({
+                transpose: !prevState.transpose
+            }),
+            () => {
+                this.generateUrl();
+            }
+        );
+    };
 
     propertiesToQueryString = () => {
         let queryString = '';
@@ -288,7 +293,7 @@ class Comparison extends Component {
         queryString = queryString.slice(0, -1);
 
         return queryString;
-    }
+    };
 
     generateUrl = (contributionIds, propertyIds, transpose) => {
         if (!contributionIds) {
@@ -301,11 +306,11 @@ class Comparison extends Component {
             transpose = this.state.transpose;
         }
         this.props.history.push(ROUTES.COMPARISON + '?contributions=' + contributionIds + '&properties=' + propertyIds + '&transpose=' + transpose);
-    }
+    };
 
     handleGoBack = () => {
         this.props.history.goBack();
-    }
+    };
 
     render() {
         const contributionAmount = this.getContributionIdsFromUrl(this.props.location).length;
@@ -330,22 +335,27 @@ class Comparison extends Component {
                     {!this.state.isLoading && this.state.loadingFailed && (
                         <div>
                             <Alert color="danger">
-                                <strong>Error.</strong> The comparison service is unreachable. Please come back later and try again. <span className="btn-link" style={{ cursor: 'pointer' }} onClick={this.handleGoBack}>Go back</span> or <Link to={ROUTES.HOME}>go to the homepage</Link>.
+                                <strong>Error.</strong> The comparison service is unreachable. Please come back later and try again.{' '}
+                                <span className="btn-link" style={{ cursor: 'pointer' }} onClick={this.handleGoBack}>
+                                    Go back
+                                </span>{' '}
+                                or <Link to={ROUTES.HOME}>go to the homepage</Link>.
                             </Alert>
                         </div>
                     )}
                     {!this.state.loadingFailed && (
                         <>
                             <h2 className="h4 mt-4 mb-3 float-left">
-                                Compare<br />
+                                Compare
+                                <br />
                                 <span className="h6">{this.state.title}</span>
                             </h2>
 
-                            {contributionAmount > 1 ?
+                            {contributionAmount > 1 ? (
                                 !this.state.isLoading ? (
                                     <div>
                                         <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
-                                            <DropdownToggle color="darkblue" size="sm" className="float-right mb-4 mt-4 ml-1 pl-3 pr-3" >
+                                            <DropdownToggle color="darkblue" size="sm" className="float-right mb-4 mt-4 ml-1 pl-3 pr-3">
                                                 <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
                                             </DropdownToggle>
                                             <DropdownMenu>
@@ -355,7 +365,7 @@ class Comparison extends Component {
                                                 <DropdownItem divider />
                                                 <DropdownItem header>Export</DropdownItem>
                                                 <DropdownItem onClick={() => this.toggle('showLatexDialog')}>Export as LaTeX</DropdownItem>
-                                                {this.state.csvData ?
+                                                {this.state.csvData ? (
                                                     <CSVLink
                                                         data={this.state.csvData}
                                                         filename={'ORKG Contribution Comparison.csv'}
@@ -365,7 +375,9 @@ class Comparison extends Component {
                                                     >
                                                         Export as CSV
                                                     </CSVLink>
-                                                    : ''}
+                                                ) : (
+                                                    ''
+                                                )}
                                                 <GeneratePdf id="comparisonTable" />
                                                 <DropdownItem divider />
                                                 <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
@@ -381,14 +393,16 @@ class Comparison extends Component {
                                             removeContribution={this.removeContribution}
                                             transpose={this.state.transpose}
                                         />
-                                    </div>)
-                                    :
+                                    </div>
+                                ) : (
                                     <ComparisonLoadingComponent />
-                                :
+                                )
+                            ) : (
                                 <>
                                     <div className="clearfix" />
                                     <Alert color="info">Please select a minimum of two research contributions to compare on</Alert>
-                                </>}
+                                </>
+                            )}
                         </>
                     )}
                 </Container>
@@ -428,17 +442,15 @@ Comparison.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
             paperId: PropTypes.string,
-            comparisonId: PropTypes.string,
-        }).isRequired,
+            comparisonId: PropTypes.string
+        }).isRequired
     }).isRequired,
     history: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
-}
+    location: PropTypes.object.isRequired
+};
 
 const mapStateToProps = state => ({
-    viewPaper: state.viewPaper,
+    viewPaper: state.viewPaper
 });
 
-export default connect(
-    mapStateToProps
-)(Comparison);
+export default connect(mapStateToProps)(Comparison);

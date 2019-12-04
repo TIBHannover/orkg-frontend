@@ -1,8 +1,10 @@
+import capitalize from 'capitalize';
+
 export const popupDelay = process.env.REACT_APP_POPUP_DELAY;
 
 export function hashCode(s) {
     return s.split('').reduce((a, b) => {
-        a = ((a << 5) - a) + b.charCodeAt(0);
+        a = (a << 5) - a + b.charCodeAt(0);
         return a & a;
     }, 0);
 }
@@ -11,7 +13,7 @@ export function groupBy(array, group) {
     const hash = Object.create(null);
     const result = [];
 
-    array.forEach((a) => {
+    array.forEach(a => {
         const groupByElement = a[group];
         if (!hash[groupByElement]) {
             hash[groupByElement] = [];
@@ -27,7 +29,7 @@ export function groupByObjectWithId(array, propertyName) {
     const hash = Object.create(null);
     const result = [];
 
-    array.forEach((a) => {
+    array.forEach(a => {
         const groupId = a[propertyName].id;
         if (!hash[groupId]) {
             hash[groupId] = [];
@@ -68,23 +70,42 @@ export const guid = () => {
 };
 
 export const range = (start, end) => {
-    return [...Array(1 + end - start).keys()].map(v => start + v)
-}
+    return [...Array(1 + end - start).keys()].map(v => start + v);
+};
 
 export function timeoutPromise(ms, promise) {
     return new Promise((resolve, reject) => {
         const timeoutId = setTimeout(() => {
-            reject(new Error('Promise timeout'))
+            reject(new Error('Promise timeout'));
         }, ms);
         promise.then(
-            (res) => {
+            res => {
                 clearTimeout(timeoutId);
                 resolve(res);
             },
-            (err) => {
+            err => {
                 clearTimeout(timeoutId);
                 reject(err);
             }
         );
-    })
+    });
 }
+
+/**
+ * Parse error response body (originating from server) by field name
+ *
+ * Not specifying a `field` name will return the global `errors.message`
+ *
+ * @param {Object} errors
+ * @param {String} field
+ */
+export const get_error_message = (errors, field = null) => {
+    if (!errors) {
+        return null;
+    }
+    if (field === null) {
+        return Boolean(errors.message) ? capitalize(errors.message) : null;
+    }
+    let field_error = errors.errors ? errors.errors.find(e => e.field === field) : null;
+    return field_error ? capitalize(field_error.message) : null;
+};

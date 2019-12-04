@@ -30,43 +30,40 @@ export default class Navigation {
         this.intervalTimer = null;
         this.intervalWaiter = this.intervalWaiter.bind(this);
         this.clearIterativeWaiter = this.clearIterativeWaiter.bind(this);
-        this.stopBackgroundProcesses=this.stopBackgroundProcesses.bind(this);
+        this.stopBackgroundProcesses = this.stopBackgroundProcesses.bind(this);
 
-        this.releaseMutex=this.releaseMutex.bind(this);
-        this.interuppted=false;
+        this.releaseMutex = this.releaseMutex.bind(this);
+        this.interuppted = false;
+    }
 
-    };
-
-    stopBackgroundProcesses(){
-        this.interuppted=true;
+    stopBackgroundProcesses() {
+        this.interuppted = true;
         this.clearIterativeWaiter();
+    }
 
-    };
+    releaseMutex() {
+        this.interuppted = false;
+    }
 
-    releaseMutex(){
-        this.interuppted=false;
-    };
-
-    resetRendering(){
-        let backupZ=this.zoomFactor;
-        let backupT=this.graphTranslation;
+    resetRendering() {
+        let backupZ = this.zoomFactor;
+        let backupT = this.graphTranslation;
         this.initializeRendering();
-        this.zoomFactor=backupZ;
-        this.graphTranslation=backupT;
+        this.zoomFactor = backupZ;
+        this.graphTranslation = backupT;
 
         if (this.zoom) {
             this.graph.graphRoot.attr('transform', 'translate(' + this.graphTranslation + ')scale(' + this.zoomFactor + ')');
             this.zoom.translate(this.graphTranslation);
             this.zoom.scale(this.zoomFactor);
         }
-    };
-
+    }
 
     clearIterativeWaiter() {
         if (this.intervalTimer) {
             clearInterval(this.intervalTimer);
         }
-    };
+    }
 
     intervalWaiter(interval) {
         if (this.graph && this.graph.layout && this.graph.layout.force) {
@@ -74,15 +71,16 @@ export default class Navigation {
             if (force.alpha() < 0.05) {
                 // remove timer and zoom to extent;
                 clearInterval(this.intervalTimer);
-                if (!this.interuppted) { // call this function as long you have not been interrupted
+                if (!this.interuppted) {
+                    // call this function as long you have not been interrupted
                     this.zoomToExtent(false);
                 }
 
                 return;
             }
-            this.intervalTimer = setTimeout(this.intervalWaiter, interval)
+            this.intervalTimer = setTimeout(this.intervalWaiter, interval);
         }
-    };
+    }
 
     waitForForce() {
         if (this.graph.layout.layoutType() === 'force') {
@@ -90,67 +88,66 @@ export default class Navigation {
         } else {
             this.zoomToExtent(false);
         }
-    };
+    }
 
     clearData() {
         delete this.dragBehaviour;
         delete this.zoom;
         delete this.graph;
         delete this.layout;
-    };
+    }
 
     getDragBehaviour() {
         return this.dragBehaviour;
-    };
+    }
 
     getZoomFunction() {
         return this.zoom;
-    };
+    }
 
     initializeRendering() {
         let graph = this.graph;
         let that = this;
 
-        this.dragBehaviour = d3.behavior.drag()
-            .origin(function (d) {
+        this.dragBehaviour = d3.behavior
+            .drag()
+            .origin(function(d) {
                 return d;
             })
-            .on('dragstart', function (d) {
+            .on('dragstart', function(d) {
                 d3.event.sourceEvent.stopPropagation(); // Prevent panning
                 d.fixed = true;
             })
-            .on('drag', function (d) {
+            .on('drag', function(d) {
                 d3.event.sourceEvent.stopPropagation(); // Prevent panning
                 d.setPosition(d3.event.x, d3.event.y);
                 d.px = d3.event.x;
                 d.py = d3.event.y;
                 // if (!forcePaused) {
                 if (graph.layout.layoutType() === 'force') {
-                    graph.layout.resumeForce()
-
+                    graph.layout.resumeForce();
                 }
                 d.updateDrawPosition();
             })
-            .on('dragend', function (d) {
+            .on('dragend', function(d) {
                 if (graph.layout.layoutType() === 'force') {
-                    graph.layout.resumeForce()
-
+                    graph.layout.resumeForce();
                 }
                 d.fixed = false;
             });
 
         // Apply the zooming factor.
-        this.zoom = d3.behavior.zoom()
+        this.zoom = d3.behavior
+            .zoom()
             .duration(150)
             .scaleExtent([0.02, 5])
             .on('zoom', that.zoomed)
-            .on('zoomstart', function () {
-
+            .on('zoomstart', function() {
                 if (d3.event.sourceEvent && d3.event.sourceEvent.buttons && d3.event.sourceEvent.buttons === 1) {
                     graph.svgRoot.style('cursor', 'move');
                 }
             })
-            .on('zoomend', function () {
+            .on('zoomend', function() {
                 graph.svgRoot.style('cursor', 'auto');
                 // save the graph values;
                 const t = d3.transform(graph.graphRoot.attr('transform'));
@@ -163,7 +160,7 @@ export default class Navigation {
         if (graph.graphRoot) {
             that.zoom.event(graph.graphRoot);
         }
-    };
+    }
 
     zoomed() {
         const that = this;
@@ -187,9 +184,10 @@ export default class Navigation {
         /** animate the transition **/
         this.zoomFactor = d3.event.scale;
         this.graphTranslation = d3.event.translate;
-        graphContainer.transition()
-            .tween('attr.translate', function () {
-                return function () {
+        graphContainer
+            .transition()
+            .tween('attr.translate', function() {
+                return function() {
                     that.transformAnimation = true;
                     let tr = d3.transform(graphContainer.attr('transform'));
                     that.graphTranslation[0] = tr.translate[0];
@@ -197,13 +195,13 @@ export default class Navigation {
                     that.zoomFactor = tr.scale[0];
                 };
             })
-            .each('end', function () {
+            .each('end', function() {
                 that.transformAnimation = false;
             })
             .attr('transform', 'translate(' + that.graphTranslation + ')scale(' + that.zoomFactor + ')')
             .ease('linear')
             .duration(250);
-    };
+    }
 
     zoomToExtent(awaitForceStable) {
         if (awaitForceStable) {
@@ -273,32 +271,36 @@ export default class Navigation {
         let pos_interpolation = d3.interpolateZoom(sP, eP);
 
         let lenAnimation = pos_interpolation.duration;
-        if (lenAnimation > 2500) { // fix duration to be max 2.5 sec
+        if (lenAnimation > 2500) {
+            // fix duration to be max 2.5 sec
             lenAnimation = 2500;
         }
 
         // apply the interpolation
-        graph.graphRoot.attr('transform', that.transform(sP, cx, cy, that))
+        graph.graphRoot
+            .attr('transform', that.transform(sP, cx, cy, that))
             .transition()
             .duration(lenAnimation)
-            .attrTween('transform', function () {
-                return function (t) {
+            .attrTween('transform', function() {
+                return function(t) {
                     return that.transform(pos_interpolation(t), cx, cy, that);
                 };
             })
-            .each('end', function () {
+            .each('end', function() {
                 if (that.zoom) {
                     graph.graphRoot.attr('transform', 'translate(' + that.graphTranslation + ')scale(' + that.zoomFactor + ')');
                     that.zoom.translate(that.graphTranslation);
                     that.zoom.scale(that.zoomFactor);
                 }
             });
-    };
+    }
 
     /** Helper functions **/
     getWorldPosFromScreen(x, y, translate, scale) {
         // have to check if scale is array or value >> temp variable
-        let temp = scale[0], xn, yn;
+        let temp = scale[0],
+            xn,
+            yn;
         if (temp) {
             xn = (x - translate[0]) / temp;
             yn = (y - translate[1]) / temp;
@@ -306,17 +308,17 @@ export default class Navigation {
             xn = (x - translate[0]) / scale;
             yn = (y - translate[1]) / scale;
         }
-        return {x: xn, y: yn};
-    };
+        return { x: xn, y: yn };
+    }
 
     transform(p, cx, cy, parent) {
         if (parent && parent.graph) {
             // one iteration step for the locate target animation
             parent.zoomFactor = parent.graph.svgRoot.node().getBoundingClientRect().height / p[2];
-            parent.graphTranslation = [(cx - p[0] * parent.zoomFactor), (cy - p[1] * parent.zoomFactor)];
+            parent.graphTranslation = [cx - p[0] * parent.zoomFactor, cy - p[1] * parent.zoomFactor];
             parent.zoom.translate(parent.graphTranslation);
             parent.zoom.scale(parent.zoomFactor);
             return 'translate(' + parent.graphTranslation[0] + ',' + parent.graphTranslation[1] + ')scale(' + parent.zoomFactor + ')';
         }
-    };
+    }
 } // end of class definition

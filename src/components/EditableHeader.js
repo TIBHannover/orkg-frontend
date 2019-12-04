@@ -6,9 +6,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 
-
 class EditableHeader extends Component {
-
     constructor(props) {
         super(props);
 
@@ -23,7 +21,7 @@ class EditableHeader extends Component {
         this.setState({ editorState: 'edit' });
     };
 
-    handleSubmitClick = async (event) => {
+    handleSubmitClick = async event => {
         this.setState({ editorState: 'loading' });
 
         try {
@@ -43,7 +41,7 @@ class EditableHeader extends Component {
         this.setState({ editorState: 'view' });
     };
 
-    handleChange = (event) => {
+    handleChange = event => {
         this.setState({ value: event.target.value });
     };
 
@@ -52,7 +50,8 @@ class EditableHeader extends Component {
             <div className=" pb-2 mb-3">
                 {this.state.editorState === 'view' && (
                     <div>
-                        <h3>{this.state.value}
+                        <h3>
+                            {this.state.value}
                             <Button className="float-right" color="link" onClick={this.handleEditClick}>
                                 <Icon icon={faPen} /> edit
                             </Button>
@@ -78,15 +77,14 @@ class EditableHeader extends Component {
                     </div>
                 )}
             </div>
-        )
+        );
     }
-
 }
 
 EditableHeader.propTypes = {
     id: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired
 };
 
 export default EditableHeader;

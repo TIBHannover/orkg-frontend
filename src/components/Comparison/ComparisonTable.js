@@ -12,8 +12,8 @@ import classNames from 'classnames';
 import TableCell from './TableCell';
 
 const ScrollContainer = styled.div`
-    overflow-x: hidden; // auto is maybe a better UX, but hidden looks better :) 
-    float: left; 
+    overflow-x: hidden; // auto is maybe a better UX, but hidden looks better :)
+    float: left;
     width: 100%;
     padding: 10px 0;
     scroll-behavior: smooth;
@@ -30,96 +30,96 @@ const ScrollContainer = styled.div`
 `;
 
 const Row = styled.tr`
-    height:100%;
-    
+    height: 100%;
+
     &:last-child td > div:first-child {
-        border-bottom:2px solid #CFCBCB;
-        border-radius:0 0 11px 11px;
+        border-bottom: 2px solid #cfcbcb;
+        border-radius: 0 0 11px 11px;
     }
 `;
 
 const Properties = styled.td`
-    padding-right:10px;
-    padding:0 10px!important;
-    margin:0;
+    padding-right: 10px;
+    padding: 0 10px !important;
+    margin: 0;
     display: table-cell;
-    height:100%;
-    width:250px;
-    position:relative;
+    height: 100%;
+    width: 250px;
+    position: relative;
 `;
 
 const PropertiesInner = styled.div`
-    background: ${props => props.transpose ? '#E86161' : '#80869B'};
-    height:100%;
-    color:#fff;
-    padding:10px;
-    border-bottom: ${props => props.transpose ? '2px solid #fff!important' : '2px solid #8B91A5!important'};
+    background: ${props => (props.transpose ? '#E86161' : '#80869B')};
+    height: 100%;
+    color: #fff;
+    padding: 10px;
+    border-bottom: ${props => (props.transpose ? '2px solid #fff!important' : '2px solid #8B91A5!important')};
 
     a {
-        color:#fff!important;
+        color: #fff !important;
     }
 
     &.first {
-        border-radius:11px 11px 0 0;
+        border-radius: 11px 11px 0 0;
     }
 
     &.last {
-        border-radius:0 0 11px 11px;
+        border-radius: 0 0 11px 11px;
     }
 `;
 
 const ItemHeader = styled.td`
-    padding-right:10px;
-    min-height:50px;
-    padding: 0 10px!important;
-    margin:0;
+    padding-right: 10px;
+    min-height: 50px;
+    padding: 0 10px !important;
+    margin: 0;
     display: table-cell;
-    height:100%;
-    width:250px;
-    position:relative;
+    height: 100%;
+    width: 250px;
+    position: relative;
 `;
 
 const ItemHeaderInner = styled.div`
-    padding:5px 10px;
-    background: ${props => !props.transpose ? '#E86161' : '#80869B'};
-    border-radius:11px 11px 0 0;
-    color:#fff;
-    height:100%;
+    padding: 5px 10px;
+    background: ${props => (!props.transpose ? '#E86161' : '#80869B')};
+    border-radius: 11px 11px 0 0;
+    color: #fff;
+    height: 100%;
 
     a {
-        color:#fff!important;
+        color: #fff !important;
     }
 `;
 
 const Contribution = styled.div`
-    color:#FFA5A5;
-    font-size:85%;
+    color: #ffa5a5;
+    font-size: 85%;
 `;
 
 const Delete = styled.div`
-    position:absolute;
-    top:-4px;
-    right:7px;
-    background:#FFA3A3;
-    border-radius:20px;
-    width:24px;
-    height:24px;
-    text-align:center;
-    color:#E86161;
-    cursor:pointer;
+    position: absolute;
+    top: -4px;
+    right: 7px;
+    background: #ffa3a3;
+    border-radius: 20px;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    color: #e86161;
+    cursor: pointer;
 
-    &:hover{
-        background:#FFF;
+    &:hover {
+        background: #fff;
     }
 `;
 
 const ScrollButton = styled.div`
-    border-radius:30px;
+    border-radius: 30px;
     color: ${props => props.theme.darkblue};
-    width:30px;
-    height:30px;
-    font-size:27px;
-    cursor:pointer;
+    width: 30px;
+    height: 30px;
+    font-size: 27px;
+    cursor: pointer;
     transition: 0.2s filter;
 
     &.next {
@@ -134,7 +134,6 @@ const ScrollButton = styled.div`
 `;
 
 class ComparisonTable extends Component {
-
     constructor(props) {
         super(props);
 
@@ -143,8 +142,8 @@ class ComparisonTable extends Component {
             showShareDialog: false,
             containerScrollLeft: 0,
             showNextButton: false,
-            showBackButton: false,
-        }
+            showBackButton: false
+        };
 
         this.scrollContainer = React.createRef();
         this.scrollAmount = 500;
@@ -153,7 +152,7 @@ class ComparisonTable extends Component {
     componentDidMount = () => {
         this.scrollContainer.current.addEventListener('scroll', this.handleScroll);
         this.defaultNextButtonState();
-    }
+    };
 
     componentDidUpdate = (prevProps, prevState) => {
         if (!this.props.transpose) {
@@ -165,36 +164,35 @@ class ComparisonTable extends Component {
                 this.defaultNextButtonState();
             }
         }
-
-    }
+    };
 
     componentWillUnmount = () => {
         this.scrollContainer.current.removeEventListener('scroll', this.handleScroll);
-    }
+    };
 
     defaultNextButtonState = () => {
         if (!this.props.transpose) {
             if (this.props.contributions.length > 3) {
                 this.setState({
-                    showNextButton: true,
+                    showNextButton: true
                 });
             }
         } else {
             if (this.props.properties.filter(property => property.active).length > 3) {
                 this.setState({
-                    showNextButton: true,
+                    showNextButton: true
                 });
             }
         }
-    }
+    };
 
     scrollNext = () => {
-        this.scrollContainer.current.scrollLeft += this.scrollAmount
-    }
+        this.scrollContainer.current.scrollLeft += this.scrollAmount;
+    };
 
     scrollBack = () => {
-        this.scrollContainer.current.scrollLeft -= this.scrollAmount
-    }
+        this.scrollContainer.current.scrollLeft -= this.scrollAmount;
+    };
 
     handleScroll = () => {
         const { scrollWidth, offsetWidth, scrollLeft } = this.scrollContainer.current;
@@ -203,7 +201,7 @@ class ComparisonTable extends Component {
             showBackButton: this.scrollContainer.current.scrollLeft !== 0,
             showNextButton: offsetWidth + scrollLeft !== scrollWidth
         });
-    }
+    };
 
     render() {
         const scrollContainerClasses = classNames({
@@ -215,31 +213,44 @@ class ComparisonTable extends Component {
         return (
             <>
                 <ScrollContainer ref={this.scrollContainer} className={scrollContainerClasses}>
-                    <Table id="comparisonTable" className="mb-0" style={{ borderCollapse: 'collapse', tableLayout: 'fixed', height: 'max-content', width: '100%' }}>
+                    <Table
+                        id="comparisonTable"
+                        className="mb-0"
+                        style={{ borderCollapse: 'collapse', tableLayout: 'fixed', height: 'max-content', width: '100%' }}
+                    >
                         <tbody className="table-borderless">
                             <tr className="table-borderless">
-                                <Properties><PropertiesInner transpose={this.props.transpose} className="first">Properties</PropertiesInner></Properties>
+                                <Properties>
+                                    <PropertiesInner transpose={this.props.transpose} className="first">
+                                        Properties
+                                    </PropertiesInner>
+                                </Properties>
 
                                 {!this.props.transpose &&
                                     this.props.contributions.map((contribution, index) => {
                                         return (
                                             <ItemHeader key={`contribution${index}`}>
                                                 <ItemHeaderInner>
-                                                    <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: contribution.paperId, contributionId: contribution.id })}>
+                                                    <Link
+                                                        to={reverse(ROUTES.VIEW_PAPER, {
+                                                            resourceId: contribution.paperId,
+                                                            contributionId: contribution.id
+                                                        })}
+                                                    >
                                                         {contribution.title ? contribution.title : <em>No title</em>}
                                                     </Link>
                                                     <br />
                                                     <Contribution>{contribution.contributionLabel}</Contribution>
                                                 </ItemHeaderInner>
 
-                                                {this.props.contributions.length > 2 &&
+                                                {this.props.contributions.length > 2 && (
                                                     <Delete onClick={() => this.props.removeContribution(contribution.id)}>
                                                         <Icon icon={faTimes} />
-                                                    </Delete>}
+                                                    </Delete>
+                                                )}
                                             </ItemHeader>
-                                        )
-                                    })
-                                }
+                                        );
+                                    })}
                                 {this.props.transpose &&
                                     this.props.properties.map((property, index) => {
                                         if (!property.active || !this.props.data[property.id]) {
@@ -254,86 +265,84 @@ class ComparisonTable extends Component {
                                                     {/*</Tooltip>*/}
                                                 </ItemHeaderInner>
                                             </ItemHeader>
-                                        )
-                                    })
-                                }
+                                        );
+                                    })}
                             </tr>
 
-                            {!this.props.transpose && this.props.properties.map((property, index) => {
-                                if (!property.active || !this.props.data[property.id]) {
-                                    return null;
-                                }
+                            {!this.props.transpose &&
+                                this.props.properties.map((property, index) => {
+                                    if (!property.active || !this.props.data[property.id]) {
+                                        return null;
+                                    }
 
-                                return (
-                                    <Row key={`row${index}`}>
-                                        <Properties>
-                                            <PropertiesInner>
-                                                {/*For when the path is available: <Tooltip message={property.path} colorIcon={'#606679'}>*/}
-                                                {capitalize(property.label)}
-                                                {/*</Tooltip>*/}
-                                            </PropertiesInner>
-                                        </Properties>
-                                        {this.props.contributions.map((contribution, index2) => {
-                                            const data = this.props.data[property.id][index2];
+                                    return (
+                                        <Row key={`row${index}`}>
+                                            <Properties>
+                                                <PropertiesInner>
+                                                    {/*For when the path is available: <Tooltip message={property.path} colorIcon={'#606679'}>*/}
+                                                    {capitalize(property.label)}
+                                                    {/*</Tooltip>*/}
+                                                </PropertiesInner>
+                                            </Properties>
+                                            {this.props.contributions.map((contribution, index2) => {
+                                                const data = this.props.data[property.id][index2];
 
-                                            return (
-                                                <TableCell
-                                                    key={`cell${index}${index2}`}
-                                                    data={data}
-                                                />
-                                            )
-                                        })}
-                                    </Row>
-                                )
-                            })}
-                            {this.props.transpose && this.props.contributions.map((contribution, index) => {
-                                return (
-                                    <Row key={`row${index}`}>
-                                        <Properties>
-                                            <PropertiesInner transpose={this.props.transpose}>
-                                                <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: contribution.paperId, contributionId: contribution.id })}>
-                                                    {contribution.title ? contribution.title : <em>No title</em>}
-                                                </Link>
-                                                <br />
-                                                <Contribution>{contribution.contributionLabel}</Contribution>
-                                            </PropertiesInner>
+                                                return <TableCell key={`cell${index}${index2}`} data={data} />;
+                                            })}
+                                        </Row>
+                                    );
+                                })}
+                            {this.props.transpose &&
+                                this.props.contributions.map((contribution, index) => {
+                                    return (
+                                        <Row key={`row${index}`}>
+                                            <Properties>
+                                                <PropertiesInner transpose={this.props.transpose}>
+                                                    <Link
+                                                        to={reverse(ROUTES.VIEW_PAPER, {
+                                                            resourceId: contribution.paperId,
+                                                            contributionId: contribution.id
+                                                        })}
+                                                    >
+                                                        {contribution.title ? contribution.title : <em>No title</em>}
+                                                    </Link>
+                                                    <br />
+                                                    <Contribution>{contribution.contributionLabel}</Contribution>
+                                                </PropertiesInner>
 
-                                            {this.props.contributions.length > 2 &&
-                                                <Delete onClick={() => this.props.removeContribution(contribution.id)}>
-                                                    <Icon icon={faTimes} />
-                                                </Delete>}
-                                        </Properties>
+                                                {this.props.contributions.length > 2 && (
+                                                    <Delete onClick={() => this.props.removeContribution(contribution.id)}>
+                                                        <Icon icon={faTimes} />
+                                                    </Delete>
+                                                )}
+                                            </Properties>
 
+                                            {this.props.properties.map((property, index2) => {
+                                                const data = this.props.data[property.id][index];
 
-                                        {this.props.properties.map((property, index2) => {
-                                            const data = this.props.data[property.id][index];
+                                                if (!property.active || !this.props.data[property.id]) {
+                                                    return null;
+                                                }
 
-                                            if (!property.active || !this.props.data[property.id]) {
-                                                return null;
-                                            }
-
-                                            return (
-                                                <TableCell
-                                                    key={`cell${index2}${index}`}
-                                                    data={data}
-                                                />
-                                            )
-                                        }
-                                        )}
-                                    </Row>
-                                )
-                            })
-                            }
+                                                return <TableCell key={`cell${index2}${index}`} data={data} />;
+                                            })}
+                                        </Row>
+                                    );
+                                })}
                         </tbody>
                     </Table>
                 </ScrollContainer>
 
-                {this.state.showBackButton &&
-                    <ScrollButton onClick={this.scrollBack} className="back"><Icon icon={faArrowCircleLeft} /></ScrollButton>
-                }
-                {this.state.showNextButton &&
-                    <ScrollButton onClick={this.scrollNext} className="next"><Icon icon={faArrowCircleRight} /></ScrollButton>
-                }
+                {this.state.showBackButton && (
+                    <ScrollButton onClick={this.scrollBack} className="back">
+                        <Icon icon={faArrowCircleLeft} />
+                    </ScrollButton>
+                )}
+                {this.state.showNextButton && (
+                    <ScrollButton onClick={this.scrollNext} className="next">
+                        <Icon icon={faArrowCircleRight} />
+                    </ScrollButton>
+                )}
             </>
         );
     }
@@ -344,7 +353,7 @@ ComparisonTable.propTypes = {
     data: PropTypes.object.isRequired,
     properties: PropTypes.array.isRequired,
     removeContribution: PropTypes.func.isRequired,
-    transpose: PropTypes.bool.isRequired,
-}
+    transpose: PropTypes.bool.isRequired
+};
 
 export default ComparisonTable;

@@ -13,19 +13,19 @@ export default function DrawTools() {
     return dt;
 }
 
-
 function cropTextIfNeeded(node, config, labelText) {
-
     if (config.fontSizeOverWritesShapeSize === false) {
         return labelText;
     } else {
         // identify the shape size
         let result = labelText;
         const shapeSize = node.getExpectedShapeSize(config);
-        if (config.renderingType === 'circle') { // use radius
+        if (config.renderingType === 'circle') {
+            // use radius
             result = cropText(labelText, config, Math.min(1.9 * shapeSize.r));
         }
-        if (config.renderingType === 'rect') { // use width
+        if (config.renderingType === 'rect') {
+            // use width
             result = cropText(labelText, config, Math.min(shapeSize.w, 250));
         }
         return result;
@@ -59,7 +59,7 @@ function angleFromVector(vx, vy) {
     const len = Math.sqrt(vx * vx + vy * vy);
     const nx = vx / len;
     const ny = vy / len;
-    let angle = Math.atan2(-ny, nx) * 180 / Math.PI;
+    let angle = (Math.atan2(-ny, nx) * 180) / Math.PI;
     if (angle < 0) {
         angle += 360;
     }
@@ -67,13 +67,12 @@ function angleFromVector(vx, vy) {
 }
 
 function angle2NormedVec(angle) {
-    const xn = Math.cos(angle * Math.PI / 180);
-    const yn = Math.sin(angle * Math.PI / 180);
-    return {x: xn, y: -yn}
+    const xn = Math.cos((angle * Math.PI) / 180);
+    const yn = Math.sin((angle * Math.PI) / 180);
+    return { x: xn, y: -yn };
 }
 
 function drawArrowHead(parent, container, identifier, configObject) {
-
     if (configObject.link_arrowHead === 'true') {
         let v1, v2, v3, v4;
         const scale = configObject.link_arrowHead_scaleFactor;
@@ -83,7 +82,8 @@ function drawArrowHead(parent, container, identifier, configObject) {
         v4 = scale * 20;
 
         const vB_String = v1 + ' ' + v2 + ' ' + v3 + ' ' + v4;
-        const arrowHead = container.append('marker')
+        const arrowHead = container
+            .append('marker')
             .attr('id', identifier)
             .attr('viewBox', vB_String)
             .attr('markerWidth', scale * 10)
@@ -104,7 +104,6 @@ function drawArrowHead(parent, container, identifier, configObject) {
 }
 
 function addStrokeElements(element, cfg, selector) {
-
     const color = cfg[selector + 'Color'];
     const width = cfg[selector + 'Width'];
     const style = cfg[selector + 'Style'];
@@ -177,16 +176,18 @@ function renderBaseShape(cfg, pNode, renderingShape) {
 }
 
 function drawElement(pGroup, cfg, pNode) {
-    if (cfg.renderingType === 'umlStyle') { // currently ignored for beta release
+    if (cfg.renderingType === 'umlStyle') {
+        // currently ignored for beta release
         let uml_renderingShape = pGroup.append('rect');
         renderBaseShape(cfg.renderingAttributes, pNode, uml_renderingShape);
         let linksToDraw = pNode.filterCollapsedLinks();
         console.log(linksToDraw);
         return uml_renderingShape;
-    } else { // currently always native node-link visualization
+    } else {
+        // currently always native node-link visualization
         let renderingShape = pGroup.append('rect');
         renderBaseShape(cfg, pNode, renderingShape);
-        return renderingShape
+        return renderingShape;
     }
 }
 
@@ -205,7 +206,6 @@ function drawLinkElement(parentGroup, configObject) {
     return renderingShape;
 }
 
-
 function measureTextWidth(text, fontFamily, fontSize) {
     let d = d3.select('body').append('text');
     d.attr('id', 'width-test');
@@ -223,7 +223,7 @@ function computeIntersectionPointsForMLP(domain, property, range, offset) {
         distOffset = offset;
     }
 
-    let iP = {x1: domain.x, y1: domain.y, x2: range.x, y2: range.y};
+    let iP = { x1: domain.x, y1: domain.y, x2: range.x, y2: range.y };
 
     let dom_cfgObj = domain.getConfigObj();
     let ran_cfgObj = range.getConfigObj();
@@ -243,12 +243,11 @@ function computeIntersectionPointsForMLP(domain, property, range, offset) {
     return iP;
 }
 
-
 function computeNormalizedOffsetDirection(source, target) {
     const x = target.x - source.x;
     const y = target.y - source.y;
     const len = Math.sqrt(x * x + y * y);
-    return {x: x / len, y: y / len};
+    return { x: x / len, y: y / len };
 }
 
 function shapeBasedIntersectionPoint(config, element, offsetDirection, distOffset, origin) {
@@ -256,8 +255,8 @@ function shapeBasedIntersectionPoint(config, element, offsetDirection, distOffse
 
     if (config.renderingType === 'circle') {
         let distanceToBorder = parseInt(element.getRadius()) + distOffset;
-        IntPoint.x = element.x + (distanceToBorder * offsetDirection.x);
-        IntPoint.y = element.y + (distanceToBorder * offsetDirection.y);
+        IntPoint.x = element.x + distanceToBorder * offsetDirection.x;
+        IntPoint.y = element.y + distanceToBorder * offsetDirection.y;
         return IntPoint;
     }
 
@@ -278,10 +277,8 @@ function shapeBasedIntersectionPoint(config, element, offsetDirection, distOffse
     if (config.renderingType === 'rect') {
         const shape = element.getExpectedShapeSize(config, true);
 
-
         let width = Math.min(shape.w, 250);
         let height = shape.h;
-
 
         // TODO
         // if (range.isUmlCustomShape()) {
@@ -301,8 +298,8 @@ function shapeBasedIntersectionPoint(config, element, offsetDirection, distOffse
             } else {
                 scale = 1.0 / Math.abs(offsetDirection.y);
             }
-            IntPoint.x = element.x + (scale * distanceToBorderX * offsetDirection.x);
-            IntPoint.y = element.y + (scale * distanceToBorderY * offsetDirection.y);
+            IntPoint.x = element.x + scale * distanceToBorderX * offsetDirection.x;
+            IntPoint.y = element.y + scale * distanceToBorderY * offsetDirection.y;
             return IntPoint;
         } else {
             let rad_angle = Math.atan2(offsetDirection.y, offsetDirection.x);
@@ -346,8 +343,6 @@ function shapeBasedIntersectionPoint(config, element, offsetDirection, distOffse
                 IntPoint.y = pY2;
             }
             return IntPoint;
-        }// end of case when we compute the origin
-    }// end of 'rect' if case
+        } // end of case when we compute the origin
+    } // end of 'rect' if case
 }
-
-

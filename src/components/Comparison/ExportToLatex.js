@@ -18,11 +18,10 @@ import styled from 'styled-components';
 
 const Textarea = styled(Input)`
     font-family: 'Courier New';
-    font-size: 85%!important;
+    font-size: 85% !important;
 `;
 
 class ExportToLatex extends Component {
-
     constructor(props) {
         super(props);
 
@@ -36,8 +35,8 @@ class ExportToLatex extends Component {
             includeFootnote: false,
             shortLink: null,
             showTooltipCopiedBibtex: false,
-            showTooltipCopiedLatex: false,
-        }
+            showTooltipCopiedLatex: false
+        };
     }
 
     componentDidUpdate = (prevProps, prevState) => {
@@ -52,7 +51,7 @@ class ExportToLatex extends Component {
             this.setState({ shortLink: null });
             this.generateLatex();
         }
-    }
+    };
 
     generateLatex = () => {
         this.setState({ latexTableLoading: true });
@@ -75,10 +74,10 @@ class ExportToLatex extends Component {
                 transposedData[0].forEach((title, i) => {
                     if (i > 0) {
                         newTitles.push(` \\cite{${this.props.contributions[i - 1].paperId}} `);
-                        conTitles.push(`${this.props.contributions[i - 1].id}`)
+                        conTitles.push(`${this.props.contributions[i - 1].id}`);
                     }
                 });
-                transposedData[0] = conTitles
+                transposedData[0] = conTitles;
             }
 
             transposedData.forEach((contribution, i) => {
@@ -105,24 +104,25 @@ class ExportToLatex extends Component {
                     res.push(con);
                 }
             });
-            nbColumns = this.props.data[0].length
+            nbColumns = this.props.data[0].length;
         }
 
         let latexTable;
 
-
         if (res.length > 0) {
-            let caption = 'This comparison table is built using ORKG \\protect \\cite{Auer2018Towards}'
+            let caption = 'This comparison table is built using ORKG \\protect \\cite{Auer2018Towards}';
             if (this.state.includeFootnote) {
                 caption += ' \\protect \\footnotemark';
             }
 
             let makeLatexOptions = {
-                'digits': 2,
-                'spec': `|${Array(nbColumns).fill('c').join('|')}|`,
-                'captionPlacement': 'top',
-                'caption': caption,
-            }
+                digits: 2,
+                spec: `|${Array(nbColumns)
+                    .fill('c')
+                    .join('|')}|`,
+                captionPlacement: 'top',
+                caption: caption
+            };
 
             if (newTitles) {
                 makeLatexOptions.colnames = newTitles;
@@ -133,48 +133,53 @@ class ExportToLatex extends Component {
             // Add a persistent link to this page as a footnote
             if (this.state.includeFootnote) {
                 if (!this.state.shortLink) {
-                    let link = queryString.parse(this.props.location.search).response_hash ? this.props.location.href : this.props.location.href + `${this.props.location.href.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
+                    let link = queryString.parse(this.props.location.search).response_hash
+                        ? this.props.location.href
+                        : this.props.location.href +
+                          `${this.props.location.href.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
                     createShortLink({
                         long_url: link,
                         response_hash: this.props.response_hash,
                         contributions: this.props.contributions.map(c => c.id),
                         properties: this.props.properties.filter(p => p.active).map(p => p.id),
-                        transpose: this.props.transpose,
-                    }).catch((e) => {
-                        console.log(e);
-                        latexTable += `\n\\footnotetext{${link}} [accessed ${moment().format('YYYY MMM DD')}]}`;
-                        this.setState({ latexTable: latexTable, latexTableLoading: false });
-                    }).then((data) => {
-                        let shortLink = `${this.props.location.protocol}//${window.location.host}${window.location.pathname.replace(ROUTES.COMPARISON, '')}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
-                        latexTable += `\n\\footnotetext{${shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
-                        this.setState({ shortLink: shortLink, latexTable: latexTable, latexTableLoading: false });
+                        transpose: this.props.transpose
                     })
+                        .catch(e => {
+                            console.log(e);
+                            latexTable += `\n\\footnotetext{${link}} [accessed ${moment().format('YYYY MMM DD')}]}`;
+                            this.setState({ latexTable: latexTable, latexTableLoading: false });
+                        })
+                        .then(data => {
+                            let shortLink = `${this.props.location.protocol}//${window.location.host}${window.location.pathname.replace(
+                                ROUTES.COMPARISON,
+                                ''
+                            )}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
+                            latexTable += `\n\\footnotetext{${shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
+                            this.setState({ shortLink: shortLink, latexTable: latexTable, latexTableLoading: false });
+                        });
                 } else {
                     latexTable += `\n\\footnotetext{${this.state.shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
                     this.setState({ latexTable: latexTable, latexTableLoading: false });
                 }
-
             } else {
                 this.setState({ latexTable: latexTable, latexTableLoading: false });
             }
         } else {
-            latexTable = 'The current comparison table doesn\'t contain any pieces of information to export. Please re-try with different options.'
+            latexTable = "The current comparison table doesn't contain any pieces of information to export. Please re-try with different options.";
             this.setState({ latexTable: latexTable, latexTableLoading: false });
         }
+    };
 
-
-    }
-
-    parsePaperStatements = (paperStatements) => {
+    parsePaperStatements = paperStatements => {
         // publication year
-        let publicationYear = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
+        let publicationYear = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
 
         if (publicationYear.length > 0) {
-            publicationYear = publicationYear[0].object.label
+            publicationYear = publicationYear[0].object.label;
         }
 
         // authors
-        let authors = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
+        let authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
 
         let authorNamesArray = [];
 
@@ -185,28 +190,28 @@ class ExportToLatex extends Component {
             }
         }
 
-        return { authorNames: authorNamesArray.reverse(), publicationYear }
-    }
+        return { authorNames: authorNamesArray.reverse(), publicationYear };
+    };
 
     createCiteBibtex = (contribution, paperStatements) => {
-        let ref
+        let ref;
         if (paperStatements) {
             let contributionData = this.parsePaperStatements(paperStatements);
-            let authors = contributionData.authorNames.map(a => ({ 'literal': a }))
+            let authors = contributionData.authorNames.map(a => ({ literal: a }));
             ref = new Cite({
                 id: contribution.paperId,
                 title: contribution.title,
                 author: authors.length > 0 ? authors : null,
                 issued: { 'date-parts': [[contributionData.publicationYear]] }
-            })
+            });
         } else {
             ref = new Cite({
                 id: contribution.paperId,
                 title: contribution.title
-            })
+            });
         }
-        return ref
-    }
+        return ref;
+    };
 
     generateBibTex = () => {
         this.setState({ bibtexReferencesLoading: true });
@@ -214,31 +219,34 @@ class ExportToLatex extends Component {
             this.setState({ bibtexReferences: '', bibtexReferencesLoading: false });
             return '';
         }
-        let contributions = this.props.contributions.map((contribution) => {
+        let contributions = this.props.contributions.map(contribution => {
             // Fetch the data of each contribution
-            return getStatementsBySubject({ id: contribution.paperId }).then((paperStatements) => {
-                let publicationDOI = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
-                if (publicationDOI.length > 0) {
-                    publicationDOI = publicationDOI[0].object.label
-                    if (publicationDOI !== '') {
-                        return Cite.async(publicationDOI).catch(() => {
-                            return this.createCiteBibtex(contribution, paperStatements);
-                        }).then((data) => {
-                            contribution.bibtex = data;
-                            return contribution;
-                        })
+            return getStatementsBySubject({ id: contribution.paperId })
+                .then(paperStatements => {
+                    let publicationDOI = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
+                    if (publicationDOI.length > 0) {
+                        publicationDOI = publicationDOI[0].object.label;
+                        if (publicationDOI !== '') {
+                            return Cite.async(publicationDOI)
+                                .catch(() => {
+                                    return this.createCiteBibtex(contribution, paperStatements);
+                                })
+                                .then(data => {
+                                    contribution.bibtex = data;
+                                    return contribution;
+                                });
+                        }
                     }
-                }
-                contribution.bibtex = this.createCiteBibtex(contribution, paperStatements);
-                return contribution;
-            }).catch((error) => {
-                contribution.bibtex = this.createCiteBibtex(contribution, null);
-                return contribution;
-            })
-
+                    contribution.bibtex = this.createCiteBibtex(contribution, paperStatements);
+                    return contribution;
+                })
+                .catch(error => {
+                    contribution.bibtex = this.createCiteBibtex(contribution, null);
+                    return contribution;
+                });
         });
-        let orkgCitation = Cite.async('10.5281/zenodo.1157185').then()
-        return Promise.all([...contributions, orkgCitation]).then((contributions) => {
+        let orkgCitation = Cite.async('10.1145/3360901.3364435').then();
+        return Promise.all([...contributions, orkgCitation]).then(contributions => {
             let res = [];
             let paperIds = [];
             let bibtexOptions = {
@@ -254,7 +262,7 @@ class ExportToLatex extends Component {
                         contribution.bibtex.options(bibtexOptions);
                         contribution.bibtex = contribution.bibtex.get();
                         let refID = contribution.bibtex.substring(contribution.bibtex.indexOf('{') + 1, contribution.bibtex.indexOf(','));
-                        contribution.bibtex = contribution.bibtex.replace(refID, contribution.paperId)
+                        contribution.bibtex = contribution.bibtex.replace(refID, contribution.paperId);
                         res.push(contribution.bibtex);
                     }
                 } else {
@@ -264,47 +272,60 @@ class ExportToLatex extends Component {
             });
             this.setState({ bibTexReferences: res.join('\n'), bibtexReferencesLoading: false });
         });
-    }
+    };
 
-    selectTab = (tab) => {
+    selectTab = tab => {
         this.setState({
             selectedTab: tab
         });
-    }
+    };
 
-    toggleCheckbox = (type) => {
-        this.setState(prevState => ({
-            [type]: !prevState[type],
-        }), () => { this.generateLatex(); });
-    }
+    toggleCheckbox = type => {
+        this.setState(
+            prevState => ({
+                [type]: !prevState[type]
+            }),
+            () => {
+                this.generateLatex();
+            }
+        );
+    };
 
     toggleTooltip = (e, type) => {
         if (e && e.type !== 'mouseover') {
             this.setState(prevState => ({
-                [type]: !prevState[type],
+                [type]: !prevState[type]
             }));
         }
-    }
+    };
 
     render() {
-
         return (
             <Modal isOpen={this.props.showDialog} toggle={this.props.toggle} size="lg">
                 <ModalHeader toggle={this.props.toggle}>LaTeX export</ModalHeader>
                 <ModalBody>
                     <Nav tabs className="mb-4">
                         <NavItem>
-                            <NavLink href="#" active={this.state.selectedTab === 'table'} onClick={() => this.selectTab('table')}>LaTeX table</NavLink>
+                            <NavLink href="#" active={this.state.selectedTab === 'table'} onClick={() => this.selectTab('table')}>
+                                LaTeX table
+                            </NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="#" active={this.state.selectedTab === 'references'} onClick={() => this.selectTab('references')}>BibTeX references</NavLink>
+                            <NavLink href="#" active={this.state.selectedTab === 'references'} onClick={() => this.selectTab('references')}>
+                                BibTeX references
+                            </NavLink>
                         </NavItem>
                     </Nav>
 
-                    {this.state.selectedTab === 'table' &&
+                    {this.state.selectedTab === 'table' && (
                         <>
                             <p>
-                                <Textarea type="textarea" value={!this.state.latexTableLoading ? this.state.latexTable : 'Loading...'} disabled rows="15" />
+                                <Textarea
+                                    type="textarea"
+                                    value={!this.state.latexTableLoading ? this.state.latexTable : 'Loading...'}
+                                    disabled
+                                    rows="15"
+                                />
                             </p>
 
                             <div className="float-left mt-1">
@@ -316,7 +337,8 @@ class ExportToLatex extends Component {
                                         label="Replace contribution titles by reference "
                                         onChange={() => this.toggleCheckbox('replaceTitles')}
                                         checked={this.state.replaceTitles}
-                                    />{'. '}
+                                    />
+                                    {'. '}
                                 </Tooltip>
                                 <br />
                                 <CustomInput
@@ -326,46 +348,68 @@ class ExportToLatex extends Component {
                                     label="Include a persistent link to this page as a footnote "
                                     onChange={() => this.toggleCheckbox('includeFootnote')}
                                     checked={this.state.includeFootnote}
-                                />{'. '}
+                                />
+                                {'. '}
                             </div>
 
-                            <CopyToClipboard id="copyToClipboardLatex" text={this.state.latexTable} onCopy={() => { this.setState({ showTooltipCopiedLatex: true }); }}>
-                                <Button
-                                    color="primary"
-                                    className="pl-3 pr-3 float-right"
-                                    size="sm"
-
-                                >
+                            <CopyToClipboard
+                                id="copyToClipboardLatex"
+                                text={this.state.latexTable}
+                                onCopy={() => {
+                                    this.setState({ showTooltipCopiedLatex: true });
+                                }}
+                            >
+                                <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
                                     <Icon icon={faClipboard} /> Copy to clipboard {/* TODO: show a success message after copy */}
                                 </Button>
-
                             </CopyToClipboard>
-                            <ReactstrapTooltip placement="top" target="copyToClipboardLatex" trigger={'hover'} toggle={(e) => this.toggleTooltip(e, 'showTooltipCopiedLatex')} isOpen={this.state.showTooltipCopiedLatex}>
+                            <ReactstrapTooltip
+                                placement="top"
+                                target="copyToClipboardLatex"
+                                trigger={'hover'}
+                                toggle={e => this.toggleTooltip(e, 'showTooltipCopiedLatex')}
+                                isOpen={this.state.showTooltipCopiedLatex}
+                            >
                                 Copied!
                             </ReactstrapTooltip>
-                        </>}
-                    {this.state.selectedTab === 'references' &&
+                        </>
+                    )}
+                    {this.state.selectedTab === 'references' && (
                         <>
                             <p>
-                                <Textarea type="textarea" value={!this.state.bibtexReferencesLoading ? this.state.bibTexReferences : 'Loading...'} disabled rows="15" />
+                                <Textarea
+                                    type="textarea"
+                                    value={!this.state.bibtexReferencesLoading ? this.state.bibTexReferences : 'Loading...'}
+                                    disabled
+                                    rows="15"
+                                />
                             </p>
 
-                            <CopyToClipboard id="copyToClipboardBibtex" text={!this.state.bibtexReferencesLoading ? this.state.bibTexReferences : 'Loading...'} onCopy={() => { this.setState({ showTooltipCopiedBibtex: true }); }}>
-                                <Button
-                                    color="primary"
-                                    className="pl-3 pr-3 float-right"
-                                    size="sm"
-                                >
+                            <CopyToClipboard
+                                id="copyToClipboardBibtex"
+                                text={!this.state.bibtexReferencesLoading ? this.state.bibTexReferences : 'Loading...'}
+                                onCopy={() => {
+                                    this.setState({ showTooltipCopiedBibtex: true });
+                                }}
+                            >
+                                <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
                                     <Icon icon={faClipboard} /> Copy to clipboard {/* TODO: show a success message after copy */}
                                 </Button>
                             </CopyToClipboard>
-                            <ReactstrapTooltip placement="top" target="copyToClipboardBibtex" trigger={'hover'} toggle={(e) => this.toggleTooltip(e, 'showTooltipCopiedBibtex')} isOpen={this.state.showTooltipCopiedBibtex}>
+                            <ReactstrapTooltip
+                                placement="top"
+                                target="copyToClipboardBibtex"
+                                trigger={'hover'}
+                                toggle={e => this.toggleTooltip(e, 'showTooltipCopiedBibtex')}
+                                isOpen={this.state.showTooltipCopiedBibtex}
+                            >
                                 Copied!
                             </ReactstrapTooltip>
-                        </>}
+                        </>
+                    )}
                 </ModalBody>
             </Modal>
-        )
+        );
     }
 }
 
@@ -377,7 +421,7 @@ ExportToLatex.propTypes = {
     toggle: PropTypes.func.isRequired,
     transpose: PropTypes.bool.isRequired,
     location: PropTypes.object.isRequired,
-    response_hash: PropTypes.string,
-}
+    response_hash: PropTypes.string
+};
 
 export default ExportToLatex;

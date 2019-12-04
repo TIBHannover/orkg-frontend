@@ -5,6 +5,8 @@ import { Cookies } from 'react-cookie';
 
 const initialState = {
     isTourOpen: false,
+    showAbstractDialog: false,
+    abstractDialogView: 'annotator', // annotator | input | list
     currentStep: 1,
     shouldBlockNavigation: false,
     tourCurrentStep: 1,
@@ -24,8 +26,8 @@ const initialState = {
     ranges: {},
     contributions: {
         byId: {},
-        allIds: [],
-    },
+        allIds: []
+    }
 };
 
 export default (state = initialState, action) => {
@@ -41,35 +43,35 @@ export default (state = initialState, action) => {
                 publicationYear: payload.publicationYear,
                 doi: payload.doi,
                 entry: payload.entry,
-                showLookupTable: payload.showLookupTable,
+                showLookupTable: payload.showLookupTable
             };
         }
 
         case type.ADD_PAPER_NEXT_STEP: {
             return {
                 ...state,
-                currentStep: state.currentStep + 1,
+                currentStep: state.currentStep + 1
             };
         }
 
         case type.ADD_PAPER_PREVIOUS_STEP: {
             return {
                 ...state,
-                currentStep: state.currentStep - 1,
+                currentStep: state.currentStep - 1
             };
         }
 
         case type.ADD_PAPER_BLOCK_NAVIGATION: {
             return {
                 ...state,
-                shouldBlockNavigation: true,
+                shouldBlockNavigation: true
             };
         }
 
         case type.ADD_PAPER_UNBLOCK_NAVIGATION: {
             return {
                 ...state,
-                shouldBlockNavigation: false,
+                shouldBlockNavigation: false
             };
         }
 
@@ -77,7 +79,7 @@ export default (state = initialState, action) => {
             let { payload } = action;
             return {
                 ...state,
-                tourCurrentStep: payload,
+                tourCurrentStep: payload
             };
         }
 
@@ -86,13 +88,13 @@ export default (state = initialState, action) => {
             if (cookies.get('taketourClosed')) {
                 return {
                     ...state,
-                    isTourOpen: false,
+                    isTourOpen: false
                 };
             } else {
-                cookies.set('taketourClosed', true, { path: '/', maxAge: 604800 })
+                cookies.set('taketourClosed', true, { path: '/', maxAge: 604800 });
                 return {
                     ...state,
-                    isTourOpen: false,
+                    isTourOpen: false
                 };
             }
         }
@@ -103,7 +105,7 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 isTourOpen: true,
-                tourStartAt: payload.step ? payload.step : 0,
+                tourStartAt: payload.step ? payload.step : 0
             };
         }
 
@@ -113,7 +115,7 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 researchFields: payload.researchFields,
-                selectedResearchField: payload.selectedResearchField,
+                selectedResearchField: payload.selectedResearchField
             };
         }
 
@@ -122,7 +124,7 @@ export default (state = initialState, action) => {
 
             return {
                 ...state,
-                abstract: payload,
+                abstract: payload
             };
         }
 
@@ -136,14 +138,21 @@ export default (state = initialState, action) => {
         case type.REMOVE_ANNOTATION: {
             let { payload } = action;
             return {
-                ...dotProp.delete(state, `ranges.${[payload.id]}`),
+                ...dotProp.delete(state, `ranges.${[payload.id]}`)
+            };
+        }
+
+        case type.TOGGLE_EDIT_ANNOTATION: {
+            let { payload } = action;
+            return {
+                ...dotProp.set(state, `ranges.${payload}.isEditing`, v => !v)
             };
         }
 
         case type.VALIDATE_ANNOTATION: {
             let { payload } = action;
             return {
-                ...dotProp.set(state, `ranges.${payload}.certainty`, 1),
+                ...dotProp.set(state, `ranges.${payload}.certainty`, 1)
             };
         }
 
@@ -151,7 +160,7 @@ export default (state = initialState, action) => {
             let { payload } = action;
             let newstate = dotProp.set(state, `ranges.${[payload.range.id]}.class`, {
                 id: payload.selectedOption.id,
-                label: payload.selectedOption.label,
+                label: payload.selectedOption.label
             });
             return {
                 ...dotProp.set(newstate, `ranges.${[payload.range.id]}.certainty`, 1)
@@ -173,11 +182,11 @@ export default (state = initialState, action) => {
                             id: payload.id,
                             label: `Contribution ${state.contributions.allIds.length + 1}`,
                             researchProblems: [],
-                            resourceId: payload.resourceId,
-                        },
+                            resourceId: payload.resourceId
+                        }
                     },
-                    allIds: [...state.contributions.allIds, payload.id],
-                },
+                    allIds: [...state.contributions.allIds, payload.id]
+                }
             };
 
             /*let resources = {
@@ -201,12 +210,21 @@ export default (state = initialState, action) => {
             // if this is the first contribution, select it
             if (state.contributions.allIds.length === 0) {
                 selectedContribution = {
-                    selectedContribution: payload.id,
+                    selectedContribution: payload.id
                     //selectedResource: payload.resourceId, //also set the selected resource id
                 };
             }
 
             return merge({}, state, contribution, selectedContribution);
+        }
+
+        case type.TOGGLE_ABSTRACT_DIALOG: {
+            return dotProp.set(state, 'showAbstractDialog', v => !v);
+        }
+
+        case type.SET_ABSTRACT_DIALOG_VIEW: {
+            let { payload } = action;
+            return dotProp.set(state, 'abstractDialogView', payload.value);
         }
 
         case type.DELETE_CONTRIBUTION: {
@@ -223,19 +241,17 @@ export default (state = initialState, action) => {
                     byId: Object.assign(
                         {},
                         ...Object.keys(state.contributions.byId)
-                            .filter((contributionId) => contributionId !== payload.id)
-                            .map((k) => ({ [k]: state.contributions.byId[k] })),
+                            .filter(contributionId => contributionId !== payload.id)
+                            .map(k => ({ [k]: state.contributions.byId[k] }))
                     ),
-                    allIds: [
-                        ...state.contributions.allIds.filter((contributionId) => contributionId !== payload.id),
-                    ],
-                },
+                    allIds: [...state.contributions.allIds.filter(contributionId => contributionId !== payload.id)]
+                }
             };
 
             return {
                 ...state,
                 ...contribution,
-                selectedContribution: state.contributions.allIds[0], //select the first contribution
+                selectedContribution: state.contributions.allIds[0] //select the first contribution
             };
         }
 
@@ -258,41 +274,33 @@ export default (state = initialState, action) => {
                 ...state,
                 selectedContribution: contributionId,
                 //selectedResource: state.contributions.byId[contributionId].resourceId,
-                level: 0,
+                level: 0
             };
         }
 
         case type.UPDATE_CONTRIBUTION_LABEL: {
             let { payload } = action;
 
-            return dotProp.set(
-                state,
-                `contributions.byId.${payload.contributionId}.label`,
-                payload.label,
-            );
+            return dotProp.set(state, `contributions.byId.${payload.contributionId}.label`, payload.label);
         }
 
         case type.UPDATE_RESEARCH_PROBLEMS: {
             let { payload } = action;
 
-            return dotProp.set(
-                state,
-                `contributions.byId.${payload.contributionId}.researchProblems`,
-                payload.problemsArray,
-            );
+            return dotProp.set(state, `contributions.byId.${payload.contributionId}.researchProblems`, payload.problemsArray);
         }
 
         case type.SAVE_ADD_PAPER: {
             return {
                 ...state,
-                paperNewResourceId: action.id,
+                paperNewResourceId: action.id
             };
         }
 
         case '@@router/LOCATION_CHANGE': {
             //from connected-react-router, reset the wizard when the page is changed
             return {
-                ...initialState,
+                ...initialState
             };
         }
 

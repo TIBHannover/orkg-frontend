@@ -8,11 +8,11 @@ import PropTypes from 'prop-types';
 
 const BreadcrumbList = styled.ul`
     list-style: none;
-    padding:0;
-    margin:0 0 10px;
-    display:flex;
-    width:80%;
-    float:left;
+    padding: 0;
+    margin: 0 0 10px;
+    display: flex;
+    width: 80%;
+    float: left;
 
     /*&:hover li:last-of-type:not(:hover) {
         max-width:100px;
@@ -21,45 +21,45 @@ const BreadcrumbList = styled.ul`
 `;
 
 const BreadcrumbItem = styled.li`
-    border-radius:11px;
-    background: #F7F7F7;
-    padding:4px 10px;
-    float:left;
-    border:2px solid #E86161;
-    font-size:87%;
-    white-space:nowrap;
-    overflow:hidden;
-    max-width:55px;
-    cursor:pointer;
+    border-radius: 11px;
+    background: #f7f7f7;
+    padding: 4px 10px;
+    float: left;
+    border: 2px solid #e86161;
+    font-size: 87%;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 55px;
+    cursor: pointer;
     transition: max-width 0.5s;
 
     &:hover {
         max-width: 100%;
-        
-        color:#000;
+
+        color: #000;
     }
 
     &:hover:not(:last-of-type) {
-        padding-right:15px;
+        padding-right: 15px;
     }
 
-    :last-of-type  {
-        background:#E86161;
-        color:#fff;
-        max-width:100%;
+    :last-of-type {
+        background: #e86161;
+        color: #fff;
+        max-width: 100%;
     }
 
     &:not(:first-child) {
-        margin-left:-15px;
+        margin-left: -15px;
     }
 `;
 
 const BackButton = styled.div`
     width: 10%;
     float: left;
-    padding: 4px 0 0 0!important;
-    font-size:95%!important;
-    text-align:left!important;
+    padding: 4px 0 0 0 !important;
+    font-size: 95% !important;
+    text-align: left !important;
 `;
 
 const Container = styled.div`
@@ -71,9 +71,9 @@ class Breadcrumbs extends Component {
     handleOnClick = (id, historyIndex) => {
         this.props.goToResourceHistory({
             id,
-            historyIndex,
+            historyIndex
         });
-    }
+    };
 
     handleBackClick = () => {
         let historyIndex = this.props.resourceHistory.allIds.length - 2;
@@ -81,9 +81,9 @@ class Breadcrumbs extends Component {
 
         this.props.goToResourceHistory({
             id,
-            historyIndex,
+            historyIndex
         });
-    }
+    };
 
     render() {
         return (
@@ -95,33 +95,34 @@ class Breadcrumbs extends Component {
                     {this.props.resourceHistory.allIds.map((history, index) => {
                         let item = this.props.resourceHistory.byId[history];
 
-                        return <BreadcrumbItem key={index} onClick={() => this.handleOnClick(item.id, index)}>{item.label}</BreadcrumbItem>;
+                        return (
+                            <BreadcrumbItem key={index} onClick={() => this.handleOnClick(item.id, index)}>
+                                {item.label}
+                            </BreadcrumbItem>
+                        );
                     })}
                     <div className="clearfix" />
                 </BreadcrumbList>
                 <div className="clearfix" />
             </Container>
-        )
+        );
     }
 }
 
 Breadcrumbs.propTypes = {
     resourceHistory: PropTypes.object.isRequired,
-    goToResourceHistory:  PropTypes.func.isRequired,
+    goToResourceHistory: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
     return {
         resourceHistory: state.statementBrowser.resourceHistory,
-        level: state.statementBrowser.level,
-    }
+        level: state.statementBrowser.level
+    };
 };
 
 const mapDispatchToProps = dispatch => ({
-    goToResourceHistory: (data) => dispatch(goToResourceHistory(data)),
+    goToResourceHistory: data => dispatch(goToResourceHistory(data))
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Breadcrumbs);
+export default connect(mapStateToProps, mapDispatchToProps)(Breadcrumbs);

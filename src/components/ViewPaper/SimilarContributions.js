@@ -16,11 +16,11 @@ const Card = styled(Link)`
     flex-grow: 0;
     margin: 10px 10px 0 0;
     border-radius: 11px;
-    background: ${(props) => props.theme.darkblue};
+    background: ${props => props.theme.darkblue};
     cursor: pointer;
     font-size: 95%;
     padding: 10px 5px;
-    color: ${(props) => props.theme.bodyColor};
+    color: ${props => props.theme.bodyColor};
     text-decoration: none;
     color: #fff;
     font-size: 85%;
@@ -50,7 +50,7 @@ const Similarity = styled.span`
     display: block;
     float: left;
     text-align: center;
-    color: ${(props) => props.theme.darkblueDarker};
+    color: ${props => props.theme.darkblueDarker};
     font-weight: 700;
 
     margin-right: 10px;
@@ -75,7 +75,9 @@ class SimilarContributions extends Component {
                                         <Col md={2} style={{ marginRight: 10 }}>
                                             <Similarity>
                                                 <span>
-                                                    {parseInt(contribution.similarityPercentage) === 1 ? 99 : parseInt(contribution.similarityPercentage * 100)}
+                                                    {parseInt(contribution.similarityPercentage) === 1
+                                                        ? 99
+                                                        : parseInt(contribution.similarityPercentage * 100)}
                                                     <br />%
                                                 </span>
                                             </Similarity>
@@ -87,14 +89,16 @@ class SimilarContributions extends Component {
                         })}
                     </CardContainer>
                 )}
-                {this.props.similaireContributions.length === 0 && <Alert color="light">We couldn't find any similar contribution, please try again later</Alert>}
+                {this.props.similaireContributions.length === 0 && (
+                    <Alert color="light">We couldn't find any similar contribution, please try again later</Alert>
+                )}
             </>
         );
     }
 }
 
 SimilarContributions.propTypes = {
-    similaireContributions: PropTypes.array.isRequired,
+    similaireContributions: PropTypes.array.isRequired
 };
 
 export default SimilarContributions;

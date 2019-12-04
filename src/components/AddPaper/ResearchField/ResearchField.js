@@ -13,18 +13,20 @@ import Tooltip from '../../Utils/Tooltip';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 const ListGroupItemTransition = styled(CSSTransition)`
-    &.fadeIn-enter, &.fadeIn-appear {
-        opacity:0;
+    &.fadeIn-enter,
+    &.fadeIn-appear {
+        opacity: 0;
     }
 
-    &.fadeIn-enter.fadeIn-enter-active, &.fadeIn-appear.fadeIn-appear-active {
-        opacity:1;
-        transition:0.5s opacity;
+    &.fadeIn-enter.fadeIn-enter-active,
+    &.fadeIn-appear.fadeIn-appear-active {
+        opacity: 1;
+        transition: 0.5s opacity;
     }
 `;
 
 const ListGroupItemStyled = styled(ListGroupItem)`
-    transition: 0.3s background-color,  0.3s border-color;
+    transition: 0.3s background-color, 0.3s border-color;
     padding-top: 0.5rem !important;
     padding-bottom: 0.5rem !important;
     cursor: pointer;
@@ -47,12 +49,16 @@ class ResearchField extends Component {
         super(props);
 
         this.state = {
-            showError: false,
-        }
+            showError: false
+        };
 
-        // check if a cookie of take a tour exist 
-        if (this.props.cookies && this.props.cookies.get('taketour') === 'take' && this.props.tourCurrentStep === 1
-            && !this.props.cookies.get('showedReaseachFiled')) {
+        // check if a cookie of take a tour exist
+        if (
+            this.props.cookies &&
+            this.props.cookies.get('taketour') === 'take' &&
+            this.props.tourCurrentStep === 1 &&
+            !this.props.cookies.get('showedReaseachFiled')
+        ) {
             this.props.openTour();
             this.props.cookies.set('showedReaseachFiled', true, { path: '/', maxAge: 604800 });
         }
@@ -69,8 +75,8 @@ class ResearchField extends Component {
         clearAllBodyScrollLocks();
     }
 
-    disableBody = target => disableBodyScroll(target)
-    enableBody = target => enableBodyScroll(target)
+    disableBody = target => disableBodyScroll(target);
+    enableBody = target => enableBodyScroll(target);
 
     handleNextClick = () => {
         // TODO validation: check if a research field is selected
@@ -83,17 +89,17 @@ class ResearchField extends Component {
         }
 
         this.props.nextStep();
-    }
+    };
 
     getFields(fieldId, level) {
-        getStatementsBySubject({ id: fieldId }).then((res) => {
+        getStatementsBySubject({ id: fieldId }).then(res => {
             let researchFields = [];
 
-            res.forEach((elm) => {
+            res.forEach(elm => {
                 researchFields.push({
-                    'label': elm.object.label,
-                    'id': elm.object.id,
-                    'active': false,
+                    label: elm.object.label,
+                    id: elm.object.id,
+                    active: false
                 });
             });
 
@@ -123,11 +129,13 @@ class ResearchField extends Component {
                 researchFields: researchFieldsNew,
                 selectedResearchField: fieldId
             });
-
         });
     }
 
     handleFieldClick(fieldId, currentLevel) {
+        if (this.props.isTourOpen) {
+            this.requestCloseTour();
+        }
         this.getFields(fieldId, currentLevel + 1);
     }
 
@@ -140,9 +148,9 @@ class ResearchField extends Component {
         }
     };
 
-    handleLearnMore = (step) => {
+    handleLearnMore = step => {
         this.props.openTour(step);
-    }
+    };
 
     render() {
         let errorMessageClasses = 'text-danger mt-2 pl-2';
@@ -150,51 +158,68 @@ class ResearchField extends Component {
 
         return (
             <div>
-                <h2 className="h4 mt-4 mb-5"><Tooltip message={<span>Select the more appropriate research field for the paper. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>Select the research field</Tooltip></h2>
+                <h2 className="h4 mt-4 mb-5">
+                    <Tooltip
+                        message={
+                            <span>
+                                Select the more appropriate research field for the paper.{' '}
+                                <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(0)}>
+                                    Learn more
+                                </span>
+                            </span>
+                        }
+                    >
+                        Select the research field
+                    </Tooltip>
+                </h2>
 
                 <CardDeck>
-                    {this.props.researchFields.length > 0 && this.props.researchFields.map((fields, level) => {
-                        return fields.length > 0 ? (
-                            <FieldSelector className="fieldSelector" key={level}>
-                                <ListGroup flush>
-                                    <TransitionGroup exit={false}>
-                                        {fields.map((field) => (
-                                            <ListGroupItemTransition
-                                                key={field.id}
-                                                classNames="fadeIn"
-                                                timeout={{ enter: 500, exit: 0 }}
-                                            >
-                                                <ListGroupItemStyled
-                                                    active={field.active}
-                                                    onClick={() => this.handleFieldClick(field.id, level)}
-                                                >
-                                                    {field.label}
-                                                </ListGroupItemStyled>
-                                            </ListGroupItemTransition>
-                                        ))}
-                                    </TransitionGroup>
-                                </ListGroup>
-                            </FieldSelector>
-                        ) : ''
-                    })}
+                    {this.props.researchFields.length > 0 &&
+                        this.props.researchFields.map((fields, level) => {
+                            return fields.length > 0 ? (
+                                <FieldSelector className="fieldSelector" key={level}>
+                                    <ListGroup flush>
+                                        <TransitionGroup exit={false}>
+                                            {fields.map(field => (
+                                                <ListGroupItemTransition key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
+                                                    <ListGroupItemStyled active={field.active} onClick={() => this.handleFieldClick(field.id, level)}>
+                                                        {field.label}
+                                                    </ListGroupItemStyled>
+                                                </ListGroupItemTransition>
+                                            ))}
+                                        </TransitionGroup>
+                                    </ListGroup>
+                                </FieldSelector>
+                            ) : (
+                                ''
+                            );
+                        })}
                 </CardDeck>
-                <p className={errorMessageClasses} style={{ borderLeft: '4px red solid' }}>Please select the research field</p>
+                <p className={errorMessageClasses} style={{ borderLeft: '4px red solid' }}>
+                    Please select the research field
+                </p>
 
                 <hr className="mt-5 mb-3" />
                 {/*<strong>Selected research field</strong> <br />
                 <span >{this.state.selectedResearchField}</span>*/}
 
-                <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>Next step</Button>
-                <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>Previous step</Button>
+                <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>
+                    Next step
+                </Button>
+                <Button color="light" className="float-right mb-4 mr-2" onClick={this.props.previousStep}>
+                    Previous step
+                </Button>
                 <Tour
                     onAfterOpen={this.disableBody}
                     onBeforeClose={this.enableBody}
+                    disableInteraction={false}
                     steps={[
                         {
                             selector: '.fieldSelector',
-                            content: 'Select a close research field to the paper from the list. The research field can be selected from a hierarchical structure of fields and their subfields.',
-                            style: { borderTop: '4px solid #E86161' },
-                        },
+                            content:
+                                'Select a close research field to the paper from the list. The research field can be selected from a hierarchical structure of fields and their subfields.',
+                            style: { borderTop: '4px solid #E86161' }
+                        }
                     ]}
                     showNumber={false}
                     accentColor={this.props.theme.orkgPrimaryColor}
@@ -202,7 +227,9 @@ class ResearchField extends Component {
                     onRequestClose={this.requestCloseTour}
                     isOpen={this.props.isTourOpen}
                     startAt={this.props.tourStartAt}
-                    getCurrentStep={curr => { this.props.updateTourCurrentStep(curr); }}
+                    getCurrentStep={curr => {
+                        this.props.updateTourCurrentStep(curr);
+                    }}
                     showButtons={false}
                     showNavigation={false}
                     maskClassName="reactourMask"
@@ -225,7 +252,7 @@ ResearchField.propTypes = {
     updateTourCurrentStep: PropTypes.func.isRequired,
     isTourOpen: PropTypes.bool.isRequired,
     tourCurrentStep: PropTypes.number.isRequired,
-    tourStartAt: PropTypes.number.isRequired,
+    tourStartAt: PropTypes.number.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -233,23 +260,16 @@ const mapStateToProps = state => ({
     researchFields: state.addPaper.researchFields,
     isTourOpen: state.addPaper.isTourOpen,
     tourCurrentStep: state.addPaper.tourCurrentStep,
-    tourStartAt: state.addPaper.tourStartAt,
+    tourStartAt: state.addPaper.tourStartAt
 });
 
 const mapDispatchToProps = dispatch => ({
-    updateResearchField: (data) => dispatch(updateResearchField(data)),
+    updateResearchField: data => dispatch(updateResearchField(data)),
     nextStep: () => dispatch(nextStep()),
     previousStep: () => dispatch(previousStep()),
-    updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
-    openTour: (data) => dispatch(openTour(data)),
-    closeTour: () => dispatch(closeTour()),
+    updateTourCurrentStep: data => dispatch(updateTourCurrentStep(data)),
+    openTour: data => dispatch(openTour(data)),
+    closeTour: () => dispatch(closeTour())
 });
 
-export default compose(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps,
-    ),
-    withTheme,
-    withCookies
-)(ResearchField);
+export default compose(connect(mapStateToProps, mapDispatchToProps), withTheme, withCookies)(ResearchField);

@@ -9,8 +9,8 @@ import { reverse } from 'named-urls';
 
 class RecentlyAddedPapers extends Component {
     state = {
-        papers: null,
-    }
+        papers: null
+    };
 
     // TODO: replace a lot of this logic to the backend (select papers, first author and research fields)
     async componentDidMount() {
@@ -18,22 +18,25 @@ class RecentlyAddedPapers extends Component {
             id: process.env.REACT_APP_CLASSES_PAPER,
             page: 1,
             items: 4,
-            sortBy: 'id',
+            sortBy: 'created_at',
             desc: true
         });
 
         await Promise.all(
             paperStatements.map(async (paper, index) => {
-
                 let paperItem = {
                     id: paper.id,
                     label: paper.label,
                     researchField: null,
-                    firstAuthor: null,
+                    firstAuthor: null
                 };
 
                 let statements = await getStatementsBySubject({ id: paper.id });
-                statements = statements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR || statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
+                statements = statements.filter(
+                    statement =>
+                        statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR ||
+                        statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD
+                );
 
                 statements.reverse(); // order statements to ensure that the first author statements is ordered at the top
 
@@ -52,15 +55,15 @@ class RecentlyAddedPapers extends Component {
         );
 
         this.setState({
-            papers: paperStatements,
+            papers: paperStatements
         });
     }
 
     render() {
         return (
             <div className="mt-5 pl-3 pr-3">
-                {this.state.papers ?
-                    this.state.papers.length > 0 ?
+                {this.state.papers ? (
+                    this.state.papers.length > 0 ? (
                         <>
                             <ListGroup>
                                 {this.state.papers.map((paper, index) => (
@@ -70,8 +73,7 @@ class RecentlyAddedPapers extends Component {
                                                 {paper.paperItem.label ? paper.paperItem.label : <em>No title</em>}
                                             </Link>
                                         </h5>
-
-                                        <span className="badge badge-lightblue"> {paper.paperItem.firstAuthor}</span> {' '}
+                                        <span className="badge badge-lightblue"> {paper.paperItem.firstAuthor}</span>{' '}
                                         {/*<span className="badge badge-lightblue"> {paper.paperItem.researchField}</span> // reserach fields can be long which doesn't look like in a badge here*/}
                                     </ListGroupItem>
                                 ))}
@@ -79,17 +81,20 @@ class RecentlyAddedPapers extends Component {
 
                             <div className="text-center">
                                 <Link to={ROUTES.PAPERS}>
-                                    <Button color="primary" className="mr-3">More papers</Button>
+                                    <Button color="primary" className="mr-3">
+                                        More papers
+                                    </Button>
                                 </Link>
                             </div>
                         </>
-                        :
+                    ) : (
                         <div className="text-center">No papers found</div>
-                    :
+                    )
+                ) : (
                     <div className="text-center">
                         <Icon icon={faSpinner} spin /> Loading
                     </div>
-                }
+                )}
             </div>
         );
     }

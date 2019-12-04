@@ -16,19 +16,19 @@ export default class MinimumSpanningTree {
         this.maxDepth = -1;
         this.computeMinimumSpanningTree = this.computeMinimumSpanningTree.bind(this);
         this.getRoot = this.getRoot.bind(this);
-    };
+    }
 
     getRoot() {
         return this.rootNode;
-    };
+    }
 
     setNodes(n) {
         this.nodes = n;
-    };
+    }
 
     setLinks(l) {
         this.links = l;
-    };
+    }
 
     computeMinimumSpanningTree() {
         // find root node;
@@ -66,5 +66,5 @@ export default class MinimumSpanningTree {
             }
         });
         return this.maxDepth;
-    };
-}// end of class definition
+    }
+} // end of class definition

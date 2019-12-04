@@ -5,7 +5,6 @@ import ProgressBar from './ProgressBar';
 import GeneralData from './GeneralData/GeneralData';
 import ResearchField from './ResearchField/ResearchField';
 import Contributions from './Contributions/Contributions';
-import Abstract from './Abstract/Abstract';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestion, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
 import Finish from './Finish/Finish';
@@ -16,8 +15,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import * as PropTypes from 'prop-types';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import { openTour, closeTour, blockNavigation } from '../../actions/addPaper';
-// import GraphViewModal from '../ViewPaper/GraphViewModal';
-import { Prompt } from 'react-router'
+import { Prompt } from 'react-router';
 import GizmoGraphViewModal from '../ViewPaper/GizmoGraphViewModal';
 
 const Help = styled.div`
@@ -32,14 +30,27 @@ const Help = styled.div`
     bottom: 24px;
     right: 24px;
     color: '#80869b';
+
+    .text {
+        cursor: pointer;
+        display: inline-block;
+        margin-left: 8px;
+        font-weight: bold;
+        line-height: 56px;
+        font-size: large;
+    }
+
+    .white {
+        color: #fff;
+    }
 `;
 
 const HelpIcon = styled(Icon)`
     vertical-align: middle;
-    height: 56px;
-    width: 56px;
+    height: 48px;
+    width: 48px !important;
     z-index: 9999;
-    background-color: ${(props) => props.theme.orkgPrimaryColor};
+    background-color: ${props => props.theme.orkgPrimaryColor};
     display: inline-flex;
     -webkit-justify-content: center;
     justify-content: center;
@@ -51,7 +62,7 @@ const HelpIcon = styled(Icon)`
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
     cursor: pointer;
     outline: none;
-    padding: 0;
+    padding: 12px;
     -webkit-user-drag: none;
     font-weight: bold;
     color: #f1f1f1;
@@ -69,12 +80,12 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
-const SubtitleSeperator = styled.div`
-    background: ${(props) => props.theme.darkblue};
-    width:2px;
-    height:30px;
-    margin:0 15px;
-    content: "";
+const SubtitleSeparator = styled.div`
+    background: ${props => props.theme.darkblue};
+    width: 2px;
+    height: 30px;
+    margin: 0 15px;
+    content: '';
     display: block;
     opacity: 0.7;
 `;
@@ -83,7 +94,7 @@ const PaperTitle = styled.div`
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    margin-right:20px;
+    margin-right: 20px;
     color: #62687d;
 `;
 
@@ -93,7 +104,7 @@ class AddPaper extends Component {
 
         this.state = {
             showGraphModal: false,
-            dropdownOpen: false,
+            dropdownOpen: false
         };
     }
 
@@ -104,7 +115,7 @@ class AddPaper extends Component {
         this.props.resetStatementBrowser();
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
         //paperNewResourceId : means paper is saved
         if (!this.props.shouldBlockNavigation && this.props.currentStep > 1 && !this.props.paperNewResourceId) {
             this.props.blockNavigation();
@@ -119,15 +130,9 @@ class AddPaper extends Component {
         window.onbeforeunload = null;
     }
 
-    toggleDropdown = () => {
-        this.setState((prevState) => ({
-            dropdownOpen: !prevState.dropdownOpen,
-        }));
-    };
-
-    toggle = (type) => {
-        this.setState((prevState) => ({
-            [type]: !prevState[type],
+    toggle = type => {
+        this.setState(prevState => ({
+            [type]: !prevState[type]
         }));
     };
 
@@ -160,32 +165,32 @@ class AddPaper extends Component {
                 );
                 break;
             case 3:
-                currentStepDetails = <AnimationContainer key={3} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}><Abstract /></AnimationContainer>
+                currentStepDetails = (
+                    <AnimationContainer key={3} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+                        <Contributions />
+                    </AnimationContainer>
+                );
                 break;
             case 4:
-                currentStepDetails = <AnimationContainer key={4} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}><Contributions /></AnimationContainer>
-                break;
-            case 5:
-                currentStepDetails = <AnimationContainer key={5} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}><Finish /></AnimationContainer>
+                currentStepDetails = (
+                    <AnimationContainer key={5} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+                        <Finish />
+                    </AnimationContainer>
+                );
                 break;
         }
 
         return (
             <div>
-                <Prompt
-                    when={this.props.shouldBlockNavigation}
-                    message="You have unsaved changes, are you sure you want to leave?"
-                />
+                <Prompt when={this.props.shouldBlockNavigation} message="You have unsaved changes, are you sure you want to leave?" />
                 <Container className="p-0 mt-4 mb-4 d-flex align-items-center">
                     <h1 className="h4 flex-shrink-0 mb-0">Add paper</h1>
 
                     {this.props.currentStep > 1 && (
                         <>
-                            <SubtitleSeperator />
+                            <SubtitleSeparator />
 
-                            <PaperTitle>
-                                {this.props.title}
-                            </PaperTitle>
+                            <PaperTitle>{this.props.title}</PaperTitle>
                         </>
                     )}
 
@@ -215,33 +220,22 @@ class AddPaper extends Component {
 
                     <hr />
 
-                    <TransitionGroup exit={false}>
-                        {currentStepDetails}
-                    </TransitionGroup>
+                    <TransitionGroup exit={false}>{currentStepDetails}</TransitionGroup>
                 </Container>
 
-                {/*<GraphViewModal*/}
-                {/*    showDialog={this.state.showGraphModal}*/}
-                {/*    toggle={() => this.toggle('showGraphModal')}*/}
-                {/*//paperId={this.props.match.params.resourceId}*/}
-                {/*/>*/}
-
-                <GizmoGraphViewModal
-                    showDialog={this.state.showGraphModal}
-                    toggle={() => this.toggle('showGraphModal')}
-                />
+                <GizmoGraphViewModal showDialog={this.state.showGraphModal} toggle={() => this.toggle('showGraphModal')} />
                 {/*the style display node will hide the help button when the graph view is activated*/}
-                <Help style={this.state.showGraphModal? {display:'none'}:{}} onClick={() => {
-                    this.toggleTour();
-                }} id="helpIcon"
+                <Help
+                    style={this.state.showGraphModal ? { display: 'none' } : {}}
+                    onClick={() => {
+                        this.toggleTour();
+                    }}
+                    id="helpIcon"
                 >
-                    <HelpIcon
-                        style={{ padding: '12px', height: '48px', width: '48px' }}
-                        icon={faQuestion}
-                    />
-                    <div style={{ cursor: 'pointer', display: 'inline-block', marginLeft: '8px', fontWeight: 'bold', lineHeight: '56px', fontSize: 'large' }}>Help</div>
+                    <HelpIcon icon={faQuestion} />
+                    <div className={'text ' + (this.props.showAbstractDialog ? 'white' : '')}>Help</div>
                 </Help>
-            </div >
+            </div>
         );
     }
 }
@@ -257,30 +251,25 @@ AddPaper.propTypes = {
     openTour: PropTypes.func.isRequired,
     closeTour: PropTypes.func.isRequired,
     blockNavigation: PropTypes.func.isRequired,
-    theme: PropTypes.object.isRequired
+    theme: PropTypes.object.isRequired,
+    showAbstractDialog: PropTypes.bool.isRequired
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     currentStep: state.addPaper.currentStep,
     isTourOpen: state.addPaper.isTourOpen,
     title: state.addPaper.title,
     authors: state.addPaper.authors,
     shouldBlockNavigation: state.addPaper.shouldBlockNavigation,
     paperNewResourceId: state.addPaper.paperNewResourceId,
+    showAbstractDialog: state.addPaper.showAbstractDialog
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
     resetStatementBrowser: () => dispatch(resetStatementBrowser()),
     openTour: () => dispatch(openTour()),
     closeTour: () => dispatch(closeTour()),
-    blockNavigation: () => dispatch(blockNavigation()),
+    blockNavigation: () => dispatch(blockNavigation())
 });
 
-export default compose(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps,
-    ),
-    withTheme,
-    withCookies
-)(AddPaper);
+export default compose(connect(mapStateToProps, mapDispatchToProps), withTheme, withCookies)(AddPaper);

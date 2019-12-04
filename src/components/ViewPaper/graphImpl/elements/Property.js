@@ -1,6 +1,5 @@
-import DrawTools from '../drawTools'
+import DrawTools from '../drawTools';
 import BaseElement from './BaseElement';
-
 
 export default class Property extends BaseElement {
     constructor(props) {
@@ -18,24 +17,23 @@ export default class Property extends BaseElement {
         this.rangeNode = this.rangeNode.bind(this);
         this.linkElement = this.linkElement.bind(this);
         this.getForceLink = this.getForceLink.bind(this);
-    };
+    }
 
-
-    linkElement = function (d) {
+    linkElement = function(d) {
         if (!arguments.length) {
             return this.link;
         }
         this.link = d;
     };
 
-    domainNode = function (d) {
+    domainNode = function(d) {
         if (!arguments.length) {
             return this.domain;
         }
         this.domain = d;
     };
 
-    rangeNode = function (r) {
+    rangeNode = function(r) {
         if (!arguments.length) {
             return this.range;
         }
@@ -47,9 +45,9 @@ export default class Property extends BaseElement {
         this.renderingElement = DrawTools().drawElement(this.svgRoot, this.configObject, this);
         this.renderingText = this.drawLabelText(this.svgRoot, this.label);
         this.updateTextPosition();
-    };
+    }
 
-    updateDrawPosition = function () {
+    updateDrawPosition = function() {
         if (this.propertyType === 'single') {
             // compute center of the domain range part ;
             this.x = 0.5 * (this.range.x + this.domain.x);
@@ -61,15 +59,14 @@ export default class Property extends BaseElement {
         }
     };
 
-    getForceLink = function () {
+    getForceLink = function() {
         let that = this;
         return [
             {
-                'source': that.domain,
-                'target': that.range,
-                'propertyData': that
+                source: that.domain,
+                target: that.range,
+                propertyData: that
             }
         ];
     };
-
-}// end of class definition
+} // end of class definition

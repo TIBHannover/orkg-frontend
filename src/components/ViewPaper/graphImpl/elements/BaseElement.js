@@ -2,7 +2,6 @@ import DrawTools from '../drawTools';
 
 export default class BaseElement {
     constructor(props) {
-
         // variables;
         this.idValue = 'base_';
         this.svgRoot = undefined;
@@ -46,12 +45,12 @@ export default class BaseElement {
             return this.visibilityStatus;
         }
         this.visibilityStatus = val;
-    };
+    }
 
     addHoverEvents() {
         this.renderingElement.on('mouseover', this.mouseHoverIn);
         this.renderingElement.on('mouseout', this.mouseHoverOut);
-    };
+    }
 
     mouseHoverIn() {
         if (this.mouseEntered()) {
@@ -70,7 +69,7 @@ export default class BaseElement {
         if (this.configObject.strokeElement === true || this.configObject.strokeElement === 'true') {
             this.renderingElement.style('stroke', this.configObject.hoverInStrokeColor);
         }
-    };
+    }
 
     mouseHoverOut() {
         this.mouseEntered(false);
@@ -80,21 +79,21 @@ export default class BaseElement {
         if (this.configObject.strokeElement === true || this.configObject.strokeElement === 'true') {
             this.renderingElement.style('stroke', this.configObject.strokeColor);
         }
-    };
+    }
 
     mouseEntered(val) {
         if (!arguments.length) {
             return this.mouseIn;
         }
         this.mouseIn = val;
-    };
+    }
 
     type(t) {
         if (!arguments.length) {
             return this.elementType;
         }
         this.elementType = t;
-    };
+    }
 
     setConfigObj(cfg) {
         this.configObject = cfg;
@@ -105,16 +104,15 @@ export default class BaseElement {
         } else {
             this.renderConfig = this.configObject;
         }
-    };
+    }
 
-
-    getRenderingElementSize(){
-        return {w: this.renderingElement.attr('width'), h: this.renderingElement.attr('height')};
-    };
+    getRenderingElementSize() {
+        return { w: this.renderingElement.attr('width'), h: this.renderingElement.attr('height') };
+    }
 
     getConfigObj() {
         return this.configObject;
-    };
+    }
 
     id(val) {
         if (!arguments.length) {
@@ -122,16 +120,16 @@ export default class BaseElement {
         } else {
             this.idValue = val;
         }
-    };
+    }
 
     setLabel(val) {
         this.label = val;
-    };
+    }
 
     setPosition(px, py) {
         this.x = px;
         this.y = py;
-    };
+    }
 
     render(parentNode) {
         this.svgRoot = parentNode;
@@ -139,15 +137,14 @@ export default class BaseElement {
         this.renderingText = this.drawLabelText(this.svgRoot, this.label);
         this.renderingElement.append('title').text(this.label);
         this.updateTextPosition();
-    };
+    }
 
-    updateDrawPosition = function () {
+    updateDrawPosition = function() {
         // to be inherited from others
         console.log('to be inherited from others');
     };
 
     getExpectedShapeSize(cfg) {
-
         let retValue = {};
         if (cfg.fontSizeOverWritesShapeSize === 'true') {
             let tempRTE = this.svgRoot.append('text').text(this.label);
@@ -165,7 +162,7 @@ export default class BaseElement {
             const radius = Math.max(0.5 * height, 0.5 * width);
 
             tempRTE.remove();
-            retValue = {r: radius, w: width, h: height, dynamic: true};
+            retValue = { r: radius, w: width, h: height, dynamic: true };
         } else {
             let c_r = parseInt(cfg.radius);
             let c_w = parseInt(cfg.width);
@@ -175,11 +172,11 @@ export default class BaseElement {
                 c_w = 100;
                 c_h = 40;
             }
-            retValue = {r: c_r, w: c_w, h: c_h, dynamic: false};
+            retValue = { r: c_r, w: c_w, h: c_h, dynamic: false };
         }
         this.shapeRadius = retValue.r;
         return retValue;
-    };
+    }
 
     updateTextPosition() {
         if (this.renderingText) {
@@ -194,7 +191,7 @@ export default class BaseElement {
             this.renderingText.attr('dy', dy + 'px');
             this.renderingText.attr('dx', dx + 'px');
         }
-    };
+    }
 
     drawLabelText(elementSvgRoot, labelText) {
         if (labelText) {
@@ -209,7 +206,5 @@ export default class BaseElement {
             return renderingTextElement;
         }
         return null;
-    };
-
-
+    }
 } // end of class definition

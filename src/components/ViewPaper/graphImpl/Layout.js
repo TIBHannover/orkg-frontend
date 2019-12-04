@@ -34,7 +34,7 @@ export default class Layout {
         if (this.force) {
             this.force.resume();
         }
-    };
+    }
 
     clearData() {
         if (this._layoutType === 'force' && this.force) {
@@ -46,7 +46,7 @@ export default class Layout {
             delete this.treeData;
             delete this.treeMap;
         }
-    };
+    }
 
     createTreeData() {
         // get the root node
@@ -58,7 +58,7 @@ export default class Layout {
 
         // create a tree layout;
         this.tree = d3.layout.tree().size(this.layoutSize);
-    };
+    }
 
     processSingleElement(node, parent) {
         // recursive function;
@@ -73,12 +73,12 @@ export default class Layout {
         if (node.outgoingLink.length > 0) {
             newObj['children'] = [];
             node.outgoingLink.forEach(item => {
-                newObj['children'].push(this.processSingleElement(item.rangeNode(), node))
+                newObj['children'].push(this.processSingleElement(item.rangeNode(), node));
             });
         }
 
         return newObj;
-    };
+    }
 
     initializeLayoutEngine() {
         if (this.force) {
@@ -90,21 +90,20 @@ export default class Layout {
         } else {
             this.createTreeData();
         }
-    };
+    }
 
     updateLayoutSize() {
         const bb = this.graph.svgRoot.node().getBoundingClientRect();
         this.layoutSize[0] = bb.width;
         this.layoutSize[1] = bb.height;
-    };
+    }
 
     layoutType(val) {
         if (!arguments.length) {
             return this._layoutType;
         }
         this._layoutType = val;
-    };
-
+    }
 
     initializePositions(rootNode, layoutChange) {
         this.updateLayoutSize();
@@ -127,7 +126,7 @@ export default class Layout {
                 this.executeExpansionForNode(expandArray[0], layoutChange);
                 // add children nodes
                 expandArray[0].outgoingLink.forEach(l => {
-                    expandArray.push(l.rangeNode())
+                    expandArray.push(l.rangeNode());
                 });
                 expandArray.shift();
             }
@@ -158,11 +157,9 @@ export default class Layout {
             temp.forEach(item => {
                 const graphNode = this.treeMap[item.name];
                 if (this._layoutType === 'treeV') {
-
                     graphNode.setPosition(item.x, item.y);
                 }
                 if (this._layoutType === 'treeH') {
-
                     graphNode.setPosition(item.y, item.x);
                 }
             });
@@ -171,7 +168,7 @@ export default class Layout {
                 this.makeLayoutTransition();
             }
         }
-    };
+    }
 
     makeLayoutTransition() {
         let id = 0;
@@ -179,13 +176,13 @@ export default class Layout {
         this.graph.classNodes.forEach(node => {
             node.startLayoutTransition(id++, max, this.graph.zoomToExtent);
         });
-    };
+    }
 
     recalculatePositions() {
         this.graph.classNodes.forEach(node => {
             node.updateDrawPosition();
         });
-    };
+    }
 
     createForceElements() {
         const that = this;
@@ -215,11 +212,9 @@ export default class Layout {
         this.force.nodes(this.forceNodes);
         this.force.links(this.forceLinks);
 
-
         // compute link distance based on the rendering element size for subject predicate and object.
         let maxDist = 240;
         this.forceLinks.forEach(link => {
-
             // assume that width is always the larger dimension
             const sourceShape = link.source.getRenderingElementSize();
             const targetShape = link.target.getRenderingElementSize();
@@ -233,12 +228,13 @@ export default class Layout {
             }
         });
         // create forceLinks;
-        this.force.charge(-500)
+        this.force
+            .charge(-500)
             .linkDistance(Math.min(500, maxDist)) // just make sure that our links are not to long.
             .linkStrength(0.8)
             .size([that.layoutSize[0], that.layoutSize[1]])
             .gravity(0.025);
-    };
+    }
 
     executeExpansionForNode(node, layoutChange) {
         const distOffset = 200;
@@ -263,7 +259,8 @@ export default class Layout {
             multiParent = true;
         }
         if (children.length !== 0) {
-            if (parent === undefined && multiParent === false) { // we dont have any other restrictions, use the full  circle
+            if (parent === undefined && multiParent === false) {
+                // we dont have any other restrictions, use the full  circle
                 // compute new positions;
                 let angle = 0;
                 const angular_offset = 360 / children.length;
@@ -274,10 +271,11 @@ export default class Layout {
                         child.y = startY + newPos.y * distOffset;
                         child.px = child.x;
                         child.py = child.y;
-                        angle += angular_offset
+                        angle += angular_offset;
                     }
                 });
-            } else { // we have to see our direction;
+            } else {
+                // we have to see our direction;
                 let angularSpace = [];
                 // do we have only one parent?
                 if (singleParent && parent) {
@@ -290,7 +288,7 @@ export default class Layout {
                     sAngle -= 0.5 * sOffset;
                     children.forEach(child => {
                         if ((child.x === -1 && child.y === -1) || layoutChange) {
-                            let nAngle = sAngle + (r) * sOffset;
+                            let nAngle = sAngle + r * sOffset;
                             if (nAngle > 360) {
                                 nAngle -= 360;
                             }
@@ -302,14 +300,15 @@ export default class Layout {
                             r++;
                         }
                     });
-                } else { // we have a multi parent;
+                } else {
+                    // we have a multi parent;
                     node.incommingLink.forEach(p => {
                         const oX = p.x - node.x;
                         const oY = p.y - node.y;
                         angularSpace.push(DrawTools().angleFromVector(oX, oY) - 90);
                     });
-                    angularSpace.sort(function (a, b) {
-                        return a - b
+                    angularSpace.sort(function(a, b) {
+                        return a - b;
                     });
                     let angularDistances = [];
 
@@ -328,7 +327,7 @@ export default class Layout {
                     }
 
                     let startAngle = 0;
-                    let aOffset = (maxDistance - 0.5 * maxDistance) / (children.length);
+                    let aOffset = (maxDistance - 0.5 * maxDistance) / children.length;
                     if (indexInSpace === angularDistances.length - 1) {
                         startAngle = angularSpace[angularSpace.length - 1];
                     } else {
@@ -340,7 +339,7 @@ export default class Layout {
                     let r = 0;
                     children.forEach(() => {
                         if ((children[r].x === -1 && children[r].y === -1) || layoutChange) {
-                            let nAngle = startAngle + (r) * aOffset;
+                            let nAngle = startAngle + r * aOffset;
                             if (nAngle > 360) {
                                 nAngle -= 360;
                             }
@@ -354,6 +353,5 @@ export default class Layout {
                 }
             }
         }
-    };
-
-}// end of class definition
+    }
+} // end of class definition

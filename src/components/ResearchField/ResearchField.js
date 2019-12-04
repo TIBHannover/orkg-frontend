@@ -4,14 +4,12 @@ import { Link } from 'react-router-dom';
 import { getStatementsByObject, getResource, getStatementsBySubject } from '../../network';
 import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
-import PaperCard from '../PaperCard/PaperCard'
+import PaperCard from '../PaperCard/PaperCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 
-
 class ResearchField extends Component {
-
     constructor(props) {
         super(props);
 
@@ -25,7 +23,7 @@ class ResearchField extends Component {
             researchField: null,
             papers: [],
             parentResearchField: null,
-            isLastPageReached: false,
+            isLastPageReached: false
         };
     }
 
@@ -34,54 +32,59 @@ class ResearchField extends Component {
         this.loadMorePapers();
     }
 
-    componentDidUpdate = (prevProps) => {
+    componentDidUpdate = prevProps => {
         if (this.props.match.params.researchFieldId !== prevProps.match.params.researchFieldId) {
             this.loadResearchFieldData();
             this.loadMorePapers();
         }
-    }
+    };
 
     loadResearchFieldData = () => {
         // Get the research field
-        getResource(this.props.match.params.researchFieldId).then((result) => {
+        getResource(this.props.match.params.researchFieldId).then(result => {
             this.setState({ researchField: result, papers: [], loading: false }, () => {
-                document.title = `${this.state.researchField.label} - ORKG`
-            })
+                document.title = `${this.state.researchField.label} - ORKG`;
+            });
         });
-    }
+    };
 
     loadMorePapers = () => {
-        this.setState({ isNextPageLoading: true })
+        this.setState({ isNextPageLoading: true });
         // Get the statements that contains the research field as an object
         getStatementsByObject({
             id: this.props.match.params.researchFieldId,
             page: this.state.page,
             items: this.pageSize,
-            sortBy: 'id',
+            sortBy: 'created_at',
             desc: true
-        }).then((result) => {
+        }).then(result => {
             // Papers
             if (result.length > 0) {
                 // Fetch the data of each paper
-                let papers = result.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD)
-                    .map((paper) => {
-                        return getStatementsBySubject({ id: paper.subject.id }).then((paperStatements) => {
+                let papers = result
+                    .filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD)
+                    .map(paper => {
+                        return getStatementsBySubject({ id: paper.subject.id }).then(paperStatements => {
                             // publication year
-                            let publicationYear = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
+                            let publicationYear = paperStatements.filter(
+                                statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR
+                            );
                             if (publicationYear.length > 0) {
-                                publicationYear = publicationYear[0].object.label
+                                publicationYear = publicationYear[0].object.label;
                             } else {
-                                publicationYear = ''
+                                publicationYear = '';
                             }
                             // publication month
-                            let publicationMonth = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
+                            let publicationMonth = paperStatements.filter(
+                                statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH
+                            );
                             if (publicationMonth.length > 0) {
-                                publicationMonth = publicationMonth[0].object.label
+                                publicationMonth = publicationMonth[0].object.label;
                             } else {
-                                publicationMonth = ''
+                                publicationMonth = '';
                             }
                             // authors
-                            let authors = paperStatements.filter((statement) => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
+                            let authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
                             let authorNamesArray = [];
                             if (authors.length > 0) {
                                 for (let author of authors) {
@@ -92,21 +95,21 @@ class ResearchField extends Component {
                             paper.data = {
                                 publicationYear,
                                 publicationMonth,
-                                authorNames: authorNamesArray.reverse(),
-                            }
+                                authorNames: authorNamesArray.reverse()
+                            };
                             return paper;
-                        })
+                        });
                     });
-                let parentResearchField = result.find((statement) => statement.predicate.id === 'P36');
-                return Promise.all(papers).then((papers) => {
+                let parentResearchField = result.find(statement => statement.predicate.id === 'P36');
+                return Promise.all(papers).then(papers => {
                     this.setState({
                         papers: [...this.state.papers, ...papers],
                         parentResearchField: parentResearchField,
                         isNextPageLoading: false,
-                        hasNextPage: (papers.length < this.pageSize || papers.length === 0) ? false : true,
+                        hasNextPage: papers.length < this.pageSize || papers.length === 0 ? false : true,
                         page: this.state.page + 1
-                    })
-                })
+                    });
+                });
             } else {
                 this.setState({
                     isNextPageLoading: false,
@@ -114,8 +117,8 @@ class ResearchField extends Component {
                     isLastPageReached: true
                 });
             }
-        })
-    }
+        });
+    };
 
     render() {
         return (
@@ -143,69 +146,75 @@ class ResearchField extends Component {
                                 {this.state.parentResearchField && (
                                     <CardFooter>
                                         Parent research field:
-                                        <Link className={'ml-2'} to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.parentResearchField.subject.id })} >
+                                        <Link
+                                            className={'ml-2'}
+                                            to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.parentResearchField.subject.id })}
+                                        >
                                             {this.state.parentResearchField.subject.label}
                                         </Link>
                                     </CardFooter>
                                 )}
-
                             </Card>
                         </Container>
                         <br />
                         <Container>
-                            {this.state.papers.length > 0 &&
+                            {this.state.papers.length > 0 && (
                                 <div>
-                                    {this.state.papers.map(
-                                        (resource) => {
-                                            return (
-                                                <PaperCard
-                                                    paper={{ id: resource.subject.id, title: resource.subject.label, ...resource.data }}
-                                                    key={`pc${resource.id}`}
-                                                />
-                                            )
-                                        }
-                                    )}
+                                    {this.state.papers.map(resource => {
+                                        return (
+                                            <PaperCard
+                                                paper={{ id: resource.subject.id, title: resource.subject.label, ...resource.data }}
+                                                key={`pc${resource.id}`}
+                                            />
+                                        );
+                                    })}
                                 </div>
-                            }
-                            {this.state.papers.length === 0 && !this.state.isNextPageLoading &&
-                                (
-                                    <div className="text-center mt-4 mb-4">
-                                        There are no articles for this research field, yet.
-                                        <br />
-                                        Start the graphing in ORKG by sharing a paper.
-                                        <br />
-                                        <br />
-                                        <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
-                                            <Button size="sm" color="primary " className="mr-3">Share paper</Button>
-                                        </Link>
-                                    </div>
-                                )
-                            }
-                            {this.state.isNextPageLoading && <div className="text-center mt-4 mb-4"><Icon icon={faSpinner} spin /> Loading</div>}
+                            )}
+                            {this.state.papers.length === 0 && !this.state.isNextPageLoading && (
+                                <div className="text-center mt-4 mb-4">
+                                    There are no articles for this research field, yet.
+                                    <br />
+                                    Start the graphing in ORKG by sharing a paper.
+                                    <br />
+                                    <br />
+                                    <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
+                                        <Button size="sm" color="primary " className="mr-3">
+                                            Share paper
+                                        </Button>
+                                    </Link>
+                                </div>
+                            )}
+                            {this.state.isNextPageLoading && (
+                                <div className="text-center mt-4 mb-4">
+                                    <Icon icon={faSpinner} spin /> Loading
+                                </div>
+                            )}
                             {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                                <div style={{ cursor: 'pointer' }} className="list-group-item list-group-item-action text-center mt-2" onClick={!this.state.isNextPageLoading ? this.loadMorePapers : undefined}>
+                                <div
+                                    style={{ cursor: 'pointer' }}
+                                    className="list-group-item list-group-item-action text-center mt-2"
+                                    onClick={!this.state.isNextPageLoading ? this.loadMorePapers : undefined}
+                                >
                                     Load more papers
                                 </div>
                             )}
                             {!this.state.hasNextPage && this.state.isLastPageReached && (
-                                <div className="text-center mt-3">
-                                    You have reached the last page.
-                                </div>)
-                            }
+                                <div className="text-center mt-3">You have reached the last page.</div>
+                            )}
                         </Container>
                     </div>
                 )}
             </>
-        )
+        );
     }
 }
 
 ResearchField.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
-            researchFieldId: PropTypes.string,
-        }).isRequired,
-    }).isRequired,
-}
+            researchFieldId: PropTypes.string
+        }).isRequired
+    }).isRequired
+};
 
 export default ResearchField;

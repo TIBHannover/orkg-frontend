@@ -21,7 +21,7 @@ export default class Node extends BaseElement {
 
         this.filterCollapsedLinks = this.filterCollapsedLinks.bind(this);
         this.startLayoutTransition = this.startLayoutTransition.bind(this);
-    };
+    }
 
     startLayoutTransition(id, max, callback) {
         // get old value
@@ -29,9 +29,10 @@ export default class Node extends BaseElement {
         const f_y = parseInt(this.y);
         let that = this;
 
-        that.svgRoot.transition()
-            .tween('attr.translate', function () {
-                return function () {
+        that.svgRoot
+            .transition()
+            .tween('attr.translate', function() {
+                return function() {
                     const tr = d3.transform(that.svgRoot.attr('transform'));
                     that.x = tr.translate[0];
                     that.y = tr.translate[1];
@@ -42,12 +43,15 @@ export default class Node extends BaseElement {
                         link.updateDrawPosition();
                     });
                 };
-            }).each('end', function () {
-            if (id === max) { // this should zoom to the extent
-                callback();
-            }
-        }).attr('transform', 'translate(' + f_x + ',' + f_y + ')');
-    };
+            })
+            .each('end', function() {
+                if (id === max) {
+                    // this should zoom to the extent
+                    callback();
+                }
+            })
+            .attr('transform', 'translate(' + f_x + ',' + f_y + ')');
+    }
 
     filterCollapsedLinks() {
         let linksToDraw = [];
@@ -57,7 +61,7 @@ export default class Node extends BaseElement {
             }
         });
         return linksToDraw;
-    };
+    }
 
     addLinkElement(link) {
         this.linkElements.push(link);
@@ -66,15 +70,15 @@ export default class Node extends BaseElement {
         } else {
             this.incommingLink.push(link);
         }
-    };
+    }
 
     setDepth(v) {
         this.depthValue = v;
-    };
+    }
 
     getDepth() {
         return this.depthValue;
-    };
+    }
 
     id(val) {
         if (!arguments.length) {
@@ -82,18 +86,18 @@ export default class Node extends BaseElement {
         } else {
             this.idValue = val;
         }
-    };
+    }
 
     setLabel(val) {
         this.label = val;
-    };
+    }
 
     setPosition(px, py) {
         this.x = px;
         this.y = py;
-    };
+    }
 
-    updateDrawPosition = function () {
+    updateDrawPosition = function() {
         if (this.svgRoot) {
             this.svgRoot.attr('transform', 'translate(' + this.x + ',' + this.y + ')');
             this.linkElements.forEach(link => {
@@ -102,15 +106,14 @@ export default class Node extends BaseElement {
         }
     };
 
-    getRadius = function () {
+    getRadius = function() {
         if (this.shapeRadius) {
             return this.shapeRadius;
         }
         return parseInt(this.configObject.radius);
     };
 
-    getRenderingShape = function () {
+    getRenderingShape = function() {
         return this.renderingElement;
     };
-
 } // end of class definition

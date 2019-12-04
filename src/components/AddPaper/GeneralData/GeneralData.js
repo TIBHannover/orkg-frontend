@@ -1,7 +1,22 @@
 import React, { Component } from 'react';
 import {
-    Row, Col, Form, FormGroup, Label, Input, InputGroup, InputGroupAddon, Button, ButtonGroup, FormFeedback, Table, Card, Modal,
-    ModalHeader, ModalBody, ModalFooter
+    Row,
+    Col,
+    Form,
+    FormGroup,
+    Label,
+    Input,
+    InputGroup,
+    InputGroupAddon,
+    Button,
+    ButtonGroup,
+    FormFeedback,
+    Table,
+    Card,
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter
 } from 'reactstrap';
 import { compose } from 'redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -22,32 +37,32 @@ import Tour from 'reactour';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 const Container = styled(CSSTransition)`
-  &.fadeIn-enter {
-    opacity: 0;
-  }
+    &.fadeIn-enter {
+        opacity: 0;
+    }
 
-  &.fadeIn-enter.fadeIn-enter-active {
-    opacity: 1;
-    transition: 1s opacity;
-  }
+    &.fadeIn-enter.fadeIn-enter-active {
+        opacity: 1;
+        transition: 1s opacity;
+    }
 
-  &.fadeIn-exit.fadeIn-exit-active {
-    display: none;
-  }
+    &.fadeIn-exit.fadeIn-exit-active {
+        display: none;
+    }
 
-  &.slideDown-enter {
-    max-height: 0;
-    overflow: hidden;
-  }
+    &.slideDown-enter {
+        max-height: 0;
+        overflow: hidden;
+    }
 
-  &.slideDown-enter.slideDown-enter-active {
-    max-height: 1000px;
-    transition: 1s;
-  }
+    &.slideDown-enter.slideDown-enter-active {
+        max-height: 1000px;
+        transition: 1s;
+    }
 
-  &.slideDown-exit.slideDown-exit-active {
-    display: none;
-  }
+    &.slideDown-exit.slideDown-exit-active {
+        display: none;
+    }
 `;
 
 class GeneralData extends Component {
@@ -59,9 +74,8 @@ class GeneralData extends Component {
                 field: 'entry',
                 method: 'isEmpty',
                 validWhen: false,
-                message:
-                    'Please enter the DOI, Bibtex or select \'Manually\' to enter the paper details yourself',
-            },
+                message: "Please enter the DOI, Bibtex or select 'Manually' to enter the paper details yourself"
+            }
         ]);
 
         this.lookup = React.createRef();
@@ -82,7 +96,7 @@ class GeneralData extends Component {
             errors: null
         };
 
-        // Hide the tour if a cookie 'taketour' exist 
+        // Hide the tour if a cookie 'taketour' exist
         if (this.props.cookies && this.props.cookies.get('taketour')) {
             this.state.isFirstVisit = false;
             this.props.closeTour();
@@ -93,14 +107,17 @@ class GeneralData extends Component {
         clearAllBodyScrollLocks();
     }
 
-    disableBody = target => disableBodyScroll()
-    enableBody = target => enableBodyScroll()
+    disableBody = target => disableBodyScroll();
+    enableBody = target => enableBodyScroll();
 
     //TODO this logic should be placed inside an action creator
     handleLookupClick = async () => {
+        if (this.props.isTourOpen) {
+            this.requestCloseTour();
+        }
         this.setState({
             entry: this.state.entry.trim(),
-            showLookupTable: false,
+            showLookupTable: false
         });
 
         this.lookup.current.blur();
@@ -113,7 +130,7 @@ class GeneralData extends Component {
         }
 
         this.setState({
-            isFetching: true,
+            isFetching: true
         });
 
         let entry;
@@ -124,26 +141,26 @@ class GeneralData extends Component {
         }
 
         await Cite.async(entry)
-            .catch((e) => {
+            .catch(e => {
                 let validation;
                 switch (e.message) {
                     case 'This format is not supported or recognized':
                         validation = this.validator.setError({
                             field: 'entry',
                             message:
-                                'This format is not supported or recognized. Please enter a valid DOI or Bibtex or select \'Manually\' to enter the paper details yourself',
+                                "This format is not supported or recognized. Please enter a valid DOI or Bibtex or select 'Manually' to enter the paper details yourself"
                         });
                         break;
                     case 'Server responded with status code 404':
                         validation = this.validator.setError({
                             field: 'entry',
-                            message: 'No paper has been found',
+                            message: 'No paper has been found'
                         });
                         break;
                     default:
                         validation = this.validator.setError({
                             field: 'entry',
-                            message: 'An error occurred, reload the page and try again',
+                            message: 'An error occurred, reload the page and try again'
                         });
                         break;
                 }
@@ -154,7 +171,7 @@ class GeneralData extends Component {
                 });
                 return null;
             })
-            .then((paper) => {
+            .then(paper => {
                 if (paper) {
                     let paperTitle = '',
                         paperAuthors = [],
@@ -163,8 +180,9 @@ class GeneralData extends Component {
                         doi = '';
                     try {
                         paperTitle = paper.data[0].title;
-                        if (paper.data[0].subtitle && paper.data[0].subtitle.length > 0) { // include the subtitle
-                            paperTitle = `${paperTitle}: ${paper.data[0].subtitle[0]}`
+                        if (paper.data[0].subtitle && paper.data[0].subtitle.length > 0) {
+                            // include the subtitle
+                            paperTitle = `${paperTitle}: ${paper.data[0].subtitle[0]}`;
                         }
                         if (paper.data[0].author) {
                             paperAuthors = paper.data[0].author.map((author, index) => {
@@ -174,7 +192,7 @@ class GeneralData extends Component {
                                 }
                                 const newAuthor = {
                                     label: fullname,
-                                    id: fullname,
+                                    id: fullname
                                 };
                                 return newAuthor;
                             });
@@ -204,28 +222,31 @@ class GeneralData extends Component {
             });
     };
 
-    handleInputChange = (e) => {
+    handleInputChange = e => {
+        if (this.props.isTourOpen) {
+            this.requestCloseTour();
+        }
         this.setState({
-            [e.target.name]: e.target.value,
+            [e.target.name]: e.target.value
         });
     };
 
-    handleMonthChange = (e) => {
+    handleMonthChange = e => {
         this.setState({
-            [e.target.name]: parseInt(e.target.value),
+            [e.target.name]: parseInt(e.target.value)
         });
     };
 
-    handleDataEntryClick = (selection) => {
+    handleDataEntryClick = selection => {
         this.setState({
-            dataEntry: selection,
+            dataEntry: selection
         });
     };
 
-    handleAuthorsChange = (tags) => {
+    handleAuthorsChange = tags => {
         tags = tags ? tags : [];
         this.setState({
-            paperAuthors: tags,
+            paperAuthors: tags
         });
     };
 
@@ -235,20 +256,20 @@ class GeneralData extends Component {
         if (this.props.cookies.get('taketourClosed')) {
             this.props.closeTour();
         } else {
-            this.props.cookies.set('taketourClosed', true)
+            this.props.cookies.set('taketourClosed', true);
             this.setState({ showHelpButton: true }, () => this.props.openTour());
         }
     };
 
     takeTour = () => {
-        this.props.cookies.set('taketour', 'take', { path: '/', maxAge: 604800 })
-        this.toggle('isFirstVisit')
+        this.props.cookies.set('taketour', 'take', { path: '/', maxAge: 604800 });
+        this.toggle('isFirstVisit');
         this.props.openTour();
     };
 
-    toggle = (type) => {
-        this.setState((prevState) => ({
-            [type]: !prevState[type],
+    toggle = type => {
+        this.setState(prevState => ({
+            [type]: !prevState[type]
         }));
     };
 
@@ -265,15 +286,7 @@ class GeneralData extends Component {
         // TODO do some sort of validation, before proceeding to the next step
         let errors = [];
 
-        let {
-            paperTitle,
-            paperAuthors,
-            paperPublicationMonth,
-            paperPublicationYear,
-            doi,
-            entry,
-            showLookupTable,
-        } = this.state;
+        let { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi, entry, showLookupTable } = this.state;
 
         if (!paperTitle || paperTitle.trim().length < 1) {
             errors.push('Please enter the title of your paper or click on "Lookup" if you entered the doi.');
@@ -290,22 +303,20 @@ class GeneralData extends Component {
                 showLookupTable: showLookupTable
             });
             this.props.nextStep();
-        }
-        else {
-            this.setState({ errors: errors })
+        } else {
+            this.setState({ errors: errors });
         }
     };
 
-    submitHandler = (e) => {
+    submitHandler = e => {
         e.preventDefault();
     };
 
-    handleLearnMore = (step) => {
+    handleLearnMore = step => {
         this.props.openTour(step);
-    }
+    };
 
     render() {
-
         return (
             <div>
                 <h2 className="h4 mt-4">General paper data</h2>
@@ -314,21 +325,24 @@ class GeneralData extends Component {
                     <ModalHeader toggle={() => this.toggle('isFirstVisit')}>A very warm welcome</ModalHeader>
                     <ModalBody>
                         <p>Great to have you on board! </p>
-                        <p>We would love to help you to get started. We've added a guided tour that covers all necessary steps to add your paper to the Open Research Knowledge Graph.</p>
+                        <p>
+                            We would love to help you to get started. We've added a guided tour that covers all necessary steps to add your paper to
+                            the Open Research Knowledge Graph.
+                        </p>
                         <p>Can we show you around?</p>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="light" onClick={this.handleSkipTour}>Skip</Button>
-                        <Button color="primary" onClick={this.takeTour}>Show me how</Button>{' '}
+                        <Button color="light" onClick={this.handleSkipTour}>
+                            Skip
+                        </Button>
+                        <Button color="primary" onClick={this.takeTour}>
+                            Show me how
+                        </Button>{' '}
                     </ModalFooter>
                 </Modal>
 
                 <ButtonGroup id="entryOptions" className="float-right" style={{ marginTop: '-30px' }}>
-                    <Button
-                        size="sm"
-                        color={this.state.dataEntry === 'doi' ? 'primary' : 'light'}
-                        onClick={() => this.handleDataEntryClick('doi')}
-                    >
+                    <Button size="sm" color={this.state.dataEntry === 'doi' ? 'primary' : 'light'} onClick={() => this.handleDataEntryClick('doi')}>
                         By DOI
                     </Button>
                     <Button
@@ -350,7 +364,20 @@ class GeneralData extends Component {
                                             <Form className="mt-4" onSubmit={this.submitHandler}>
                                                 <FormGroup>
                                                     <Label for="paperDoi">
-                                                        <Tooltip message={<span>Automatically fetch the details of your paper by providing a DOI or a BibTeX entry. <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(0)}>Learn more</span></span>}>
+                                                        <Tooltip
+                                                            message={
+                                                                <span>
+                                                                    Automatically fetch the details of your paper by providing a DOI or a BibTeX
+                                                                    entry.{' '}
+                                                                    <span
+                                                                        style={{ textDecoration: 'underline', cursor: 'pointer' }}
+                                                                        onClick={() => this.handleLearnMore(0)}
+                                                                    >
+                                                                        Learn more
+                                                                    </span>
+                                                                </span>
+                                                            }
+                                                        >
                                                             Paper DOI or BibTeX
                                                         </Tooltip>
                                                     </Label>
@@ -362,11 +389,11 @@ class GeneralData extends Component {
                                                             value={this.state.entry}
                                                             onChange={this.handleInputChange}
                                                             invalid={this.state.validation.entry.isInvalid}
-                                                            onKeyPress={(target) => { target.charCode === 13 && this.handleLookupClick(); }}
+                                                            onKeyPress={target => {
+                                                                target.charCode === 13 && this.handleLookupClick();
+                                                            }}
                                                         />
-                                                        <FormFeedback className="order-1">
-                                                            {this.state.validation.entry.message}
-                                                        </FormFeedback>{' '}
+                                                        <FormFeedback className="order-1">{this.state.validation.entry.message}</FormFeedback>{' '}
                                                         {/* Need to set order-1 here to fix Bootstrap bug of missing rounded borders */}
                                                         <InputGroupAddon addonType="append">
                                                             <Button
@@ -378,11 +405,7 @@ class GeneralData extends Component {
                                                                 disabled={this.state.isFetching}
                                                                 data-test="lookupDoi"
                                                             >
-                                                                {!this.state.isFetching ? (
-                                                                    'Lookup'
-                                                                ) : (
-                                                                        <FontAwesomeIcon icon={faSpinner} spin />
-                                                                    )}
+                                                                {!this.state.isFetching ? 'Lookup' : <FontAwesomeIcon icon={faSpinner} spin />}
                                                             </Button>
                                                         </InputGroupAddon>
                                                     </InputGroup>
@@ -391,22 +414,18 @@ class GeneralData extends Component {
 
                                             <TransitionGroup>
                                                 {this.state.showLookupTable ? (
-                                                    <Container
-                                                        key={1}
-                                                        classNames="slideDown"
-                                                        timeout={{ enter: 500, exit: 300 }}
-                                                    >
+                                                    <Container key={1} classNames="slideDown" timeout={{ enter: 500, exit: 300 }}>
                                                         <div className="mt-5">
                                                             <h3 className="h4 mb-3">
                                                                 Lookup result
-                                                            <Button
+                                                                <Button
                                                                     className={'pull-right ml-1'}
                                                                     outline
                                                                     size="sm"
                                                                     onClick={() => this.handleDataEntryClick('manually')}
-                                                            >
+                                                                >
                                                                     Edit
-                                                            </Button>
+                                                                </Button>
                                                             </h3>
                                                             <Card body>
                                                                 <Table className="mb-0">
@@ -443,8 +462,8 @@ class GeneralData extends Component {
                                                         </div>
                                                     </Container>
                                                 ) : (
-                                                        ''
-                                                    )}
+                                                    ''
+                                                )}
                                             </TransitionGroup>
                                         </div>
                                     </Container>
@@ -452,10 +471,7 @@ class GeneralData extends Component {
                             default:
                                 //Manually
                                 return (
-                                    <Container key={2}
-                                        classNames="fadeIn"
-                                        timeout={{ enter: 500, exit: 0 }}
-                                    >
+                                    <Container key={2} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
                                         <Form className="mt-4" onSubmit={this.submitHandler}>
                                             <FormGroup>
                                                 <Label for="paperTitle">
@@ -478,10 +494,7 @@ class GeneralData extends Component {
                                                                 Paper authors
                                                             </Tooltip>
                                                         </Label>
-                                                        <AuthorsInput
-                                                            handler={this.handleAuthorsChange}
-                                                            value={this.state.paperAuthors}
-                                                        />
+                                                        <AuthorsInput handler={this.handleAuthorsChange} value={this.state.paperAuthors} />
                                                     </FormGroup>
                                                 </Col>
                                                 <Col md={6} className="pl-3">
@@ -525,7 +538,7 @@ class GeneralData extends Component {
                                                                     </option>
                                                                     {range(1900, moment().year())
                                                                         .reverse()
-                                                                        .map((year) => (
+                                                                        .map(year => (
                                                                             <option key={year}>{year}</option>
                                                                         ))}
                                                                 </Input>
@@ -541,19 +554,14 @@ class GeneralData extends Component {
                     })()}
                 </TransitionGroup>
                 <hr className="mt-5 mb-3" />
-                {this.state.errors && this.state.errors.length > 0 &&
+                {this.state.errors && this.state.errors.length > 0 && (
                     <ul className="float-left mb-4 text-danger">
-                        {this.state.errors.map(e => {
-                            return <li>{e}</li>
+                        {this.state.errors.map((e, index) => {
+                            return <li key={index}>{e}</li>;
                         })}
                     </ul>
-                }
-                <Button
-                    color="primary"
-                    className="float-right mb-4"
-                    onClick={this.handleNextClick}
-                    data-test="nextStep"
-                >
+                )}
+                <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick} data-test="nextStep">
                     Next step
                 </Button>
                 {!this.state.showHelpButton && (
@@ -561,15 +569,22 @@ class GeneralData extends Component {
                         onAfterOpen={this.disableBody}
                         onBeforeClose={this.enableBody}
                         steps={[
-                            {
-                                selector: '#doiInputGroup',
-                                content: 'Start by entering the DOI or the BibTeX of the paper you want to add. Then, click on "Lookup" to fetch paper meta-data automatically.',
-                                style: { borderTop: '4px solid #E86161' },
-                            },
+                            ...(this.state.dataEntry === 'doi'
+                                ? [
+                                      {
+                                          selector: '#doiInputGroup',
+                                          content:
+                                              'Start by entering the DOI or the BibTeX of the paper you want to add. Then, click on "Lookup" to fetch paper meta-data automatically.',
+                                          style: { borderTop: '4px solid #E86161' },
+                                          action: node => (node ? node.focus() : null)
+                                      }
+                                  ]
+                                : []),
                             {
                                 selector: '#entryOptions',
-                                content: 'In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button on the right.',
-                                style: { borderTop: '4px solid #E86161' },
+                                content:
+                                    'In case you don\'t have the DOI, you can enter the general paper data manually. Do this by pressing the "Manually" button on the right.',
+                                style: { borderTop: '4px solid #E86161' }
                             }
                         ]}
                         showNumber={false}
@@ -584,19 +599,24 @@ class GeneralData extends Component {
                 )}
                 {this.state.showHelpButton && (
                     <Tour
+                        disableInteraction={false}
                         onAfterOpen={this.disableBody}
                         onBeforeClose={this.enableBody}
                         steps={[
                             {
                                 selector: '#helpIcon',
                                 content: 'If you want to start the tour again at a later point, you can do so from this button.',
-                                style: { borderTop: '4px solid #E86161' },
-                            },
+                                style: { borderTop: '4px solid #E86161' }
+                            }
                         ]}
                         showNumber={false}
                         accentColor={this.props.theme.orkgPrimaryColor}
                         rounded={10}
-                        onRequestClose={() => { this.enableBody(); this.props.closeTour(); this.setState({ showHelpButton: false }); }}
+                        onRequestClose={() => {
+                            this.enableBody();
+                            this.props.closeTour();
+                            this.setState({ showHelpButton: false });
+                        }}
                         isOpen={this.state.showHelpButton}
                         startAt={0}
                         showButtons={false}
@@ -604,8 +624,6 @@ class GeneralData extends Component {
                         maskClassName="reactourMask"
                     />
                 )}
-
-
             </div>
         );
     }
@@ -616,14 +634,8 @@ GeneralData.propTypes = {
     doi: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     authors: PropTypes.array.isRequired,
-    publicationMonth: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number
-    ]).isRequired,
-    publicationYear: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number
-    ]).isRequired,
+    publicationMonth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    publicationYear: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     showLookupTable: PropTypes.bool.isRequired,
     updateGeneralData: PropTypes.func.isRequired,
     nextStep: PropTypes.func.isRequired,
@@ -633,10 +645,10 @@ GeneralData.propTypes = {
     closeTour: PropTypes.func.isRequired,
     updateTourCurrentStep: PropTypes.func.isRequired,
     isTourOpen: PropTypes.bool.isRequired,
-    tourStartAt: PropTypes.number.isRequired,
+    tourStartAt: PropTypes.number.isRequired
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     entry: state.addPaper.entry,
     doi: state.addPaper.doi,
     title: state.addPaper.title,
@@ -646,23 +658,15 @@ const mapStateToProps = (state) => ({
     publicationYear: state.addPaper.publicationYear,
     isTourOpen: state.addPaper.isTourOpen,
     tourCurrentStep: state.addPaper.tourCurrentStep,
-    tourStartAt: state.addPaper.tourStartAt,
+    tourStartAt: state.addPaper.tourStartAt
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    updateGeneralData: (data) => dispatch(updateGeneralData(data)),
-    updateTourCurrentStep: (data) => dispatch(updateTourCurrentStep(data)),
+const mapDispatchToProps = dispatch => ({
+    updateGeneralData: data => dispatch(updateGeneralData(data)),
+    updateTourCurrentStep: data => dispatch(updateTourCurrentStep(data)),
     nextStep: () => dispatch(nextStep()),
-    openTour: (data) => dispatch(openTour(data)),
-    closeTour: () => dispatch(closeTour()),
+    openTour: data => dispatch(openTour(data)),
+    closeTour: () => dispatch(closeTour())
 });
 
-
-export default compose(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps,
-    ),
-    withTheme,
-    withCookies
-)(GeneralData);
+export default compose(connect(mapStateToProps, mapDispatchToProps), withTheme, withCookies)(GeneralData);

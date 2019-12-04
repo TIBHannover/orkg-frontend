@@ -15,7 +15,7 @@ class Tooltip extends React.Component {
             tooltipOpen: false
         };
 
-        this.id = `tooltip-${guid()}`; // generate ID to connect the tooltip with the text 
+        this.id = `tooltip-${guid()}`; // generate ID to connect the tooltip with the text
     }
 
     toggle() {
@@ -27,8 +27,8 @@ class Tooltip extends React.Component {
     render() {
         const style = {
             fontSize: '1rem',
-            color: this.props.colorIcon ? this.props.colorIcon : 'initial',
-        }
+            color: this.props.colorIcon ? this.props.colorIcon : 'initial'
+        };
         const className = !this.props.colorIcon ? 'text-primary' : '';
 
         const trigger = this.props.trigger ? this.props.trigger : 'click hover focus';
@@ -36,7 +36,14 @@ class Tooltip extends React.Component {
         return (
             <span>
                 <span id={this.id}>
-                    {this.props.children} {!this.props.hideDefaultIcon ? <span style={style}><FontAwesomeIcon icon={faQuestionCircle} className={className} /></span> : ''}
+                    {this.props.children}{' '}
+                    {!this.props.hideDefaultIcon ? (
+                        <span style={style}>
+                            <FontAwesomeIcon icon={faQuestionCircle} className={className} />
+                        </span>
+                    ) : (
+                        ''
+                    )}
                 </span>
 
                 <ReactstrapTooltip
@@ -57,18 +64,15 @@ class Tooltip extends React.Component {
 
 Tooltip.propTypes = {
     children: PropTypes.node,
-    message: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.object
-    ]).isRequired,
+    message: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
     hideDefaultIcon: PropTypes.bool,
     colorIcon: PropTypes.string,
-    trigger: PropTypes.string,
-}
+    trigger: PropTypes.string
+};
 
 Tooltip.defaultProps = {
     hideDefaultIcon: false,
-    colorIcon: null,
-}
+    colorIcon: null
+};
 
 export default Tooltip;

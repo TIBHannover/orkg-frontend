@@ -1,19 +1,19 @@
 import Options from './options.js';
 import * as d3 from 'd3';
 
-import Node from './elements/Nodes'
-import Edge from './elements/Edges'
-import Property from './elements/Property'
+import Node from './elements/Nodes';
+import Edge from './elements/Edges';
+import Property from './elements/Property';
 import MinimumSpanningTree from './mst';
-import Layout from './Layout'
+import Layout from './Layout';
 import Navigation from './Navigation';
 
 export default class GraphVis {
     constructor() {
         this.graphOptions = new Options();
         this.mst = new MinimumSpanningTree();
-        this.nav = new Navigation({graph: this});
-        this.layout = new Layout({graph: this}); // possible 'force, treeV, treeH'
+        this.nav = new Navigation({ graph: this });
+        this.layout = new Layout({ graph: this }); // possible 'force, treeV, treeH'
         this.rootContainer = 'graphRendering';
         this.nodeMap = {};
         this.graphIsInitialized = false;
@@ -48,9 +48,8 @@ export default class GraphVis {
         this.stopBackgroundProcesses = this.stopBackgroundProcesses.bind(this);
         this.bindComponentValues = this.bindComponentValues.bind(this);
         this.loadDefaultOptions = this.loadDefaultOptions.bind(this);
-        this.ensureLayoutConsistency=this.ensureLayoutConsistency.bind(this);
-    };
-
+        this.ensureLayoutConsistency = this.ensureLayoutConsistency.bind(this);
+    }
 
     /** State Load Unload Functions **/
     graphInitialized(val) {
@@ -58,8 +57,7 @@ export default class GraphVis {
             return this.graphIsInitialized;
         }
         this.graphIsInitialized = val;
-    };
-
+    }
 
     loadData() {
         // clear if something was there;
@@ -105,18 +103,18 @@ export default class GraphVis {
                 this.nav.zoomToExtent();
             }
         }
-    };
+    }
 
     getMaxDepth() {
         return this.maxDepth - 1;
-    };
+    }
 
     computeDepth() {
         this.mst.setNodes(this.classNodes);
         this.mst.setLinks(this.links);
         this.maxDepth = this.mst.computeMinimumSpanningTree();
         return this.mst.getRoot();
-    };
+    }
 
     clearGraphData() {
         console.log('clearing the graphVis Data');
@@ -141,20 +139,19 @@ export default class GraphVis {
         delete this.classNodes;
         delete this.propNodes;
         delete this.links;
-
-    };
+    }
 
     /** Navigation Functions **/
     updateLayout(value) {
         this.layout.layoutType(value);
         this.layout.initializeLayoutEngine();
         this.layout.initializePositions(this.mst.getRoot(), true);
-    };
+    }
 
     zoomToExtent() {
         // forwarding function to bee called form outside;
         this.nav.zoomToExtent();
-    };
+    }
 
     /** Rendering Functions **/
     initializeLayers() {
@@ -162,7 +159,7 @@ export default class GraphVis {
         const root = this.graphRoot;
         const rootContainer = this.rootContainer;
 
-        layers.forEach(function (layer) {
+        layers.forEach(function(layer) {
             if (layer === 'arrows') {
                 const markerContainer = root.append('defs');
                 markerContainer.node().id = rootContainer + '_' + layer;
@@ -171,11 +168,11 @@ export default class GraphVis {
                 renderingLayer.node().id = rootContainer + '_' + layer;
             }
         });
-    };
+    }
 
     initializeRendering() {
         this.nav.initializeRendering();
-    };
+    }
 
     filterGraphByDepth(depth) {
         if (depth === this.filtedDepth) {
@@ -188,7 +185,7 @@ export default class GraphVis {
                 node.incommingLink.forEach(link => {
                     link.visible(false);
                     link.linkElement().visible(false);
-                })
+                });
             } else {
                 if (!node.visible()) {
                     newNodes.push(node); // add to new nodes;
@@ -197,13 +194,13 @@ export default class GraphVis {
                 node.incommingLink.forEach(link => {
                     link.visible(true);
                     link.linkElement().visible(true);
-                })
+                });
             }
         });
         this.updateDepthVis(newNodes);
         newNodes = []; // clear the nodes
         this.filtedDepth = depth;
-    };
+    }
 
     redrawGraph() {
         // remove svg;
@@ -213,7 +210,7 @@ export default class GraphVis {
         this.layout.initializeLayoutEngine();
         this.layout.initializePositions(this.mst.getRoot(), true);
         this.drawGraph();
-    };
+    }
 
     redrawGraphWithReset(props) {
         console.log('Resetting the visualization');
@@ -236,7 +233,7 @@ export default class GraphVis {
             this.nav.resetRendering();
             this.drawGraph();
         }
-    };
+    }
 
     resetSvgRoot(bgColor) {
         if (this.svgRoot) {
@@ -248,21 +245,23 @@ export default class GraphVis {
         this.svgRoot.style('background-color', bgColor);
         this.graphRoot = this.svgRoot.append('g'); // d3 node for the svg container
         this.graphRoot.style('overflow', 'hidden');
-    };
+    }
 
     createRenderingElements(container, data) {
-        return container.selectAll('.draggableItem')
-            .data(data).enter()
+        return container
+            .selectAll('.draggableItem')
+            .data(data)
+            .enter()
             .append('g')
             .classed('draggableItem', true)
-            .attr('id', function (d) {
+            .attr('id', function(d) {
                 return d.id();
             })
             .call(this.nav.getDragBehaviour());
-    };
+    }
 
     drawRenderingElements(elements) {
-        elements.each(function (item) {
+        elements.each(function(item) {
             if (item.visible()) {
                 item.render(d3.select(this));
                 item.addHoverEvents();
@@ -271,7 +270,7 @@ export default class GraphVis {
                 d3.select(this).remove();
             }
         });
-    };
+    }
 
     drawGraph() {
         // create and draw nodes
@@ -285,8 +284,11 @@ export default class GraphVis {
         this.drawRenderingElements(this.edgeElements);
 
         // links are a bit different
-        this.renderedLink = d3.select('#graphRendering_edges').selectAll('.linkElements')
-            .data(this.links).enter()
+        this.renderedLink = d3
+            .select('#graphRendering_edges')
+            .selectAll('.linkElements')
+            .data(this.links)
+            .enter()
             .append('g')
             .classed('.linkElements', true)
             .call(this.nav.getDragBehaviour());
@@ -294,7 +296,7 @@ export default class GraphVis {
         // create the links
         const makerContainer = d3.select('#graphRendering_arrows');
         if (this.renderedLink) {
-            this.renderedLink.each(function (link) {
+            this.renderedLink.each(function(link) {
                 if (link.visible()) {
                     link.render(d3.select(this), makerContainer);
                     link.updateDrawPosition();
@@ -303,7 +305,7 @@ export default class GraphVis {
                 }
             });
         }
-    };
+    }
 
     updateDepthVis(nodeRef) {
         this.graphRoot.selectAll('defs').remove();
@@ -331,7 +333,7 @@ export default class GraphVis {
             }
         } // end of smart expanding for force directed layout
         this.drawGraph();
-    };
+    }
 
     reinitializeGraphData(props) {
         if (this.svgRoot) {
@@ -349,10 +351,10 @@ export default class GraphVis {
 
         this.graphRoot = this.svgRoot.append('g'); // d3 node for the svg container
         this.graphRoot.style('overflow', 'hidden');
-    };
+    }
 
     createEdge(edge_data, iterator) {
-        const property = new Property({configObject: this.graphOptions.edgeConfig()});
+        const property = new Property({ configObject: this.graphOptions.edgeConfig() });
         property.setLabel(edge_data.label);
         property.id(property.id() + iterator);
 
@@ -367,7 +369,7 @@ export default class GraphVis {
         property.setPosition(rx * 300, ry * 300);
 
         // create that link;
-        const link = new Edge({configObject: this.graphOptions.edgeConfig()});
+        const link = new Edge({ configObject: this.graphOptions.edgeConfig() });
         link.domainNode(srcNode);
         link.propertyNode(property);
         link.rangeNode(tarNode);
@@ -390,10 +392,10 @@ export default class GraphVis {
         this.links.push(link);
 
         return property;
-    };
+    }
 
     createNode(node_data) {
-        const node = new Node({configObject: this.graphOptions.nodeConfig()});
+        const node = new Node({ configObject: this.graphOptions.nodeConfig() });
         node.setLabel(node_data.title);
         node.setPosition(-1, -1);
         if (node_data.type === 'literal') {
@@ -406,15 +408,14 @@ export default class GraphVis {
         // append to map;
         this.nodeMap[node_data.id] = node;
         return node;
-    };
-
+    }
 
     /** Helper functions**/
-    ensureLayoutConsistency(layout){
-        if (this.layout!==layout){
+    ensureLayoutConsistency(layout) {
+        if (this.layout !== layout) {
             this.updateLayout(layout);
         }
-    };
+    }
 
     bindComponentValues(props) {
         this.layout.layoutType(props.layout);
@@ -428,14 +429,13 @@ export default class GraphVis {
         this.initializeRendering();
 
         this.loadData();
-    };
+    }
 
     loadDefaultOptions() {
-        this.graphOptions.loadDefaultOptions()
-    };
+        this.graphOptions.loadDefaultOptions();
+    }
 
     stopBackgroundProcesses() {
         this.nav.stopBackgroundProcesses();
-    };
-
-}// end of class definition
+    }
+} // end of class definition

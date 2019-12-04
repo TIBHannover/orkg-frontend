@@ -25,7 +25,7 @@ const ComparisonBoxButton = styled(Button)`
 `;
 
 const ComparisonBox = styled.div`
-    background: ${(props) => props.theme.orkgPrimaryColor};
+    background: ${props => props.theme.orkgPrimaryColor};
     border-radius: 11px 11px 0 0;
     width: 340px;
     min-height: 390px;
@@ -81,7 +81,7 @@ class ComparisonPopup extends Component {
         super(props);
 
         this.state = {
-            showComparisonBox: false,
+            showComparisonBox: false
         };
     }
 
@@ -95,30 +95,33 @@ class ComparisonPopup extends Component {
     }
 
     loadComparisonFromCookie = () => {
-        if (this.props.cookies.get('comparison') && JSON.stringify(this.props.comparison.allIds) !== JSON.stringify(this.props.cookies.get('comparison').allIds)) {
+        if (
+            this.props.cookies.get('comparison') &&
+            JSON.stringify(this.props.comparison.allIds) !== JSON.stringify(this.props.cookies.get('comparison').allIds)
+        ) {
             this.props.loadComparisonFromCookie(this.props.cookies.get('comparison'));
         }
     };
 
     toggleComparisonBox = () => {
-        this.setState((prevState) => ({
-            showComparisonBox: !prevState.showComparisonBox,
+        this.setState(prevState => ({
+            showComparisonBox: !prevState.showComparisonBox
         }));
     };
 
-    removeAllContributionFromComparison = async (allIds) => {
+    removeAllContributionFromComparison = async allIds => {
         let result = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure you want to remove all contributions from comparison?',
-            cancelColor: 'light',
+            cancelColor: 'light'
         });
 
         if (result) {
-            allIds.map((contributionId) => this.removeFromComparison(contributionId));
+            allIds.map(contributionId => this.removeFromComparison(contributionId));
         }
     };
 
-    removeFromComparison = (id) => {
+    removeFromComparison = id => {
         this.props.removeFromComparison(id);
     };
 
@@ -144,48 +147,60 @@ class ComparisonPopup extends Component {
                             Compare contributions <Icon icon={faChevronUp} />
                         </ComparisonBoxButton>
                     ) : (
-                            <ComparisonBox className="ml-auto">
-                                <Header onClick={this.toggleComparisonBox}>
-                                    <Badge color="primaryDarker" className="pl-2 pr-2 mr-1">
-                                        {contributionAmount}
-                                    </Badge>{' '}
-                                    Compare contributions
+                        <ComparisonBox className="ml-auto">
+                            <Header onClick={this.toggleComparisonBox}>
+                                <Badge color="primaryDarker" className="pl-2 pr-2 mr-1">
+                                    {contributionAmount}
+                                </Badge>{' '}
+                                Compare contributions
                                 <div className="float-right">
-                                        <Tooltip message="Remove all contributions from comparison" hideDefaultIcon>
-                                            <Icon className="ml-2 mr-2" size="sm" onClick={() => this.removeAllContributionFromComparison(allIds)} icon={faTrash} />
-                                        </Tooltip>
-                                        <Icon icon={faChevronDown} />
+                                    <Tooltip message="Remove all contributions from comparison" hideDefaultIcon>
+                                        <Icon
+                                            className="ml-2 mr-2"
+                                            size="sm"
+                                            onClick={() => this.removeAllContributionFromComparison(allIds)}
+                                            icon={faTrash}
+                                        />
+                                    </Tooltip>
+                                    <Icon icon={faChevronDown} />
                                 </div>
-                                </Header>
-                                <List>
-                                    {allIds.map((contributionId) => (
-                                        <ContributionItem key={contributionId}>
-                                            <div className="d-flex">
-                                                <div className="pr-3">
-                                                    <Icon icon={faFile} />
-                                                </div>
-                                                <div className="flex-grow-1">
-                                                    <Title to={reverse(ROUTES.VIEW_PAPER, { resourceId: byId[contributionId].paperId, contributionId: contributionId })}>{byId[contributionId].paperTitle}</Title>
-                                                    <Number>{byId[contributionId].contributionTitle}</Number>
-                                                </div>
-                                                <Tooltip message="Remove from comparison" hideDefaultIcon>
-                                                    <Remove>
-                                                        <Icon icon={faTimes} onClick={() => this.removeFromComparison(contributionId)} />
-                                                    </Remove>
-                                                </Tooltip>
+                            </Header>
+                            <List>
+                                {allIds.map(contributionId => (
+                                    <ContributionItem key={contributionId}>
+                                        <div className="d-flex">
+                                            <div className="pr-3">
+                                                <Icon icon={faFile} />
                                             </div>
-                                        </ContributionItem>
-                                    ))}
-                                </List>
-                                <div className="w-100 text-center">
-                                    <Link to={comparisonUrl}>
-                                        <StartComparison color="primaryDarker" className="mb-2">
-                                            Start comparison
-                                        </StartComparison>
-                                    </Link>
-                                </div>
-                            </ComparisonBox>
-                        )}
+                                            <div className="flex-grow-1">
+                                                <Title
+                                                    to={reverse(ROUTES.VIEW_PAPER, {
+                                                        resourceId: byId[contributionId].paperId,
+                                                        contributionId: contributionId
+                                                    })}
+                                                >
+                                                    {byId[contributionId].paperTitle}
+                                                </Title>
+                                                <Number>{byId[contributionId].contributionTitle}</Number>
+                                            </div>
+                                            <Tooltip message="Remove from comparison" hideDefaultIcon>
+                                                <Remove>
+                                                    <Icon icon={faTimes} onClick={() => this.removeFromComparison(contributionId)} />
+                                                </Remove>
+                                            </Tooltip>
+                                        </div>
+                                    </ContributionItem>
+                                ))}
+                            </List>
+                            <div className="w-100 text-center">
+                                <Link to={comparisonUrl}>
+                                    <StartComparison color="primaryDarker" className="mb-2">
+                                        Start comparison
+                                    </StartComparison>
+                                </Link>
+                            </div>
+                        </ComparisonBox>
+                    )}
                 </Container>
             </Navbar>
         );
@@ -196,22 +211,16 @@ ComparisonPopup.propTypes = {
     comparison: PropTypes.object.isRequired,
     removeFromComparison: PropTypes.func.isRequired,
     loadComparisonFromCookie: PropTypes.func.isRequired,
-    cookies: PropTypes.object,
+    cookies: PropTypes.object
 };
 
-const mapStateToProps = (state) => ({
-    comparison: state.viewPaper.comparison,
+const mapStateToProps = state => ({
+    comparison: state.viewPaper.comparison
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    removeFromComparison: (data) => dispatch(removeFromComparison(data)),
-    loadComparisonFromCookie: (data) => dispatch(loadComparisonFromCookie(data)),
+const mapDispatchToProps = dispatch => ({
+    removeFromComparison: data => dispatch(removeFromComparison(data)),
+    loadComparisonFromCookie: data => dispatch(loadComparisonFromCookie(data))
 });
 
-export default compose(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps,
-    ),
-    withCookies,
-)(ComparisonPopup);
+export default compose(connect(mapStateToProps, mapDispatchToProps), withCookies)(ComparisonPopup);

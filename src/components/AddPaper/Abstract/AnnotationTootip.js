@@ -23,30 +23,30 @@ class AnnotationTootip extends Component {
                 paddingLeft: 0,
                 paddingRight: 0,
                 width: '250px',
-                color: '#fff',
+                color: '#fff'
             }),
-            placeholder: (provided) => ({
+            placeholder: provided => ({
                 ...provided,
-                color: '#fff',
+                color: '#fff'
             }),
-            singleValue: (provided) => ({
+            singleValue: provided => ({
                 ...provided,
-                color: '#fff',
+                color: '#fff'
             }),
-            input: (provided) => ({
+            input: provided => ({
                 ...provided,
-                color: '#fff',
+                color: '#fff'
             }),
-            menu: (provided) => ({
+            menu: provided => ({
                 ...provided,
-                zIndex: 10,
+                zIndex: 10
             }),
-            menuList: (provided) => ({
+            menuList: provided => ({
                 ...provided,
                 backgroundColor: '#fff',
                 opacity: 1,
-                color: '#000',
-            }),
+                color: '#000'
+            })
         };
         return (
             <span>
@@ -64,25 +64,32 @@ class AnnotationTootip extends Component {
                                 label: this.props.range.class.label,
                                 id: this.props.range.class.id,
                                 certainty: this.props.range.certainty,
-                                range_id: this.props.range.id,
+                                range_id: this.props.range.id
                             }}
                             getOptionLabel={({ label }) => label}
                             getOptionValue={({ id }) => id}
-                            onChange={(e, a) => { this.props.handleChangeAnnotationClass(e, a, this.props.range); this.tippyInstance.current.hide(); }}
-                            key={(value) => value}
+                            onChange={(e, a) => {
+                                this.props.handleChangeAnnotationClass(e, a, this.props.range);
+                                this.tippyInstance.current.hide();
+                            }}
+                            key={value => value}
                             cacheOptions
                             defaultOptions={this.props.defaultOptions}
                             isClearable
                             openMenuOnClick={false}
                             placeholder="Select or type something..."
                             styles={customStyles}
-                        />}
+                        />
+                    }
                 >
-                    <span style={{ backgroundColor: this.props.getClassColor(this.props.range.class.label), color: 'black' }} id={`CR${this.props.range.id}`}>
+                    <span
+                        style={{ backgroundColor: this.props.getClassColor(this.props.range.class.label), color: 'black' }}
+                        id={`CR${this.props.range.id}`}
+                    >
                         {this.props.lettersNode}
                     </span>
                 </Tippy>
-            </span >
+            </span>
         );
     }
 }
@@ -95,8 +102,7 @@ AnnotationTootip.propTypes = {
     loadOptions: PropTypes.func,
     getClassColor: PropTypes.func.isRequired,
     theme: PropTypes.object.isRequired,
-    defaultOptions: PropTypes.array.isRequired,
+    defaultOptions: PropTypes.array.isRequired
 };
-
 
 export default withTheme(AnnotationTootip);

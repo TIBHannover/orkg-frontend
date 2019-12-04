@@ -10,30 +10,29 @@ import capitalize from 'capitalize';
 import Tooltip from '../Utils/Tooltip';
 
 const DragHandle = styled.span`
-    cursor:move;
-    color:#A5A5A5;
-    width:30px;
-    text-align:center;
+    cursor: move;
+    color: #a5a5a5;
+    width: 30px;
+    text-align: center;
 `;
 
 const DragHandlePlaceholder = styled.span`
-    width:30px;
+    width: 30px;
 `;
 
 const ListGroupItemStyled = styled(ListGroupItem)`
-    padding: 10px 10px 9px 5px!important;
-    display:flex!important;
+    padding: 10px 10px 9px 5px !important;
+    display: flex !important;
 `;
 
 class SelectProperties extends Component {
-
-    // TODO: place this outside the component class 
+    // TODO: place this outside the component class
     SortableHandle = sortableHandle(() => (
         <DragHandle>
             <Icon icon={faSort} />
         </DragHandle>
     ));
-    
+
     SortableItem = SortableElement(({ value: property }) => (
         <ListGroupItemStyled>
             {property.active ? <this.SortableHandle /> : <DragHandlePlaceholder />}
@@ -50,7 +49,7 @@ class SelectProperties extends Component {
             </Tooltip>
         </ListGroupItemStyled>
     ));
-    
+
     SortableList = SortableContainer(({ items }) => {
         return (
             <ListGroup>
@@ -84,13 +83,11 @@ SelectProperties.propTypes = {
     togglePropertiesDialog: PropTypes.func.isRequired,
     properties: PropTypes.array.isRequired,
     onSortEnd: PropTypes.func.isRequired,
-    toggleProperty: PropTypes.func.isRequired,
-}
+    toggleProperty: PropTypes.func.isRequired
+};
 
 const mapStateToProps = state => ({
-    viewPaper: state.viewPaper,
+    viewPaper: state.viewPaper
 });
 
-export default connect(
-    mapStateToProps
-)(SelectProperties);
+export default connect(mapStateToProps)(SelectProperties);

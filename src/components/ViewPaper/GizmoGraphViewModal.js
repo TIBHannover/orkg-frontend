@@ -1,19 +1,17 @@
-import React, {Component} from 'react';
-import {getStatementsBySubject} from '../../network';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { getStatementsBySubject } from '../../network';
+import { connect } from 'react-redux';
 import * as PropTypes from 'prop-types';
 // import Graph from 'react-graph-vis';
 import GizmoGraph from './GizmoGraph';
-import {Modal, ModalHeader, ModalBody, Input, Form, FormGroup, Label, Button} from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, Input, Form, FormGroup, Label, Button } from 'reactstrap';
 import uniqBy from 'lodash/uniqBy';
-import {FontAwesomeIcon as Icon} from '@fortawesome/react-fontawesome';
-import {faSpinner, faProjectDiagram, faAngleDoubleLeft, faAngleDoubleUp} from '@fortawesome/free-solid-svg-icons';
-import {Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
-
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faSpinner, faProjectDiagram, faAngleDoubleLeft, faAngleDoubleUp } from '@fortawesome/free-solid-svg-icons';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 // moving GraphVis here in order to maintain the layouts and status related stuff;
 import GraphVis from './graphImpl/GraphVis';
-
 
 class GraphView extends Component {
     constructor(props) {
@@ -23,7 +21,7 @@ class GraphView extends Component {
         this.seenDepth = -1;
         this.graphVis = new GraphVis();
         this.updateDepthRange = this.updateDepthRange.bind(this);
-    };
+    }
 
     state = {
         nodes: [],
@@ -44,7 +42,7 @@ class GraphView extends Component {
         console.log('Graph View Modal is mounted');
         window.addEventListener('resize', this.updateDimensions);
         this.updateDimensions();
-    };
+    }
 
     componentDidUpdate = (prevProps, prevState) => {
         // load statements again if depth is changed
@@ -62,30 +60,30 @@ class GraphView extends Component {
     componentWillUnmount() {
         console.log('View modal un mounting');
         window.removeEventListener('resize', this.updateDimensions);
-    };
+    }
 
     updateDepthRange(value, fullGraph) {
         // called from the child to ensure that the depth has correct range
         if (fullGraph) {
-            this.setState({maxDepth: value, depth: value, seenFullGraph: true});
+            this.setState({ maxDepth: value, depth: value, seenFullGraph: true });
             return;
         }
         if (value < this.state.depth || this.state.seenFullGraph === true) {
             // console.log('We have seen the full Graph so we just update the graph view;');
-            this.setState({depth: value});
+            this.setState({ depth: value });
         } else {
             if (!fullGraph && this.state.seenFullGraph === false) {
                 //Case we want to load more data
-                this.setState({depth: value, seenFullGraph: false});
+                this.setState({ depth: value, seenFullGraph: false });
             } else {
                 //Case we have seen the full Graph on going deeper
-                this.setState({maxDepth: value, seenFullGraph: true});
+                this.setState({ maxDepth: value, seenFullGraph: true });
             }
         }
     }
 
     loadStatements = async () => {
-        this.setState({isLoadingStatements: true, initializeGraph: false});
+        this.setState({ isLoadingStatements: true, initializeGraph: false });
         this.graphVis.stopBackgroundProcesses();
         if (this.seenDepth < this.state.depth) {
             if (this.props.paperId) {
@@ -98,10 +96,10 @@ class GraphView extends Component {
                     const subjectLabel = statement.subject.label.substring(0, 20);
                     const objectLabel = statement.object.label.substring(0, 20);
 
-                    nodes.push({id: statement.subject.id, label: subjectLabel, title: statement.subject.label});
+                    nodes.push({ id: statement.subject.id, label: subjectLabel, title: statement.subject.label });
                     // check if node type is resource or literal
                     if (statement.object._class === 'resource') {
-                        nodes.push({id: statement.object.id, label: objectLabel, title: statement.object.label});
+                        nodes.push({ id: statement.object.id, label: objectLabel, title: statement.object.label });
                     } else {
                         nodes.push({
                             id: statement.object.id,
@@ -110,57 +108,57 @@ class GraphView extends Component {
                             type: 'literal'
                         });
                     }
-                    edges.push({from: statement.subject.id, to: statement.object.id, label: statement.predicate.label});
+                    edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label });
                 }
                 // remove duplicate nodes
                 nodes = uniqBy(nodes, 'id');
 
                 // remove duplicate edges TODO: EXPERIMENTAL
-                edges= uniqBy(edges, e => [e.from, e.to, e.label].join());
+                edges = uniqBy(edges, e => [e.from, e.to, e.label].join());
 
                 this.setState({
                     nodes,
-                    edges,
+                    edges
                 });
             } else {
                 await this.visualizeAddPaper();
             }
         }
-        this.setState({isLoadingStatements: false, initializeGraph: true});
+        this.setState({ isLoadingStatements: false, initializeGraph: true });
     };
 
-// Code is not very organized, structure can be improved
+    // Code is not very organized, structure can be improved
     visualizeAddPaper = () => {
         let nodes = [];
         let edges = [];
-        const {title, authors, doi, publicationMonth, publicationYear, selectedResearchField, contributions} = this.props.addPaper;
+        const { title, authors, doi, publicationMonth, publicationYear, selectedResearchField, contributions } = this.props.addPaper;
 
         // title
-        nodes.push({id: 'title', label: title.substring(0, 20), title: title});
+        nodes.push({ id: 'title', label: title.substring(0, 20), title: title });
 
         // authors
         if (authors.length > 0) {
             for (let author of authors) {
-                nodes.push({id: author.label, label: author.label.substring(0, 20), title: author.label});
-                edges.push({from: 'title', to: author.label, label: 'has author'});
+                nodes.push({ id: author.label, label: author.label.substring(0, 20), title: author.label });
+                edges.push({ from: 'title', to: author.label, label: 'has author' });
             }
         }
 
         //doi
-        nodes.push({id: 'doi', label: doi.substring(0, 20), title: doi, type: 'literal'});
-        edges.push({from: 'title', to: 'doi', label: 'has doi'});
+        nodes.push({ id: 'doi', label: doi.substring(0, 20), title: doi, type: 'literal' });
+        edges.push({ from: 'title', to: 'doi', label: 'has doi' });
 
         //publicationMonth
-        nodes.push({id: 'publicationMonth', label: publicationMonth, title: publicationMonth});
-        edges.push({from: 'title', to: 'publicationMonth', label: 'has publication month'});
+        nodes.push({ id: 'publicationMonth', label: publicationMonth, title: publicationMonth });
+        edges.push({ from: 'title', to: 'publicationMonth', label: 'has publication month' });
 
         //publicationYear
-        nodes.push({id: 'publicationYear', label: publicationYear, title: publicationYear, type: 'literal'});
-        edges.push({from: 'title', to: 'publicationYear', label: 'has publication year'});
+        nodes.push({ id: 'publicationYear', label: publicationYear, title: publicationYear, type: 'literal' });
+        edges.push({ from: 'title', to: 'publicationYear', label: 'has publication year' });
 
         //research field TODO: convert to readable label
-        nodes.push({id: 'researchField', label: selectedResearchField, title: selectedResearchField});
-        edges.push({from: 'title', to: 'researchField', label: 'has research field'});
+        nodes.push({ id: 'researchField', label: selectedResearchField, title: selectedResearchField });
+        edges.push({ from: 'title', to: 'researchField', label: 'has research field' });
 
         //contributions
         if (Object.keys(contributions['byId']).length) {
@@ -168,8 +166,8 @@ class GraphView extends Component {
                 if (contributions['byId'].hasOwnProperty(contributionId)) {
                     let contribution = contributions['byId'][contributionId];
 
-                    nodes.push({id: contribution.resourceId, label: contribution.label, title: contribution.label});
-                    edges.push({from: 'title', to: contribution.resourceId, label: 'has contribution'});
+                    nodes.push({ id: contribution.resourceId, label: contribution.label, title: contribution.label });
+                    edges.push({ from: 'title', to: contribution.resourceId, label: 'has contribution' });
 
                     //research problems
                     for (let problem of contribution.researchProblems) {
@@ -198,7 +196,7 @@ class GraphView extends Component {
 
         this.setState({
             nodes,
-            edges,
+            edges
         });
     };
 
@@ -208,7 +206,6 @@ class GraphView extends Component {
         // then when the depth value changed, higher than seen value
         // select all nodes that have this value and only query these ones
         // >> faster performance since only retrieving what is needed !
-
 
         let statementBrowser = this.props.statementBrowser;
         let resource = statementBrowser.resources.byId[resourceId];
@@ -223,8 +220,8 @@ class GraphView extends Component {
                         let id = value.resourceId ? value.resourceId : valueId;
 
                         //add the node and relation
-                        nodes.push({id: id, label: value.label, title: value.label});
-                        edges.push({from: resourceId, to: id, label: property.label});
+                        nodes.push({ id: id, label: value.label, title: value.label });
+                        edges.push({ from: resourceId, to: id, label: property.label });
                         console.log(value);
                         if (value.type === 'object') {
                             this.addPaperStatementsToGraph(id, nodes, edges);
@@ -236,10 +233,9 @@ class GraphView extends Component {
 
         return {
             nodes,
-            edges,
+            edges
         };
     };
-
 
     centerGraph = () => {
         this.child.current.centerGraphEvent();
@@ -259,17 +255,16 @@ class GraphView extends Component {
         if (this.state.layout === 'treeV') {
             return faAngleDoubleUp;
         }
-    };
+    }
 
     updateDimensions = () => {
         // test
         const offset = 28 * 2 + 65;
-        this.setState({windowHeight: window.innerHeight - offset});
+        this.setState({ windowHeight: window.innerHeight - offset });
     };
 
-
-    handleDepthChange = (event) => {
-        this.setState({depth: parseInt(event.target.value)}); // make sure the value is an integer
+    handleDepthChange = event => {
+        this.setState({ depth: parseInt(event.target.value) }); // make sure the value is an integer
     };
 
     getResourceAndStatements = async (resourceId, depth, list) => {
@@ -277,7 +272,7 @@ class GraphView extends Component {
             return list;
         }
 
-        let statements = await getStatementsBySubject({id: resourceId});
+        let statements = await getStatementsBySubject({ id: resourceId });
 
         if (statements.length > 0) {
             list.push(...statements);
@@ -303,48 +298,57 @@ class GraphView extends Component {
         // console.log('++++++++++++++++++++++++++++++++++++');
         // console.log(this.child);
         return (
-            <Modal isOpen={this.props.showDialog}
-                   toggle={this.props.toggle}
-                   size="lg"
-                   onOpened={() => {
-                       this.loadStatements().then(()=>{
-                           console.log('calling finisher after first loader');
-                           if (this.child && this.child.current) {
-                               this.child.current.propagateDepthMaxValue(this.graphVis.getMaxDepth());
-                           }
-                           this.seenDepth = this.graphVis.getMaxDepth();
-                       });
+            <Modal
+                isOpen={this.props.showDialog}
+                toggle={this.props.toggle}
+                size="lg"
+                onOpened={() => {
+                    this.loadStatements().then(() => {
+                        console.log('calling finisher after first loader');
+                        if (this.child && this.child.current) {
+                            this.child.current.propagateDepthMaxValue(this.graphVis.getMaxDepth());
                         }
-                   }
-                   style={{maxWidth: '90%'}}
+                        this.seenDepth = this.graphVis.getMaxDepth();
+                    });
+                }}
+                style={{ maxWidth: '90%' }}
             >
-                <ModalHeader toggle={this.props.toggle}>Paper graph visualization
+                <ModalHeader toggle={this.props.toggle}>
+                    Paper graph visualization
                     {this.props.paperId && (
                         <>
-                            <Form style={{display: 'inline-flex'}}>
-                                <FormGroup className="d-flex" style={{
-                                    marginBottom: -40,
-                                    position: 'absolute',
-                                    zIndex: '999',
-                                    marginLeft: '50px',
-                                    marginTop: '-28px'
-                                }}
+                            <Form style={{ display: 'inline-flex' }}>
+                                <FormGroup
+                                    className="d-flex"
+                                    style={{
+                                        marginBottom: -40,
+                                        position: 'absolute',
+                                        zIndex: '999',
+                                        marginLeft: '50px',
+                                        marginTop: '-28px'
+                                    }}
                                 >
                                     <Label for="depth" className="align-self-center mb-0 mr-2">
                                         Depth
                                     </Label>
-                                    <Input type="number" name="select" id="depth" onChange={this.handleDepthChange}
-                                           value={this.state.depth} style={{width: 60}} min="1"
-                                           max={this.state.maxDepth}
+                                    <Input
+                                        type="number"
+                                        name="select"
+                                        id="depth"
+                                        onChange={this.handleDepthChange}
+                                        value={this.state.depth}
+                                        style={{ width: 60 }}
+                                        min="1"
+                                        max={this.state.maxDepth}
                                     />
                                 </FormGroup>
                             </Form>
-                            <div style={{display: 'inline-flex', position: 'absolute', left: '430px', top: '10px'}}>
+                            <div style={{ display: 'inline-flex', position: 'absolute', left: '430px', top: '10px' }}>
                                 <Button
                                     color="darkblue"
                                     size="sm"
                                     //    className='mb-4 mt-4'
-                                    style={{margin: '0 10px'}}
+                                    style={{ margin: '0 10px' }}
                                     onClick={this.centerGraph}
                                 >
                                     <Icon icon={faProjectDiagram} className="mr-1" /> Center Graph
@@ -360,52 +364,56 @@ class GraphView extends Component {
                                 {/*/!*>*!/*/}
                                 {/*  <Icon icon={faProjectDiagram} className='mr-1'/> Clear Data*/}
                                 {/*</Button>*/}
-                                <Dropdown color="darkblue"
-                                          size="'sm"
+                                <Dropdown
+                                    color="darkblue"
+                                    size="'sm"
                                     //    className='mb-4 mt-4'
-                                          style={{margin: '0 10px'}}
-                                          isOpen={this.state.layoutSelectionOpen} toggle={() => {
-                                    this.setState({layoutSelectionOpen: !this.state.layoutSelectionOpen})
-                                }}
+                                    style={{ margin: '0 10px' }}
+                                    isOpen={this.state.layoutSelectionOpen}
+                                    toggle={() => {
+                                        this.setState({ layoutSelectionOpen: !this.state.layoutSelectionOpen });
+                                    }}
                                 >
                                     <DropdownToggle caret color="darkblue">
                                         Layout:
-                                        <Icon icon={this.getLayoutIcon()} className="mr-1"
-                                              style={{width: '40px'}}
-                                        />
+                                        <Icon icon={this.getLayoutIcon()} className="mr-1" style={{ width: '40px' }} />
                                     </DropdownToggle>
                                     <DropdownMenu>
-                                        <DropdownItem onClick={
-                                            () => {
+                                        <DropdownItem
+                                            onClick={() => {
                                                 if (this.state.layout === 'force') {
                                                     return;
                                                 }
-                                                this.setState({layout: 'force'});
+                                                this.setState({ layout: 'force' });
                                             }}
                                         >
-                                            <Icon icon={faProjectDiagram} className="mr-1" style={{width: '40px'}} />
+                                            <Icon icon={faProjectDiagram} className="mr-1" style={{ width: '40px' }} />
                                             Force Directed
                                         </DropdownItem>
-                                        <DropdownItem onClick={() => {
-                                            if (this.state.layout === 'treeH') { // forcing reset of the layout
-                                                this.graphVis.updateLayout('treeH');
-                                                return;
-                                            }
-                                            this.setState({layout: 'treeH'});
-                                        }}
+                                        <DropdownItem
+                                            onClick={() => {
+                                                if (this.state.layout === 'treeH') {
+                                                    // forcing reset of the layout
+                                                    this.graphVis.updateLayout('treeH');
+                                                    return;
+                                                }
+                                                this.setState({ layout: 'treeH' });
+                                            }}
                                         >
-                                            <Icon icon={faAngleDoubleLeft} className="mr-1" style={{width: '40px'}} />
+                                            <Icon icon={faAngleDoubleLeft} className="mr-1" style={{ width: '40px' }} />
                                             Horizontal Tree
                                         </DropdownItem>
-                                        <DropdownItem onClick={() => {
-                                            if (this.state.layout === 'treeV') { // forcing reset of the layout
-                                                this.graphVis.updateLayout('treeV');
-                                                return;
-                                            }
-                                            this.setState({layout: 'treeV'});
-                                        }}
+                                        <DropdownItem
+                                            onClick={() => {
+                                                if (this.state.layout === 'treeV') {
+                                                    // forcing reset of the layout
+                                                    this.graphVis.updateLayout('treeV');
+                                                    return;
+                                                }
+                                                this.setState({ layout: 'treeV' });
+                                            }}
                                         >
-                                            <Icon icon={faAngleDoubleUp} className="mr-1" style={{width: '40px'}} />
+                                            <Icon icon={faAngleDoubleUp} className="mr-1" style={{ width: '40px' }} />
                                             Vertical Tree
                                         </DropdownItem>
                                     </DropdownMenu>
@@ -414,23 +422,27 @@ class GraphView extends Component {
                         </>
                     )}
                 </ModalHeader>
-                <ModalBody style={{padding: '0', minHeight: '100px', height: this.state.windowHeight}}>
+                <ModalBody style={{ padding: '0', minHeight: '100px', height: this.state.windowHeight }}>
                     {!this.state.isLoadingStatements && (
                         <GizmoGraph
-                            ref={this.child} isLoadingStatements={this.state.isLoadingStatements}
-                            depth={this.state.depth} updateDepthRange={this.updateDepthRange}
-                            maxDepth={this.state.maxDepth} layout={this.state.layout}
+                            ref={this.child}
+                            isLoadingStatements={this.state.isLoadingStatements}
+                            depth={this.state.depth}
+                            updateDepthRange={this.updateDepthRange}
+                            maxDepth={this.state.maxDepth}
+                            layout={this.state.layout}
                             layoutReload={this.state.layoutReload}
-                            graph={{nodes: this.state.nodes, edges: this.state.edges}}
+                            graph={{ nodes: this.state.nodes, edges: this.state.edges }}
                             initializeGraph={this.state.initializeGraph}
-                            graphVis={this.graphVis} graphBgColor={'#ecf0f1'}
+                            graphVis={this.graphVis}
+                            graphBgColor={'#ecf0f1'}
                         />
                     )}
                     {this.state.isLoadingStatements && (
                         <div className="text-center text-primary mt-4 mb-4">
                             {/*using a manual fixed scale value for the spinner scale! */}
-                            <span style={{fontSize: this.state.windowHeight / 5}}>
-                       <Icon icon={faSpinner} spin />
+                            <span style={{ fontSize: this.state.windowHeight / 5 }}>
+                                <Icon icon={faSpinner} spin />
                             </span>
                             <br />
                             <h2 className="h5">Loading graph...</h2>
@@ -447,12 +459,12 @@ GraphView.propTypes = {
     toggle: PropTypes.func.isRequired,
     addPaper: PropTypes.object.isRequired,
     statementBrowser: PropTypes.object.isRequired,
-    paperId: PropTypes.string,
+    paperId: PropTypes.string
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     addPaper: state.addPaper,
-    statementBrowser: state.statementBrowser,
+    statementBrowser: state.statementBrowser
 });
 
 export default connect(mapStateToProps)(GraphView);
