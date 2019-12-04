@@ -10,7 +10,6 @@ import {
     literalsUrl,
     getStatementsByObject,
     createResourceStatement,
-    updateStatement,
     createResource
 } from 'network';
 import { connect } from 'react-redux';
@@ -20,6 +19,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import LoadingOverlay from 'react-loading-overlay';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { isEqual } from 'lodash';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 
 const LoadingOverlayStyled = styled(LoadingOverlay)`
@@ -140,90 +140,59 @@ class EditPaperDialog extends Component {
 
     // TODO: improve code by using reduce function
     updateAuthors = async () => {
-        // check which authors to remove
-        for (let author of this.props.viewPaper.authors) {
-            let keepAuthor = false;
-            for (let existingAuthor of this.state.authors) {
-                if (existingAuthor.statementId === author.statementId) {
-                    keepAuthor = true;
-                }
-            }
-
-            if (!keepAuthor) {
-                deleteStatementById(author.statementId);
-            }
+        // Check if there is changes on the authors
+        if (isEqual(this.props.viewPaper.authors, this.state.authors)) {
+            return null;
         }
 
-        // check which authors to add
+        // remove all authors statement from reducer
+        for (let author of this.props.viewPaper.authors) {
+            deleteStatementById(author.statementId);
+        }
+
+        // Add all authors from the state
         let authors = this.state.authors;
         for (let [i, author] of this.state.authors.entries()) {
-            let authorExists = false;
-            for (let existingAuthor of this.props.viewPaper.authors) {
-                if (existingAuthor.id === author.id && existingAuthor.statementId === author.statementId) {
-                    authorExists = true;
-                }
-            }
-
-            // change author and keep the statement
-            if (!authorExists) {
-                if (author.orcid) {
-                    // Create author with ORCID
-                    // check if there's an author resource
-                    let responseJson = await submitGetRequest(literalsUrl + '?q=' + encodeURIComponent(author.orcid) + '&exact=true');
-                    if (responseJson.length > 0) {
-                        // Author resource exists
-                        let authorResource = await getStatementsByObject({ id: responseJson[0].id });
-                        authorResource = authorResource.find(s => s.predicate.id === process.env.REACT_APP_PREDICATES_HAS_ORCID);
-                        let authorStatement = null;
-                        if (author.statementId) {
-                            // update the statement
-                            authorStatement = await updateStatement(author.statementId, { object_id: authorResource.subject.id });
-                        } else {
-                            authorStatement = await createResourceStatement(
-                                this.props.viewPaper.paperResourceId,
-                                process.env.REACT_APP_PREDICATES_HAS_AUTHOR,
-                                authorResource.subject.id
-                            );
-                        }
-                        authors[i].id = authorStatement.id;
-                        authors[i].resourceId = authorResource.subject.id;
-                    } else {
-                        // Author resource doesn't exist
-                        // Create resource author
-                        let authorResource = await createResource(author.label, [process.env.REACT_APP_CLASSES_AUTHOR]);
-                        let createLiteral = await createLiteralAPI(author.orcid);
-                        await createLiteralStatement(authorResource.id, process.env.REACT_APP_PREDICATES_HAS_ORCID, createLiteral.id);
-                        let authorStatement = null;
-                        if (author.statementId) {
-                            // update the statement
-                            authorStatement = await updateStatement(author.statementId, { object_id: authorResource.id });
-                        } else {
-                            authorStatement = await createResourceStatement(
-                                this.props.viewPaper.paperResourceId,
-                                process.env.REACT_APP_PREDICATES_HAS_AUTHOR,
-                                authorResource.id
-                            );
-                        }
-                        authors[i].id = authorStatement.id;
-                        authors[i].resourceId = authorResource.id;
-                    }
+            // create the author
+            if (author.orcid) {
+                // Create author with ORCID
+                // check if there's an author resource
+                let responseJson = await submitGetRequest(literalsUrl + '?q=' + encodeURIComponent(author.orcid) + '&exact=true');
+                if (responseJson.length > 0) {
+                    // Author resource exists
+                    let authorResource = await getStatementsByObject({ id: responseJson[0].id });
+                    authorResource = authorResource.find(s => s.predicate.id === process.env.REACT_APP_PREDICATES_HAS_ORCID);
+                    let authorStatement = await createResourceStatement(
+                        this.props.viewPaper.paperResourceId,
+                        process.env.REACT_APP_PREDICATES_HAS_AUTHOR,
+                        authorResource.subject.id
+                    );
+                    authors[i].id = authorStatement.id;
+                    authors[i].resourceId = authorResource.subject.id;
                 } else {
                     // Author resource doesn't exist
-                    let newLiteral = await createLiteralAPI(author.label);
-                    let authorStatement = null;
-                    if (author.statementId) {
-                        // update the statement
-                        authorStatement = await updateStatement(author.statementId, { object_id: newLiteral.id });
-                    } else {
-                        // Create literal of author
-                        authorStatement = await createLiteralStatement(
-                            this.props.viewPaper.paperResourceId,
-                            process.env.REACT_APP_PREDICATES_HAS_AUTHOR,
-                            newLiteral.id
-                        );
-                    }
+                    // Create resource author
+                    let authorResource = await createResource(author.label, [process.env.REACT_APP_CLASSES_AUTHOR]);
+                    let createLiteral = await createLiteralAPI(author.orcid);
+                    await createLiteralStatement(authorResource.id, process.env.REACT_APP_PREDICATES_HAS_ORCID, createLiteral.id);
+                    let authorStatement = await createResourceStatement(
+                        this.props.viewPaper.paperResourceId,
+                        process.env.REACT_APP_PREDICATES_HAS_AUTHOR,
+                        authorResource.id
+                    );
                     authors[i].id = authorStatement.id;
+                    authors[i].resourceId = authorResource.id;
                 }
+            } else {
+                // Author resource doesn't exist
+                let newLiteral = await createLiteralAPI(author.label);
+                // Create literal of author
+                let authorStatement = await createLiteralStatement(
+                    this.props.viewPaper.paperResourceId,
+                    process.env.REACT_APP_PREDICATES_HAS_AUTHOR,
+                    newLiteral.id
+                );
+                authors[i].id = authorStatement.id;
             }
         }
 
