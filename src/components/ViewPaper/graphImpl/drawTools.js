@@ -134,7 +134,7 @@ function renderBaseShape(cfg, pNode, renderingShape) {
     }
 
     // fix max width of element :
-    width=Math.min(width,250);
+    width = Math.min(width, 250);
     // check if is uml style << TODO;
     /**  render a pure circle **/
     if (cfg.renderingType === 'circle') {
@@ -222,16 +222,17 @@ function computeIntersectionPointsForMLP(domain, property, range, offset) {
     if (offset) {
         distOffset = offset;
     }
+
     let iP = {x1: domain.x, y1: domain.y, x2: range.x, y2: range.y};
 
     let dom_cfgObj = domain.getConfigObj();
     let ran_cfgObj = range.getConfigObj();
 
-    let offsetDirection = computeNormalizedOffsetDirection(domain, property);
+    let offsetDirection = computeNormalizedOffsetDirection(domain, range);
     const p1 = shapeBasedIntersectionPoint(dom_cfgObj, domain, offsetDirection, distOffset);
 
-    offsetDirection = computeNormalizedOffsetDirection(range, property);
-    const p2 = shapeBasedIntersectionPoint(ran_cfgObj, range, offsetDirection, distOffset);
+    offsetDirection = computeNormalizedOffsetDirection(range, domain);
+    const p2 = shapeBasedIntersectionPoint(ran_cfgObj, range, offsetDirection, distOffset, p1);
 
     // set the positions into the intersection point
     iP.x1 = p1.x;
@@ -250,8 +251,9 @@ function computeNormalizedOffsetDirection(source, target) {
     return {x: x / len, y: y / len};
 }
 
-function shapeBasedIntersectionPoint(config, element, offsetDirection, distOffset) {
+function shapeBasedIntersectionPoint(config, element, offsetDirection, distOffset, origin) {
     let IntPoint = {};
+
     if (config.renderingType === 'circle') {
         let distanceToBorder = parseInt(element.getRadius()) + distOffset;
         IntPoint.x = element.x + (distanceToBorder * offsetDirection.x);
@@ -259,22 +261,27 @@ function shapeBasedIntersectionPoint(config, element, offsetDirection, distOffse
         return IntPoint;
     }
 
-    let distX, distY, distanceToBorderX, distanceToBorderY;
-    if (config.renderingType === 'ellipse') {
-        distX = element.getRenderingShape().attr('width');
-        distY = element.getRenderingShape().attr('height');
-
-        distanceToBorderX = 0.5 * parseFloat(distX);
-        distanceToBorderY = 0.5 * parseFloat(distY);
-
-        IntPoint.x = element.x + (distanceToBorderX * offsetDirection.x);
-        IntPoint.y = element.y + (distanceToBorderY * offsetDirection.y);
-    }
+    let distanceToBorderX, distanceToBorderY;
+    // TODO: Used for later GizMO elements;
+    // if (config.renderingType === 'ellipse') {
+    //
+    //     distX = element.getRenderingShape().attr('width');
+    //     distY = element.getRenderingShape().attr('height');
+    //
+    //     distanceToBorderX = 0.5 * parseFloat(distX);
+    //     distanceToBorderY = 0.5 * parseFloat(distY);
+    //
+    //     IntPoint.x = element.x + (distanceToBorderX * offsetDirection.x);
+    //     IntPoint.y = element.y + (distanceToBorderY * offsetDirection.y);
+    // }
 
     if (config.renderingType === 'rect') {
         const shape = element.getExpectedShapeSize(config, true);
-        distX = Math.min(shape.w,250);
-        distY = shape.h;
+
+
+        let width = Math.min(shape.w, 250);
+        let height = shape.h;
+
 
         // TODO
         // if (range.isUmlCustomShape()) {
@@ -284,19 +291,63 @@ function shapeBasedIntersectionPoint(config, element, offsetDirection, distOffse
         //
         // }
 
-        distanceToBorderX = 0.5 * parseFloat(distX);
-        distanceToBorderY = 0.5 * parseFloat(distY);
+        distanceToBorderX = 0.5 * parseFloat(width);
+        distanceToBorderY = 0.5 * parseFloat(height);
 
-        let scale = 1.0;
-        if (Math.abs(offsetDirection.x) >= Math.abs(offsetDirection.y)) {
-            scale = 1.0 / Math.abs(offsetDirection.x);
+        if (!origin) {
+            let scale = 1.0;
+            if (Math.abs(offsetDirection.x) >= Math.abs(offsetDirection.y)) {
+                scale = 1.0 / Math.abs(offsetDirection.x);
+            } else {
+                scale = 1.0 / Math.abs(offsetDirection.y);
+            }
+            IntPoint.x = element.x + (scale * distanceToBorderX * offsetDirection.x);
+            IntPoint.y = element.y + (scale * distanceToBorderY * offsetDirection.y);
+            return IntPoint;
         } else {
-            scale = 1.0 / Math.abs(offsetDirection.y);
-        }
-        IntPoint.x = element.x + (scale * distanceToBorderX * offsetDirection.x);
-        IntPoint.y = element.y + (scale * distanceToBorderY * offsetDirection.y);
-        return IntPoint;
-    }
-}// end of function definition;
+            let rad_angle = Math.atan2(offsetDirection.y, offsetDirection.x);
+
+            let c1_x = distanceToBorderX;
+            let c1_y = Math.tan(rad_angle) * c1_x;
+            let c2_x = distanceToBorderY / Math.tan(rad_angle);
+            let c2_y = distanceToBorderY;
+
+            let ipX = 0;
+            let ipY = 0;
+
+            if (Math.abs(c1_y) < distanceToBorderY) {
+                // use this point;
+                ipX = c1_x;
+                ipY = c1_y;
+            } else {
+                ipX = c2_x;
+                ipY = c2_y;
+            }
+            // possible intersection points
+            const pX1 = element.x - ipX;
+            const pY1 = element.y - ipY;
+            const pX2 = element.x + ipX;
+            const pY2 = element.y + ipY;
+
+            // take the smaller distance point;
+            const d1_x = pX1 - origin.x;
+            const d1_y = pY1 - origin.y;
+            const d2_x = pX2 - origin.x;
+            const d2_y = pY2 - origin.y;
+            const len1 = Math.sqrt(d1_x * d1_x + d1_y * d1_y);
+            const len2 = Math.sqrt(d2_x * d2_x + d2_y * d2_y);
+
+            // use the point that has the lower distance to the domain node
+            if (len1 < len2) {
+                IntPoint.x = pX1;
+                IntPoint.y = pY1;
+            } else {
+                IntPoint.x = pX2;
+                IntPoint.y = pY2;
+            }
+            return IntPoint;
+        }// end of case when we compute the origin
+    }// end of 'rect' if case
+}
 
 

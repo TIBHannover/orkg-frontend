@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { getStatementsBySubject } from '../../network';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import Graph from 'react-graph-vis';
 import { Modal, ModalHeader, ModalBody, Input, Form, FormGroup, Label } from 'reactstrap';
 import uniqBy from 'lodash/uniqBy';
@@ -21,7 +21,9 @@ class GraphView extends Component {
     componentDidUpdate = (prevProps, prevState) => {
         // load statements again if depth is changed
         if (prevState.depth !== this.state.depth) {
-            this.loadStatements();
+            this.loadStatements().then(()=>{
+                // here goes the promise. currently empty
+            });
         }
     };
 

@@ -10,21 +10,28 @@ import {FontAwesomeIcon as Icon} from '@fortawesome/react-fontawesome';
 import {faSpinner, faProjectDiagram, faAngleDoubleLeft, faAngleDoubleUp} from '@fortawesome/free-solid-svg-icons';
 import {Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
 
+
+// moving GraphVis here in order to maintain the layouts and status related stuff;
+import GraphVis from './graphImpl/GraphVis';
+
+
 class GraphView extends Component {
     constructor(props) {
         super(props);
 
         this.child = React.createRef();
+        this.seenDepth = -1;
+        this.graphVis = new GraphVis();
         this.updateDepthRange = this.updateDepthRange.bind(this);
-        this.seenDepth = -1
     };
 
     state = {
         nodes: [],
         edges: [],
         statements: [],
-        depth: 5,
-
+        depth: 1,
+        initializeGraph: false,
+        seenDepth: -1,
         isLoadingStatements: false,
         maxDepth: 25,
         seenFullGraph: false,
@@ -34,104 +41,95 @@ class GraphView extends Component {
     };
 
     componentDidMount() {
+        console.log('Graph View Modal is mounted');
         window.addEventListener('resize', this.updateDimensions);
         this.updateDimensions();
-        this.seenDepth = this.state.depth;
     };
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (prevProps.showDialog === false) {
-            // reset some variables so data reloading is enabled;
-            this.surpressComponentUpdate = false;
-            this.seenDepth = -1
-        }
-
         // load statements again if depth is changed
-        if (prevState.depth !== this.state.depth) {
-            if (this.surpressComponentUpdate === true) {
-                // console.log('Blocking reloading the data stuff ');
-                this.child.current.filterGraphByDepth(this.state.depth);
-            } else {
-                if (this.seenDepth < this.state.depth) {
-                    this.loadStatements().then(() => {
-                        this.seenDepth = this.state.depth;
-                    });
-                } else {
-                    // console.log('Already seen that depth, let the vis module take care of that');
-                    this.child.current.filterGraphByDepth(this.state.depth);
+        if (prevState.depth < this.state.depth) {
+            this.loadStatements().then(() => {
+                if (this.child && this.child.current) {
+                    this.child.current.propagateDepthMaxValue(this.graphVis.getMaxDepth());
+                    this.graphVis.ensureLayoutConsistency(this.state.layout);
                 }
-            }
+                this.seenDepth = this.graphVis.getMaxDepth();
+            });
         }
     };
 
     componentWillUnmount() {
+        console.log('View modal un mounting');
         window.removeEventListener('resize', this.updateDimensions);
     };
 
     updateDepthRange(value, fullGraph) {
         // called from the child to ensure that the depth has correct range
         if (fullGraph) {
-            this.surpressComponentUpdate = true;
             this.setState({maxDepth: value, depth: value, seenFullGraph: true});
             return;
         }
         if (value < this.state.depth || this.state.seenFullGraph === true) {
             // console.log('We have seen the full Graph so we just update the graph view;');
-            this.surpressComponentUpdate = true;
             this.setState({depth: value});
         } else {
             if (!fullGraph && this.state.seenFullGraph === false) {
-                // console.log('Case we want to load more data');
-                this.surpressComponentUpdate = false;
+                //Case we want to load more data
                 this.setState({depth: value, seenFullGraph: false});
             } else {
-                // console.log('Case we have seen the full Graph');
-                this.surpressComponentUpdate = true;
+                //Case we have seen the full Graph on going deeper
                 this.setState({maxDepth: value, seenFullGraph: true});
             }
         }
     }
 
     loadStatements = async () => {
-        this.setState({isLoadingStatements: true});
-        if (this.props.paperId) {
-            let statements = await this.getResourceAndStatements(this.props.paperId, 0, []);
-            let nodes = [];
-            let edges = [];
+        this.setState({isLoadingStatements: true, initializeGraph: false});
+        this.graphVis.stopBackgroundProcesses();
+        if (this.seenDepth < this.state.depth) {
+            if (this.props.paperId) {
+                let statements = await this.getResourceAndStatements(this.props.paperId, 0, []);
+                let nodes = [];
+                let edges = [];
 
-            for (let statement of statements) {
-                // limit the label length to 20 chars
-                const subjectLabel = statement.subject.label.substring(0, 20);
-                const objectLabel = statement.object.label.substring(0, 20);
+                for (let statement of statements) {
+                    // limit the label length to 20 chars
+                    const subjectLabel = statement.subject.label.substring(0, 20);
+                    const objectLabel = statement.object.label.substring(0, 20);
 
-                nodes.push({id: statement.subject.id, label: subjectLabel, title: statement.subject.label});
-                // check if node type is resource or literal
-                if (statement.object._class === 'resource') {
-                    nodes.push({id: statement.object.id, label: objectLabel, title: statement.object.label});
-                } else {
-                    nodes.push({
-                        id: statement.object.id,
-                        label: objectLabel,
-                        title: statement.object.label,
-                        type: 'literal'
-                    });
+                    nodes.push({id: statement.subject.id, label: subjectLabel, title: statement.subject.label});
+                    // check if node type is resource or literal
+                    if (statement.object._class === 'resource') {
+                        nodes.push({id: statement.object.id, label: objectLabel, title: statement.object.label});
+                    } else {
+                        nodes.push({
+                            id: statement.object.id,
+                            label: objectLabel,
+                            title: statement.object.label,
+                            type: 'literal'
+                        });
+                    }
+                    edges.push({from: statement.subject.id, to: statement.object.id, label: statement.predicate.label});
                 }
-                edges.push({from: statement.subject.id, to: statement.object.id, label: statement.predicate.label});
-            }
-            // remove duplicate nodes
-            nodes = uniqBy(nodes, 'id');
+                // remove duplicate nodes
+                nodes = uniqBy(nodes, 'id');
 
-            this.setState({
-                nodes,
-                edges,
-            });
-        } else {
-            await this.visualizeAddPaper();
+                // remove duplicate edges TODO: EXPERIMENTAL
+                edges= uniqBy(edges, e => [e.from, e.to, e.label].join());
+
+                this.setState({
+                    nodes,
+                    edges,
+                });
+            } else {
+                await this.visualizeAddPaper();
+            }
         }
-        this.setState({isLoadingStatements: false});
+        this.setState({isLoadingStatements: false, initializeGraph: true});
     };
 
-    // Code is not very organized, structure can be improved
+// Code is not very organized, structure can be improved
     visualizeAddPaper = () => {
         let nodes = [];
         let edges = [];
@@ -205,6 +203,13 @@ class GraphView extends Component {
     };
 
     addPaperStatementsToGraph = (resourceId, nodes, edges) => {
+        // we could try to add depth values here the nodes
+        //
+        // then when the depth value changed, higher than seen value
+        // select all nodes that have this value and only query these ones
+        // >> faster performance since only retrieving what is needed !
+
+
         let statementBrowser = this.props.statementBrowser;
         let resource = statementBrowser.resources.byId[resourceId];
 
@@ -254,7 +259,7 @@ class GraphView extends Component {
         if (this.state.layout === 'treeV') {
             return faAngleDoubleUp;
         }
-    }
+    };
 
     updateDimensions = () => {
         // test
@@ -264,7 +269,7 @@ class GraphView extends Component {
 
 
     handleDepthChange = (event) => {
-        this.setState({depth: event.target.value});
+        this.setState({depth: parseInt(event.target.value)}); // make sure the value is an integer
     };
 
     getResourceAndStatements = async (resourceId, depth, list) => {
@@ -289,12 +294,6 @@ class GraphView extends Component {
     };
 
     render() {
-        const graph = {
-            nodes: this.state.nodes,
-            edges: this.state.edges,
-        };
-
-
         /*const events = {
             select: function (event) {
                 var { nodes, edges } = event;
@@ -307,7 +306,16 @@ class GraphView extends Component {
             <Modal isOpen={this.props.showDialog}
                    toggle={this.props.toggle}
                    size="lg"
-                   onOpened={this.loadStatements}
+                   onOpened={() => {
+                       this.loadStatements().then(()=>{
+                           console.log('calling finisher after first loader');
+                           if (this.child && this.child.current) {
+                               this.child.current.propagateDepthMaxValue(this.graphVis.getMaxDepth());
+                           }
+                           this.seenDepth = this.graphVis.getMaxDepth();
+                       });
+                        }
+                   }
                    style={{maxWidth: '90%'}}
             >
                 <ModalHeader toggle={this.props.toggle}>Paper graph visualization
@@ -331,7 +339,7 @@ class GraphView extends Component {
                                     />
                                 </FormGroup>
                             </Form>
-                            <div style={{display: 'inline-flex', position: 'absolute', left: '450px'}}>
+                            <div style={{display: 'inline-flex', position: 'absolute', left: '430px', top: '10px'}}>
                                 <Button
                                     color="darkblue"
                                     size="sm"
@@ -369,6 +377,9 @@ class GraphView extends Component {
                                     <DropdownMenu>
                                         <DropdownItem onClick={
                                             () => {
+                                                if (this.state.layout === 'force') {
+                                                    return;
+                                                }
                                                 this.setState({layout: 'force'});
                                             }}
                                         >
@@ -376,6 +387,10 @@ class GraphView extends Component {
                                             Force Directed
                                         </DropdownItem>
                                         <DropdownItem onClick={() => {
+                                            if (this.state.layout === 'treeH') { // forcing reset of the layout
+                                                this.graphVis.updateLayout('treeH');
+                                                return;
+                                            }
                                             this.setState({layout: 'treeH'});
                                         }}
                                         >
@@ -383,6 +398,10 @@ class GraphView extends Component {
                                             Horizontal Tree
                                         </DropdownItem>
                                         <DropdownItem onClick={() => {
+                                            if (this.state.layout === 'treeV') { // forcing reset of the layout
+                                                this.graphVis.updateLayout('treeV');
+                                                return;
+                                            }
                                             this.setState({layout: 'treeV'});
                                         }}
                                         >
@@ -401,14 +420,17 @@ class GraphView extends Component {
                             ref={this.child} isLoadingStatements={this.state.isLoadingStatements}
                             depth={this.state.depth} updateDepthRange={this.updateDepthRange}
                             maxDepth={this.state.maxDepth} layout={this.state.layout}
-                            graph={graph}
+                            layoutReload={this.state.layoutReload}
+                            graph={{nodes: this.state.nodes, edges: this.state.edges}}
+                            initializeGraph={this.state.initializeGraph}
+                            graphVis={this.graphVis} graphBgColor={'#ecf0f1'}
                         />
                     )}
                     {this.state.isLoadingStatements && (
                         <div className="text-center text-primary mt-4 mb-4">
-                            {/*using a manual fixed scale value for the sinner scale! */}
+                            {/*using a manual fixed scale value for the spinner scale! */}
                             <span style={{fontSize: this.state.windowHeight / 5}}>
-                                <Icon icon={faSpinner} spin />
+                       <Icon icon={faSpinner} spin />
                             </span>
                             <br />
                             <h2 className="h5">Loading graph...</h2>

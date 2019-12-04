@@ -24,15 +24,13 @@ GraphVis
 // add uml-style
   -> visibility flags;
 
-[] verify depth filtering for the datatype nodes;
-  -> when uml rendering is activated it has a different behaviour
 
 [] modal header elements alignment
   >> when width is to small the header becomes ill aligned
 
 
 
-[]
+[] clean up code
 
 
 // Breaking changes will be when updating from d3.v3 >> d3.v5
@@ -41,3 +39,12 @@ GraphVis
 
 [x] fix force layout when changing depth
  >> currently the nodes are jumping
+
+
+[] add options manipulations;
+ >> fixed link distance
+ >> dynamic link distance;
+
+[] node coloring state as option >> multiColor (stateColoring) or SingleColor)
+
+[] add search functions

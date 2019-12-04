@@ -11,7 +11,6 @@ export default class Edge extends BaseElement {
         this.range = undefined;
         this.prop = undefined;
 
-
         this.renderingLine = undefined;
 
         // bind new functions;
@@ -27,7 +26,7 @@ export default class Edge extends BaseElement {
             return d.y;
         }).interpolate('cardinal');
 
-    }
+    };
 
     propertyNode = function (p) {
         if (!arguments.length) {
@@ -54,7 +53,7 @@ export default class Edge extends BaseElement {
         this.svgRoot = parentNode;
         this.renderingLine = DrawTools().drawLinkElement(this.svgRoot, this.configObject);
         DrawTools().drawArrowHead(this.svgRoot, markerContainer, this.id() + '_arrowHead', this.configObject);
-    }
+    };
 
     updateDrawPosition = function () {
         if (this.renderingLine) {
@@ -76,6 +75,6 @@ export default class Edge extends BaseElement {
             fixPoint3 = {'x': iP.x2, 'y': iP.y2};
 
         return [fixPoint1, fixPoint2, fixPoint3];
-    }
+    };
 
 } // end of class definition

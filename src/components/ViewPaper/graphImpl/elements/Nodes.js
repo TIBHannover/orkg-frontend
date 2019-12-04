@@ -21,7 +21,7 @@ export default class Node extends BaseElement {
 
         this.filterCollapsedLinks = this.filterCollapsedLinks.bind(this);
         this.startLayoutTransition = this.startLayoutTransition.bind(this);
-    }
+    };
 
     startLayoutTransition(id, max, callback) {
         // get old value
@@ -47,7 +47,7 @@ export default class Node extends BaseElement {
                 callback();
             }
         }).attr('transform', 'translate(' + f_x + ',' + f_y + ')');
-    }
+    };
 
     filterCollapsedLinks() {
         let linksToDraw = [];
@@ -57,7 +57,7 @@ export default class Node extends BaseElement {
             }
         });
         return linksToDraw;
-    }
+    };
 
     addLinkElement(link) {
         this.linkElements.push(link);
@@ -66,15 +66,15 @@ export default class Node extends BaseElement {
         } else {
             this.incommingLink.push(link);
         }
-    }
+    };
 
     setDepth(v) {
         this.depthValue = v;
-    }
+    };
 
     getDepth() {
         return this.depthValue;
-    }
+    };
 
     id(val) {
         if (!arguments.length) {
@@ -82,16 +82,16 @@ export default class Node extends BaseElement {
         } else {
             this.idValue = val;
         }
-    }
+    };
 
     setLabel(val) {
         this.label = val;
-    }
+    };
 
     setPosition(px, py) {
         this.x = px;
         this.y = py;
-    }
+    };
 
     updateDrawPosition = function () {
         if (this.svgRoot) {

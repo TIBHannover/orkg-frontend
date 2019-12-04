@@ -1,68 +1,87 @@
 import React, {Component} from 'react';
-import GraphVis from './graphImpl/GraphVis';
-import * as d3 from 'd3';
 import * as PropTypes from 'prop-types';
 
-
 class GizMOGraph extends Component {
-
     constructor(props) {
         super(props);
         this.graphRoot = undefined;
-        this.graphVis = null;
-        this.graphInitialized = false;
+        this.graphVis = props.graphVis;
+
         // parent functions called by child
         this.updateDepthRange = props.updateDepthRange;
 
+        // this object functions
         this.centerGraphEvent = this.centerGraphEvent.bind(this);
         this.clearGraphData = this.clearGraphData.bind(this);
-        this.getMaxDepth = this.getMaxDepth.bind(this);
         this.filterGraphByDepth = this.filterGraphByDepth.bind(this);
-    }
-
-    state = {
-        nodes: this.props.graph.nodes,
-        edges: this.props.graph.edges,
-        statements: [],
-        depth: this.props.depth,
-        isLoadingStatements: false,
-        graphBgColor: '#ecf0f1'
-
+        this.propagateDepthMaxValue = this.propagateDepthMaxValue.bind(this);
     };
 
-    componentDidMount = () => {
-        if (!this.state.isLoadingStatements && this.updateDepthRange) {
-            // check if there is data;
-            if (this.state.nodes.length > 0) {
-                this.graphRoot = d3.select('#graphRendering').append('svg');
-                this.initializeGraphSize();
-            }
+    componentDidMount() {
+        if (this.props.initializeGraph && this.graphVis.graphInitialized() === false) {
+            this.graphVis.bindComponentValues(this.props);
+            this.graphVis.graphInitialized(true);
+        }
+        if (this.graphVis.graphInitialized()) {
+            this.graphVis.redrawGraphWithReset(this.props);
         }
     };
 
     componentDidUpdate = (prevProps) => {
-        if (prevProps !== this.props) {
-            if (prevProps.layout !== this.props.layout) {
-                this.graphVis.updateLayout(this.props.layout);
+        // checking if some properties have changed (excluding the 'graph')
+        let nonEqualItems = 0;
+        for (let name in prevProps) {
+            if (prevProps.hasOwnProperty(name) && this.props.hasOwnProperty(name)) {
+                if (name === 'graph') {
+                    continue;
+                }
+                const prevItem = prevProps[name];
+                const newItem = this.props[name];
+                if (newItem !== prevItem) {
+                    nonEqualItems++;
+                }
+            }
+        }
+
+        if (nonEqualItems > 0) {
+            if (!this.props.isLoadingStatements) {
+                console.log('GizmoGraph needs an update');
+                if (prevProps.layout !== this.props.layout) {
+                    this.graphVis.updateLayout(this.props.layout);
+                }
+                const newDepthValue = parseInt(this.props.depth) + 1;
+                this.graphVis.filterGraphByDepth(newDepthValue);
             }
         }
     };
 
+
     componentWillUnmount() {
-        if (this.graphInitialized) {
-            this.clearGraphData();
-            delete this.graphVis;
+        console.log('GizMO Graph un mounting');
+        this.graphVis.stopBackgroundProcesses();
+
+        // if (this.graphVis.graphIsInitialized) {
+        //     // todo : make sure memory is cleared!
+        //
+        //     console.log('clearing graph data? ');
+        //     this.clearGraphData();
+        //     delete this.graphVis; // removes the reference to the object ;
+        // }
+    };
+
+    propagateDepthMaxValue(maxValue) {
+        if (maxValue < 0) {
+            return;
+        }
+        if (this.props.depth > maxValue) {
+            this.updateDepthRange(maxValue, true);
         }
     };
 
     filterGraphByDepth(depth) {
         const val = parseInt(depth) + 1; // make sure it is int and reflects the backend depth value;
         this.graphVis.filterGraphByDepth(val);
-    }
-
-    getMaxDepth() {
-        return this.graphVis.getMaxDetph() - 1;
-    }
+    };
 
     centerGraphEvent() {
         this.graphVis.zoomToExtent();
@@ -72,43 +91,13 @@ class GizMOGraph extends Component {
         this.graphVis.clearGraphData();
     };
 
-    initializeGraphSize() {
-        this.graphRoot.style('width', '100%');
-        this.graphRoot.style('height', '100%');
-        this.graphRoot.style('background-color', this.state.graphBgColor);
-
-        if (!this.state.isLoadingStatements) {
-            this.initGraph();
-        }
-    }
-
-    initGraph() {
-        if (this.state.nodes.length > 0) {
-            this.graphVis = new GraphVis({
-                graphRoot: this.graphRoot,
-                nodes: this.state.nodes,
-                edges: this.state.edges,
-                layout: this.props.layout
-            });
-            this.graphVis.loadDefaultOptions(); // keep it here in order to make later adjustments easier :)
-            this.graphVis.initializeLayers();
-            this.graphVis.initializeRendering();
-
-            this.graphVis.loadData();
-            this.maxDepth = this.graphVis.getMaxDepth() - 1;
-            if (this.state.depth > this.maxDepth) {
-                this.updateDepthRange(this.maxDepth, true);
-            }
-            this.graphInitialized = true;
-        }
-    }
 
     /** Component Rendering Function **/
     render() {
         return (
             <div id="graphRendering" style={{width: '100%', height: '100%', backgroundColor: 'gray'}} />
         );
-    }
+    };
 
 }
 
@@ -116,9 +105,11 @@ class GizMOGraph extends Component {
 GizMOGraph.propTypes = {
     updateDepthRange: PropTypes.func.isRequired,
     graph: PropTypes.any.isRequired,
+    graphVis: PropTypes.any.isRequired,
     depth: PropTypes.any.isRequired,
-    layout: PropTypes.any.isRequired
-    // updateDepthRange: PropTypes.array.isRequired,
+    layout: PropTypes.any.isRequired,
+    isLoadingStatements: PropTypes.bool.isRequired,
+    initializeGraph: PropTypes.bool.isRequired
 };
 
 export default GizMOGraph;

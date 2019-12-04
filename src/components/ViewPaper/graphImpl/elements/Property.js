@@ -18,7 +18,7 @@ export default class Property extends BaseElement {
         this.rangeNode = this.rangeNode.bind(this);
         this.linkElement = this.linkElement.bind(this);
         this.getForceLink = this.getForceLink.bind(this);
-    }
+    };
 
 
     linkElement = function (d) {
@@ -47,8 +47,7 @@ export default class Property extends BaseElement {
         this.renderingElement = DrawTools().drawElement(this.svgRoot, this.configObject, this);
         this.renderingText = this.drawLabelText(this.svgRoot, this.label);
         this.updateTextPosition();
-
-    }
+    };
 
     updateDrawPosition = function () {
         if (this.propertyType === 'single') {
@@ -64,11 +63,12 @@ export default class Property extends BaseElement {
 
     getForceLink = function () {
         let that = this;
-        return [{
-            'source': that.domain,
-            'target': that.range,
-            'propertyData': that
-        }
+        return [
+            {
+                'source': that.domain,
+                'target': that.range,
+                'propertyData': that
+            }
         ];
     };
 

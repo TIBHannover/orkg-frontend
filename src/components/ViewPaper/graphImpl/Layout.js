@@ -1,5 +1,6 @@
 import DrawTools from './drawTools';
 import * as d3 from 'd3';
+// import {max} from 'moment';
 
 export default class Layout {
     constructor(props) {
@@ -33,7 +34,7 @@ export default class Layout {
         if (this.force) {
             this.force.resume();
         }
-    }
+    };
 
     clearData() {
         if (this._layoutType === 'force' && this.force) {
@@ -45,7 +46,7 @@ export default class Layout {
             delete this.treeData;
             delete this.treeMap;
         }
-    }
+    };
 
     createTreeData() {
         // get the root node
@@ -57,7 +58,7 @@ export default class Layout {
 
         // create a tree layout;
         this.tree = d3.layout.tree().size(this.layoutSize);
-    }
+    };
 
     processSingleElement(node, parent) {
         // recursive function;
@@ -75,8 +76,9 @@ export default class Layout {
                 newObj['children'].push(this.processSingleElement(item.rangeNode(), node))
             });
         }
-        return newObj
-    }
+
+        return newObj;
+    };
 
     initializeLayoutEngine() {
         if (this.force) {
@@ -88,20 +90,20 @@ export default class Layout {
         } else {
             this.createTreeData();
         }
-    }
+    };
 
     updateLayoutSize() {
         const bb = this.graph.svgRoot.node().getBoundingClientRect();
         this.layoutSize[0] = bb.width;
         this.layoutSize[1] = bb.height;
-    }
+    };
 
     layoutType(val) {
         if (!arguments.length) {
             return this._layoutType;
         }
         this._layoutType = val;
-    }
+    };
 
 
     initializePositions(rootNode, layoutChange) {
@@ -136,9 +138,9 @@ export default class Layout {
             }
         }
         if (this._layoutType === 'treeH' || this._layoutType === 'treeV') {
-            if (!this.tree) {
-                this.createTreeData();
-            }
+            // todo: check if we have to create this each time we have a layout change
+            this.createTreeData();
+
             this.tree.size(this.layoutSize); // updates if there is something new
 
             let rt = this.treeData[0];
@@ -156,19 +158,20 @@ export default class Layout {
             temp.forEach(item => {
                 const graphNode = this.treeMap[item.name];
                 if (this._layoutType === 'treeV') {
+
                     graphNode.setPosition(item.x, item.y);
                 }
                 if (this._layoutType === 'treeH') {
+
                     graphNode.setPosition(item.y, item.x);
                 }
             });
 
             if (layoutChange) {
                 this.makeLayoutTransition();
-                this.graph.nav.zoomToExtent();
             }
         }
-    }
+    };
 
     makeLayoutTransition() {
         let id = 0;
@@ -176,13 +179,13 @@ export default class Layout {
         this.graph.classNodes.forEach(node => {
             node.startLayoutTransition(id++, max, this.graph.zoomToExtent);
         });
-    }
+    };
 
     recalculatePositions() {
         this.graph.classNodes.forEach(node => {
             node.updateDrawPosition();
         });
-    }
+    };
 
     createForceElements() {
         const that = this;
@@ -212,14 +215,30 @@ export default class Layout {
         this.force.nodes(this.forceNodes);
         this.force.links(this.forceLinks);
 
+
+        // compute link distance based on the rendering element size for subject predicate and object.
+        let maxDist = 240;
+        this.forceLinks.forEach(link => {
+
+            // assume that width is always the larger dimension
+            const sourceShape = link.source.getRenderingElementSize();
+            const targetShape = link.target.getRenderingElementSize();
+            const propertyShape = link.propertyData.getRenderingElementSize();
+            let currentLinkDistance = 0;
+            currentLinkDistance += 1.0 * sourceShape.w;
+            currentLinkDistance += 0.75 * targetShape.w;
+            currentLinkDistance += 1.0 * propertyShape.w;
+            if (maxDist < currentLinkDistance) {
+                maxDist = currentLinkDistance;
+            }
+        });
         // create forceLinks;
         this.force.charge(-500)
-            .linkDistance(240)
-            .linkStrength(1)
+            .linkDistance(Math.min(500, maxDist)) // just make sure that our links are not to long.
+            .linkStrength(0.8)
             .size([that.layoutSize[0], that.layoutSize[1]])
             .gravity(0.025);
-    }
-
+    };
 
     executeExpansionForNode(node, layoutChange) {
         const distOffset = 200;
@@ -335,6 +354,6 @@ export default class Layout {
                 }
             }
         }
-    }
+    };
 
 }// end of class definition

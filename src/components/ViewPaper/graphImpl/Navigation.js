@@ -15,6 +15,7 @@ export default class Navigation {
         this.getDragBehaviour = this.getDragBehaviour.bind(this);
         this.getZoomFunction = this.getZoomFunction.bind(this);
         this.initializeRendering = this.initializeRendering.bind(this);
+        this.resetRendering = this.resetRendering.bind(this);
 
         this.zoomed = this.zoomed.bind(this);
         this.zoomToExtent = this.zoomToExtent.bind(this);
@@ -29,13 +30,43 @@ export default class Navigation {
         this.intervalTimer = null;
         this.intervalWaiter = this.intervalWaiter.bind(this);
         this.clearIterativeWaiter = this.clearIterativeWaiter.bind(this);
-    }
+        this.stopBackgroundProcesses=this.stopBackgroundProcesses.bind(this);
+
+        this.releaseMutex=this.releaseMutex.bind(this);
+        this.interuppted=false;
+
+    };
+
+    stopBackgroundProcesses(){
+        this.interuppted=true;
+        this.clearIterativeWaiter();
+
+    };
+
+    releaseMutex(){
+        this.interuppted=false;
+    };
+
+    resetRendering(){
+        let backupZ=this.zoomFactor;
+        let backupT=this.graphTranslation;
+        this.initializeRendering();
+        this.zoomFactor=backupZ;
+        this.graphTranslation=backupT;
+
+        if (this.zoom) {
+            this.graph.graphRoot.attr('transform', 'translate(' + this.graphTranslation + ')scale(' + this.zoomFactor + ')');
+            this.zoom.translate(this.graphTranslation);
+            this.zoom.scale(this.zoomFactor);
+        }
+    };
+
 
     clearIterativeWaiter() {
         if (this.intervalTimer) {
             clearInterval(this.intervalTimer);
         }
-    }
+    };
 
     intervalWaiter(interval) {
         if (this.graph && this.graph.layout && this.graph.layout.force) {
@@ -43,12 +74,15 @@ export default class Navigation {
             if (force.alpha() < 0.05) {
                 // remove timer and zoom to extent;
                 clearInterval(this.intervalTimer);
-                this.zoomToExtent(false);
+                if (!this.interuppted) { // call this function as long you have not been interrupted
+                    this.zoomToExtent(false);
+                }
+
                 return;
             }
             this.intervalTimer = setTimeout(this.intervalWaiter, interval)
         }
-    }
+    };
 
     waitForForce() {
         if (this.graph.layout.layoutType() === 'force') {
@@ -56,22 +90,22 @@ export default class Navigation {
         } else {
             this.zoomToExtent(false);
         }
-    }
+    };
 
     clearData() {
         delete this.dragBehaviour;
         delete this.zoom;
         delete this.graph;
         delete this.layout;
-    }
+    };
 
     getDragBehaviour() {
         return this.dragBehaviour;
-    }
+    };
 
     getZoomFunction() {
         return this.zoom;
-    }
+    };
 
     initializeRendering() {
         let graph = this.graph;
@@ -129,7 +163,7 @@ export default class Navigation {
         if (graph.graphRoot) {
             that.zoom.event(graph.graphRoot);
         }
-    }
+    };
 
     zoomed() {
         const that = this;
@@ -169,7 +203,7 @@ export default class Navigation {
             .attr('transform', 'translate(' + that.graphTranslation + ')scale(' + that.zoomFactor + ')')
             .ease('linear')
             .duration(250);
-    }
+    };
 
     zoomToExtent(awaitForceStable) {
         if (awaitForceStable) {
@@ -253,11 +287,13 @@ export default class Navigation {
                 };
             })
             .each('end', function () {
-                graph.graphRoot.attr('transform', 'translate(' + that.graphTranslation + ')scale(' + that.zoomFactor + ')');
-                that.zoom.translate(that.graphTranslation);
-                that.zoom.scale(that.zoomFactor);
+                if (that.zoom) {
+                    graph.graphRoot.attr('transform', 'translate(' + that.graphTranslation + ')scale(' + that.zoomFactor + ')');
+                    that.zoom.translate(that.graphTranslation);
+                    that.zoom.scale(that.zoomFactor);
+                }
             });
-    }
+    };
 
     /** Helper functions **/
     getWorldPosFromScreen(x, y, translate, scale) {
@@ -271,7 +307,7 @@ export default class Navigation {
             yn = (y - translate[1]) / scale;
         }
         return {x: xn, y: yn};
-    }
+    };
 
     transform(p, cx, cy, parent) {
         if (parent && parent.graph) {
@@ -282,5 +318,5 @@ export default class Navigation {
             parent.zoom.scale(parent.zoomFactor);
             return 'translate(' + parent.graphTranslation[0] + ',' + parent.graphTranslation[1] + ')scale(' + parent.zoomFactor + ')';
         }
-    }
+    };
 } // end of class definition

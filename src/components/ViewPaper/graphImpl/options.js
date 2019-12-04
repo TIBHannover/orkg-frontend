@@ -11,18 +11,18 @@ export default class Options {
         this.datatypeConfig = this.datatypeConfig.bind(this);
         this.datatypeLinkConfig = this.datatypeLinkConfig.bind(this);
         this.renderingStyle = this.renderingStyle.bind(this);
-    }
+    };
 
     renderingStyle(val) {
         if (!arguments.length) {
             return this._renderingStyle;
         }
         this._renderingStyle = val;
-    }
+    };
 
     loadDefaultOptions() {
         this.loadLayerOptions();
-    }
+    };
 
     loadLayerOptions() {
         // defines on which layer nodes/links and the properties
@@ -35,11 +35,11 @@ export default class Options {
         //           --> Arrows;
 
         this.layerObject = ['arrows', 'edges', 'properties', 'nodes'];
-    }
+    };
 
     layerDefinitionObject() {
         return this.layerObject
-    }
+    };
 
     nodeConfig() {
         if (this._renderingStyle === 'vowl') {
@@ -105,7 +105,7 @@ export default class Options {
             }
 
         }
-    }
+    };
 
     edgeConfig() {
         if (this._renderingStyle === 'vowl') {
@@ -170,7 +170,7 @@ export default class Options {
                 'link_arrowHead_fillColor': '#000000'
             }
         }
-    }
+    };
 
     datatypeConfig() {
         if (this._renderingStyle === 'vowl') {
@@ -217,7 +217,7 @@ export default class Options {
                 'hoverInFontSize': '12px',
             }
         }
-    }
+    };
 
     datatypeLinkConfig() {
         if (this._renderingStyle === 'vowl') {
@@ -282,6 +282,6 @@ export default class Options {
                 'hoverInFontSize': '12px',
             }
         }
-    }
+    };
 
 }

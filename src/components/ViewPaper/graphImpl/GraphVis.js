@@ -9,171 +9,57 @@ import Layout from './Layout'
 import Navigation from './Navigation';
 
 export default class GraphVis {
-    constructor(props) {
+    constructor() {
         this.graphOptions = new Options();
         this.mst = new MinimumSpanningTree();
         this.nav = new Navigation({graph: this});
         this.layout = new Layout({graph: this}); // possible 'force, treeV, treeH'
-        // init layout with a layout type, using the props values;
-        this.layout.layoutType(props.layout);
-
-
-        this.nodes = props.nodes;
-        this.edges = props.edges;
-        this.svgRoot = props.graphRoot;
-        this.graphRoot = props.graphRoot.append('g'); // d3 node for the svg container
-        this.graphRoot.style('overflow', 'hidden');
-
         this.rootContainer = 'graphRendering';
         this.nodeMap = {};
-
-        this.initializeLayers = this.initializeLayers.bind(this);
-        this.loadDefaultOptions = this.loadDefaultOptions.bind(this);
-        this.initializeRendering = this.initializeRendering.bind(this);
-        this.loadData = this.loadData.bind(this);
-        this.createRenderingElements = this.createRenderingElements.bind(this);
-        this.drawRenderingElements = this.drawRenderingElements.bind(this);
-
-        this.drawGraph = this.drawGraph.bind(this);
-        this.computeDepth = this.computeDepth.bind(this);
-        this.clearGraphData = this.clearGraphData.bind(this);
-
-        this.zoomToExtent = this.zoomToExtent.bind(this);
-        this.getMaxDepth = this.getMaxDepth.bind(this);
-
-        this.filterGraphByDepth = this.filterGraphByDepth.bind(this);
-        this.redrawGraph = this.redrawGraph.bind(this);
-
-        this.updateLayout = this.updateLayout.bind(this);
+        this.graphIsInitialized = false;
 
         this.renderedNodes = undefined;
         this.maxDepth = -1;
-    }
+        this.filtedDepth = -1;
 
-    updateLayout(value) {
-        this.layout.layoutType(value);
-        this.layout.initializeLayoutEngine();
-        this.layout.initializePositions(this.mst.getRoot(), true);
-        this.nav.zoomToExtent();
-    }
+        // state, load, unload functions
+        this.graphInitialized = this.graphInitialized.bind(this);
+        this.loadData = this.loadData.bind(this);
+        this.getMaxDepth = this.getMaxDepth.bind(this);
+        this.computeDepth = this.computeDepth.bind(this);
+        this.clearGraphData = this.clearGraphData.bind(this);
 
-    filterGraphByDepth(depth) {
-        let newNodes = [];
-        this.classNodes.forEach(node => {
-            if (node.getDepth() > depth) {
-                node.visible(false);
-                node.incommingLink.forEach(link => {
-                    link.visible(false);
-                    link.linkElement().visible(false);
-                })
-            } else {
-                if (!node.visible()) {
-                    newNodes.push(node); // add to new nodes;
-                }
-                node.visible(true);
-                node.incommingLink.forEach(link => {
-                    link.visible(true);
-                    link.linkElement().visible(true);
-                })
-            }
-        });
-        // redraw the graph;
-        //this.redrawGraph();
-        this.updateDepthVis(newNodes);
-        newNodes = []; // clear the nodes
-    }
+        // navigation functions
+        this.updateLayout = this.updateLayout.bind(this);
+        this.zoomToExtent = this.zoomToExtent.bind(this);
 
-    updateDepthVis(nodeRef) {
-        this.graphRoot.selectAll('defs').remove();
-        this.graphRoot.selectAll('g').remove();
-        this.initializeLayers();
-        this.layout.initializeLayoutEngine();
+        // rendering functions
+        this.initializeLayers = this.initializeLayers.bind(this);
+        this.initializeRendering = this.initializeRendering.bind(this);
+        this.filterGraphByDepth = this.filterGraphByDepth.bind(this);
+        this.redrawGraph = this.redrawGraph.bind(this);
+        this.redrawGraphWithReset = this.redrawGraphWithReset.bind(this);
 
-        if (this.layout.layoutType() === 'force') {
-            // expand the nodes;
-            if (nodeRef.length > 0) {
-                // get simply the parents from which we want to expand;
-                let parentMap = {};
-                nodeRef.forEach(node => {
-                    for (let i = 0; i < node.incommingLink.length; i++) {
-                        const par = node.incommingLink[i];
-                        if (!parentMap.hasOwnProperty(par.domainNode().id())) {
-                            parentMap[par.domainNode().id()] = par.domainNode();
-                        }
-                    }
-                });
-                let nodesToExpand = Object.values(parentMap);
-                nodesToExpand.forEach(node => {
-                    this.layout.executeExpansionForNode(node, true);
-                });
-            }
-        } // end of smart expanding for force directed layout
-        this.drawGraph();
-    }
+        this.createRenderingElements = this.createRenderingElements.bind(this);
+        this.drawRenderingElements = this.drawRenderingElements.bind(this);
+        this.drawGraph = this.drawGraph.bind(this);
 
-    redrawGraph() {
-        // remove svg;
-        this.graphRoot.selectAll('defs').remove();
-        this.graphRoot.selectAll('g').remove();
-        this.initializeLayers();
-        this.layout.initializeLayoutEngine();
-        this.layout.initializePositions(this.mst.getRoot(), true);
-        this.drawGraph();
-    }
+        // helper functions
+        this.stopBackgroundProcesses = this.stopBackgroundProcesses.bind(this);
+        this.bindComponentValues = this.bindComponentValues.bind(this);
+        this.loadDefaultOptions = this.loadDefaultOptions.bind(this);
+        this.ensureLayoutConsistency=this.ensureLayoutConsistency.bind(this);
+    };
 
-    getMaxDepth() {
-        return this.maxDepth;
-    }
 
-    clearGraphData() {
-        if (this.layout) {
-            this.layout.clearData();
+    /** State Load Unload Functions **/
+    graphInitialized(val) {
+        if (!arguments.length) {
+            return this.graphIsInitialized;
         }
-        if (this.nav) {
-            this.nav.clearData();
-        }
+        this.graphIsInitialized = val;
+    };
 
-        delete this.layout;
-        delete this.nav;
-
-        this.svgRoot.remove();
-
-        delete this.graphOptions;
-        delete this.mst;
-        delete this.edges;
-        delete this.nodes;
-
-        delete this.nodeMap;
-        delete this.classNodes;
-        delete this.propNodes;
-        delete this.links;
-
-    }
-
-    zoomToExtent() {
-        // forwarding function to bee called form outside;
-        this.nav.zoomToExtent();
-    }
-
-    loadDefaultOptions() {
-        this.graphOptions.loadDefaultOptions()
-    }
-
-    initializeLayers() {
-        const layers = this.graphOptions.layerDefinitionObject();
-        const root = this.graphRoot;
-        const rootContainer = this.rootContainer;
-
-        layers.forEach(function (layer) {
-            if (layer === 'arrows') {
-                const markerContainer = root.append('defs');
-                markerContainer.node().id = rootContainer + '_' + layer;
-            } else {
-                const renderingLayer = root.append('g');
-                renderingLayer.node().id = rootContainer + '_' + layer;
-            }
-        });
-    }
 
     loadData() {
         // clear if something was there;
@@ -206,22 +92,163 @@ export default class GraphVis {
             });
             this.propNodes = properties;
 
-
+            this.nav.releaseMutex();
             const rootNode = this.computeDepth();
             this.layout.initializePositions(rootNode);
             this.drawGraph();
 
             this.layout.initializeLayoutEngine();
-            this.nav.zoomToExtent(true);
+
+            if (this.layout.layoutType() === 'force') {
+                this.nav.zoomToExtent(true);
+            } else {
+                this.nav.zoomToExtent();
+            }
         }
-    }
+    };
+
+    getMaxDepth() {
+        return this.maxDepth - 1;
+    };
 
     computeDepth() {
         this.mst.setNodes(this.classNodes);
         this.mst.setLinks(this.links);
         this.maxDepth = this.mst.computeMinimumSpanningTree();
         return this.mst.getRoot();
-    }
+    };
+
+    clearGraphData() {
+        console.log('clearing the graphVis Data');
+        if (this.layout) {
+            this.layout.clearData();
+        }
+        if (this.nav) {
+            this.nav.clearData();
+        }
+
+        delete this.layout;
+        delete this.nav;
+
+        this.svgRoot.remove();
+
+        delete this.graphOptions;
+        delete this.mst;
+        delete this.edges;
+        delete this.nodes;
+
+        delete this.nodeMap;
+        delete this.classNodes;
+        delete this.propNodes;
+        delete this.links;
+
+    };
+
+    /** Navigation Functions **/
+    updateLayout(value) {
+        this.layout.layoutType(value);
+        this.layout.initializeLayoutEngine();
+        this.layout.initializePositions(this.mst.getRoot(), true);
+    };
+
+    zoomToExtent() {
+        // forwarding function to bee called form outside;
+        this.nav.zoomToExtent();
+    };
+
+    /** Rendering Functions **/
+    initializeLayers() {
+        const layers = this.graphOptions.layerDefinitionObject();
+        const root = this.graphRoot;
+        const rootContainer = this.rootContainer;
+
+        layers.forEach(function (layer) {
+            if (layer === 'arrows') {
+                const markerContainer = root.append('defs');
+                markerContainer.node().id = rootContainer + '_' + layer;
+            } else {
+                const renderingLayer = root.append('g');
+                renderingLayer.node().id = rootContainer + '_' + layer;
+            }
+        });
+    };
+
+    initializeRendering() {
+        this.nav.initializeRendering();
+    };
+
+    filterGraphByDepth(depth) {
+        if (depth === this.filtedDepth) {
+            return;
+        }
+        let newNodes = [];
+        this.classNodes.forEach(node => {
+            if (node.getDepth() > depth) {
+                node.visible(false);
+                node.incommingLink.forEach(link => {
+                    link.visible(false);
+                    link.linkElement().visible(false);
+                })
+            } else {
+                if (!node.visible()) {
+                    newNodes.push(node); // add to new nodes;
+                }
+                node.visible(true);
+                node.incommingLink.forEach(link => {
+                    link.visible(true);
+                    link.linkElement().visible(true);
+                })
+            }
+        });
+        this.updateDepthVis(newNodes);
+        newNodes = []; // clear the nodes
+        this.filtedDepth = depth;
+    };
+
+    redrawGraph() {
+        // remove svg;
+        this.graphRoot.selectAll('defs').remove();
+        this.graphRoot.selectAll('g').remove();
+        this.initializeLayers();
+        this.layout.initializeLayoutEngine();
+        this.layout.initializePositions(this.mst.getRoot(), true);
+        this.drawGraph();
+    };
+
+    redrawGraphWithReset(props) {
+        console.log('Resetting the visualization');
+        this.resetSvgRoot(props.graphBgColor);
+        this.graphRoot.selectAll('defs').remove();
+        this.graphRoot.selectAll('g').remove();
+        this.initializeLayers();
+
+        if (props.graph.nodes.length > this.nodes.length) {
+            this.nodes = props.graph.nodes;
+            this.edges = props.graph.edges;
+            this.renderedNodes = [];
+            this.edgeElements = [];
+            this.renderedLink = [];
+            this.initializeLayers();
+            this.initializeRendering();
+            this.loadData('init');
+        } else {
+            this.layout.initializeLayoutEngine();
+            this.nav.resetRendering();
+            this.drawGraph();
+        }
+    };
+
+    resetSvgRoot(bgColor) {
+        if (this.svgRoot) {
+            this.svgRoot.remove();
+        }
+        this.svgRoot = d3.select('#graphRendering').append('svg');
+        this.svgRoot.style('width', '100%');
+        this.svgRoot.style('height', '100%');
+        this.svgRoot.style('background-color', bgColor);
+        this.graphRoot = this.svgRoot.append('g'); // d3 node for the svg container
+        this.graphRoot.style('overflow', 'hidden');
+    };
 
     createRenderingElements(container, data) {
         return container.selectAll('.draggableItem')
@@ -232,7 +259,7 @@ export default class GraphVis {
                 return d.id();
             })
             .call(this.nav.getDragBehaviour());
-    }
+    };
 
     drawRenderingElements(elements) {
         elements.each(function (item) {
@@ -244,7 +271,7 @@ export default class GraphVis {
                 d3.select(this).remove();
             }
         });
-    }
+    };
 
     drawGraph() {
         // create and draw nodes
@@ -276,7 +303,53 @@ export default class GraphVis {
                 }
             });
         }
-    }
+    };
+
+    updateDepthVis(nodeRef) {
+        this.graphRoot.selectAll('defs').remove();
+        this.graphRoot.selectAll('g').remove();
+        this.initializeLayers();
+        this.layout.initializeLayoutEngine();
+
+        if (this.layout.layoutType() === 'force') {
+            // expand the nodes;
+            if (nodeRef.length > 0) {
+                // get simply the parents from which we want to expand;
+                let parentMap = {};
+                nodeRef.forEach(node => {
+                    for (let i = 0; i < node.incommingLink.length; i++) {
+                        const par = node.incommingLink[i];
+                        if (!parentMap.hasOwnProperty(par.domainNode().id())) {
+                            parentMap[par.domainNode().id()] = par.domainNode();
+                        }
+                    }
+                });
+                let nodesToExpand = Object.values(parentMap);
+                nodesToExpand.forEach(node => {
+                    this.layout.executeExpansionForNode(node, true);
+                });
+            }
+        } // end of smart expanding for force directed layout
+        this.drawGraph();
+    };
+
+    reinitializeGraphData(props) {
+        if (this.svgRoot) {
+            this.svgRoot.remove();
+        }
+
+        this.renderedNodes = [];
+        this.edgeElements = [];
+        this.renderedLink = [];
+
+        this.svgRoot = d3.select('#graphRendering').append('svg');
+        this.svgRoot.style('width', '100%');
+        this.svgRoot.style('height', '100%');
+        this.svgRoot.style('background-color', props.graphBgColor);
+
+        this.graphRoot = this.svgRoot.append('g'); // d3 node for the svg container
+        this.graphRoot.style('overflow', 'hidden');
+    };
 
     createEdge(edge_data, iterator) {
         const property = new Property({configObject: this.graphOptions.edgeConfig()});
@@ -317,7 +390,7 @@ export default class GraphVis {
         this.links.push(link);
 
         return property;
-    }
+    };
 
     createNode(node_data) {
         const node = new Node({configObject: this.graphOptions.nodeConfig()});
@@ -333,10 +406,36 @@ export default class GraphVis {
         // append to map;
         this.nodeMap[node_data.id] = node;
         return node;
-    }
+    };
 
-    initializeRendering() {
-        this.nav.initializeRendering();
-    }
+
+    /** Helper functions**/
+    ensureLayoutConsistency(layout){
+        if (this.layout!==layout){
+            this.updateLayout(layout);
+        }
+    };
+
+    bindComponentValues(props) {
+        this.layout.layoutType(props.layout);
+        this.nodes = props.graph.nodes;
+        this.edges = props.graph.edges;
+
+        // get the  graphRoot;
+        this.reinitializeGraphData(props);
+        this.loadDefaultOptions(); // keep it here in order to make later adjustments easier :)
+        this.initializeLayers();
+        this.initializeRendering();
+
+        this.loadData();
+    };
+
+    loadDefaultOptions() {
+        this.graphOptions.loadDefaultOptions()
+    };
+
+    stopBackgroundProcesses() {
+        this.nav.stopBackgroundProcesses();
+    };
 
 }// end of class definition
