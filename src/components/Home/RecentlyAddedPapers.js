@@ -40,7 +40,7 @@ class RecentlyAddedPapers extends Component {
 
                 statements.reverse(); // order statements to ensure that the first author statements is ordered at the top
 
-                for (var i = 0; i < statements.length; i++) {
+                for (let i = 0; i < statements.length; i++) {
                     if (statements[i].predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD) {
                         paperItem.researchField = statements[i].object.label;
                     }

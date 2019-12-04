@@ -153,7 +153,7 @@ class AuthorPage extends Component {
                                         </AuthorMetaInfo>
                                         <AuthorMetaInfo>
                                             <div className={'key'}>Place of birth</div>
-                                            <div className={'value'}>Coutnry</div>
+                                            <div className={'value'}>Country</div>
                                         </AuthorMetaInfo>
                                         <AuthorMetaInfo>
                                             <div className={'key'}>Occupation</div>

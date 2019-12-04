@@ -171,7 +171,7 @@ class AbstractAnnotator extends Component {
     };
 
     handleMouseUp = () => {
-        var sel = rangy.getSelection(this.annotatorRef.current);
+        const sel = rangy.getSelection(this.annotatorRef.current);
         if (sel.isCollapsed) {
             return null;
         }
@@ -189,12 +189,12 @@ class AbstractAnnotator extends Component {
             [start, end] = [end, start];
         }
         // Find index of all occurrences of selected text in the abstract
-        var pos = getAllIndexes(this.props.abstract, text);
+        const pos = getAllIndexes(this.props.abstract, text);
         // Get the closest number out of occurrences positions
         if (pos === undefined || pos.length === 0) {
             return null;
         }
-        var closest = pos.reduce(function(prev, curr) {
+        const closest = pos.reduce(function(prev, curr) {
             return Math.abs(curr - start) < Math.abs(prev - start) ? curr : prev;
         }, 0);
         // Update position of selection

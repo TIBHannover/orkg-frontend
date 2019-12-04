@@ -37,7 +37,7 @@ export default class Papers extends Component {
         }).then(papers => {
             if (papers.length > 0) {
                 // Fetch the data of each paper
-                var papers_data = papers.map(paper => {
+                const papers_data = papers.map(paper => {
                     return getStatementsBySubject({ id: paper.id }).then(paperStatements => {
                         // publication year
                         let publicationYear = paperStatements.filter(

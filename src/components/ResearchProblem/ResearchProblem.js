@@ -60,13 +60,13 @@ class ResearchProblem extends Component {
             // Papers
             if (result.length > 0) {
                 // Get the papers of each contribution
-                var papers = result.map(contribution => {
+                const papers = result.map(contribution => {
                     return getStatementsByObject({
                         id: contribution.subject.id,
                         order: 'desc'
                     }).then(papers => {
                         // Fetch the data of each paper
-                        var papers_data = papers.map(paper => {
+                        const papers_data = papers.map(paper => {
                             return getStatementsBySubject({ id: paper.subject.id }).then(paperStatements => {
                                 // publication year
                                 let publicationYear = paperStatements.filter(

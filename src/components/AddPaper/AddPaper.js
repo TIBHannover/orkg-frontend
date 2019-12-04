@@ -115,7 +115,7 @@ class AddPaper extends Component {
         this.props.resetStatementBrowser();
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         //paperNewResourceId : means paper is saved
         if (!this.props.shouldBlockNavigation && this.props.currentStep > 1 && !this.props.paperNewResourceId) {
             this.props.blockNavigation();

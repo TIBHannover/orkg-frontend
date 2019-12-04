@@ -44,7 +44,7 @@ export function groupByObjectWithId(array, propertyName) {
 export function deleteArrayEntryByObjectValue(arr, object, value) {
     let newArr = [...arr];
 
-    var indexToDelete = -1;
+    let indexToDelete = -1;
 
     for (let i = 0; i < newArr.length; i++) {
         if (newArr[i][object] === value) {
