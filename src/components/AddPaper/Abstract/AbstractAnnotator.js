@@ -9,7 +9,7 @@ import AnnotationTootip from './AnnotationTootip';
 import { createAnnotation, updateAnnotationClass, removeAnnotation, validateAnnotation } from '../../../actions/addPaper';
 
 function getAllIndexes(arr, val) {
-    var indexes = [],
+    let indexes = [],
         i = -1;
     while ((i = arr.indexOf(val, i + 1)) !== -1) {
         indexes.push(i);
@@ -251,4 +251,9 @@ const mapDispatchToProps = dispatch => ({
     updateAnnotationClass: data => dispatch(updateAnnotationClass(data))
 });
 
-export default compose(connect(mapStateToProps, mapDispatchToProps))(AbstractAnnotator);
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )
+)(AbstractAnnotator);

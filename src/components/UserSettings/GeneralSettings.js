@@ -164,4 +164,7 @@ GeneralSettings.propTypes = {
     updateAuth: PropTypes.func.isRequired
 };
 
-export default connect(null, mapDispatchToProps)(GeneralSettings);
+export default connect(
+    null,
+    mapDispatchToProps
+)(GeneralSettings);

@@ -101,4 +101,7 @@ const mapStateToProps = state => ({
     comparison: state.viewPaper.comparison
 });
 
-export default compose(connect(mapStateToProps), withCookies)(PaperCard);
+export default compose(
+    connect(mapStateToProps),
+    withCookies
+)(PaperCard);

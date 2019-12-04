@@ -128,4 +128,7 @@ Authentication.propTypes = {
     openAuthDialog: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Authentication);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Authentication);

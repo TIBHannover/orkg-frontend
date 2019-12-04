@@ -13,7 +13,7 @@ class AbstractInputView extends Component {
 
     stripLineBreaks = event => {
         event.preventDefault();
-        var text = '';
+        let text = '';
         if (event.clipboardData || event.originalEvent.clipboardData) {
             text = (event.originalEvent || event).clipboardData.getData('text/plain');
         } else if (window.clipboardData) {
@@ -69,4 +69,7 @@ const mapDispatchToProps = dispatch => ({
     updateAbstract: data => dispatch(updateAbstract(data))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AbstractInputView);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AbstractInputView);

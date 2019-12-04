@@ -3,11 +3,7 @@ import { mount } from 'enzyme';
 import ExportToLatex from './../ExportToLatex.js';
 
 let props = {
-    data: [
-        ['Title', 'Property 1'],
-        ['Paper 1', 'Value 1'],
-        ['Paper 2', 'Value 2']
-    ],
+    data: [['Title', 'Property 1'], ['Paper 1', 'Value 1'], ['Paper 2', 'Value 2']],
     contributions: [
         {
             contributionLabel: 'Contribution 1',

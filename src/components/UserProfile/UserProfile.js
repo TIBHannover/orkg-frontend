@@ -104,4 +104,7 @@ UserProfile.propTypes = {
     }).isRequired
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(UserProfile);

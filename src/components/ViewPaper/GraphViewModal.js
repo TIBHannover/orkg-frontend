@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { getStatementsBySubject } from '../../network';
 import { connect } from 'react-redux';
-import * as PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Graph from 'react-graph-vis';
 import { Modal, ModalHeader, ModalBody, Input, Form, FormGroup, Label } from 'reactstrap';
 import uniqBy from 'lodash/uniqBy';

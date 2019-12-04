@@ -110,4 +110,7 @@ const mapDispatchToProps = dispatch => ({
     toggleEditPropertyLabel: data => dispatch(toggleEditPropertyLabel(data))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(StatementOptions);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(StatementOptions);

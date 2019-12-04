@@ -289,4 +289,7 @@ const mapDispatchToProps = dispatch => ({
     loadPaper: payload => dispatch(loadPaper(payload))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditPaperDialog);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(EditPaperDialog);

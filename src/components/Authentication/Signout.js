@@ -49,4 +49,7 @@ const mapDispatchToProps = dispatch => ({
     openAuthDialog: action => dispatch(openAuthDialog(action))
 });
 
-export default connect(null, mapDispatchToProps)(Signout);
+export default connect(
+    null,
+    mapDispatchToProps
+)(Signout);

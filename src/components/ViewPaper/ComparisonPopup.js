@@ -223,4 +223,10 @@ const mapDispatchToProps = dispatch => ({
     loadComparisonFromCookie: data => dispatch(loadComparisonFromCookie(data))
 });
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withCookies)(ComparisonPopup);
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    ),
+    withCookies
+)(ComparisonPopup);

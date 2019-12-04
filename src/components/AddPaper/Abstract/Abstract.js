@@ -249,7 +249,10 @@ class Abstract extends Component {
             });
         }
         // Add the statements to the selected contribution
-        this.props.prefillStatements({ statements, resourceId: this.props.contributions.byId[this.props.selectedContribution].resourceId });
+        this.props.prefillStatements({
+            statements,
+            resourceId: this.props.contributions.byId[this.props.selectedContribution].resourceId
+        });
         this.props.toggleAbstractDialog();
     };
 
@@ -432,4 +435,9 @@ const mapDispatchToProps = dispatch => ({
     setAbstractDialogView: data => dispatch(setAbstractDialogView(data))
 });
 
-export default compose(connect(mapStateToProps, mapDispatchToProps))(Abstract);
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )
+)(Abstract);

@@ -325,4 +325,7 @@ UserSettings.propTypes = {
     updateAuth: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserSettings);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(UserSettings);

@@ -617,4 +617,7 @@ const mapDispatchToProps = dispatch => ({
     changeValue: data => dispatch(changeValue(data))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ValueItem);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ValueItem);

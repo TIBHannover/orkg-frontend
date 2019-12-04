@@ -257,4 +257,11 @@ const mapDispatchToProps = dispatch => ({
     toggleAbstractDialog: () => dispatch(toggleAbstractDialog())
 });
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withTheme, withCookies)(Contributions);
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    ),
+    withTheme,
+    withCookies
+)(Contributions);

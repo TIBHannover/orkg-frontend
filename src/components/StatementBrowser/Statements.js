@@ -140,4 +140,7 @@ const mapDispatchToProps = dispatch => ({
     initializeWithoutContribution: data => dispatch(initializeWithoutContribution(data))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Statements);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Statements);

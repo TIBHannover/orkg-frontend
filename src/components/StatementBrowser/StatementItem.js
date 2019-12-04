@@ -400,4 +400,7 @@ const mapDispatchToProps = dispatch => ({
     createProperty: data => dispatch(createProperty(data))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(StatementItem);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(StatementItem);

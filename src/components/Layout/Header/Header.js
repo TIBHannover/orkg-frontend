@@ -270,4 +270,7 @@ Header.propTypes = {
     resetAuth: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Header);

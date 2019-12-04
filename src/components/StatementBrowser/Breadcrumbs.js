@@ -125,4 +125,7 @@ const mapDispatchToProps = dispatch => ({
     goToResourceHistory: data => dispatch(goToResourceHistory(data))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Breadcrumbs);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Breadcrumbs);

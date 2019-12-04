@@ -12,7 +12,7 @@ import { withCookies } from 'react-cookie';
 import { connect } from 'react-redux';
 import styled, { withTheme } from 'styled-components';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import * as PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import { openTour, closeTour, blockNavigation } from '../../actions/addPaper';
 import { Prompt } from 'react-router';
@@ -272,4 +272,11 @@ const mapDispatchToProps = dispatch => ({
     blockNavigation: () => dispatch(blockNavigation())
 });
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withTheme, withCookies)(AddPaper);
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    ),
+    withTheme,
+    withCookies
+)(AddPaper);

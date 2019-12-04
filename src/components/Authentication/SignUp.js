@@ -158,4 +158,7 @@ const mapDispatchToProps = dispatch => ({
     toggleAuthDialog: () => dispatch(toggleAuthDialog())
 });
 
-export default connect(null, mapDispatchToProps)(SignUp);
+export default connect(
+    null,
+    mapDispatchToProps
+)(SignUp);

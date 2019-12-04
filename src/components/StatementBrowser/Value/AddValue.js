@@ -223,4 +223,7 @@ const mapDispatchToProps = dispatch => ({
     createValue: data => dispatch(createValue(data))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddValue);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AddValue);

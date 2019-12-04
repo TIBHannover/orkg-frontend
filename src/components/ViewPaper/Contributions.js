@@ -372,4 +372,7 @@ const mapDispatchToProps = dispatch => ({
     updateResearchProblems: data => dispatch(updateResearchProblems(data))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Contributions);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Contributions);

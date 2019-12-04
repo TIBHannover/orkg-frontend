@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes';
 import moment from 'moment';
-import * as PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import ComparisonPopup from './ComparisonPopup';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import { loadPaper, selectContribution } from '../../actions/viewPaper';
@@ -454,4 +454,7 @@ const mapDispatchToProps = dispatch => ({
     selectContribution: payload => dispatch(selectContribution(payload))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewPaper);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ViewPaper);

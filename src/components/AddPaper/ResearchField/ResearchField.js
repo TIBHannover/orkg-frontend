@@ -272,4 +272,11 @@ const mapDispatchToProps = dispatch => ({
     closeTour: () => dispatch(closeTour())
 });
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withTheme, withCookies)(ResearchField);
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    ),
+    withTheme,
+    withCookies
+)(ResearchField);

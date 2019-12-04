@@ -222,4 +222,10 @@ const mapDispatchToProps = dispatch => ({
     updateAnnotationClass: data => dispatch(updateAnnotationClass(data))
 });
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withTheme)(AbstractRangesList);
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    ),
+    withTheme
+)(AbstractRangesList);

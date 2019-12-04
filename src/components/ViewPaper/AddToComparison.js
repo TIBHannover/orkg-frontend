@@ -59,4 +59,10 @@ const mapDispatchToProps = dispatch => ({
     removeFromComparison: data => dispatch(removeFromComparison(data))
 });
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withCookies)(AddToComparison);
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    ),
+    withCookies
+)(AddToComparison);
