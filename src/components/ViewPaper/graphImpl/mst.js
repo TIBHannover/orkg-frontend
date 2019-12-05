@@ -40,6 +40,11 @@ export default class MinimumSpanningTree {
             }
         });
 
+        if (rootCandidates.length === 0) {
+            console.log('%c COULD NOT FIND A ROOT NODE >> USING FIRST ELEMENT! ', 'color: #ff0000');
+            rootCandidates.push(this.nodes[0]);
+        }
+
         if (rootCandidates.length === 1) {
             this.rootNode = rootCandidates[0];
         }
@@ -52,9 +57,12 @@ export default class MinimumSpanningTree {
             while (propagateArray.length !== 0) {
                 const currentRoot = propagateArray[0];
                 const children = currentRoot.outgoingLink;
+                // console.log('current root ' + currentRoot.label);
                 children.forEach(child => {
+                    //  console.log('\t\t current child ' + child.rangeNode().label + ' has depth ' + child.rangeNode().getDepth());
                     if (child.rangeNode().getDepth() === -1) {
                         const nextDepth = currentRoot.getDepth() + 1;
+                        //   console.log('this max depth=' + this.maxDepth);
                         if (nextDepth > this.maxDepth) {
                             this.maxDepth = nextDepth;
                         }

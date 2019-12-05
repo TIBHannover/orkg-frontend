@@ -1,12 +1,12 @@
 import DrawTools from '../drawTools';
 import BaseElement from './BaseElement';
 import * as d3 from 'd3';
-
+let id = 0;
 export default class Edge extends BaseElement {
     constructor(props) {
         super(props);
 
-        this.id('edge_');
+        this.id('edge_' + id++);
         this.domain = undefined;
         this.range = undefined;
         this.prop = undefined;

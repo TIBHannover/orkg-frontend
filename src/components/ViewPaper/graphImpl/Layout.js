@@ -73,10 +73,12 @@ export default class Layout {
         if (node.outgoingLink.length > 0) {
             newObj['children'] = [];
             node.outgoingLink.forEach(item => {
-                newObj['children'].push(this.processSingleElement(item.rangeNode(), node));
+                // check if we have an downward (child depth > parent depth) connection
+                if (item.rangeNode().getDepth() > node.getDepth()) {
+                    newObj['children'].push(this.processSingleElement(item.rangeNode(), node));
+                }
             });
         }
-
         return newObj;
     }
 
@@ -120,16 +122,21 @@ export default class Layout {
                 // the call should be this.force.center([rootNode.x, rootNode.y]);
             }
             let expandArray = [];
+            let seenNodes = [];
             expandArray.push(rootNode);
 
             while (expandArray.length !== 0) {
                 this.executeExpansionForNode(expandArray[0], layoutChange);
-                // add children nodes
+                // add children nodes only when the have not been in the seen array
                 expandArray[0].outgoingLink.forEach(l => {
-                    expandArray.push(l.rangeNode());
+                    if (seenNodes.indexOf(l.rangeNode()) === -1) {
+                        expandArray.push(l.rangeNode());
+                        seenNodes.push(l.rangeNode());
+                    }
                 });
                 expandArray.shift();
             }
+
             if (layoutChange) {
                 this.makeLayoutTransition();
                 this.force.start();
@@ -227,6 +234,7 @@ export default class Layout {
                 maxDist = currentLinkDistance;
             }
         });
+
         // create forceLinks;
         this.force
             .charge(-500)

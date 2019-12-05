@@ -186,6 +186,14 @@ export default class GraphVis {
                     link.visible(false);
                     link.linkElement().visible(false);
                 });
+
+                // adding functionality for outgoing links that have smaller depth;
+                node.outgoingLink.forEach(link => {
+                    if (link.rangeNode().getDepth() < node.getDepth()) {
+                        link.visible(false);
+                        link.linkElement().visible(false);
+                    }
+                });
             } else {
                 if (!node.visible()) {
                     newNodes.push(node); // add to new nodes;
@@ -194,6 +202,13 @@ export default class GraphVis {
                 node.incommingLink.forEach(link => {
                     link.visible(true);
                     link.linkElement().visible(true);
+                });
+                // adding functionality for outgoing links that have smaller depth;
+                node.outgoingLink.forEach(link => {
+                    if (link.rangeNode().getDepth() < node.getDepth()) {
+                        link.visible(true);
+                        link.linkElement().visible(true);
+                    }
                 });
             }
         });
@@ -213,10 +228,10 @@ export default class GraphVis {
     }
 
     redrawGraphWithReset(props) {
-        console.log('Resetting the visualization');
         this.resetSvgRoot(props.graphBgColor);
         this.graphRoot.selectAll('defs').remove();
         this.graphRoot.selectAll('g').remove();
+
         this.initializeLayers();
 
         if (props.graph.nodes.length > this.nodes.length) {
@@ -225,7 +240,6 @@ export default class GraphVis {
             this.renderedNodes = [];
             this.edgeElements = [];
             this.renderedLink = [];
-            this.initializeLayers();
             this.initializeRendering();
             this.loadData('init');
         } else {
@@ -412,7 +426,7 @@ export default class GraphVis {
 
     /** Helper functions**/
     ensureLayoutConsistency(layout) {
-        if (this.layout !== layout) {
+        if (this.layout.layoutType() !== layout) {
             this.updateLayout(layout);
         }
     }

@@ -20,6 +20,7 @@ class GraphView extends Component {
         this.child = React.createRef();
         this.seenDepth = -1;
         this.graphVis = new GraphVis();
+        this.objectLevelLoadingStatements = false;
         this.updateDepthRange = this.updateDepthRange.bind(this);
     }
 
@@ -44,6 +45,12 @@ class GraphView extends Component {
         this.updateDimensions();
     }
 
+    // componentWillUpdate = (nextProps, nextState) => {
+    //     if (nextState.depth > this.seenDepth) {
+    //         this.objectLevelLoadingStatements = true;
+    //     }
+    // };
+
     componentDidUpdate = (prevProps, prevState) => {
         // load statements again if depth is changed
         if (prevState.depth < this.state.depth) {
@@ -53,7 +60,10 @@ class GraphView extends Component {
                     this.graphVis.ensureLayoutConsistency(this.state.layout);
                 }
                 this.seenDepth = this.graphVis.getMaxDepth();
+                this.objectLevelLoadingStatements = false;
             });
+        } else {
+            this.objectLevelLoadingStatements = false;
         }
     };
 
@@ -69,7 +79,7 @@ class GraphView extends Component {
             return;
         }
         if (value < this.state.depth || this.state.seenFullGraph === true) {
-            // console.log('We have seen the full Graph so we just update the graph view;');
+            // Case we have seen the full Graph so we just update the graph view
             this.setState({ depth: value });
         } else {
             if (!fullGraph && this.state.seenFullGraph === false) {
@@ -222,7 +232,6 @@ class GraphView extends Component {
                         //add the node and relation
                         nodes.push({ id: id, label: value.label, title: value.label });
                         edges.push({ from: resourceId, to: id, label: property.label });
-                        console.log(value);
                         if (value.type === 'object') {
                             this.addPaperStatementsToGraph(id, nodes, edges);
                         }
@@ -264,7 +273,9 @@ class GraphView extends Component {
     };
 
     handleDepthChange = event => {
-        this.setState({ depth: parseInt(event.target.value) }); // make sure the value is an integer
+        if (event.target.value) {
+            this.setState({ depth: parseInt(event.target.value) });
+        } // make sure the value is an integer
     };
 
     getResourceAndStatements = async (resourceId, depth, list) => {
@@ -294,9 +305,6 @@ class GraphView extends Component {
                 var { nodes, edges } = event;
             }
         };*/
-        // this.child=React.createRef();
-        // console.log('++++++++++++++++++++++++++++++++++++');
-        // console.log(this.child);
         return (
             <Modal
                 isOpen={this.props.showDialog}
@@ -304,7 +312,6 @@ class GraphView extends Component {
                 size="lg"
                 onOpened={() => {
                     this.loadStatements().then(() => {
-                        console.log('calling finisher after first loader');
                         if (this.child && this.child.current) {
                             this.child.current.propagateDepthMaxValue(this.graphVis.getMaxDepth());
                         }
@@ -426,7 +433,7 @@ class GraphView extends Component {
                     {!this.state.isLoadingStatements && (
                         <GizmoGraph
                             ref={this.child}
-                            isLoadingStatements={this.state.isLoadingStatements}
+                            isLoadingStatements={this.objectLevelLoadingStatements}
                             depth={this.state.depth}
                             updateDepthRange={this.updateDepthRange}
                             maxDepth={this.state.maxDepth}

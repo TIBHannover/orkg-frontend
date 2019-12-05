@@ -18,6 +18,8 @@ class GizMOGraph extends Component {
     }
 
     componentDidMount() {
+        // console.log('GizMOGraph component did mount ');
+
         if (this.props.initializeGraph && this.graphVis.graphInitialized() === false) {
             this.graphVis.bindComponentValues(this.props);
             this.graphVis.graphInitialized(true);
@@ -45,7 +47,6 @@ class GizMOGraph extends Component {
 
         if (nonEqualItems > 0) {
             if (!this.props.isLoadingStatements) {
-                console.log('GizmoGraph needs an update');
                 if (prevProps.layout !== this.props.layout) {
                     this.graphVis.updateLayout(this.props.layout);
                 }
@@ -56,16 +57,13 @@ class GizMOGraph extends Component {
     };
 
     componentWillUnmount() {
-        console.log('GizMO Graph un mounting');
+        // console.log('GizMO Graph un mounting');
         this.graphVis.stopBackgroundProcesses();
 
-        // if (this.graphVis.graphIsInitialized) {
-        //     // todo : make sure memory is cleared!
-        //
-        //     console.log('clearing graph data? ');
-        //     this.clearGraphData();
-        //     delete this.graphVis; // removes the reference to the object ;
-        // }
+        if (this.graphVis.graphIsInitialized) {
+            // todo : make sure memory is cleared!
+            this.clearGraphData();
+        }
     }
 
     propagateDepthMaxValue(maxValue) {
@@ -87,7 +85,7 @@ class GizMOGraph extends Component {
     }
 
     clearGraphData() {
-        this.graphVis.clearGraphData();
+        this.graphVis.svgRoot.remove();
     }
 
     /** Component Rendering Function **/
