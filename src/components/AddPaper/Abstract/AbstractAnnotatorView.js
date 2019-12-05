@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Tooltip from '../../Utils/Tooltip';
-import { submitGetRequest, createPredicate, predicatesUrl } from '../../../network';
 import { Badge, Alert } from 'reactstrap';
 import capitalize from 'capitalize';
 import Tippy from '@tippy.js/react';
@@ -16,55 +15,6 @@ import toArray from 'lodash/toArray';
 import { compose } from 'redux';
 
 class AbstractAnnotatorView extends Component {
-    constructor(props) {
-        super(props);
-
-        this.automaticAnnotationConcepts = [
-            { label: 'Process', description: 'Natural phenomenon, or independent/dependent activities.E.g., growing(Bio), cured(MS), flooding(ES).' },
-            {
-                label: 'Data',
-                description:
-                    'The data themselves, or quantitative or qualitative characteristics of entities. E.g., rotational energy (Eng), tensile strength (MS), the Chern character (Mat).'
-            },
-            {
-                label: 'Material',
-                description: 'A physical or digital entity used for scientific experiments. E.g., soil (Agr), the moon (Ast), the set (Mat).'
-            },
-            {
-                label: 'Method',
-                description:
-                    'A commonly used procedure that acts on entities. E.g., powder X-ray (Che), the PRAM analysis (CS), magnetoencephalography (Med).'
-            }
-        ];
-    }
-
-    componentDidMount() {
-        this.loadClassOptions();
-    }
-
-    loadClassOptions = () => {
-        // Fetch the predicates used in the NLP model
-        let nLPPredicates = this.automaticAnnotationConcepts.map(classOption => {
-            return submitGetRequest(predicatesUrl + '?q=' + classOption.label + '&exact=true').then(predicates => {
-                if (predicates.length > 0) {
-                    return predicates[0]; // Use the first predicate that match the label
-                } else {
-                    return createPredicate(classOption.label); // Create the predicate if it doesn't exist
-                }
-            });
-        });
-        let options = [];
-        Promise.all(nLPPredicates).then(results => {
-            results.map(item =>
-                options.push({
-                    label: item.label,
-                    id: item.id
-                })
-            );
-        });
-        this.props.handleChangeClassOptions(options);
-    };
-
     render() {
         let rangeArray = toArray(this.props.ranges).filter(r => r.certainty >= this.props.certaintyThreshold);
         let rangesClasses = [...new Set(rangeArray.map(r => r.class.label))];
@@ -102,7 +52,7 @@ class AbstractAnnotatorView extends Component {
                             {rangesClasses.length > 0 &&
                                 rangesClasses.map(c => {
                                     let aconcept = c
-                                        ? this.automaticAnnotationConcepts.filter(function(e) {
+                                        ? this.props.classOptions.filter(function(e) {
                                               return e.label.toLowerCase() === c.toLowerCase();
                                           })
                                         : [];
@@ -224,7 +174,6 @@ AbstractAnnotatorView.propTypes = {
     isAnnotationLoading: PropTypes.bool.isRequired,
     isAnnotationFailedLoading: PropTypes.bool.isRequired,
     handleChangeCertaintyThreshold: PropTypes.func.isRequired,
-    handleChangeClassOptions: PropTypes.func.isRequired,
     getClassColor: PropTypes.func.isRequired,
     theme: PropTypes.object.isRequired,
     annotationError: PropTypes.string

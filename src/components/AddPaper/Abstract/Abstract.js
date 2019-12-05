@@ -48,7 +48,30 @@ class Abstract extends Component {
             isAnnotationFailedLoading: false,
             annotationError: null,
             showError: false,
-            classOptions: [],
+            classOptions: [
+                {
+                    id: 'PROCESS',
+                    label: 'Process',
+                    description: 'Natural phenomenon, or independent/dependent activities.E.g., growing(Bio), cured(MS), flooding(ES).'
+                },
+                {
+                    id: 'DATA',
+                    label: 'Data',
+                    description:
+                        'The data themselves, or quantitative or qualitative characteristics of entities. E.g., rotational energy (Eng), tensile strength (MS), the Chern character (Mat).'
+                },
+                {
+                    id: 'MATERIAL',
+                    label: 'Material',
+                    description: 'A physical or digital entity used for scientific experiments. E.g., soil (Agr), the moon (Ast), the set (Mat).'
+                },
+                {
+                    id: 'METHOD',
+                    label: 'Method',
+                    description:
+                        'A commonly used procedure that acts on entities. E.g., powder X-ray (Che), the PRAM analysis (CS), magnetoencephalography (Med).'
+                }
+            ],
             certaintyThreshold: [0.5],
             validation: true,
             classColors: {
@@ -269,10 +292,6 @@ class Abstract extends Component {
         this.setState({ certaintyThreshold: values });
     };
 
-    handleChangeClassOptions = options => {
-        this.setState({ classOptions: options });
-    };
-
     handleChangeView = view => {
         this.props.setAbstractDialogView(view);
     };
@@ -291,7 +310,6 @@ class Abstract extends Component {
                             isAnnotationFailedLoading={this.state.isAnnotationFailedLoading}
                             handleChangeCertaintyThreshold={this.handleChangeCertaintyThreshold}
                             classOptions={this.state.classOptions}
-                            handleChangeClassOptions={this.handleChangeClassOptions}
                             annotationError={this.state.annotationError}
                             getClassColor={this.getClassColor}
                         />

@@ -11,6 +11,7 @@ class AnnotationTootip extends Component {
         super(props);
 
         this.tippyInstance = React.createRef();
+        this.reactSelectInstance = React.createRef();
     }
 
     render() {
@@ -55,13 +56,19 @@ class AnnotationTootip extends Component {
                     followCursor={true}
                     plugins={[followCursor]}
                     arrow={true}
+                    onHide={() => {
+                        if (this.reactSelectInstance) {
+                            this.reactSelectInstance.blur();
+                        }
+                    }}
                     interactive={true}
                     onCreate={instance => (this.tippyInstance.current = instance)}
                     content={
                         <AsyncCreatableSelect
+                            ref={instance => (this.reactSelectInstance = instance)}
                             loadOptions={this.props.loadOptions}
                             value={{
-                                label: this.props.range.class.label,
+                                label: this.props.range.class.label ? this.props.range.class.label : 'Select or type something...',
                                 id: this.props.range.class.id,
                                 certainty: this.props.range.certainty,
                                 range_id: this.props.range.id
@@ -74,10 +81,9 @@ class AnnotationTootip extends Component {
                             }}
                             key={value => value}
                             cacheOptions
-                            defaultOptions={this.props.defaultOptions}
+                            defaultOptions={true}
                             isClearable
                             openMenuOnClick={false}
-                            placeholder="Select or type something..."
                             styles={customStyles}
                         />
                     }
@@ -101,8 +107,7 @@ AnnotationTootip.propTypes = {
     handleValidateAnnotation: PropTypes.func,
     loadOptions: PropTypes.func,
     getClassColor: PropTypes.func.isRequired,
-    theme: PropTypes.object.isRequired,
-    defaultOptions: PropTypes.array.isRequired
+    theme: PropTypes.object.isRequired
 };
 
 export default withTheme(AnnotationTootip);

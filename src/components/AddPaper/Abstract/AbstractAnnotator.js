@@ -62,7 +62,7 @@ class AbstractAnnotator extends Component {
     loadOptions = async value => {
         try {
             if (value === '' || value.trim() === '') {
-                return [];
+                return this.props.classOptions;
             }
 
             let queryParams = '';
