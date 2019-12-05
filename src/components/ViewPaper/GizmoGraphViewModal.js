@@ -273,6 +273,8 @@ class GraphView extends Component {
     };
 
     handleDepthChange = event => {
+        console.log('depth spinner onChange event');
+        console.log(event);
         if (event.target.value) {
             this.setState({ depth: parseInt(event.target.value) });
         } // make sure the value is an integer
@@ -343,6 +345,12 @@ class GraphView extends Component {
                                         name="select"
                                         id="depth"
                                         onChange={this.handleDepthChange}
+                                        onKeyDown={event => {
+                                            // prevent the reload when enter is pressed
+                                            if (event.keyCode === 13) {
+                                                event.preventDefault();
+                                            }
+                                        }}
                                         value={this.state.depth}
                                         style={{ width: 60 }}
                                         min="1"
@@ -438,7 +446,6 @@ class GraphView extends Component {
                             updateDepthRange={this.updateDepthRange}
                             maxDepth={this.state.maxDepth}
                             layout={this.state.layout}
-                            layoutReload={this.state.layoutReload}
                             graph={{ nodes: this.state.nodes, edges: this.state.edges }}
                             initializeGraph={this.state.initializeGraph}
                             graphVis={this.graphVis}
