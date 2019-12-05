@@ -273,8 +273,6 @@ class GraphView extends Component {
     };
 
     handleDepthChange = event => {
-        console.log('depth spinner onChange event');
-        console.log(event);
         if (event.target.value) {
             this.setState({ depth: parseInt(event.target.value) });
         } // make sure the value is an integer
