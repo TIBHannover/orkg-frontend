@@ -388,13 +388,14 @@ export const updateUserInformation = ({ email, displayName }) => {
     return submitPutRequest(`${authenticationUrl}user/`, headers, data);
 };
 
-export const updateUserPassword = ({ password, newPassword, confirmNewPassword }) => {
+export const updateUserPassword = ({ oldPassword, newPassword, confirmNewPassword }) => {
     const headers = { 'Content-Type': 'application/json' };
 
     const data = {
-        password: newPassword,
+        old_password: oldPassword,
+        new_password: newPassword,
         matching_password: confirmNewPassword
     };
 
-    return submitPutRequest(`${authenticationUrl}user/`, headers, data);
+    return submitPutRequest(`${authenticationUrl}user/password/`, headers, data);
 };

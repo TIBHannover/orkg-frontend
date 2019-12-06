@@ -10,7 +10,7 @@ class Password extends Component {
         super(props);
 
         this.state = {
-            password: '',
+            oldPassword: '',
             newPassword: '',
             confirmNewPassword: '',
             loading: false,
@@ -25,9 +25,9 @@ class Password extends Component {
     };
 
     handleSave = async () => {
-        const { password, newPassword, confirmNewPassword } = this.state;
+        const { oldPassword, newPassword, confirmNewPassword } = this.state;
 
-        if (!password || !newPassword || !confirmNewPassword) {
+        if (!oldPassword || !newPassword || !confirmNewPassword) {
             this.setState({
                 error: 'Please fill out all fields'
             });
@@ -47,11 +47,12 @@ class Password extends Component {
 
         try {
             await updateUserPassword({
-                password,
+                oldPassword,
                 newPassword,
                 confirmNewPassword
             });
         } catch (err) {
+            console.log(err);
             this.setState({
                 error: 'Something went wrong, please try again',
                 loading: false
@@ -63,7 +64,7 @@ class Password extends Component {
         this.setState({
             error: '',
             loading: false,
-            password: '',
+            oldPassword: '',
             newPassword: '',
             confirmNewPassword: ''
         });
@@ -80,8 +81,8 @@ class Password extends Component {
                         onChange={this.handleInputChange}
                         value={this.state.password}
                         type="password"
-                        name="password"
-                        id="password"
+                        name="oldPassword"
+                        id="oldPassword"
                         placeholder="Current password"
                     />
                 </FormGroup>
