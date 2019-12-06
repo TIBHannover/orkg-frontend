@@ -30,7 +30,6 @@ class GizMOGraph extends Component {
     }
 
     componentDidUpdate = prevProps => {
-        // checking if some properties have changed (excluding the 'graph')
         let nonEqualItems = 0;
         for (let name in prevProps) {
             if (prevProps.hasOwnProperty(name) && this.props.hasOwnProperty(name)) {
@@ -52,6 +51,8 @@ class GizMOGraph extends Component {
                 }
                 const newDepthValue = parseInt(this.props.depth) + 1;
                 this.graphVis.filterGraphByDepth(newDepthValue);
+                // TODO could be optimized not to be called on reloading data from loading statements
+                // console.log('called filterGraph by Depth' + newDepthValue);
             }
         }
     };

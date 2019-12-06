@@ -98,7 +98,7 @@ class RDFDataCube extends Component {
                             statement =>
                                 statement.predicate.label.toLowerCase() === 'dataset' && statement.subject.classes.includes(classes['qb:Observation'])
                         );
-                        // Fetch the data of each observation
+                        // Fetch the data of each observation todo : check for const correctness
                         const observations_data = observations.map(observation => {
                             return getStatementsBySubject({ id: observation.subject.id }).then(observationStatements => {
                                 // Measure
@@ -136,7 +136,7 @@ class RDFDataCube extends Component {
                                         ...os_a.map(o_a => {
                                             return { id: o_a.object.id, label: o_a.object.label, type: o_a.object._class };
                                         })
-                                    ] // Ressource labels
+                                    ] // Resource labels
                                 };
                                 return ob;
                             });

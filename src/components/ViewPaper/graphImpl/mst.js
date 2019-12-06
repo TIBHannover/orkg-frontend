@@ -66,7 +66,7 @@ export default class MinimumSpanningTree {
                         if (nextDepth > this.maxDepth) {
                             this.maxDepth = nextDepth;
                         }
-                        child.rangeNode().setDepth(currentRoot.getDepth() + 1);
+                        child.rangeNode().setDepth(nextDepth);
                         propagateArray.push(child.rangeNode());
                     }
                 });

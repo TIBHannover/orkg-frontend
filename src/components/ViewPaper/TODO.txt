@@ -1,4 +1,6 @@
-[ FIX MST COMPUTATION !]
+[ ]add correct icons
+
+[x][ FIX MST COMPUTATION !]
 
 Memory Management:
  --> clear graph data [x]

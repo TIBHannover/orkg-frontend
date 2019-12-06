@@ -93,21 +93,31 @@ class GraphView extends Component {
         //contributions
         if (Object.keys(contributions['byId']).length) {
             for (let contributionId in contributions['byId']) {
-                let contribution = contributions['byId'][contributionId];
+                if (contributions['byId'].hasOwnProperty(contributionId)) {
+                    let contribution = contributions['byId'][contributionId];
 
-                nodes.push({ id: contribution.resourceId, label: contribution.label, title: contribution.label });
-                edges.push({ from: 'title', to: contribution.resourceId, label: 'has contribution' });
+                    nodes.push({ id: contribution.resourceId, label: contribution.label, title: contribution.label });
+                    edges.push({ from: 'title', to: contribution.resourceId, label: 'has contribution' });
 
-                //research problems
-                for (let problem of contribution.researchProblems) {
-                    nodes.push({ id: contribution.resourceId + problem.label, label: problem.label, title: problem.label });
-                    edges.push({ from: contribution.resourceId, to: contribution.resourceId + problem.label, label: 'has research problem' });
+                    //research problems
+                    for (let problem of contribution.researchProblems) {
+                        nodes.push({
+                            id: contribution.resourceId + problem.label,
+                            label: problem.label,
+                            title: problem.label
+                        });
+                        edges.push({
+                            from: contribution.resourceId,
+                            to: contribution.resourceId + problem.label,
+                            label: 'has research problem'
+                        });
+                    }
+
+                    //contribution statements
+                    let statements = this.addPaperStatementsToGraph(contribution.resourceId, [], []);
+                    nodes.push(...statements.nodes);
+                    edges.push(...statements.edges);
                 }
-
-                //contribution statements
-                let statements = this.addPaperStatementsToGraph(contribution.resourceId, [], []);
-                nodes.push(...statements.nodes);
-                edges.push(...statements.edges);
             }
         }
 

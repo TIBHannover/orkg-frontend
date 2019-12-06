@@ -249,10 +249,7 @@ class Abstract extends Component {
             });
         }
         // Add the statements to the selected contribution
-        this.props.prefillStatements({
-            statements,
-            resourceId: this.props.contributions.byId[this.props.selectedContribution].resourceId
-        });
+        this.props.prefillStatements({ statements, resourceId: this.props.contributions.byId[this.props.selectedContribution].resourceId });
         this.props.toggleAbstractDialog();
     };
 

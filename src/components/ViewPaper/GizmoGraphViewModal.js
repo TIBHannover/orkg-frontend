@@ -20,7 +20,6 @@ class GraphView extends Component {
         this.child = React.createRef();
         this.seenDepth = -1;
         this.graphVis = new GraphVis();
-        this.objectLevelLoadingStatements = false;
         this.updateDepthRange = this.updateDepthRange.bind(this);
     }
 
@@ -45,25 +44,17 @@ class GraphView extends Component {
         this.updateDimensions();
     }
 
-    // componentWillUpdate = (nextProps, nextState) => {
-    //     if (nextState.depth > this.seenDepth) {
-    //         this.objectLevelLoadingStatements = true;
-    //     }
-    // };
-
     componentDidUpdate = (prevProps, prevState) => {
         // load statements again if depth is changed
         if (prevState.depth < this.state.depth) {
             this.loadStatements().then(() => {
+                // todo remove code duplication >> create function for that
                 if (this.child && this.child.current) {
                     this.child.current.propagateDepthMaxValue(this.graphVis.getMaxDepth());
                     this.graphVis.ensureLayoutConsistency(this.state.layout);
                 }
                 this.seenDepth = this.graphVis.getMaxDepth();
-                this.objectLevelLoadingStatements = false;
             });
-        } else {
-            this.objectLevelLoadingStatements = false;
         }
     };
 
@@ -250,6 +241,7 @@ class GraphView extends Component {
         this.child.current.centerGraphEvent();
     };
 
+    // not used anymore, stays for mem leak analysis (todo)
     clearGraphData = () => {
         this.child.current.clearGraphData();
     };
@@ -314,6 +306,7 @@ class GraphView extends Component {
                     this.loadStatements().then(() => {
                         if (this.child && this.child.current) {
                             this.child.current.propagateDepthMaxValue(this.graphVis.getMaxDepth());
+                            this.graphVis.ensureLayoutConsistency(this.state.layout);
                         }
                         this.seenDepth = this.graphVis.getMaxDepth();
                     });
@@ -439,7 +432,7 @@ class GraphView extends Component {
                     {!this.state.isLoadingStatements && (
                         <GizmoGraph
                             ref={this.child}
-                            isLoadingStatements={this.objectLevelLoadingStatements}
+                            isLoadingStatements={this.state.isLoadingStatements}
                             depth={this.state.depth}
                             updateDepthRange={this.updateDepthRange}
                             maxDepth={this.state.maxDepth}
