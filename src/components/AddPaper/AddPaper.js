@@ -115,8 +115,12 @@ class AddPaper extends Component {
         this.props.resetStatementBrowser();
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate = prevProps => {
         //paperNewResourceId : means paper is saved
+        console.log('>>> AddPaper.js');
+        console.log(this.props);
+        console.log('<<<<>>>>>>> AddPaper.js');
+
         if (!this.props.shouldBlockNavigation && this.props.currentStep > 1 && !this.props.paperNewResourceId) {
             this.props.blockNavigation();
             window.onbeforeunload = () => true;
@@ -124,7 +128,7 @@ class AddPaper extends Component {
         if (!this.props.shouldBlockNavigation && prevProps.shouldBlockNavigation !== this.props.shouldBlockNavigation) {
             window.onbeforeunload = null;
         }
-    }
+    };
 
     componentWillUnmount() {
         window.onbeforeunload = null;
@@ -223,7 +227,11 @@ class AddPaper extends Component {
                     <TransitionGroup exit={false}>{currentStepDetails}</TransitionGroup>
                 </Container>
 
-                <GizmoGraphViewModal showDialog={this.state.showGraphModal} toggle={() => this.toggle('showGraphModal')} />
+                <GizmoGraphViewModal
+                    addPaperVisualization={true}
+                    showDialog={this.state.showGraphModal}
+                    toggle={() => this.toggle('showGraphModal')}
+                />
                 {/*the style display node will hide the help button when the graph view is activated*/}
                 <Help
                     style={this.state.showGraphModal ? { display: 'none' } : {}}

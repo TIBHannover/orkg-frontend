@@ -103,6 +103,11 @@ class GeneralData extends Component {
         }
     }
 
+    componentDidUpdate = (prevProps, prevState) => {
+        console.log('general data has updated');
+        console.log(this.state);
+    };
+
     componentWillUnmount() {
         clearAllBodyScrollLocks();
     }
@@ -208,16 +213,29 @@ class GeneralData extends Component {
                         console.log('Error setting paper data: ', e);
                     }
 
-                    this.setState({
-                        isFetching: false,
-                        showLookupTable: true,
-                        paperTitle,
-                        paperAuthors,
-                        paperPublicationMonth,
-                        paperPublicationYear,
-                        doi: doi,
-                        errors: null
-                    });
+                    this.setState(
+                        {
+                            isFetching: false,
+                            showLookupTable: true,
+                            paperTitle,
+                            paperAuthors,
+                            paperPublicationMonth,
+                            paperPublicationYear,
+                            doi: doi,
+                            errors: null
+                        },
+                        () => {
+                            this.props.updateGeneralData({
+                                title: paperTitle,
+                                authors: paperAuthors,
+                                publicationMonth: paperPublicationMonth,
+                                publicationYear: paperPublicationYear,
+                                doi: doi,
+                                entry: entry,
+                                showLookupTable: true
+                            });
+                        }
+                    );
                 }
             });
     };
