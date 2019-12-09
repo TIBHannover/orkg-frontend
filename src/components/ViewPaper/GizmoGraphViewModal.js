@@ -321,120 +321,114 @@ class GraphView extends Component {
                 style={{ maxWidth: '90%' }}
             >
                 <ModalHeader toggle={this.props.toggle}>
-                    Paper graph visualization
-                    <>
-                        {' '}
-                        {this.props.paperId && (
-                            <Form style={{ display: 'inline-flex' }}>
-                                <FormGroup
-                                    className="d-flex"
-                                    style={{
-                                        marginBottom: -40,
-                                        position: 'absolute',
-                                        zIndex: '999',
-                                        marginLeft: '50px',
-                                        marginTop: '-28px'
+                    <div className={'d-flex'}>
+                        Paper graph visualization
+                        <>
+                            {' '}
+                            {this.props.paperId && (
+                                <Form inline className="ml-4">
+                                    <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                                        <Label for="depth" className="mb-0 mr-2">
+                                            Depth
+                                        </Label>
+                                        <Input
+                                            type="number"
+                                            name="select"
+                                            id="depth"
+                                            size="sm"
+                                            onChange={this.handleDepthChange}
+                                            onKeyDown={event => {
+                                                // prevent the reload when enter is pressed
+                                                if (event.keyCode === 13) {
+                                                    event.preventDefault();
+                                                }
+                                            }}
+                                            value={this.state.depth}
+                                            style={{ width: '60px' }}
+                                            min="1"
+                                            max={this.state.maxDepth}
+                                        />
+                                    </FormGroup>
+                                </Form>
+                            )}
+                            <div style={{ flexDirection: 'row', display: 'flex', flexGrow: '1' }}>
+                                <Button
+                                    color="darkblue"
+                                    size="sm"
+                                    //    className='mb-4 mt-4'
+                                    style={{ margin: '0 10px', flexGrow: '1', display: 'flex' }}
+                                    onClick={this.centerGraph}
+                                >
+                                    <Icon icon={faHome} className="mr-1 align-self-center" /> Center Graph
+                                </Button>
+
+                                {/*/!*<Button*!/*/}
+                                {/*/!*  color='darkblue'*!/*/}
+                                {/*/!*  size='sm'*!/*/}
+                                {/*/!*  //    className='mb-4 mt-4'*!/*/}
+                                {/*/!*  // style={{position:'absolute', left: '450px', marginLeft: '10px'}}*!/*/}
+                                {/*/!*  style={{margin: '0 10px'}}*!/*/}
+                                {/*/!*  onClick={this.clearGraphData}*!/*/}
+                                {/*/!*>*!/*/}
+                                {/*  <Icon icon={faProjectDiagram} className='mr-1'/> Clear Data*/}
+                                {/*</Button>*/}
+                                <Dropdown
+                                    color="darkblue"
+                                    size="sm"
+                                    //    className='mb-4 mt-4'
+                                    style={{ margin: '0 10px', flexGrow: '1', display: 'flex' }}
+                                    isOpen={this.state.layoutSelectionOpen}
+                                    toggle={() => {
+                                        this.setState({ layoutSelectionOpen: !this.state.layoutSelectionOpen });
                                     }}
                                 >
-                                    <Label for="depth" className="align-self-center mb-0 mr-2">
-                                        Depth
-                                    </Label>
-                                    <Input
-                                        type="number"
-                                        name="select"
-                                        id="depth"
-                                        onChange={this.handleDepthChange}
-                                        onKeyDown={event => {
-                                            // prevent the reload when enter is pressed
-                                            if (event.keyCode === 13) {
-                                                event.preventDefault();
-                                            }
-                                        }}
-                                        value={this.state.depth}
-                                        style={{ width: 60 }}
-                                        min="1"
-                                        max={this.state.maxDepth}
-                                    />
-                                </FormGroup>
-                            </Form>
-                        )}
-                        <div style={{ display: 'inline-flex', position: 'absolute', left: '430px', top: '10px' }}>
-                            <Button
-                                color="darkblue"
-                                size="sm"
-                                //    className='mb-4 mt-4'
-                                style={{ margin: '0 10px' }}
-                                onClick={this.centerGraph}
-                            >
-                                <Icon icon={faHome} className="mr-1" /> Center Graph
-                            </Button>
-
-                            {/*/!*<Button*!/*/}
-                            {/*/!*  color='darkblue'*!/*/}
-                            {/*/!*  size='sm'*!/*/}
-                            {/*/!*  //    className='mb-4 mt-4'*!/*/}
-                            {/*/!*  // style={{position:'absolute', left: '450px', marginLeft: '10px'}}*!/*/}
-                            {/*/!*  style={{margin: '0 10px'}}*!/*/}
-                            {/*/!*  onClick={this.clearGraphData}*!/*/}
-                            {/*/!*>*!/*/}
-                            {/*  <Icon icon={faProjectDiagram} className='mr-1'/> Clear Data*/}
-                            {/*</Button>*/}
-                            <Dropdown
-                                color="darkblue"
-                                size="'sm"
-                                //    className='mb-4 mt-4'
-                                style={{ margin: '0 10px' }}
-                                isOpen={this.state.layoutSelectionOpen}
-                                toggle={() => {
-                                    this.setState({ layoutSelectionOpen: !this.state.layoutSelectionOpen });
-                                }}
-                            >
-                                <DropdownToggle caret color="darkblue">
-                                    Layout:
-                                    <Icon icon={this.getLayoutIcon()} className="mr-1" style={{ width: '40px' }} />
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem
-                                        onClick={() => {
-                                            if (this.state.layout === 'force') {
-                                                return;
-                                            }
-                                            this.setState({ layout: 'force' });
-                                        }}
-                                    >
-                                        <Icon icon={faProjectDiagram} className="mr-1" style={{ width: '40px' }} />
-                                        Force Directed
-                                    </DropdownItem>
-                                    <DropdownItem
-                                        onClick={() => {
-                                            if (this.state.layout === 'treeH') {
-                                                // forcing reset of the layout
-                                                this.graphVis.updateLayout('treeH');
-                                                return;
-                                            }
-                                            this.setState({ layout: 'treeH' });
-                                        }}
-                                    >
-                                        <Icon icon={faAngleDoubleLeft} className="mr-1" style={{ width: '40px' }} />
-                                        Horizontal Tree
-                                    </DropdownItem>
-                                    <DropdownItem
-                                        onClick={() => {
-                                            if (this.state.layout === 'treeV') {
-                                                // forcing reset of the layout
-                                                this.graphVis.updateLayout('treeV');
-                                                return;
-                                            }
-                                            this.setState({ layout: 'treeV' });
-                                        }}
-                                    >
-                                        <Icon icon={faAngleDoubleUp} className="mr-1" style={{ width: '40px' }} />
-                                        Vertical Tree
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
-                        </div>
-                    </>
+                                    <DropdownToggle caret color="darkblue">
+                                        Layout:
+                                        <Icon icon={this.getLayoutIcon()} className="mr-1" style={{ width: '40px' }} />
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DropdownItem
+                                            onClick={() => {
+                                                if (this.state.layout === 'force') {
+                                                    return;
+                                                }
+                                                this.setState({ layout: 'force' });
+                                            }}
+                                        >
+                                            <Icon icon={faProjectDiagram} className="mr-1" style={{ width: '40px' }} />
+                                            Force Directed
+                                        </DropdownItem>
+                                        <DropdownItem
+                                            onClick={() => {
+                                                if (this.state.layout === 'treeH') {
+                                                    // forcing reset of the layout
+                                                    this.graphVis.updateLayout('treeH');
+                                                    return;
+                                                }
+                                                this.setState({ layout: 'treeH' });
+                                            }}
+                                        >
+                                            <Icon icon={faAngleDoubleLeft} className="mr-1" style={{ width: '40px' }} />
+                                            Horizontal Tree
+                                        </DropdownItem>
+                                        <DropdownItem
+                                            onClick={() => {
+                                                if (this.state.layout === 'treeV') {
+                                                    // forcing reset of the layout
+                                                    this.graphVis.updateLayout('treeV');
+                                                    return;
+                                                }
+                                                this.setState({ layout: 'treeV' });
+                                            }}
+                                        >
+                                            <Icon icon={faAngleDoubleUp} className="mr-1" style={{ width: '40px' }} />
+                                            Vertical Tree
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </Dropdown>
+                            </div>
+                        </>
+                    </div>
                 </ModalHeader>
                 <ModalBody style={{ padding: '0', minHeight: '100px', height: this.state.windowHeight }}>
                     {!this.state.isLoadingStatements && (
