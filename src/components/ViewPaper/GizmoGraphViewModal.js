@@ -7,7 +7,7 @@ import GizmoGraph from './GizmoGraph';
 import { Modal, ModalHeader, ModalBody, Input, Form, FormGroup, Label, Button } from 'reactstrap';
 import uniqBy from 'lodash/uniqBy';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faProjectDiagram, faAngleDoubleLeft, faAngleDoubleUp } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faProjectDiagram, faAngleDoubleLeft, faAngleDoubleUp, faHome } from '@fortawesome/free-solid-svg-icons';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 // moving GraphVis here in order to maintain the layouts and status related stuff;
@@ -366,7 +366,7 @@ class GraphView extends Component {
                                 style={{ margin: '0 10px' }}
                                 onClick={this.centerGraph}
                             >
-                                <Icon icon={faProjectDiagram} className="mr-1" /> Center Graph
+                                <Icon icon={faHome} className="mr-1" /> Center Graph
                             </Button>
 
                             {/*/!*<Button*!/*/}
