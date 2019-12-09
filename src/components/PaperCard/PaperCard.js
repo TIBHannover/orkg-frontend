@@ -50,6 +50,7 @@ class PaperCard extends Component {
                             </Link>
                         )}
                         <br />
+
                         <small>
                             {this.props.paper.authorNames.length > 0 && (
                                 <>
@@ -63,6 +64,9 @@ class PaperCard extends Component {
                                 {this.props.paper.publicationYear}
                             </i>
                         </small>
+                        {this.props.contribution && this.props.contribution.title !== 'Contribution 1' && (
+                            <small> - {this.props.contribution.title}</small>
+                        )}
                     </Col>
                     <Col sm="3">
                         {this.props.contribution && (

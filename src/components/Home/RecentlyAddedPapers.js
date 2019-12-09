@@ -24,7 +24,7 @@ class RecentlyAddedPapers extends Component {
         }).then(paperStatements => {
             if (paperStatements.length > 0) {
                 // Fetch the data of each paper
-                getStatementsBySubjects(paperStatements.map(p => p.id))
+                getStatementsBySubjects({ ids: paperStatements.map(p => p.id) })
                     .then(papersStatements => {
                         let papers = papersStatements.map(paperStatements => {
                             return get_paper_data(paperStatements.statements);

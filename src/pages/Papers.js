@@ -38,7 +38,7 @@ export default class Papers extends Component {
         }).then(papers => {
             if (papers.length > 0) {
                 // Fetch the data of each paper
-                getStatementsBySubjects(papers.map(p => p.id))
+                getStatementsBySubjects({ ids: papers.map(p => p.id) })
                     .then(papersStatements => {
                         let statements = papersStatements.map(paperStatements => {
                             return get_paper_data(paperStatements.statements);

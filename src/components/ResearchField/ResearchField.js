@@ -73,9 +73,11 @@ class ResearchField extends Component {
             if (result.length > 0) {
                 let parentResearchField = result.find(statement => statement.predicate.id === 'P36');
                 // Fetch the data of each paper
-                getStatementsBySubjects(
-                    result.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD).map(p => p.subject.id)
-                )
+                getStatementsBySubjects({
+                    ids: result
+                        .filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD)
+                        .map(p => p.subject.id)
+                })
                     .then(papersStatements => {
                         let papers = papersStatements.map(paperStatements => {
                             return get_paper_data(paperStatements.statements);

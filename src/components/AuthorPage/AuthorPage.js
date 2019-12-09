@@ -78,9 +78,9 @@ class AuthorPage extends Component {
             // Papers
             if (result.length > 0) {
                 // Fetch the data of each paper
-                getStatementsBySubjects(
-                    result.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR).map(p => p.subject.id)
-                )
+                getStatementsBySubjects({
+                    ids: result.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR).map(p => p.subject.id)
+                })
                     .then(papersStatements => {
                         let papers = papersStatements.map(paperStatements => {
                             return get_paper_data(paperStatements.statements);
