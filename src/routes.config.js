@@ -22,6 +22,7 @@ import ViewPaper from './components/ViewPaper/ViewPaper';
 import Stats from './components/Stats/Stats';
 import UserSettings from './components/UserSettings/UserSettings';
 import UserProfile from './components/UserProfile/UserProfile';
+import FeaturedComparisons from 'components/StaticPages/FeaturedComparisons';
 
 const routes = [
     {
@@ -131,6 +132,10 @@ const routes = [
     {
         path: ROUTES.PREDICATE_DETAILS,
         component: PredicateDetails
+    },
+    {
+        path: ROUTES.FEATURED_COMPARISONS,
+        component: FeaturedComparisons
     },
     {
         path: ROUTES.TPDL,

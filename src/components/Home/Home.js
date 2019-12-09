@@ -4,6 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faStar, faPlus } from '@fortawesome/free-solid-svg-icons';
 import ResearchFieldCards from './ResearchFieldCards';
 import RecentlyAddedPapers from './RecentlyAddedPapers';
+import FeaturedComparisons from './FeaturedComparisons';
 import HomeBannerBg from 'assets/img/home_banner_bg.jpg';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
@@ -83,6 +84,13 @@ class Home extends Component {
                             </div>
                         </Col>
                     </Row>
+                </Container>
+
+                <Container className="box mt-4 p-4">
+                    <h2 className="h5">
+                        <Icon icon={faStar} className="text-primary" /> Featured paper comparisons
+                    </h2>
+                    <FeaturedComparisons />
                 </Container>
             </div>
         );
