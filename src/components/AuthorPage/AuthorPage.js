@@ -3,6 +3,7 @@ import { Container, Row, Col } from 'reactstrap';
 import { getStatementsByObject, getStatementsBySubject } from '../../network';
 import PaperCard from '../PaperCard/PaperCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -64,9 +65,11 @@ class AuthorPage extends Component {
             if (orcidStatement) {
                 orcid = orcidStatement.object.label;
             }
-            this.setState({ author: authorStatements[0].subject, papers: [], loading: false, orcid: orcid }, () => {
-                document.title = `${this.state.author.label} - ORKG`;
-            });
+            if (authorStatements.length > 0) {
+                this.setState({ author: authorStatements[0].subject, papers: [], loading: false, orcid: orcid }, () => {
+                    document.title = `${this.state.author.label} - ORKG`;
+                });
+            }
         });
     };
 
@@ -201,8 +204,18 @@ class AuthorPage extends Component {
                                             <Row className="mt-3">
                                                 <Col className="col-6">
                                                     <AuthorIdentifier>
-                                                        <div className={'key'}>ORCID</div>
-                                                        <div className={'value'}>{this.state.orcid}</div>
+                                                        <div className={'key'}>
+                                                            ORCID <Icon color={'#A6CE39'} icon={faOrcid} />
+                                                        </div>
+                                                        <div className={'value'}>
+                                                            <a
+                                                                href={`https://orcid.org/${this.state.orcid}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                            >
+                                                                {this.state.orcid}
+                                                            </a>
+                                                        </div>
                                                     </AuthorIdentifier>
                                                 </Col>
                                                 {/*
