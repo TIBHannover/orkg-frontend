@@ -197,7 +197,8 @@ class GeneralData extends Component {
                                 }
                                 const newAuthor = {
                                     label: fullname,
-                                    id: fullname
+                                    id: fullname,
+                                    orcid: author.ORCID ? author.ORCID : ''
                                 };
                                 return newAuthor;
                             });

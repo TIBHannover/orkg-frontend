@@ -329,7 +329,7 @@ export const saveAddPaper = data => {
             paper: {
                 title: data.title,
                 doi: data.doi,
-                authors: data.authors.map(author => ({ label: author.label })),
+                authors: data.authors.map(author => ({ label: author.label, ...(author.orcid ? { orcid: author.orcid } : {}) })),
                 publicationMonth: data.publicationMonth,
                 publicationYear: data.publicationYear,
                 researchField: data.selectedResearchField,
