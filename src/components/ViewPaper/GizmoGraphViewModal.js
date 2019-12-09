@@ -46,13 +46,9 @@ class GraphView extends Component {
 
     componentDidUpdate = (prevProps, prevState) => {
         if (this.props.addPaperVisualization === true) {
-            console.log('Component did update for addPaper Visualization');
-            console.log(this.state);
-            console.log('------------------');
-            // use a paperObject ;
-            console.log(this.props.addPaper);
-            if (this.props.addPaper.title !== prevProps.addPaper.title) {
-                this.loadStatements();
+            if (prevProps.showDialog === false && this.props.showDialog === true) {
+                // reload graph data when modal is shown
+                this.visualizeAddPaper();
             }
         }
         // load statements again if depth is changed
@@ -144,9 +140,6 @@ class GraphView extends Component {
         let edges = [];
         const { title, authors, doi, publicationMonth, publicationYear, selectedResearchField, contributions } = this.props.addPaper;
 
-        console.log('calling add Visualize paper');
-        console.log(this.props.addPaper);
-        console.log('--RERENDER GRAPH-------------');
         // title
         nodes.push({ id: 'title', label: title.substring(0, 20), title: title });
 
@@ -207,6 +200,7 @@ class GraphView extends Component {
 
         //  ensure no nodes with duplicate IDs exist
         nodes = uniqBy(nodes, 'id');
+        edges = uniqBy(edges, e => [e.from, e.to, e.label].join());
 
         this.setState({
             nodes,
@@ -328,40 +322,42 @@ class GraphView extends Component {
             >
                 <ModalHeader toggle={this.props.toggle}>
                     Paper graph visualization
-                    {/*{this.props.paperId && (*/}
                     <>
-                        <Form style={{ display: 'inline-flex' }}>
-                            <FormGroup
-                                className="d-flex"
-                                style={{
-                                    marginBottom: -40,
-                                    position: 'absolute',
-                                    zIndex: '999',
-                                    marginLeft: '50px',
-                                    marginTop: '-28px'
-                                }}
-                            >
-                                <Label for="depth" className="align-self-center mb-0 mr-2">
-                                    Depth
-                                </Label>
-                                <Input
-                                    type="number"
-                                    name="select"
-                                    id="depth"
-                                    onChange={this.handleDepthChange}
-                                    onKeyDown={event => {
-                                        // prevent the reload when enter is pressed
-                                        if (event.keyCode === 13) {
-                                            event.preventDefault();
-                                        }
+                        {' '}
+                        {this.props.paperId && (
+                            <Form style={{ display: 'inline-flex' }}>
+                                <FormGroup
+                                    className="d-flex"
+                                    style={{
+                                        marginBottom: -40,
+                                        position: 'absolute',
+                                        zIndex: '999',
+                                        marginLeft: '50px',
+                                        marginTop: '-28px'
                                     }}
-                                    value={this.state.depth}
-                                    style={{ width: 60 }}
-                                    min="1"
-                                    max={this.state.maxDepth}
-                                />
-                            </FormGroup>
-                        </Form>
+                                >
+                                    <Label for="depth" className="align-self-center mb-0 mr-2">
+                                        Depth
+                                    </Label>
+                                    <Input
+                                        type="number"
+                                        name="select"
+                                        id="depth"
+                                        onChange={this.handleDepthChange}
+                                        onKeyDown={event => {
+                                            // prevent the reload when enter is pressed
+                                            if (event.keyCode === 13) {
+                                                event.preventDefault();
+                                            }
+                                        }}
+                                        value={this.state.depth}
+                                        style={{ width: 60 }}
+                                        min="1"
+                                        max={this.state.maxDepth}
+                                    />
+                                </FormGroup>
+                            </Form>
+                        )}
                         <div style={{ display: 'inline-flex', position: 'absolute', left: '430px', top: '10px' }}>
                             <Button
                                 color="darkblue"
@@ -439,7 +435,6 @@ class GraphView extends Component {
                             </Dropdown>
                         </div>
                     </>
-                    {/*// )}*/}
                 </ModalHeader>
                 <ModalBody style={{ padding: '0', minHeight: '100px', height: this.state.windowHeight }}>
                     {!this.state.isLoadingStatements && (
@@ -454,6 +449,7 @@ class GraphView extends Component {
                             initializeGraph={this.state.initializeGraph}
                             graphVis={this.graphVis}
                             graphBgColor={'#ecf0f1'}
+                            addPaperVisualization={this.props.addPaperVisualization}
                         />
                     )}
                     {this.state.isLoadingStatements && (

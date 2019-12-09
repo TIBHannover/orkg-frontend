@@ -103,17 +103,25 @@ class GeneralData extends Component {
         }
     }
 
-    componentDidUpdate = (prevProps, prevState) => {
-        console.log('general data has updated');
-        console.log(this.state);
-    };
-
     componentWillUnmount() {
         clearAllBodyScrollLocks();
     }
 
     disableBody = target => disableBodyScroll();
     enableBody = target => enableBodyScroll();
+
+    //moved callback after stateUpdate into a function
+    updateGlobalStateForVisualization = () => {
+        this.props.updateGeneralData({
+            title: this.state.paperTitle,
+            authors: this.state.paperAuthors,
+            publicationMonth: this.state.paperPublicationMonth,
+            publicationYear: this.state.paperPublicationYear,
+            doi: this.state.doi,
+            entry: this.state.entry,
+            showLookupTable: true
+        });
+    };
 
     //TODO this logic should be placed inside an action creator
     handleLookupClick = async () => {
@@ -225,17 +233,7 @@ class GeneralData extends Component {
                             doi: doi,
                             errors: null
                         },
-                        () => {
-                            this.props.updateGeneralData({
-                                title: paperTitle,
-                                authors: paperAuthors,
-                                publicationMonth: paperPublicationMonth,
-                                publicationYear: paperPublicationYear,
-                                doi: doi,
-                                entry: entry,
-                                showLookupTable: true
-                            });
-                        }
+                        this.updateGlobalStateForVisualization
                     );
                 }
             });
@@ -245,28 +243,40 @@ class GeneralData extends Component {
         if (this.props.isTourOpen) {
             this.requestCloseTour();
         }
-        this.setState({
-            [e.target.name]: e.target.value
-        });
+        this.setState(
+            {
+                [e.target.name]: e.target.value
+            },
+            this.updateGlobalStateForVisualization
+        );
     };
 
     handleMonthChange = e => {
-        this.setState({
-            [e.target.name]: parseInt(e.target.value)
-        });
+        this.setState(
+            {
+                [e.target.name]: parseInt(e.target.value)
+            },
+            this.updateGlobalStateForVisualization
+        );
     };
 
     handleDataEntryClick = selection => {
-        this.setState({
-            dataEntry: selection
-        });
+        this.setState(
+            {
+                dataEntry: selection
+            },
+            this.updateGlobalStateForVisualization
+        );
     };
 
     handleAuthorsChange = tags => {
         tags = tags ? tags : [];
-        this.setState({
-            paperAuthors: tags
-        });
+        this.setState(
+            {
+                paperAuthors: tags
+            },
+            this.updateGlobalStateForVisualization
+        );
     };
 
     handleSkipTour = () => {

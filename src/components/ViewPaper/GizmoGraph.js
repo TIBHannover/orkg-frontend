@@ -31,17 +31,27 @@ class GizMOGraph extends Component {
 
     componentDidUpdate = prevProps => {
         let nonEqualItems = 0;
+        let graphHasChanged = false;
         for (let name in prevProps) {
             if (prevProps.hasOwnProperty(name) && this.props.hasOwnProperty(name)) {
-                if (name === 'graph') {
-                    continue;
-                }
                 const prevItem = prevProps[name];
                 const newItem = this.props[name];
                 if (newItem !== prevItem) {
                     nonEqualItems++;
+                    if (name === 'graph') {
+                        const graph = this.props[name];
+                        graphHasChanged = true;
+                        // verify that the nodes and edges of the graphVis are diffrent
+                        if (this.graphVis.edges === graph.edges && this.graphVis.nodes === graph.nodes) {
+                            graphHasChanged = false;
+                        }
+                    }
                 }
             }
+        }
+        // if graph has changed, we reload its values
+        if (this.props.addPaperVisualization && graphHasChanged === true) {
+            this.graphVis.bindComponentValues(this.props);
         }
 
         if (nonEqualItems > 0) {
@@ -103,7 +113,8 @@ GizMOGraph.propTypes = {
     depth: PropTypes.any.isRequired,
     layout: PropTypes.any.isRequired,
     isLoadingStatements: PropTypes.bool.isRequired,
-    initializeGraph: PropTypes.bool.isRequired
+    initializeGraph: PropTypes.bool.isRequired,
+    addPaperVisualization: PropTypes.bool
 };
 
 export default GizMOGraph;

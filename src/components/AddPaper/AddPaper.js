@@ -117,9 +117,6 @@ class AddPaper extends Component {
 
     componentDidUpdate = prevProps => {
         //paperNewResourceId : means paper is saved
-        console.log('>>> AddPaper.js');
-        console.log(this.props);
-        console.log('<<<<>>>>>>> AddPaper.js');
 
         if (!this.props.shouldBlockNavigation && this.props.currentStep > 1 && !this.props.paperNewResourceId) {
             this.props.blockNavigation();
