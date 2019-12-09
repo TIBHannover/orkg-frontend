@@ -156,7 +156,7 @@ class GraphView extends Component {
         edges.push({ from: 'title', to: 'doi', label: 'has doi' });
 
         //publicationMonth
-        nodes.push({ id: 'publicationMonth', label: publicationMonth, title: publicationMonth });
+        nodes.push({ id: 'publicationMonth', label: publicationMonth, title: publicationMonth, type: 'literal' });
         edges.push({ from: 'title', to: 'publicationMonth', label: 'has publication month' });
 
         //publicationYear
