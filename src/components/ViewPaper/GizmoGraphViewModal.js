@@ -335,7 +335,7 @@ class GraphView extends Component {
                                             type="number"
                                             name="select"
                                             id="depth"
-                                            size="sm"
+                                            bsSize="sm"
                                             onChange={this.handleDepthChange}
                                             onKeyDown={event => {
                                                 // prevent the reload when enter is pressed
