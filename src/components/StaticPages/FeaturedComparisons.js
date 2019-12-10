@@ -80,7 +80,7 @@ class FeaturedComparisons extends Component {
                         <FeaturedComparisonsItem
                             title="QALD4 QA evaluations"
                             description="Multiple question answering systems are compared based on the QALD4 task. Results include the system performance using the F-measure."
-                            paperAmount="17"
+                            paperAmount="5"
                             icon={faCheck}
                             link="/comparison/?contributions=R150179,R150181,R150177,R150175,R150173&properties=P32,P34,P20126,P16002,P20124,P20122,P20123,P20125&transpose=false"
                         />
