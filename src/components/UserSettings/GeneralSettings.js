@@ -1,4 +1,4 @@
-import { Form, FormGroup, Label, Input, Button, Alert } from 'reactstrap';
+import { Form, FormGroup, Label, Input, Button, Alert, FormFeedback } from 'reactstrap';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getUserInformation, updateUserInformation } from '../../network';
@@ -6,6 +6,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { updateAuth } from '../../actions/auth';
+import { get_error_message } from 'utils';
 import { toast } from 'react-toastify';
 
 class GeneralSettings extends Component {
@@ -13,12 +14,12 @@ class GeneralSettings extends Component {
         super(props);
 
         this.state = {
-            displayName: '',
+            display_name: '',
             email: '',
             organization: '',
             bio: '',
             loading: false,
-            error: null
+            errors: null
         };
     }
 
@@ -30,7 +31,7 @@ class GeneralSettings extends Component {
         const userData = await getUserInformation();
 
         this.setState({
-            displayName: userData.display_name,
+            display_name: userData.display_name,
             email: userData.email
         });
     };
@@ -42,9 +43,9 @@ class GeneralSettings extends Component {
     };
 
     handleSave = async () => {
-        const { email, displayName } = this.state;
+        const { email, display_name } = this.state;
 
-        if (!email || !displayName) {
+        if (!display_name) {
             this.setState({
                 error: 'Please fill out all fields'
             });
@@ -52,31 +53,29 @@ class GeneralSettings extends Component {
         }
 
         this.setState({
-            loading: true
+            loading: true,
+            errors: null
         });
 
-        try {
-            await updateUserInformation({
-                email,
-                displayName
+        updateUserInformation({
+            email,
+            display_name
+        })
+            .then(response => {
+                toast.success('Your changes have been saved successfully');
+                this.props.updateAuth({ user: { displayName: display_name } });
+
+                this.setState({
+                    loading: false,
+                    error: ''
+                });
+            })
+            .catch(err => {
+                this.setState({
+                    loading: false,
+                    errors: err
+                });
             });
-        } catch (err) {
-            /*
-      TODO: enable this code, but backend is currently returning an error
-      this.setState({
-        error: 'Something went wrong, please try again',
-        loading: false,
-      });
-      return;*/
-        }
-        toast.success('Your changes have been saved successfully');
-
-        this.props.updateAuth({ user: { displayName: displayName } });
-
-        this.setState({
-            loading: false,
-            error: ''
-        });
     };
 
     render = () => (
@@ -85,15 +84,19 @@ class GeneralSettings extends Component {
             {this.state.error && <Alert color="danger">{this.state.error}</Alert>}
             <Form>
                 <FormGroup>
-                    <Label for="displayName">Display name</Label>
+                    <Label for="display_name">Display name</Label>
                     <Input
                         onChange={this.handleInputChange}
-                        value={this.state.displayName}
+                        value={this.state.display_name}
                         type="email"
-                        name="displayName"
-                        id="displayName"
+                        name="display_name"
+                        id="display_name"
                         placeholder="Display name"
+                        invalid={Boolean(get_error_message(this.state.errors, 'display_name'))}
                     />
+                    {Boolean(get_error_message(this.state.errors, 'display_name')) && (
+                        <FormFeedback>{get_error_message(this.state.errors, 'display_name')}</FormFeedback>
+                    )}
                 </FormGroup>
                 <FormGroup>
                     <Label for="Email">Email address</Label>

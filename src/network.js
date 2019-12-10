@@ -114,7 +114,12 @@ const submitPutRequest = (url, headers, data) => {
         fetch(url, { method: 'PUT', headers: myHeaders, body: JSON.stringify(data) })
             .then(response => {
                 if (!response.ok) {
-                    reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
+                    const json = response.json();
+                    if (json.then) {
+                        json.then(reject);
+                    } else {
+                        reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
+                    }
                 } else {
                     const json = response.json();
                     if (json.then) {
@@ -377,24 +382,24 @@ export const getUserInformation = () => {
     return submitGetRequest(`${authenticationUrl}user/`);
 };
 
-export const updateUserInformation = ({ email, displayName }) => {
+export const updateUserInformation = ({ email, display_name }) => {
     const headers = { 'Content-Type': 'application/json' };
 
     const data = {
         //email, //back doesn't support this
-        display_name: displayName
+        display_name: display_name
     };
 
     return submitPutRequest(`${authenticationUrl}user/`, headers, data);
 };
 
-export const updateUserPassword = ({ oldPassword, newPassword, confirmNewPassword }) => {
+export const updateUserPassword = ({ old_password, new_password, new_matching_password }) => {
     const headers = { 'Content-Type': 'application/json' };
 
     const data = {
-        old_password: oldPassword,
-        new_password: newPassword,
-        matching_password: confirmNewPassword
+        old_password: old_password,
+        new_password: new_password,
+        new_matching_password: new_matching_password
     };
 
     return submitPutRequest(`${authenticationUrl}user/password/`, headers, data);
