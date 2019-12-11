@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import { openTour, closeTour, blockNavigation } from '../../actions/addPaper';
 import { Prompt } from 'react-router';
-import GizmoGraphViewModal from '../ViewPaper/GizmoGraphViewModal';
+import GizmoGraphViewModal from '../ViewPaper/GraphView/GizmoGraphViewModal';
 
 const Help = styled.div`
     box-sizing: border-box;

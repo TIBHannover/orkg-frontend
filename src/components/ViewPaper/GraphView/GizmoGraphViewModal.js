@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getStatementsBySubject } from '../../network';
+import { getStatementsBySubject } from '../../../network';
 import { connect } from 'react-redux';
 import * as PropTypes from 'prop-types';
 // import Graph from 'react-graph-vis';
@@ -11,7 +11,7 @@ import { faSpinner, faProjectDiagram, faAngleDoubleLeft, faAngleDoubleUp, faHome
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 // moving GraphVis here in order to maintain the layouts and status related stuff;
-import GraphVis from './graphImpl/GraphVis';
+import GraphVis from '../../../libs/gizmo/GraphVis';
 
 class GraphView extends Component {
     constructor(props) {

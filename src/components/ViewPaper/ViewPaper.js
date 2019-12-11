@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 import ComparisonPopup from './ComparisonPopup';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import { loadPaper, selectContribution, setPaperAuthors } from '../../actions/viewPaper';
-import GizmoGraphViewModal from './GizmoGraphViewModal';
+import GizmoGraphViewModal from './GraphView/GizmoGraphViewModal';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
 import Confirm from 'reactstrap-confirm';
