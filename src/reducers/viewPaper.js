@@ -57,6 +57,12 @@ export default (state = initialState, action) => {
             };
         }
 
+        case type.SET_PAPER_AUTHORS: {
+            let { payload } = action;
+
+            return dotProp.set(state, 'authors', payload.authors);
+        }
+
         case type.UPDATE_RESEARCH_PROBLEMS: {
             let { payload } = action;
 
