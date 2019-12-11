@@ -78,7 +78,7 @@ export default class Papers extends Component {
                     {this.state.statements.length > 0 && (
                         <div>
                             {this.state.statements.map(resource => {
-                                return <PaperCard paper={{ id: resource.id, title: resource.label, ...resource.data }} key={`pc${resource.id}`} />;
+                                return <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />;
                             })}
                         </div>
                     )}
