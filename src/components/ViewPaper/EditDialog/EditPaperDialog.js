@@ -5,12 +5,12 @@ import {
     updateLiteral,
     createLiteral as createLiteralAPI,
     createLiteralStatement,
-    deleteStatementById,
     submitGetRequest,
     literalsUrl,
     getStatementsByObject,
     createResourceStatement,
-    createResource
+    createResource,
+    deleteStatementsByIds
 } from 'network';
 import { connect } from 'react-redux';
 import EditItem from './EditItem';
@@ -146,9 +146,11 @@ class EditPaperDialog extends Component {
         }
 
         // remove all authors statement from reducer
+        let statementsIds = [];
         for (let author of this.props.viewPaper.authors) {
-            deleteStatementById(author.statementId);
+            statementsIds.push(author.statementId);
         }
+        deleteStatementsByIds(statementsIds);
 
         // Add all authors from the state
         let authors = this.state.authors;
