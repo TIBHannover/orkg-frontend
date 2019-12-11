@@ -46,6 +46,10 @@ const Results = props => {
                 link = reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: resourceId });
                 break;
             }
+            case process.env.REACT_APP_CLASSES_AUTHOR: {
+                link = reverse(ROUTES.AUTHOR_PAGE, { authorId: resourceId });
+                break;
+            }
             case 'resource': {
                 link = '/resource/' + resourceId; //TODO: replace this with a better resource view
                 break;
