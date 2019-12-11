@@ -50,10 +50,11 @@ class PaperCard extends Component {
                             </Link>
                         )}
                         <br />
+
                         <small>
                             {this.props.paper.authorNames.length > 0 && (
                                 <>
-                                    <Icon size={'sm'} icon={faUser} /> {this.props.paper.authorNames.join(', ')} -
+                                    <Icon size={'sm'} icon={faUser} /> {this.props.paper.authorNames.map(a => a.label).join(', ')} -
                                 </>
                             )}
                             <i>
@@ -63,6 +64,9 @@ class PaperCard extends Component {
                                 {this.props.paper.publicationYear}
                             </i>
                         </small>
+                        {this.props.contribution && this.props.contribution.title !== 'Contribution 1' && (
+                            <small> - {this.props.contribution.title}</small>
+                        )}
                     </Col>
                     {this.props.contribution && (
                         <Col sm="3">

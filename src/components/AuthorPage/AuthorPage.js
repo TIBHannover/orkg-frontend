@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Container, Row, Col } from 'reactstrap';
-import { getStatementsByObject, getStatementsBySubject } from '../../network';
+import { Container, Row, Col, Button } from 'reactstrap';
+import { getStatementsByObject, getStatementsBySubjects, getStatementsBySubject } from '../../network';
 import PaperCard from '../PaperCard/PaperCard';
+import { get_paper_data } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faSpinner, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
@@ -86,45 +87,28 @@ class AuthorPage extends Component {
             // Papers
             if (result.length > 0) {
                 // Fetch the data of each paper
-                let papers = result
-                    .filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR)
-                    .map(paper => {
-                        return getStatementsBySubject({ id: paper.subject.id }).then(paperStatements => {
-                            // publication year
-                            let publicationYear = paperStatements.filter(
-                                statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR
-                            );
-                            if (publicationYear.length > 0) {
-                                publicationYear = publicationYear[0].object.label;
-                            } else {
-                                publicationYear = '';
-                            }
-                            // publication month
-                            let publicationMonth = paperStatements.filter(
-                                statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH
-                            );
-                            if (publicationMonth.length > 0) {
-                                publicationMonth = publicationMonth[0].object.label;
-                            } else {
-                                publicationMonth = '';
-                            }
-
-                            paper.subject.data = {
-                                publicationYear,
-                                publicationMonth,
-                                authorNames: [] // just to hide authors
-                            };
-                            return paper.subject;
+                getStatementsBySubjects({
+                    ids: result.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR).map(p => p.subject.id)
+                })
+                    .then(papersStatements => {
+                        let papers = papersStatements.map(paperStatements => {
+                            return get_paper_data(paperStatements.statements);
                         });
+                        this.setState({
+                            papers: [...this.state.papers, ...papers],
+                            isNextPageLoading: false,
+                            hasNextPage: papers.length < this.pageSize || papers.length === 0 ? false : true,
+                            page: this.state.page + 1
+                        });
+                    })
+                    .catch(error => {
+                        this.setState({
+                            isNextPageLoading: false,
+                            hasNextPage: false,
+                            isLastPageReached: true
+                        });
+                        console.log(error);
                     });
-                return Promise.all(papers).then(papers => {
-                    this.setState({
-                        papers: [...this.state.papers, ...papers],
-                        isNextPageLoading: false,
-                        hasNextPage: papers.length < this.pageSize || papers.length === 0 ? false : true,
-                        page: this.state.page + 1
-                    });
-                });
             } else {
                 this.setState({
                     isNextPageLoading: false,
@@ -205,22 +189,19 @@ class AuthorPage extends Component {
                                         {this.state.papers.length > 0 && (
                                             <div>
                                                 {this.state.papers.map(resource => {
-                                                    return (
-                                                        <PaperCard
-                                                            paper={{ id: resource.id, title: resource.label, ...resource.data }}
-                                                            key={`pc${resource.id}`}
-                                                        />
-                                                    );
+                                                    return <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />;
                                                 })}
                                             </div>
                                         )}
                                         {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                                            <div
-                                                style={{ cursor: 'pointer' }}
-                                                className="list-group-item list-group-item-action text-center mt-2"
-                                                onClick={!this.state.isNextPageLoading ? this.loadMorePapers : undefined}
-                                            >
-                                                View more papers
+                                            <div className="text-center mt-2">
+                                                <Button
+                                                    size="sm"
+                                                    color="darkblue"
+                                                    onClick={!this.state.isNextPageLoading ? this.loadMorePapers : undefined}
+                                                >
+                                                    View more papers
+                                                </Button>
                                             </div>
                                         )}
                                     </div>

@@ -211,6 +211,18 @@ export const updateStatement = (id, { subject_id = null, predicate_id = null, ob
     );
 };
 
+export const updateStatements = (statementIds, { subject_id = null, predicate_id = null, object_id = null }) => {
+    return submitPutRequest(
+        `${statementsUrl}?ids=${statementIds.join()}`,
+        { 'Content-Type': 'application/json' },
+        {
+            ...(subject_id ? { subject_id: subject_id } : null),
+            ...(predicate_id ? { predicate_id: predicate_id } : null),
+            ...(object_id ? { object_id: object_id } : null)
+        }
+    );
+};
+
 export const createPredicate = label => {
     return submitPostRequest(predicatesUrl, { 'Content-Type': 'application/json' }, { label: label });
 };
@@ -264,6 +276,12 @@ export const getStatementsBySubject = ({ id, page = 1, items = 9999, sortBy = 'c
     let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
 
     return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`);
+};
+
+export const getStatementsBySubjects = ({ ids, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
+    let params = queryString.stringify({ ids: ids.join(), page: page, items: items, sortBy: sortBy, desc: desc });
+
+    return submitGetRequest(`${statementsUrl}subjects/?${params}`);
 };
 
 export const getStatementsByObject = async ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
