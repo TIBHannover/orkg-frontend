@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Alert, UncontrolledAlert, ButtonGroup, Badge } from 'reactstrap';
+import { Container, Button, Alert, UncontrolledAlert, ButtonGroup } from 'reactstrap';
 import { getStatementsBySubject, getResource, updateResource, createResource, createResourceStatement, deleteStatementById } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 import ComparisonPopup from './ComparisonPopup';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import { loadPaper, selectContribution, setPaperAuthors } from '../../actions/viewPaper';
-import GraphViewModal from './GraphViewModal';
+import GizmoGraphViewModal from './GraphView/GizmoGraphViewModal';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
 import Confirm from 'reactstrap-confirm';
@@ -398,14 +398,14 @@ class ViewPaper extends Component {
                                     {this.props.viewPaper.authors.map((author, index) =>
                                         author.classes && author.classes.includes(process.env.REACT_APP_CLASSES_AUTHOR) ? (
                                             <Link key={index} to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}>
-                                                <Badge color="lightblue" className="mr-2 mb-2" key={index}>
+                                                <span className="badge badge-lightblue mr-2 mb-2" key={index}>
                                                     <Icon icon={faUser} className="text-primary" /> {author.label}
-                                                </Badge>
+                                                </span>
                                             </Link>
                                         ) : (
-                                            <Badge color="lightblue" className="mr-2 mb-2" key={index}>
-                                                <Icon icon={faUser} className="text-darkblue" /> {author.label}
-                                            </Badge>
+                                            <span className="badge badge-lightblue mr-2 mb-2" key={index}>
+                                                <Icon icon={faUser} className="text-primary" /> {author.label}
+                                            </span>
                                         )
                                     )}
                                     <br />
@@ -452,7 +452,7 @@ class ViewPaper extends Component {
                     </>
                 )}
 
-                <GraphViewModal
+                <GizmoGraphViewModal
                     showDialog={this.state.showGraphModal}
                     toggle={() => this.toggle('showGraphModal')}
                     paperId={this.props.match.params.resourceId}

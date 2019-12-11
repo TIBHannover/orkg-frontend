@@ -2,7 +2,7 @@
 
 (Summarize the bug encountered concisely)
 
-### When bug occures (steps to reproduce).
+### When bug occurs (steps to reproduce).
 
 (How one can reproduce the issue)
 

@@ -103,8 +103,8 @@ class AutoComplete extends Component {
     };
 
     // this fixes a problem (or a bug by design) from react-select
-    // options were lost after bluring and then focusing the select menu
-    // probably because the inputvalue is controlled by this component
+    // options were lost after blurring and then focusing the select menu
+    // probably because the inputValue is controlled by this component
     loadDefaultOptions = async inputValue => {
         const defaultOptions = await this.loadOptions(inputValue);
 

@@ -5,12 +5,12 @@ import {
     updateLiteral,
     createLiteral as createLiteralAPI,
     createLiteralStatement,
+    deleteStatementById,
     submitGetRequest,
     literalsUrl,
     getStatementsByObject,
     createResourceStatement,
-    createResource,
-    deleteStatementsByIds
+    createResource
 } from 'network';
 import { connect } from 'react-redux';
 import EditItem from './EditItem';
@@ -146,11 +146,9 @@ class EditPaperDialog extends Component {
         }
 
         // remove all authors statement from reducer
-        let statementsIds = [];
         for (let author of this.props.viewPaper.authors) {
-            statementsIds.push(author.statementId);
+            deleteStatementById(author.statementId);
         }
-        deleteStatementsByIds(statementsIds);
 
         // Add all authors from the state
         let authors = this.state.authors;
@@ -169,10 +167,8 @@ class EditPaperDialog extends Component {
                         process.env.REACT_APP_PREDICATES_HAS_AUTHOR,
                         authorResource.subject.id
                     );
-                    authors[i].statementId = authorStatement.id;
-                    authors[i].id = authorResource.subject.id;
-                    authors[i].class = authorResource.subject._class;
-                    authors[i].classes = authorResource.subject.classes;
+                    authors[i].id = authorStatement.id;
+                    authors[i].resourceId = authorResource.subject.id;
                 } else {
                     // Author resource doesn't exist
                     // Create resource author
@@ -184,10 +180,8 @@ class EditPaperDialog extends Component {
                         process.env.REACT_APP_PREDICATES_HAS_AUTHOR,
                         authorResource.id
                     );
-                    authors[i].statementId = authorStatement.id;
-                    authors[i].id = authorResource.id;
-                    authors[i].class = authorResource._class;
-                    authors[i].classes = authorResource.classes;
+                    authors[i].id = authorStatement.id;
+                    authors[i].resourceId = authorResource.id;
                 }
             } else {
                 // Author resource doesn't exist
@@ -198,10 +192,7 @@ class EditPaperDialog extends Component {
                     process.env.REACT_APP_PREDICATES_HAS_AUTHOR,
                     newLiteral.id
                 );
-                authors[i].statementId = authorStatement.id;
-                authors[i].id = newLiteral.id;
-                authors[i].class = authorStatement.object._class;
-                authors[i].classes = authorStatement.object.classes;
+                authors[i].id = authorStatement.id;
             }
         }
 

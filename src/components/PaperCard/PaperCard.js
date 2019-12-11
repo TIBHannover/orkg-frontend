@@ -38,7 +38,7 @@ class PaperCard extends Component {
                 }
             >
                 <Row>
-                    <Col sm={this.props.contribution ? 9 : 12}>
+                    <Col sm="9">
                         {this.props.contribution && (
                             <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paper.id, contributionId: this.props.contribution.id })}>
                                 {this.props.paper.title ? this.props.paper.title : <em>No title</em>}
@@ -50,11 +50,10 @@ class PaperCard extends Component {
                             </Link>
                         )}
                         <br />
-
                         <small>
                             {this.props.paper.authorNames.length > 0 && (
                                 <>
-                                    <Icon size={'sm'} icon={faUser} /> {this.props.paper.authorNames.map(a => a.label).join(', ')} -
+                                    <Icon size={'sm'} icon={faUser} /> {this.props.paper.authorNames.join(', ')} -
                                 </>
                             )}
                             <i>
@@ -64,12 +63,9 @@ class PaperCard extends Component {
                                 {this.props.paper.publicationYear}
                             </i>
                         </small>
-                        {this.props.contribution && this.props.contribution.title !== 'Contribution 1' && (
-                            <small> - {this.props.contribution.title}</small>
-                        )}
                     </Col>
-                    {this.props.contribution && (
-                        <Col sm="3">
+                    <Col sm="3">
+                        {this.props.contribution && (
                             <div className="options">
                                 <AddToComparison
                                     contributionId={this.props.contribution.id}
@@ -78,8 +74,8 @@ class PaperCard extends Component {
                                     contributionTitle={this.props.contribution.title}
                                 />
                             </div>
-                        </Col>
-                    )}
+                        )}
+                    </Col>
                 </Row>
             </PaperCardStyled>
         );

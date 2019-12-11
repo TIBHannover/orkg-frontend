@@ -80,7 +80,7 @@ class Contributions extends Component {
         });
         getSimilaireContribution(this.state.selectedContribution)
             .then(similaireContributions => {
-                var similaireContributionsData = similaireContributions.map(paper => {
+                const similaireContributionsData = similaireContributions.map(paper => {
                     // Fetch the data of each paper
                     return getResource(paper.paperId).then(paperResource => {
                         paper.title = paperResource.label;

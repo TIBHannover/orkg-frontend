@@ -240,13 +240,14 @@ class AuthorsInput extends Component {
                     <ModalBody>
                         <FormGroup>
                             <Label for="authorInput">
-                                Enter author name <b>or</b> ORCID <Icon color={'#A6CE39'} icon={faOrcid} />
+                                Name <b>or</b> ORCID <Icon color={'#A6CE39'} icon={faOrcid} />
                             </Label>
                             <Input
                                 onChange={this.handleChange}
                                 type="text"
                                 name="authorInput"
                                 id="authorInput"
+                                placeholder="Enter author name or ORCID"
                                 value={this.state.authorInput}
                                 invalid={Boolean(get_error_message(this.state.errors, 'authorInput'))}
                             />
@@ -256,11 +257,11 @@ class AuthorsInput extends Component {
                         </FormGroup>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="light" onClick={() => this.toggle('showAuthorForm')}>
-                            Cancel
-                        </Button>{' '}
                         <Button disabled={this.state.authorNameLoading} color="primary" onClick={() => this.saveAuthor()}>
                             {!this.state.authorNameLoading ? this.state.editMode ? 'Save' : 'Add' : <Icon icon={faSpinner} spin />}
+                        </Button>{' '}
+                        <Button color="secondary" onClick={() => this.toggle('showAuthorForm')}>
+                            Cancel
                         </Button>
                     </ModalFooter>
                 </Modal>

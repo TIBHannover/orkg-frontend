@@ -78,7 +78,7 @@ export default class Papers extends Component {
                     {this.state.statements.length > 0 && (
                         <div>
                             {this.state.statements.map(resource => {
-                                return <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />;
+                                return <PaperCard paper={{ id: resource.id, title: resource.label, ...resource.data }} key={`pc${resource.id}`} />;
                             })}
                         </div>
                     )}
@@ -91,7 +91,7 @@ export default class Papers extends Component {
                     {!this.state.isNextPageLoading && this.state.hasNextPage && (
                         <div
                             style={{ cursor: 'pointer' }}
-                            className="list-group-item list-group-item-action text-center mt-2 rounded"
+                            className="list-group-item list-group-item-action text-center mt-2"
                             onClick={!this.state.isNextPageLoading ? this.loadMorePapers : undefined}
                         >
                             Load more papers
