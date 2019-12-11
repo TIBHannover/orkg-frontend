@@ -214,7 +214,7 @@ class ResearchProblem extends Component {
                             {!this.state.isNextPageLoading && this.state.hasNextPage && (
                                 <div
                                     style={{ cursor: 'pointer' }}
-                                    className="list-group-item list-group-item-action text-center mt-2"
+                                    className="list-group-item list-group-item-action text-center mt-2 rounded"
                                     onClick={!this.state.isNextPageLoading ? this.loadMorePapers : undefined}
                                 >
                                     Load more papers
