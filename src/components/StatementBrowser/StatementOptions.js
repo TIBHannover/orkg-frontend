@@ -3,7 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
 import { deleteProperty, toggleEditPropertyLabel } from '../../actions/statementBrowser';
-import { deleteStatementById } from '../../network';
+import { deleteStatementsByIds } from '../../network';
 import Confirm from 'reactstrap-confirm';
 import { toast } from 'react-toastify';
 import Tippy from '@tippy.js/react';
@@ -42,10 +42,11 @@ class StatementOptions extends Component {
             if (this.props.syncBackend) {
                 // Delete All related statements
                 if (property.valueIds.length > 0) {
+                    let statementsIds = [];
                     for (let valueId of property.valueIds) {
-                        let value = this.props.values.byId[valueId];
-                        deleteStatementById(value.statementId);
+                        statementsIds.push(this.props.values.byId[valueId].statementId);
                     }
+                    deleteStatementsByIds(statementsIds);
                     toast.success(`${property.valueIds.length} ${property.valueIds.length === 1 ? 'Statement' : 'Statements'} deleted successfully`);
                 }
             }
