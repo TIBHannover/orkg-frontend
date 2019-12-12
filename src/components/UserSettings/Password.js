@@ -30,14 +30,14 @@ class Password extends Component {
 
         if (!old_password || !new_password || !new_matching_password) {
             this.setState({
-                error: 'Please fill out all fields'
+                errors: { message: 'Please fill out all fields' }
             });
             return;
         }
 
         if (new_password !== new_matching_password) {
             this.setState({
-                error: 'The new passwords are not matching'
+                errors: { message: 'The new passwords are not matching' }
             });
             return;
         }

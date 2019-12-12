@@ -47,7 +47,7 @@ class GeneralSettings extends Component {
 
         if (!display_name) {
             this.setState({
-                error: 'Please fill out all fields'
+                errors: { message: 'Please fill out all fields' }
             });
             return;
         }
@@ -67,7 +67,7 @@ class GeneralSettings extends Component {
 
                 this.setState({
                     loading: false,
-                    error: ''
+                    errors: null
                 });
             })
             .catch(err => {
@@ -81,14 +81,13 @@ class GeneralSettings extends Component {
     render = () => (
         <>
             <h5 className="mb-4">General account settings</h5>
-            {this.state.error && <Alert color="danger">{this.state.error}</Alert>}
+            {Boolean(get_error_message(this.state.errors)) && <Alert color="danger">{get_error_message(this.state.errors)}</Alert>}
             <Form>
                 <FormGroup>
                     <Label for="display_name">Display name</Label>
                     <Input
                         onChange={this.handleInputChange}
                         value={this.state.display_name}
-                        type="email"
                         name="display_name"
                         id="display_name"
                         placeholder="Display name"
@@ -107,9 +106,11 @@ class GeneralSettings extends Component {
                         name="email"
                         id="Email"
                         placeholder="Email address"
+                        disabled
                     />
                 </FormGroup>
-                {/*<FormGroup>
+                {/*
+                <FormGroup>
           <Label for="organization">Organization</Label>
           <Input
             onChange={this.handleInputChange}
