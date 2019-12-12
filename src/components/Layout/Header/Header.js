@@ -20,8 +20,7 @@ import {
 import { Link, NavLink as RouterNavLink } from 'react-router-dom';
 import { ReactComponent as Logo } from '../../../assets/img/logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
-// import { faChevronDown, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faUser } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from '../../../constants/routes.js';
 import { Cookies } from 'react-cookie';
 import Gravatar from 'react-gravatar';
@@ -159,7 +158,7 @@ class Header extends Component {
                         <Nav className="mr-auto" navbar>
                             <NavItem>
                                 <NavLink tag={RouterNavLink} exact to={ROUTES.PAPERS}>
-                                    View all papers
+                                    Papers
                                     {/* TODO: add taxonomy "Browse by research field" <FontAwesomeIcon icon={faSortDown} pull="right" /> */}
                                 </NavLink>
                             </NavItem>
@@ -196,7 +195,7 @@ class Header extends Component {
 
                         <SearchForm placeholder="Search..." />
 
-                        <Button color="primary" className="pl-4 pr-4" tag={Link} to={ROUTES.ADD_PAPER.GENERAL_DATA}>
+                        <Button color="primary" className="mr-3 pl-4 pr-4" tag={Link} to={ROUTES.ADD_PAPER.GENERAL_DATA}>
                             Add paper
                         </Button>
 
@@ -238,12 +237,12 @@ class Header extends Component {
                             </div>
                         )}
 
-                        {/*!this.props.user && (
+                        {!this.props.user && (
                             <Button color="darkblue" className="pl-4 pr-4" outline onClick={() => this.props.openAuthDialog('signin')}>
                                 {' '}
                                 <FontAwesomeIcon className="mr-1" icon={faUser} /> Sign in
                             </Button>
-                        )*/}
+                        )}
                     </Collapse>
 
                     <Authentication />
