@@ -400,11 +400,11 @@ export const registerWithEmailAndPassword = (email, password, matching_password,
         matching_password: matching_password
     };
 
-    return submitPostRequest(`${authenticationUrl}auth/register`, headers, data, true, false);
+    return submitPostRequest(`${url}auth/register`, headers, data, true, false);
 };
 
 export const getUserInformation = () => {
-    return submitGetRequest(`${authenticationUrl}user/`);
+    return submitGetRequest(`${url}user/`);
 };
 
 export const updateUserInformation = ({ email, display_name }) => {
@@ -415,17 +415,17 @@ export const updateUserInformation = ({ email, display_name }) => {
         display_name: display_name
     };
 
-    return submitPutRequest(`${authenticationUrl}user/`, headers, data);
+    return submitPutRequest(`${url}user/`, headers, data);
 };
 
-export const updateUserPassword = ({ old_password, new_password, new_matching_password }) => {
+export const updateUserPassword = ({ current_password, new_password, new_matching_password }) => {
     const headers = { 'Content-Type': 'application/json' };
 
     const data = {
-        old_password: old_password,
+        current_password: current_password,
         new_password: new_password,
         new_matching_password: new_matching_password
     };
 
-    return submitPutRequest(`${authenticationUrl}user/password/`, headers, data);
+    return submitPutRequest(`${url}user/password/`, headers, data);
 };

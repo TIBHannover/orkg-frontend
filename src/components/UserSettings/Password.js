@@ -11,7 +11,7 @@ class Password extends Component {
         super(props);
 
         this.state = {
-            old_password: '',
+            current_password: '',
             new_password: '',
             new_matching_password: '',
             loading: false,
@@ -26,9 +26,9 @@ class Password extends Component {
     };
 
     handleSave = async () => {
-        const { old_password, new_password, new_matching_password } = this.state;
+        const { current_password, new_password, new_matching_password } = this.state;
 
-        if (!old_password || !new_password || !new_matching_password) {
+        if (!current_password || !new_password || !new_matching_password) {
             this.setState({
                 errors: { message: 'Please fill out all fields' }
             });
@@ -47,7 +47,7 @@ class Password extends Component {
         });
 
         updateUserPassword({
-            old_password,
+            current_password,
             new_password,
             new_matching_password
         })
@@ -56,7 +56,7 @@ class Password extends Component {
                 this.setState({
                     errors: '',
                     loading: false,
-                    old_password: '',
+                    current_password: '',
                     new_password: '',
                     new_matching_password: ''
                 });
@@ -75,18 +75,18 @@ class Password extends Component {
             {Boolean(get_error_message(this.state.errors)) && <Alert color="danger">{get_error_message(this.state.errors)}</Alert>}
             <Form>
                 <FormGroup>
-                    <Label for="old_password">Current password</Label>
+                    <Label for="current_password">Current password</Label>
                     <Input
                         onChange={this.handleInputChange}
-                        value={this.state.old_password}
+                        value={this.state.current_password}
                         type="password"
-                        name="old_password"
-                        id="old_password"
+                        name="current_password"
+                        id="current_password"
                         placeholder="Current password"
-                        invalid={Boolean(get_error_message(this.state.errors, 'old_password'))}
+                        invalid={Boolean(get_error_message(this.state.errors, 'current_password'))}
                     />
-                    {Boolean(get_error_message(this.state.errors, 'old_password')) && (
-                        <FormFeedback>{get_error_message(this.state.errors, 'old_password')}</FormFeedback>
+                    {Boolean(get_error_message(this.state.errors, 'current_password')) && (
+                        <FormFeedback>{get_error_message(this.state.errors, 'current_password')}</FormFeedback>
                     )}
                 </FormGroup>
                 <Row>
