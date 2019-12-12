@@ -77,11 +77,14 @@ const Footer = () => (
                             <li>
                                 <Link to={ROUTES.CHANGELOG}>Changelog</Link>
                             </li>
-                            <li>Contributors</li>
+                            {/*<li>Contributors</li>*/}
                             <li>
                                 <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/" target="_blank" rel="noopener noreferrer">
                                     Gitlab
                                 </a>
+                            </li>
+                            <li>
+                                <Link to={ROUTES.LICENSE}>License</Link>
                             </li>
                         </ul>
                     </FooterCol>
@@ -89,9 +92,6 @@ const Footer = () => (
                         <h5>More</h5>
                         <hr className={'mr-5'} />
                         <ul className={'p-0'} style={{ listStyle: 'none' }}>
-                            <li>
-                                <Link to={ROUTES.LICENSE}>License</Link>
-                            </li>
                             <li>
                                 <a href="https://projects.tib.eu/orkg/contact/" target="_blank" rel="noopener noreferrer">
                                     Contact us

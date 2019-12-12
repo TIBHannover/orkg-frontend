@@ -15,8 +15,8 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import { openTour, closeTour, blockNavigation } from '../../actions/addPaper';
-import GraphViewModal from '../ViewPaper/GraphViewModal';
 import { Prompt } from 'react-router';
+import GizmoGraphViewModal from '../ViewPaper/GraphView/GizmoGraphViewModal';
 
 const Help = styled.div`
     box-sizing: border-box;
@@ -80,7 +80,7 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
-const SubtitleSeperator = styled.div`
+const SubtitleSeparator = styled.div`
     background: ${props => props.theme.darkblue};
     width: 2px;
     height: 30px;
@@ -115,8 +115,9 @@ class AddPaper extends Component {
         this.props.resetStatementBrowser();
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate = prevProps => {
         //paperNewResourceId : means paper is saved
+
         if (!this.props.shouldBlockNavigation && this.props.currentStep > 1 && !this.props.paperNewResourceId) {
             this.props.blockNavigation();
             window.onbeforeunload = () => true;
@@ -124,17 +125,11 @@ class AddPaper extends Component {
         if (!this.props.shouldBlockNavigation && prevProps.shouldBlockNavigation !== this.props.shouldBlockNavigation) {
             window.onbeforeunload = null;
         }
-    }
+    };
 
     componentWillUnmount() {
         window.onbeforeunload = null;
     }
-
-    toggleDropdown = () => {
-        this.setState(prevState => ({
-            dropdownOpen: !prevState.dropdownOpen
-        }));
-    };
 
     toggle = type => {
         this.setState(prevState => ({
@@ -194,7 +189,7 @@ class AddPaper extends Component {
 
                     {this.props.currentStep > 1 && (
                         <>
-                            <SubtitleSeperator />
+                            <SubtitleSeparator />
 
                             <PaperTitle>{this.props.title}</PaperTitle>
                         </>
@@ -229,13 +224,14 @@ class AddPaper extends Component {
                     <TransitionGroup exit={false}>{currentStepDetails}</TransitionGroup>
                 </Container>
 
-                <GraphViewModal
+                <GizmoGraphViewModal
+                    addPaperVisualization={true}
                     showDialog={this.state.showGraphModal}
                     toggle={() => this.toggle('showGraphModal')}
-                    //paperId={this.props.match.params.resourceId}
                 />
-
+                {/*the style display node will hide the help button when the graph view is activated*/}
                 <Help
+                    style={this.state.showGraphModal ? { display: 'none' } : {}}
                     onClick={() => {
                         this.toggleTour();
                     }}

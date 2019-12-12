@@ -9,3 +9,6 @@ build/
 
 *.iml
 .vscode
+
+# IntelliJ  files
+.idea/
