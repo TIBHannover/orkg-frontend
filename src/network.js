@@ -355,7 +355,7 @@ export const signInWithEmailAndPassword = async (email, password) => {
     const data = {
         username: email,
         grant_type: 'password',
-        client_id: 'orkg-client',
+        client_id: `${process.env.REACT_APP_AUTHENTICATION_CLIENT_ID}`,
         password
     };
 
