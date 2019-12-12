@@ -14,8 +14,8 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import ComparisonPopup from './ComparisonPopup';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
-import { loadPaper, selectContribution } from '../../actions/viewPaper';
-import GraphViewModal from './GraphViewModal';
+import { loadPaper, selectContribution, setPaperAuthors } from '../../actions/viewPaper';
+import GizmoGraphViewModal from './GraphView/GizmoGraphViewModal';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
 import Confirm from 'reactstrap-confirm';
@@ -113,10 +113,11 @@ class ViewPaper extends Component {
                         if (authors.length > 0) {
                             for (let author of authors) {
                                 authorNamesArray.push({
-                                    id: author.id,
-                                    resourceId: author.object.id,
+                                    id: author.object.id,
+                                    statementId: author.id,
                                     class: author.object._class,
-                                    label: author.object.label
+                                    label: author.object.label,
+                                    classes: author.object.classes
                                 });
                             }
                         }
@@ -168,6 +169,37 @@ class ViewPaper extends Component {
                         this.setState({
                             loading: false,
                             contributions: contributionArray.sort((a, b) => a.label.localeCompare(b.label)) // sort contributions ascending, so contribution 1, is actually the first one
+                        });
+                    })
+                    .then(e => {
+                        // Load paper authors ORCID
+                        let authors = [];
+                        if (this.props.viewPaper.authors.length > 0) {
+                            authors = this.props.viewPaper.authors
+                                .filter(author => author.classes && author.classes.includes(process.env.REACT_APP_CLASSES_AUTHOR))
+                                .map(author => {
+                                    return getStatementsBySubject({ id: author.id }).then(authorStatements => {
+                                        return authorStatements.find(
+                                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_ORCID
+                                        );
+                                    });
+                                });
+                        }
+                        return Promise.all(authors).then(authorsORCID => {
+                            let authorsArray = [];
+                            for (let author of this.props.viewPaper.authors) {
+                                let orcid = authorsORCID.find(a => a.subject.id === author.id);
+                                if (orcid) {
+                                    author.orcid = orcid.object.label;
+                                    authorsArray.push(author);
+                                } else {
+                                    author.orcid = '';
+                                    authorsArray.push(author);
+                                }
+                            }
+                            this.props.setPaperAuthors({
+                                authors: authorsArray
+                            });
                         });
                     })
                     .then(e => {
@@ -364,8 +396,8 @@ class ViewPaper extends Component {
                                         </Link>
                                     )}
                                     {this.props.viewPaper.authors.map((author, index) =>
-                                        false ? (
-                                            <Link key={index} to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.resourceId })}>
+                                        author.classes && author.classes.includes(process.env.REACT_APP_CLASSES_AUTHOR) ? (
+                                            <Link key={index} to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}>
                                                 <span className="badge badge-lightblue mr-2 mb-2" key={index}>
                                                     <Icon icon={faUser} className="text-primary" /> {author.label}
                                                 </span>
@@ -420,7 +452,7 @@ class ViewPaper extends Component {
                     </>
                 )}
 
-                <GraphViewModal
+                <GizmoGraphViewModal
                     showDialog={this.state.showGraphModal}
                     toggle={() => this.toggle('showGraphModal')}
                     paperId={this.props.match.params.resourceId}
@@ -441,7 +473,8 @@ ViewPaper.propTypes = {
     selectContribution: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     viewPaper: PropTypes.object.isRequired,
-    loadPaper: PropTypes.func.isRequired
+    loadPaper: PropTypes.func.isRequired,
+    setPaperAuthors: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -451,7 +484,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     resetStatementBrowser: () => dispatch(resetStatementBrowser()),
     loadPaper: payload => dispatch(loadPaper(payload)),
-    selectContribution: payload => dispatch(selectContribution(payload))
+    selectContribution: payload => dispatch(selectContribution(payload)),
+    setPaperAuthors: payload => dispatch(setPaperAuthors(payload))
 });
 
 export default connect(

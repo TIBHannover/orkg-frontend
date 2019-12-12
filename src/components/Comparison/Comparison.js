@@ -81,7 +81,7 @@ class Comparison extends Component {
         if (typeof ids === 'string' || ids instanceof String) {
             return [ids];
         }
-        ids = ids.filter(n => n); //filter out empty elementsids
+        ids = ids.filter(n => n); //filter out empty element ids
         return ids;
     };
 
@@ -322,7 +322,7 @@ class Comparison extends Component {
                     {/* 
                     // Created a breadcrumb so it is possible to navigate back to the original paper (or the first paper)
                     // problem is: when a contribution is performed, the first paper is not the paper from where the contribution started 
-                    // So maybe a breadcrumb is not intiutive, therefore it is commented out right now
+                    // So maybe a breadcrumb is not intuitive, therefore it is commented out right now
                     {this.state.contributions[0] &&
                         <BreadcrumbStyled>}
                             <BreadcrumbItem><Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.state.contributions[0].paperId })}>Paper</Link></BreadcrumbItem>

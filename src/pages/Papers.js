@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { getResourcesByClass, getStatementsBySubject } from '../network';
+import { getResourcesByClass, getStatementsBySubjects } from '../network';
 import { Container } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { get_paper_data } from 'utils';
 import PaperCard from './../components/PaperCard/PaperCard';
 
 export default class Papers extends Component {
@@ -37,51 +38,26 @@ export default class Papers extends Component {
         }).then(papers => {
             if (papers.length > 0) {
                 // Fetch the data of each paper
-                var papers_data = papers.map(paper => {
-                    return getStatementsBySubject({ id: paper.id }).then(paperStatements => {
-                        // publication year
-                        let publicationYear = paperStatements.filter(
-                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR
-                        );
-                        if (publicationYear.length > 0) {
-                            publicationYear = publicationYear[0].object.label;
-                        } else {
-                            publicationYear = '';
-                        }
-                        // publication month
-                        let publicationMonth = paperStatements.filter(
-                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH
-                        );
-                        if (publicationMonth.length > 0) {
-                            publicationMonth = publicationMonth[0].object.label;
-                        } else {
-                            publicationMonth = '';
-                        }
-                        // authors
-                        let authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
-                        let authorNamesArray = [];
-                        if (authors.length > 0) {
-                            for (let author of authors) {
-                                let authorName = author.object.label;
-                                authorNamesArray.push(authorName);
-                            }
-                        }
-                        paper.data = {
-                            publicationYear,
-                            publicationMonth,
-                            authorNames: authorNamesArray.reverse()
-                        };
-                        return paper;
+                getStatementsBySubjects({ ids: papers.map(p => p.id) })
+                    .then(papersStatements => {
+                        let statements = papersStatements.map(paperStatements => {
+                            return get_paper_data(paperStatements.statements);
+                        });
+                        this.setState({
+                            statements: [...this.state.statements, ...statements],
+                            isNextPageLoading: false,
+                            hasNextPage: statements.length < this.pageSize ? false : true,
+                            page: this.state.page + 1
+                        });
+                    })
+                    .catch(error => {
+                        this.setState({
+                            isNextPageLoading: false,
+                            hasNextPage: false,
+                            isLastPageReached: true
+                        });
+                        console.log(error);
                     });
-                });
-                return Promise.all(papers_data).then(statements => {
-                    this.setState({
-                        statements: [...this.state.statements, ...statements],
-                        isNextPageLoading: false,
-                        hasNextPage: statements.length < this.pageSize ? false : true,
-                        page: this.state.page + 1
-                    });
-                });
             } else {
                 this.setState({
                     isNextPageLoading: false,
@@ -102,7 +78,7 @@ export default class Papers extends Component {
                     {this.state.statements.length > 0 && (
                         <div>
                             {this.state.statements.map(resource => {
-                                return <PaperCard paper={{ id: resource.id, title: resource.label, ...resource.data }} key={`pc${resource.id}`} />;
+                                return <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />;
                             })}
                         </div>
                     )}

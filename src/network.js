@@ -19,22 +19,25 @@ export const authenticationUrl = process.env.REACT_APP_SERVER_URL;
 /**
  * Sends simple GET request to the URL.
  */
-export const submitGetRequest = url => {
+export const submitGetRequest = (url, headers, send_token = true) => {
     if (!url) {
         throw new Error('Cannot submit GET request. URL is null or undefined.');
     }
 
-    const cookies = new Cookies();
-    let token = cookies.get('token') ? cookies.get('token') : null;
+    let myHeaders = new Headers(headers);
+
+    if (send_token) {
+        const cookies = new Cookies();
+        let token = cookies.get('token') ? cookies.get('token') : null;
+        if (token) {
+            myHeaders.append('Authorization', `Bearer ${token}`);
+        }
+    }
 
     return new Promise((resolve, reject) => {
         fetch(url, {
             method: 'GET',
-            headers: token
-                ? {
-                      Authorization: `Bearer ${token}`
-                  }
-                : {}
+            headers: myHeaders
         })
             .then(response => {
                 if (!response.ok) {
@@ -213,6 +216,18 @@ export const updateStatement = (id, { subject_id = null, predicate_id = null, ob
     );
 };
 
+export const updateStatements = (statementIds, { subject_id = null, predicate_id = null, object_id = null }) => {
+    return submitPutRequest(
+        `${statementsUrl}?ids=${statementIds.join()}`,
+        { 'Content-Type': 'application/json' },
+        {
+            ...(subject_id ? { subject_id: subject_id } : null),
+            ...(predicate_id ? { predicate_id: predicate_id } : null),
+            ...(object_id ? { object_id: object_id } : null)
+        }
+    );
+};
+
 export const createPredicate = label => {
     return submitPostRequest(predicatesUrl, { 'Content-Type': 'application/json' }, { label: label });
 };
@@ -258,10 +273,20 @@ export const deleteStatementById = id => {
     return submitDeleteRequest(statementsUrl + encodeURIComponent(id));
 };
 
+export const deleteStatementsByIds = ids => {
+    return submitDeleteRequest(`${statementsUrl}?ids=${ids.join()}`);
+};
+
 export const getStatementsBySubject = ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
     let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
 
     return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`);
+};
+
+export const getStatementsBySubjects = ({ ids, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
+    let params = queryString.stringify({ ids: ids.join(), page: page, items: items, sortBy: sortBy, desc: desc });
+
+    return submitGetRequest(`${statementsUrl}subjects/?${params}`);
 };
 
 export const getStatementsByObject = async ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {

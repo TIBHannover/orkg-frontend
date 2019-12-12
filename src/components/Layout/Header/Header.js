@@ -20,7 +20,8 @@ import {
 import { Link, NavLink as RouterNavLink } from 'react-router-dom';
 import { ReactComponent as Logo } from '../../../assets/img/logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+// import { faChevronDown, faUser } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from '../../../constants/routes.js';
 import { Cookies } from 'react-cookie';
 import Gravatar from 'react-gravatar';
