@@ -38,7 +38,7 @@ class PaperCard extends Component {
                 }
             >
                 <Row>
-                    <Col sm="9">
+                    <Col sm={this.props.contribution ? 9 : 12}>
                         {this.props.contribution && (
                             <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paper.id, contributionId: this.props.contribution.id })}>
                                 {this.props.paper.title ? this.props.paper.title : <em>No title</em>}
@@ -64,8 +64,8 @@ class PaperCard extends Component {
                             </i>
                         </small>
                     </Col>
-                    <Col sm="3">
-                        {this.props.contribution && (
+                    {this.props.contribution && (
+                        <Col sm="3">
                             <div className="options">
                                 <AddToComparison
                                     contributionId={this.props.contribution.id}
@@ -74,8 +74,8 @@ class PaperCard extends Component {
                                     contributionTitle={this.props.contribution.title}
                                 />
                             </div>
-                        )}
-                    </Col>
+                        </Col>
+                    )}
                 </Row>
             </PaperCardStyled>
         );

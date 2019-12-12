@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Alert, UncontrolledAlert, ButtonGroup } from 'reactstrap';
+import { Container, Button, Alert, UncontrolledAlert, ButtonGroup, Badge } from 'reactstrap';
 import { getStatementsBySubject, getResource, updateResource, createResource, createResourceStatement, deleteStatementById } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -398,14 +398,14 @@ class ViewPaper extends Component {
                                     {this.props.viewPaper.authors.map((author, index) =>
                                         author.classes && author.classes.includes(process.env.REACT_APP_CLASSES_AUTHOR) ? (
                                             <Link key={index} to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}>
-                                                <span className="badge badge-lightblue mr-2 mb-2" key={index}>
+                                                <Badge color="lightblue" className="mr-2 mb-2" key={index}>
                                                     <Icon icon={faUser} className="text-primary" /> {author.label}
-                                                </span>
+                                                </Badge>
                                             </Link>
                                         ) : (
-                                            <span className="badge badge-lightblue mr-2 mb-2" key={index}>
-                                                <Icon icon={faUser} className="text-primary" /> {author.label}
-                                            </span>
+                                            <Badge color="lightblue" className="mr-2 mb-2" key={index}>
+                                                <Icon icon={faUser} className="text-darkblue" /> {author.label}
+                                            </Badge>
                                         )
                                     )}
                                     <br />
