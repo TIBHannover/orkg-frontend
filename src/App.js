@@ -9,6 +9,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import { withCookies } from 'react-cookie';
 import { detect } from 'detect-browser';
+import ScrollToTop from './components/ScrollToTop';
 
 class App extends Component {
     constructor(props) {
@@ -28,15 +29,17 @@ class App extends Component {
     render() {
         return (
             <ConnectedRouter history={this.props.history}>
-                <DefaultLayout>
-                    {this.state.showBrowserWarning && (
-                        <div class="alert alert-danger alert-server" role="alert" style={{ borderRadius: '0' }}>
-                            <strong>Outdated browser</strong> You are using Internet Explorer which is not supported. Please upgrade your browser for
-                            the best experience
-                        </div>
-                    )}
-                    <Switch>{renderRoutes(routes)}</Switch>
-                </DefaultLayout>
+                <ScrollToTop>
+                    <DefaultLayout>
+                        {this.state.showBrowserWarning && (
+                            <div class="alert alert-danger alert-server" role="alert" style={{ borderRadius: '0' }}>
+                                <strong>Outdated browser</strong> You are using Internet Explorer which is not supported. Please upgrade your browser
+                                for the best experience
+                            </div>
+                        )}
+                        <Switch>{renderRoutes(routes)}</Switch>
+                    </DefaultLayout>
+                </ScrollToTop>
             </ConnectedRouter>
         );
     }
