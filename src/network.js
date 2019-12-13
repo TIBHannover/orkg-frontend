@@ -19,7 +19,7 @@ export const authenticationUrl = process.env.REACT_APP_SERVER_URL;
 /**
  * Sends simple GET request to the URL.
  */
-export const submitGetRequest = (url, headers, send_token = true) => {
+export const submitGetRequest = (url, headers, send_token = false) => {
     if (!url) {
         throw new Error('Cannot submit GET request. URL is null or undefined.');
     }
