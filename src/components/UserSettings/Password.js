@@ -1,8 +1,9 @@
-import { Row, Form, FormGroup, Label, Input, Button, Alert } from 'reactstrap';
+import { Row, Form, FormGroup, Label, Input, Button, Alert, FormFeedback } from 'reactstrap';
 import React, { Component } from 'react';
 import { updateUserPassword } from '../../network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { get_error_message } from 'utils';
 import { toast } from 'react-toastify';
 
 class Password extends Component {
@@ -10,11 +11,11 @@ class Password extends Component {
         super(props);
 
         this.state = {
-            password: '',
-            newPassword: '',
-            confirmNewPassword: '',
+            current_password: '',
+            new_password: '',
+            new_matching_password: '',
             loading: false,
-            error: null
+            errors: null
         };
     }
 
@@ -25,91 +26,102 @@ class Password extends Component {
     };
 
     handleSave = async () => {
-        const { password, newPassword, confirmNewPassword } = this.state;
+        const { current_password, new_password, new_matching_password } = this.state;
 
-        if (!password || !newPassword || !confirmNewPassword) {
+        if (!current_password || !new_password || !new_matching_password) {
             this.setState({
-                error: 'Please fill out all fields'
+                errors: { message: 'Please fill out all fields' }
             });
             return;
         }
 
-        if (newPassword !== confirmNewPassword) {
+        if (new_password !== new_matching_password) {
             this.setState({
-                error: 'The new passwords are not matching'
+                errors: { message: 'The new passwords are not matching' }
             });
             return;
         }
-
         this.setState({
-            loading: true
+            loading: true,
+            errors: null
         });
 
-        try {
-            await updateUserPassword({
-                password,
-                newPassword,
-                confirmNewPassword
+        updateUserPassword({
+            current_password,
+            new_password,
+            new_matching_password
+        })
+            .then(response => {
+                toast.success('Your changes have been saved successfully');
+                this.setState({
+                    errors: '',
+                    loading: false,
+                    current_password: '',
+                    new_password: '',
+                    new_matching_password: ''
+                });
+            })
+            .catch(err => {
+                this.setState({
+                    loading: false,
+                    errors: err
+                });
             });
-        } catch (err) {
-            this.setState({
-                error: 'Something went wrong, please try again',
-                loading: false
-            });
-            return;
-        }
-        toast.success('Your changes have been saved successfully');
-
-        this.setState({
-            error: '',
-            loading: false,
-            password: '',
-            newPassword: '',
-            confirmNewPassword: ''
-        });
     };
 
     render = () => (
         <>
             <h5 className="mb-4">Change password</h5>
-            {this.state.error && <Alert color="danger">{this.state.error}</Alert>}
+            {Boolean(get_error_message(this.state.errors)) && <Alert color="danger">{get_error_message(this.state.errors)}</Alert>}
             <Form>
                 <FormGroup>
-                    <Label for="password">Current password</Label>
+                    <Label for="current_password">Current password</Label>
                     <Input
                         onChange={this.handleInputChange}
-                        value={this.state.password}
+                        value={this.state.current_password}
                         type="password"
-                        name="password"
-                        id="password"
+                        name="current_password"
+                        id="current_password"
                         placeholder="Current password"
+                        invalid={Boolean(get_error_message(this.state.errors, 'current_password'))}
                     />
+                    {Boolean(get_error_message(this.state.errors, 'current_password')) && (
+                        <FormFeedback>{get_error_message(this.state.errors, 'current_password')}</FormFeedback>
+                    )}
                 </FormGroup>
                 <Row>
                     <div className={'col-6'}>
                         <FormGroup>
-                            <Label for="newPassword">New password</Label>
+                            <Label for="new_password">New password</Label>
                             <Input
                                 onChange={this.handleInputChange}
-                                value={this.state.newPassword}
+                                value={this.state.new_password}
                                 type="password"
-                                name="newPassword"
-                                id="newPassword"
+                                name="new_password"
+                                id="new_password"
                                 placeholder="New password"
+                                invalid={Boolean(get_error_message(this.state.errors, 'new_password'))}
                             />
+                            {Boolean(get_error_message(this.state.errors, 'new_password')) && (
+                                <FormFeedback>{get_error_message(this.state.errors, 'new_password')}</FormFeedback>
+                            )}
                         </FormGroup>
                     </div>
                     <div className={'col-6'}>
                         <FormGroup>
-                            <Label for="confirmNewPassword">Repeat new password</Label>
+                            <Label for="matching_password">Repeat new password</Label>
                             <Input
                                 onChange={this.handleInputChange}
-                                value={this.state.confirmNewPassword}
+                                value={this.state.new_matching_password}
                                 type="password"
-                                name="confirmNewPassword"
-                                id="confirmNewPassword"
+                                name="new_matching_password"
+                                id="new_matching_password"
                                 placeholder="Confirm new password"
+                                invalid={Boolean(get_error_message(this.state.errors, 'new_matching_password'))}
                             />
+                            {Boolean(get_error_message(this.state.errors, 'new_matching_password')) && (
+                                <FormFeedback>{get_error_message(this.state.errors, 'new_matching_password')}</FormFeedback>
+                            )}
                         </FormGroup>
                     </div>
                 </Row>

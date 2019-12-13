@@ -117,7 +117,12 @@ const submitPutRequest = (url, headers, data) => {
         fetch(url, { method: 'PUT', headers: myHeaders, body: JSON.stringify(data) })
             .then(response => {
                 if (!response.ok) {
-                    reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
+                    const json = response.json();
+                    if (json.then) {
+                        json.then(reject);
+                    } else {
+                        reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
+                    }
                 } else {
                     const json = response.json();
                     if (json.then) {
@@ -350,7 +355,7 @@ export const signInWithEmailAndPassword = async (email, password) => {
     const data = {
         username: email,
         grant_type: 'password',
-        client_id: 'orkg-client',
+        client_id: `${process.env.REACT_APP_AUTHENTICATION_CLIENT_ID}`,
         password
     };
 
@@ -395,31 +400,32 @@ export const registerWithEmailAndPassword = (email, password, matching_password,
         matching_password: matching_password
     };
 
-    return submitPostRequest(`${authenticationUrl}auth/register`, headers, data, true, false);
+    return submitPostRequest(`${url}auth/register`, headers, data, true, false);
 };
 
 export const getUserInformation = () => {
-    return submitGetRequest(`${authenticationUrl}user/`);
+    return submitGetRequest(`${url}user/`);
 };
 
-export const updateUserInformation = ({ email, displayName }) => {
+export const updateUserInformation = ({ email, display_name }) => {
     const headers = { 'Content-Type': 'application/json' };
 
     const data = {
         //email, //back doesn't support this
-        display_name: displayName
+        display_name: display_name
     };
 
-    return submitPutRequest(`${authenticationUrl}user/`, headers, data);
+    return submitPutRequest(`${url}user/`, headers, data);
 };
 
-export const updateUserPassword = ({ password, newPassword, confirmNewPassword }) => {
+export const updateUserPassword = ({ current_password, new_password, new_matching_password }) => {
     const headers = { 'Content-Type': 'application/json' };
 
     const data = {
-        password: newPassword,
-        matching_password: confirmNewPassword
+        current_password: current_password,
+        new_password: new_password,
+        new_matching_password: new_matching_password
     };
 
-    return submitPutRequest(`${authenticationUrl}user/`, headers, data);
+    return submitPutRequest(`${url}user/password/`, headers, data);
 };

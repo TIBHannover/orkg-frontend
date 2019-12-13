@@ -71,6 +71,7 @@ class SignIn extends Component {
                     <FormGroup>
                         <Label for="Password">
                             Password{' '}
+                            {/*
                             <span
                                 className="ml-1"
                                 style={{ cursor: 'pointer', color: 'inherit', textDecoration: 'underline' }}
@@ -80,6 +81,7 @@ class SignIn extends Component {
                             >
                                 Forgot?
                             </span>
+                            */}
                         </Label>
                         <Input
                             onChange={this.handleInputChange}
