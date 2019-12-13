@@ -2,7 +2,6 @@
     "name": "knowledge-graph",
     "version": "0.1.0",
     "private": true,
-    "homepage": "https://gitlab.com/TIBHannover/orkg/orkg-frontend",
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^1.2.24",
         "@fortawesome/free-brands-svg-icons": "^5.11.2",
