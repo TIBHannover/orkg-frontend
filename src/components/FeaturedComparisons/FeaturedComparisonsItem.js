@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Container, Alert, Card, CardImg, CardTitle, CardText, Row, Col, CardBody, Badge } from 'reactstrap';
+import { Card, CardTitle, CardText, Row, Col, CardBody, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faChartArea, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
-import { Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import queryString from 'query-string';
 
 const Comparison = styled(Card)`
     border-width: 1px !important; //TODO: remove once style of 1px border is applied globally
@@ -39,22 +39,26 @@ class FeaturedComparisonsItem extends Component {
     };
 
     handleClick = () => {
-        this.props.history.push(this.props.link);
+        this.props.history.push(`/comparison/${this.props.link}`);
     };
 
     render() {
+        const icon = require('@fortawesome/free-solid-svg-icons')[this.props.icon];
+        const contributionString = queryString.parse(this.props.link).contributions;
+        const contributionsLength = typeof contributionString === 'string' ? contributionString.split(',').length : 0;
+
         return (
             <Col sm="6">
                 <Comparison onClick={this.handleClick}>
                     <ComparisonBody>
                         <Row>
                             <ImageCol sm="3" className="d-flex justify-content-center align-items-center">
-                                <Icon icon={this.props.icon} />
+                                <Icon icon={icon} />
                             </ImageCol>
                             <Col sm="9">
                                 <ComparisonTitle tag="h5">{this.props.title}</ComparisonTitle>
                                 <ComparisonText>{this.props.description}</ComparisonText>
-                                <Badge color="lightblue">{this.props.paperAmount} papers</Badge>
+                                <Badge color="lightblue">{contributionsLength} papers</Badge>
                             </Col>
                         </Row>
                     </ComparisonBody>
@@ -63,5 +67,13 @@ class FeaturedComparisonsItem extends Component {
         );
     }
 }
+
+FeaturedComparisonsItem.propTypes = {
+    history: PropTypes.object.isRequired,
+    icon: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    link: PropTypes.string.isRequired
+};
 
 export default withRouter(FeaturedComparisonsItem);

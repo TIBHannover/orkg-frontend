@@ -22,7 +22,7 @@ import ViewPaper from './components/ViewPaper/ViewPaper';
 import Stats from './components/Stats/Stats';
 import UserSettings from './components/UserSettings/UserSettings';
 import UserProfile from './components/UserProfile/UserProfile';
-import FeaturedComparisons from 'components/StaticPages/FeaturedComparisons';
+import FeaturedComparisons from 'components/FeaturedComparisons/FeaturedComparisons';
 
 const routes = [
     {
