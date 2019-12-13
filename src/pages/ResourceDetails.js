@@ -73,7 +73,7 @@ class ResourceDetails extends Component {
                         <div className={'box clearfix pt-4 pb-4 pl-5 pr-5'}>
                             <div className={'mb-2'}>
                                 {!this.state.editMode ? (
-                                    <h3 className={'pb-2 mb-3'}>
+                                    <h3 className={'pb-2 mb-3'} style={{ overflowWrap: 'break-word' }}>
                                         {this.state.label}
                                         <Button className="float-right" color="darkblue" size="sm" onClick={() => this.toggle('editMode')}>
                                             <Icon icon={faPen} /> Edit
