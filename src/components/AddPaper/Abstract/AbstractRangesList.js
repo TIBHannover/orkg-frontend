@@ -80,7 +80,6 @@ class AbstractRangesList extends Component {
                 id: selectedOption.label
             };
             this.props.updateAnnotationClass({ range, selectedOption: newOption });
-            this.setState({ defaultOptions: [...this.state.defaultOptions, newOption] });
         } else if (action === 'clear') {
             this.props.removeAnnotation(range);
         }
@@ -88,8 +87,8 @@ class AbstractRangesList extends Component {
 
     loadOptions = async value => {
         try {
-            if (value === '' || value.trim() === '') {
-                return [];
+            if (!value || value === '' || value.trim() === '') {
+                return this.props.classOptions;
             }
 
             let queryParams = '';
@@ -102,8 +101,8 @@ class AbstractRangesList extends Component {
             let responseJson = await submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(value) + queryParams);
             responseJson = await this.IdMatch(value, responseJson);
 
-            if (this.state.defaultOptions && this.state.defaultOptions.length > 0) {
-                let newProperties = this.state.defaultOptions;
+            if (this.props.classOptions && this.props.classOptions.length > 0) {
+                let newProperties = this.props.classOptions;
                 newProperties = newProperties.filter(({ label }) => label.includes(value)); // ensure the label of the new property contains the search value
 
                 responseJson.unshift(...newProperties);
@@ -167,7 +166,7 @@ class AbstractRangesList extends Component {
                                             <AsyncCreatableSelect
                                                 loadOptions={this.loadOptions}
                                                 value={{
-                                                    label: range.class.label,
+                                                    label: range.class.label ? range.class.label : 'Select or type something...',
                                                     id: range.class.id,
                                                     certainty: range.certainty,
                                                     range_id: range.id,
@@ -181,10 +180,9 @@ class AbstractRangesList extends Component {
                                                 }}
                                                 key={value => value}
                                                 cacheOptions
-                                                defaultOptions={this.state.defaultOptions}
+                                                defaultOptions={true}
                                                 isClearable
                                                 openMenuOnClick={false}
-                                                placeholder="Select or type something..."
                                             />
                                         )}
                                     </div>
