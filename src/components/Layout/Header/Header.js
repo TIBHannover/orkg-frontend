@@ -51,6 +51,9 @@ const StyledGravatar = styled(Gravatar)`
 `;
 
 const StyledAuthTooltip = styled(Tooltip)`
+    & .tooltip {
+        opacity: 1 !important;
+    }
     & .tooltip-inner {
         font-size: 16px;
         background-color: ${props => props.theme.darkblue};
