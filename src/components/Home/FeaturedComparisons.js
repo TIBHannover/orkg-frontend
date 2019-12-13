@@ -6,7 +6,6 @@ import { getResourcesByClass, getStatementsBySubjects } from '../../network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import Dotdotdot from 'react-dotdotdot';
-import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import ContentLoader from 'react-content-loader';
 
@@ -143,7 +142,7 @@ class FeaturedComparisons extends Component {
                         </div>
                         <div>
                             <h5>
-                                <Link className="" to={reverse(ROUTES.VIEW_PAPER, { resourceId: comparison.id })}>
+                                <Link className="" to={`${ROUTES.COMPARISON}${comparison.url}`}>
                                     <Dotdotdot clamp={2}>{comparison.label}</Dotdotdot>
                                 </Link>
                             </h5>

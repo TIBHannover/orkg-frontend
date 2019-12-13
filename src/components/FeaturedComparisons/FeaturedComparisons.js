@@ -107,9 +107,9 @@ class FeaturedComparisons extends Component {
                 </Container>
                 <Container className="box pt-4 pb-4 pl-5 pr-5">
                     <Alert color="info">
-                        With the paper data inside the ORKG, you can build powerful paper comparisons. On this page, we list of the featured
-                        comparisons that are created using the comparison functionality. The featured comparisons below are structured by category.
-                        They consist of paper comparisons of state-of-the-art work from the Computer Science field
+                        With the paper data inside the ORKG, you can build powerful paper comparisons. On this page, we list the featured comparisons
+                        that are created using the comparison functionality. The featured comparisons below are structured by category. They consist
+                        of paper comparisons of state-of-the-art work from the Computer Science field.
                     </Alert>
 
                     {this.state.loading ? (
