@@ -1,17 +1,35 @@
 import React, { Component } from 'react';
-import { Button, Row } from 'reactstrap';
+import { Button, Row, Carousel, CarouselItem, CarouselIndicators } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from '../../constants/routes.js';
-import FeaturedComparisonsItem from '../FeaturedComparisons/FeaturedComparisonsItem';
-import { faChartArea, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
 import { getResourcesByClass, getStatementsBySubjects } from '../../network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import Dotdotdot from 'react-dotdotdot';
+import { reverse } from 'named-urls';
+import styled from 'styled-components';
+import ContentLoader from 'react-content-loader';
+
+const CarouselContainer = styled.div`
+    width: 100%;
+    background: #f7f7f7 !important;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+
+    & li {
+        width: 10px !important;
+        height: 10px !important;
+        border-radius: 100% !important;
+        background-color: ${props => props.theme.orkgPrimaryColor} !important;
+    }
+`;
 
 class FeaturedComparisons extends Component {
     state = {
         loading: false,
-        comparisons: []
+        comparisons: [],
+        activeIndex: 0,
+        animating: false
     };
     componentDidMount = () => {
         document.title = 'Featured comparisons - ORKG';
@@ -88,6 +106,57 @@ class FeaturedComparisons extends Component {
         });
     };
 
+    next = () => {
+        if (this.state.animating) {
+            return;
+        }
+        const nextIndex = this.state.activeIndex === this.state.comparisons.length - 1 ? 0 : this.state.activeIndex + 1;
+        this.setState({ activeIndex: nextIndex });
+    };
+
+    previous = () => {
+        if (this.state.animating) {
+            return;
+        }
+        const nextIndex = this.state.activeIndex === 0 ? this.state.comparisons.length - 1 : this.state.activeIndex - 1;
+        this.setState({ activeIndex: nextIndex });
+    };
+
+    goToIndex = newIndex => {
+        this.setState({ activeIndex: newIndex });
+    };
+
+    slides = () => {
+        return this.state.comparisons.map((comparison, index) => {
+            const icon = require('@fortawesome/free-solid-svg-icons')[comparison.icon];
+
+            return (
+                <CarouselItem
+                    onExiting={() => this.setState({ animating: true })}
+                    onExited={() => this.setState({ animating: false })}
+                    className={'pt-4 pb-1 pl-4 pr-4'}
+                    key={`fp${comparison.id}`}
+                >
+                    <div style={{ minHeight: '120px' }} className="d-flex">
+                        <div style={{ fontSize: 40, color: '#80869b' }} className="mr-4">
+                            <Icon icon={icon} />
+                        </div>
+                        <div>
+                            <h5>
+                                <Link className="" to={reverse(ROUTES.VIEW_PAPER, { resourceId: comparison.id })}>
+                                    <Dotdotdot clamp={2}>{comparison.label}</Dotdotdot>
+                                </Link>
+                            </h5>
+                            <div>
+                                <i>{comparison.description}</i>
+                            </div>
+                        </div>
+                    </div>
+                </CarouselItem>
+            );
+        });
+    };
+
     render() {
         return (
             <div className="mt-3 pl-3 pr-3">
@@ -98,38 +167,29 @@ class FeaturedComparisons extends Component {
                 )}
 
                 <Row style={{ margin: '25px 0 20px' }}>
-                    {this.state.comparisons.map(comparison => {
-                        return (
-                            <FeaturedComparisonsItem
-                                key={comparison.id}
-                                title={comparison.label}
-                                description={comparison.description}
-                                icon={comparison.icon}
-                                link={comparison.url}
-                            />
-                        );
-                    })}
-
-                    {/*<FeaturedComparisonsItem
-                        title="General visualization systems"
-                        description="In this comparsion, graph visualization systems are compared. Some systems support more features than
-                            others."
-                        paperAmount="11"
-                        icon={faChartArea}
-                        link="/comparison/?contributions=R146151,R146139,R146127,R146115,R146103,R146091,R146079,R146067,R146055,R146043,R146031&properties=P32,P20010,P20001,P20009,P20006,P20000,P20008,P15,P20007,P20003,P20005,P20004,P20002&transpose=false"
-                    />
-                    <FeaturedComparisonsItem
-                        title="Knowledge graph visualizations"
-                        description="The state-of-the-art visualization systems are compared. Particularly interesting is to see which data types are
-                            supported."
-                        paperAmount="11"
-                        icon={faProjectDiagram}
-                        link="/comparison/?contributions=R146306,R146302,R146298,R146294,R146290,R146286,R146282,R146278,R146274,R146270,R146266,R146262,R146258,R146254,R146250,R146246,R146242,R146238&properties=P32,P20037,P15,P20036,P20033,P20035,P20031,P20034,P20030,P20032&transpose=false"
-                    />*/}
+                    <CarouselContainer>
+                        {!this.state.loading ? (
+                            <Carousel activeIndex={this.state.activeIndex} next={this.next} previous={this.previous}>
+                                {this.slides()}
+                                <CarouselIndicators
+                                    items={this.state.comparisons}
+                                    activeIndex={this.state.activeIndex}
+                                    onClickHandler={this.goToIndex}
+                                />
+                            </Carousel>
+                        ) : (
+                            <div style={{ height: '130px' }} className={'pt-4 pb-1 pl-4 pr-4'}>
+                                <ContentLoader speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb" ariaLabel={false}>
+                                    <rect x="1" y="0" rx="4" ry="4" width="300" height="20" />
+                                    <rect x="1" y="25" rx="3" ry="3" width="250" height="20" />
+                                </ContentLoader>
+                            </div>
+                        )}
+                    </CarouselContainer>
                 </Row>
                 <div className="text-center">
                     <Link to={ROUTES.FEATURED_COMPARISONS}>
-                        <Button color="darkblue" size="sm" className="mr-3">
+                        <Button color="darkblue" size="sm">
                             More comparisons
                         </Button>
                     </Link>

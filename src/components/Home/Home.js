@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faStar, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faPlus, faStream } from '@fortawesome/free-solid-svg-icons';
 import ResearchFieldCards from './ResearchFieldCards';
 import RecentlyAddedPapers from './RecentlyAddedPapers';
 import FeaturedComparisons from './FeaturedComparisons';
@@ -70,7 +70,7 @@ class Home extends Component {
                         <Col className="col-sm-7 px-0">
                             <div className="box mr-4 p-4 h-100">
                                 <h2 className="h5">
-                                    <Icon icon={faStar} className="text-primary" /> Browse by research field
+                                    <Icon icon={faStream} className="text-primary" /> Browse by research field
                                 </h2>
                                 <ResearchFieldCards />
                             </div>
