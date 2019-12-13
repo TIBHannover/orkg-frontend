@@ -14,6 +14,7 @@ const StyledShortRecord = styled.div`
     }
     .shortRecord-content {
         width: 100%;
+        overflow-wrap: break-word;
     }
 `;
 

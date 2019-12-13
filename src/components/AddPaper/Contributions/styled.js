@@ -82,6 +82,8 @@ export const StyledStatementItem = styled(ListGroupItem)`
     cursor: default;
     background-color: ${props => props.theme.ultraLightBlue} !important;
     border-color: ${props => props.theme.ultraLightBlueDarker} !important;
+    overflow-wrap: break-word;
+    word-break: break-all;
 
     &.selectable {
         cursor: pointer;
@@ -169,6 +171,7 @@ export const StyledLevelBox = styled.div`
 /* valueItem */
 export const StyledValueItem = styled(ListGroupItem)`
     padding: 8px 0px !important;
+    overflow-wrap: break-word;
 
     & .objectLink {
         text-decoration: underline;
