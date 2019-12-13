@@ -5,7 +5,7 @@
     </clipPath>
   </defs>
   <g id="Web_1920_1" data-name="Web 1920 – 1" clip-path="url(#clip-Web_1920_1)">
-    <g id="Background" transform="translate(658.194 -20.5)">
+    <g id="Background" transform="translate(658.194 -20.5)" opacity="0.696">
       <line id="Line_3" data-name="Line 3" y1="268" x2="31" transform="translate(763.306 196)" fill="none" stroke="#83879b" stroke-width="3"/>
       <line id="Line_4" data-name="Line 4" x2="10" y2="120" transform="translate(784.306 76)" fill="none" stroke="#83879b" stroke-width="3"/>
       <line id="Line_5" data-name="Line 5" x1="118" y1="2" transform="translate(666.306 74)" fill="none" stroke="#6d7184" stroke-width="3"/>
