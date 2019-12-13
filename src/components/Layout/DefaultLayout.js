@@ -13,7 +13,7 @@ const StyledBody = styled.div`
     display: flex;
     min-height: 100vh;
     flex-direction: column;
-    padding-top: 100px;
+    padding-top: 73px;
 `;
 
 const StyledAppContent = styled.div`
