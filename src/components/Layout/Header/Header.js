@@ -91,7 +91,7 @@ class Header extends Component {
     }
 
     componentDidMount() {
-        this.getUserInformation();
+        this.userInformation();
     }
 
     componentDidUpdate() {
@@ -102,12 +102,17 @@ class Header extends Component {
         }
     }
 
-    getUserInformation = async () => {
+    userInformation = () => {
         const cookies = new Cookies();
         let token = cookies.get('token') ? cookies.get('token') : null;
         if (token && !this.props.user) {
-            const userData = await getUserInformation();
-            this.props.updateAuth({ user: { displayName: userData.display_name, id: userData.id, token: token, email: userData.email } });
+            getUserInformation()
+                .then(userData => {
+                    this.props.updateAuth({ user: { displayName: userData.display_name, id: userData.id, token: token, email: userData.email } });
+                })
+                .catch(error => {
+                    cookies.remove('token');
+                });
         }
     };
 

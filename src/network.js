@@ -404,7 +404,7 @@ export const registerWithEmailAndPassword = (email, password, matching_password,
 };
 
 export const getUserInformation = () => {
-    return submitGetRequest(`${url}user/`);
+    return submitGetRequest(`${url}user/`, {}, true);
 };
 
 export const updateUserInformation = ({ email, display_name }) => {
