@@ -6,7 +6,6 @@ import ResearchFieldCards from './ResearchFieldCards';
 import RecentlyAddedPapers from './RecentlyAddedPapers';
 import FeaturedComparisons from './FeaturedComparisons';
 import Jumbotron from './Jumbotron';
-import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
@@ -30,7 +29,7 @@ class Home extends Component {
             <div>
                 <Jumbotron />
 
-                <Container className="mt-4">
+                <Container style={{ marginTop: -40 }}>
                     <Row>
                         <Col className="col-sm-7 px-0">
                             <div className="box mr-4 p-4 h-100">
