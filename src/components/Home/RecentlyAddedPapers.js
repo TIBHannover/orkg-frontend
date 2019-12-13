@@ -72,7 +72,7 @@ class RecentlyAddedPapers extends Component {
 
                             <div className="text-center">
                                 <Link to={ROUTES.PAPERS}>
-                                    <Button color="primary" className="mr-3">
+                                    <Button color="primary" className="mr-3" size="sm">
                                         More papers
                                     </Button>
                                 </Link>

@@ -25,5 +25,6 @@ export default {
     SEARCH: '/search/:searchTerm?',
     TPDL: '/tpdl',
     STATS: '/stats',
-    CHANGELOG: '/changelog'
+    CHANGELOG: '/changelog',
+    FEATURED_COMPARISONS: '/featured-comparisons'
 };
