@@ -93,6 +93,11 @@ const Footer = () => (
                         <hr className={'mr-5'} />
                         <ul className={'p-0'} style={{ listStyle: 'none' }}>
                             <li>
+                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues" target="_blank" rel="noopener noreferrer">
+                                    Report an issue
+                                </a>
+                            </li>
+                            <li>
                                 <a href="https://projects.tib.eu/orkg/contact/" target="_blank" rel="noopener noreferrer">
                                     Contact us
                                 </a>
