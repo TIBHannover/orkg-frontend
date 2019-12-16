@@ -6,7 +6,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faSpinner, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
-import { get_paper_data } from 'utils';
+import { getPaperData } from 'utils';
 import PropTypes from 'prop-types';
 
 const AuthorMetaInfo = styled.div`
@@ -92,7 +92,7 @@ class AuthorPage extends Component {
                 })
                     .then(papersStatements => {
                         let papers = papersStatements.map(paperStatements => {
-                            return get_paper_data(paperStatements.statements);
+                            return getPaperData(paperStatements.statements);
                         });
                         this.setState({
                             papers: [...this.state.papers, ...papers],

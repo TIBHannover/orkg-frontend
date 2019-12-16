@@ -5,7 +5,7 @@ import { getStatementsByObject, getResource, getStatementsBySubjects } from '../
 import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes.js';
 import PaperCard from '../PaperCard/PaperCard';
-import { get_paper_data } from 'utils';
+import { getPaperData } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
@@ -80,7 +80,7 @@ class ResearchField extends Component {
                 })
                     .then(papersStatements => {
                         let papers = papersStatements.map(paperStatements => {
-                            return get_paper_data(paperStatements.statements);
+                            return getPaperData(paperStatements.statements);
                         });
                         this.setState({
                             papers: [...this.state.papers, ...papers],

@@ -74,7 +74,7 @@ class ResearchProblem extends Component {
                         id: contribution.subject.id,
                         order: 'desc'
                     }).then(papers => {
-                        // TODO : use get_paper_data(paperStatements) utils function and getStatementsBySubjects network function
+                        // TODO : use getPaperData(paperStatements) utils function and getStatementsBySubjects network function
                         // Fetch the data of each paper
                         const papers_data = papers.map(paper => {
                             return getStatementsBySubject({ id: paper.subject.id }).then(paperStatements => {

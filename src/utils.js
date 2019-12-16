@@ -115,7 +115,7 @@ export const get_error_message = (errors, field = null) => {
  *
  * @param {Array} paperStatements
  */
-export const get_paper_data = paperStatements => {
+export const getPaperData = paperStatements => {
     // research field
     let researchField = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
     if (researchField.length > 0) {

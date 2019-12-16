@@ -3,7 +3,7 @@ import { getResourcesByClass, getStatementsBySubjects } from '../network';
 import { Container } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { get_paper_data } from 'utils';
+import { getPaperData } from 'utils';
 import PaperCard from './../components/PaperCard/PaperCard';
 
 export default class Papers extends Component {
@@ -41,7 +41,7 @@ export default class Papers extends Component {
                 getStatementsBySubjects({ ids: papers.map(p => p.id) })
                     .then(papersStatements => {
                         let statements = papersStatements.map(paperStatements => {
-                            return get_paper_data(paperStatements.statements);
+                            return getPaperData(paperStatements.statements);
                         });
                         this.setState({
                             statements: [...this.state.statements, ...statements],

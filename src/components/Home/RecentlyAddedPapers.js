@@ -3,7 +3,7 @@ import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from '../../constants/routes.js';
 import { getResourcesByClass, getStatementsBySubjects } from '../../network';
-import { get_paper_data } from 'utils';
+import { getPaperData } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
@@ -27,7 +27,7 @@ class RecentlyAddedPapers extends Component {
                 getStatementsBySubjects({ ids: paperStatements.map(p => p.id) })
                     .then(papersStatements => {
                         let papers = papersStatements.map(paperStatements => {
-                            return get_paper_data(paperStatements.statements);
+                            return getPaperData(paperStatements.statements);
                         });
                         this.setState({
                             papers: papers
