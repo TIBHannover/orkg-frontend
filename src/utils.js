@@ -172,8 +172,8 @@ export const getPaperData = (id, label, paperStatements) => {
         }
     }
     return {
-        id: id,
-        label: label,
+        id,
+        label,
         publicationYear,
         publicationMonth,
         researchField,
