@@ -450,6 +450,7 @@ export default class GraphVis {
     }
 
     stopBackgroundProcesses() {
+        this.layout.stopForce();
         this.nav.stopBackgroundProcesses();
     }
 } // end of class definition

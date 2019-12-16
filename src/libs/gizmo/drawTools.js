@@ -279,7 +279,6 @@ function shapeBasedIntersectionPoint(config, element, offsetDirection, distOffse
 
         let width = Math.min(shape.w, 250);
         let height = shape.h;
-
         // TODO
         // if (range.isUmlCustomShape()) {
         //

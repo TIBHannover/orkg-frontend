@@ -25,6 +25,8 @@ export default class Layout {
         this.createForceElements = this.createForceElements.bind(this);
         this.initializeLayoutEngine = this.initializeLayoutEngine.bind(this);
         this.resumeForce = this.resumeForce.bind(this);
+        this.stopForce = this.stopForce.bind(this);
+
         this.createTreeData = this.createTreeData.bind(this);
         // helper functions;
         this.updateLayoutSize = this.updateLayoutSize.bind(this);
@@ -33,6 +35,11 @@ export default class Layout {
     resumeForce() {
         if (this.force) {
             this.force.resume();
+        }
+    }
+    stopForce() {
+        if (this.force) {
+            this.force.stop();
         }
     }
 

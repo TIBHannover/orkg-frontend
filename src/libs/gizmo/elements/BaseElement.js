@@ -157,11 +157,17 @@ export default class BaseElement {
             const fontSize = parseFloat(fontSizeProperty);
             const textWidth = DrawTools().measureTextWidth(this.label, fontFamily, fontSize + 'px');
 
-            const height = fontSize + 2 * parseInt(cfg.overWriteOffset);
-            const width = textWidth + 2 * parseInt(cfg.overWriteOffset);
+            let height = fontSize + 2 * parseInt(cfg.overWriteOffset);
+            let width = textWidth + 2 * parseInt(cfg.overWriteOffset);
             const radius = Math.max(0.5 * height, 0.5 * width);
-
             tempRTE.remove();
+            if (isNaN(height)) {
+                height = 10;
+            }
+            if (isNaN(width)) {
+                width = 10;
+            }
+
             retValue = { r: radius, w: width, h: height, dynamic: true };
         } else {
             let c_r = parseInt(cfg.radius);
