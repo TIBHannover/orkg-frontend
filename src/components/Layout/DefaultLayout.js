@@ -14,7 +14,7 @@ const StyledBody = styled.div`
     min-height: 100vh;
     flex-direction: column;
     padding-top: 73px;
-    margin-top: 20px;
+    margin-top: 30px;
 `;
 
 const StyledAppContent = styled.div`
