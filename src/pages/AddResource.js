@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { createLiteralStatement, createResource, crossrefUrl, submitGetRequest, createLiteral } from '../network';
 import { Container } from 'reactstrap';
 import { toast } from 'react-toastify';
+import { reverse } from 'named-urls';
+import ROUTES from '../constants/routes';
 
 export default class AddResource extends Component {
     state = {
@@ -79,7 +81,7 @@ export default class AddResource extends Component {
 
     navigateToResource = resourceId => {
         this.setEditorState('edit');
-        document.location.href = `${process.env.PUBLIC_URL}/resource/${resourceId}`;
+        document.location.href = reverse(ROUTES.RESOURCE, { id: resourceId });
     };
 
     createDoiStatement = async (resourceId, predicateId) => {

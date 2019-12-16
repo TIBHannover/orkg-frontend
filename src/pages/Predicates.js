@@ -4,6 +4,8 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getAllPredicates } from '../network';
 import { Container } from 'reactstrap';
+import { reverse } from 'named-urls';
+import ROUTES from '../constants/routes';
 
 export default class Predicates extends Component {
     constructor(props) {
@@ -62,11 +64,7 @@ export default class Predicates extends Component {
                         <div>
                             {this.state.predicates.map(predicate => {
                                 return (
-                                    <ShortRecord
-                                        key={predicate.id}
-                                        header={predicate.id}
-                                        href={`${process.env.PUBLIC_URL}/predicate/${encodeURIComponent(predicate.id)}`}
-                                    >
+                                    <ShortRecord key={predicate.id} header={predicate.id} href={reverse(ROUTES.PREDICATE, { id: predicate.id })}>
                                         {predicate.label}
                                     </ShortRecord>
                                 );

@@ -164,7 +164,7 @@ class Header extends Component {
 
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="mr-auto" navbar>
-                            <NavItem>
+                            <NavItem className="ml-2 ml-md-0">
                                 <NavLink tag={RouterNavLink} exact to={ROUTES.PAPERS}>
                                     Papers
                                     {/* TODO: add taxonomy "Browse by research field" <FontAwesomeIcon icon={faSortDown} pull="right" /> */}
