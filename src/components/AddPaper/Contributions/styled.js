@@ -84,6 +84,7 @@ export const StyledStatementItem = styled(ListGroupItem)`
     border-color: ${props => props.theme.ultraLightBlueDarker} !important;
     overflow-wrap: break-word;
     word-break: break-all;
+    flex: 1;
 
     &.selectable {
         cursor: pointer;
@@ -159,12 +160,15 @@ export const StyledLevelBox = styled.div`
     margin-top: -2px;
     margin-right: -2px;
     margin-bottom: -2px;
+    display: flex;
+    flex: 1;
 
     .listGroupEnlarge {
         margin-top: -2px;
         margin-right: -2px;
         margin-bottom: -2px;
-        display: block;
+        display: flex;
+        flex: 1;
     }
 `;
 
