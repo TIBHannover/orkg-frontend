@@ -63,7 +63,7 @@ export default class Jumbotron extends Component {
                         <HeaderStyled className="mb-3 text-white">
                             <div className="row">
                                 <div className="col-md-7 definition">Scholarly Knowledge.</div>
-                                <div className="col-md-5 motto">
+                                <div className="col-md-5 motto pl-0">
                                     <Typist
                                         key={this.state.currentMotto}
                                         onTypingDone={() => this.setState(state => ({ currentMotto: state.currentMotto + 1 }))}
