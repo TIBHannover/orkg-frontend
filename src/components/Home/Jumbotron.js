@@ -23,6 +23,22 @@ const JumbotronStyled = styled.div`
     .marketingtext {
         font-size: larger;
     }
+
+    .definition {
+        text-align: right !important;
+    }
+    .motto {
+        text-align: left !important;
+    }
+
+    @media (max-width: 768px) {
+        .definition {
+            text-align: center !important;
+        }
+        .motto {
+            text-align: center !important;
+        }
+    }
 `;
 
 const HeaderStyled = styled.h1`
@@ -30,26 +46,47 @@ const HeaderStyled = styled.h1`
 `;
 
 export default class Jumbotron extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            motto: ['Structured.', 'Findable.', 'Comparable.'],
+            currentMotto: 0
+        };
+    }
+
     render() {
         return (
             <div>
                 <JumbotronStyled className="pt-6 pb-6">
                     <Container className="position-relative text-center">
                         <HeaderStyled className="mb-3 text-white">
-                            <Typist cursor={{ blink: true }}>
-                                Scholarly Knowledge. <Typist.Delay ms={500} />
-                                <em>Structured.</em>
-                            </Typist>
+                            <div className="row">
+                                <div className="col-md-7 definition">Scholarly Knowledge.</div>
+                                <div className="col-md-5 motto pl-0">
+                                    <Typist
+                                        key={this.state.currentMotto}
+                                        onTypingDone={() => this.setState(state => ({ currentMotto: state.currentMotto + 1 }))}
+                                    >
+                                        {this.state.motto.map((word, i) => (
+                                            <span key={word}>
+                                                {word}
+                                                <Typist.Backspace count={word.length} delay={(i + 1) * 1500} />
+                                            </span>
+                                        ))}
+                                    </Typist>
+                                </div>
+                            </div>
                         </HeaderStyled>
                         <div className="col-md-8 mx-auto mb-5 marketingtext">
                             <p className="mr-n2 ml-n2">
                                 The Open Research Knowledge Graph (ORKG) aims to describe research papers in a structured manner. With the ORKG,
-                                papers become findable and comparible.{' '}
+                                papers become findable and comparable.{' '}
                             </p>
                         </div>
 
                         <div style={{ position: 'relative' }}>
-                            <p className="mt-4 mb-4 text-shadow-dark text-center">
+                            <div className="mt-4 mb-4 text-shadow-dark text-center">
                                 <div className="flex-shrink-0 justify-content-center d-flex align-items-center">
                                     <a
                                         href="https://projects.tib.eu/orkg/"
@@ -61,7 +98,7 @@ export default class Jumbotron extends Component {
                                         Learn More
                                     </a>
                                 </div>
-                            </p>
+                            </div>
                         </div>
                     </Container>
                 </JumbotronStyled>
