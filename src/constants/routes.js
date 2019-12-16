@@ -6,8 +6,10 @@ export default {
     USER_SETTINGS: '/settings',
     USER_PROFILE: '/u/:userId',
     RESOURCES: '/resources',
+    RESOURCE: '/resource/:id',
     ADD_RESOURCE: '/addResource',
     PREDICATES: '/predicates',
+    PREDICATE: '/predicate/:id',
     ADD_PAPER: {
         GENERAL_DATA: '/add-paper'
     },
