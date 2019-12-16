@@ -3,6 +3,13 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.5.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5...V0.5.1) - 2019-12-13
+
+### Merged
+
+- fix: remove the token cookie if it's expired [`#134`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/134)
+
+---
 ## [V0.5](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.4.1...V0.5) - 2019-12-13
 
 ### Merged
