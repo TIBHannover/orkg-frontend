@@ -33,7 +33,7 @@ class Home extends Component {
                     <Row>
                         <Col className="col-sm-7 px-0" style={{ display: 'flex', flexDirection: 'column' }}>
                             <FeaturedComparisons />
-                            <div className="box mt-4 mr-4 p-4" style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
+                            <div className="box rounded-lg mt-4 mr-4 p-4" style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
                                 <h2 className="h5">
                                     <Icon icon={faStream} className="text-primary" /> Browse by research field
                                 </h2>

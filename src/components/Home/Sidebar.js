@@ -71,13 +71,13 @@ class Sidebar extends Component {
         }
 
         return (
-            <div className="box" style={{ flexGrow: '1', overflow: 'hidden', borderTopLeftRadius: '8px', borderTopRightRadius: '8px' }}>
+            <div className="box rounded-lg" style={{ flexGrow: '1', overflow: 'hidden' }}>
                 <FeaturedTabs className="clearfix row">
-                    <div className={`h6 col-md-6 text-center tab ${this.state.activeTab === 1 ? 'active' : ''}`} onClick={() => this.toggle(1)}>
-                        Featured papers
-                    </div>
                     <div className={`h6 col-md-6 text-center tab ${this.state.activeTab === 2 ? 'active' : ''}`} onClick={() => this.toggle(2)}>
                         Recently added papers
+                    </div>
+                    <div className={`h6 col-md-6 text-center tab ${this.state.activeTab === 1 ? 'active' : ''}`} onClick={() => this.toggle(1)}>
+                        Featured papers
                     </div>
                 </FeaturedTabs>
                 <TransitionGroup exit={false}>{rightSidebar}</TransitionGroup>

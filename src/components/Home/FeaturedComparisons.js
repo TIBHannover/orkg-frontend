@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import ROUTES from '../../constants/routes.js';
 import { getResourcesByClass, getStatementsBySubjects } from '../../network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 import Dotdotdot from 'react-dotdotdot';
 import styled from 'styled-components';
 import ContentLoader from 'react-content-loader';
@@ -38,6 +38,10 @@ class FeaturedComparisons extends Component {
     };
 
     getFeaturedComparisons = async () => {
+        this.setState({
+            loading: true
+        });
+
         let responseJson = await getResourcesByClass({
             id: process.env.REACT_APP_CLASSES_FEATURED_COMPARISON,
             sortBy: 'created_at',
@@ -154,25 +158,19 @@ class FeaturedComparisons extends Component {
 
     render() {
         return (
-            <div className="mr-4 box" style={{ overflow: 'hidden', borderTopLeftRadius: '8px', borderTopRightRadius: '8px' }}>
+            <div className="mr-4 box rounded-lg" style={{ overflow: 'hidden' }}>
                 <h2
-                    className="h6"
+                    className="h5"
                     style={{
                         marginBottom: 0,
                         padding: '15px'
                     }}
                 >
-                    Featured paper comparisons
+                    <Icon icon={faStar} className="text-primary" /> Featured paper comparisons
                     <Link to={ROUTES.FEATURED_COMPARISONS}>
-                        <span style={{ fontSize: '12px', float: 'right' }}>More comparisons</span>
+                        <span style={{ fontSize: '0.9rem', float: 'right', marginTop: 2 }}>More comparisons</span>
                     </Link>
                 </h2>
-                <div style={{}} />
-                {this.state.loading && (
-                    <div className="text-center mt-4 mb-4">
-                        <Icon icon={faSpinner} spin /> Loading
-                    </div>
-                )}
 
                 <CarouselContainer>
                     {!this.state.loading ? (
