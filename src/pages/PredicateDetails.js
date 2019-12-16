@@ -19,7 +19,7 @@ class PredicateDetails extends Component {
 
     findPredicate = async () => {
         try {
-            const responseJson = await submitGetRequest(predicatesUrl + encodeURIComponent(this.props.match.params.predicateId));
+            const responseJson = await submitGetRequest(predicatesUrl + encodeURIComponent(this.props.match.params.id));
             this.setState({
                 title: responseJson.label
             });
@@ -68,7 +68,7 @@ class PredicateDetails extends Component {
 PredicateDetails.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
-            predicateId: PropTypes.string.isRequired
+            id: PropTypes.string.isRequired
         }).isRequired
     }).isRequired
 };

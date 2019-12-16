@@ -126,11 +126,11 @@ const routes = [
     },
     /* Legacy routes, only used for debugging now */
     {
-        path: ROUTES.RESSOURCE_DETAILS,
+        path: ROUTES.RESOURCE,
         component: ResourceDetails
     },
     {
-        path: ROUTES.PREDICATE_DETAILS,
+        path: ROUTES.PREDICATE,
         component: PredicateDetails
     },
     {

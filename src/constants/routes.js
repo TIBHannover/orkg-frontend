@@ -22,8 +22,6 @@ export default {
     AUTHOR_PAGE: '/author/:authorId',
     LICENSE: '/license',
     /* Legacy routes, only used for debugging now */
-    RESSOURCE_DETAILS: '/resource/:resourceId',
-    PREDICATE_DETAILS: '/predicate/:predicateId',
     SEARCH: '/search/:searchTerm?',
     TPDL: '/tpdl',
     STATS: '/stats',
