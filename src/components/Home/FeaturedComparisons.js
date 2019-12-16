@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
-import { Button, Row, Carousel, CarouselItem, CarouselIndicators } from 'reactstrap';
+import { Carousel, CarouselItem, CarouselIndicators } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from '../../constants/routes.js';
 import { getResourcesByClass, getStatementsBySubjects } from '../../network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 import Dotdotdot from 'react-dotdotdot';
 import styled from 'styled-components';
 import ContentLoader from 'react-content-loader';
 
 const CarouselContainer = styled.div`
     width: 100%;
-    background: #f7f7f7 !important;
-    border-radius: 12px;
-    border: 1px solid rgba(0, 0, 0, 0.125);
 
     & li {
         width: 10px !important;
@@ -21,6 +18,10 @@ const CarouselContainer = styled.div`
         border-radius: 100% !important;
         background-color: ${props => props.theme.orkgPrimaryColor} !important;
     }
+`;
+
+const CarouselItemStyled = styled(CarouselItem)`
+    border-left: 4px solid ${props => props.theme.orkgPrimaryColor};
 `;
 
 class FeaturedComparisons extends Component {
@@ -37,6 +38,10 @@ class FeaturedComparisons extends Component {
     };
 
     getFeaturedComparisons = async () => {
+        this.setState({
+            loading: true
+        });
+
         let responseJson = await getResourcesByClass({
             id: process.env.REACT_APP_CLASSES_FEATURED_COMPARISON,
             sortBy: 'created_at',
@@ -127,19 +132,14 @@ class FeaturedComparisons extends Component {
 
     slides = () => {
         return this.state.comparisons.map((comparison, index) => {
-            const icon = require('@fortawesome/free-solid-svg-icons')[comparison.icon];
-
             return (
-                <CarouselItem
+                <CarouselItemStyled
                     onExiting={() => this.setState({ animating: true })}
                     onExited={() => this.setState({ animating: false })}
                     className={'pt-4 pb-1 pl-4 pr-4'}
                     key={`fp${comparison.id}`}
                 >
                     <div style={{ minHeight: '120px' }} className="d-flex">
-                        <div style={{ fontSize: 40, color: '#80869b' }} className="mr-4">
-                            <Icon icon={icon} />
-                        </div>
                         <div>
                             <h5>
                                 <Link className="" to={`${ROUTES.COMPARISON}${comparison.url}`}>
@@ -151,48 +151,42 @@ class FeaturedComparisons extends Component {
                             </div>
                         </div>
                     </div>
-                </CarouselItem>
+                </CarouselItemStyled>
             );
         });
     };
 
     render() {
         return (
-            <div className="mt-3 pl-3 pr-3">
-                {this.state.loading && (
-                    <div className="text-center mt-4 mb-4">
-                        <Icon icon={faSpinner} spin /> Loading
-                    </div>
-                )}
-
-                <Row style={{ margin: '25px 0 20px' }}>
-                    <CarouselContainer>
-                        {!this.state.loading ? (
-                            <Carousel activeIndex={this.state.activeIndex} next={this.next} previous={this.previous}>
-                                {this.slides()}
-                                <CarouselIndicators
-                                    items={this.state.comparisons}
-                                    activeIndex={this.state.activeIndex}
-                                    onClickHandler={this.goToIndex}
-                                />
-                            </Carousel>
-                        ) : (
-                            <div style={{ height: '130px' }} className={'pt-4 pb-1 pl-4 pr-4'}>
-                                <ContentLoader speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb" ariaLabel={false}>
-                                    <rect x="1" y="0" rx="4" ry="4" width="300" height="20" />
-                                    <rect x="1" y="25" rx="3" ry="3" width="250" height="20" />
-                                </ContentLoader>
-                            </div>
-                        )}
-                    </CarouselContainer>
-                </Row>
-                <div className="text-center">
+            <div className="mr-4 box rounded-lg" style={{ overflow: 'hidden' }}>
+                <h2
+                    className="h5"
+                    style={{
+                        marginBottom: 0,
+                        padding: '15px'
+                    }}
+                >
+                    <Icon icon={faStar} className="text-primary" /> Featured paper comparisons
                     <Link to={ROUTES.FEATURED_COMPARISONS}>
-                        <Button color="darkblue" size="sm">
-                            More comparisons
-                        </Button>
+                        <span style={{ fontSize: '0.9rem', float: 'right', marginTop: 2 }}>More comparisons</span>
                     </Link>
-                </div>
+                </h2>
+
+                <CarouselContainer>
+                    {!this.state.loading ? (
+                        <Carousel activeIndex={this.state.activeIndex} next={this.next} previous={this.previous}>
+                            {this.slides()}
+                            <CarouselIndicators items={this.state.comparisons} activeIndex={this.state.activeIndex} onClickHandler={this.goToIndex} />
+                        </Carousel>
+                    ) : (
+                        <div style={{ height: '130px' }} className={'pt-4 pb-1 pl-4 pr-4'}>
+                            <ContentLoader speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb" ariaLabel={false}>
+                                <rect x="1" y="0" rx="4" ry="4" width="300" height="20" />
+                                <rect x="1" y="25" rx="3" ry="3" width="250" height="20" />
+                            </ContentLoader>
+                        </div>
+                    )}
+                </CarouselContainer>
             </div>
         );
     }

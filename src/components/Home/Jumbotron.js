@@ -56,6 +56,14 @@ export default class Jumbotron extends Component {
         };
     }
 
+    componentDidMount() {
+        this.mounted = true;
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
+    }
+
     render() {
         return (
             <div>
@@ -67,7 +75,12 @@ export default class Jumbotron extends Component {
                                 <div className="col-md-5 motto pl-0">
                                     <Typist
                                         key={this.state.currentMotto}
-                                        onTypingDone={() => this.setState(state => ({ currentMotto: state.currentMotto + 1 }))}
+                                        onTypingDone={() => {
+                                            if (!this.mounted) {
+                                                return;
+                                            }
+                                            this.setState(state => ({ currentMotto: state.currentMotto + 1 }));
+                                        }}
                                     >
                                         {this.state.motto.map((word, i) => (
                                             <span key={word}>

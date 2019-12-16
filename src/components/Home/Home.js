@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faStar, faPlus, faStream } from '@fortawesome/free-solid-svg-icons';
+import { faStream } from '@fortawesome/free-solid-svg-icons';
 import ResearchFieldCards from './ResearchFieldCards';
-import RecentlyAddedPapers from './RecentlyAddedPapers';
+import Sidebar from './Sidebar';
 import FeaturedComparisons from './FeaturedComparisons';
 import Jumbotron from './Jumbotron';
 import { toast } from 'react-toastify';
@@ -29,32 +29,21 @@ class Home extends Component {
             <div>
                 <Jumbotron />
 
-                <Container style={{ marginTop: -40 }}>
+                <Container style={{ marginTop: -50 }}>
                     <Row>
-                        <Col className="col-sm-7 px-0">
-                            <div className="box mr-4 p-4 h-100">
+                        <Col className="col-sm-7 px-0" style={{ display: 'flex', flexDirection: 'column' }}>
+                            <FeaturedComparisons />
+                            <div className="box rounded-lg mt-4 mr-4 p-4" style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
                                 <h2 className="h5">
                                     <Icon icon={faStream} className="text-primary" /> Browse by research field
                                 </h2>
                                 <ResearchFieldCards />
                             </div>
                         </Col>
-                        <Col className="col-sm-5 px-0">
-                            <div className="box p-4 h-100">
-                                <h2 className="h5">
-                                    <Icon icon={faPlus} className="text-primary" /> Recently added papers
-                                </h2>
-                                <RecentlyAddedPapers />
-                            </div>
+                        <Col className="col-sm-5 px-0" style={{ display: 'flex', flexDirection: 'column' }}>
+                            <Sidebar />
                         </Col>
                     </Row>
-                </Container>
-
-                <Container className="box mt-4 p-4">
-                    <h2 className="h5">
-                        <Icon icon={faStar} className="text-primary" /> Featured paper comparisons
-                    </h2>
-                    <FeaturedComparisons />
                 </Container>
             </div>
         );
