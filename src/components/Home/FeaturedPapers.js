@@ -3,7 +3,8 @@ import { ListGroup, ListGroupItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from '../../constants/routes.js';
 import { getResourcesByClass, getStatementsBySubjects } from '../../network';
-import { get_paper_data } from 'utils';
+import { getPaperData } from 'utils';
+import { find } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
@@ -24,11 +25,16 @@ class FeaturedPapers extends Component {
             page: 1,
             items: 7,
             desc: true
-        }).then(paperStatements => {
-            getStatementsBySubjects({ ids: paperStatements.map(p => p.id) })
+        }).then(result => {
+            getStatementsBySubjects({ ids: result.map(p => p.id) })
                 .then(papersStatements => {
                     let papers = papersStatements.map(paperStatements => {
-                        return get_paper_data(paperStatements.statements);
+                        let paperSubject = find(result, { id: paperStatements.id });
+                        return getPaperData(
+                            paperStatements.id,
+                            paperSubject && paperSubject.label ? paperSubject.label : 'No Title',
+                            paperStatements.statements
+                        );
                     });
                     this.setState({
                         papers: papers
