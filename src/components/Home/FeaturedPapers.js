@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ListGroup, ListGroupItem, Button } from 'reactstrap';
+import { ListGroup, ListGroupItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from '../../constants/routes.js';
 import { getResourcesByClass, getStatementsBySubjects } from '../../network';
@@ -8,44 +8,40 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 
-class RecentlyAddedPapers extends Component {
+class FeaturedPapers extends Component {
     state = {
         papers: null
     };
 
-    // TODO: replace a lot of this logic to the backend (select papers, first author and research fields)
-    async componentDidMount() {
+    componentDidMount() {
+        this.loadfeaturedPapers();
+    }
+
+    loadfeaturedPapers = async () => {
+        this.setState({ loadingPapers: true });
         getResourcesByClass({
-            id: process.env.REACT_APP_CLASSES_PAPER,
+            id: process.env.REACT_APP_CLASSES_FEATURED_PAPER,
             page: 1,
             items: 7,
-            sortBy: 'created_at',
             desc: true
         }).then(paperStatements => {
-            if (paperStatements.length > 0) {
-                // Fetch the data of each paper
-                getStatementsBySubjects({ ids: paperStatements.map(p => p.id) })
-                    .then(papersStatements => {
-                        let papers = papersStatements.map(paperStatements => {
-                            return get_paper_data(paperStatements.statements);
-                        });
-                        this.setState({
-                            papers: papers
-                        });
-                    })
-                    .catch(error => {
-                        this.setState({
-                            papers: null
-                        });
-                        console.log(error);
+            getStatementsBySubjects({ ids: paperStatements.map(p => p.id) })
+                .then(papersStatements => {
+                    let papers = papersStatements.map(paperStatements => {
+                        return get_paper_data(paperStatements.statements);
                     });
-            } else {
-                this.setState({
-                    papers: []
+                    this.setState({
+                        papers: papers
+                    });
+                })
+                .catch(error => {
+                    this.setState({
+                        papers: null
+                    });
+                    console.log(error);
                 });
-            }
         });
-    }
+    };
 
     render() {
         return (
@@ -69,14 +65,6 @@ class RecentlyAddedPapers extends Component {
                                     </ListGroupItem>
                                 ))}
                             </ListGroup>
-
-                            <div className="text-center">
-                                <Link to={ROUTES.PAPERS}>
-                                    <Button color="primary" className="mr-3" size="sm">
-                                        More papers
-                                    </Button>
-                                </Link>
-                            </div>
                         </>
                     ) : (
                         <div className="text-center">No papers found</div>
@@ -91,4 +79,4 @@ class RecentlyAddedPapers extends Component {
     }
 }
 
-export default RecentlyAddedPapers;
+export default FeaturedPapers;
