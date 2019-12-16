@@ -7,6 +7,7 @@ import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { faSpinner, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import { getPaperData } from 'utils';
+import { find } from 'lodash';
 import PropTypes from 'prop-types';
 
 const AuthorMetaInfo = styled.div`
@@ -92,7 +93,12 @@ class AuthorPage extends Component {
                 })
                     .then(papersStatements => {
                         let papers = papersStatements.map(paperStatements => {
-                            return getPaperData(paperStatements.statements);
+                            let paperSubject = find(result.map(p => p.subject), { id: paperStatements.id });
+                            return getPaperData(
+                                paperStatements.id,
+                                paperSubject && paperSubject.label ? paperSubject.label : 'No Title',
+                                paperStatements.statements
+                            );
                         });
                         this.setState({
                             papers: [...this.state.papers, ...papers],
