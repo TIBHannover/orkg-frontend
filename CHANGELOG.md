@@ -3,6 +3,21 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.5.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.1...V0.5.2) - 2019-12-16
+
+### Merged
+
+- fix: featured papers component [`#143`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/143)
+- refactor : Get paper data function [`#142`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/142)
+- style: update home page components [`#139`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/139)
+- added stopForce function (called when graph is closed [stopBackgroundProcesses]) [`#140`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/140)
+- style: fix statment browser issue in firefox [`#141`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/141)
+- fix: replace urls with constants [`#137`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/137)
+- style: add margin top to body class [`#138`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/138)
+- style(Homepage): set multiple mottos in the homepage [`#136`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/136)
+- fix: typos on homepage and license page [`#135`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/135)
+
+---
 ## [V0.5.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5...V0.5.1) - 2019-12-13
 
 ### Merged
