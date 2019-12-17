@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const StyledShortRecord = styled.div`
@@ -23,7 +24,7 @@ class ShortRecord extends Component {
         return (
             <StyledShortRecord>
                 <div className="shortRecord-header">
-                    <a href={this.props.href}>{this.props.header}</a>
+                    <Link to={this.props.href}>{this.props.header}</Link>
                 </div>
                 <div className="shortRecord-content">{this.props.children}</div>
             </StyledShortRecord>

@@ -95,7 +95,7 @@ export default class Jumbotron extends Component {
                         <div className="col-md-8 mx-auto mb-5 marketingtext">
                             <p className="mr-n2 ml-n2">
                                 The Open Research Knowledge Graph (ORKG) aims to describe research papers in a structured manner. With the ORKG,
-                                papers become findable and comparable.{' '}
+                                papers are easier to find and compare.{' '}
                             </p>
                         </div>
 
