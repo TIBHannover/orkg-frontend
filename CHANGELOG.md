@@ -3,6 +3,15 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.5.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.2...V0.5.3) - 2019-12-17
+
+### Merged
+
+- Show featured papers by default [`#144`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/144)
+- fix: Use react router link for internal link [`#146`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/146)
+- fix: Add FeaturedPaper class to default environment variables [`#147`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/147)
+
+---
 ## [V0.5.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.1...V0.5.2) - 2019-12-16
 
 ### Merged
