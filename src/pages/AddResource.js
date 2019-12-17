@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { createLiteralStatement, createResource, crossrefUrl, submitGetRequest, createLiteral } from '../network';
+import { Redirect } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
@@ -7,9 +8,11 @@ import ROUTES from '../constants/routes';
 
 export default class AddResource extends Component {
     state = {
+        redirect: false,
         value: '',
         /* Possible values: 'edit', 'loading'. */
-        editorState: 'edit'
+        editorState: 'edit',
+        resourceId: ''
     };
 
     doi = null;
@@ -81,7 +84,9 @@ export default class AddResource extends Component {
 
     navigateToResource = resourceId => {
         this.setEditorState('edit');
-        document.location.href = reverse(ROUTES.RESOURCE, { id: resourceId });
+        this.setState({ resourceId: resourceId }, () => {
+            this.setState({ redirect: true });
+        });
     };
 
     createDoiStatement = async (resourceId, predicateId) => {
@@ -93,6 +98,15 @@ export default class AddResource extends Component {
 
     render() {
         const loading = this.state.editorState === 'loading';
+        if (this.state.redirect) {
+            this.setState({
+                redirect: false,
+                value: '',
+                resourceId: ''
+            });
+
+            return <Redirect to={reverse(ROUTES.RESOURCE, { id: this.state.resourceId })} />;
+        }
 
         return (
             <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5">
