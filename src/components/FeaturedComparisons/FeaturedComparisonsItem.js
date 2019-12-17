@@ -48,7 +48,7 @@ class FeaturedComparisonsItem extends Component {
         const contributionsLength = typeof contributionString === 'string' ? contributionString.split(',').length : 0;
 
         return (
-            <Col sm="6">
+            <Col sm="6" className="mb-4">
                 <Comparison onClick={this.handleClick}>
                     <ComparisonBody>
                         <Row>
