@@ -88,11 +88,15 @@ class Contributions extends Component {
                     });
                 });
                 Promise.all(similaireContributionsData).then(results => {
-                    this.setState({ similaireContributions: results, isSimilaireContributionsLoading: false });
+                    this.setState({
+                        similaireContributions: results,
+                        isSimilaireContributionsLoading: false,
+                        isSimilaireContributionsFailedLoading: false
+                    });
                 });
             })
             .catch(error => {
-                this.setState({ isSimilaireContributionsLoading: false, isSimilaireContributionsFailedLoading: true });
+                this.setState({ similaireContributions: [], isSimilaireContributionsLoading: false, isSimilaireContributionsFailedLoading: true });
             });
         this.setState({ loading: false });
     };
