@@ -161,7 +161,13 @@ class Search extends Component {
             desc: true,
             q: searchQuery,
             exclude:
-                process.env.REACT_APP_CLASSES_CONTRIBUTION + ',' + process.env.REACT_APP_CLASSES_PAPER + ',' + process.env.REACT_APP_CLASSES_PROBLEM
+                process.env.REACT_APP_CLASSES_CONTRIBUTION +
+                ',' +
+                process.env.REACT_APP_CLASSES_PAPER +
+                ',' +
+                process.env.REACT_APP_CLASSES_PROBLEM +
+                ',' +
+                process.env.REACT_APP_CLASSES_AUTHOR
         }).then(resources => {
             if (resources.length > 0) {
                 this.setState({
