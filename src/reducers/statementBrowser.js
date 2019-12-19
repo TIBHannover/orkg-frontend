@@ -337,6 +337,13 @@ export default (state = initialState, action) => {
             };
         }
 
+        case type.STATEMENT_BROWSER_LOAD_DATA: {
+            let { payload } = action;
+            return {
+                ...payload
+            };
+        }
+
         case type.ADD_FETCHED_STATEMENT: {
             return {
                 ...state

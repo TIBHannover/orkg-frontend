@@ -75,6 +75,13 @@ export default (state = initialState, action) => {
             };
         }
 
+        case type.ADD_PAPER_LOAD_DATA: {
+            let { payload } = action;
+            return {
+                ...payload
+            };
+        }
+
         case type.UPDATE_TOUR_CURRENT_STEP: {
             let { payload } = action;
             return {
