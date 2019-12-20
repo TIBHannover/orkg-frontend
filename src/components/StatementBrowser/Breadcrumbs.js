@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { goToResourceHistory } from '../../actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faLink } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes';
 import styled from 'styled-components/macro';
 import PropTypes from 'prop-types';
 
@@ -96,8 +99,22 @@ class Breadcrumbs extends Component {
                         let item = this.props.resourceHistory.byId[history];
 
                         return (
-                            <BreadcrumbItem key={index} onClick={() => this.handleOnClick(item.id, index)}>
+                            <BreadcrumbItem
+                                key={index}
+                                onClick={() =>
+                                    this.props.resourceHistory.allIds.length !== index + 1 ? this.handleOnClick(item.id, index) : undefined
+                                }
+                            >
                                 {item.label}
+                                {this.props.resourceHistory.allIds.length === index + 1 && (
+                                    <Link
+                                        title={'Go to resource page'}
+                                        className={'ml-2'}
+                                        to={reverse(ROUTES.RESOURCE, { id: this.props.selectedResource })}
+                                    >
+                                        <Icon icon={faLink} color={'#fff'} />
+                                    </Link>
+                                )}
                             </BreadcrumbItem>
                         );
                     })}
@@ -111,13 +128,15 @@ class Breadcrumbs extends Component {
 
 Breadcrumbs.propTypes = {
     resourceHistory: PropTypes.object.isRequired,
-    goToResourceHistory: PropTypes.func.isRequired
+    goToResourceHistory: PropTypes.func.isRequired,
+    selectedResource: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => {
     return {
         resourceHistory: state.statementBrowser.resourceHistory,
-        level: state.statementBrowser.level
+        level: state.statementBrowser.level,
+        selectedResource: state.statementBrowser.selectedResource
     };
 };
 
