@@ -69,3 +69,8 @@ body {
         padding-right: 15px;
     }
 }
+
+//react-sortable-hoc
+.sortableHelper {
+    z-index: 10000 !important;
+}
