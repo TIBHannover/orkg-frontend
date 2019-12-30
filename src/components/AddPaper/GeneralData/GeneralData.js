@@ -110,6 +110,19 @@ class GeneralData extends Component {
     disableBody = target => disableBodyScroll();
     enableBody = target => enableBodyScroll();
 
+    //moved callback after stateUpdate into a function
+    updateGlobalStateForVisualization = () => {
+        this.props.updateGeneralData({
+            title: this.state.paperTitle,
+            authors: this.state.paperAuthors,
+            publicationMonth: this.state.paperPublicationMonth,
+            publicationYear: this.state.paperPublicationYear,
+            doi: this.state.doi,
+            entry: this.state.entry,
+            showLookupTable: true
+        });
+    };
+
     //TODO this logic should be placed inside an action creator
     handleLookupClick = async () => {
         if (this.props.isTourOpen) {
@@ -192,7 +205,8 @@ class GeneralData extends Component {
                                 }
                                 const newAuthor = {
                                     label: fullname,
-                                    id: fullname
+                                    id: fullname,
+                                    orcid: author.ORCID ? author.ORCID : ''
                                 };
                                 return newAuthor;
                             });
@@ -208,16 +222,19 @@ class GeneralData extends Component {
                         console.log('Error setting paper data: ', e);
                     }
 
-                    this.setState({
-                        isFetching: false,
-                        showLookupTable: true,
-                        paperTitle,
-                        paperAuthors,
-                        paperPublicationMonth,
-                        paperPublicationYear,
-                        doi: doi,
-                        errors: null
-                    });
+                    this.setState(
+                        {
+                            isFetching: false,
+                            showLookupTable: true,
+                            paperTitle,
+                            paperAuthors,
+                            paperPublicationMonth,
+                            paperPublicationYear,
+                            doi: doi,
+                            errors: null
+                        },
+                        this.updateGlobalStateForVisualization
+                    );
                 }
             });
     };
@@ -226,28 +243,40 @@ class GeneralData extends Component {
         if (this.props.isTourOpen) {
             this.requestCloseTour();
         }
-        this.setState({
-            [e.target.name]: e.target.value
-        });
+        this.setState(
+            {
+                [e.target.name]: e.target.value
+            },
+            this.updateGlobalStateForVisualization
+        );
     };
 
     handleMonthChange = e => {
-        this.setState({
-            [e.target.name]: parseInt(e.target.value)
-        });
+        this.setState(
+            {
+                [e.target.name]: parseInt(e.target.value)
+            },
+            this.updateGlobalStateForVisualization
+        );
     };
 
     handleDataEntryClick = selection => {
-        this.setState({
-            dataEntry: selection
-        });
+        this.setState(
+            {
+                dataEntry: selection
+            },
+            this.updateGlobalStateForVisualization
+        );
     };
 
     handleAuthorsChange = tags => {
         tags = tags ? tags : [];
-        this.setState({
-            paperAuthors: tags
-        });
+        this.setState(
+            {
+                paperAuthors: tags
+            },
+            this.updateGlobalStateForVisualization
+        );
     };
 
     handleSkipTour = () => {

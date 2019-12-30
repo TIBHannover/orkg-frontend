@@ -10,6 +10,7 @@ import ROUTES from '../../constants/routes';
 import capitalize from 'capitalize';
 import classNames from 'classnames';
 import TableCell from './TableCell';
+import _ from 'lodash';
 
 const ScrollContainer = styled.div`
     overflow-x: hidden; // auto is maybe a better UX, but hidden looks better :)
@@ -150,7 +151,7 @@ class ComparisonTable extends Component {
     }
 
     componentDidMount = () => {
-        this.scrollContainer.current.addEventListener('scroll', this.handleScroll);
+        this.scrollContainer.current.addEventListener('scroll', this.handleScroll, 1000);
         this.defaultNextButtonState();
     };
 
@@ -194,14 +195,14 @@ class ComparisonTable extends Component {
         this.scrollContainer.current.scrollLeft -= this.scrollAmount;
     };
 
-    handleScroll = () => {
+    handleScroll = _.debounce(() => {
         const { scrollWidth, offsetWidth, scrollLeft } = this.scrollContainer.current;
 
         this.setState({
             showBackButton: this.scrollContainer.current.scrollLeft !== 0,
             showNextButton: offsetWidth + scrollLeft !== scrollWidth
         });
-    };
+    }, 100);
 
     render() {
         const scrollContainerClasses = classNames({

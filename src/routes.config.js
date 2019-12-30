@@ -22,6 +22,7 @@ import ViewPaper from './components/ViewPaper/ViewPaper';
 import Stats from './components/Stats/Stats';
 import UserSettings from './components/UserSettings/UserSettings';
 import UserProfile from './components/UserProfile/UserProfile';
+import FeaturedComparisons from 'components/FeaturedComparisons/FeaturedComparisons';
 
 const routes = [
     {
@@ -125,12 +126,16 @@ const routes = [
     },
     /* Legacy routes, only used for debugging now */
     {
-        path: ROUTES.RESSOURCE_DETAILS,
+        path: ROUTES.RESOURCE,
         component: ResourceDetails
     },
     {
-        path: ROUTES.PREDICATE_DETAILS,
+        path: ROUTES.PREDICATE,
         component: PredicateDetails
+    },
+    {
+        path: ROUTES.FEATURED_COMPARISONS,
+        component: FeaturedComparisons
     },
     {
         path: ROUTES.TPDL,

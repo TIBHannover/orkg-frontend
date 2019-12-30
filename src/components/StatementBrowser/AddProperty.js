@@ -14,6 +14,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from './AutoComplete';
 import { connect } from 'react-redux';
 import { createProperty } from '../../actions/statementBrowser';
+import uniqBy from 'lodash/uniqBy';
 import PropTypes from 'prop-types';
 
 class AddProperty extends Component {
@@ -104,7 +105,8 @@ class AddProperty extends Component {
                 });
             }
         }
-
+        //  ensure no properties with duplicate Labels exist
+        propertyList = uniqBy(propertyList, 'label');
         return propertyList;
     };
 

@@ -5,6 +5,8 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getAllResources } from '../network';
 import { Container } from 'reactstrap';
+import ROUTES from '../constants/routes';
+import { reverse } from 'named-urls';
 
 export default class Resources extends Component {
     constructor(props) {
@@ -61,20 +63,16 @@ export default class Resources extends Component {
                 </Container>
                 <Container className={'box pt-4 pb-4 pl-5 pr-5 clearfix'}>
                     <div className="clearfix">
-                        <Link className="float-right mb-2 mt-2 clearfix" to={`${process.env.PUBLIC_URL}/addResource`}>
-                            <span className="fa fa-plus" /> add new resource
+                        <Link className="float-right mb-2 mt-2 clearfix" to={ROUTES.ADD_RESOURCE}>
+                            <span className="fa fa-plus" /> Create new resource
                         </Link>
                     </div>
                     {this.state.resources.length > 0 && (
                         <div>
-                            {this.state.resources.map(predicate => {
+                            {this.state.resources.map(resource => {
                                 return (
-                                    <ShortRecord
-                                        key={predicate.id}
-                                        header={predicate.id}
-                                        href={`${process.env.PUBLIC_URL}/resource/${encodeURIComponent(predicate.id)}`}
-                                    >
-                                        {predicate.label}
+                                    <ShortRecord key={resource.id} header={resource.id} href={reverse(ROUTES.RESOURCE, { id: resource.id })}>
+                                        {resource.label}
                                     </ShortRecord>
                                 );
                             })}

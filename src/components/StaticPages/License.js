@@ -14,7 +14,7 @@ class License extends Component {
                 </Container>
                 <Container className="box pt-4 pb-4 pl-5 pr-5">
                     <h2>Data</h2>
-                    <p>No decisions has been made yet on the license of the data. {/* TODO: add correct license */}</p>
+                    <p>No decision has been made yet on the license of the data. {/* TODO: add correct license */}</p>
 
                     <h2>Code</h2>
 

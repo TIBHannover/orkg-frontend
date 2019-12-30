@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'reactstrap';
-import { getStatementsByObject, getResource, getStatementsBySubject } from '../../network';
+import { getStatementsByObject, getStatementsBySubject, getStatementsBySubjects } from '../../network';
 import PaperCard from '../PaperCard/PaperCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faOrcid } from '@fortawesome/free-brands-svg-icons';
+import { faSpinner, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
+import { getPaperData } from 'utils';
+import { find } from 'lodash';
 import PropTypes from 'prop-types';
 
 const AuthorMetaInfo = styled.div`
@@ -38,6 +41,7 @@ class AuthorPage extends Component {
             hasNextPage: false,
             page: 1,
             author: null,
+            orcid: '',
             papers: [],
             isLastPageReached: false
         };
@@ -56,11 +60,18 @@ class AuthorPage extends Component {
     };
 
     loadAuthorData = () => {
-        // Get the research field
-        getResource(this.props.match.params.authorId).then(result => {
-            this.setState({ author: result, papers: [], loading: false }, () => {
-                document.title = `${this.state.author.label} - ORKG`;
-            });
+        // Get the author data
+        getStatementsBySubject({ id: this.props.match.params.authorId }).then(authorStatements => {
+            let orcidStatement = authorStatements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_ORCID);
+            let orcid = null;
+            if (orcidStatement) {
+                orcid = orcidStatement.object.label;
+            }
+            if (authorStatements.length > 0) {
+                this.setState({ author: authorStatements[0].subject, papers: [], loading: false, orcid: orcid }, () => {
+                    document.title = `${this.state.author.label} - ORKG`;
+                });
+            }
         });
     };
 
@@ -77,45 +88,33 @@ class AuthorPage extends Component {
             // Papers
             if (result.length > 0) {
                 // Fetch the data of each paper
-                let papers = result
-                    .filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR)
-                    .map(paper => {
-                        return getStatementsBySubject({ id: paper.subject.id }).then(paperStatements => {
-                            // publication year
-                            let publicationYear = paperStatements.filter(
-                                statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR
+                getStatementsBySubjects({
+                    ids: result.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR).map(p => p.subject.id)
+                })
+                    .then(papersStatements => {
+                        let papers = papersStatements.map(paperStatements => {
+                            let paperSubject = find(result.map(p => p.subject), { id: paperStatements.id });
+                            return getPaperData(
+                                paperStatements.id,
+                                paperSubject && paperSubject.label ? paperSubject.label : 'No Title',
+                                paperStatements.statements
                             );
-                            if (publicationYear.length > 0) {
-                                publicationYear = publicationYear[0].object.label;
-                            } else {
-                                publicationYear = '';
-                            }
-                            // publication month
-                            let publicationMonth = paperStatements.filter(
-                                statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH
-                            );
-                            if (publicationMonth.length > 0) {
-                                publicationMonth = publicationMonth[0].object.label;
-                            } else {
-                                publicationMonth = '';
-                            }
-
-                            paper.subject.data = {
-                                publicationYear,
-                                publicationMonth,
-                                authorNames: [] // just to hide authors
-                            };
-                            return paper.subject;
                         });
+                        this.setState({
+                            papers: [...this.state.papers, ...papers],
+                            isNextPageLoading: false,
+                            hasNextPage: papers.length < this.pageSize || papers.length === 0 ? false : true,
+                            page: this.state.page + 1
+                        });
+                    })
+                    .catch(error => {
+                        this.setState({
+                            isNextPageLoading: false,
+                            hasNextPage: false,
+                            isLastPageReached: true
+                        });
+                        console.log(error);
                     });
-                return Promise.all(papers).then(papers => {
-                    this.setState({
-                        papers: [...this.state.papers, ...papers],
-                        isNextPageLoading: false,
-                        hasNextPage: papers.length < this.pageSize || papers.length === 0 ? false : true,
-                        page: this.state.page + 1
-                    });
-                });
             } else {
                 this.setState({
                     isNextPageLoading: false,
@@ -137,43 +136,66 @@ class AuthorPage extends Component {
                 {!this.state.loading && (
                     <div>
                         <Container className="p-0">
-                            <h1 className="h4 mt-4 mb-4">Author page: {this.state.author.label}</h1>
+                            <h1 className="h4 mt-4 mb-4">Author: {this.state.author.label}</h1>
                         </Container>
                         <Container className="p-0">
                             <Row>
                                 <Col className="col-4">
-                                    <div className={'box p-4'}>
+                                    <div className={'box p-4 mb-3'}>
                                         <AuthorMetaInfo>
                                             <div className={'key'}>Full name</div>
                                             <div className={'value'}>{this.state.author.label}</div>
                                         </AuthorMetaInfo>
+                                        {/*
                                         <AuthorMetaInfo>
                                             <div className={'key'}>Date of birth</div>
                                             <div className={'value'}>Date</div>
                                         </AuthorMetaInfo>
                                         <AuthorMetaInfo>
                                             <div className={'key'}>Place of birth</div>
-                                            <div className={'value'}>Coutnry</div>
+                                            <div className={'value'}>Country</div>
                                         </AuthorMetaInfo>
                                         <AuthorMetaInfo>
                                             <div className={'key'}>Occupation</div>
                                             <div className={'value'}>Lab</div>
                                         </AuthorMetaInfo>
+                                        */}
                                     </div>
+
+                                    {this.state.orcid && (
+                                        <div className={'box p-4'}>
+                                            <h5>Identifiers</h5>
+                                            <AuthorIdentifier>
+                                                <div className={'key'}>
+                                                    ORCID <Icon color={'#A6CE39'} icon={faOrcid} />
+                                                </div>
+                                                <div className={'value'}>
+                                                    <a href={`https://orcid.org/${this.state.orcid}`} target="_blank" rel="noopener noreferrer">
+                                                        {this.state.orcid} <Icon icon={faExternalLinkAlt} />
+                                                    </a>
+                                                </div>
+                                            </AuthorIdentifier>
+                                            {/*
+                                            <AuthorIdentifier>
+                                                <div className={'key'}>Scopus Author ID</div>
+                                                <div className={'value'}>Scopus link</div>
+                                            </AuthorIdentifier>
+                                            <AuthorIdentifier>
+                                                <div className={'key'}>Google Scholar author ID</div>
+                                                <div className={'value'}>Google Scholar link</div>
+                                            </AuthorIdentifier>
+                                            */}
+                                        </div>
+                                    )}
                                 </Col>
 
                                 <Col className="col-8">
-                                    <div className={'box p-4 mb-3'}>
+                                    <div className={'box p-4'}>
                                         <h5>Papers</h5>
                                         {this.state.papers.length > 0 && (
                                             <div>
                                                 {this.state.papers.map(resource => {
-                                                    return (
-                                                        <PaperCard
-                                                            paper={{ id: resource.id, title: resource.label, ...resource.data }}
-                                                            key={`pc${resource.id}`}
-                                                        />
-                                                    );
+                                                    return <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />;
                                                 })}
                                             </div>
                                         )}
@@ -186,29 +208,6 @@ class AuthorPage extends Component {
                                                 View more papers
                                             </div>
                                         )}
-                                    </div>
-                                    <div className={'box p-4'}>
-                                        <h5>Identifiers</h5>
-                                        <Row className="mt-3">
-                                            <Col className="col-6">
-                                                <AuthorIdentifier>
-                                                    <div className={'key'}>ORCID</div>
-                                                    <div className={'value'}>ORCID link</div>
-                                                </AuthorIdentifier>
-                                            </Col>
-                                            <Col className="col-6">
-                                                <AuthorIdentifier>
-                                                    <div className={'key'}>Scopus Author ID</div>
-                                                    <div className={'value'}>Scopus link</div>
-                                                </AuthorIdentifier>
-                                            </Col>
-                                            <Col className="col-6">
-                                                <AuthorIdentifier>
-                                                    <div className={'key'}>Google Scholar author ID</div>
-                                                    <div className={'value'}>Google Scholar link</div>
-                                                </AuthorIdentifier>
-                                            </Col>
-                                        </Row>
                                     </div>
                                 </Col>
                             </Row>

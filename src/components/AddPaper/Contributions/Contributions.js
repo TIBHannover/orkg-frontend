@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Row, Col, Button } from 'reactstrap';
 import ContributionItemList from './ContributionItemList';
+import ContributionsHelpTour from './ContributionsHelpTour';
 import Tooltip from '../../Utils/Tooltip';
 import { StyledHorizontalContributionsList } from './styled';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
 import {
     nextStep,
     previousStep,
@@ -14,7 +14,6 @@ import {
     updateContributionLabel,
     saveAddPaper,
     openTour,
-    updateTourCurrentStep,
     toggleAbstractDialog
 } from '../../../actions/addPaper';
 import Abstract from './../Abstract/Abstract';
@@ -23,8 +22,7 @@ import Contribution from './Contribution';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faMagic, faPlus } from '@fortawesome/free-solid-svg-icons';
-import styled, { withTheme } from 'styled-components';
-import { withCookies } from 'react-cookie';
+import styled from 'styled-components';
 import Tippy from '@tippy.js/react';
 import PropTypes from 'prop-types';
 
@@ -197,6 +195,8 @@ class Contributions extends Component {
 
                 <Abstract />
 
+                <ContributionsHelpTour />
+
                 <Button color="primary" className="float-right mb-4" onClick={this.handleNextClick}>
                     Finish
                 </Button>
@@ -227,9 +227,7 @@ Contributions.propTypes = {
     selectContribution: PropTypes.func.isRequired,
     updateContributionLabel: PropTypes.func.isRequired,
     saveAddPaper: PropTypes.func.isRequired,
-    theme: PropTypes.object.isRequired,
     openTour: PropTypes.func.isRequired,
-    updateTourCurrentStep: PropTypes.func.isRequired,
     toggleAbstractDialog: PropTypes.func.isRequired
 };
 
@@ -258,15 +256,10 @@ const mapDispatchToProps = dispatch => ({
     updateContributionLabel: data => dispatch(updateContributionLabel(data)),
     saveAddPaper: data => dispatch(saveAddPaper(data)),
     openTour: data => dispatch(openTour(data)),
-    updateTourCurrentStep: data => dispatch(updateTourCurrentStep(data)),
     toggleAbstractDialog: () => dispatch(toggleAbstractDialog())
 });
 
-export default compose(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    ),
-    withTheme,
-    withCookies
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
 )(Contributions);

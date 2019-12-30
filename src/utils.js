@@ -44,7 +44,7 @@ export function groupByObjectWithId(array, propertyName) {
 export function deleteArrayEntryByObjectValue(arr, object, value) {
     let newArr = [...arr];
 
-    var indexToDelete = -1;
+    let indexToDelete = -1;
 
     for (let i = 0; i < newArr.length; i++) {
         if (newArr[i][object] === value) {
@@ -108,4 +108,78 @@ export const get_error_message = (errors, field = null) => {
     }
     let field_error = errors.errors ? errors.errors.find(e => e.field === field) : null;
     return field_error ? capitalize(field_error.message) : null;
+};
+
+/**
+ * Parse paper statements and return a a paper object
+ *
+ * @param {Array} paperStatements
+ */
+export const getPaperData = (id, label, paperStatements) => {
+    // research field
+    let researchField = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
+    if (researchField.length > 0) {
+        researchField = researchField[0];
+    }
+    // publication year
+    let publicationYear = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
+    if (publicationYear.length > 0) {
+        publicationYear = publicationYear[0].object.label;
+    } else {
+        publicationYear = '';
+    }
+    // publication month
+    let publicationMonth = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
+    if (publicationMonth.length > 0) {
+        publicationMonth = publicationMonth[0].object.label;
+    } else {
+        publicationMonth = '';
+    }
+    // authors
+    let authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
+    let authorNamesArray = [];
+    if (authors.length > 0) {
+        for (let author of authors) {
+            authorNamesArray.push({
+                id: author.object.id,
+                statementId: author.id,
+                class: author.object._class,
+                label: author.object.label,
+                classes: author.object.classes,
+                created_at: author.created_at
+            });
+        }
+    }
+    // DOI
+    let doi = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
+    let doiResourceId = 0;
+    if (doi.length > 0) {
+        doiResourceId = doi[0].object.id;
+        doi = doi[0].object.label;
+
+        if (doi.includes('10.') && !doi.startsWith('10.')) {
+            doi = doi.substring(doi.indexOf('10.'));
+        }
+    } else {
+        doi = null;
+    }
+    // contributions
+    let contributions = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION);
+    let contributionArray = [];
+    if (contributions.length > 0) {
+        for (let contribution of contributions) {
+            contributionArray.push({ ...contribution.object, statementId: contribution.id });
+        }
+    }
+    return {
+        id,
+        label,
+        publicationYear,
+        publicationMonth,
+        researchField,
+        doi,
+        doiResourceId,
+        authorNames: authorNamesArray.sort((a, b) => a.created_at.localeCompare(b.created_at)),
+        contributions: contributionArray.sort((a, b) => a.label.localeCompare(b.label))
+    };
 };

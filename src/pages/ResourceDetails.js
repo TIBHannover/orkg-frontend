@@ -28,7 +28,7 @@ class ResourceDetails extends Component {
 
     findResource = () => {
         this.setState({ isLoading: true });
-        getResource(this.props.match.params.resourceId)
+        getResource(this.props.match.params.id)
             .then(responseJson => {
                 document.title = `${responseJson.label} - Resource - ORKG`;
                 this.setState({ label: responseJson.label, isLoading: false });
@@ -49,7 +49,7 @@ class ResourceDetails extends Component {
     };
 
     render() {
-        const id = this.props.match.params.resourceId;
+        const id = this.props.match.params.id;
         return (
             <>
                 {this.state.isLoading && <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
@@ -73,7 +73,7 @@ class ResourceDetails extends Component {
                         <div className={'box clearfix pt-4 pb-4 pl-5 pr-5'}>
                             <div className={'mb-2'}>
                                 {!this.state.editMode ? (
-                                    <h3 className={'pb-2 mb-3'}>
+                                    <h3 className={'pb-2 mb-3'} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                         {this.state.label}
                                         <Button className="float-right" color="darkblue" size="sm" onClick={() => this.toggle('editMode')}>
                                             <Icon icon={faPen} /> Edit
@@ -88,7 +88,7 @@ class ResourceDetails extends Component {
                                     enableEdit={this.state.editMode}
                                     syncBackend={this.state.editMode}
                                     openExistingResourcesInDialog={false}
-                                    initialResourceId={this.props.match.params.resourceId}
+                                    initialResourceId={this.props.match.params.id}
                                     initialResourceLabel={this.state.label}
                                 />
                             </div>
@@ -103,7 +103,7 @@ class ResourceDetails extends Component {
 ResourceDetails.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
-            resourceId: PropTypes.string.isRequired
+            id: PropTypes.string.isRequired
         }).isRequired
     }).isRequired
 };

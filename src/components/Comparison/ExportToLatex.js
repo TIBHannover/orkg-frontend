@@ -245,7 +245,7 @@ class ExportToLatex extends Component {
                     return contribution;
                 });
         });
-        let orkgCitation = Cite.async('10.5281/zenodo.1157185').then();
+        let orkgCitation = Cite.async('10.1145/3360901.3364435').then();
         return Promise.all([...contributions, orkgCitation]).then(contributions => {
             let res = [];
             let paperIds = [];

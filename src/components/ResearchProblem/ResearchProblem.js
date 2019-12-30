@@ -33,6 +33,15 @@ class ResearchProblem extends Component {
 
     componentDidUpdate = prevProps => {
         if (this.props.match.params.researchProblemId !== prevProps.match.params.researchProblemId) {
+            this.setState({
+                loading: true,
+                isNextPageLoading: false,
+                hasNextPage: false,
+                page: 1,
+                researchProblem: null,
+                contributions: [],
+                isLastPageReached: false
+            });
             this.loadResearchProblemData();
             this.loadMorePapers();
         }
@@ -60,13 +69,14 @@ class ResearchProblem extends Component {
             // Papers
             if (result.length > 0) {
                 // Get the papers of each contribution
-                var papers = result.map(contribution => {
+                const papers = result.map(contribution => {
                     return getStatementsByObject({
                         id: contribution.subject.id,
                         order: 'desc'
                     }).then(papers => {
+                        // TODO : use getPaperData(paperStatements) utils function and getStatementsBySubjects network function
                         // Fetch the data of each paper
-                        var papers_data = papers.map(paper => {
+                        const papers_data = papers.map(paper => {
                             return getStatementsBySubject({ id: paper.subject.id }).then(paperStatements => {
                                 // publication year
                                 let publicationYear = paperStatements.filter(
@@ -93,14 +103,20 @@ class ResearchProblem extends Component {
                                 let authorNamesArray = [];
                                 if (authors.length > 0) {
                                     for (let author of authors) {
-                                        let authorName = author.object.label;
-                                        authorNamesArray.push(authorName);
+                                        authorNamesArray.push({
+                                            id: author.object.id,
+                                            statementId: author.id,
+                                            class: author.object._class,
+                                            label: author.object.label,
+                                            classes: author.object.classes,
+                                            created_at: author.created_at
+                                        });
                                     }
                                 }
                                 paper.data = {
                                     publicationYear,
                                     publicationMonth,
-                                    authorNames: authorNamesArray.reverse()
+                                    authorNames: authorNamesArray.sort((a, b) => a.created_at.localeCompare(b.created_at))
                                 };
                                 return paper;
                             });

@@ -19,22 +19,25 @@ export const authenticationUrl = process.env.REACT_APP_SERVER_URL;
 /**
  * Sends simple GET request to the URL.
  */
-export const submitGetRequest = url => {
+export const submitGetRequest = (url, headers, send_token = false) => {
     if (!url) {
         throw new Error('Cannot submit GET request. URL is null or undefined.');
     }
 
-    const cookies = new Cookies();
-    let token = cookies.get('token') ? cookies.get('token') : null;
+    let myHeaders = new Headers(headers);
+
+    if (send_token) {
+        const cookies = new Cookies();
+        let token = cookies.get('token') ? cookies.get('token') : null;
+        if (token) {
+            myHeaders.append('Authorization', `Bearer ${token}`);
+        }
+    }
 
     return new Promise((resolve, reject) => {
         fetch(url, {
             method: 'GET',
-            headers: token
-                ? {
-                      Authorization: `Bearer ${token}`
-                  }
-                : {}
+            headers: myHeaders
         })
             .then(response => {
                 if (!response.ok) {
@@ -114,7 +117,12 @@ const submitPutRequest = (url, headers, data) => {
         fetch(url, { method: 'PUT', headers: myHeaders, body: JSON.stringify(data) })
             .then(response => {
                 if (!response.ok) {
-                    reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
+                    const json = response.json();
+                    if (json.then) {
+                        json.then(reject);
+                    } else {
+                        reject(new Error(`Error response. (${response.status}) ${response.statusText}`));
+                    }
                 } else {
                     const json = response.json();
                     if (json.then) {
@@ -208,6 +216,18 @@ export const updateStatement = (id, { subject_id = null, predicate_id = null, ob
     );
 };
 
+export const updateStatements = (statementIds, { subject_id = null, predicate_id = null, object_id = null }) => {
+    return submitPutRequest(
+        `${statementsUrl}?ids=${statementIds.join()}`,
+        { 'Content-Type': 'application/json' },
+        {
+            ...(subject_id ? { subject_id: subject_id } : null),
+            ...(predicate_id ? { predicate_id: predicate_id } : null),
+            ...(object_id ? { object_id: object_id } : null)
+        }
+    );
+};
+
 export const createPredicate = label => {
     return submitPostRequest(predicatesUrl, { 'Content-Type': 'application/json' }, { label: label });
 };
@@ -253,10 +273,20 @@ export const deleteStatementById = id => {
     return submitDeleteRequest(statementsUrl + encodeURIComponent(id));
 };
 
+export const deleteStatementsByIds = ids => {
+    return submitDeleteRequest(`${statementsUrl}?ids=${ids.join()}`);
+};
+
 export const getStatementsBySubject = ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
     let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
 
     return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`);
+};
+
+export const getStatementsBySubjects = ({ ids, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
+    let params = queryString.stringify({ ids: ids.join(), page: page, items: items, sortBy: sortBy, desc: desc });
+
+    return submitGetRequest(`${statementsUrl}subjects/?${params}`);
 };
 
 export const getStatementsByObject = async ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
@@ -325,7 +355,7 @@ export const signInWithEmailAndPassword = async (email, password) => {
     const data = {
         username: email,
         grant_type: 'password',
-        client_id: 'orkg-client',
+        client_id: `${process.env.REACT_APP_AUTHENTICATION_CLIENT_ID}`,
         password
     };
 
@@ -370,31 +400,32 @@ export const registerWithEmailAndPassword = (email, password, matching_password,
         matching_password: matching_password
     };
 
-    return submitPostRequest(`${authenticationUrl}auth/register`, headers, data, true, false);
+    return submitPostRequest(`${url}auth/register`, headers, data, true, false);
 };
 
 export const getUserInformation = () => {
-    return submitGetRequest(`${authenticationUrl}user/`);
+    return submitGetRequest(`${url}user/`, {}, true);
 };
 
-export const updateUserInformation = ({ email, displayName }) => {
+export const updateUserInformation = ({ email, display_name }) => {
     const headers = { 'Content-Type': 'application/json' };
 
     const data = {
         //email, //back doesn't support this
-        display_name: displayName
+        display_name: display_name
     };
 
-    return submitPutRequest(`${authenticationUrl}user/`, headers, data);
+    return submitPutRequest(`${url}user/`, headers, data);
 };
 
-export const updateUserPassword = ({ password, newPassword, confirmNewPassword }) => {
+export const updateUserPassword = ({ current_password, new_password, new_matching_password }) => {
     const headers = { 'Content-Type': 'application/json' };
 
     const data = {
-        password: newPassword,
-        matching_password: confirmNewPassword
+        current_password: current_password,
+        new_password: new_password,
+        new_matching_password: new_matching_password
     };
 
-    return submitPutRequest(`${authenticationUrl}user/`, headers, data);
+    return submitPutRequest(`${url}user/password/`, headers, data);
 };

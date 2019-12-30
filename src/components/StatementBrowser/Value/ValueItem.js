@@ -76,7 +76,7 @@ class ValueItem extends Component {
             if (this.props.syncBackend) {
                 this.props.isSavingValue({ id: this.props.id }); // To show the saving message instead of the value label
                 if (this.props.resourceId) {
-                    await updateLiteral(this.props.resourceId, this.props.label);
+                    await updateLiteral(this.props.resourceId, this.state.draftLabel);
                     toast.success('Literal label updated successfully');
                 }
                 this.props.doneSavingValue({ id: this.props.id });
@@ -94,7 +94,7 @@ class ValueItem extends Component {
             if (this.props.syncBackend) {
                 this.props.isSavingValue({ id: this.props.id }); // To show the saving message instead of the value label
                 if (this.props.resourceId) {
-                    await updateResource(this.props.resourceId, this.props.label);
+                    await updateResource(this.props.resourceId, this.state.draftLabel);
                     toast.success('Resource label updated successfully');
                 }
                 this.props.doneSavingValue({ id: this.props.id });

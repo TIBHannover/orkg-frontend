@@ -160,6 +160,9 @@ export const StyledStatementItem = styled(ListGroupItem)`
     cursor: default;
     background-color: ${props => props.theme.ultraLightBlue} !important;
     border-color: ${props => props.theme.ultraLightBlueDarker} !important;
+    overflow-wrap: break-word;
+    word-break: break-all;
+    flex: 1;
 
     &.selectable {
         cursor: pointer;
@@ -235,18 +238,22 @@ export const StyledLevelBox = styled.div`
     margin-top: -2px;
     margin-right: -2px;
     margin-bottom: -2px;
+    display: flex;
+    flex: 1;
 
     .listGroupEnlarge {
         margin-top: -2px;
         margin-right: -2px;
         margin-bottom: -2px;
-        display: block;
+        display: flex;
+        flex: 1;
     }
 `;
 
 /* valueItem */
 export const StyledValueItem = styled(ListGroupItem)`
     padding: 8px 0px !important;
+    overflow-wrap: break-word;
 
     & .objectLink {
         text-decoration: underline;

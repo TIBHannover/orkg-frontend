@@ -14,14 +14,16 @@ const FooterWrapper = styled.div`
 const FooterCol = styled(Col)`
     color: ${props => props.theme.darkblueDarker};
     margin: 10px 0;
+    font-size: 0.95rem;
 
     h5 {
         font-weight: 500;
         text-transform: uppercase;
         color: ${props => props.theme.darkblueDarker};
+        font-size: 1.1rem;
     }
     .description {
-        font-size: smaller;
+        font-size: 0.85rem;
     }
     a {
         color: ${props => props.theme.darkblueDarker};
@@ -42,7 +44,9 @@ const Footer = () => (
                                     <Logo style={{ height: '80px' }} />
                                 </Link>
                             </div>
-                            <div className={'col-md-8 description'}>We aim to describe research papers and contributions in a structured manner</div>
+                            <div className={'col-md-8 description'}>
+                                The Open Research Knowledge Graph aims to describe research papers in a structured manner
+                            </div>
                         </Row>
                     </FooterCol>
                     <FooterCol md={3}>
@@ -73,11 +77,14 @@ const Footer = () => (
                             <li>
                                 <Link to={ROUTES.CHANGELOG}>Changelog</Link>
                             </li>
-                            <li>Contributors</li>
+                            {/*<li>Contributors</li>*/}
                             <li>
                                 <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/" target="_blank" rel="noopener noreferrer">
                                     Gitlab
                                 </a>
+                            </li>
+                            <li>
+                                <Link to={ROUTES.LICENSE}>License</Link>
                             </li>
                         </ul>
                     </FooterCol>
@@ -86,7 +93,9 @@ const Footer = () => (
                         <hr className={'mr-5'} />
                         <ul className={'p-0'} style={{ listStyle: 'none' }}>
                             <li>
-                                <Link to={ROUTES.LICENSE}>License</Link>
+                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues" target="_blank" rel="noopener noreferrer">
+                                    Report an issue
+                                </a>
                             </li>
                             <li>
                                 <a href="https://projects.tib.eu/orkg/contact/" target="_blank" rel="noopener noreferrer">

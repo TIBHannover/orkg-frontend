@@ -98,8 +98,8 @@ class RDFDataCube extends Component {
                             statement =>
                                 statement.predicate.label.toLowerCase() === 'dataset' && statement.subject.classes.includes(classes['qb:Observation'])
                         );
-                        // Fetch the data of each observation
-                        var observations_data = observations.map(observation => {
+                        // Fetch the data of each observation todo : check for const correctness
+                        const observations_data = observations.map(observation => {
                             return getStatementsBySubject({ id: observation.subject.id }).then(observationStatements => {
                                 // Measure
                                 let os_m = observationStatements.filter(statement => statement.predicate.label in sMeasures);
@@ -136,7 +136,7 @@ class RDFDataCube extends Component {
                                         ...os_a.map(o_a => {
                                             return { id: o_a.object.id, label: o_a.object.label, type: o_a.object._class };
                                         })
-                                    ] // Ressource labels
+                                    ] // Resource labels
                                 };
                                 return ob;
                             });
@@ -155,7 +155,7 @@ class RDFDataCube extends Component {
                                 });
                                 //const onlyFebruary = (point) => point[2] === 'R1415'
                                 //table = table.dice(onlyFebruary)
-                                // Ressoruces labels
+                                // Resources labels
                                 resources = Object.assign(
                                     {},
                                     ...observations
@@ -242,8 +242,8 @@ class RDFDataCube extends Component {
                                             a = a === null || a === undefined ? -Infinity : a;
                                             b = b === null || b === undefined ? -Infinity : b;
                                             // check if a and b are numbers (contains only digits)
-                                            var aisnum = /^\d+$/.test(a);
-                                            var bisnum = /^\d+$/.test(b);
+                                            const aisnum = /^\d+$/.test(a);
+                                            const bisnum = /^\d+$/.test(b);
                                             if (aisnum && bisnum) {
                                                 a = parseInt(a);
                                                 b = parseInt(b);

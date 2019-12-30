@@ -6,8 +6,10 @@ export default {
     USER_SETTINGS: '/settings',
     USER_PROFILE: '/u/:userId',
     RESOURCES: '/resources',
+    RESOURCE: '/resource/:id',
     ADD_RESOURCE: '/addResource',
     PREDICATES: '/predicates',
+    PREDICATE: '/predicate/:id',
     ADD_PAPER: {
         GENERAL_DATA: '/add-paper'
     },
@@ -20,10 +22,9 @@ export default {
     AUTHOR_PAGE: '/author/:authorId',
     LICENSE: '/license',
     /* Legacy routes, only used for debugging now */
-    RESSOURCE_DETAILS: '/resource/:resourceId',
-    PREDICATE_DETAILS: '/predicate/:predicateId',
     SEARCH: '/search/:searchTerm?',
     TPDL: '/tpdl',
     STATS: '/stats',
-    CHANGELOG: '/changelog'
+    CHANGELOG: '/changelog',
+    FEATURED_COMPARISONS: '/featured-comparisons'
 };
