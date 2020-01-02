@@ -12,6 +12,7 @@ import NotFound from './components/StaticPages/NotFound';
 import Papers from './pages/Papers';
 import PredicateDetails from './pages/PredicateDetails';
 import Predicates from './pages/Predicates';
+import ContributionTemplates from './components/ContributionTemplates/ContributionTemplates';
 import ROUTES from './constants/routes';
 import RedirectShortLinks from './components/Comparison/RedirectShortLinks';
 import ResearchField from './components/ResearchField/ResearchField';
@@ -44,6 +45,11 @@ const routes = [
         path: ROUTES.PREDICATES,
         exact: true,
         component: Predicates
+    },
+    {
+        path: ROUTES.CONTRIBUTION_TEMPLATES,
+        exact: true,
+        component: ContributionTemplates
     },
     {
         path: ROUTES.USER_SETTINGS,
