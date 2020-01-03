@@ -181,10 +181,7 @@ export const createResourceStatement = (subjectId, predicateId, objectId) => {
         {
             subject_id: subjectId,
             predicate_id: predicateId,
-            object: {
-                id: objectId,
-                _class: 'resource'
-            }
+            object_id: objectId
         }
     );
 };

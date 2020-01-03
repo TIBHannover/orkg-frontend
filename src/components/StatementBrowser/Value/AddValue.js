@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { resourcesUrl, createResourceStatement, createResource, createLiteral, createLiteralStatement } from '../../../network';
+import { resourcesUrl, createResourceStatement, createResource, createLiteral, createLiteralStatement, predicatesUrl } from '../../../network';
 import { Input, InputGroup, InputGroupAddon, Button, DropdownToggle, DropdownMenu, InputGroupButtonDropdown, DropdownItem } from 'reactstrap';
 import Tooltip from '../../Utils/Tooltip';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -144,29 +144,42 @@ class AddValue extends Component {
                     <StyledValueItem>
                         {this.state.showAddValue ? (
                             <InputGroup>
-                                <InputGroupButtonDropdown
-                                    addonType="prepend"
-                                    isOpen={this.state.dropdownValueTypeOpen}
-                                    toggle={this.toggleDropDownValueType}
-                                >
-                                    <DropdownToggle caret color="primary" className={'valueTypeDropdown'}>
-                                        {this.state.valueType.charAt(0).toUpperCase() + this.state.valueType.slice(1)}
-                                    </DropdownToggle>
-                                    <DropdownMenu>
-                                        <StyledDropdownItem onClick={() => this.handleDropdownSelect('object')}>
-                                            <Tooltip message="Choose object to link this to an object, which can contain values on its own">
-                                                Object
-                                            </Tooltip>
-                                        </StyledDropdownItem>
-                                        <StyledDropdownItem onClick={() => this.handleDropdownSelect('literal')}>
-                                            <Tooltip message="Choose literal for values like numbers or plain text">Literal</Tooltip>
-                                        </StyledDropdownItem>
-                                    </DropdownMenu>
-                                </InputGroupButtonDropdown>
+                                {![process.env.REACT_APP_TEMPLATE_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
+                                    this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty]
+                                        .existingPredicateId
+                                ) && (
+                                    <InputGroupButtonDropdown
+                                        addonType="prepend"
+                                        isOpen={this.state.dropdownValueTypeOpen}
+                                        toggle={this.toggleDropDownValueType}
+                                    >
+                                        <DropdownToggle caret color="primary" className={'valueTypeDropdown'}>
+                                            {this.state.valueType.charAt(0).toUpperCase() + this.state.valueType.slice(1)}
+                                        </DropdownToggle>
+                                        <DropdownMenu>
+                                            <StyledDropdownItem onClick={() => this.handleDropdownSelect('object')}>
+                                                <Tooltip message="Choose object to link this to an object, which can contain values on its own">
+                                                    Object
+                                                </Tooltip>
+                                            </StyledDropdownItem>
+                                            <StyledDropdownItem onClick={() => this.handleDropdownSelect('literal')}>
+                                                <Tooltip message="Choose literal for values like numbers or plain text">Literal</Tooltip>
+                                            </StyledDropdownItem>
+                                        </DropdownMenu>
+                                    </InputGroupButtonDropdown>
+                                )}
 
                                 {this.state.valueType === 'object' ? (
                                     <AutoComplete
-                                        requestUrl={resourcesUrl}
+                                        requestUrl={
+                                            ![process.env.REACT_APP_TEMPLATE_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
+                                                this.props.properties.byId[
+                                                    this.props.propertyId ? this.props.propertyId : this.props.selectedProperty
+                                                ].existingPredicateId
+                                            )
+                                                ? resourcesUrl
+                                                : predicatesUrl
+                                        }
                                         excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM}`}
                                         placeholder="Enter a resource"
                                         onItemSelected={this.handleValueSelect}
@@ -186,9 +199,14 @@ class AddValue extends Component {
                                 )}
 
                                 <InputGroupAddon addonType="append">
-                                    <Button color="light" className={'valueActionButton'} onClick={this.handleAddValue}>
-                                        Create
-                                    </Button>
+                                    {![process.env.REACT_APP_TEMPLATE_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
+                                        this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty]
+                                            .existingPredicateId
+                                    ) && (
+                                        <Button color="light" className={'valueActionButton'} onClick={this.handleAddValue}>
+                                            Create
+                                        </Button>
+                                    )}
                                     <Button color="light" className={'valueActionButton'} onClick={this.handleHideAddValue}>
                                         Cancel
                                     </Button>

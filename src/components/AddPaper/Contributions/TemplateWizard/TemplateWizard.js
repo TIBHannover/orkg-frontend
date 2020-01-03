@@ -81,7 +81,7 @@ TemplateWizard.propTypes = {
     resources: PropTypes.object.isRequired,
     properties: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
-    initialResourceId: PropTypes.string.isRequired,
+    initialResourceId: PropTypes.string,
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool

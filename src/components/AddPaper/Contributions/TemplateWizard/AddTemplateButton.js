@@ -74,7 +74,7 @@ class AddTemplateButton extends Component {
                 className="mr-2 position-relative px-3 rounded-pill border-0"
             >
                 <IconWrapper>
-                    <Icon size="s" icon={faPlus} />
+                    <Icon size="sm" icon={faPlus} />
                 </IconWrapper>
                 <Label>{this.props.label}</Label>
             </Button>
@@ -85,7 +85,7 @@ class AddTemplateButton extends Component {
 AddTemplateButton.propTypes = {
     createProperty: PropTypes.func.isRequired,
     prefillStatements: PropTypes.func.isRequired,
-    selectedResource: PropTypes.string.isRequired,
+    selectedResource: PropTypes.string,
     predicateId: PropTypes.string.isRequired,
     predicateLabel: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
@@ -96,14 +96,12 @@ AddTemplateButton.defaultProps = {
     label: ''
 };
 
-const mapStateToProps = state => {};
-
 const mapDispatchToProps = dispatch => ({
     createProperty: data => dispatch(createProperty(data)),
     prefillStatements: data => dispatch(prefillStatements(data))
 });
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
 )(AddTemplateButton);
