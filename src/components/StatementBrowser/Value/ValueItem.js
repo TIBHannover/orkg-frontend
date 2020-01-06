@@ -314,8 +314,12 @@ class ValueItem extends Component {
     };
 
     render() {
+        const isProperty = [process.env.REACT_APP_TEMPLATE_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
+            this.props.properties.byId[this.props.propertyId].existingPredicateId
+        );
+
         const labelClass = classNames({
-            objectLink: this.props.type === 'object' && !this.props.isEditing
+            objectLink: this.props.type === 'object' && !this.props.isEditing && !isProperty
         });
 
         let resource = this.props.resources.byId[this.props.resourceId];
@@ -388,7 +392,7 @@ class ValueItem extends Component {
                     <>
                         {!this.props.inline ? (
                             <StyledValueItem>
-                                <span className={labelClass} onClick={!this.props.isEditing ? onClick : undefined}>
+                                <span className={labelClass} onClick={!this.props.isEditing && !isProperty ? onClick : undefined}>
                                     {!this.props.isSaving ? (
                                         !this.props.isEditing ? (
                                             <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>
@@ -511,7 +515,7 @@ class ValueItem extends Component {
                                                 </span>
                                             </Tippy>
                                         </span>
-                                        {(!existingResourceId || this.props.shared <= 1) && (
+                                        {(!existingResourceId || this.props.shared <= 1) && !isProperty && (
                                             <span
                                                 className={'mr-3 deleteValue float-right'}
                                                 onClick={() => {
@@ -655,6 +659,7 @@ ValueItem.propTypes = {
     fetchStatementsForResource: PropTypes.func.isRequired,
     resources: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
+    properties: PropTypes.object.isRequired,
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     selectedProperty: PropTypes.string.isRequired,
@@ -688,6 +693,7 @@ const mapStateToProps = state => {
     return {
         resources: state.statementBrowser.resources,
         values: state.statementBrowser.values,
+        properties: state.statementBrowser.properties,
         selectedProperty: state.statementBrowser.selectedProperty
     };
 };
