@@ -28,6 +28,9 @@ const StyledLoadMoreButton = styled.div`
 `;
 
 const StyledListGroupItem = styled(ListGroupItem)`
+    overflow-wrap: break-word;
+    word-break: break-all;
+
     &:last-child {
         border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
     }
