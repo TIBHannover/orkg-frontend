@@ -54,7 +54,8 @@ class AddProperty extends Component {
         this.props.createProperty({
             resourceId: this.props.selectedResource,
             existingPredicateId: id,
-            label: label
+            label: label,
+            createAndSelect: true
         });
     };
 
@@ -70,12 +71,14 @@ class AddProperty extends Component {
             this.props.createProperty({
                 resourceId: this.props.selectedResource,
                 existingPredicateId: newPredicate.id,
-                label: newPredicate.label
+                label: newPredicate.label,
+                createAndSelect: true
             });
         } else {
             this.props.createProperty({
                 resourceId: this.props.selectedResource,
-                label: this.state.newPropertyLabel
+                label: this.state.newPropertyLabel,
+                createAndSelect: true
             });
         }
     };

@@ -72,6 +72,9 @@ export default (state = initialState, action) => {
                 }));
                 newState = dotProp.set(newState, 'properties.allIds', ids => [...ids, payload.propertyId]);
             }
+            if (payload.createAndSelect) {
+                newState = dotProp.set(newState, 'selectedProperty', payload.propertyId);
+            }
             return newState ? newState : state;
         }
 
