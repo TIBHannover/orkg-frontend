@@ -35,7 +35,6 @@ const FooterCol = styled(Col)`
 const TwitterLink = styled.a`
     :hover {
         color: #00acee;
-        text-decoration: none;
     }
 `;
 
