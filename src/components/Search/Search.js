@@ -387,23 +387,34 @@ class Search extends Component {
                         </Col>
                         <Col className="col-sm-8 px-0">
                             <div className="box p-4 h-100">
-                                {this.isLoading() && this.state.papers.length === 0 && (
-                                    <ContentLoader height={210} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
-                                        <rect x="0" y="8" width="50" height="15" />
-                                        <rect x="0" y="25" width="100%" height="15" />
-                                        <rect x="0" y="42" width="100%" height="15" />
-                                        <rect x="0" y="59" width="100%" height="15" />
-                                        <rect x="0" y="76" width="100%" height="15" />
+                                {this.isLoading() &&
+                                    (this.state.papers.length === 0 &&
+                                        this.state.problems.length === 0 &&
+                                        this.state.authors.length === 0 &&
+                                        this.state.resources.length === 0 &&
+                                        this.state.predicates.length === 0) && (
+                                        <ContentLoader height={210} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
+                                            <rect x="0" y="8" width="50" height="15" />
+                                            <rect x="0" y="25" width="100%" height="15" />
+                                            <rect x="0" y="42" width="100%" height="15" />
+                                            <rect x="0" y="59" width="100%" height="15" />
+                                            <rect x="0" y="76" width="100%" height="15" />
 
-                                        <rect x="0" y={8 + 100} width="50" height="15" />
-                                        <rect x="0" y={25 + 100} width="100%" height="15" />
-                                        <rect x="0" y={42 + 100} width="100%" height="15" />
-                                        <rect x="0" y={59 + 100} width="100%" height="15" />
-                                        <rect x="0" y={76 + 100} width="100%" height="15" />
-                                    </ContentLoader>
-                                )}
+                                            <rect x="0" y={8 + 100} width="50" height="15" />
+                                            <rect x="0" y={25 + 100} width="100%" height="15" />
+                                            <rect x="0" y={42 + 100} width="100%" height="15" />
+                                            <rect x="0" y={59 + 100} width="100%" height="15" />
+                                            <rect x="0" y={76 + 100} width="100%" height="15" />
+                                        </ContentLoader>
+                                    )}
 
-                                {!this.props.match.params.searchTerm || (!this.isLoading() && this.state.papers.length === 0) ? (
+                                {!this.props.match.params.searchTerm ||
+                                (!this.isLoading() &&
+                                    (this.state.papers.length === 0 &&
+                                        this.state.problems.length === 0 &&
+                                        this.state.authors.length === 0 &&
+                                        this.state.resources.length === 0 &&
+                                        this.state.predicates.length === 0)) ? (
                                     <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
                                 ) : (
                                     <div>
