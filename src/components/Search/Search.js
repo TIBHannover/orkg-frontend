@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import Results from './Results';
 import Filters from './Filters';
+import ContentLoader from 'react-content-loader';
 
 class Search extends Component {
     constructor(props) {
@@ -67,7 +68,7 @@ class Search extends Component {
             hasResourcesNextPage: false,
             resourcesPage: 1,
             isResourcesLastPageReached: false,
-
+            //TODO: create a general method for filtering, so there is less duplicate code
             predicates: [],
             isPredicatesNextPageLoading: false,
             hasPredicatesNextPage: false,
@@ -145,6 +146,24 @@ class Search extends Component {
                 }
             );
         }
+    };
+
+    isLoading = () => {
+        const {
+            isResourcesNextPageLoading,
+            isPapersNextPageLoading,
+            isAuthorsNextPageLoading,
+            isProblemsNextPageLoading,
+            isPredicatesNextPageLoading
+        } = this.state;
+
+        return (
+            isResourcesNextPageLoading ||
+            isPapersNextPageLoading ||
+            isAuthorsNextPageLoading ||
+            isProblemsNextPageLoading ||
+            isPredicatesNextPageLoading
+        );
     };
 
     handleChange(event) {
@@ -368,7 +387,23 @@ class Search extends Component {
                         </Col>
                         <Col className="col-sm-8 px-0">
                             <div className="box p-4 h-100">
-                                {!this.props.match.params.searchTerm ? (
+                                {this.isLoading() && this.state.papers.length === 0 && (
+                                    <ContentLoader height={210} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
+                                        <rect x="0" y="8" width="50" height="15" />
+                                        <rect x="0" y="25" width="100%" height="15" />
+                                        <rect x="0" y="42" width="100%" height="15" />
+                                        <rect x="0" y="59" width="100%" height="15" />
+                                        <rect x="0" y="76" width="100%" height="15" />
+
+                                        <rect x="0" y={8 + 100} width="50" height="15" />
+                                        <rect x="0" y={25 + 100} width="100%" height="15" />
+                                        <rect x="0" y={42 + 100} width="100%" height="15" />
+                                        <rect x="0" y={59 + 100} width="100%" height="15" />
+                                        <rect x="0" y={76 + 100} width="100%" height="15" />
+                                    </ContentLoader>
+                                )}
+
+                                {!this.props.match.params.searchTerm || (!this.isLoading() && this.state.papers.length === 0) ? (
                                     <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
                                 ) : (
                                     <div>
@@ -381,6 +416,7 @@ class Search extends Component {
                                                 items={this.state.papers}
                                                 label={'Papers'}
                                                 class={process.env.REACT_APP_CLASSES_PAPER}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(1)}
                                             />
                                         )}
                                         {(this.state.selectedFilters.length === 0 ||
@@ -392,6 +428,7 @@ class Search extends Component {
                                                 items={this.state.problems}
                                                 label={'Research problems'}
                                                 class={process.env.REACT_APP_CLASSES_PROBLEM}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(2)}
                                             />
                                         )}
                                         {(this.state.selectedFilters.length === 0 ||
@@ -403,6 +440,7 @@ class Search extends Component {
                                                 items={this.state.authors}
                                                 label={'Authors'}
                                                 class={process.env.REACT_APP_CLASSES_AUTHOR}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(3)}
                                             />
                                         )}
                                         {(this.state.selectedFilters.length === 0 ||
@@ -414,6 +452,7 @@ class Search extends Component {
                                                 items={this.state.resources}
                                                 label={'Resources'}
                                                 class={'resource'}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(4)}
                                             />
                                         )}
                                         {(this.state.selectedFilters.length === 0 ||
@@ -425,6 +464,7 @@ class Search extends Component {
                                                 items={this.state.predicates}
                                                 label={'Predicates'}
                                                 class={'predicate'}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(5)}
                                             />
                                         )}
                                     </div>
