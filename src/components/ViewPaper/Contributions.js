@@ -113,7 +113,7 @@ class Contributions extends Component {
             problemsArray = [...problemsArray.slice(0, objIndex), updatedObj, ...problemsArray.slice(objIndex + 1)];
             toast.success('Research problem added successfully');
         } else if (a.action === 'create-option') {
-            let newResource = await createResource(a.createdOptionLabel);
+            let newResource = await createResource(a.createdOptionLabel, [process.env.REACT_APP_CLASSES_PROBLEM]);
             let statement = await createResourceStatement(
                 this.state.selectedContribution,
                 process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM,

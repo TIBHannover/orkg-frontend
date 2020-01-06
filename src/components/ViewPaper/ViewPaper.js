@@ -260,7 +260,9 @@ class ViewPaper extends Component {
     };
 
     handleCreateContribution = async () => {
-        let newContribution = await createResource(`Contribution ${this.state.contributions.length + 1}`);
+        let newContribution = await createResource(`Contribution ${this.state.contributions.length + 1}`, [
+            process.env.REACT_APP_CLASSES_CONTRIBUTION
+        ]);
         let statement = await createResourceStatement(
             this.props.match.params.resourceId,
             process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION,
