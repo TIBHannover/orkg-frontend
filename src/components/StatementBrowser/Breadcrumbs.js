@@ -8,6 +8,7 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import styled from 'styled-components/macro';
 import PropTypes from 'prop-types';
+import Tippy from '@tippy.js/react';
 
 const BreadcrumbList = styled.ul`
     list-style: none;
@@ -50,6 +51,7 @@ const BreadcrumbItem = styled.li`
         background: #e86161;
         color: #fff;
         max-width: 100%;
+        cursor: default;
     }
 
     &:not(:first-child) {
@@ -107,13 +109,15 @@ class Breadcrumbs extends Component {
                             >
                                 {item.label}
                                 {this.props.resourceHistory.allIds.length === index + 1 && (
-                                    <Link
-                                        title={'Go to resource page'}
-                                        className={'ml-2'}
-                                        to={reverse(ROUTES.RESOURCE, { id: this.props.selectedResource })}
-                                    >
-                                        <Icon icon={faLink} color={'#fff'} />
-                                    </Link>
+                                    <Tippy content="Go to resource page">
+                                        <Link
+                                            title={'Go to resource page'}
+                                            className={'ml-2'}
+                                            to={reverse(ROUTES.RESOURCE, { id: this.props.selectedResource })}
+                                        >
+                                            <Icon icon={faLink} color={'#fff'} />
+                                        </Link>
+                                    </Tippy>
                                 )}
                             </BreadcrumbItem>
                         );
