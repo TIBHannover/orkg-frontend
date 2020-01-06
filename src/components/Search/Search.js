@@ -96,15 +96,17 @@ class Search extends Component {
 
     componentDidMount() {
         document.title = 'Search - ORKG';
-        this.loadMoreResources(this.state.value);
-        this.loadMorePapers(this.state.value);
-        this.loadMoreProblems(this.state.value);
-        this.loadMoreAuthors(this.state.value);
-        this.loadMorePredicates(this.state.value);
+        if (this.state.value) {
+            this.loadMoreResources(this.state.value);
+            this.loadMorePapers(this.state.value);
+            this.loadMoreProblems(this.state.value);
+            this.loadMoreAuthors(this.state.value);
+            this.loadMorePredicates(this.state.value);
+        }
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (this.props.match.params.searchTerm !== prevProps.match.params.searchTerm) {
+        if (this.props.match.params.searchTerm !== prevProps.match.params.searchTerm && this.props.match.params.searchTerm) {
             this.setState(
                 {
                     value: this.props.match.params.searchTerm,
@@ -366,60 +368,66 @@ class Search extends Component {
                         </Col>
                         <Col className="col-sm-8 px-0">
                             <div className="box p-4 h-100">
-                                {(this.state.selectedFilters.length === 0 ||
-                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(1))) && (
-                                    <Results
-                                        loading={this.state.isPapersNextPageLoading}
-                                        hasNextPage={this.state.hasPapersNextPage}
-                                        loadMore={this.loadMorePapers}
-                                        items={this.state.papers}
-                                        label={'Papers'}
-                                        class={process.env.REACT_APP_CLASSES_PAPER}
-                                    />
-                                )}
-                                {(this.state.selectedFilters.length === 0 ||
-                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(2))) && (
-                                    <Results
-                                        loading={this.state.isProblemsNextPageLoading}
-                                        hasNextPage={this.state.hasProblemsNextPage}
-                                        loadMore={this.loadMoreProblems}
-                                        items={this.state.problems}
-                                        label={'Research problems'}
-                                        class={process.env.REACT_APP_CLASSES_PROBLEM}
-                                    />
-                                )}
-                                {(this.state.selectedFilters.length === 0 ||
-                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(3))) && (
-                                    <Results
-                                        loading={this.state.isAuthorsNextPageLoading}
-                                        hasNextPage={this.state.hasAuthorsNextPage}
-                                        loadMore={this.loadMoreAuthors}
-                                        items={this.state.authors}
-                                        label={'Authors'}
-                                        class={process.env.REACT_APP_CLASSES_AUTHOR}
-                                    />
-                                )}
-                                {(this.state.selectedFilters.length === 0 ||
-                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(4))) && (
-                                    <Results
-                                        loading={this.state.isResourcesNextPageLoading}
-                                        hasNextPage={this.state.hasResourcesNextPage}
-                                        loadMore={this.loadMoreResources}
-                                        items={this.state.resources}
-                                        label={'Resources'}
-                                        class={'resource'}
-                                    />
-                                )}
-                                {(this.state.selectedFilters.length === 0 ||
-                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(5))) && (
-                                    <Results
-                                        loading={this.state.isPredicatesNextPageLoading}
-                                        hasNextPage={this.state.hasPredicatesNextPage}
-                                        loadMore={this.loadMorePredicates}
-                                        items={this.state.predicates}
-                                        label={'Predicates'}
-                                        class={'predicate'}
-                                    />
+                                {!this.props.match.params.searchTerm ? (
+                                    <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
+                                ) : (
+                                    <div>
+                                        {(this.state.selectedFilters.length === 0 ||
+                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(1))) && (
+                                            <Results
+                                                loading={this.state.isPapersNextPageLoading}
+                                                hasNextPage={this.state.hasPapersNextPage}
+                                                loadMore={this.loadMorePapers}
+                                                items={this.state.papers}
+                                                label={'Papers'}
+                                                class={process.env.REACT_APP_CLASSES_PAPER}
+                                            />
+                                        )}
+                                        {(this.state.selectedFilters.length === 0 ||
+                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(2))) && (
+                                            <Results
+                                                loading={this.state.isProblemsNextPageLoading}
+                                                hasNextPage={this.state.hasProblemsNextPage}
+                                                loadMore={this.loadMoreProblems}
+                                                items={this.state.problems}
+                                                label={'Research problems'}
+                                                class={process.env.REACT_APP_CLASSES_PROBLEM}
+                                            />
+                                        )}
+                                        {(this.state.selectedFilters.length === 0 ||
+                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(3))) && (
+                                            <Results
+                                                loading={this.state.isAuthorsNextPageLoading}
+                                                hasNextPage={this.state.hasAuthorsNextPage}
+                                                loadMore={this.loadMoreAuthors}
+                                                items={this.state.authors}
+                                                label={'Authors'}
+                                                class={process.env.REACT_APP_CLASSES_AUTHOR}
+                                            />
+                                        )}
+                                        {(this.state.selectedFilters.length === 0 ||
+                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(4))) && (
+                                            <Results
+                                                loading={this.state.isResourcesNextPageLoading}
+                                                hasNextPage={this.state.hasResourcesNextPage}
+                                                loadMore={this.loadMoreResources}
+                                                items={this.state.resources}
+                                                label={'Resources'}
+                                                class={'resource'}
+                                            />
+                                        )}
+                                        {(this.state.selectedFilters.length === 0 ||
+                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(5))) && (
+                                            <Results
+                                                loading={this.state.isPredicatesNextPageLoading}
+                                                hasNextPage={this.state.hasPredicatesNextPage}
+                                                loadMore={this.loadMorePredicates}
+                                                items={this.state.predicates}
+                                                label={'Predicates'}
+                                                class={'predicate'}
+                                            />
+                                        )}
+                                    </div>
                                 )}
                             </div>
                         </Col>
