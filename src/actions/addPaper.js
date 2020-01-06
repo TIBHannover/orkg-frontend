@@ -2,7 +2,7 @@ import * as network from '../network';
 import * as type from './types.js';
 import { guid } from '../utils';
 import { mergeWith, isArray, uniqBy } from 'lodash';
-import { createResource, selectResource, createProperty, createValue } from './statementBrowser';
+import { createResource, selectResource, createProperty, createValue, loadStatementBrowserData } from './statementBrowser';
 import { toast } from 'react-toastify';
 
 export const updateGeneralData = data => dispatch => {
@@ -28,6 +28,15 @@ export const blockNavigation = () => dispatch => {
     dispatch({
         type: type.ADD_PAPER_BLOCK_NAVIGATION
     });
+};
+
+export const loadPaperData = data => dispatch => {
+    dispatch({
+        type: type.ADD_PAPER_LOAD_DATA,
+        payload: data.addPaper
+    });
+
+    dispatch(loadStatementBrowserData(data.statementBrowser));
 };
 
 export const updateResearchField = data => dispatch => {

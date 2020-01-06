@@ -41,6 +41,13 @@ export const resetStatementBrowser = () => dispatch => {
     });
 };
 
+export const loadStatementBrowserData = data => dispatch => {
+    dispatch({
+        type: type.STATEMENT_BROWSER_LOAD_DATA,
+        payload: data
+    });
+};
+
 export const togglePropertyCollapse = id => dispatch => {
     dispatch({
         type: type.TOGGLE_PROPERTY_COLLAPSE,
