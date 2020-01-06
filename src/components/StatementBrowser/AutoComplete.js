@@ -75,7 +75,7 @@ class AutoComplete extends Component {
 
             if (this.props.additionalData && this.props.additionalData.length > 0) {
                 let newProperties = this.props.additionalData;
-                newProperties = newProperties.filter(({ label }) => label.includes(value)); // ensure the label of the new property contains the search value
+                newProperties = newProperties.filter(({ label }) => label.toLowerCase().includes(value.toLowerCase())); // ensure the label of the new property contains the search value
 
                 responseJson.unshift(...newProperties);
             }
