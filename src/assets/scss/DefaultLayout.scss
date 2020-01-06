@@ -1,4 +1,4 @@
-@import '../../assets/scss/ThemeVariables.scss';
+@import "../../assets/scss/ThemeVariables.scss";
 
 body {
     color: #646464;
@@ -56,6 +56,10 @@ body {
     border-radius: 0 !important;
 }
 
+.sortableHelperAuthors {
+    z-index: 10000 !important;
+}
+
 // REACTOUR
 .reactourMask {
     opacity: 0.6;
@@ -68,9 +72,4 @@ body {
         padding-left: 15px;
         padding-right: 15px;
     }
-}
-
-//react-sortable-hoc
-.sortableHelper {
-    z-index: 10000 !important;
 }

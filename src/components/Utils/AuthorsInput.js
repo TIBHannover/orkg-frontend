@@ -19,17 +19,8 @@ const AuthorTags = styled.div`
     overflow: hidden;
 `;
 
-const AddAuthor = styled.div`
-    padding: 6px 10px;
-    display: flex;
+const AddAuthor = styled(Button)`
     margin: 0 0 2px 0;
-    min-width: 0;
-    color: ${props => props.theme.darkblueDarker};
-    border: solid 2px #e9ecef;
-    border-radius: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
     &:hover {
         background-color: #e9ecef;
         color: ${props => props.theme.darkblueDarker};
@@ -248,10 +239,11 @@ class AuthorsInput extends Component {
                     {this.props.value.length > 0 && (
                         <SortableContainer
                             useDragHandle
-                            helperClass="sortableHelper"
+                            helperClass="sortableHelperAuthors"
                             onSortEnd={this.onSortEnd}
                             className={'clearfix'}
                             onClick={this.props.value.length === 0 ? () => this.toggle('showAuthorForm') : undefined}
+                            lockAxis="y"
                         >
                             {this.props.value.map((author, index) => {
                                 return (
@@ -271,12 +263,14 @@ class AuthorsInput extends Component {
                 <div>
                     <AddAuthor
                         id="button-addon2"
+                        color="light"
+                        className="w-100"
                         onClick={() => {
                             this.setState({ authorNameLoading: false, authorInput: '', errors: null, editMode: false });
                             this.toggle('showAuthorForm');
                         }}
                     >
-                        <Icon icon={faPlus} color={'#495057'} className={'mr-2'} /> Add author
+                        <Icon icon={faPlus} className={'mr-2'} /> Add author
                     </AddAuthor>
                 </div>
                 <Modal isOpen={this.state.showAuthorForm} toggle={() => this.toggle('showAuthorForm')}>
