@@ -26,6 +26,12 @@ class ResourceDetails extends Component {
         this.findResource();
     }
 
+    componentDidUpdate = prevProps => {
+        if (this.props.match.params.id !== prevProps.match.params.id) {
+            this.findResource();
+        }
+    };
+
     findResource = () => {
         this.setState({ isLoading: true });
         getResource(this.props.match.params.id)

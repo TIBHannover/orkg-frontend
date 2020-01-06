@@ -93,7 +93,7 @@ class Statements extends Component {
             <>
                 {this.props.level !== 0 ? (
                     <>
-                        <Breadcrumbs />
+                        <Breadcrumbs openExistingResourcesInDialog={this.props.openExistingResourcesInDialog} />
                     </>
                 ) : (
                     ''
