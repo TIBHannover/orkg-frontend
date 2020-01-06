@@ -186,17 +186,14 @@ export const createResourceStatement = (subjectId, predicateId, objectId) => {
     );
 };
 
-export const createLiteralStatement = (subjectId, predicateId, property) => {
+export const createLiteralStatement = (subjectId, predicateId, literalId) => {
     return submitPostRequest(
         `${statementsUrl}`,
         { 'Content-Type': 'application/json' },
         {
             subject_id: subjectId,
             predicate_id: predicateId,
-            object: {
-                id: property,
-                _class: 'literal'
-            }
+            object_id: literalId
         }
     );
 };
