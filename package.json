@@ -176,6 +176,15 @@
             ],
             "react/prop-types": [
                 "error"
+            ],
+            "no-var": [
+                "error"
+            ],
+            "no-const-assign": [
+                "error"
+            ],
+            "prefer-const": [
+                1
             ]
         }
     }
