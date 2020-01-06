@@ -91,6 +91,7 @@ class Breadcrumbs extends Component {
     };
 
     render() {
+        console.log(this.props);
         return (
             <Container>
                 <BackButton className="btn btn-link border-0 align-baseline" onClick={this.handleBackClick}>
@@ -108,7 +109,7 @@ class Breadcrumbs extends Component {
                                 }
                             >
                                 {item.label}
-                                {this.props.resourceHistory.allIds.length === index + 1 && (
+                                {this.props.resourceHistory.allIds.length === index + 1 && !this.props.openExistingResourcesInDialog && (
                                     <Tippy content="Go to resource page">
                                         <Link
                                             title={'Go to resource page'}
@@ -133,7 +134,8 @@ class Breadcrumbs extends Component {
 Breadcrumbs.propTypes = {
     resourceHistory: PropTypes.object.isRequired,
     goToResourceHistory: PropTypes.func.isRequired,
-    selectedResource: PropTypes.string.isRequired
+    selectedResource: PropTypes.string.isRequired,
+    openExistingResourcesInDialog: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => {
