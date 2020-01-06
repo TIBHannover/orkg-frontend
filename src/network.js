@@ -24,7 +24,7 @@ export const submitGetRequest = (url, headers, send_token = false) => {
         throw new Error('Cannot submit GET request. URL is null or undefined.');
     }
 
-    let myHeaders = new Headers(headers);
+    let myHeaders = headers ? new Headers(headers) : {};
 
     if (send_token) {
         const cookies = new Cookies();
