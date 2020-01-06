@@ -1,4 +1,4 @@
-@import '../../assets/scss/ThemeVariables.scss';
+@import "../../assets/scss/ThemeVariables.scss";
 
 body {
     color: #646464;
@@ -54,6 +54,10 @@ body {
 .sortableHelper {
     z-index: 99999;
     border-radius: 0 !important;
+}
+
+.sortableHelperAuthors {
+    z-index: 10000 !important;
 }
 
 // REACTOUR
