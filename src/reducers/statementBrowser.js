@@ -27,7 +27,7 @@ const initialState = {
 export default (state = initialState, action) => {
     switch (action.type) {
         case type.CREATE_RESOURCE: {
-            let { payload } = action;
+            const { payload } = action;
 
             let newState = dotProp.set(state, 'resources.byId', ids => ({
                 ...ids,
@@ -52,7 +52,7 @@ export default (state = initialState, action) => {
         }
 
         case type.CREATE_PROPERTY: {
-            let { payload } = action;
+            const { payload } = action;
             let newState;
             if (dotProp.get(state, `resources.byId.${payload.resourceId}`)) {
                 newState = dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, propertyIds => [
@@ -79,14 +79,14 @@ export default (state = initialState, action) => {
         }
 
         case type.DELETE_PROPERTY: {
-            let { payload } = action;
+            const { payload } = action;
 
             let newState = dotProp.delete(state, `properties.byId.${payload.id}`);
 
-            let propertyIndex = dotProp.get(newState, 'properties.allIds').indexOf(payload.id);
+            const propertyIndex = dotProp.get(newState, 'properties.allIds').indexOf(payload.id);
             newState = dotProp.delete(newState, `properties.allIds.${propertyIndex}`);
 
-            let resourceIndex = dotProp.get(newState, `resources.byId.${payload.resourceId}.propertyIds`).indexOf(payload.id);
+            const resourceIndex = dotProp.get(newState, `resources.byId.${payload.resourceId}.propertyIds`).indexOf(payload.id);
             newState = dotProp.delete(newState, `resources.byId.${payload.resourceId}.propertyIds.${resourceIndex}`);
 
             // TODO: maybe also delete related values, so it becomes easier to make the API call later?
@@ -95,13 +95,13 @@ export default (state = initialState, action) => {
         }
 
         case type.UPDATE_PROPERTY_LABEL: {
-            let { payload } = action;
-            let newState = dotProp.set(state, `properties.byId.${payload.propertyId}.label`, payload.label);
+            const { payload } = action;
+            const newState = dotProp.set(state, `properties.byId.${payload.propertyId}.label`, payload.label);
             return newState;
         }
 
         case type.CHANGE_PROPERTY: {
-            let { payload } = action;
+            const { payload } = action;
             let newState = dotProp.set(state, `properties.byId.${payload.propertyId}.label`, payload.newProperty.label);
             newState = dotProp.set(
                 newState,
@@ -113,25 +113,25 @@ export default (state = initialState, action) => {
         }
 
         case type.TOGGLE_EDIT_PROPERTY_LABEL: {
-            let { payload } = action;
-            let newState = dotProp.set(state, `properties.byId.${payload.id}.isEditing`, v => !v);
+            const { payload } = action;
+            const newState = dotProp.set(state, `properties.byId.${payload.id}.isEditing`, v => !v);
             return newState;
         }
 
         case type.IS_SAVING_PROPERTY: {
-            let { payload } = action;
-            let newState = dotProp.set(state, `properties.byId.${payload.id}.isSaving`, v => true);
+            const { payload } = action;
+            const newState = dotProp.set(state, `properties.byId.${payload.id}.isSaving`, v => true);
             return newState;
         }
 
         case type.DONE_SAVING_PROPERTY: {
-            let { payload } = action;
-            let newState = dotProp.set(state, `properties.byId.${payload.id}.isSaving`, v => false);
+            const { payload } = action;
+            const newState = dotProp.set(state, `properties.byId.${payload.id}.isSaving`, v => false);
             return newState;
         }
 
         case type.CREATE_VALUE: {
-            let { payload } = action;
+            const { payload } = action;
             let newState;
             if (dotProp.get(state, `properties.byId.${payload.propertyId}`)) {
                 newState = dotProp.set(state, `properties.byId.${payload.propertyId}.valueIds`, valueIds => [...valueIds, payload.valueId]);
@@ -177,21 +177,21 @@ export default (state = initialState, action) => {
         }
 
         case type.DELETE_VALUE: {
-            let { payload } = action;
+            const { payload } = action;
 
             let newState = dotProp.delete(state, `values.byId.${payload.id}`);
 
-            let valueIndex = dotProp.get(newState, 'values.allIds').indexOf(payload.id);
+            const valueIndex = dotProp.get(newState, 'values.allIds').indexOf(payload.id);
             newState = dotProp.delete(newState, `values.allIds.${valueIndex}`);
 
-            let propertyIndex = dotProp.get(newState, `properties.byId.${payload.propertyId}.valueIds`).indexOf(payload.id);
+            const propertyIndex = dotProp.get(newState, `properties.byId.${payload.propertyId}.valueIds`).indexOf(payload.id);
             newState = dotProp.delete(newState, `properties.byId.${payload.propertyId}.valueIds.${propertyIndex}`);
 
             return newState;
         }
 
         case type.CHANGE_VALUE: {
-            let { payload } = action;
+            const { payload } = action;
             let newState;
             if (dotProp.get(state, `values.byId.${payload.valueId}`)) {
                 newState = dotProp.set(state, `values.byId.${payload.valueId}`, v => ({
@@ -226,31 +226,31 @@ export default (state = initialState, action) => {
         }
 
         case type.IS_SAVING_VALUE: {
-            let { payload } = action;
-            let newState = dotProp.set(state, `values.byId.${payload.id}.isSaving`, v => true);
+            const { payload } = action;
+            const newState = dotProp.set(state, `values.byId.${payload.id}.isSaving`, v => true);
             return newState;
         }
 
         case type.DONE_SAVING_VALUE: {
-            let { payload } = action;
-            let newState = dotProp.set(state, `values.byId.${payload.id}.isSaving`, v => false);
+            const { payload } = action;
+            const newState = dotProp.set(state, `values.byId.${payload.id}.isSaving`, v => false);
             return newState;
         }
 
         case type.TOGGLE_EDIT_VALUE: {
-            let { payload } = action;
-            let newState = dotProp.set(state, `values.byId.${payload.id}.isEditing`, v => !v);
+            const { payload } = action;
+            const newState = dotProp.set(state, `values.byId.${payload.id}.isEditing`, v => !v);
             return newState;
         }
 
         case type.UPDATE_VALUE_LABEL: {
-            let { payload } = action;
+            const { payload } = action;
             let newState = dotProp.set(state, `values.byId.${payload.valueId}.label`, payload.label);
             // Update all the labels of the same resource ID
-            let resourceId = dotProp.get(state, `values.byId.${payload.valueId}.resourceId`);
+            const resourceId = dotProp.get(state, `values.byId.${payload.valueId}.resourceId`);
             if (resourceId) {
                 newState = dotProp.set(newState, `resources.byId.${resourceId}.label`, payload.label);
-                for (let valueId of newState.values.allIds) {
+                for (const valueId of newState.values.allIds) {
                     if (dotProp.get(newState, `values.byId.${valueId}.resourceId`) === resourceId && valueId !== payload.valueId) {
                         newState = dotProp.set(newState, `values.byId.${valueId}.label`, payload.label);
                     }
@@ -262,8 +262,8 @@ export default (state = initialState, action) => {
         }
 
         case type.SELECT_RESOURCE: {
-            let { payload } = action;
-            let level = payload.increaseLevel ? state.level + 1 : state.level - 1;
+            const { payload } = action;
+            const level = payload.increaseLevel ? state.level + 1 : state.level - 1;
 
             return {
                 ...state,
@@ -280,9 +280,9 @@ export default (state = initialState, action) => {
         }
 
         case type.ADD_RESOURCE_HISTORY: {
-            let { payload } = action;
-            let resourceId = payload.resourceId ? payload.resourceId : null; //state.contributions.byId[state.selectedContribution].resourceId
-            let lastResourceId = state.resourceHistory.allIds[state.resourceHistory.allIds.length - 1];
+            const { payload } = action;
+            const resourceId = payload.resourceId ? payload.resourceId : null; //state.contributions.byId[state.selectedContribution].resourceId
+            const lastResourceId = state.resourceHistory.allIds[state.resourceHistory.allIds.length - 1];
 
             let newState = dotProp.set(state, 'resourceHistory.byId', ids => ({
                 ...ids,
@@ -306,8 +306,8 @@ export default (state = initialState, action) => {
         }
 
         case type.GOTO_RESOURCE_HISTORY: {
-            let { payload } = action;
-            let ids = state.resourceHistory.allIds.slice(0, payload.historyIndex + 1); //TODO: it looks like historyIndex can be derived, so remove it from payload
+            const { payload } = action;
+            const ids = state.resourceHistory.allIds.slice(0, payload.historyIndex + 1); //TODO: it looks like historyIndex can be derived, so remove it from payload
 
             return {
                 ...state,
@@ -341,7 +341,7 @@ export default (state = initialState, action) => {
         }
 
         case type.STATEMENT_BROWSER_LOAD_DATA: {
-            let { payload } = action;
+            const { payload } = action;
             return {
                 ...payload
             };
@@ -354,9 +354,9 @@ export default (state = initialState, action) => {
         }
 
         case type.SET_STATEMENT_IS_FECHTED: {
-            let { resourceId } = action;
+            const { resourceId } = action;
 
-            let newState = dotProp.set(state, `resources.byId.${resourceId}.isFechted`, true);
+            const newState = dotProp.set(state, `resources.byId.${resourceId}.isFechted`, true);
 
             return {
                 ...newState

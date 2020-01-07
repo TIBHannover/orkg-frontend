@@ -73,7 +73,7 @@ class Contributions extends Component {
 
     handleSelectContribution = contributionId => {
         this.setState({ loading: true, isSimilaireContributionsLoading: true });
-        let contributionIsLoaded = this.props.resources.byId[contributionId] ? true : false;
+        const contributionIsLoaded = this.props.resources.byId[contributionId] ? true : false;
         this.props.selectContribution({
             contributionId,
             contributionIsLoaded
@@ -104,7 +104,7 @@ class Contributions extends Component {
     handleResearchProblemsChange = async (problemsArray, a) => {
         problemsArray = problemsArray ? problemsArray : [];
         if (a.action === 'select-option') {
-            let statement = await createResourceStatement(
+            const statement = await createResourceStatement(
                 this.state.selectedContribution,
                 process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM,
                 a.option.id
@@ -117,8 +117,8 @@ class Contributions extends Component {
             problemsArray = [...problemsArray.slice(0, objIndex), updatedObj, ...problemsArray.slice(objIndex + 1)];
             toast.success('Research problem added successfully');
         } else if (a.action === 'create-option') {
-            let newResource = await createResource(a.createdOptionLabel, [process.env.REACT_APP_CLASSES_PROBLEM]);
-            let statement = await createResourceStatement(
+            const newResource = await createResource(a.createdOptionLabel, [process.env.REACT_APP_CLASSES_PROBLEM]);
+            const statement = await createResourceStatement(
                 this.state.selectedContribution,
                 process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM,
                 newResource.id
@@ -141,7 +141,7 @@ class Contributions extends Component {
     };
 
     render() {
-        let selectedContributionId = this.state.selectedContribution;
+        const selectedContributionId = this.state.selectedContribution;
 
         return (
             <div>

@@ -42,7 +42,7 @@ export function groupByObjectWithId(array, propertyName) {
 }
 
 export function deleteArrayEntryByObjectValue(arr, object, value) {
-    let newArr = [...arr];
+    const newArr = [...arr];
 
     let indexToDelete = -1;
 
@@ -106,7 +106,7 @@ export const get_error_message = (errors, field = null) => {
     if (field === null) {
         return Boolean(errors.message) ? capitalize(errors.message) : null;
     }
-    let field_error = errors.errors ? errors.errors.find(e => e.field === field) : null;
+    const field_error = errors.errors ? errors.errors.find(e => e.field === field) : null;
     return field_error ? capitalize(field_error.message) : null;
 };
 
@@ -136,10 +136,10 @@ export const getPaperData = (id, label, paperStatements) => {
         publicationMonth = '';
     }
     // authors
-    let authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
-    let authorNamesArray = [];
+    const authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
+    const authorNamesArray = [];
     if (authors.length > 0) {
-        for (let author of authors) {
+        for (const author of authors) {
             authorNamesArray.push({
                 id: author.object.id,
                 statementId: author.id,
@@ -164,10 +164,10 @@ export const getPaperData = (id, label, paperStatements) => {
         doi = null;
     }
     // contributions
-    let contributions = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION);
-    let contributionArray = [];
+    const contributions = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION);
+    const contributionArray = [];
     if (contributions.length > 0) {
-        for (let contribution of contributions) {
+        for (const contribution of contributions) {
             contributionArray.push({ ...contribution.object, statementId: contribution.id });
         }
     }

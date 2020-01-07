@@ -33,7 +33,7 @@ const initialState = {
 export default (state = initialState, action) => {
     switch (action.type) {
         case type.UPFATE_GENERAL_DATA: {
-            let { payload } = action;
+            const { payload } = action;
 
             return {
                 ...state,
@@ -76,14 +76,14 @@ export default (state = initialState, action) => {
         }
 
         case type.ADD_PAPER_LOAD_DATA: {
-            let { payload } = action;
+            const { payload } = action;
             return {
                 ...payload
             };
         }
 
         case type.UPDATE_TOUR_CURRENT_STEP: {
-            let { payload } = action;
+            const { payload } = action;
             return {
                 ...state,
                 tourCurrentStep: payload
@@ -107,7 +107,7 @@ export default (state = initialState, action) => {
         }
 
         case type.OPEN_TOUR: {
-            let { payload } = action;
+            const { payload } = action;
 
             return {
                 ...state,
@@ -117,7 +117,7 @@ export default (state = initialState, action) => {
         }
 
         case type.UPDATE_RESEARCH_FIELD: {
-            let { payload } = action;
+            const { payload } = action;
 
             return {
                 ...state,
@@ -127,7 +127,7 @@ export default (state = initialState, action) => {
         }
 
         case type.UPDATE_ABSTRACT: {
-            let { payload } = action;
+            const { payload } = action;
 
             return {
                 ...state,
@@ -136,36 +136,36 @@ export default (state = initialState, action) => {
         }
 
         case type.CREATE_ANNOTATION: {
-            let { payload } = action;
+            const { payload } = action;
             return {
                 ...dotProp.set(state, `ranges.${payload.id}`, payload)
             };
         }
 
         case type.REMOVE_ANNOTATION: {
-            let { payload } = action;
+            const { payload } = action;
             return {
                 ...dotProp.delete(state, `ranges.${[payload.id]}`)
             };
         }
 
         case type.TOGGLE_EDIT_ANNOTATION: {
-            let { payload } = action;
+            const { payload } = action;
             return {
                 ...dotProp.set(state, `ranges.${payload}.isEditing`, v => !v)
             };
         }
 
         case type.VALIDATE_ANNOTATION: {
-            let { payload } = action;
+            const { payload } = action;
             return {
                 ...dotProp.set(state, `ranges.${payload}.certainty`, 1)
             };
         }
 
         case type.UPDATE_ANNOTATION_CLASS: {
-            let { payload } = action;
-            let newstate = dotProp.set(state, `ranges.${[payload.range.id]}.class`, {
+            const { payload } = action;
+            const newstate = dotProp.set(state, `ranges.${[payload.range.id]}.class`, {
                 id: payload.selectedOption.id,
                 label: payload.selectedOption.label
             });
@@ -181,8 +181,8 @@ export default (state = initialState, action) => {
         }
 
         case type.CREATE_CONTRIBUTION: {
-            let { payload } = action;
-            let contribution = {
+            const { payload } = action;
+            const contribution = {
                 contributions: {
                     byId: {
                         [payload.id]: {
@@ -230,12 +230,12 @@ export default (state = initialState, action) => {
         }
 
         case type.SET_ABSTRACT_DIALOG_VIEW: {
-            let { payload } = action;
+            const { payload } = action;
             return dotProp.set(state, 'abstractDialogView', payload.value);
         }
 
         case type.DELETE_CONTRIBUTION: {
-            let { payload } = action;
+            const { payload } = action;
             //let newState = { ...state };
 
             // delete both from byId and allIds
@@ -243,7 +243,7 @@ export default (state = initialState, action) => {
             //newState.contributions.byId = omit(newState.contributions.byId, payload.id);
             //newState.contributions.allIds = newState.contributions.allIds.filter((val) => val !== payload.id);
 
-            let contribution = {
+            const contribution = {
                 contributions: {
                     byId: Object.assign(
                         {},
@@ -263,7 +263,7 @@ export default (state = initialState, action) => {
         }
 
         case type.SELECT_CONTRIBUTION: {
-            let { payload } = action;
+            const { payload } = action;
 
             let contributionId;
             if (!payload.id) {
@@ -286,13 +286,13 @@ export default (state = initialState, action) => {
         }
 
         case type.UPDATE_CONTRIBUTION_LABEL: {
-            let { payload } = action;
+            const { payload } = action;
 
             return dotProp.set(state, `contributions.byId.${payload.contributionId}.label`, payload.label);
         }
 
         case type.UPDATE_RESEARCH_PROBLEMS: {
-            let { payload } = action;
+            const { payload } = action;
 
             return dotProp.set(state, `contributions.byId.${payload.contributionId}.researchProblems`, payload.problemsArray);
         }

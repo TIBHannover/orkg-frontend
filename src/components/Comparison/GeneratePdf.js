@@ -19,7 +19,7 @@ class GeneratePdf extends Component {
                     html2canvas(input).then(canvas => {
                         const imgData = canvas.toDataURL('image/png');
 
-                        let pdf = new jsPDF('l', 'mm', [inputHeightMm, inputWidthMm]);
+                        const pdf = new jsPDF('l', 'mm', [inputHeightMm, inputWidthMm]);
                         pdf.addImage(imgData, 'PNG', 0, 5);
                         pdf.save('ORKG Comparison exported.pdf');
                     });

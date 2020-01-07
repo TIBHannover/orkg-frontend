@@ -65,8 +65,8 @@ class Comparison extends Component {
             this.generateMatrixOfComparison();
         }
 
-        let prevContributions = this.getContributionIdsFromUrl(prevProps.location);
-        let currentContributions = this.getContributionIdsFromUrl(this.props.location);
+        const prevContributions = this.getContributionIdsFromUrl(prevProps.location);
+        const currentContributions = this.getContributionIdsFromUrl(this.props.location);
         // perform comparison again when contribution ids are removed
         if (prevContributions.length !== currentContributions.length || !currentContributions.every(e => prevContributions.includes(e))) {
             this.performComparison();
@@ -98,7 +98,7 @@ class Comparison extends Component {
     };
 
     getTransposeOptionFromUrl = () => {
-        let transpose = queryString.parse(this.props.location.search).transpose;
+        const transpose = queryString.parse(this.props.location.search).transpose;
         if (!transpose || !['true', '1'].includes(transpose)) {
             return false;
         }
@@ -106,7 +106,7 @@ class Comparison extends Component {
     };
 
     getResonseHashFromUrl = () => {
-        let response_hash = queryString.parse(this.props.location.search).response_hash;
+        const response_hash = queryString.parse(this.props.location.search).response_hash;
         if (response_hash) {
             return response_hash;
         }
@@ -114,21 +114,21 @@ class Comparison extends Component {
     };
 
     generateMatrixOfComparison = () => {
-        let header = ['Title'];
+        const header = ['Title'];
 
-        for (let property of this.state.properties) {
+        for (const property of this.state.properties) {
             if (property.active) {
                 header.push(property.label);
             }
         }
 
-        let rows = [];
+        const rows = [];
 
         for (let i = 0; i < this.state.contributions.length; i++) {
-            let contribution = this.state.contributions[i];
-            let row = [contribution.title];
+            const contribution = this.state.contributions[i];
+            const row = [contribution.title];
 
-            for (let property of this.state.properties) {
+            for (const property of this.state.properties) {
                 if (property.active) {
                     let value = '';
                     if (this.state.data[property.id]) {
@@ -151,15 +151,15 @@ class Comparison extends Component {
             isLoading: true
         });
 
-        let response_hash = this.getResonseHashFromUrl();
+        const response_hash = this.getResonseHashFromUrl();
         const contributionIds = this.getContributionIdsFromUrl(this.props.location);
 
         submitGetRequest(`${comparisonUrl}${this.props.location.search}`)
             .then(comparisonData => {
                 // mocking function to allow for deletion of contributions via the url
-                let contributions = [];
+                const contributions = [];
                 for (let i = 0; i < comparisonData.contributions.length; i++) {
-                    let contribution = comparisonData.contributions[i];
+                    const contribution = comparisonData.contributions[i];
 
                     if (contributionIds.includes(contribution.id)) {
                         contributions.push(contribution);
@@ -173,8 +173,8 @@ class Comparison extends Component {
                     // sort properties based on query string (is not presented in query string, sort at the bottom)
                     // TODO: sort by label when is not active
                     comparisonData.properties.sort((a, b) => {
-                        let index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
-                        let index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
+                        const index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
+                        const index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
                         return index1 - index2;
                     });
                     // hide properties based on query string
@@ -226,8 +226,8 @@ class Comparison extends Component {
     };
 
     removeContribution = contributionId => {
-        let contributionIds = this.getContributionIdsFromUrl(this.props.location);
-        let index = contributionIds.indexOf(contributionId);
+        const contributionIds = this.getContributionIdsFromUrl(this.props.location);
+        const index = contributionIds.indexOf(contributionId);
 
         if (index > -1) {
             contributionIds.splice(index, 1);
@@ -255,7 +255,7 @@ class Comparison extends Component {
 
     // code is a bit ugly because the properties inside an array and not an object
     toggleProperty = id => {
-        let newState = dotProp.set(this.state, 'properties', properties => {
+        const newState = dotProp.set(this.state, 'properties', properties => {
             properties.forEach((property, index) => {
                 if (property.id === id) {
                     properties[index].active = !properties[index].active;

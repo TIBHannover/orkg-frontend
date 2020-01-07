@@ -94,11 +94,11 @@ class GraphView extends Component {
         this.graphVis.stopBackgroundProcesses();
         if (this.seenDepth < this.state.depth) {
             if (this.props.paperId) {
-                let statements = await this.getResourceAndStatements(this.props.paperId, 0, []);
+                const statements = await this.getResourceAndStatements(this.props.paperId, 0, []);
                 let nodes = [];
                 let edges = [];
 
-                for (let statement of statements) {
+                for (const statement of statements) {
                     // limit the label length to 20 chars
                     const subjectLabel = statement.subject.label.substring(0, 20);
                     const objectLabel = statement.object.label.substring(0, 20);
@@ -145,7 +145,7 @@ class GraphView extends Component {
 
         // authors
         if (authors.length > 0) {
-            for (let author of authors) {
+            for (const author of authors) {
                 nodes.push({ id: author.label, label: author.label.substring(0, 20), title: author.label });
                 edges.push({ from: 'title', to: author.label, label: 'has author' });
             }
@@ -169,15 +169,15 @@ class GraphView extends Component {
 
         //contributions
         if (Object.keys(contributions['byId']).length) {
-            for (let contributionId in contributions['byId']) {
+            for (const contributionId in contributions['byId']) {
                 if (contributions['byId'].hasOwnProperty(contributionId)) {
-                    let contribution = contributions['byId'][contributionId];
+                    const contribution = contributions['byId'][contributionId];
 
                     nodes.push({ id: contribution.resourceId, label: contribution.label, title: contribution.label });
                     edges.push({ from: 'title', to: contribution.resourceId, label: 'has contribution' });
 
                     //research problems
-                    for (let problem of contribution.researchProblems) {
+                    for (const problem of contribution.researchProblems) {
                         nodes.push({
                             id: contribution.resourceId + problem.label,
                             label: problem.label,
@@ -191,7 +191,7 @@ class GraphView extends Component {
                     }
 
                     //contribution statements
-                    let statements = this.addPaperStatementsToGraph(contribution.resourceId, [], []);
+                    const statements = this.addPaperStatementsToGraph(contribution.resourceId, [], []);
                     nodes.push(...statements.nodes);
                     edges.push(...statements.edges);
                 }
@@ -215,17 +215,17 @@ class GraphView extends Component {
         // select all nodes that have this value and only query these ones
         // >> faster performance since only retrieving what is needed !
 
-        let statementBrowser = this.props.statementBrowser;
-        let resource = statementBrowser.resources.byId[resourceId];
+        const statementBrowser = this.props.statementBrowser;
+        const resource = statementBrowser.resources.byId[resourceId];
 
         if (resource.propertyIds.length > 0) {
-            for (let propertyId of resource.propertyIds) {
-                let property = statementBrowser.properties.byId[propertyId];
+            for (const propertyId of resource.propertyIds) {
+                const property = statementBrowser.properties.byId[propertyId];
 
                 if (property.valueIds.length > 0) {
-                    for (let valueId of property.valueIds) {
-                        let value = statementBrowser.values.byId[valueId];
-                        let id = value.resourceId ? value.resourceId : valueId;
+                    for (const valueId of property.valueIds) {
+                        const value = statementBrowser.values.byId[valueId];
+                        const id = value.resourceId ? value.resourceId : valueId;
 
                         //add the node and relation
                         nodes.push({ id: id, label: value.label, title: value.label });
@@ -282,11 +282,11 @@ class GraphView extends Component {
             return list;
         }
 
-        let statements = await getStatementsBySubject({ id: resourceId });
+        const statements = await getStatementsBySubject({ id: resourceId });
 
         if (statements.length > 0) {
             list.push(...statements);
-            for (let statement of statements) {
+            for (const statement of statements) {
                 if (statement.object._class === 'resource') {
                     await this.getResourceAndStatements(statement.object.id, depth + 1, list);
                 }

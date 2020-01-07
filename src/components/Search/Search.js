@@ -15,7 +15,7 @@ class Search extends Component {
     constructor(props) {
         super(props);
 
-        let value = this.props.match.params.searchTerm;
+        const value = this.props.match.params.searchTerm;
 
         this.itemsPerFilter = 10;
 

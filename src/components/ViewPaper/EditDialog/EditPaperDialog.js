@@ -70,7 +70,7 @@ class EditPaperDialog extends Component {
         this.setState({
             isLoading: true
         });
-        let loadPaper = {};
+        const loadPaper = {};
 
         //title
         updateResource(this.props.viewPaper.paperResourceId, this.state.title);
@@ -123,14 +123,14 @@ class EditPaperDialog extends Component {
             updateLiteral(literalId, value);
         } else if (value) {
             // only create a new literal if a value has been provided
-            let newLiteral = await this.createNewLiteral(this.props.viewPaper.paperResourceId, predicateIdForCreate, value);
+            const newLiteral = await this.createNewLiteral(this.props.viewPaper.paperResourceId, predicateIdForCreate, value);
             loadPaper[reducerName] = newLiteral.literalId;
         }
     };
 
     createNewLiteral = async (resourceId, predicateId, label) => {
-        let newLiteral = await createLiteralAPI(label);
-        let statement = await createLiteralStatement(resourceId, predicateId, newLiteral.id);
+        const newLiteral = await createLiteralAPI(label);
+        const statement = await createLiteralStatement(resourceId, predicateId, newLiteral.id);
 
         return {
             literalId: newLiteral.id,
@@ -145,26 +145,26 @@ class EditPaperDialog extends Component {
             return null;
         }
 
-        let statementsIds = [];
+        const statementsIds = [];
         // remove all authors statement from reducer
-        for (let author of this.props.viewPaper.authors) {
+        for (const author of this.props.viewPaper.authors) {
             statementsIds.push(author.statementId);
         }
         deleteStatementsByIds(statementsIds);
 
         // Add all authors from the state
-        let authors = this.state.authors;
-        for (let [i, author] of this.state.authors.entries()) {
+        const authors = this.state.authors;
+        for (const [i, author] of this.state.authors.entries()) {
             // create the author
             if (author.orcid) {
                 // Create author with ORCID
                 // check if there's an author resource
-                let responseJson = await submitGetRequest(literalsUrl + '?q=' + encodeURIComponent(author.orcid) + '&exact=true');
+                const responseJson = await submitGetRequest(literalsUrl + '?q=' + encodeURIComponent(author.orcid) + '&exact=true');
                 if (responseJson.length > 0) {
                     // Author resource exists
                     let authorResource = await getStatementsByObject({ id: responseJson[0].id });
                     authorResource = authorResource.find(s => s.predicate.id === process.env.REACT_APP_PREDICATES_HAS_ORCID);
-                    let authorStatement = await createResourceStatement(
+                    const authorStatement = await createResourceStatement(
                         this.props.viewPaper.paperResourceId,
                         process.env.REACT_APP_PREDICATES_HAS_AUTHOR,
                         authorResource.subject.id
@@ -176,10 +176,10 @@ class EditPaperDialog extends Component {
                 } else {
                     // Author resource doesn't exist
                     // Create resource author
-                    let authorResource = await createResource(author.label, [process.env.REACT_APP_CLASSES_AUTHOR]);
-                    let createLiteral = await createLiteralAPI(author.orcid);
+                    const authorResource = await createResource(author.label, [process.env.REACT_APP_CLASSES_AUTHOR]);
+                    const createLiteral = await createLiteralAPI(author.orcid);
                     await createLiteralStatement(authorResource.id, process.env.REACT_APP_PREDICATES_HAS_ORCID, createLiteral.id);
-                    let authorStatement = await createResourceStatement(
+                    const authorStatement = await createResourceStatement(
                         this.props.viewPaper.paperResourceId,
                         process.env.REACT_APP_PREDICATES_HAS_AUTHOR,
                         authorResource.id
@@ -191,9 +191,9 @@ class EditPaperDialog extends Component {
                 }
             } else {
                 // Author resource doesn't exist
-                let newLiteral = await createLiteralAPI(author.label);
+                const newLiteral = await createLiteralAPI(author.label);
                 // Create literal of author
-                let authorStatement = await createLiteralStatement(
+                const authorStatement = await createLiteralStatement(
                     this.props.viewPaper.paperResourceId,
                     process.env.REACT_APP_PREDICATES_HAS_AUTHOR,
                     newLiteral.id

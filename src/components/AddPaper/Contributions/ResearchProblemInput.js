@@ -18,7 +18,7 @@ class ResearchProblemInput extends Component {
     loadOptions = async value => {
         try {
             // Get the resoures that contains 'Problem' as a class
-            let responseJson = await getResourcesByClass({
+            const responseJson = await getResourcesByClass({
                 id: process.env.REACT_APP_CLASSES_PROBLEM,
                 page: 1,
                 items: 999,

@@ -76,7 +76,7 @@ class ResearchFieldCards extends Component {
                     });
 
                     if (addBreadcrumb) {
-                        let breadcrumb = this.state.breadcrumb;
+                        const breadcrumb = this.state.breadcrumb;
 
                         breadcrumb.push({
                             label: label,
@@ -121,8 +121,8 @@ class ResearchFieldCards extends Component {
     }
 
     handleClickBreadcrumb(fieldId, label) {
-        let activeIndex = this.state.breadcrumb.findIndex(breadcrumb => breadcrumb.id === fieldId);
-        let breadcrumb = this.state.breadcrumb.slice(0, activeIndex + 1); //remove the items after the clicked link
+        const activeIndex = this.state.breadcrumb.findIndex(breadcrumb => breadcrumb.id === fieldId);
+        const breadcrumb = this.state.breadcrumb.slice(0, activeIndex + 1); //remove the items after the clicked link
 
         this.setState({
             breadcrumb
@@ -136,7 +136,7 @@ class ResearchFieldCards extends Component {
             return <div className="text-center mt-5 text-danger">{this.state.error}</div>;
         }
 
-        let showPapers = this.state.researchFields.length === 0 && this.state.breadcrumb.length !== 0;
+        const showPapers = this.state.researchFields.length === 0 && this.state.breadcrumb.length !== 0;
 
         return (
             <div className="mt-5">

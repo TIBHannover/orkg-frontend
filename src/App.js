@@ -15,7 +15,7 @@ class App extends Component {
     constructor(props) {
         super(props);
 
-        let browser = detect();
+        const browser = detect();
 
         this.state = {
             showBrowserWarning: false

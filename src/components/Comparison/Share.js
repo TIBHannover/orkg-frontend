@@ -36,7 +36,7 @@ class Share extends Component {
     }
 
     componentDidMount() {
-        let link = queryString.parse(this.props.url).response_hash
+        const link = queryString.parse(this.props.url).response_hash
             ? this.props.url
             : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
         this.setState({ link: link });
@@ -44,7 +44,7 @@ class Share extends Component {
 
     componentDidUpdate = prevProps => {
         if (this.props.url !== prevProps.url || this.props.response_hash !== prevProps.response_hash) {
-            let link = queryString.parse(this.props.url).response_hash
+            const link = queryString.parse(this.props.url).response_hash
                 ? this.props.url
                 : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
             this.setState({ link: link, shortLink: null, shareShortLink: false });
@@ -53,7 +53,7 @@ class Share extends Component {
 
     generateShortLink = () => {
         this.setState({ shortLinkIsLoading: true, shortLinkIsFailed: false });
-        let link = queryString.parse(this.props.url).response_hash
+        const link = queryString.parse(this.props.url).response_hash
             ? this.props.url
             : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
         createShortLink({
@@ -63,7 +63,7 @@ class Share extends Component {
                 this.setState({ shortLink: null, link: link, shortLinkIsLoading: false, shortLinkIsFailed: true });
             })
             .then(data => {
-                let shortLink = `${window.location.protocol}//${window.location.host}${window.location.pathname.replace(
+                const shortLink = `${window.location.protocol}//${window.location.host}${window.location.pathname.replace(
                     ROUTES.COMPARISON,
                     ''
                 )}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
@@ -81,7 +81,7 @@ class Share extends Component {
                 });
             }
         } else {
-            let link = queryString.parse(this.props.url).response_hash
+            const link = queryString.parse(this.props.url).response_hash
                 ? this.props.url
                 : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
             this.setState({ shareShortLink: false, link: link, shortLinkIsFailed: false });

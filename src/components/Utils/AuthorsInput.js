@@ -130,8 +130,8 @@ class AuthorsInput extends Component {
 
     isORCID = value => {
         /** Regular expression to check whether an input string is a valid ORCID id.  */
-        let ORCID_REGEX = '^\\s*(?:(?:https?://)?orcid.org/)?([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?([0-9]{4})\\s*$';
-        let supportedORCID = new RegExp(ORCID_REGEX);
+        const ORCID_REGEX = '^\\s*(?:(?:https?://)?orcid.org/)?([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?([0-9]{4})\\s*$';
+        const supportedORCID = new RegExp(ORCID_REGEX);
         return Boolean(value && value.match(supportedORCID));
     };
 
@@ -146,11 +146,11 @@ class AuthorsInput extends Component {
             if (this.isORCID(this.state.authorInput)) {
                 this.setState({ authorNameLoading: true });
                 // Get the full name from ORCID API
-                let orcid = this.state.authorInput.match(/([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?([0-9]{4})/g)[0];
-                let ORCIDLink = 'https://pub.orcid.org/v2.0/' + orcid + '/person';
+                const orcid = this.state.authorInput.match(/([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?([0-9]{4})/g)[0];
+                const ORCIDLink = 'https://pub.orcid.org/v2.0/' + orcid + '/person';
                 submitGetRequest(ORCIDLink, { Accept: 'application/orcid+json' })
                     .then(response => {
-                        let authorName = this.getFullname(response.name);
+                        const authorName = this.getFullname(response.name);
                         const newAuthor = {
                             label: authorName,
                             id: authorName,

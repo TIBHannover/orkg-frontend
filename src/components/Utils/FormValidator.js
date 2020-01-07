@@ -10,7 +10,7 @@ class FormValidator {
 
     // manually set an error message (e.g. needed when a async validation has been performed)
     setError({ field, message }) {
-        let validation = this.valid();
+        const validation = this.valid();
 
         validation.isValid = false;
         validation[field] = { isInvalid: true, message: message };
@@ -20,7 +20,7 @@ class FormValidator {
 
     validate(state) {
         // start out assuming valid
-        let validation = this.valid();
+        const validation = this.valid();
 
         // for each validation rule
         this.validations.forEach(rule => {

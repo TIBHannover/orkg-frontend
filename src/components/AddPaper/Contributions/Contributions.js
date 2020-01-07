@@ -76,7 +76,7 @@ class Contributions extends Component {
     };
 
     toggleDeleteContribution = async id => {
-        let result = await Confirm({
+        const result = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure you want to delete this contribution?',
             cancelColor: 'light'
@@ -84,7 +84,7 @@ class Contributions extends Component {
 
         if (result) {
             // delete the contribution and select the first one in the remaining list
-            let selectedId = this.props.contributions.allIds.filter(i => i !== id)[0];
+            const selectedId = this.props.contributions.allIds.filter(i => i !== id)[0];
             this.props.deleteContribution({ id, selectAfterDeletion: this.props.contributions.byId[selectedId] });
         }
     };
@@ -127,7 +127,7 @@ class Contributions extends Component {
     };
 
     render() {
-        let selectedResourceId = this.props.selectedContribution;
+        const selectedResourceId = this.props.selectedContribution;
 
         return (
             <div>
@@ -156,7 +156,7 @@ class Contributions extends Component {
                         <Col xs="3">
                             <StyledContributionsList id="contributionsList">
                                 {this.props.contributions.allIds.map((contributionId, index) => {
-                                    let contribution = this.props.contributions.byId[contributionId];
+                                    const contribution = this.props.contributions.byId[contributionId];
 
                                     return (
                                         <ContributionItemList

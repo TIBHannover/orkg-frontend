@@ -72,7 +72,7 @@ class ResearchField extends Component {
         }).then(result => {
             // Papers
             if (result.length > 0) {
-                let parentResearchField = result.find(statement => statement.predicate.id === 'P36');
+                const parentResearchField = result.find(statement => statement.predicate.id === 'P36');
                 // Fetch the data of each paper
                 getStatementsBySubjects({
                     ids: result
@@ -80,8 +80,8 @@ class ResearchField extends Component {
                         .map(p => p.subject.id)
                 })
                     .then(papersStatements => {
-                        let papers = papersStatements.map(paperStatements => {
-                            let paperSubject = find(result.map(p => p.subject), { id: paperStatements.id });
+                        const papers = papersStatements.map(paperStatements => {
+                            const paperSubject = find(result.map(p => p.subject), { id: paperStatements.id });
                             return getPaperData(
                                 paperStatements.id,
                                 paperSubject && paperSubject.label ? paperSubject.label : 'No Title',

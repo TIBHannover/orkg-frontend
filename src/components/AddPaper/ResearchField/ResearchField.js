@@ -108,7 +108,7 @@ class ResearchField extends Component {
                 return a.label.localeCompare(b.label);
             });
 
-            let researchFieldsNew = [...this.props.researchFields];
+            const researchFieldsNew = [...this.props.researchFields];
             researchFieldsNew[level] = researchFields;
 
             // add active to selected field

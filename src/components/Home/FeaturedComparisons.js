@@ -42,7 +42,7 @@ class FeaturedComparisons extends Component {
             loading: true
         });
 
-        let responseJson = await getResourcesByClass({
+        const responseJson = await getResourcesByClass({
             id: process.env.REACT_APP_CLASSES_FEATURED_COMPARISON,
             sortBy: 'created_at',
             desc: false
@@ -53,7 +53,7 @@ class FeaturedComparisons extends Component {
             ids
         });
 
-        let comparisons = [];
+        const comparisons = [];
         for (const comparison of responseJson) {
             let description = '';
             let icon = '';

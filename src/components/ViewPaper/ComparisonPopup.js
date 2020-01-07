@@ -110,7 +110,7 @@ class ComparisonPopup extends Component {
     };
 
     removeAllContributionFromComparison = async allIds => {
-        let result = await Confirm({
+        const result = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure you want to remove all contributions from comparison?',
             cancelColor: 'light'
