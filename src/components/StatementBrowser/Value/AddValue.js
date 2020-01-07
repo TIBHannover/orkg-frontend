@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
-import { resourcesUrl, createResourceStatement, createResource, createLiteral, createLiteralStatement, predicatesUrl } from '../../../network';
+import {
+    resourcesUrl,
+    createResourceStatement,
+    createResource,
+    createLiteral,
+    createLiteralStatement,
+    predicatesUrl,
+    createPredicate
+} from '../../../network';
 import { Input, InputGroup, InputGroupAddon, Button, DropdownToggle, DropdownMenu, InputGroupButtonDropdown, DropdownItem } from 'reactstrap';
 import Tooltip from '../../Utils/Tooltip';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -8,7 +16,7 @@ import { StyledValueItem, StyledDropdownItem, StyledButton, StyledDropdownToggle
 import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizard/TemplateOptionButton';
 import AutoComplete from '../AutoComplete';
 import { connect } from 'react-redux';
-import { createValue } from '../../../actions/statementBrowser';
+import { createValue, createProperty } from '../../../actions/statementBrowser';
 import PropTypes from 'prop-types';
 
 class AddValue extends Component {
@@ -92,12 +100,18 @@ class AddValue extends Component {
             let predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
             let newObject = null;
             let newStatement = null;
-            if (this.state.valueType === 'object') {
-                newObject = await createResource(this.state.inputValue);
-                newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
-            } else {
-                newObject = await createLiteral(this.state.inputValue);
-                newStatement = await createLiteralStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
+            switch (this.state.valueType) {
+                case 'object':
+                    newObject = await createResource(this.state.inputValue);
+                    newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
+                    break;
+                case 'property':
+                    newObject = await createPredicate(this.state.inputValue);
+                    newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
+                    break;
+                default:
+                    newObject = await createLiteral(this.state.inputValue);
+                    newStatement = await createLiteralStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
             }
             this.props.createValue({
                 label: this.state.inputValue,
@@ -180,7 +194,7 @@ class AddValue extends Component {
                                                 ? resourcesUrl
                                                 : predicatesUrl
                                         }
-                                        excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM}`}
+                                        excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM},${process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE}`}
                                         placeholder="Enter a resource"
                                         onItemSelected={this.handleValueSelect}
                                         onInput={this.handleInputChange}
@@ -207,6 +221,27 @@ class AddValue extends Component {
                                             Create
                                         </Button>
                                     )}
+
+                                    {[process.env.REACT_APP_TEMPLATE_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
+                                        this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty]
+                                            .existingPredicateId
+                                    ) && (
+                                        <Button
+                                            color="light"
+                                            className={'valueActionButton'}
+                                            onClick={() => {
+                                                this.setState(
+                                                    {
+                                                        valueType: 'property'
+                                                    },
+                                                    () => this.handleAddValue()
+                                                );
+                                            }}
+                                        >
+                                            Create
+                                        </Button>
+                                    )}
+
                                     <Button color="light" className={'valueActionButton'} onClick={this.handleHideAddValue}>
                                         Cancel
                                     </Button>
@@ -241,7 +276,7 @@ class AddValue extends Component {
                                     {this.state.valueType === 'object' ? (
                                         <AutoComplete
                                             requestUrl={resourcesUrl}
-                                            excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM}`}
+                                            excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM},${process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE}`}
                                             placeholder="Enter a resource"
                                             onItemSelected={this.handleValueSelect}
                                             onInput={this.handleInputChange}
@@ -287,7 +322,8 @@ AddValue.propTypes = {
     newResources: PropTypes.object.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     properties: PropTypes.object.isRequired,
-    contextStyle: PropTypes.string.isRequired
+    contextStyle: PropTypes.string.isRequired,
+    createProperty: PropTypes.func.isRequired
 };
 
 AddValue.defaultProps = {
@@ -304,7 +340,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-    createValue: data => dispatch(createValue(data))
+    createValue: data => dispatch(createValue(data)),
+    createProperty: data => dispatch(createProperty(data))
 });
 
 export default connect(
