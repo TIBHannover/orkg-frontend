@@ -13,7 +13,7 @@ import TableCell from './TableCell';
 import _ from 'lodash';
 
 const ScrollContainer = styled.div`
-    overflow-x: hidden; // auto is maybe a better UX, but hidden looks better :)
+    overflow-x: auto;
     float: left;
     width: 100%;
     padding: 10px 0;
