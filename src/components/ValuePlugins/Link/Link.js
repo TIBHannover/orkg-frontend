@@ -8,7 +8,7 @@ class Link extends Component {
     constructor(props) {
         super(props);
         // eslint-disable-next-line no-useless-escape
-        const expression = /(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/gi;
+        const expression = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?/gi;
         this.supportedValues = new RegExp(expression);
     }
 
