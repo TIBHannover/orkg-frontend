@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import ROUTES from '../../constants/routes.js';
 import SelectProperties from './SelectProperties.js';
 import Share from './Share.js';
+import Publish from './Publish.js';
 import arrayMove from 'array-move';
 import { connect } from 'react-redux';
 import dotProp from 'dot-prop-immutable';
@@ -45,6 +46,7 @@ class Comparison extends Component {
             showPropertiesDialog: false,
             showShareDialog: false,
             showLatexDialog: false,
+            showPublishDialog: false,
             isLoading: false,
             loadingFailed: false
         };
@@ -381,6 +383,7 @@ class Comparison extends Component {
                                                 <GeneratePdf id="comparisonTable" />
                                                 <DropdownItem divider />
                                                 <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
+                                                <DropdownItem onClick={() => this.toggle('showPublishDialog')}>Publish</DropdownItem>
                                             </DropdownMenu>
                                         </Dropdown>
 
@@ -419,6 +422,13 @@ class Comparison extends Component {
                 <Share
                     showDialog={this.state.showShareDialog}
                     toggle={() => this.toggle('showShareDialog')}
+                    url={window.location.href}
+                    response_hash={this.state.response_hash}
+                />
+
+                <Publish
+                    showDialog={this.state.showPublishDialog}
+                    toggle={() => this.toggle('showPublishDialog')}
                     url={window.location.href}
                     response_hash={this.state.response_hash}
                 />
