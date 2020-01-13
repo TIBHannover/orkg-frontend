@@ -78,7 +78,9 @@ class TableCell extends Component {
                                         {index > 0 && <ItemInnerSeparator />}
                                         <Tippy content={`Path of this value : ${date.pathLabels.slice(1).join(' / ')}`} arrow={true}>
                                             <span>
-                                                <ValuePlugins type={'literal'}>{date.label}</ValuePlugins>
+                                                <ValuePlugins type={'literal'} options={{ inModal: true }}>
+                                                    {date.label}
+                                                </ValuePlugins>
                                             </span>
                                         </Tippy>
                                     </span>
