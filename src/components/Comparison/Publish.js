@@ -120,46 +120,6 @@ class Share extends Component {
                         </Label>
                         <Input type="textarea" name="description" id="description" />
                     </FormGroup>
-
-                    <InputGroup>
-                        <Input value={!this.state.shortLinkIsLoading ? this.state.link : 'Loading...'} disabled />
-                        <InputGroupAddon addonType="append">
-                            <CopyToClipboard
-                                id="copyToClipboardLink"
-                                text={!this.state.shortLinkIsLoading ? this.state.link : 'Loading...'}
-                                onCopy={() => {
-                                    this.setState({ showTooltipCopiedLink: true });
-                                }}
-                            >
-                                <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                    <Icon icon={faClipboard} />
-                                </Button>
-                            </CopyToClipboard>
-                            <ReactstrapTooltip
-                                placement="top"
-                                target="copyToClipboardLink"
-                                trigger={'hover'}
-                                toggle={this.toggleTooltip}
-                                isOpen={this.state.showTooltipCopiedLink}
-                            >
-                                Copied!
-                            </ReactstrapTooltip>
-                        </InputGroupAddon>
-                    </InputGroup>
-
-                    {/*<CustomInput
-                        className="mt-1"
-                        type="checkbox"
-                        id={'shortLink'}
-                        label="Create a persistent short link for this page."
-                        onChange={() => this.toggleShareShortLink()}
-                        checked={this.state.shareShortLink}
-                    />*/}
-                    {this.state.shortLinkIsFailed && (
-                        <Alert color="light" className="mb-0 mt-1">
-                            Failed to create a short link, please try again later
-                        </Alert>
-                    )}
                 </ModalBody>
                 <ModalFooter>
                     <div class="text-align-center mt-2">
