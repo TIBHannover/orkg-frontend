@@ -12,7 +12,9 @@ class ValuePlugins extends Component {
             <Boolean>
                 <Latex type={this.props.type}>
                     <Link type={this.props.type}>
-                        <Video type={this.props.type}>{this.props.children}</Video>
+                        <Video type={this.props.type} options={this.props.options}>
+                            {this.props.children}
+                        </Video>
                     </Link>
                 </Latex>
             </Boolean>
@@ -22,7 +24,12 @@ class ValuePlugins extends Component {
 
 ValuePlugins.propTypes = {
     children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-    type: PropTypes.oneOf(['resource', 'literal'])
+    type: PropTypes.oneOf(['resource', 'literal']),
+    options: PropTypes.object.isRequired
+};
+
+ValuePlugins.defaultProps = {
+    options: {}
 };
 
 export default ValuePlugins;
