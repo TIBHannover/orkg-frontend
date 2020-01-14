@@ -64,7 +64,7 @@ class Share extends Component {
             })
             .then(data => {
                 const shortLink = `${window.location.protocol}//${window.location.host}${window.location.pathname.replace(
-                    ROUTES.COMPARISON,
+                    reverse(ROUTES.COMPARISON),
                     ''
                 )}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
                 this.setState({ link: shortLink, shortLink: shortLink, shortLinkIsLoading: false, shortLinkIsFailed: false });

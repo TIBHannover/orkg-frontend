@@ -151,7 +151,7 @@ class ExportToLatex extends Component {
                         })
                         .then(data => {
                             const shortLink = `${this.props.location.protocol}//${window.location.host}${window.location.pathname.replace(
-                                ROUTES.COMPARISON,
+                                reverse(ROUTES.COMPARISON),
                                 ''
                             )}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
                             latexTable += `\n\\footnotetext{${shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
