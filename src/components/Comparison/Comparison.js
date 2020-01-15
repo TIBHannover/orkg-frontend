@@ -390,9 +390,12 @@ class Comparison extends Component {
                                         </div>
                                     )}
                                 </div>
-                                <br />
-                                {this.props.match.params.comparisonId && this.state.description && (
-                                    <span className="h6">{this.state.description}</span>
+                                {this.props.match.params.comparisonId && this.state.description ? (
+                                    <div style={{ marginBottom: '20px' }} className="h6">
+                                        {this.state.description}
+                                    </div>
+                                ) : (
+                                    <br />
                                 )}
                             </div>
                             {contributionAmount > 1 ? (
