@@ -445,6 +445,7 @@ class Search extends Component {
                                     (this.state.papers.length === 0 &&
                                         this.state.problems.length === 0 &&
                                         this.state.authors.length === 0 &&
+                                        this.state.comparisons.length === 0 &&
                                         this.state.resources.length === 0 &&
                                         this.state.predicates.length === 0) && (
                                         <ContentLoader height={210} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
@@ -467,6 +468,7 @@ class Search extends Component {
                                     (this.state.papers.length === 0 &&
                                         this.state.problems.length === 0 &&
                                         this.state.authors.length === 0 &&
+                                        this.state.comparisons.length === 0 &&
                                         this.state.resources.length === 0 &&
                                         this.state.predicates.length === 0)) ? (
                                     <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
