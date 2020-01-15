@@ -395,7 +395,7 @@ class Comparison extends Component {
                                     <br />
                                 )}
                             </div>
-                            {contributionAmount > 1 ? (
+                            {contributionAmount > 1 || this.props.match.params.comparisonId ? (
                                 !this.state.isLoading ? (
                                     <ComparisonTable
                                         data={this.state.data}
