@@ -20,8 +20,7 @@ class Publish extends Component {
             title: '',
             description: '',
             comparisonId: '',
-            isLoading: false,
-            redirect: false
+            isLoading: false
         };
     }
 
@@ -35,7 +34,6 @@ class Publish extends Component {
 
     handleSubmit = async e => {
         this.setState({ isLoading: true });
-
         try {
             const titleResponse = await createResource(this.state.title, [process.env.REACT_APP_CLASSES_COMPARISON]);
             const resourceId = titleResponse.id;
