@@ -343,7 +343,9 @@ class Comparison extends Component {
                         <>
                             <div>
                                 <div className="p-0 d-flex align-items-start">
-                                    <h2 className="h4 mb-4 mt-4">{this.props.match.params.comparisonId ? this.state.title : 'Compare'}</h2>
+                                    <h2 className="h4 mb-4 mt-4">
+                                        {this.props.match.params.comparisonId && this.state.title ? this.state.title : 'Compare'}
+                                    </h2>
                                     {/*this.props.match.params.comparisonId && (
                                         <>
                                             <SubtitleSeparator />

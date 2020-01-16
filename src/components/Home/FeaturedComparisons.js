@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Carousel, CarouselItem, CarouselIndicators } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import ROUTES from '../../constants/routes.js';
-import { getResourcesByClass, getStatementsBySubjects } from '../../network';
+import ROUTES from 'constants/routes.js';
+import { getResourcesByClass, getStatementsBySubjects } from 'network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import Dotdotdot from 'react-dotdotdot';
@@ -147,7 +147,7 @@ class FeaturedComparisons extends Component {
                     <div style={{ minHeight: '120px' }} className="d-flex">
                         <div>
                             <h5>
-                                <Link className="" to={`${reverse(ROUTES.COMPARISON)}/${comparison.id}`}>
+                                <Link className="" to={reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })}>
                                     <Dotdotdot clamp={2}>{comparison.label}</Dotdotdot>
                                 </Link>
                             </h5>
