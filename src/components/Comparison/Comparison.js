@@ -32,6 +32,7 @@ class Comparison extends Component {
             description: '',
             contributions: [],
             dropdownOpen: false,
+            dropdownExportOpen: false,
             properties: [],
             data: {},
             csvData: [],
