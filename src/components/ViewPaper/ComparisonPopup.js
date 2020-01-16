@@ -110,7 +110,7 @@ class ComparisonPopup extends Component {
     };
 
     removeAllContributionFromComparison = async allIds => {
-        let result = await Confirm({
+        const result = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure you want to remove all contributions from comparison?',
             cancelColor: 'light'
@@ -134,7 +134,7 @@ class ComparisonPopup extends Component {
 
         const contributionAmount = allIds.length;
         const ids = allIds.join(',');
-        const comparisonUrl = ROUTES.COMPARISON + '?contributions=' + ids; // with named-urls it is not possible to use wildcard URLs, so replace the asterisk
+        const comparisonUrl = reverse(ROUTES.COMPARISON) + '?contributions=' + ids; // with named-urls it is not possible to use wildcard URLs, so replace the asterisk
 
         return (
             <Navbar fixed="bottom" className="p-0 offset-8" style={{ width: '340px' }}>

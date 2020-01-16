@@ -25,7 +25,7 @@ class FeaturedComparisons extends Component {
             loading: true
         });
 
-        let responseJson = await getResourcesByClass({
+        const responseJson = await getResourcesByClass({
             id: process.env.REACT_APP_CLASSES_FEATURED_COMPARISON_CATEGORY,
             sortBy: 'created_at',
             desc: false
@@ -42,7 +42,7 @@ class FeaturedComparisons extends Component {
     };
 
     getFeaturedComparisons = async () => {
-        let responseJson = await getResourcesByClass({
+        const responseJson = await getResourcesByClass({
             id: process.env.REACT_APP_CLASSES_FEATURED_COMPARISON,
             sortBy: 'created_at',
             desc: false

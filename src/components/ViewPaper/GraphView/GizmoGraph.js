@@ -32,7 +32,7 @@ class GizMOGraph extends Component {
     componentDidUpdate = prevProps => {
         let nonEqualItems = 0;
         let graphHasChanged = false;
-        for (let name in prevProps) {
+        for (const name in prevProps) {
             if (prevProps.hasOwnProperty(name) && this.props.hasOwnProperty(name)) {
                 const prevItem = prevProps[name];
                 const newItem = this.props[name];

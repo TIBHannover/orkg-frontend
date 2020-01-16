@@ -18,7 +18,7 @@ class Home extends Component {
         const showSignOutMessage = this.props.location.state && this.props.location.state.signedOut;
 
         if (showSignOutMessage) {
-            let locationState = { ...this.props.location.state, signedOut: false };
+            const locationState = { ...this.props.location.state, signedOut: false };
             this.props.history.replace({ state: locationState });
             toast.success('You have been signed out successfully');
         }

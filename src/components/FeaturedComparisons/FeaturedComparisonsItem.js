@@ -31,6 +31,11 @@ const ComparisonTitle = styled(CardTitle)`
 const ComparisonText = styled(CardText)`
     font-size: 0.9rem;
     margin-bottom: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 `;
 
 class FeaturedComparisonsItem extends Component {

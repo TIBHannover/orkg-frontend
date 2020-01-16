@@ -60,7 +60,7 @@ class ExportToLatex extends Component {
             return '';
         }
 
-        let res = [];
+        const res = [];
         let transposedData;
         let newTitles = null;
         let nbColumns = 0;
@@ -70,7 +70,7 @@ class ExportToLatex extends Component {
 
             if (this.state.replaceTitles) {
                 newTitles = ['Title'];
-                let conTitles = ['Title'];
+                const conTitles = ['Title'];
                 transposedData[0].forEach((title, i) => {
                     if (i > 0) {
                         newTitles.push(` \\cite{${this.props.contributions[i - 1].paperId}} `);
@@ -82,7 +82,7 @@ class ExportToLatex extends Component {
 
             transposedData.forEach((contribution, i) => {
                 if (i > 0) {
-                    let con = {};
+                    const con = {};
                     contribution.forEach((item, j) => {
                         con[transposedData[0][j]] = item !== 'undefined' ? item : '-';
                     });
@@ -94,7 +94,7 @@ class ExportToLatex extends Component {
         } else {
             this.props.data.forEach((contribution, i) => {
                 if (i > 0) {
-                    let con = {};
+                    const con = {};
                     contribution.forEach((item, j) => {
                         if (this.state.replaceTitles && j === 0) {
                             item = ` \\cite{${this.props.contributions[i - 1].paperId}}`;
@@ -115,7 +115,7 @@ class ExportToLatex extends Component {
                 caption += ' \\protect \\footnotemark';
             }
 
-            let makeLatexOptions = {
+            const makeLatexOptions = {
                 digits: 2,
                 spec: `|${Array(nbColumns)
                     .fill('c')
@@ -133,7 +133,7 @@ class ExportToLatex extends Component {
             // Add a persistent link to this page as a footnote
             if (this.state.includeFootnote) {
                 if (!this.state.shortLink) {
-                    let link = queryString.parse(this.props.location.search).response_hash
+                    const link = queryString.parse(this.props.location.search).response_hash
                         ? this.props.location.href
                         : this.props.location.href +
                           `${this.props.location.href.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
@@ -150,8 +150,8 @@ class ExportToLatex extends Component {
                             this.setState({ latexTable: latexTable, latexTableLoading: false });
                         })
                         .then(data => {
-                            let shortLink = `${this.props.location.protocol}//${window.location.host}${window.location.pathname.replace(
-                                ROUTES.COMPARISON,
+                            const shortLink = `${this.props.location.protocol}//${window.location.host}${window.location.pathname.replace(
+                                reverse(ROUTES.COMPARISON),
                                 ''
                             )}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
                             latexTable += `\n\\footnotetext{${shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
@@ -179,13 +179,13 @@ class ExportToLatex extends Component {
         }
 
         // authors
-        let authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
+        const authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
 
-        let authorNamesArray = [];
+        const authorNamesArray = [];
 
         if (authors.length > 0) {
-            for (let author of authors) {
-                let authorName = author.object.label;
+            for (const author of authors) {
+                const authorName = author.object.label;
                 authorNamesArray.push(authorName);
             }
         }
@@ -196,8 +196,8 @@ class ExportToLatex extends Component {
     createCiteBibtex = (contribution, paperStatements) => {
         let ref;
         if (paperStatements) {
-            let contributionData = this.parsePaperStatements(paperStatements);
-            let authors = contributionData.authorNames.map(a => ({ literal: a }));
+            const contributionData = this.parsePaperStatements(paperStatements);
+            const authors = contributionData.authorNames.map(a => ({ literal: a }));
             ref = new Cite({
                 id: contribution.paperId,
                 title: contribution.title,
@@ -219,7 +219,7 @@ class ExportToLatex extends Component {
             this.setState({ bibtexReferences: '', bibtexReferencesLoading: false });
             return '';
         }
-        let contributions = this.props.contributions.map(contribution => {
+        const contributions = this.props.contributions.map(contribution => {
             // Fetch the data of each contribution
             return getStatementsBySubject({ id: contribution.paperId })
                 .then(paperStatements => {
@@ -245,11 +245,11 @@ class ExportToLatex extends Component {
                     return contribution;
                 });
         });
-        let orkgCitation = Cite.async('10.1145/3360901.3364435').then();
+        const orkgCitation = Cite.async('10.1145/3360901.3364435').then();
         return Promise.all([...contributions, orkgCitation]).then(contributions => {
-            let res = [];
-            let paperIds = [];
-            let bibtexOptions = {
+            const res = [];
+            const paperIds = [];
+            const bibtexOptions = {
                 output: {
                     type: 'string',
                     style: 'bibtex'
@@ -261,7 +261,7 @@ class ExportToLatex extends Component {
                         paperIds.push(contribution.paperId);
                         contribution.bibtex.options(bibtexOptions);
                         contribution.bibtex = contribution.bibtex.get();
-                        let refID = contribution.bibtex.substring(contribution.bibtex.indexOf('{') + 1, contribution.bibtex.indexOf(','));
+                        const refID = contribution.bibtex.substring(contribution.bibtex.indexOf('{') + 1, contribution.bibtex.indexOf(','));
                         contribution.bibtex = contribution.bibtex.replace(refID, contribution.paperId);
                         res.push(contribution.bibtex);
                     }

@@ -59,7 +59,7 @@ export default class Edge extends BaseElement {
 
     updateDrawPosition = function() {
         if (this.renderingLine) {
-            let that = this;
+            const that = this;
             this.renderingLine.attr('d', this.lineFunction(that.calculateLinkPath()));
         }
     };
@@ -72,7 +72,7 @@ export default class Edge extends BaseElement {
             iP = DrawTools().computeIntersectionPointsForMLP(this.domain, this.prop, this.range, 1);
         }
 
-        let fixPoint1 = { x: iP.x1, y: iP.y1 },
+        const fixPoint1 = { x: iP.x1, y: iP.y1 },
             fixPoint2 = { x: this.prop.x, y: this.prop.y },
             fixPoint3 = { x: iP.x2, y: iP.y2 };
 

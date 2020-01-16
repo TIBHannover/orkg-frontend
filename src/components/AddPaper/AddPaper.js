@@ -155,7 +155,7 @@ class AddPaper extends Component {
     };
 
     render() {
-        let { currentStep } = this.props;
+        const { currentStep } = this.props;
         let currentStepDetails;
 
         switch (currentStep) {

@@ -27,8 +27,8 @@ class RecentlyAddedPapers extends Component {
                 // Fetch the data of each paper
                 getStatementsBySubjects({ ids: result.map(p => p.id) })
                     .then(papersStatements => {
-                        let papers = papersStatements.map(paperStatements => {
-                            let paperSubject = find(result, { id: paperStatements.id });
+                        const papers = papersStatements.map(paperStatements => {
+                            const paperSubject = find(result, { id: paperStatements.id });
                             return getPaperData(
                                 paperStatements.id,
                                 paperSubject && paperSubject.label ? paperSubject.label : 'No Title',

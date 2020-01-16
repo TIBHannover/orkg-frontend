@@ -61,9 +61,9 @@ const selectedStyle = {
 
 class ProgressBar extends Component {
     render() {
-        let styleSelectedOne = this.props.currentStep >= '1' ? selectedStyle : {};
-        let styleSelectedTwo = this.props.currentStep >= '2' ? selectedStyle : {};
-        let styleSelectedThree = this.props.currentStep >= '3' ? selectedStyle : {};
+        const styleSelectedOne = this.props.currentStep >= '1' ? selectedStyle : {};
+        const styleSelectedTwo = this.props.currentStep >= '2' ? selectedStyle : {};
+        const styleSelectedThree = this.props.currentStep >= '3' ? selectedStyle : {};
 
         return (
             <div style={{ height: 65, margin: '30px 0 30px', position: 'relative' }}>

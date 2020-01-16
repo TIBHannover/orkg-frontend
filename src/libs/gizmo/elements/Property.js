@@ -60,7 +60,7 @@ export default class Property extends BaseElement {
     };
 
     getForceLink = function() {
-        let that = this;
+        const that = this;
         return [
             {
                 source: that.domain,

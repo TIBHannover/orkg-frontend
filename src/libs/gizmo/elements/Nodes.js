@@ -27,7 +27,7 @@ export default class Node extends BaseElement {
         // get old value
         const f_x = parseInt(this.x);
         const f_y = parseInt(this.y);
-        let that = this;
+        const that = this;
 
         that.svgRoot
             .transition()
@@ -54,7 +54,7 @@ export default class Node extends BaseElement {
     }
 
     filterCollapsedLinks() {
-        let linksToDraw = [];
+        const linksToDraw = [];
         this.outgoingLink.forEach(link => {
             if (!link.visible()) {
                 linksToDraw.push(link);

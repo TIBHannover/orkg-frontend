@@ -71,7 +71,7 @@ export default class GraphVis {
 
         if (this.nodes.length > 0) {
             // create the nodes and edges using the provided data;
-            let classNodes = [];
+            const classNodes = [];
             let iterator = 0;
             this.nodes.forEach(node => {
                 const aNode = this.createNode(node);
@@ -82,7 +82,7 @@ export default class GraphVis {
             this.classNodes = classNodes;
 
             iterator = 0; // reset the iterator for the edges;
-            let properties = [];
+            const properties = [];
             this.edges.forEach(edge => {
                 const anEdge = this.createEdge(edge, iterator);
                 properties.push(anEdge);
@@ -331,7 +331,7 @@ export default class GraphVis {
             // expand the nodes;
             if (nodeRef.length > 0) {
                 // get simply the parents from which we want to expand;
-                let parentMap = {};
+                const parentMap = {};
                 nodeRef.forEach(node => {
                     for (let i = 0; i < node.incommingLink.length; i++) {
                         const par = node.incommingLink[i];
@@ -340,7 +340,7 @@ export default class GraphVis {
                         }
                     }
                 });
-                let nodesToExpand = Object.values(parentMap);
+                const nodesToExpand = Object.values(parentMap);
                 nodesToExpand.forEach(node => {
                     this.layout.executeExpansionForNode(node, true);
                 });

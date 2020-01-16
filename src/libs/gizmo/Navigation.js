@@ -46,8 +46,8 @@ export default class Navigation {
     }
 
     resetRendering() {
-        let backupZ = this.zoomFactor;
-        let backupT = this.graphTranslation;
+        const backupZ = this.zoomFactor;
+        const backupT = this.graphTranslation;
         this.initializeRendering();
         this.zoomFactor = backupZ;
         this.graphTranslation = backupT;
@@ -106,8 +106,8 @@ export default class Navigation {
     }
 
     initializeRendering() {
-        let graph = this.graph;
-        let that = this;
+        const graph = this.graph;
+        const that = this;
 
         this.dragBehaviour = d3.behavior
             .drag()
@@ -165,7 +165,7 @@ export default class Navigation {
     zoomed() {
         const that = this;
         const graph = that.graph;
-        let graphContainer = graph.graphRoot;
+        const graphContainer = graph.graphRoot;
         let zoomEventByMWheel = false;
         if (d3.event.sourceEvent) {
             if (d3.event.sourceEvent.deltaY) {
@@ -189,7 +189,7 @@ export default class Navigation {
             .tween('attr.translate', function() {
                 return function() {
                     that.transformAnimation = true;
-                    let tr = d3.transform(graphContainer.attr('transform'));
+                    const tr = d3.transform(graphContainer.attr('transform'));
                     that.graphTranslation[0] = tr.translate[0];
                     that.graphTranslation[1] = tr.translate[1];
                     that.zoomFactor = tr.scale[0];
@@ -218,8 +218,8 @@ export default class Navigation {
 
         // get the graph coordinates
         const bboxOffset = 20; // default radius of a node;
-        let topLeft = this.getWorldPosFromScreen(bbox.left - svgBbox.left, bbox.top - svgBbox.top, that.graphTranslation, that.zoomFactor);
-        let botRight = this.getWorldPosFromScreen(bbox.right - svgBbox.left, bbox.bottom - svgBbox.top, that.graphTranslation, that.zoomFactor);
+        const topLeft = this.getWorldPosFromScreen(bbox.left - svgBbox.left, bbox.top - svgBbox.top, that.graphTranslation, that.zoomFactor);
+        const botRight = this.getWorldPosFromScreen(bbox.right - svgBbox.left, bbox.bottom - svgBbox.top, that.graphTranslation, that.zoomFactor);
 
         // get svg size;
         const w = svgBbox.width;
@@ -242,8 +242,8 @@ export default class Navigation {
         // zoom factor calculations and fail safes;
         let newZoomFactor = 1.0; // fail save if graph and window are squares
         //get the smaller one
-        let a = w / g_w;
-        let b = h / g_h;
+        const a = w / g_w;
+        const b = h / g_h;
         if (a < b) {
             newZoomFactor = a;
         } else {
@@ -261,14 +261,14 @@ export default class Navigation {
         const cx = 0.5 * w;
         const cy = 0.5 * h;
 
-        let cp = this.getWorldPosFromScreen(cx, cy, this.graphTranslation, this.zoomFactor);
+        const cp = this.getWorldPosFromScreen(cx, cy, this.graphTranslation, this.zoomFactor);
 
         // apply Zooming
         const sP = [cp.x, cp.y, h / that.zoomFactor];
         const eP = [posX, posY, h / newZoomFactor];
 
         // interpolation function
-        let pos_interpolation = d3.interpolateZoom(sP, eP);
+        const pos_interpolation = d3.interpolateZoom(sP, eP);
 
         let lenAnimation = pos_interpolation.duration;
         if (lenAnimation > 2500) {

@@ -57,7 +57,7 @@ export default class Layout {
 
     createTreeData() {
         // get the root node
-        let rootNode = this.graph.mst.getRoot();
+        const rootNode = this.graph.mst.getRoot();
 
         // create the tree data for that thing;
         this.treeData = [];
@@ -69,7 +69,7 @@ export default class Layout {
 
     processSingleElement(node, parent) {
         // recursive function;
-        let newObj = {};
+        const newObj = {};
         this.treeMap[node.id()] = node;
         newObj['name'] = node.id();
         if (parent === null) {
@@ -128,8 +128,8 @@ export default class Layout {
                 // TODO: This could be a part of setting the center of gravity for the layout >> need d3.v5 or so
                 // the call should be this.force.center([rootNode.x, rootNode.y]);
             }
-            let expandArray = [];
-            let seenNodes = [];
+            const expandArray = [];
+            const seenNodes = [];
             expandArray.push(rootNode);
 
             while (expandArray.length !== 0) {
@@ -156,7 +156,7 @@ export default class Layout {
 
             this.tree.size(this.layoutSize); // updates if there is something new
 
-            let rt = this.treeData[0];
+            const rt = this.treeData[0];
 
             if (this._layoutType === 'treeV') {
                 this.tree.nodeSize([220, 200]);
@@ -165,7 +165,7 @@ export default class Layout {
                 this.tree.nodeSize([150, 250]);
             }
 
-            let temp = this.tree.nodes(rt).reverse();
+            const temp = this.tree.nodes(rt).reverse();
 
             // set positions;
             temp.forEach(item => {
@@ -186,7 +186,7 @@ export default class Layout {
 
     makeLayoutTransition() {
         let id = 0;
-        let max = this.graph.classNodes.length - 1;
+        const max = this.graph.classNodes.length - 1;
         this.graph.classNodes.forEach(node => {
             node.startLayoutTransition(id++, max, this.graph.zoomToExtent);
         });
@@ -257,8 +257,8 @@ export default class Layout {
         const startY = node.y;
 
         // get outgoing links;
-        let childrenLinks = node.outgoingLink;
-        let children = [];
+        const childrenLinks = node.outgoingLink;
+        const children = [];
         childrenLinks.forEach(link => {
             children.push(link.rangeNode());
         });
@@ -291,14 +291,14 @@ export default class Layout {
                 });
             } else {
                 // we have to see our direction;
-                let angularSpace = [];
+                const angularSpace = [];
                 // do we have only one parent?
                 if (singleParent && parent) {
                     const oX = node.x - parent.x;
                     const oY = node.y - parent.y;
                     angularSpace.push(DrawTools().angleFromVector(-oX, -oY));
                     let sAngle = angularSpace[0] + 180 - 45;
-                    let sOffset = 90 / children.length;
+                    const sOffset = 90 / children.length;
                     let r = 1;
                     sAngle -= 0.5 * sOffset;
                     children.forEach(child => {
@@ -325,7 +325,7 @@ export default class Layout {
                     angularSpace.sort(function(a, b) {
                         return a - b;
                     });
-                    let angularDistances = [];
+                    const angularDistances = [];
 
                     let i;
                     for (i = 0; i < angularSpace.length - 1; i++) {
@@ -342,7 +342,7 @@ export default class Layout {
                     }
 
                     let startAngle = 0;
-                    let aOffset = (maxDistance - 0.5 * maxDistance) / children.length;
+                    const aOffset = (maxDistance - 0.5 * maxDistance) / children.length;
                     if (indexInSpace === angularDistances.length - 1) {
                         startAngle = angularSpace[angularSpace.length - 1];
                     } else {
@@ -351,14 +351,14 @@ export default class Layout {
 
                     startAngle += 0.25 * maxDistance;
                     startAngle += 0.5 * aOffset;
-                    let r = 0;
+                    const r = 0;
                     children.forEach(() => {
                         if ((children[r].x === -1 && children[r].y === -1) || layoutChange) {
                             let nAngle = startAngle + r * aOffset;
                             if (nAngle > 360) {
                                 nAngle -= 360;
                             }
-                            let nPos = DrawTools().angle2NormedVec(nAngle);
+                            const nPos = DrawTools().angle2NormedVec(nAngle);
                             children[r].x = startX + nPos.x * distOffset;
                             children[r].y = startY + nPos.y * distOffset;
                             children[r].px = children[r].x;

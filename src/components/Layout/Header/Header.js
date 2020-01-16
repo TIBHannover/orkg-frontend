@@ -104,7 +104,7 @@ class Header extends Component {
 
     userInformation = () => {
         const cookies = new Cookies();
-        let token = cookies.get('token') ? cookies.get('token') : null;
+        const token = cookies.get('token') ? cookies.get('token') : null;
         if (token && !this.props.user) {
             getUserInformation()
                 .then(userData => {
