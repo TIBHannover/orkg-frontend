@@ -1,52 +1,71 @@
 import React, { Component } from 'react';
-import { Table } from 'reactstrap';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTimes, faArrowCircleRight, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes';
 import capitalize from 'capitalize';
-import classNames from 'classnames';
 import TableCell from './TableCell';
-import _ from 'lodash';
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
+import withFixedColumnsScrollEvent from 'react-table-hoc-fixed-columns';
+import 'react-table-hoc-fixed-columns/lib/styles.css'; // important: this line must be placed after react-table css import
 
-const ScrollContainer = styled.div`
-    overflow-x: auto;
-    float: left;
-    width: 100%;
-    padding: 10px 0;
-    scroll-behavior: smooth;
+const ReactTableFixedColumns = withFixedColumnsScrollEvent(ReactTable);
 
-    &.overflowing-right {
-        box-shadow: inset -9px 0 5px -5px #d9d9d9;
+const ReactTableWrapper = styled.div`
+    clear: both;
+    .rthfc .-filters .rt-th.rthfc-th-fixed-left-last,
+    .rthfc .rt-th.rthfc-th-fixed-left-last,
+    .rthfc .rt-td.rthfc-td-fixed-left-last,
+    .ReactTable .rt-tbody .rt-td,
+    .ReactTable {
+        border: 0;
     }
-    &.overflowing-left {
-        box-shadow: inset 9px 0 5px -5px #d9d9d9;
+    .ReactTable .rt-th,
+    .ReactTable .rt-td,
+    .ReactTable .rt-thead .rt-th,
+    .ReactTable .rt-thead .rt-td {
+        padding: 0;
+        border: 0;
+        overflow: initial;
+        white-space: initial;
     }
-    &.overflowing-both {
-        box-shadow: inset 9px 0 5px -5px #d9d9d9, inset -9px 0 5px -5px #d9d9d9;
+    .ReactTable .rt-th > div {
+        height: 100%;
+    }
+    .ReactTable .rt-tbody .rt-tr-group {
+        border: 0;
+    }
+    .ReactTable .rt-thead .rt-tr {
+        text-align: left;
+        position: sticky;
+        top: 0;
+        background: white;
+    }
+    .ReactTable .rt-table {
+        position: relative;
+    }
+    .ReactTable .rt-thead.-header {
+        box-shadow: none;
+    }
+    .ReactTable .rt-tbody .rt-tr-group:last-child .rt-td > div div:first-child {
+        border-bottom: 2px solid #cfcbcb !important;
+        border-radius: 0 0 11px 11px !important;
     }
 `;
 
-const Row = styled.tr`
-    height: 100%;
-
-    &:last-child td > div:first-child {
-        border-bottom: 2px solid #cfcbcb;
-        border-radius: 0 0 11px 11px;
-    }
-`;
-
-const Properties = styled.td`
+const Properties = styled.div`
     padding-right: 10px;
-    padding: 0 10px !important;
+    padding: 0 10px 0 0 !important;
     margin: 0;
-    display: table-cell;
+    display: inline-block;
     height: 100%;
     width: 250px;
     position: relative;
+    background: transparent;
 `;
 
 const PropertiesInner = styled.div`
@@ -69,12 +88,12 @@ const PropertiesInner = styled.div`
     }
 `;
 
-const ItemHeader = styled.td`
+const ItemHeader = styled.div`
     padding-right: 10px;
     min-height: 50px;
     padding: 0 10px !important;
     margin: 0;
-    display: table-cell;
+    display: inline-block;
     height: 100%;
     width: 250px;
     position: relative;
@@ -99,8 +118,8 @@ const Contribution = styled.div`
 
 const Delete = styled.div`
     position: absolute;
-    top: -4px;
-    right: 7px;
+    top: 0px;
+    right: 5px;
     background: #ffa3a3;
     border-radius: 20px;
     width: 24px;
@@ -114,236 +133,155 @@ const Delete = styled.div`
     }
 `;
 
-const ScrollButton = styled.div`
-    border-radius: 30px;
-    color: ${props => props.theme.darkblue};
-    width: 30px;
-    height: 30px;
-    font-size: 27px;
-    cursor: pointer;
-    transition: 0.2s filter;
-
-    &.next {
-        float: right;
-    }
-    &.back {
-        float: left;
-    }
-    &:hover {
-        filter: brightness(85%);
-    }
-`;
-
 class ComparisonTable extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             showPropertiesDialog: false,
-            showShareDialog: false,
-            containerScrollLeft: 0,
-            showNextButton: false,
-            showBackButton: false
+            showShareDialog: false
         };
-
-        this.scrollContainer = React.createRef();
-        this.scrollAmount = 500;
     }
 
-    componentDidMount = () => {
-        this.scrollContainer.current.addEventListener('scroll', this.handleScroll, 1000);
-        this.defaultNextButtonState();
-    };
-
-    componentDidUpdate = (prevProps, prevState) => {
-        if (!this.props.transpose) {
-            if (this.props.contributions !== prevProps.contributions && this.props.contributions.length > 3) {
-                this.defaultNextButtonState();
-            }
-        } else {
-            if (this.props.transpose !== prevProps.transpose && this.props.properties.filter(property => property.active).length > 3) {
-                this.defaultNextButtonState();
-            }
-        }
-    };
-
-    componentWillUnmount = () => {
-        this.scrollContainer.current.removeEventListener('scroll', this.handleScroll);
-    };
-
-    defaultNextButtonState = () => {
-        if (!this.props.transpose) {
-            if (this.props.contributions.length > 3) {
-                this.setState({
-                    showNextButton: true
-                });
-            }
-        } else {
-            if (this.props.properties.filter(property => property.active).length > 3) {
-                this.setState({
-                    showNextButton: true
-                });
-            }
-        }
-    };
-
-    scrollNext = () => {
-        this.scrollContainer.current.scrollLeft += this.scrollAmount;
-    };
-
-    scrollBack = () => {
-        this.scrollContainer.current.scrollLeft -= this.scrollAmount;
-    };
-
-    handleScroll = _.debounce(() => {
-        const { scrollWidth, offsetWidth, scrollLeft } = this.scrollContainer.current;
-
-        this.setState({
-            showBackButton: this.scrollContainer.current.scrollLeft !== 0,
-            showNextButton: offsetWidth + scrollLeft !== scrollWidth
-        });
-    }, 100);
-
     render() {
-        const scrollContainerClasses = classNames({
-            'overflowing-left': this.state.showBackButton,
-            'overflowing-right': this.state.showNextButton,
-            'overflowing-both': this.state.showBackButton && this.state.showNextButton
-        });
-
         return (
             <>
-                <ScrollContainer ref={this.scrollContainer} className={scrollContainerClasses}>
-                    <Table
-                        id="comparisonTable"
-                        className="mb-0"
-                        style={{ borderCollapse: 'collapse', tableLayout: 'fixed', height: 'max-content', width: '100%' }}
-                    >
-                        <tbody className="table-borderless">
-                            <tr className="table-borderless">
-                                <Properties>
-                                    <PropertiesInner transpose={this.props.transpose} className="first">
-                                        Properties
-                                    </PropertiesInner>
-                                </Properties>
+                <ReactTableWrapper>
+                    <ReactTableFixedColumns
+                        resizable={false}
+                        sortable={false}
+                        pageSize={
+                            !this.props.transpose ? this.props.properties.filter(property => property.active).length : this.props.contributions.length
+                        }
+                        data={[
+                            ...(!this.props.transpose
+                                ? this.props.properties
+                                      .filter(property => property.active && this.props.data[property.id])
+                                      .map((property, index) => {
+                                          return {
+                                              property: capitalize(property.label),
+                                              values: this.props.contributions.map((contribution, index2) => {
+                                                  const data = this.props.data[property.id][index2];
+                                                  return data;
+                                              })
+                                          };
+                                      })
+                                : this.props.contributions.map((contribution, index) => {
+                                      return {
+                                          property: contribution,
+                                          values: this.props.properties
+                                              .filter(property => property.active)
+                                              .map((property, index2) => {
+                                                  const data = this.props.data[property.id][index];
+                                                  return data;
+                                              })
+                                      };
+                                  }))
+                        ]}
+                        columns={[
+                            {
+                                Header: (
+                                    <Properties>
+                                        <PropertiesInner transpose={this.props.transpose} className="first">
+                                            Properties
+                                        </PropertiesInner>
+                                    </Properties>
+                                ),
+                                accessor: 'property',
+                                fixed: 'left',
+                                Cell: props =>
+                                    !this.props.transpose ? (
+                                        <Properties>
+                                            <PropertiesInner>{capitalize(props.value)}</PropertiesInner>
+                                        </Properties>
+                                    ) : (
+                                        <Properties>
+                                            <PropertiesInner transpose={this.props.transpose}>
+                                                <Link
+                                                    to={reverse(ROUTES.VIEW_PAPER, {
+                                                        resourceId: props.value.paperId,
+                                                        contributionId: props.value.id
+                                                    })}
+                                                >
+                                                    {props.value.title ? props.value.title : <em>No title</em>}
+                                                </Link>
+                                                <br />
+                                                <Contribution>{props.value.contributionLabel}</Contribution>
+                                            </PropertiesInner>
 
-                                {!this.props.transpose &&
-                                    this.props.contributions.map((contribution, index) => {
-                                        return (
-                                            <ItemHeader key={`contribution${index}`}>
-                                                <ItemHeaderInner>
-                                                    <Link
-                                                        to={reverse(ROUTES.VIEW_PAPER, {
-                                                            resourceId: contribution.paperId,
-                                                            contributionId: contribution.id
-                                                        })}
-                                                    >
-                                                        {contribution.title ? contribution.title : <em>No title</em>}
-                                                    </Link>
-                                                    <br />
-                                                    <Contribution>{contribution.contributionLabel}</Contribution>
-                                                </ItemHeaderInner>
+                                            {this.props.contributions.length > 2 && (
+                                                <Delete onClick={() => this.props.removeContribution(props.value.id)}>
+                                                    <Icon icon={faTimes} />
+                                                </Delete>
+                                            )}
+                                        </Properties>
+                                    ),
+                                width: 250
+                            },
+                            ...(!this.props.transpose && this.props.contributions
+                                ? this.props.contributions.map((contribution, index) => {
+                                      return {
+                                          id: contribution.id, // <-here
+                                          Header: props => (
+                                              <ItemHeader key={`contribution${index}`}>
+                                                  <ItemHeaderInner>
+                                                      <Link
+                                                          to={reverse(ROUTES.VIEW_PAPER, {
+                                                              resourceId: contribution.paperId,
+                                                              contributionId: contribution.id
+                                                          })}
+                                                      >
+                                                          {contribution.title ? contribution.title : <em>No title</em>}
+                                                      </Link>
+                                                      <br />
+                                                      <Contribution>{contribution.contributionLabel}</Contribution>
+                                                  </ItemHeaderInner>
 
-                                                {this.props.contributions.length > 2 && (
-                                                    <Delete onClick={() => this.props.removeContribution(contribution.id)}>
-                                                        <Icon icon={faTimes} />
-                                                    </Delete>
-                                                )}
-                                            </ItemHeader>
-                                        );
-                                    })}
-                                {this.props.transpose &&
-                                    this.props.properties.map((property, index) => {
-                                        if (!property.active || !this.props.data[property.id]) {
-                                            return null;
-                                        }
-
-                                        return (
-                                            <ItemHeader key={`property${index}`}>
-                                                <ItemHeaderInner transpose={this.props.transpose}>
-                                                    {/*For when the path is available: <Tooltip message={property.path} colorIcon={'#606679'}>*/}
-                                                    {capitalize(property.label)}
-                                                    {/*</Tooltip>*/}
-                                                </ItemHeaderInner>
-                                            </ItemHeader>
-                                        );
-                                    })}
-                            </tr>
-
-                            {!this.props.transpose &&
-                                this.props.properties.map((property, index) => {
-                                    if (!property.active || !this.props.data[property.id]) {
-                                        return null;
-                                    }
-
-                                    return (
-                                        <Row key={`row${index}`}>
-                                            <Properties>
-                                                <PropertiesInner>
-                                                    {/*For when the path is available: <Tooltip message={property.path} colorIcon={'#606679'}>*/}
-                                                    {capitalize(property.label)}
-                                                    {/*</Tooltip>*/}
-                                                </PropertiesInner>
-                                            </Properties>
-                                            {this.props.contributions.map((contribution, index2) => {
-                                                const data = this.props.data[property.id][index2];
-
-                                                return <TableCell key={`cell${index}${index2}`} data={data} />;
-                                            })}
-                                        </Row>
-                                    );
-                                })}
-                            {this.props.transpose &&
-                                this.props.contributions.map((contribution, index) => {
-                                    return (
-                                        <Row key={`row${index}`}>
-                                            <Properties>
-                                                <PropertiesInner transpose={this.props.transpose}>
-                                                    <Link
-                                                        to={reverse(ROUTES.VIEW_PAPER, {
-                                                            resourceId: contribution.paperId,
-                                                            contributionId: contribution.id
-                                                        })}
-                                                    >
-                                                        {contribution.title ? contribution.title : <em>No title</em>}
-                                                    </Link>
-                                                    <br />
-                                                    <Contribution>{contribution.contributionLabel}</Contribution>
-                                                </PropertiesInner>
-
-                                                {this.props.contributions.length > 2 && (
-                                                    <Delete onClick={() => this.props.removeContribution(contribution.id)}>
-                                                        <Icon icon={faTimes} />
-                                                    </Delete>
-                                                )}
-                                            </Properties>
-
-                                            {this.props.properties.map((property, index2) => {
-                                                const data = this.props.data[property.id][index];
-
-                                                if (!property.active || !this.props.data[property.id]) {
-                                                    return null;
-                                                }
-
-                                                return <TableCell key={`cell${index2}${index}`} data={data} />;
-                                            })}
-                                        </Row>
-                                    );
-                                })}
-                        </tbody>
-                    </Table>
-                </ScrollContainer>
-
-                {this.state.showBackButton && (
-                    <ScrollButton onClick={this.scrollBack} className="back">
-                        <Icon icon={faArrowCircleLeft} />
-                    </ScrollButton>
-                )}
-                {this.state.showNextButton && (
-                    <ScrollButton onClick={this.scrollNext} className="next">
-                        <Icon icon={faArrowCircleRight} />
-                    </ScrollButton>
-                )}
+                                                  {this.props.contributions.length > 2 && (
+                                                      <Delete onClick={() => this.props.removeContribution(contribution.id)}>
+                                                          <Icon icon={faTimes} />
+                                                      </Delete>
+                                                  )}
+                                              </ItemHeader>
+                                          ),
+                                          accessor: d => {
+                                              //return d.values[index].length > 0 ? d.values[index][0].label : '';
+                                              return d.values[index];
+                                          },
+                                          Cell: props => <TableCell data={props.value} />, // Custom cell components!
+                                          width: 250
+                                      };
+                                  })
+                                : this.props.properties
+                                      .filter(property => property.active && this.props.data[property.id])
+                                      .map((property, index) => {
+                                          return {
+                                              id: property.id, // <-here
+                                              Header: props => (
+                                                  <ItemHeader key={`property${index}`}>
+                                                      <ItemHeaderInner transpose={this.props.transpose}>
+                                                          {/*For when the path is available: <Tooltip message={property.path} colorIcon={'#606679'}>*/}
+                                                          {capitalize(property.label)}
+                                                          {/*</Tooltip>*/}
+                                                      </ItemHeaderInner>
+                                                  </ItemHeader>
+                                              ),
+                                              accessor: d => {
+                                                  //return d.values[index].length > 0 ? d.values[index][0].label : '';
+                                                  return d.values[index];
+                                              },
+                                              Cell: props => <TableCell data={props.value} />, // Custom cell components!
+                                              width: 250
+                                          };
+                                      }))
+                        ]}
+                        style={{
+                            height: 'max-content' // This will force the table body to overflow and scroll, since there is not enough room
+                        }}
+                        className={''}
+                        showPagination={false}
+                    />
+                </ReactTableWrapper>
             </>
         );
     }

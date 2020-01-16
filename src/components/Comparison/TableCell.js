@@ -5,11 +5,12 @@ import StatementBrowserDialog from '../StatementBrowser/StatementBrowserDialog';
 import ValuePlugins from '../ValuePlugins/ValuePlugins';
 import Tippy from '@tippy.js/react';
 
-const Item = styled.td`
+const Item = styled.div`
     padding-right: 10px;
     padding: 0 10px !important;
     margin: 0;
-    display: table-cell;
+    width: 250px;
+    display: inline-block;
     height: 100%;
 `;
 
