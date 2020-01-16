@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Alert, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject } from 'network';
 import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResonseHashFromUrl, get_error_message } from 'utils';
-import { SubtitleSeparator, ComparisonTitle } from './styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
@@ -343,17 +342,17 @@ class Comparison extends Component {
                     {!this.state.loadingFailed && (
                         <>
                             <div>
-                                <div className="p-0 d-flex align-items-center">
-                                    <h2 className="h4 flex-shrink-0 mb-4 mt-4">Compare</h2>
-                                    {this.props.match.params.comparisonId && (
+                                <div className="p-0 d-flex align-items-start">
+                                    <h2 className="h4 mb-4 mt-4">{this.props.match.params.comparisonId ? this.state.title : 'Compare'}</h2>
+                                    {/*this.props.match.params.comparisonId && (
                                         <>
                                             <SubtitleSeparator />
 
                                             <ComparisonTitle>{this.state.title}</ComparisonTitle>
                                         </>
-                                    )}
+                                    )*/}
                                     {contributionAmount > 1 && !this.state.isLoading && (
-                                        <div style={{ marginLeft: 'auto' }} className="flex-shrink-0">
+                                        <div style={{ marginLeft: 'auto' }} className="flex-shrink-0 mt-4">
                                             <Dropdown isOpen={this.state.dropdownOpen} toggle={() => this.toggle('dropdownOpen')}>
                                                 <DropdownToggle color="darkblue" size="sm" className="float-right ml-1 pl-3 pr-3">
                                                     <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
@@ -388,7 +387,7 @@ class Comparison extends Component {
                                     )}
                                 </div>
                                 {this.props.match.params.comparisonId && this.state.description ? (
-                                    <div style={{ marginBottom: '20px' }} className="h6">
+                                    <div style={{ marginBottom: '20px', lineHeight: 1.5 }} className="h6">
                                         {this.state.description}
                                     </div>
                                 ) : (

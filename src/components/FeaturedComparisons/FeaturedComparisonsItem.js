@@ -44,7 +44,7 @@ class FeaturedComparisonsItem extends Component {
     };
 
     handleClick = () => {
-        this.props.history.push(`/comparison/${this.props.link}`);
+        this.props.history.push(`/comparison/${this.props.id}`);
     };
 
     render() {
@@ -78,6 +78,7 @@ FeaturedComparisonsItem.propTypes = {
     icon: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
     link: PropTypes.string.isRequired
 };
 
