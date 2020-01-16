@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
-import { ReactTableWrapper, Properties, PropertiesInner, ItemHeader, ItemHeaderInner, Contribution, Delete } from './styled';
-import PropTypes from 'prop-types';
+import { ReactTableWrapper, Properties, PropertiesInner, ItemHeader, ItemHeaderInner, Contribution, Delete, ScrollButton } from './styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faArrowCircleRight, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import ReactDOM from 'react-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import capitalize from 'capitalize';
 import TableCell from './TableCell';
 import ReactTable from 'react-table';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
 import withFixedColumnsScrollEvent from 'react-table-hoc-fixed-columns';
 import 'react-table-hoc-fixed-columns/lib/styles.css'; // important: this line must be placed after react-table css import
+import _ from 'lodash';
 
 const ReactTableFixedColumns = withFixedColumnsScrollEvent(ReactTable);
 
@@ -20,15 +23,88 @@ class ComparisonTable extends Component {
 
         this.state = {
             showPropertiesDialog: false,
-            showShareDialog: false
+            showShareDialog: false,
+            containerScrollLeft: 0,
+            showNextButton: false,
+            showBackButton: false
         };
+
+        this.scrollContainer = React.createRef();
+        this.scrollAmount = 500;
     }
 
+    componentDidMount = () => {
+        const rtTable = ReactDOM.findDOMNode(this.scrollContainer).getElementsByClassName('rt-table')[0];
+        rtTable.addEventListener('scroll', this.handleScroll, 1000);
+        this.defaultNextButtonState();
+    };
+
+    componentDidUpdate = (prevProps, prevState) => {
+        if (!this.props.transpose) {
+            if (this.props.contributions !== prevProps.contributions && this.props.contributions.length > 3) {
+                this.defaultNextButtonState();
+            }
+        } else {
+            if (this.props.transpose !== prevProps.transpose && this.props.properties.filter(property => property.active).length > 3) {
+                this.defaultNextButtonState();
+            }
+        }
+    };
+
+    componentWillUnmount = () => {
+        const rtTable = ReactDOM.findDOMNode(this.scrollContainer).getElementsByClassName('rt-table')[0];
+        rtTable.removeEventListener('scroll', this.handleScroll);
+    };
+
+    defaultNextButtonState = () => {
+        if (!this.props.transpose) {
+            if (this.props.contributions.length > 3) {
+                this.setState({
+                    showNextButton: true
+                });
+            }
+        } else {
+            if (this.props.properties.filter(property => property.active).length > 3) {
+                this.setState({
+                    showNextButton: true
+                });
+            }
+        }
+    };
+
+    scrollNext = () => {
+        const rtTable = ReactDOM.findDOMNode(this.scrollContainer).getElementsByClassName('rt-table')[0];
+        rtTable.scrollLeft += this.scrollAmount;
+    };
+
+    scrollBack = () => {
+        const rtTable = ReactDOM.findDOMNode(this.scrollContainer).getElementsByClassName('rt-table')[0];
+        rtTable.scrollLeft -= this.scrollAmount;
+    };
+
+    handleScroll = _.debounce(() => {
+        const rtTable = ReactDOM.findDOMNode(this.scrollContainer).getElementsByClassName('rt-table')[0];
+        const { scrollWidth, offsetWidth, scrollLeft } = rtTable;
+        this.setState({
+            showBackButton: rtTable.scrollLeft !== 0,
+            showNextButton: offsetWidth + scrollLeft !== scrollWidth
+        });
+    }, 100);
+
     render() {
+        const scrollContainerClasses = classNames({
+            'overflowing-left': this.state.showBackButton,
+            'overflowing-right': this.state.showNextButton,
+            'overflowing-both': this.state.showBackButton && this.state.showNextButton
+        });
+
         return (
             <>
-                <ReactTableWrapper>
+                <ReactTableWrapper className={scrollContainerClasses}>
                     <ReactTableFixedColumns
+                        innerRef={ref => {
+                            this.scrollContainer = ref;
+                        }}
                         resizable={false}
                         sortable={false}
                         pageSize={
@@ -159,10 +235,19 @@ class ComparisonTable extends Component {
                         style={{
                             height: 'max-content' // This will force the table body to overflow and scroll, since there is not enough room
                         }}
-                        className={''}
                         showPagination={false}
                     />
                 </ReactTableWrapper>
+                {this.state.showBackButton && (
+                    <ScrollButton onClick={this.scrollBack} className="back">
+                        <Icon icon={faArrowCircleLeft} />
+                    </ScrollButton>
+                )}
+                {this.state.showNextButton && (
+                    <ScrollButton onClick={this.scrollNext} className="next">
+                        <Icon icon={faArrowCircleRight} />
+                    </ScrollButton>
+                )}
             </>
         );
     }

@@ -23,8 +23,41 @@ export const ContainerAnimated = styled(Container)`
     transition: 0.5s max-width;
 `;
 
+export const ScrollButton = styled.div`
+    border-radius: 30px;
+    color: ${props => props.theme.darkblue};
+    width: 30px;
+    height: 30px;
+    font-size: 27px;
+    cursor: pointer;
+    transition: 0.2s filter;
+
+    &.next {
+        float: right;
+    }
+    &.back {
+        float: left;
+    }
+    &:hover {
+        filter: brightness(85%);
+    }
+`;
+
 export const ReactTableWrapper = styled.div`
     clear: both;
+
+    &.overflowing-left .rthfc-td-fixed,
+    &.overflowing-left .rthfc-th-fixed {
+        box-shadow: 9px 0px 5px -5px #d9d9d9 !important;
+    }
+
+    & .rt-th.rthfc-th-fixed-left-last {
+        border-radius: 11px 11px 0 0;
+    }
+    & .rthfc-td-fixed-left-last {
+        border-radius: 0 0 11px 11px !important;
+    }
+
     .rthfc .-filters .rt-th.rthfc-th-fixed-left-last,
     .rthfc .rt-th.rthfc-th-fixed-left-last,
     .rthfc .rt-td.rthfc-td-fixed-left-last,
@@ -55,6 +88,7 @@ export const ReactTableWrapper = styled.div`
     }
     .ReactTable .rt-table {
         position: relative;
+        scroll-behavior: smooth;
     }
     .ReactTable .rt-thead.-header {
         box-shadow: none;
@@ -66,9 +100,9 @@ export const ReactTableWrapper = styled.div`
 `;
 
 export const Properties = styled.div`
-    padding-right: 10px;
-    padding: 0 10px 0 0 !important;
+    padding: 0 0 0 0 !important;
     margin: 0;
+    margin-right: 10px !important;
     display: inline-block;
     height: 100%;
     width: 250px;
