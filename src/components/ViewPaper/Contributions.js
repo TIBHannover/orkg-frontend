@@ -322,9 +322,9 @@ class Contributions extends Component {
                                             {this.state.similaireContributions.length > 0 && (
                                                 <Link
                                                     className="clearfix"
-                                                    to={`${
+                                                    to={`${reverse(
                                                         ROUTES.COMPARISON
-                                                    }?contributions=${selectedContributionId},${this.state.similaireContributions
+                                                    )}?contributions=${selectedContributionId},${this.state.similaireContributions
                                                         .slice(0, 3)
                                                         .map(s => s.contributionId)
                                                         .join(',')}`}

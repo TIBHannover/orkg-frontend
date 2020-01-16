@@ -1,32 +1,25 @@
-import { Alert, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import React, { Component } from 'react';
-import { comparisonUrl, submitGetRequest } from '../../network';
-
-import { CSVLink } from 'react-csv';
+import { Alert, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject } from 'network';
+import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResonseHashFromUrl, get_error_message } from 'utils';
+import { SubtitleSeparator, ComparisonTitle } from './styled';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import ROUTES from 'constants/routes.js';
 import ComparisonLoadingComponent from './ComparisonLoadingComponent';
 import ComparisonTable from './ComparisonTable.js';
 import ExportToLatex from './ExportToLatex.js';
 import GeneratePdf from './GeneratePdf.js';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import ROUTES from '../../constants/routes.js';
 import SelectProperties from './SelectProperties.js';
 import Share from './Share.js';
+import Publish from './Publish.js';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { CSVLink } from 'react-csv';
 import arrayMove from 'array-move';
 import { connect } from 'react-redux';
 import dotProp from 'dot-prop-immutable';
-import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import queryString from 'query-string';
-
-/*const BreadcrumbStyled = styled(Breadcrumb)`
-    .breadcrumb {
-        background:transparent;
-        border-left: 2px solid #caccd5;
-        border-radius: 0;
-        margin: 0 0 0 18px;
-    }
-`;*/
+import { reverse } from 'named-urls';
 
 class Comparison extends Component {
     constructor(props) {
@@ -36,7 +29,7 @@ class Comparison extends Component {
             transpose: false,
             response_hash: null,
             title: '',
-            authorNames: [],
+            description: '',
             contributions: [],
             dropdownOpen: false,
             properties: [],
@@ -45,8 +38,11 @@ class Comparison extends Component {
             showPropertiesDialog: false,
             showShareDialog: false,
             showLatexDialog: false,
+            showPublishDialog: false,
             isLoading: false,
-            loadingFailed: false
+            loadingFailed: false,
+            errors: null,
+            locationSearch: ''
         };
     }
 
@@ -65,52 +61,16 @@ class Comparison extends Component {
             this.generateMatrixOfComparison();
         }
 
-        const prevContributions = this.getContributionIdsFromUrl(prevProps.location);
-        const currentContributions = this.getContributionIdsFromUrl(this.props.location);
+        const prevContributions = getContributionIdsFromUrl(prevProps.location.search);
+        const currentContributions = getContributionIdsFromUrl(this.props.location.search);
         // perform comparison again when contribution ids are removed
         if (prevContributions.length !== currentContributions.length || !currentContributions.every(e => prevContributions.includes(e))) {
             this.performComparison();
         }
     };
 
-    getContributionIdsFromUrl = location => {
-        let ids = queryString.parse(location.search, { arrayFormat: 'comma' }).contributions;
-        if (!ids) {
-            return [];
-        }
-        if (typeof ids === 'string' || ids instanceof String) {
-            return [ids];
-        }
-        ids = ids.filter(n => n); //filter out empty element ids
-        return ids;
-    };
-
-    getPropertyIdsFromUrl = () => {
-        let ids = queryString.parse(this.props.location.search).properties;
-
-        if (!ids) {
-            return [];
-        }
-        ids = ids.split(',');
-        ids = ids.filter(n => n); //filter out empty elements
-
-        return ids;
-    };
-
-    getTransposeOptionFromUrl = () => {
-        const transpose = queryString.parse(this.props.location.search).transpose;
-        if (!transpose || !['true', '1'].includes(transpose)) {
-            return false;
-        }
-        return true;
-    };
-
-    getResonseHashFromUrl = () => {
-        const response_hash = queryString.parse(this.props.location.search).response_hash;
-        if (response_hash) {
-            return response_hash;
-        }
-        return null;
+    updateComparisonMetadata = (title, description) => {
+        this.setState({ title, description });
     };
 
     generateMatrixOfComparison = () => {
@@ -146,15 +106,13 @@ class Comparison extends Component {
         });
     };
 
-    performComparison = () => {
-        this.setState({
-            isLoading: true
-        });
+    getComparisonResult = locationSearch => {
+        const response_hash = getResonseHashFromUrl(locationSearch);
+        const contributionIds = getContributionIdsFromUrl(locationSearch);
+        const propertyIds = getPropertyIdsFromUrl(locationSearch);
+        const transpose = getTransposeOptionFromUrl(locationSearch);
 
-        const response_hash = this.getResonseHashFromUrl();
-        const contributionIds = this.getContributionIdsFromUrl(this.props.location);
-
-        submitGetRequest(`${comparisonUrl}${this.props.location.search}`)
+        submitGetRequest(`${comparisonUrl}${locationSearch}`)
             .then(comparisonData => {
                 // mocking function to allow for deletion of contributions via the url
                 const contributions = [];
@@ -165,8 +123,6 @@ class Comparison extends Component {
                         contributions.push(contribution);
                     }
                 }
-
-                const propertyIds = this.getPropertyIdsFromUrl();
 
                 // if there are properties in the query string
                 if (propertyIds.length > 0) {
@@ -201,32 +157,65 @@ class Comparison extends Component {
                     properties: comparisonData.properties,
                     data: comparisonData.data,
                     response_hash: comparisonData.response_hash ? comparisonData.response_hash : response_hash,
-                    transpose: this.getTransposeOptionFromUrl(),
-                    isLoading: false
+                    transpose: transpose,
+                    isLoading: false,
+                    errors: null,
+                    loadingFailed: false
                 });
             })
             .catch(error => {
                 this.setState({
                     loadingFailed: true,
-                    isLoading: false
+                    isLoading: false,
+                    errors: get_error_message(error)
                 });
             });
     };
 
-    toggleDropdown = () => {
-        this.setState(prevState => ({
-            dropdownOpen: !prevState.dropdownOpen
-        }));
-    };
-
-    exportAsCsv = e => {
+    performComparison = () => {
         this.setState({
-            dropdownOpen: false
+            isLoading: true
         });
+        if (this.props.match.params.comparisonId) {
+            getResource(this.props.match.params.comparisonId)
+                .then(comparisonResource => {
+                    if (!comparisonResource.classes.includes(process.env.REACT_APP_CLASSES_COMPARISON)) {
+                        throw new Error(`The requested resource is not of class "${process.env.REACT_APP_CLASSES_COMPARISON}".`);
+                    }
+                    return getStatementsBySubject({ id: this.props.match.params.comparisonId }).then(comparisonStatement => {
+                        const descriptionStatement = comparisonStatement.find(
+                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_DESCRIPTION
+                        );
+                        const urlStatement = comparisonStatement.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL);
+                        if (urlStatement) {
+                            this.getComparisonResult(urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')));
+                            this.setState({
+                                locationSearch: urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')),
+                                title: descriptionStatement.subject.label,
+                                description: descriptionStatement.object.label
+                            });
+                        } else {
+                            throw new Error('The requested comparison has no contributions.');
+                        }
+                    });
+                })
+                .catch(error => {
+                    let errorMessage = null;
+                    if (error.statusCode && error.statusCode === 404) {
+                        errorMessage = 'The requested resource is not found';
+                    } else {
+                        errorMessage = get_error_message(error);
+                    }
+                    this.setState({ errors: errorMessage, isLoading: false, loadingFailed: true });
+                });
+        } else {
+            this.getComparisonResult(this.props.location.search);
+            this.setState({ locationSearch: '' });
+        }
     };
 
     removeContribution = contributionId => {
-        const contributionIds = this.getContributionIdsFromUrl(this.props.location);
+        const contributionIds = getContributionIdsFromUrl(this.state.locationSearch || this.props.location.search);
         const index = contributionIds.indexOf(contributionId);
 
         if (index > -1) {
@@ -297,7 +286,7 @@ class Comparison extends Component {
 
     generateUrl = (contributionIds, propertyIds, transpose) => {
         if (!contributionIds) {
-            contributionIds = this.getContributionIdsFromUrl(this.props.location).join(',');
+            contributionIds = getContributionIdsFromUrl(this.state.locationSearch || this.props.location.search).join(',');
         }
         if (!propertyIds) {
             propertyIds = this.propertiesToQueryString();
@@ -305,7 +294,9 @@ class Comparison extends Component {
         if (!transpose) {
             transpose = this.state.transpose;
         }
-        this.props.history.push(ROUTES.COMPARISON + '?contributions=' + contributionIds + '&properties=' + propertyIds + '&transpose=' + transpose);
+        this.props.history.push(
+            reverse(ROUTES.COMPARISON) + '?contributions=' + contributionIds + '&properties=' + propertyIds + '&transpose=' + transpose
+        );
     };
 
     handleGoBack = () => {
@@ -313,7 +304,7 @@ class Comparison extends Component {
     };
 
     render() {
-        const contributionAmount = this.getContributionIdsFromUrl(this.props.location).length;
+        const contributionAmount = getContributionIdsFromUrl(this.state.locationSearch || this.props.location.search).length;
 
         return (
             <div>
@@ -335,65 +326,84 @@ class Comparison extends Component {
                     {!this.state.isLoading && this.state.loadingFailed && (
                         <div>
                             <Alert color="danger">
-                                <strong>Error.</strong> The comparison service is unreachable. Please come back later and try again.{' '}
-                                <span className="btn-link" style={{ cursor: 'pointer' }} onClick={this.handleGoBack}>
-                                    Go back
-                                </span>{' '}
-                                or <Link to={ROUTES.HOME}>go to the homepage</Link>.
+                                {this.state.errors ? (
+                                    <>{this.state.errors}</>
+                                ) : (
+                                    <>
+                                        <strong>Error.</strong> The comparison service is unreachable. Please come back later and try again.{' '}
+                                        <span className="btn-link" style={{ cursor: 'pointer' }} onClick={this.handleGoBack}>
+                                            Go back
+                                        </span>{' '}
+                                        or <Link to={ROUTES.HOME}>go to the homepage</Link>.
+                                    </>
+                                )}
                             </Alert>
                         </div>
                     )}
                     {!this.state.loadingFailed && (
                         <>
-                            <h2 className="h4 mt-4 mb-3 float-left">
-                                Compare
-                                <br />
-                                <span className="h6">{this.state.title}</span>
-                            </h2>
+                            <div>
+                                <div className="p-0 d-flex align-items-center">
+                                    <h2 className="h4 flex-shrink-0 mb-4 mt-4">Compare</h2>
+                                    {this.props.match.params.comparisonId && (
+                                        <>
+                                            <SubtitleSeparator />
 
-                            {contributionAmount > 1 ? (
-                                !this.state.isLoading ? (
-                                    <div>
-                                        <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
-                                            <DropdownToggle color="darkblue" size="sm" className="float-right mb-4 mt-4 ml-1 pl-3 pr-3">
-                                                <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
-                                            </DropdownToggle>
-                                            <DropdownMenu>
-                                                <DropdownItem header>Customize</DropdownItem>
-                                                <DropdownItem onClick={() => this.toggle('showPropertiesDialog')}>Select properties</DropdownItem>
-                                                <DropdownItem onClick={() => this.toggleTranpose()}>Transpose table</DropdownItem>
-                                                <DropdownItem divider />
-                                                <DropdownItem header>Export</DropdownItem>
-                                                <DropdownItem onClick={() => this.toggle('showLatexDialog')}>Export as LaTeX</DropdownItem>
-                                                {this.state.csvData ? (
-                                                    <CSVLink
-                                                        data={this.state.csvData}
-                                                        filename={'ORKG Contribution Comparison.csv'}
-                                                        className="dropdown-item"
-                                                        target="_blank"
-                                                        onClick={this.exportAsCsv}
-                                                    >
-                                                        Export as CSV
-                                                    </CSVLink>
-                                                ) : (
-                                                    ''
-                                                )}
-                                                <GeneratePdf id="comparisonTable" />
-                                                <DropdownItem divider />
-                                                <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
-                                            </DropdownMenu>
-                                        </Dropdown>
-
-                                        {/*<Button color="darkblue" className="float-right mb-4 mt-4 " size="sm">Add to comparison</Button>*/}
-
-                                        <ComparisonTable
-                                            data={this.state.data}
-                                            properties={this.state.properties}
-                                            contributions={this.state.contributions}
-                                            removeContribution={this.removeContribution}
-                                            transpose={this.state.transpose}
-                                        />
+                                            <ComparisonTitle>{this.state.title}</ComparisonTitle>
+                                        </>
+                                    )}
+                                    {contributionAmount > 1 && !this.state.isLoading && (
+                                        <div style={{ marginLeft: 'auto' }} className="flex-shrink-0">
+                                            <Dropdown isOpen={this.state.dropdownOpen} toggle={() => this.toggle('dropdownOpen')}>
+                                                <DropdownToggle color="darkblue" size="sm" className="float-right ml-1 pl-3 pr-3">
+                                                    <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
+                                                </DropdownToggle>
+                                                <DropdownMenu>
+                                                    <DropdownItem header>Customize</DropdownItem>
+                                                    <DropdownItem onClick={() => this.toggle('showPropertiesDialog')}>Select properties</DropdownItem>
+                                                    <DropdownItem onClick={() => this.toggleTranpose()}>Transpose table</DropdownItem>
+                                                    <DropdownItem divider />
+                                                    <DropdownItem header>Export</DropdownItem>
+                                                    <DropdownItem onClick={() => this.toggle('showLatexDialog')}>Export as LaTeX</DropdownItem>
+                                                    {this.state.csvData ? (
+                                                        <CSVLink
+                                                            data={this.state.csvData}
+                                                            filename={'ORKG Contribution Comparison.csv'}
+                                                            className="dropdown-item"
+                                                            target="_blank"
+                                                            onClick={() => this.toggle('dropdownOpen')}
+                                                        >
+                                                            Export as CSV
+                                                        </CSVLink>
+                                                    ) : (
+                                                        ''
+                                                    )}
+                                                    <GeneratePdf id="comparisonTable" />
+                                                    <DropdownItem divider />
+                                                    <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
+                                                    <DropdownItem onClick={() => this.toggle('showPublishDialog')}>Publish</DropdownItem>
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                        </div>
+                                    )}
+                                </div>
+                                {this.props.match.params.comparisonId && this.state.description ? (
+                                    <div style={{ marginBottom: '20px' }} className="h6">
+                                        {this.state.description}
                                     </div>
+                                ) : (
+                                    <br />
+                                )}
+                            </div>
+                            {contributionAmount > 1 || this.props.match.params.comparisonId ? (
+                                !this.state.isLoading ? (
+                                    <ComparisonTable
+                                        data={this.state.data}
+                                        properties={this.state.properties}
+                                        contributions={this.state.contributions}
+                                        removeContribution={this.removeContribution}
+                                        transpose={this.state.transpose}
+                                    />
                                 ) : (
                                     <ComparisonLoadingComponent />
                                 )
@@ -420,7 +430,17 @@ class Comparison extends Component {
                     showDialog={this.state.showShareDialog}
                     toggle={() => this.toggle('showShareDialog')}
                     url={window.location.href}
+                    comparisonId={this.props.match.params.comparisonId}
                     response_hash={this.state.response_hash}
+                />
+
+                <Publish
+                    showDialog={this.state.showPublishDialog}
+                    toggle={() => this.toggle('showPublishDialog')}
+                    url={window.location.href}
+                    response_hash={this.state.response_hash}
+                    comparisonId={this.props.match.params.comparisonId}
+                    updateComparisonMetadata={this.updateComparisonMetadata}
                 />
 
                 <ExportToLatex
@@ -441,7 +461,6 @@ class Comparison extends Component {
 Comparison.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
-            paperId: PropTypes.string,
             comparisonId: PropTypes.string
         }).isRequired
     }).isRequired,

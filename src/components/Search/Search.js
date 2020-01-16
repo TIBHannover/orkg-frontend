@@ -45,12 +45,19 @@ class Search extends Component {
             [
                 4,
                 {
+                    label: 'Comparison',
+                    class: process.env.REACT_APP_CLASSES_COMPARISON
+                }
+            ],
+            [
+                5,
+                {
                     label: 'Resource',
                     class: 'resource'
                 }
             ],
             [
-                5,
+                6,
                 {
                     label: 'Predicate',
                     class: 'predicate'
@@ -91,7 +98,13 @@ class Search extends Component {
             isAuthorsNextPageLoading: false,
             hasAuthorsNextPage: false,
             authorsPage: 1,
-            isAuthorsLastPageReached: false
+            isAuthorsLastPageReached: false,
+
+            comparisons: [],
+            isComparisonsNextPageLoading: false,
+            hasComparisonsNextPage: false,
+            comparisonsPage: 1,
+            isComparisonsLastPageReached: false
         };
     }
 
@@ -103,6 +116,7 @@ class Search extends Component {
             this.loadMoreProblems(this.state.value);
             this.loadMoreAuthors(this.state.value);
             this.loadMorePredicates(this.state.value);
+            this.loadMoreComparisons(this.state.value);
         }
     }
 
@@ -135,7 +149,12 @@ class Search extends Component {
                     isAuthorsNextPageLoading: false,
                     hasAuthorsNextPage: false,
                     authorsPage: 1,
-                    isAuthorsLastPageReached: false
+                    isAuthorsLastPageReached: false,
+                    comparisons: [],
+                    isComparisonsNextPageLoading: false,
+                    hasComparisonsNextPage: false,
+                    comparisonsPage: 1,
+                    isComparisonsLastPageReached: false
                 },
                 () => {
                     this.loadMoreResources(this.state.value);
@@ -143,6 +162,7 @@ class Search extends Component {
                     this.loadMoreProblems(this.state.value);
                     this.loadMoreAuthors(this.state.value);
                     this.loadMorePredicates(this.state.value);
+                    this.loadMoreComparisons(this.state.value);
                 }
             );
         }
@@ -153,6 +173,7 @@ class Search extends Component {
             isResourcesNextPageLoading,
             isPapersNextPageLoading,
             isAuthorsNextPageLoading,
+            isComparisonsNextPageLoading,
             isProblemsNextPageLoading,
             isPredicatesNextPageLoading
         } = this.state;
@@ -161,6 +182,7 @@ class Search extends Component {
             isResourcesNextPageLoading ||
             isPapersNextPageLoading ||
             isAuthorsNextPageLoading ||
+            isComparisonsNextPageLoading ||
             isProblemsNextPageLoading ||
             isPredicatesNextPageLoading
         );
@@ -188,7 +210,9 @@ class Search extends Component {
                 ',' +
                 process.env.REACT_APP_CLASSES_PROBLEM +
                 ',' +
-                process.env.REACT_APP_CLASSES_AUTHOR
+                process.env.REACT_APP_CLASSES_AUTHOR +
+                ',' +
+                process.env.REACT_APP_CLASSES_COMPARISON
         }).then(resources => {
             if (resources.length > 0) {
                 this.setState({
@@ -297,6 +321,36 @@ class Search extends Component {
         });
     };
 
+    loadMoreComparisons = searchQuery => {
+        if (searchQuery.length === 0) {
+            return;
+        }
+        this.setState({ isComparisonsNextPageLoading: true });
+        getResourcesByClass({
+            page: this.state.comparisonsPage,
+            items: this.itemsPerFilter,
+            sortBy: 'id',
+            desc: true,
+            q: searchQuery,
+            id: process.env.REACT_APP_CLASSES_COMPARISON
+        }).then(comparisons => {
+            if (comparisons.length > 0) {
+                this.setState({
+                    comparisons: [...this.state.comparisons, ...comparisons],
+                    isComparisonsNextPageLoading: false,
+                    hasComparisonsNextPage: comparisons.length < this.itemsPerFilter ? false : true,
+                    comparisonsPage: this.state.comparisonsPage + 1
+                });
+            } else {
+                this.setState({
+                    isComparisonsNextPageLoading: false,
+                    hasComparisonsNextPage: false,
+                    isComparisonsLastPageReached: true
+                });
+            }
+        });
+    };
+
     loadMorePredicates = searchQuery => {
         if (searchQuery.length === 0) {
             return;
@@ -391,6 +445,7 @@ class Search extends Component {
                                     (this.state.papers.length === 0 &&
                                         this.state.problems.length === 0 &&
                                         this.state.authors.length === 0 &&
+                                        this.state.comparisons.length === 0 &&
                                         this.state.resources.length === 0 &&
                                         this.state.predicates.length === 0) && (
                                         <ContentLoader height={210} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
@@ -413,6 +468,7 @@ class Search extends Component {
                                     (this.state.papers.length === 0 &&
                                         this.state.problems.length === 0 &&
                                         this.state.authors.length === 0 &&
+                                        this.state.comparisons.length === 0 &&
                                         this.state.resources.length === 0 &&
                                         this.state.predicates.length === 0)) ? (
                                     <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
@@ -457,17 +513,29 @@ class Search extends Component {
                                         {(this.state.selectedFilters.length === 0 ||
                                             (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(4))) && (
                                             <Results
+                                                loading={this.state.isComparisonsNextPageLoading}
+                                                hasNextPage={this.state.hasComparisonsNextPage}
+                                                loadMore={this.loadMoreComparisons}
+                                                items={this.state.comparisons}
+                                                label={'Comparisons'}
+                                                class={process.env.REACT_APP_CLASSES_COMPARISON}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(4)}
+                                            />
+                                        )}
+                                        {(this.state.selectedFilters.length === 0 ||
+                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(5))) && (
+                                            <Results
                                                 loading={this.state.isResourcesNextPageLoading}
                                                 hasNextPage={this.state.hasResourcesNextPage}
                                                 loadMore={this.loadMoreResources}
                                                 items={this.state.resources}
                                                 label={'Resources'}
                                                 class={'resource'}
-                                                showNoResultsMessage={this.state.selectedFilters.includes(4)}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(5)}
                                             />
                                         )}
                                         {(this.state.selectedFilters.length === 0 ||
-                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(5))) && (
+                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(6))) && (
                                             <Results
                                                 loading={this.state.isPredicatesNextPageLoading}
                                                 hasNextPage={this.state.hasPredicatesNextPage}
@@ -475,7 +543,7 @@ class Search extends Component {
                                                 items={this.state.predicates}
                                                 label={'Predicates'}
                                                 class={'predicate'}
-                                                showNoResultsMessage={this.state.selectedFilters.includes(5)}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(6)}
                                             />
                                         )}
                                     </div>

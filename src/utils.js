@@ -1,4 +1,5 @@
 import capitalize from 'capitalize';
+import queryString from 'query-string';
 
 export const popupDelay = process.env.REACT_APP_POPUP_DELAY;
 
@@ -214,4 +215,44 @@ export const sortMethod = (a, b) => {
     }
     // returning 0 or undefined will use any subsequent column sorting methods or the row index as a tiebreaker
     return 0;
+};
+
+export const getContributionIdsFromUrl = locationSearch => {
+    let ids = queryString.parse(locationSearch, { arrayFormat: 'comma' }).contributions;
+    if (!ids) {
+        return [];
+    }
+    if (typeof ids === 'string' || ids instanceof String) {
+        return [ids];
+    }
+    ids = ids.filter(n => n); //filter out empty element ids
+    return ids;
+};
+
+export const getPropertyIdsFromUrl = locationSearch => {
+    let ids = queryString.parse(locationSearch).properties;
+
+    if (!ids) {
+        return [];
+    }
+    ids = ids.split(',');
+    ids = ids.filter(n => n); //filter out empty elements
+
+    return ids;
+};
+
+export const getTransposeOptionFromUrl = locationSearch => {
+    const transpose = queryString.parse(locationSearch).transpose;
+    if (!transpose || !['true', '1'].includes(transpose)) {
+        return false;
+    }
+    return true;
+};
+
+export const getResonseHashFromUrl = locationSearch => {
+    const response_hash = queryString.parse(locationSearch).response_hash;
+    if (response_hash) {
+        return response_hash;
+    }
+    return null;
 };

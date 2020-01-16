@@ -7,6 +7,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import Dotdotdot from 'react-dotdotdot';
 import styled from 'styled-components';
+import { reverse } from 'named-urls';
 import ContentLoader from 'react-content-loader';
 
 const CarouselContainer = styled.div`
@@ -142,7 +143,7 @@ class FeaturedComparisons extends Component {
                     <div style={{ minHeight: '120px' }} className="d-flex">
                         <div>
                             <h5>
-                                <Link className="" to={`${ROUTES.COMPARISON}${comparison.url}`}>
+                                <Link className="" to={`${reverse(ROUTES.COMPARISON)}${comparison.url}`}>
                                     <Dotdotdot clamp={2}>{comparison.label}</Dotdotdot>
                                 </Link>
                             </h5>
