@@ -133,6 +133,7 @@ class FeaturedComparisons extends Component {
                                                 title={comparison.label}
                                                 description={comparison.description}
                                                 icon={comparison.icon}
+                                                id={comparison.id}
                                                 link={comparison.url}
                                             />
                                         );
