@@ -241,7 +241,9 @@ class ComparisonTable extends Component {
                                                         {contribution.title ? contribution.title : <em>No title</em>}
                                                     </Link>
                                                     <br />
-                                                    <Contribution>{contribution.contributionLabel}</Contribution>
+                                                    <Contribution>
+                                                        {contribution.contributionLabel} {contribution.year && `- ${contribution.year}`}
+                                                    </Contribution>
                                                 </ItemHeaderInner>
 
                                                 {this.props.contributions.length > 2 && (
