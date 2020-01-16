@@ -1,43 +1,25 @@
-import { Alert, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import React, { Component } from 'react';
-import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject } from '../../network';
-import { CSVLink } from 'react-csv';
+import { Alert, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject } from 'network';
+import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResonseHashFromUrl, get_error_message } from 'utils';
+import { SubtitleSeparator, ComparisonTitle } from './styled';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import ROUTES from 'constants/routes.js';
 import ComparisonLoadingComponent from './ComparisonLoadingComponent';
 import ComparisonTable from './ComparisonTable.js';
 import ExportToLatex from './ExportToLatex.js';
 import GeneratePdf from './GeneratePdf.js';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import ROUTES from '../../constants/routes.js';
 import SelectProperties from './SelectProperties.js';
 import Share from './Share.js';
 import Publish from './Publish.js';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { CSVLink } from 'react-csv';
 import arrayMove from 'array-move';
 import { connect } from 'react-redux';
 import dotProp from 'dot-prop-immutable';
 import { reverse } from 'named-urls';
-import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResonseHashFromUrl } from 'utils';
-import styled from 'styled-components';
-
-const SubtitleSeparator = styled.div`
-    background: ${props => props.theme.darkblue};
-    width: 2px;
-    height: 30px;
-    margin: 0 15px;
-    content: '';
-    display: block;
-    opacity: 0.7;
-`;
-
-const ComparisonTitle = styled.div`
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    margin-right: 20px;
-    color: #62687d;
-`;
 
 class Comparison extends Component {
     constructor(props) {
@@ -59,6 +41,7 @@ class Comparison extends Component {
             showPublishDialog: false,
             isLoading: false,
             loadingFailed: false,
+            errors: null,
             locationSearch: ''
         };
     }
@@ -175,13 +158,16 @@ class Comparison extends Component {
                     data: comparisonData.data,
                     response_hash: comparisonData.response_hash ? comparisonData.response_hash : response_hash,
                     transpose: transpose,
-                    isLoading: false
+                    isLoading: false,
+                    errors: null,
+                    loadingFailed: false
                 });
             })
             .catch(error => {
                 this.setState({
                     loadingFailed: true,
-                    isLoading: false
+                    isLoading: false,
+                    errors: get_error_message(error)
                 });
             });
     };
@@ -191,40 +177,45 @@ class Comparison extends Component {
             isLoading: true
         });
         if (this.props.match.params.comparisonId) {
-            getResource(this.props.match.params.comparisonId).then(resouce => {
-                getStatementsBySubject({ id: this.props.match.params.comparisonId }).then(comparisonStatement => {
-                    const descriptionStatement = comparisonStatement.find(
-                        statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_DESCRIPTION
-                    );
-                    const urlStatement = comparisonStatement.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL);
-                    this.getComparisonResult(urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')));
-                    this.setState({
-                        locationSearch: urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')),
-                        title: descriptionStatement.subject.label,
-                        description: descriptionStatement.object.label
+            getResource(this.props.match.params.comparisonId)
+                .then(comparisonResource => {
+                    if (!comparisonResource.classes.includes(process.env.REACT_APP_CLASSES_COMPARISON)) {
+                        throw new Error(`The requested resource is not of class "${process.env.REACT_APP_CLASSES_COMPARISON}".`);
+                    }
+                    return getStatementsBySubject({ id: this.props.match.params.comparisonId }).then(comparisonStatement => {
+                        const descriptionStatement = comparisonStatement.find(
+                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_DESCRIPTION
+                        );
+                        const urlStatement = comparisonStatement.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL);
+                        if (urlStatement) {
+                            this.getComparisonResult(urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')));
+                            this.setState({
+                                locationSearch: urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')),
+                                title: descriptionStatement.subject.label,
+                                description: descriptionStatement.object.label
+                            });
+                        } else {
+                            throw new Error('The requested comparison has no contributions.');
+                        }
                     });
+                })
+                .catch(error => {
+                    let errorMessage = null;
+                    if (error.statusCode && error.statusCode === 404) {
+                        errorMessage = 'The requested resource is not found';
+                    } else {
+                        errorMessage = get_error_message(error);
+                    }
+                    this.setState({ errors: errorMessage, isLoading: false, loadingFailed: true });
                 });
-            });
         } else {
             this.getComparisonResult(this.props.location.search);
             this.setState({ locationSearch: '' });
         }
     };
 
-    toggleDropdown = () => {
-        this.setState(prevState => ({
-            dropdownOpen: !prevState.dropdownOpen
-        }));
-    };
-
-    exportAsCsv = e => {
-        this.setState({
-            dropdownOpen: false
-        });
-    };
-
     removeContribution = contributionId => {
-        const contributionIds = getContributionIdsFromUrl(this.props.location.search);
+        const contributionIds = getContributionIdsFromUrl(this.state.locationSearch || this.props.location.search);
         const index = contributionIds.indexOf(contributionId);
 
         if (index > -1) {
@@ -313,7 +304,7 @@ class Comparison extends Component {
     };
 
     render() {
-        const contributionAmount = 3;
+        const contributionAmount = getContributionIdsFromUrl(this.state.locationSearch || this.props.location.search).length;
 
         return (
             <div>
@@ -335,11 +326,17 @@ class Comparison extends Component {
                     {!this.state.isLoading && this.state.loadingFailed && (
                         <div>
                             <Alert color="danger">
-                                <strong>Error.</strong> The comparison service is unreachable. Please come back later and try again.{' '}
-                                <span className="btn-link" style={{ cursor: 'pointer' }} onClick={this.handleGoBack}>
-                                    Go back
-                                </span>{' '}
-                                or <Link to={ROUTES.HOME}>go to the homepage</Link>.
+                                {this.state.errors ? (
+                                    <>{this.state.errors}</>
+                                ) : (
+                                    <>
+                                        <strong>Error.</strong> The comparison service is unreachable. Please come back later and try again.{' '}
+                                        <span className="btn-link" style={{ cursor: 'pointer' }} onClick={this.handleGoBack}>
+                                            Go back
+                                        </span>{' '}
+                                        or <Link to={ROUTES.HOME}>go to the homepage</Link>.
+                                    </>
+                                )}
                             </Alert>
                         </div>
                     )}
@@ -347,7 +344,7 @@ class Comparison extends Component {
                         <>
                             <div>
                                 <div className="p-0 d-flex align-items-center">
-                                    <h2 className="h4 flex-shrink-0 mb-0">Compare</h2>
+                                    <h2 className="h4 flex-shrink-0 mb-4 mt-4">Compare</h2>
                                     {this.props.match.params.comparisonId && (
                                         <>
                                             <SubtitleSeparator />
@@ -357,8 +354,8 @@ class Comparison extends Component {
                                     )}
                                     {contributionAmount > 1 && !this.state.isLoading && (
                                         <div style={{ marginLeft: 'auto' }} className="flex-shrink-0">
-                                            <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
-                                                <DropdownToggle color="darkblue" size="sm" className="float-right mb-4 mt-4 ml-1 pl-3 pr-3">
+                                            <Dropdown isOpen={this.state.dropdownOpen} toggle={() => this.toggle('dropdownOpen')}>
+                                                <DropdownToggle color="darkblue" size="sm" className="float-right ml-1 pl-3 pr-3">
                                                     <span className="mr-2">Options</span> <Icon icon={faEllipsisV} />
                                                 </DropdownToggle>
                                                 <DropdownMenu>
@@ -374,7 +371,7 @@ class Comparison extends Component {
                                                             filename={'ORKG Contribution Comparison.csv'}
                                                             className="dropdown-item"
                                                             target="_blank"
-                                                            onClick={this.exportAsCsv}
+                                                            onClick={() => this.toggle('dropdownOpen')}
                                                         >
                                                             Export as CSV
                                                         </CSVLink>
@@ -398,7 +395,7 @@ class Comparison extends Component {
                                     <br />
                                 )}
                             </div>
-                            {contributionAmount > 1 ? (
+                            {contributionAmount > 1 || this.props.match.params.comparisonId ? (
                                 !this.state.isLoading ? (
                                     <ComparisonTable
                                         data={this.state.data}
@@ -433,6 +430,7 @@ class Comparison extends Component {
                     showDialog={this.state.showShareDialog}
                     toggle={() => this.toggle('showShareDialog')}
                     url={window.location.href}
+                    comparisonId={this.props.match.params.comparisonId}
                     response_hash={this.state.response_hash}
                 />
 
