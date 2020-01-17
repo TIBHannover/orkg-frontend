@@ -56,9 +56,10 @@ class Publish extends Component {
     };
 
     render() {
-        const comparisonLink = `${window.location.protocol}//${window.location.host}${reverse(ROUTES.COMPARISON, {
-            comparisonId: this.props.comparisonId || this.state.comparisonId
-        })}`;
+        const comparisonLink = `${window.location.protocol}//${window.location.host}${window.location.pathname.replace(
+            reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparisonId }),
+            ''
+        )}${reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparisonId || this.state.comparisonId })}`;
 
         return (
             <Modal isOpen={this.props.showDialog} toggle={this.props.toggle}>
