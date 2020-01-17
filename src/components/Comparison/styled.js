@@ -45,10 +45,38 @@ export const ScrollButton = styled.div`
 
 export const ReactTableWrapper = styled.div`
     clear: both;
+    position: relative;
+    padding: 10px 0;
 
-    &.overflowing-left .rthfc-td-fixed,
+    /*&.overflowing-left .rthfc-td-fixed,
     &.overflowing-left .rthfc-th-fixed {
         box-shadow: 9px 0px 5px -5px #d9d9d9 !important;
+    }*/
+
+    /*&.overflowing-right,*/
+
+    &.overflowing-left::before {
+        content: '';
+        position: absolute;
+        left: 250px;
+        top: 10px;
+        height: calc(100% - 35px);
+        width: 10px;
+        box-shadow: rgba(0, 0, 0, 0.18) 9px 0px 5px -5px inset;
+        z-index: 5;
+        pointer-events: none; /* ensure the elements under the shadow are still clickable */
+    }
+
+    &.overflowing-right::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        width: 10px;
+        box-shadow: rgba(0, 0, 0, 0.18) -9px 0px 5px -5px inset;
+        z-index: 5;
+        pointer-events: none; /* ensure the elements under the shadow are still clickable */
     }
 
     & .rt-th.rthfc-th-fixed-left-last {
@@ -107,7 +135,7 @@ export const Properties = styled.div`
     height: 100%;
     width: 250px;
     position: relative;
-    background: transparent;
+    background: #fff;
 `;
 
 export const PropertiesInner = styled.div`
@@ -166,9 +194,11 @@ export const Delete = styled.div`
     border-radius: 20px;
     width: 24px;
     height: 24px;
-    text-align: center;
     color: #e86161;
     cursor: pointer;
+    justify-content: center;
+    display: flex;
+    align-items: center;
 
     &:hover {
         background: #fff;

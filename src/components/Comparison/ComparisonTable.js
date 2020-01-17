@@ -13,7 +13,6 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import withFixedColumnsScrollEvent from 'react-table-hoc-fixed-columns';
 import 'react-table-hoc-fixed-columns/lib/styles.css'; // important: this line must be placed after react-table css import
-import _ from 'lodash';
 
 const ReactTableFixedColumns = withFixedColumnsScrollEvent(ReactTable);
 
@@ -82,14 +81,19 @@ class ComparisonTable extends Component {
         rtTable.scrollLeft -= this.scrollAmount;
     };
 
-    handleScroll = _.debounce(() => {
+    handleScroll = () => {
         const rtTable = ReactDOM.findDOMNode(this.scrollContainer).getElementsByClassName('rt-table')[0];
         const { scrollWidth, offsetWidth, scrollLeft } = rtTable;
-        this.setState({
-            showBackButton: rtTable.scrollLeft !== 0,
-            showNextButton: offsetWidth + scrollLeft !== scrollWidth
-        });
-    }, 100);
+        const showBackButton = rtTable.scrollLeft !== 0;
+        const showNextButton = offsetWidth + scrollLeft !== scrollWidth;
+
+        if (showBackButton !== this.state.showBackButton || showNextButton !== this.state.showNextButton) {
+            this.setState({
+                showBackButton: showBackButton,
+                showNextButton: showNextButton
+            });
+        }
+    };
 
     render() {
         const scrollContainerClasses = classNames({
