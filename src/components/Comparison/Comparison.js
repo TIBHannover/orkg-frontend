@@ -19,6 +19,7 @@ import arrayMove from 'array-move';
 import { connect } from 'react-redux';
 import dotProp from 'dot-prop-immutable';
 import { reverse } from 'named-urls';
+import { generateRdfDataVocabularyFile } from 'utils';
 import { ContainerAnimated } from './styled';
 
 class Comparison extends Component {
@@ -30,6 +31,8 @@ class Comparison extends Component {
             response_hash: null,
             title: '',
             description: '',
+            createdAt: '',
+            createdBy: '',
             contributions: [],
             dropdownOpen: false,
             dropdownExportOpen: false,
@@ -194,7 +197,9 @@ class Comparison extends Component {
                             this.setState({
                                 locationSearch: urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')),
                                 title: descriptionStatement.subject.label,
-                                description: descriptionStatement.object.label
+                                description: descriptionStatement.object.label,
+                                createdAt: descriptionStatement.object.created_at,
+                                createdBy: descriptionStatement.object.created_by
                             });
                         } else {
                             throw new Error('The requested comparison has no contributions.');
@@ -393,6 +398,25 @@ class Comparison extends Component {
                                                             ''
                                                         )}
                                                         <GeneratePdf id="comparisonTable" />
+                                                        <DropdownItem
+                                                            onClick={() =>
+                                                                generateRdfDataVocabularyFile(
+                                                                    this.state.data,
+                                                                    this.state.contributions,
+                                                                    this.state.properties,
+                                                                    this.props.match.params.comparisonId
+                                                                        ? {
+                                                                              title: this.state.title,
+                                                                              description: this.state.description,
+                                                                              creator: this.state.createdBy,
+                                                                              date: this.state.createdAt
+                                                                          }
+                                                                        : { title: '', description: '', creator: '', date: '' }
+                                                                )
+                                                            }
+                                                        >
+                                                            Export as RDF
+                                                        </DropdownItem>
                                                     </DropdownMenu>
                                                 </Dropdown>
 
