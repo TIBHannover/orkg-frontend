@@ -3,6 +3,48 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.5.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.3...V0.5.4) - 2020-01-17
+
+### Merged
+
+- feat(Comparison): Export as RDF [`#169`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/169)
+- fix(Comparison): improve general UX [`#164`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/164)
+- fix(Comparison): fix links to published comparison, fix wrapping long comparison title [`#168`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/168)
+- feat(Comparison): ability to publish a comparison [`#166`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/166)
+- feat(License): add license for published data [`#167`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/167)
+- feat(StatementBrowser): video previews for multiple platforms including the TIB AV portal [`#165`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/165)
+- fix(Search): hide no found message of not selected filter types, fix loading indicator [`#162`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/162)
+- style: eslint rules for better coding, prefer const over let as warning, disallow var [`#163`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/163)
+- feat: Sortable authors input [`#159`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/159)
+- fix: similar contributions [`#148`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/148)
+- fix: check if headers exist before calling headers function [`#149`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/149)
+- fix: load paper and statement browser data from the previous props on componenetDidUpdate [`#150`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/150)
+- fix: Set classes of newly created contributions and research problems [`#151`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/151)
+- Make the autocomplete case unsensitive [`#152`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/152)
+- fix: Show no result message if the search query is empty [`#153`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/153)
+- style: Fix problem with long strings of search results [`#154`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/154)
+- fix: exclude authors from resources search result [`#155`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/155)
+- fix: Open property on create [`#156`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/156)
+- fix: define a custom method to sort elements of an array [`#157`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/157)
+- feat: show a link of the dedicated page of selected resource in statement browser [`#158`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/158)
+- add links to imprint and data protection regulation [`#160`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/160)
+- remove unused css files [`#161`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/161)
+
+### Fixed
+
+- Merge branch '113-comparison-ux-improvements' into 'master' [`#113`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/113)
+- Merge branch '119-data-deleted-if-user-cancel-going-back-in-browser-history' into 'master' [`#119`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/119)
+- Merge branch '123-set-the-classes-contribution-and-research-problem-to-respective-resources-when-editing-a-paper' into 'master' [`#123`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/123)
+- Merge branch '124-make-the-autocomplete-of-properties-case-unsensitive' into 'master' [`#124`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/124)
+- Merge branch '114-clicking-search-button-with-empty-search-string-results-in-empty-page' into 'master' [`#114`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/114)
+- Merge branch '125-adding-wrapping-option-to-search-result-items' into 'master' [`#125`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/125)
+- Merge branch '126-exclude-authors-from-resources-search-result' into 'master' [`#126`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/126)
+- Merge branch '116-statement-browser-open-property-on-create' into 'master' [`#116`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/116)
+- Merge branch '122-order-component-specification-of-rdf-datacube-vocabulary-is-not-supported-in-google-chrome' into 'master' [`#122`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/122)
+- Merge branch '120-show-the-id-of-resources-in-the-statement-browser' into 'master' [`#120`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/120)
+- Merge branch '117-direkt-link-to-imprint-and-data-protection-regulation' into 'master' [`#117`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/117)
+
+---
 ## [V0.5.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.2...V0.5.3) - 2019-12-17
 
 ### Merged
