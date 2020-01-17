@@ -336,7 +336,11 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
                 const cell = data[property.id][index2];
                 if (cell.length > 0) {
                     cell.map(v => {
-                        gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), orkgResource(`${v.resourceId}`)));
+                        if (v.type && v.type === 'resource') {
+                            gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), orkgResource(`${v.resourceId}`)));
+                        } else {
+                            gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal(`${v.label ? v.label : ''}`)));
+                        }
                         return null;
                     });
                 } else {
