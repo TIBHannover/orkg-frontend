@@ -262,7 +262,7 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
     const element = document.createElement('a');
     const cubens = rdf.ns('http://purl.org/linked-data/cube#');
     const orkgVocab = rdf.ns('http://orkg.org/orkg/vocab/#');
-    const orkgResource = rdf.ns('http://orkg.org/orkg/resource/#');
+    const orkgResource = rdf.ns('http://orkg.org/orkg/resource/');
     const gds = new rdf.Graph();
     //Vocabulary properties labels
     gds.add(new rdf.Triple(cubens('dataSet'), rdf.rdfsns('label'), new rdf.Literal('dataSet')));
