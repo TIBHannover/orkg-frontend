@@ -144,7 +144,9 @@ export const PropertiesInner = styled.div`
     color: #fff;
     padding: 10px;
     border-bottom: ${props => (props.transpose ? '2px solid #fff!important' : '2px solid #8B91A5!important')};
-
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
     a {
         color: #fff !important;
     }
@@ -175,7 +177,9 @@ export const ItemHeaderInner = styled.div`
     border-radius: 11px 11px 0 0;
     color: #fff;
     height: 100%;
-
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
     a {
         color: #fff !important;
     }
