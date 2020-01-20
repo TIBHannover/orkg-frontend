@@ -17,7 +17,7 @@ class TemplateWizard extends Component {
                 ? this.props.resources.byId[this.props.initialResourceId].shared
                 : 1;
         return (
-            <div>
+            <div className={'contributionData'}>
                 {propertyIds.length > 0 ? (
                     propertyIds.map((propertyId, index) => {
                         let property = this.props.properties.byId[propertyId];

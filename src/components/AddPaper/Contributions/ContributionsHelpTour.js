@@ -94,7 +94,7 @@ class ContributionsHelpTour extends Component {
                                       action: node => (node ? node.focus() : null)
                                   },
                                   {
-                                      selector: '.listGroupEnlarge',
+                                      selector: '.contributionData',
                                       content: (
                                           <span>
                                               Entering contribution data is the most important part of adding a paper (this part takes around 10-20
@@ -181,7 +181,7 @@ class ContributionsHelpTour extends Component {
                             title="ORKG - How to add contribution data"
                         />
                         <hr />
-                        <a href="https://labs.tib.eu/orkg/paper/R1020" target="_blank" rel="noopener noreferrer">
+                        <a href="https://www.orkg.org/orkg/paper/R1020" target="_blank" rel="noopener noreferrer">
                             View paper that has been used in this example <Icon size="sm" icon={faExternalLinkAlt} />
                         </a>
                     </ModalBody>
