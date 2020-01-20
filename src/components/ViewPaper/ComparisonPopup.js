@@ -172,7 +172,7 @@ class ComparisonPopup extends Component {
                                             <div className="pr-3">
                                                 <Icon icon={faFile} />
                                             </div>
-                                            <div className="flex-grow-1">
+                                            <div className="flex-grow-1 text-break">
                                                 <Title
                                                     to={reverse(ROUTES.VIEW_PAPER, {
                                                         resourceId: byId[contributionId].paperId,
