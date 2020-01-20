@@ -41,6 +41,11 @@ const Card = styled(Link)`
     &:focus {
         outline: none;
     }
+
+    & .simContributionLabel {
+        color: ${props => props.theme.darkblueDarker};
+        font-size: 84%;
+    }
 `;
 
 const Similarity = styled.span`
@@ -82,7 +87,12 @@ class SimilarContributions extends Component {
                                                 </span>
                                             </Similarity>
                                         </Col>
-                                        <Col>{contribution.title ? contribution.title : <em>No title</em>}</Col>
+                                        <Col>
+                                            {contribution.title ? contribution.title : <em>No title</em>}
+                                            {contribution.contributionLabel && (
+                                                <div className={'simContributionLabel'}>{contribution.contributionLabel}</div>
+                                            )}
+                                        </Col>
                                     </Row>
                                 </Card>
                             );
