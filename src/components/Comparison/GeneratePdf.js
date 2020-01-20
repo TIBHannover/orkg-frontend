@@ -17,15 +17,16 @@ class GeneratePdf extends Component {
                     const headerWidthMm = header.offsetWidth;
                     const body = document.getElementById(this.props.id).getElementsByClassName('rt-tbody')[0];
                     const bodyHeightMm = body.offsetHeight;
-                    const bodyWidthMm = body.offsetWidth;
+                    // Header
                     html2canvas(header).then(canvas => {
                         const imgData = canvas.toDataURL('image/png');
-                        const pdf = new jsPDF('l', 'mm', [headerHeightMm + bodyHeightMm, headerWidthMm + bodyWidthMm]);
+                        const pdf = new jsPDF('l', 'mm', [headerHeightMm + bodyHeightMm, headerWidthMm]);
                         pdf.addImage(imgData, 'PNG', 0, 5);
-
+                        // Body
                         html2canvas(body).then(canvas => {
                             const imgData2 = canvas.toDataURL('image/png');
-                            pdf.addImage(imgData2, 'PNG', 0, headerHeightMm - 5);
+                            // multiply by 0.26 to convert from pixel to mm
+                            pdf.addImage(imgData2, 'PNG', 0, headerHeightMm * 0.26 + 5);
                             pdf.save('ORKG Comparison exported.pdf');
                         });
                     });
