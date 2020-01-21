@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 import { getResourcesByClass } from 'network';
 import { Container } from 'reactstrap';
 import { reverse } from 'named-urls';
@@ -61,6 +62,11 @@ export default class ContributionTemplates extends Component {
                     <h1 className="h4 mt-4 mb-4">View all contribution templates</h1>
                 </Container>
                 <Container className={'box pt-4 pb-4 pl-5 pr-5 clearfix'}>
+                    <div className="clearfix">
+                        <Link className="float-right mb-2 mt-2 clearfix" to={reverse(ROUTES.CONTRIBUTION_TEMPLATE)}>
+                            <span className="fa fa-plus" /> Create new template
+                        </Link>
+                    </div>
                     {this.state.contributionTemplates.length > 0 && (
                         <div>
                             {this.state.contributionTemplates.map(contributionTemplate => {
@@ -68,7 +74,7 @@ export default class ContributionTemplates extends Component {
                                     <ShortRecord
                                         key={contributionTemplate.id}
                                         header={contributionTemplate.id}
-                                        href={reverse(ROUTES.RESOURCE, { id: contributionTemplate.id })}
+                                        href={reverse(ROUTES.CONTRIBUTION_TEMPLATE, { id: contributionTemplate.id })}
                                     >
                                         {contributionTemplate.label}
                                     </ShortRecord>
