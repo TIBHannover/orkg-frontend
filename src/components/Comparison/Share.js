@@ -66,10 +66,9 @@ class Share extends Component {
                 this.setState({ shortLink: null, link: link, shortLinkIsLoading: false, shortLinkIsFailed: true });
             })
             .then(data => {
-                const shortLink = `${window.location.protocol}//${window.location.host}${window.location.pathname.replace(
-                    reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparisonId }),
-                    ''
-                )}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
+                const shortLink = `${window.location.protocol}//${window.location.host}${window.location.pathname
+                    .replace(reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparisonId }), '')
+                    .replace(/\/$/, '')}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
                 this.setState({ link: shortLink, shortLink: shortLink, shortLinkIsLoading: false, shortLinkIsFailed: false });
             });
     };
