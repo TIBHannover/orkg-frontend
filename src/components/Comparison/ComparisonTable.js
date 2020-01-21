@@ -102,6 +102,7 @@ class ComparisonTable extends Component {
             'overflowing-both': this.state.showBackButton && this.state.showNextButton
         });
 
+        const customProps = { id: 'comparisonTable' };
         return (
             <>
                 <ReactTableWrapper className={scrollContainerClasses}>
@@ -109,6 +110,7 @@ class ComparisonTable extends Component {
                         innerRef={ref => {
                             this.scrollContainer = ref;
                         }}
+                        getProps={() => customProps}
                         resizable={false}
                         sortable={false}
                         pageSize={
