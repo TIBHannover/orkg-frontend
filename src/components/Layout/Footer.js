@@ -129,7 +129,7 @@ const Footer = () => (
                     </FooterCol>
                 </Row>
                 <hr style={{ width: '30%' }} />
-                <div class="d-flex justify-content-center mt-4">
+                <div className="d-flex justify-content-center mt-4">
                     <a href="https://www.tib.eu/en/" target="_blank" rel="noopener noreferrer">
                         <img src={TIB_LOGO} alt="Logo Technische Informationsbibliothek (TIB)" style={{ borderWidth: 0, height: '50px' }} />
                     </a>
