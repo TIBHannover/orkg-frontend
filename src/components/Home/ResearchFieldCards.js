@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components/macro';
-import { getStatementsBySubject, getStatementsByObject } from '../../network';
+import { getStatementsBySubject, getStatementsByObject, getResearchFieldsStats } from 'network';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import ROUTES from '../../constants/routes.js';
-import classNames from 'classnames';
+import ROUTES from 'constants/routes.js';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 /* Bootstrap card column is not working correctly working with vertical alignment,
@@ -84,12 +83,20 @@ class ResearchFieldCards extends Component {
         researchFields: [],
         breadcrumb: [],
         papers: null,
-        error: ''
+        error: '',
+        stats: {}
     };
 
     componentDidMount() {
         this.getFields(process.env.REACT_APP_RESEARCH_FIELD_MAIN, 'Main');
+        this.fetchResearchFieldsStats();
     }
+
+    fetchResearchFieldsStats = () => {
+        return getResearchFieldsStats().then(results => {
+            this.setState({ stats: results });
+        });
+    };
 
     async getFields(fieldId, label, addBreadcrumb = true) {
         try {
@@ -126,7 +133,7 @@ class ResearchFieldCards extends Component {
                         });
                     }
 
-                    if (researchFields.length === 0) {
+                    if (fieldId !== process.env.REACT_APP_RESEARCH_FIELD_MAIN) {
                         this.setState({
                             papers: null // to show loading indicator
                         });
@@ -174,7 +181,7 @@ class ResearchFieldCards extends Component {
             return <div className="text-center mt-5 text-danger">{this.state.error}</div>;
         }
 
-        const showPapers = this.state.researchFields.length === 0 && this.state.breadcrumb.length !== 0;
+        const showPapers = this.state.breadcrumb.length > 1;
 
         return (
             <div className="mt-5">
@@ -188,12 +195,15 @@ class ResearchFieldCards extends Component {
                 <div>
                     <TransitionGroup id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap" exit={false}>
                         {this.state.researchFields.map(field => {
-                            const disabled = Math.round(Math.random());
                             return (
                                 <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
-                                    <Card role="button" disabled={disabled} onClick={() => this.getFields(field.id, field.label)}>
+                                    <Card
+                                        role="button"
+                                        disabled={this.state.stats[field.id] === 0}
+                                        onClick={() => this.getFields(field.id, field.label)}
+                                    >
                                         <CardTitle className="card-title m-0 text-center">{field.label}</CardTitle>
-                                        <PaperAmount>234 papers</PaperAmount>
+                                        <PaperAmount>{this.state.stats[field.id]} papers</PaperAmount>
                                     </Card>
                                 </AnimationContainer>
                             );
