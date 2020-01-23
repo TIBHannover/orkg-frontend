@@ -92,6 +92,7 @@ class GeneralData extends Component {
             paperAuthors: this.props.authors,
             paperPublicationMonth: this.props.publicationMonth,
             paperPublicationYear: this.props.publicationYear,
+            paperVenue: '',
             validation: this.validator.valid(),
             errors: null
         };
@@ -190,7 +191,8 @@ class GeneralData extends Component {
                         paperAuthors = [],
                         paperPublicationMonth = '',
                         paperPublicationYear = '',
-                        doi = '';
+                        doi = '',
+                        paperVenue = '';
                     try {
                         paperTitle = paper.data[0].title;
                         if (paper.data[0].subtitle && paper.data[0].subtitle.length > 0) {
@@ -218,6 +220,9 @@ class GeneralData extends Component {
                             paperPublicationYear = paper.data[0].issued['date-parts'][0][0];
                         }
                         doi = paper.data[0].DOI ? paper.data[0].DOI : '';
+                        if (paper.data[0]['container-title']) {
+                            paperVenue = paper.data[0]['container-title'];
+                        }
                     } catch (e) {
                         console.log('Error setting paper data: ', e);
                     }
@@ -231,6 +236,7 @@ class GeneralData extends Component {
                             paperPublicationMonth,
                             paperPublicationYear,
                             doi: doi,
+                            paperVenue,
                             errors: null
                         },
                         this.updateGlobalStateForVisualization
@@ -485,6 +491,11 @@ class GeneralData extends Component {
                                                                                 {this.state.paperPublicationYear}
                                                                             </td>
                                                                         </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <strong>Published in:</strong> {this.state.paperVenue}
+                                                                            </td>
+                                                                        </tr>
                                                                     </tbody>
                                                                 </Table>
                                                             </Card>
@@ -576,6 +587,19 @@ class GeneralData extends Component {
                                                     </FormGroup>
                                                 </Col>
                                             </Row>
+                                            <FormGroup>
+                                                <Label for="paperVenue">
+                                                    <Tooltip message="The paper venue ">Published in</Tooltip>
+                                                </Label>
+                                                <Input
+                                                    type="text"
+                                                    name="paperVenue"
+                                                    id="paperVenue"
+                                                    value={this.state.paperVenue}
+                                                    onChange={this.handleInputChange}
+                                                />
+                                                <FormFeedback />
+                                            </FormGroup>
                                         </Form>
                                     </Container>
                                 );
