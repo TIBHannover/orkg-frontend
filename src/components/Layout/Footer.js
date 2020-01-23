@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { ReactComponent as Logo } from './../../assets/img/vertical_logo.svg';
+import TIB_LOGO from './../../assets/img/poweredby/TIB_Logo_EN.png';
 import styled from 'styled-components';
 
 const FooterWrapper = styled.div`
@@ -127,6 +128,12 @@ const Footer = () => (
                         </ul>
                     </FooterCol>
                 </Row>
+                <hr style={{ width: '30%' }} />
+                <div className="d-flex justify-content-center mt-4">
+                    <a href="https://www.tib.eu/en/" target="_blank" rel="noopener noreferrer">
+                        <img src={TIB_LOGO} alt="Logo Technische Informationsbibliothek (TIB)" style={{ borderWidth: 0, height: '50px' }} />
+                    </a>
+                </div>
             </footer>
         </Container>
     </FooterWrapper>
