@@ -1,0 +1,39 @@
+
+.loadingAnimation{
+    stroke:#FFFFFF;
+    fill:none;
+
+    stroke-dasharray:200;
+    stroke-linecap:round;
+    animation: lds-dual-ring 1.5s linear infinite;
+}
+.hidden{
+    display: none;
+}
+@keyframes lds-dual-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+.collapseExpandButton{
+    fill: #e5e3e4;
+    stroke:#000;
+    stroke-width: 1px;
+}
+
+.collapseExpandButton:hover{
+    fill: #f00;
+    stroke:#000;
+    stroke-width: 1px;
+}
+
+.collapseExpandButtonHovered{
+    fill: #f00;
+    stroke:#000;
+    stroke-width: 1px;
+}

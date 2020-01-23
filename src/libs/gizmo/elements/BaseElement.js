@@ -13,7 +13,9 @@ export default class BaseElement {
         this.renderingText = null;
         this.shapeRadius = undefined;
         this.elementType = 'undefined';
-
+        this.multicoloring = false;
+        this.colorState = { unknown: '#cccccc', collapsed: '#aaccff', expanded: '#aaccff', leafNode: '#aaccff' };
+        this.status = 'none';
         this.x = undefined;
         this.y = undefined;
         this.mouseIn = false;
@@ -38,6 +40,16 @@ export default class BaseElement {
         this.mouseEntered = this.mouseEntered.bind(this);
         this.mouseHoverIn = this.mouseHoverIn.bind(this);
         this.mouseHoverOut = this.mouseHoverOut.bind(this);
+        this.removeAllRenderedElementsFromParent = this.removeAllRenderedElementsFromParent.bind(this);
+    }
+
+    removeAllRenderedElementsFromParent() {
+        if (this.svgRoot) {
+            // we have a parent;
+            this.svgRoot.selectAll('rect').remove();
+            this.svgRoot.selectAll('text').remove();
+            this.svgRoot.selectAll('g').remove();
+        }
     }
 
     visible(val) {
@@ -48,6 +60,8 @@ export default class BaseElement {
     }
 
     addHoverEvents() {
+        // reset mouseEnteredValue (if redraw it will otherwise not behave as expected)
+        this.mouseEntered(false);
         this.renderingElement.on('mouseover', this.mouseHoverIn);
         this.renderingElement.on('mouseout', this.mouseHoverOut);
     }
@@ -74,7 +88,11 @@ export default class BaseElement {
     mouseHoverOut() {
         this.mouseEntered(false);
         this.svgRoot.style('cursor', 'default');
-        this.renderingElement.style('fill', this.configObject.bgColor);
+        if (this.multicoloring && this.multicoloring === true && this.type() === 'resource') {
+            this.renderingElement.style('fill', this.colorState[this.status]);
+        } else {
+            this.renderingElement.style('fill', this.configObject.bgColor);
+        }
 
         if (this.configObject.strokeElement === true || this.configObject.strokeElement === 'true') {
             this.renderingElement.style('stroke', this.configObject.strokeColor);
@@ -145,7 +163,7 @@ export default class BaseElement {
     };
 
     getExpectedShapeSize(cfg) {
-        let retValue = {};
+        let retValue;
         if (cfg.fontSizeOverWritesShapeSize === 'true') {
             const tempRTE = this.svgRoot.append('text').text(this.label);
             tempRTE.style('font-family', cfg.fontFamily);

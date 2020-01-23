@@ -20,7 +20,14 @@ class GraphView extends Component {
         this.child = React.createRef();
         this.seenDepth = -1;
         this.graphVis = new GraphVis();
+
         this.updateDepthRange = this.updateDepthRange.bind(this);
+        this.getDataFromApi = this.getDataFromApi.bind(this);
+        this.processStatements = this.processStatements.bind(this);
+
+        // graphVis caller to this object (have to be set after the bind.this calls)
+        this.graphVis.propagateMaxDepthValue = this.updateDepthRange;
+        this.graphVis.getDataFromApi = this.getDataFromApi;
     }
 
     state = {
@@ -44,23 +51,12 @@ class GraphView extends Component {
         this.updateDimensions();
     }
 
-    componentDidUpdate = (prevProps, prevState) => {
+    componentDidUpdate = prevProps => {
         if (this.props.addPaperVisualization === true) {
             if (prevProps.showDialog === false && this.props.showDialog === true) {
                 // reload graph data when modal is shown
                 this.visualizeAddPaper();
             }
-        }
-        // load statements again if depth is changed
-        if (prevState.depth < this.state.depth) {
-            this.loadStatements().then(() => {
-                // todo remove code duplication >> create function for that
-                if (this.child && this.child.current) {
-                    this.child.current.propagateDepthMaxValue(this.graphVis.getMaxDepth());
-                    this.graphVis.ensureLayoutConsistency(this.state.layout);
-                }
-                this.seenDepth = this.graphVis.getMaxDepth();
-            });
         }
     };
 
@@ -89,44 +85,54 @@ class GraphView extends Component {
         }
     }
 
+    async getDataFromApi(resourceId) {
+        const statements = await getStatementsBySubject({ id: resourceId });
+        if (statements.length === 0) {
+            return {}; // we dont have incremental data
+        } else {
+            // result is the incremental data we get;
+            return this.processStatements(statements);
+        }
+    }
+
+    processStatements(statements) {
+        let nodes = [];
+        let edges = [];
+
+        for (const statement of statements) {
+            // limit the label length to 20 chars
+            const subjectLabel = statement.subject.label.substring(0, 20);
+            const objectLabel = statement.object.label.substring(0, 20);
+
+            nodes.push({ id: statement.subject.id, label: subjectLabel, title: statement.subject.label });
+            // check if node type is resource or literal
+            if (statement.object._class === 'resource') {
+                nodes.push({ id: statement.object.id, label: objectLabel, title: statement.object.label });
+            } else {
+                nodes.push({
+                    id: statement.object.id,
+                    label: objectLabel,
+                    title: statement.object.label,
+                    type: 'literal'
+                });
+            }
+            edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label });
+        }
+        // remove duplicate nodes
+        nodes = uniqBy(nodes, 'id');
+        edges = uniqBy(edges, e => [e.from, e.to, e.label].join());
+
+        return { nodes: nodes, edges: edges };
+    }
+
     loadStatements = async () => {
         this.setState({ isLoadingStatements: true, initializeGraph: false });
         this.graphVis.stopBackgroundProcesses();
         if (this.seenDepth < this.state.depth) {
             if (this.props.paperId) {
                 const statements = await this.getResourceAndStatements(this.props.paperId, 0, []);
-                let nodes = [];
-                let edges = [];
-
-                for (const statement of statements) {
-                    // limit the label length to 20 chars
-                    const subjectLabel = statement.subject.label.substring(0, 20);
-                    const objectLabel = statement.object.label.substring(0, 20);
-
-                    nodes.push({ id: statement.subject.id, label: subjectLabel, title: statement.subject.label });
-                    // check if node type is resource or literal
-                    if (statement.object._class === 'resource') {
-                        nodes.push({ id: statement.object.id, label: objectLabel, title: statement.object.label });
-                    } else {
-                        nodes.push({
-                            id: statement.object.id,
-                            label: objectLabel,
-                            title: statement.object.label,
-                            type: 'literal'
-                        });
-                    }
-                    edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label });
-                }
-                // remove duplicate nodes
-                nodes = uniqBy(nodes, 'id');
-
-                // remove duplicate edges TODO: EXPERIMENTAL
-                edges = uniqBy(edges, e => [e.from, e.to, e.label].join());
-
-                this.setState({
-                    nodes,
-                    edges
-                });
+                const result = this.processStatements(statements);
+                this.setState({ nodes: result.nodes, edges: result.edges });
             } else {
                 await this.visualizeAddPaper();
             }
@@ -274,7 +280,8 @@ class GraphView extends Component {
     handleDepthChange = event => {
         if (event.target.value) {
             this.setState({ depth: parseInt(event.target.value) });
-        } // make sure the value is an integer
+            this.graphVis.depthUpdateEvent(parseInt(event.target.value)).then();
+        }
     };
 
     getResourceAndStatements = async (resourceId, depth, list) => {
@@ -310,13 +317,14 @@ class GraphView extends Component {
                 toggle={this.props.toggle}
                 size="lg"
                 onOpened={() => {
-                    this.loadStatements().then(() => {
-                        if (this.child && this.child.current) {
-                            this.child.current.propagateDepthMaxValue(this.graphVis.getMaxDepth());
-                            this.graphVis.ensureLayoutConsistency(this.state.layout);
-                        }
-                        this.seenDepth = this.graphVis.getMaxDepth();
-                    });
+                    if (!this.graphVis.graphIsInitialized) {
+                        this.loadStatements().then(() => {
+                            if (this.child && this.child.current) {
+                                this.graphVis.ensureLayoutConsistency(this.state.layout);
+                            }
+                            this.seenDepth = this.graphVis.getMaxDepth();
+                        });
+                    }
                 }}
                 style={{ maxWidth: '90%' }}
             >
@@ -341,6 +349,7 @@ class GraphView extends Component {
                                                 // prevent the reload when enter is pressed
                                                 if (event.keyCode === 13) {
                                                     event.preventDefault();
+                                                    this.graphVis.depthUpdateEvent(this.state.depth).then();
                                                 }
                                             }}
                                             value={this.state.depth}
@@ -361,17 +370,6 @@ class GraphView extends Component {
                                 >
                                     <Icon icon={faHome} className="mr-1 align-self-center" /> Center Graph
                                 </Button>
-
-                                {/*/!*<Button*!/*/}
-                                {/*/!*  color='darkblue'*!/*/}
-                                {/*/!*  size='sm'*!/*/}
-                                {/*/!*  //    className='mb-4 mt-4'*!/*/}
-                                {/*/!*  // style={{position:'absolute', left: '450px', marginLeft: '10px'}}*!/*/}
-                                {/*/!*  style={{margin: '0 10px'}}*!/*/}
-                                {/*/!*  onClick={this.clearGraphData}*!/*/}
-                                {/*/!*>*!/*/}
-                                {/*  <Icon icon={faProjectDiagram} className='mr-1'/> Clear Data*/}
-                                {/*</Button>*/}
                                 <Dropdown
                                     color="darkblue"
                                     size="sm"
