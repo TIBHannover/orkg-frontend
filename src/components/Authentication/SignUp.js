@@ -129,6 +129,7 @@ class SignUp extends Component {
                         By signing up you agree that any data you add to the service has a CC0 (Public Domain) license
                     </p>
                     <Button
+                        type="submit"
                         color="primary"
                         onClick={() => {
                             this.signUp();

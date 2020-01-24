@@ -93,6 +93,7 @@ class SignIn extends Component {
                         />
                     </FormGroup>
                     <Button
+                        type="submit"
                         color="primary"
                         onClick={() => {
                             this.signIn();

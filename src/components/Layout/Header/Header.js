@@ -232,7 +232,7 @@ class Header extends Component {
                                             {/*</Link>*/}
                                         </div>
                                         <div className="col-9">
-                                            {greeting} {this.props.user.displayName},
+                                            {greeting} {this.props.user.displayName}
                                             <ButtonGroup className="mt-2" size="sm">
                                                 <Button color="secondary" onClick={this.toggleUserTooltip} tag={Link} to={ROUTES.USER_SETTINGS}>
                                                     Settings
