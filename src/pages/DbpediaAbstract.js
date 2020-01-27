@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'reactstrap';
+import DBPEDIA_LOGO from 'assets/img/sameas/dbpedia.png';
 import PropTypes from 'prop-types';
 
 class DbpediaAbstract extends Component {
@@ -64,11 +65,7 @@ class DbpediaAbstract extends Component {
             <div className="mt-5 mb-2 list-group-item">
                 <h2 className="h5 mt-2 float-left">Abstract from DBpedia</h2>
                 <a href={this.props.externalResource} target="_blank" rel="noopener noreferrer">
-                    <img
-                        alt="DBpedia logo"
-                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/DBpediaLogo.svg/1200px-DBpediaLogo.svg.png"
-                        style={{ height: 40, float: 'right' }}
-                    />
+                    <img alt="DBpedia logo" src={DBPEDIA_LOGO} style={{ height: 40, float: 'right' }} />
                 </a>
                 <div className="clearfix" />
 
