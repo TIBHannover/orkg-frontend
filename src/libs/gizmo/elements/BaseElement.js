@@ -14,7 +14,7 @@ export default class BaseElement {
         this.shapeRadius = undefined;
         this.elementType = 'undefined';
         this.multicoloring = false;
-        this.colorState = { unknown: '#cccccc', collapsed: '#aaccff', expanded: '#aaccff', leafNode: '#aaccff' };
+        this.colorState = { unknown: '#aaccff', collapsed: '#aaccff', expanded: '#aaccff', leafNode: '#cccccc' };
         this.status = 'none';
         this.x = undefined;
         this.y = undefined;

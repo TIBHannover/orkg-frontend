@@ -3,11 +3,28 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.5.6](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.5...V0.5.6) - 2020-01-21
+
+### Merged
+
+- style(footer): Add TIB logo [`#175`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/175)
+- fix(Comparison): Export PDF [`#170`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/170)
+- fix(Comparison): Short and Publish links [`#171`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/171)
+- style(SimilarContribution): show contribution label [`#173`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/173)
+- style: break words comparison box + add calendar icon paper card [`#174`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/174)
+- fix(Comparison): wrap long text in headers [`#172`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/172)
+
+### Fixed
+
+- Merge branch '128-add-tib-logo-to-footer' into 'master' [`#128`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/128)
+
+---
 ## [V0.5.5](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.4...V0.5.5) - 2020-01-17
 
 ### Commits
 
 - fix(Comparison): Export as RDF [`c6abbd6`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/c6abbd667fac2bcb441360dac68925ff12bd1674)
+- Update changelog [`fc46dbd`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/fc46dbd30c79d7a0ad6af8ef5c8e0ca9b658c61c)
 - fix(Comparison): Comparison url [`27f3e7b`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/27f3e7b7966de5fb28bdb197919a3fd5e49015de)
 ---
 ## [V0.5.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.3...V0.5.4) - 2020-01-17
