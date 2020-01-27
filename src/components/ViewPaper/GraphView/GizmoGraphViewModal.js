@@ -86,12 +86,16 @@ class GraphView extends Component {
     }
 
     async getDataFromApi(resourceId) {
-        const statements = await getStatementsBySubject({ id: resourceId });
-        if (statements.length === 0) {
-            return {}; // we dont have incremental data
-        } else {
-            // result is the incremental data we get;
-            return this.processStatements(statements);
+        try {
+            const statements = await getStatementsBySubject({ id: resourceId });
+            if (statements.length === 0) {
+                return {}; // we dont have incremental data
+            } else {
+                // result is the incremental data we get;
+                return this.processStatements(statements);
+            }
+        } catch (error) {
+            return {}; // TODO: handle unsaved resources
         }
     }
 
