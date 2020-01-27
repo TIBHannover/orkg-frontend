@@ -11,8 +11,16 @@ class DbpediaAbstract extends Component {
             abstract: '',
             collapsed: true
         };
+    }
 
+    componentDidMount() {
         this.getAbstract();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.externalResource !== this.props.externalResource) {
+            this.getAbstract();
+        }
     }
 
     getAbstract = async () => {
