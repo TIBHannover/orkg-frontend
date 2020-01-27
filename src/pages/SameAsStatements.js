@@ -15,15 +15,19 @@ class SameAsStatements extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.values !== this.props.values || prevProps.properties !== this.props.properties) {
+        if (
+            prevProps.selectedResource !== this.props.selectedResource ||
+            prevProps.values !== this.props.values ||
+            prevProps.properties !== this.props.properties
+        ) {
             this.getSameAsResources();
         }
     }
 
     getSameAsResources = () => {
         const internalSameAsIds =
-            this.props.properties.allIds.length > 0
-                ? this.props.properties.allIds.filter(
+            this.props.selectedResource && this.props.resources.byId[this.props.selectedResource].propertyIds.length > 0
+                ? this.props.resources.byId[this.props.selectedResource].propertyIds.filter(
                       property => this.props.properties.byId[property].existingPredicateId === process.env.REACT_APP_PREDICATES_SAME_AS
                   )
                 : [];
@@ -57,7 +61,9 @@ class SameAsStatements extends Component {
 
 SameAsStatements.propTypes = {
     properties: PropTypes.object.isRequired,
-    values: PropTypes.object.isRequired
+    values: PropTypes.object.isRequired,
+    resources: PropTypes.object.isRequired,
+    selectedResource: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => {
