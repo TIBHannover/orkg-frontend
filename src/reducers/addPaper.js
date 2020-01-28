@@ -98,7 +98,7 @@ export default (state = initialState, action) => {
                     isTourOpen: false
                 };
             } else {
-                cookies.set('taketourClosed', true, { path: '/', maxAge: 604800 });
+                cookies.set('taketourClosed', true, { path: process.env.PUBLIC_URL, maxAge: 604800 });
                 return {
                     ...state,
                     isTourOpen: false

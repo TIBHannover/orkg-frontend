@@ -280,7 +280,7 @@ class GeneralData extends Component {
     };
 
     handleSkipTour = () => {
-        this.props.cookies.set('taketour', 'skip', { path: '/', maxAge: 604800 });
+        this.props.cookies.set('taketour', 'skip', { path: process.env.PUBLIC_URL, maxAge: 604800 });
         this.toggle('isFirstVisit');
         if (this.props.cookies.get('taketourClosed')) {
             this.props.closeTour();
@@ -291,7 +291,7 @@ class GeneralData extends Component {
     };
 
     takeTour = () => {
-        this.props.cookies.set('taketour', 'take', { path: '/', maxAge: 604800 });
+        this.props.cookies.set('taketour', 'take', { path: process.env.PUBLIC_URL, maxAge: 604800 });
         this.toggle('isFirstVisit');
         this.props.openTour();
     };
