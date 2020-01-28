@@ -92,7 +92,7 @@ export default (state = initialState, action) => {
                 allIds: [...state.comparison.allIds, payload.contributionId],
                 byId: comparisonContributions
             };
-            cookies.set('comparison', newComparison, { path: '/', maxAge: 604800 });
+            cookies.set('comparison', newComparison, { path: process.env.PUBLIC_URL, maxAge: 604800 });
             return {
                 ...state,
                 comparison: newComparison
@@ -108,7 +108,7 @@ export default (state = initialState, action) => {
                 allIds: newState.comparison.allIds,
                 byId: dotProp.delete(state.comparison.byId, payload.id)
             };
-            cookies.set('comparison', newComparison, { path: '/', maxAge: 604800 });
+            cookies.set('comparison', newComparison, { path: process.env.PUBLIC_URL, maxAge: 604800 });
             return {
                 ...newState,
                 comparison: newComparison
