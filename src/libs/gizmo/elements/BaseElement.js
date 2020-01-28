@@ -1,4 +1,5 @@
 import DrawTools from '../drawTools';
+import NodeIcon from './NodeIcon';
 
 export default class BaseElement {
     constructor(props) {
@@ -19,6 +20,9 @@ export default class BaseElement {
         this.x = undefined;
         this.y = undefined;
         this.mouseIn = false;
+
+        this.addIcon = this.addIcon.bind(this);
+        this.iconElement = undefined;
 
         this.setConfigObj(props.configObject);
 
@@ -43,6 +47,14 @@ export default class BaseElement {
         this.removeAllRenderedElementsFromParent = this.removeAllRenderedElementsFromParent.bind(this);
     }
 
+    addIcon(iconName) {
+        if (!this.iconElement) {
+            this.iconElement = new NodeIcon();
+            this.iconElement.parentNode = this;
+        }
+        this.iconElement.iconType = iconName;
+    }
+
     removeAllRenderedElementsFromParent() {
         if (this.svgRoot) {
             // we have a parent;
@@ -62,8 +74,8 @@ export default class BaseElement {
     addHoverEvents() {
         // reset mouseEnteredValue (if redraw it will otherwise not behave as expected)
         this.mouseEntered(false);
-        this.renderingElement.on('mouseover', this.mouseHoverIn);
-        this.renderingElement.on('mouseout', this.mouseHoverOut);
+        this.svgRoot.on('mouseover', this.mouseHoverIn);
+        this.svgRoot.on('mouseout', this.mouseHoverOut);
     }
 
     mouseHoverIn() {

@@ -377,6 +377,7 @@ export default class GraphVis {
 
     createEdge(edge_data, iterator) {
         const property = new Property({ configObject: this.graphOptions.edgeConfig() });
+
         property.setLabel(edge_data.label);
         property.id(property.id() + iterator);
 
@@ -395,6 +396,16 @@ export default class GraphVis {
         link.domainNode(srcNode);
         link.propertyNode(property);
         link.rangeNode(tarNode);
+
+        if (edge_data.isAuthorProp === true) {
+            if (tarNode.type() === 'literal') {
+                tarNode.setStatusLeafNode();
+            }
+            tarNode.type('resource');
+            tarNode.setConfigObj(this.graphOptions.nodeConfig());
+            tarNode.addIcon('userIcon');
+        }
+
         if (tarNode.type() === 'literal') {
             link.type('datatypeLink');
             link.setConfigObj(this.graphOptions.datatypeLinkConfig());
@@ -404,6 +415,10 @@ export default class GraphVis {
                 link.visible(false);
                 property.visible(false);
             }
+        }
+
+        if (edge_data.isDOIProp === true) {
+            tarNode.addIcon('doiIcon');
         }
 
         // add link to the nodes;
@@ -433,6 +448,15 @@ export default class GraphVis {
         }
         // append to map;
         this.nodeMap[node_data.id] = node;
+
+        if (node_data.classificationArray) {
+            // console.log(node_data.classificationArray);
+            // todo: based on the classificationArray, add further icons
+            if (node_data.classificationArray.indexOf('Paper') !== -1) {
+                node.addIcon('paperIcon');
+            }
+        }
+
         return node;
     }
 

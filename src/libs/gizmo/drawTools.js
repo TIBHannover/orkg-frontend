@@ -24,7 +24,7 @@ function cropTextIfNeeded(node, config, labelText) {
         const shapeSize = node.getExpectedShapeSize(config);
         if (config.renderingType === 'circle') {
             // use radius
-            result = cropText(labelText, config, Math.min(1.9 * shapeSize.r));
+            result = cropText(labelText, config, Math.min(1.9 * shapeSize.r - 15));
         }
         if (config.renderingType === 'rect') {
             // use width

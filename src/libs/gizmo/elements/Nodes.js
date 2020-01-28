@@ -1,6 +1,7 @@
 import BaseElement from './BaseElement';
 import * as d3 from 'd3';
 import './nodeLoaderAnimation.css';
+import NodeIcon from './NodeIcon';
 import DrawTools from '../drawTools';
 
 export default class Node extends BaseElement {
@@ -312,6 +313,9 @@ export default class Node extends BaseElement {
 
     render(parentNode) {
         this.svgRoot = parentNode;
+        if (!this.graph) {
+            this.setStatusLeafNode();
+        }
 
         if (this.collapseExapandGroup) {
             this.collapseExapandGroup.remove();
@@ -327,6 +331,19 @@ export default class Node extends BaseElement {
             this.addStackedView();
         }
         super.render(parentNode);
+
+        if (this.iconElement) {
+            this.iconElement.remove(); // clear previous rendering element
+            this.iconElement.parentSvgRoot = this.svgRoot;
+            const iconDef = this.iconElement.drawIcon();
+            if (iconDef.textTransform) {
+                for (const name in iconDef.textTransform) {
+                    if (iconDef.textTransform.hasOwnProperty(name)) {
+                        this.renderingText.attr(name, iconDef.textTransform[name]);
+                    }
+                }
+            }
+        }
 
         this.addHoverEvents();
         if (this.type() === 'resource') {

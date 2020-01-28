@@ -108,10 +108,20 @@ class GraphView extends Component {
             const subjectLabel = statement.subject.label.substring(0, 20);
             const objectLabel = statement.object.label.substring(0, 20);
 
-            nodes.push({ id: statement.subject.id, label: subjectLabel, title: statement.subject.label });
+            nodes.push({
+                id: statement.subject.id,
+                label: subjectLabel,
+                title: statement.subject.label,
+                classificationArray: statement.subject.classes
+            });
             // check if node type is resource or literal
             if (statement.object._class === 'resource') {
-                nodes.push({ id: statement.object.id, label: objectLabel, title: statement.object.label });
+                nodes.push({
+                    id: statement.object.id,
+                    label: objectLabel,
+                    title: statement.object.label,
+                    classificationArray: statement.object.classes
+                });
             } else {
                 nodes.push({
                     id: statement.object.id,
@@ -120,7 +130,17 @@ class GraphView extends Component {
                     type: 'literal'
                 });
             }
-            edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label });
+
+            if (statement.predicate.id === 'P27') {
+                // add user Icon to target node if we have 'has author' property === P27
+                edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label, isAuthorProp: true });
+            } else if (statement.predicate.id === 'P26') {
+                // add DOI Icon to target node
+                edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label, isDOIProp: true });
+            } else {
+                // no Icon for the target node
+                edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label });
+            }
         }
         // remove duplicate nodes
         nodes = uniqBy(nodes, 'id');
