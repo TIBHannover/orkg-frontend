@@ -23,7 +23,7 @@ class ContributionsHelpTour extends Component {
         // check if a cookie of take a tour exist
         if (this.props.cookies && this.props.cookies.get('taketour') === 'take' && !this.props.cookies.get('showedContributions')) {
             this.props.openTour();
-            this.props.cookies.set('showedContributions', true, { path: '/', maxAge: 604800 });
+            this.props.cookies.set('showedContributions', true, { path: process.env.PUBLIC_URL, maxAge: 604800 });
         }
     }
 
