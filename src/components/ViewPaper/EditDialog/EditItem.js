@@ -4,7 +4,9 @@ import { StyledStatementItem, StyledListGroupOpen } from 'components/AddPaper/Co
 import classNames from 'classnames';
 import moment from 'moment';
 import { range } from 'utils';
+import { resourcesUrl } from 'network';
 import AuthorsInput from '../../Utils/AuthorsInput';
+import AutoComplete from '../../Utils/AutoComplete';
 import PropTypes from 'prop-types';
 
 const EditItem = props => {
@@ -48,6 +50,19 @@ const EditItem = props => {
         );
     } else if (props.type === 'authors') {
         input = <AuthorsInput value={props.value} handler={props.onChange} />;
+    } else if (props.type === 'publishedIn') {
+        input = (
+            <AutoComplete
+                allowCreate
+                requestUrl={resourcesUrl}
+                optionsClass={process.env.REACT_APP_CLASSES_VENUE}
+                onItemSelected={props.onChange}
+                placeholder={'Select or type to enter a venue'}
+                autoFocus
+                cacheOptions
+                value={props.value}
+            />
+        );
     }
 
     return (
@@ -66,9 +81,9 @@ EditItem.propTypes = {
     open: PropTypes.bool.isRequired,
     label: PropTypes.string.isRequired,
     toggleItem: PropTypes.func.isRequired,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array]),
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array, PropTypes.object]),
     onChange: PropTypes.func.isRequired,
-    type: PropTypes.oneOf(['text', 'month', 'year', 'authors']).isRequired,
+    type: PropTypes.oneOf(['text', 'month', 'year', 'authors', 'publishedIn']).isRequired,
     isLastItem: PropTypes.bool
 };
 

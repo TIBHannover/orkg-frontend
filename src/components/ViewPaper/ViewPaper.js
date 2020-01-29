@@ -87,7 +87,7 @@ class ViewPaper extends Component {
                         let publishedIn = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_VENUE);
 
                         if (publishedIn.length > 0) {
-                            publishedIn = publishedIn[0].object;
+                            publishedIn = { ...publishedIn[0].object, statementId: publishedIn[0].id };
                         } else {
                             publishedIn = '';
                         }
@@ -236,6 +236,7 @@ class ViewPaper extends Component {
                         }
                     })
                     .catch(error => {
+                        console.log(error);
                         if (error.message === 'No Contribution found') {
                             this.setState({ unfoundContribution: true, loading: false, loading_failed: false });
                         } else {
