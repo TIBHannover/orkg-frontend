@@ -171,19 +171,19 @@ class GraphView extends Component {
         const { title, authors, doi, publicationMonth, publicationYear, selectedResearchField, contributions } = this.props.addPaper;
 
         // title
-        nodes.push({ id: 'title', label: title.substring(0, 20), title: title });
+        nodes.push({ id: 'title', label: title.substring(0, 20), title: title, classificationArray: [process.env.REACT_APP_CLASSES_PAPER] });
 
         // authors
         if (authors.length > 0) {
             for (const author of authors) {
                 nodes.push({ id: author.label, label: author.label.substring(0, 20), title: author.label });
-                edges.push({ from: 'title', to: author.label, label: 'has author' });
+                edges.push({ from: 'title', to: author.label, label: 'has author', isAuthorProp: true });
             }
         }
 
         //doi
         nodes.push({ id: 'doi', label: doi.substring(0, 20), title: doi, type: 'literal' });
-        edges.push({ from: 'title', to: 'doi', label: 'has doi' });
+        edges.push({ from: 'title', to: 'doi', label: 'has doi', isDOIProp: true });
 
         //publicationMonth
         nodes.push({ id: 'publicationMonth', label: publicationMonth, title: publicationMonth, type: 'literal' });

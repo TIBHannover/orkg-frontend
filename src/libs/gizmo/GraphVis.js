@@ -452,7 +452,7 @@ export default class GraphVis {
         if (node_data.classificationArray) {
             // console.log(node_data.classificationArray);
             // todo: based on the classificationArray, add further icons
-            if (node_data.classificationArray.indexOf('Paper') !== -1) {
+            if (node_data.classificationArray.indexOf(process.env.REACT_APP_CLASSES_PAPER) !== -1) {
                 node.addIcon('paperIcon');
             }
         }
