@@ -9,6 +9,7 @@ import uniqBy from 'lodash/uniqBy';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faProjectDiagram, faAngleDoubleLeft, faAngleDoubleUp, faHome } from '@fortawesome/free-solid-svg-icons';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import flattenDeep from 'lodash/flattenDeep';
 
 // moving GraphVis here in order to maintain the layouts and status related stuff;
 import GraphVis from '../../../libs/gizmo/GraphVis';
@@ -193,8 +194,19 @@ class GraphView extends Component {
         nodes.push({ id: 'publicationYear', label: publicationYear, title: publicationYear, type: 'literal' });
         edges.push({ from: 'title', to: 'publicationYear', label: 'has publication year' });
 
-        //research field TODO: convert to readable label
-        nodes.push({ id: 'researchField', label: selectedResearchField, title: selectedResearchField });
+        //research field
+        let researchFieldLabel = selectedResearchField;
+        if (this.props.addPaper.researchFields && this.props.addPaper.researchFields.length > 0) {
+            const rF = flattenDeep(this.props.addPaper.researchFields).find(rf => rf.id === selectedResearchField);
+            researchFieldLabel = rF ? rF.label : selectedResearchField;
+        }
+
+        nodes.push({
+            id: 'researchField',
+            label: researchFieldLabel.substring(0, 20),
+            title: researchFieldLabel
+        });
+
         edges.push({ from: 'title', to: 'researchField', label: 'has research field' });
 
         //contributions

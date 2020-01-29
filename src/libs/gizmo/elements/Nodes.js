@@ -1,7 +1,6 @@
 import BaseElement from './BaseElement';
 import * as d3 from 'd3';
 import './nodeLoaderAnimation.css';
-import NodeIcon from './NodeIcon';
 import DrawTools from '../drawTools';
 
 export default class Node extends BaseElement {
@@ -338,7 +337,7 @@ export default class Node extends BaseElement {
             const iconDef = this.iconElement.drawIcon();
             if (iconDef.textTransform) {
                 for (const name in iconDef.textTransform) {
-                    if (iconDef.textTransform.hasOwnProperty(name)) {
+                    if (iconDef.textTransform.hasOwnProperty(name) && this.renderingText) {
                         this.renderingText.attr(name, iconDef.textTransform[name]);
                     }
                 }
