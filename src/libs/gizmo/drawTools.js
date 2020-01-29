@@ -10,6 +10,8 @@ export default function DrawTools() {
     dt.angle2NormedVec = angle2NormedVec;
     dt.angleFromVector = angleFromVector;
     dt.cropTextIfNeeded = cropTextIfNeeded;
+
+    dt.renderStackedItems = renderStackedItems;
     return dt;
 }
 
@@ -22,7 +24,7 @@ function cropTextIfNeeded(node, config, labelText) {
         const shapeSize = node.getExpectedShapeSize(config);
         if (config.renderingType === 'circle') {
             // use radius
-            result = cropText(labelText, config, Math.min(1.9 * shapeSize.r));
+            result = cropText(labelText, config, Math.min(1.9 * shapeSize.r - 15));
         }
         if (config.renderingType === 'rect') {
             // use width
@@ -120,7 +122,7 @@ function addStrokeElements(element, cfg, selector) {
     }
 }
 
-function renderBaseShape(cfg, pNode, renderingShape) {
+function renderBaseShape(cfg, pNode, renderingShape, radiusOffset) {
     let radius = parseInt(cfg.radius);
     let width = parseInt(cfg.width);
     let height = parseInt(cfg.height);
@@ -134,6 +136,10 @@ function renderBaseShape(cfg, pNode, renderingShape) {
 
     // fix max width of element :
     width = Math.min(width, 250);
+    if (radiusOffset) {
+        radius += radiusOffset;
+    }
+
     // check if is uml style << TODO;
     /**  render a pure circle **/
     if (cfg.renderingType === 'circle') {
@@ -169,10 +175,25 @@ function renderBaseShape(cfg, pNode, renderingShape) {
     }
 
     /** apply stroke and fill colors as addition stroke style related parameters **/
-    renderingShape.attr('fill', cfg.bgColor);
+    if (pNode.multicoloring === true && pNode.type() === 'resource') {
+        renderingShape.attr('fill', pNode.colorState[pNode.status]);
+    } else {
+        renderingShape.attr('fill', cfg.bgColor);
+    }
     if (cfg.strokeElement === true || cfg.strokeElement === 'true') {
         addStrokeElements(renderingShape, cfg, 'stroke');
     }
+}
+
+function renderStackedItems(group, cfg, pNode) {
+    const renderingShapeA = group.append('rect');
+    const renderingShapeB = group.append('rect');
+
+    renderBaseShape(cfg, pNode, renderingShapeB, -4);
+    renderBaseShape(cfg, pNode, renderingShapeA, -8);
+
+    renderingShapeB.attr('transform', 'translate(8,8)');
+    renderingShapeA.attr('transform', 'translate(16,16)');
 }
 
 function drawElement(pGroup, cfg, pNode) {

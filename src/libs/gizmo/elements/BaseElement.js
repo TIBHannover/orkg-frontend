@@ -1,4 +1,5 @@
 import DrawTools from '../drawTools';
+import NodeIcon from './NodeIcon';
 
 export default class BaseElement {
     constructor(props) {
@@ -13,10 +14,15 @@ export default class BaseElement {
         this.renderingText = null;
         this.shapeRadius = undefined;
         this.elementType = 'undefined';
-
+        this.multicoloring = false;
+        this.colorState = { unknown: '#aaccff', collapsed: '#aaccff', expanded: '#aaccff', leafNode: '#cccccc' };
+        this.status = 'none';
         this.x = undefined;
         this.y = undefined;
         this.mouseIn = false;
+
+        this.addIcon = this.addIcon.bind(this);
+        this.iconElement = undefined;
 
         this.setConfigObj(props.configObject);
 
@@ -38,6 +44,24 @@ export default class BaseElement {
         this.mouseEntered = this.mouseEntered.bind(this);
         this.mouseHoverIn = this.mouseHoverIn.bind(this);
         this.mouseHoverOut = this.mouseHoverOut.bind(this);
+        this.removeAllRenderedElementsFromParent = this.removeAllRenderedElementsFromParent.bind(this);
+    }
+
+    addIcon(iconName) {
+        if (!this.iconElement) {
+            this.iconElement = new NodeIcon();
+            this.iconElement.parentNode = this;
+        }
+        this.iconElement.iconType = iconName;
+    }
+
+    removeAllRenderedElementsFromParent() {
+        if (this.svgRoot) {
+            // we have a parent;
+            this.svgRoot.selectAll('rect').remove();
+            this.svgRoot.selectAll('text').remove();
+            this.svgRoot.selectAll('g').remove();
+        }
     }
 
     visible(val) {
@@ -48,8 +72,10 @@ export default class BaseElement {
     }
 
     addHoverEvents() {
-        this.renderingElement.on('mouseover', this.mouseHoverIn);
-        this.renderingElement.on('mouseout', this.mouseHoverOut);
+        // reset mouseEnteredValue (if redraw it will otherwise not behave as expected)
+        this.mouseEntered(false);
+        this.svgRoot.on('mouseover', this.mouseHoverIn);
+        this.svgRoot.on('mouseout', this.mouseHoverOut);
     }
 
     mouseHoverIn() {
@@ -74,7 +100,11 @@ export default class BaseElement {
     mouseHoverOut() {
         this.mouseEntered(false);
         this.svgRoot.style('cursor', 'default');
-        this.renderingElement.style('fill', this.configObject.bgColor);
+        if (this.multicoloring && this.multicoloring === true && this.type() === 'resource') {
+            this.renderingElement.style('fill', this.colorState[this.status]);
+        } else {
+            this.renderingElement.style('fill', this.configObject.bgColor);
+        }
 
         if (this.configObject.strokeElement === true || this.configObject.strokeElement === 'true') {
             this.renderingElement.style('stroke', this.configObject.strokeColor);
@@ -145,7 +175,7 @@ export default class BaseElement {
     };
 
     getExpectedShapeSize(cfg) {
-        let retValue = {};
+        let retValue;
         if (cfg.fontSizeOverWritesShapeSize === 'true') {
             const tempRTE = this.svgRoot.append('text').text(this.label);
             tempRTE.style('font-family', cfg.fontFamily);
