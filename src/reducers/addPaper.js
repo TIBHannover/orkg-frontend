@@ -19,6 +19,7 @@ const initialState = {
     entry: '',
     showLookupTable: false,
     doi: '',
+    publishedIn: '',
     researchFields: [],
     selectedResearchField: '',
     selectedContribution: '',
@@ -43,7 +44,8 @@ export default (state = initialState, action) => {
                 publicationYear: payload.publicationYear,
                 doi: payload.doi,
                 entry: payload.entry,
-                showLookupTable: payload.showLookupTable
+                showLookupTable: payload.showLookupTable,
+                publishedIn: payload.publishedIn
             };
         }
 

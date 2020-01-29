@@ -83,6 +83,15 @@ class ViewPaper extends Component {
                             researchField = researchField[0];
                         }
 
+                        // venue
+                        let publishedIn = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_VENUE);
+
+                        if (publishedIn.length > 0) {
+                            publishedIn = publishedIn[0].object;
+                        } else {
+                            publishedIn = '';
+                        }
+
                         // publication year
                         const publicationYearStatements = paperStatements.filter(
                             statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR
@@ -163,7 +172,8 @@ class ViewPaper extends Component {
                             publicationYearResourceId,
                             doi,
                             doiResourceId,
-                            researchField
+                            researchField,
+                            publishedIn
                         });
 
                         this.setState({
@@ -412,7 +422,19 @@ class ViewPaper extends Component {
                                     )}
                                     <br />
                                     <div className="d-flex justify-content-end align-items-center">
-                                        {this.state.editMode && <EditPaperDialog />}
+                                        {this.props.viewPaper.publishedIn && (
+                                            <div className="flex-grow-1">
+                                                <small>
+                                                    Published in:{' '}
+                                                    <Link
+                                                        style={{ color: '#60687a', fontStyle: 'italic' }}
+                                                        to={reverse(ROUTES.VENUE_PAGE, { venueId: this.props.viewPaper.publishedIn.id })}
+                                                    >
+                                                        {this.props.viewPaper.publishedIn.label}
+                                                    </Link>
+                                                </small>
+                                            </div>
+                                        )}
                                         {this.props.viewPaper.doi && this.props.viewPaper.doi.startsWith('10.') && (
                                             <div className="flex-shrink-0">
                                                 <small>
@@ -424,6 +446,7 @@ class ViewPaper extends Component {
                                             </div>
                                         )}
                                     </div>
+                                    {this.state.editMode && <EditPaperDialog />}
                                 </>
                             )}
                             {!this.state.loading_failed && !this.state.unfoundContribution && (
