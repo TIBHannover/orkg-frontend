@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'reactstrap';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import DBPEDIA_LOGO from 'assets/img/sameas/dbpedia.png';
 import PropTypes from 'prop-types';
 
@@ -9,7 +11,9 @@ class DbpediaAbstract extends Component {
 
         this.state = {
             abstract: '',
-            collapsed: true
+            collapsed: true,
+            isLoading: false,
+            loadingFailed: false
         };
     }
 
@@ -23,7 +27,8 @@ class DbpediaAbstract extends Component {
         }
     }
 
-    getAbstract = async () => {
+    getAbstract = () => {
+        this.setState({ isLoading: true, loadingFailed: false });
         const resource = this.props.externalResource;
         const endpoint = 'http://dbpedia.org/sparql';
         const query = `
@@ -36,7 +41,6 @@ class DbpediaAbstract extends Component {
                 }
             LIMIT 500
         `;
-
         const url = endpoint + '?query=' + encodeURIComponent(query) + '&format=json';
         const self = this;
 
@@ -53,9 +57,16 @@ class DbpediaAbstract extends Component {
                     data.results.bindings[0].abstract.value
                 ) {
                     self.setState({
-                        abstract: data.results.bindings[0].abstract.value
+                        abstract: data.results.bindings[0].abstract.value,
+                        isLoading: false,
+                        loadingFailed: false
                     });
+                } else {
+                    this.setState({ isLoading: false, loadingFailed: true });
                 }
+            })
+            .catch(error => {
+                this.setState({ isLoading: false, loadingFailed: true });
             });
     };
 
@@ -78,11 +89,23 @@ class DbpediaAbstract extends Component {
                 <div className="clearfix" />
 
                 <div style={{ fontSize: '90%' }}>
-                    {this.state.collapsed ? shortAbstract + '...' : this.state.abstract}
-                    {showReadMore && (
-                        <Button color="link" className="p-0" style={{ fontSize: 'inherit' }} onClick={this.handleReadMore}>
-                            {this.state.collapsed ? 'Read more' : 'Read less'}
-                        </Button>
+                    {this.state.isLoading && !this.state.loadingFailed && (
+                        <div className="text-center">
+                            <Icon icon={faSpinner} spin /> Loading abstract from DBpedia...
+                        </div>
+                    )}
+                    {!this.state.isLoading && this.state.loadingFailed && (
+                        <div className="text-center text-primary">Failed loading abstract from DBpedia...</div>
+                    )}
+                    {!this.state.isLoading && !this.state.loadingFailed && (
+                        <>
+                            {this.state.collapsed ? shortAbstract + '...' : this.state.abstract}
+                            {showReadMore && (
+                                <Button color="link" className="p-0" style={{ fontSize: 'inherit' }} onClick={this.handleReadMore}>
+                                    {this.state.collapsed ? 'Read more' : 'Read less'}
+                                </Button>
+                            )}
+                        </>
                     )}
                 </div>
             </div>
