@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import DbpediaAbstract from './DbpediaAbstract';
+import WikidataDescription from './WikidataDescription';
 
 class SameAsStatements extends Component {
     constructor(props) {
@@ -12,6 +13,7 @@ class SameAsStatements extends Component {
         };
 
         this.expressionDbPedia = new RegExp(/^(https?:)?\/\/dbpedia\.org(\/resource(\?.*)?)\//);
+        this.expressionWikiData = new RegExp(/^(https?:)?\/\/(www\.)?wikidata\.org(\/entity(\?.*)?)\//);
     }
 
     componentDidUpdate(prevProps) {
@@ -45,17 +47,20 @@ class SameAsStatements extends Component {
     render() {
         if (this.state.externalResources.length > 0) {
             return (
-                <div>
+                <div className="mt-5 mb-2">
                     {this.state.externalResources.map((resourceUrl, index) => {
                         if (resourceUrl.match(this.expressionDbPedia)) {
-                            return <DbpediaAbstract externalResource={resourceUrl} key={index} />;
+                            return <DbpediaAbstract externalResource={resourceUrl} key={`db${index}`} />;
                         }
-                        return <></>;
+                        if (resourceUrl.match(this.expressionWikiData)) {
+                            return <WikidataDescription externalResource={resourceUrl} key={`wiki${index}`} />;
+                        }
+                        return null;
                     })}
                 </div>
             );
         }
-        return null;
+        return <></>;
     }
 }
 
