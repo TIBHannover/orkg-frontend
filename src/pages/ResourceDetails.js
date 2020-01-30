@@ -9,6 +9,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { EditModeHeader, Title } from 'components/ViewPaper/ViewPaper';
 import PropTypes from 'prop-types';
+import SameAsStatements from './SameAsStatements';
 
 class ResourceDetails extends Component {
     constructor(props) {
@@ -18,7 +19,8 @@ class ResourceDetails extends Component {
             error: null,
             label: '',
             isLoading: false,
-            editMode: false
+            editMode: false,
+            classes: []
         };
     }
 
@@ -37,7 +39,7 @@ class ResourceDetails extends Component {
         getResource(this.props.match.params.id)
             .then(responseJson => {
                 document.title = `${responseJson.label} - Resource - ORKG`;
-                this.setState({ label: responseJson.label, isLoading: false });
+                this.setState({ label: responseJson.label, isLoading: false, classes: responseJson.classes });
             })
             .catch(error => {
                 this.setState({ label: null, isLoading: false, error: error });
@@ -79,12 +81,29 @@ class ResourceDetails extends Component {
                         <div className={'box clearfix pt-4 pb-4 pl-5 pr-5'}>
                             <div className={'mb-2'}>
                                 {!this.state.editMode ? (
-                                    <h3 className={'pb-2 mb-3'} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                        {this.state.label}
-                                        <Button className="float-right" color="darkblue" size="sm" onClick={() => this.toggle('editMode')}>
-                                            <Icon icon={faPen} /> Edit
-                                        </Button>
-                                    </h3>
+                                    <div className="pb-2 mb-3">
+                                        <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                            {this.state.label}
+                                            <Button className="float-right" color="darkblue" size="sm" onClick={() => this.toggle('editMode')}>
+                                                <Icon icon={faPen} /> Edit
+                                            </Button>
+                                        </h3>
+                                        {this.state.classes.length > 0 && (
+                                            <span style={{ fontSize: '90%' }}>
+                                                Classes:{' '}
+                                                {this.state.classes.map((className, index) => {
+                                                    const separator = index < this.state.classes.length - 1 ? ', ' : '';
+
+                                                    return (
+                                                        <i key={index}>
+                                                            {className}
+                                                            {separator}
+                                                        </i>
+                                                    );
+                                                })}
+                                            </span>
+                                        )}
+                                    </div>
                                 ) : (
                                     <EditableHeader id={id} value={this.state.label} onChange={this.handleHeaderChange} />
                                 )}
@@ -97,6 +116,8 @@ class ResourceDetails extends Component {
                                     initialResourceId={this.props.match.params.id}
                                     initialResourceLabel={this.state.label}
                                 />
+
+                                <SameAsStatements />
                             </div>
                         </div>
                     </Container>
