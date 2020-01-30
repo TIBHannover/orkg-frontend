@@ -11,6 +11,7 @@ import {
     createResourceStatement,
     createResource,
     deleteStatementsByIds,
+    deleteStatementById,
     updateStatement
 } from 'network';
 import { connect } from 'react-redux';
@@ -81,10 +82,17 @@ class EditPaperDialog extends Component {
         await this.updateAuthors(this.state.authors); //use await to prevent updating the props, which are needed to check whether authors exist
 
         //venue
-        if (this.state.publishedIn && this.state.publishedIn.statementId) {
-            updateStatement(this.state.publishedIn.statementId, { object_id: this.state.publishedIn.id });
+        if (this.state.publishedIn && this.state.publishedIn.statementId && this.state.publishedIn.id) {
+            await updateStatement(this.state.publishedIn.statementId, { object_id: this.state.publishedIn.id });
         } else if (this.state.publishedIn && !this.state.publishedIn.statementId) {
-            createResourceStatement(this.props.viewPaper.paperResourceId, process.env.REACT_APP_CLASSES_VENUE, this.state.publishedIn.id);
+            await createResourceStatement(
+                this.props.viewPaper.paperResourceId,
+                process.env.REACT_APP_PREDICATES_HAS_VENUE,
+                this.state.publishedIn.id
+            );
+        } else if (this.state.publishedIn && this.state.publishedIn.statementId && !this.state.publishedIn.id) {
+            await deleteStatementById(this.state.publishedIn.statementId);
+            this.setState({ publishedIn: '' });
         }
 
         //publication month
@@ -245,6 +253,11 @@ class EditPaperDialog extends Component {
             selected.statementId = this.state.publishedIn && this.state.publishedIn.statementId ? this.state.publishedIn.statementId : '';
             this.setState({
                 publishedIn: selected
+            });
+        } else if (action.action === 'clear') {
+            const statementId = this.state.publishedIn && this.state.publishedIn.statementId ? this.state.publishedIn.statementId : '';
+            this.setState({
+                publishedIn: { statementId: statementId, id: null, label: null }
             });
         }
     };

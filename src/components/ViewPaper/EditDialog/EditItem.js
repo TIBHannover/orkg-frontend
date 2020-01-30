@@ -61,6 +61,7 @@ const EditItem = props => {
                 autoFocus
                 cacheOptions
                 value={props.value}
+                isClearable={true}
             />
         );
     }
