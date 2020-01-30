@@ -192,8 +192,10 @@ export default class Node extends BaseElement {
             this.renderingAnimationGroup.style('stroke-width', '7px');
             this.renderingAnimationGroup.classed('loadingAnimation', true);
         } else {
-            this.renderingAnimationGroup.remove();
-            this.renderingAnimationGroup = null;
+            if (this.renderingAnimationGroup) {
+                this.renderingAnimationGroup.remove();
+            }
+            this.renderingAnimationGrop = null;
         }
     }
 
