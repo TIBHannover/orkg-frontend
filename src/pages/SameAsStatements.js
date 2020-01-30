@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import DbpediaAbstract from './DbpediaAbstract';
 import WikidataDescription from './WikidataDescription';
+import WikipediaSummary from './WikipediaSummary';
 
 class SameAsStatements extends Component {
     constructor(props) {
@@ -14,6 +15,7 @@ class SameAsStatements extends Component {
 
         this.expressionDbPedia = new RegExp(/^(https?:)?\/\/dbpedia\.org(\/resource(\?.*)?)\//);
         this.expressionWikiData = new RegExp(/^(https?:)?\/\/(www\.)?wikidata\.org(\/entity(\?.*)?)\//);
+        this.expressionWikipedia = new RegExp(/^(https?:)?\/\/[a-zA-Z.0-9]{0,3}\.wikipedia\.org\/wiki\/([\w%]+)/g);
     }
 
     componentDidUpdate(prevProps) {
@@ -54,6 +56,9 @@ class SameAsStatements extends Component {
                         }
                         if (resourceUrl.match(this.expressionWikiData)) {
                             return <WikidataDescription externalResource={resourceUrl} key={`wiki${index}`} />;
+                        }
+                        if (resourceUrl.match(this.expressionWikipedia)) {
+                            return <WikipediaSummary externalResource={resourceUrl} key={`wiki${index}`} />;
                         }
                         return null;
                     })}
