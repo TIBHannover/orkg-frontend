@@ -52,12 +52,19 @@ class Search extends Component {
             [
                 5,
                 {
+                    label: 'Venue',
+                    class: process.env.REACT_APP_CLASSES_VENUE
+                }
+            ],
+            [
+                6,
+                {
                     label: 'Resource',
                     class: 'resource'
                 }
             ],
             [
-                6,
+                7,
                 {
                     label: 'Predicate',
                     class: 'predicate'
@@ -100,6 +107,12 @@ class Search extends Component {
             authorsPage: 1,
             isAuthorsLastPageReached: false,
 
+            venues: [],
+            isVenuesNextPageLoading: false,
+            hasVenuesNextPage: false,
+            venuesPage: 1,
+            isVenuesLastPageReached: false,
+
             comparisons: [],
             isComparisonsNextPageLoading: false,
             hasComparisonsNextPage: false,
@@ -117,6 +130,7 @@ class Search extends Component {
             this.loadMoreAuthors(this.state.value);
             this.loadMorePredicates(this.state.value);
             this.loadMoreComparisons(this.state.value);
+            this.loadMoreVenues(this.state.value);
         }
     }
 
@@ -150,6 +164,11 @@ class Search extends Component {
                     hasAuthorsNextPage: false,
                     authorsPage: 1,
                     isAuthorsLastPageReached: false,
+                    venues: [],
+                    isVenuesNextPageLoading: false,
+                    hasVenuesNextPage: false,
+                    venuesPage: 1,
+                    isVenuesLastPageReached: false,
                     comparisons: [],
                     isComparisonsNextPageLoading: false,
                     hasComparisonsNextPage: false,
@@ -163,6 +182,7 @@ class Search extends Component {
                     this.loadMoreAuthors(this.state.value);
                     this.loadMorePredicates(this.state.value);
                     this.loadMoreComparisons(this.state.value);
+                    this.loadMoreVenues(this.state.value);
                 }
             );
         }
@@ -175,7 +195,8 @@ class Search extends Component {
             isAuthorsNextPageLoading,
             isComparisonsNextPageLoading,
             isProblemsNextPageLoading,
-            isPredicatesNextPageLoading
+            isPredicatesNextPageLoading,
+            isVenuesNextPageLoading
         } = this.state;
 
         return (
@@ -184,7 +205,8 @@ class Search extends Component {
             isAuthorsNextPageLoading ||
             isComparisonsNextPageLoading ||
             isProblemsNextPageLoading ||
-            isPredicatesNextPageLoading
+            isPredicatesNextPageLoading ||
+            isVenuesNextPageLoading
         );
     };
 
@@ -321,6 +343,36 @@ class Search extends Component {
         });
     };
 
+    loadMoreVenues = searchQuery => {
+        if (searchQuery.length === 0) {
+            return;
+        }
+        this.setState({ isVenuesNextPageLoading: true });
+        getResourcesByClass({
+            page: this.state.venuesPage,
+            items: this.itemsPerFilter,
+            sortBy: 'id',
+            desc: true,
+            q: searchQuery,
+            id: process.env.REACT_APP_CLASSES_VENUE
+        }).then(venues => {
+            if (venues.length > 0) {
+                this.setState({
+                    venues: [...this.state.venues, ...venues],
+                    isVenuesNextPageLoading: false,
+                    hasVenuesNextPage: venues.length < this.itemsPerFilter ? false : true,
+                    venuesPage: this.state.venuesPage + 1
+                });
+            } else {
+                this.setState({
+                    isVenuesNextPageLoading: false,
+                    hasVenuesNextPage: false,
+                    isVenuesLastPageReached: true
+                });
+            }
+        });
+    };
+
     loadMoreComparisons = searchQuery => {
         if (searchQuery.length === 0) {
             return;
@@ -447,6 +499,7 @@ class Search extends Component {
                                         this.state.authors.length === 0 &&
                                         this.state.comparisons.length === 0 &&
                                         this.state.resources.length === 0 &&
+                                        this.state.venues.length === 0 &&
                                         this.state.predicates.length === 0) && (
                                         <ContentLoader height={210} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
                                             <rect x="0" y="8" width="50" height="15" />
@@ -468,6 +521,7 @@ class Search extends Component {
                                     (this.state.papers.length === 0 &&
                                         this.state.problems.length === 0 &&
                                         this.state.authors.length === 0 &&
+                                        this.state.venues.length === 0 &&
                                         this.state.comparisons.length === 0 &&
                                         this.state.resources.length === 0 &&
                                         this.state.predicates.length === 0)) ? (
@@ -525,17 +579,29 @@ class Search extends Component {
                                         {(this.state.selectedFilters.length === 0 ||
                                             (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(5))) && (
                                             <Results
+                                                loading={this.state.isVenuesNextPageLoading}
+                                                hasNextPage={this.state.hasVenuesNextPage}
+                                                loadMore={this.loadMoreVenues}
+                                                items={this.state.venues}
+                                                label={'Venues'}
+                                                class={process.env.REACT_APP_CLASSES_VENUE}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(5)}
+                                            />
+                                        )}
+                                        {(this.state.selectedFilters.length === 0 ||
+                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(6))) && (
+                                            <Results
                                                 loading={this.state.isResourcesNextPageLoading}
                                                 hasNextPage={this.state.hasResourcesNextPage}
                                                 loadMore={this.loadMoreResources}
                                                 items={this.state.resources}
                                                 label={'Resources'}
                                                 class={'resource'}
-                                                showNoResultsMessage={this.state.selectedFilters.includes(5)}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(6)}
                                             />
                                         )}
                                         {(this.state.selectedFilters.length === 0 ||
-                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(6))) && (
+                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(7))) && (
                                             <Results
                                                 loading={this.state.isPredicatesNextPageLoading}
                                                 hasNextPage={this.state.hasPredicatesNextPage}
@@ -543,7 +609,7 @@ class Search extends Component {
                                                 items={this.state.predicates}
                                                 label={'Predicates'}
                                                 class={'predicate'}
-                                                showNoResultsMessage={this.state.selectedFilters.includes(6)}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(7)}
                                             />
                                         )}
                                     </div>

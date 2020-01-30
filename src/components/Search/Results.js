@@ -57,6 +57,10 @@ const Results = props => {
                 link = reverse(ROUTES.COMPARISON, { comparisonId: resourceId });
                 break;
             }
+            case process.env.REACT_APP_CLASSES_VENUE: {
+                link = reverse(ROUTES.VENUE_PAGE, { venueId: resourceId });
+                break;
+            }
             case 'resource': {
                 link = '/resource/' + resourceId; //TODO: replace this with a better resource view
                 break;
