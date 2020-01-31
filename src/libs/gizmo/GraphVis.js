@@ -95,7 +95,11 @@ export default class GraphVis {
             return o._resourceId;
         });
         const incrementalData = await this.fetchMultipleResourcesFromAPI(ResourceIds);
-        let iterator = this.classNodes.length;
+        let iterator = this.classNodes.length + 1;
+        if (!incrementalData.nodes && !incrementalData.edges) {
+            // we dont have new data
+            return;
+        }
         incrementalData.nodes.forEach(node => {
             if (this.mapOfResources[node.id] === undefined) {
                 // create a node;
