@@ -707,11 +707,11 @@ export default class GraphVis {
     async promisedGroupCollapse(groupsToCollapse) {
         // keep it an iterative for loop to ensure the correct execution of collapse operations
         for (let i = 0; i < groupsToCollapse.length; i++) {
-            await this.singleGroupCollapse(groupsToCollapse[i]);
+            await this.singleGroupCollapse(groupsToCollapse[i], (i + 1) / groupsToCollapse.length);
         }
     }
 
-    async singleGroupCollapse(nodesToCollapse) {
+    async singleGroupCollapse(nodesToCollapse, animationPercentageDuration = 1) {
         let children = [];
         nodesToCollapse.forEach(node => {
             children = [].concat(children, this.collectChildrenAndSetVisibilityFlag(node, false));
@@ -723,7 +723,8 @@ export default class GraphVis {
         children.forEach(child => {
             child.setToParentNodePosition();
         });
-        await this.layout.promisedLayoutAnimation(true);
+
+        await this.layout.promisedLayoutAnimation(true, animationPercentageDuration);
     }
 
     singleNodeCollapse(node) {
@@ -788,7 +789,7 @@ export default class GraphVis {
     async promisedGroupExpand(groupsToExpand) {
         // keep it an iterative for loop to ensure the correct execution of collapse operations
         for (let i = 0; i < groupsToExpand.length; i++) {
-            await this.singleGroupExpand(groupsToExpand[i]);
+            await this.singleGroupExpand(groupsToExpand[i], Math.max(0.125, 1.0 - (i + 1) / groupsToExpand.length));
         }
     }
 
@@ -838,7 +839,7 @@ export default class GraphVis {
         return children;
     }
 
-    async singleGroupExpand(nodesToExpand) {
+    async singleGroupExpand(nodesToExpand, animationDurationPercentage = 1.0) {
         let nodeRef = [];
         nodesToExpand.forEach(node => {
             node.incommingLink.forEach(link => {
@@ -855,7 +856,7 @@ export default class GraphVis {
         this.layout.initializeLayoutEngine(); // creates force nodes and tree data
         this.layout.pauseForceLayoutAnimation(true);
         this.layout.initializePositionsForGroupExpansionAnimation(nodeRef, nodesToExpand);
-        await this.layout.promisedLayoutAnimation(false);
+        await this.layout.promisedLayoutAnimation(false, animationDurationPercentage);
     }
 
     async singleNodeExpansion(node) {

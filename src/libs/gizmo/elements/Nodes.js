@@ -28,6 +28,8 @@ export default class Node extends BaseElement {
         this.collapseExapandGroup = undefined;
         this.stackViewGroup = undefined;
         this._parentNodeForPosition = undefined;
+        this.defaultDuration = 400;
+        this.percentModifier = 1.0;
         this.type('resource');
 
         this.filterCollapsedLinks = this.filterCollapsedLinks.bind(this);
@@ -45,11 +47,17 @@ export default class Node extends BaseElement {
         this.parentNodeForPosition = this.parentNodeForPosition.bind(this);
         this.setToParentNodePosition = this.setToParentNodePosition.bind(this);
 
+        this.setAnimationDurationPercentage = this.setAnimationDurationPercentage.bind(this);
+
         // performance optimization stuff;
         this.redraw = this.redraw.bind(this);
 
         // some helper functions; [ensures that status values are correctly set!]
         this.setStatusLeafNode = this.setStatusLeafNode.bind(this);
+    }
+
+    setAnimationDurationPercentage(val) {
+        this.percentModifier = val;
     }
 
     setToParentNodePosition() {
@@ -205,6 +213,11 @@ export default class Node extends BaseElement {
 
     startLayoutTransition(collapse = false, id, max, callback) {
         // get old value
+        let duration = this.defaultDuration * this.percentModifier;
+        if (isNaN(duration)) {
+            duration = 400;
+        }
+
         const f_x = parseInt(this.x);
         const f_y = parseInt(this.y);
         const that = this;
@@ -234,7 +247,7 @@ export default class Node extends BaseElement {
                     }
                 };
             })
-            .duration(400)
+            .duration(duration)
             .each('end', function() {
                 if (callback && id === max) {
                     callback();
