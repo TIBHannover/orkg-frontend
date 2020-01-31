@@ -370,7 +370,7 @@ export default class Node extends BaseElement {
 
     addDoubleClickAction = function() {
         const that = this;
-        that.renderingElement.on('dblclick', function() {
+        that.svgRoot.on('dblclick', function() {
             d3.event.stopPropagation();
             console.log(that.label + ' was double clicked');
             if (that._resourceId !== 'unknown') {
