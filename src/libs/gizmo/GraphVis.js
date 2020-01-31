@@ -132,6 +132,15 @@ export default class GraphVis {
     }
 
     async fullExplore(doubleTheDepth = false, maxIterationCounter = 10) {
+        // ensure first that the graph is fully expanded;
+        const levelsToExpand = [];
+        for (let it = 0; it < this.sortedByDepthNodes.length; it++) {
+            if (this.sortedByDepthNodes[it]) {
+                levelsToExpand.push(it);
+            }
+        }
+        await this.performExpansion(levelsToExpand);
+
         const explorationDepth = maxIterationCounter;
         // fix max amount of tries to 20 for now;
         let exploreCounter = 0;
