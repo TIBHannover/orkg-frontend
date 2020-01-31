@@ -53,17 +53,19 @@ export default class Layout {
     }
 
     // the collapseAnimation will be propagated to the node, if true then it will be set to invisible
-    async promisedLayoutAnimation(collapseAnimation) {
+    async promisedLayoutAnimation(collapseAnimation, durationPercentage) {
         const that = this;
         const animationWaiter = new Promise(function(resolve) {
             const max = that.graph.classNodes.length - 1;
             let it = 0;
             that.graph.classNodes.forEach(async node => {
+                node.setAnimationDurationPercentage(durationPercentage);
                 if (it === max) {
                     node.startLayoutTransition(collapseAnimation, it, max, function() {
                         resolve(true);
                     });
                 } else {
+                    node.setAnimationDurationPercentage(durationPercentage);
                     node.startLayoutTransition(collapseAnimation);
                 }
                 it++;

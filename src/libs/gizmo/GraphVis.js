@@ -29,6 +29,7 @@ export default class GraphVis {
 
         // overloadingFunctions;
         this.getDataFromApi = undefined; // has to be set from graphView  modal;
+        this.fetchMultipleResourcesFromAPI = undefined;
         this.propagateMaxDepthValue = undefined; // has to be set from graphView modal;
 
         // state, load, unload functions
@@ -85,6 +86,101 @@ export default class GraphVis {
         this.performExplorations = this.performExplorations.bind(this);
         this.exploreCurrentDept = this.exploreCurrentDept.bind(this);
         this.singleNodeExploration = this.singleNodeExploration.bind(this);
+        this.fullExplore = this.fullExplore.bind(this);
+        this.exploreMultipleNodes = this.exploreMultipleNodes.bind(this);
+    }
+
+    async exploreMultipleNodes(nodesToExplore) {
+        const ResourceIds = nodesToExplore.map(o => {
+            return o._resourceId;
+        });
+        const incrementalData = await this.fetchMultipleResourcesFromAPI(ResourceIds);
+        let iterator = this.classNodes.length + 1;
+        if (!incrementalData.nodes && !incrementalData.edges) {
+            // we dont have new data
+            return;
+        }
+        incrementalData.nodes.forEach(node => {
+            if (this.mapOfResources[node.id] === undefined) {
+                // create a node;
+                const aNode = this.createNode(node);
+                aNode.id(aNode.id() + iterator);
+                if (aNode.type() === 'resource') {
+                    aNode.status = 'unknown';
+                }
+                // put parent position to the child node for the expand animation
+                this.classNodes.push(aNode);
+                iterator++;
+            }
+        });
+
+        iterator = this.propNodes.length + 1;
+        if (incrementalData.edges) {
+            incrementalData.edges.forEach(edge => {
+                const anEdge = this.createEdge(edge, iterator);
+                this.propNodes.push(anEdge);
+                iterator++;
+            });
+        }
+
+        this.updateNodeStatus();
+        nodesToExplore.forEach(n => {
+            n.nodeHasBeenExplored = true;
+        });
+        this.computeDepth();
+        this.singleGroupExpand(nodesToExplore);
+    }
+
+    async fullExplore(doubleTheDepth = false, maxIterationCounter = 10) {
+        // ensure first that the graph is fully expanded;
+        const levelsToExpand = [];
+        for (let it = 0; it < this.sortedByDepthNodes.length; it++) {
+            if (this.sortedByDepthNodes[it]) {
+                levelsToExpand.push(it);
+            }
+        }
+        await this.performExpansion(levelsToExpand);
+
+        const explorationDepth = maxIterationCounter;
+        // fix max amount of tries to 20 for now;
+        let exploreCounter = 0;
+        while (exploreCounter < explorationDepth) {
+            // collect current states;
+            const unexploredNodes = [];
+            // this could be optimized by having explored levels state!
+            for (let it = 0; it < this.sortedByDepthNodes.length; it++) {
+                if (this.sortedByDepthNodes[it]) {
+                    this.sortedByDepthNodes[it].forEach(item => {
+                        if (item.type() === 'resource' && item.status === 'unknown') {
+                            unexploredNodes.push(item);
+                            item.setExploreAnimation(true);
+                        }
+                    });
+                }
+            }
+            if (unexploredNodes.length === 0) {
+                // we have no more nodes to explore, restart force animation,
+                // and forward the max value and disable the explore graph button (or even hide it)
+                this.layout.pauseForceLayoutAnimation(false);
+                if (!this.graphFullyExplored) {
+                    this.propagateMaxDepthValue(this.getMaxDepth(), true);
+                    this.graphFullyExplored = true;
+                }
+                return;
+            } else {
+                await this.exploreMultipleNodes(unexploredNodes);
+            }
+        }
+        exploreCounter++;
+
+        // fallback for the fixed iterations
+        // (when we have not found all the nodes we trie once more with the double amount of iterations)
+        // but only once
+        if (doubleTheDepth === false) {
+            this.fullExplore(true, explorationDepth * 2);
+        } else {
+            console.log('We have tried a lot , still the graph is not explored! ');
+        }
     }
 
     /** State Load Unload Functions **/
@@ -611,11 +707,11 @@ export default class GraphVis {
     async promisedGroupCollapse(groupsToCollapse) {
         // keep it an iterative for loop to ensure the correct execution of collapse operations
         for (let i = 0; i < groupsToCollapse.length; i++) {
-            await this.singleGroupCollapse(groupsToCollapse[i]);
+            await this.singleGroupCollapse(groupsToCollapse[i], (i + 1) / groupsToCollapse.length);
         }
     }
 
-    async singleGroupCollapse(nodesToCollapse) {
+    async singleGroupCollapse(nodesToCollapse, animationPercentageDuration = 1) {
         let children = [];
         nodesToCollapse.forEach(node => {
             children = [].concat(children, this.collectChildrenAndSetVisibilityFlag(node, false));
@@ -627,7 +723,8 @@ export default class GraphVis {
         children.forEach(child => {
             child.setToParentNodePosition();
         });
-        await this.layout.promisedLayoutAnimation(true);
+
+        await this.layout.promisedLayoutAnimation(true, animationPercentageDuration);
     }
 
     singleNodeCollapse(node) {
@@ -692,7 +789,7 @@ export default class GraphVis {
     async promisedGroupExpand(groupsToExpand) {
         // keep it an iterative for loop to ensure the correct execution of collapse operations
         for (let i = 0; i < groupsToExpand.length; i++) {
-            await this.singleGroupExpand(groupsToExpand[i]);
+            await this.singleGroupExpand(groupsToExpand[i], Math.max(0.125, 1.0 - (i + 1) / groupsToExpand.length));
         }
     }
 
@@ -742,7 +839,7 @@ export default class GraphVis {
         return children;
     }
 
-    async singleGroupExpand(nodesToExpand) {
+    async singleGroupExpand(nodesToExpand, animationDurationPercentage = 1.0) {
         let nodeRef = [];
         nodesToExpand.forEach(node => {
             node.incommingLink.forEach(link => {
@@ -751,7 +848,6 @@ export default class GraphVis {
                     link.linkElement().visible(true);
                 }
             });
-            // adding functionality for outgoing links that have smaller depth;
             nodeRef = [].concat(nodeRef, this.collectChildrenAndSetVisibilityFlag(node, true, true));
         });
         this.clearGraphAnimation();
@@ -760,7 +856,7 @@ export default class GraphVis {
         this.layout.initializeLayoutEngine(); // creates force nodes and tree data
         this.layout.pauseForceLayoutAnimation(true);
         this.layout.initializePositionsForGroupExpansionAnimation(nodeRef, nodesToExpand);
-        await this.layout.promisedLayoutAnimation(false);
+        await this.layout.promisedLayoutAnimation(false, animationDurationPercentage);
     }
 
     async singleNodeExpansion(node) {
@@ -819,24 +915,14 @@ export default class GraphVis {
                 }
                 break;
             }
+
             await that.exploreCurrentDept(nodesOnLvlToExplore);
         }
         this.layout.pauseForceLayoutAnimation(false);
     }
 
     async exploreCurrentDept(nodesToExplore) {
-        for (let i = 0; i < nodesToExplore.length; i++) {
-            await this.singleNodeExploration(nodesToExplore[i], false);
-        }
-        // we have new data;
-        this.computeDepth();
-        this.clearGraphAnimation();
-        this.initializeLayers();
-        this.drawGraph();
-        this.layout.initializeLayoutEngine(); // creates force nodes and tree data
-        this.layout.pauseForceLayoutAnimation(true);
-        // make animation and resume ;
-        await this.layout.depthExplorationAnimation(nodesToExplore);
+        await this.exploreMultipleNodes(nodesToExplore);
     }
 
     async singleNodeExploration(node, redrawWhenFinished = true) {
