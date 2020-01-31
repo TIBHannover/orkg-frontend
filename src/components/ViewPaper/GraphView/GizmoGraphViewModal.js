@@ -354,9 +354,10 @@ class GraphView extends Component {
             this.graphVis.depthUpdateEvent(parseInt(event.target.value)).then();
         }
     };
-    exploreTheFullGraph = () => {
+    exploreTheFullGraph = async () => {
         this.setState({ exploringFullGraph: true });
-        this.graphVis.fullExplore();
+        await this.graphVis.fullExplore();
+        this.setState({ exploringFullGraph: false });
     };
 
     getResourceAndStatements = async (resourceId, depth, list) => {
@@ -442,16 +443,16 @@ class GraphView extends Component {
                                     //    className='mb-4 mt-4'
                                     style={{ margin: '0 10px', flexGrow: '1', display: 'flex' }}
                                     onClick={this.exploreTheFullGraph}
-                                    disabled={this.state.seenFullGraph || this.state.exploringFullGraph}
+                                    disabled={this.state.exploringFullGraph}
                                 >
-                                    {!this.state.exploringFullGraph || this.state.seenFullGraph ? (
+                                    {!this.state.exploringFullGraph ? (
                                         <>
                                             <Icon icon={faSnowman} className="mr-1 align-self-center" />
-                                            Explore Graph{' '}
+                                            Expand All Nodes{' '}
                                         </>
                                     ) : (
                                         <>
-                                            <Icon icon={faSpinner} spin className="mr-1 align-self-center" /> Exploring Graph
+                                            <Icon icon={faSpinner} spin className="mr-1 align-self-center" /> Expanding Graph
                                         </>
                                     )}
                                 </Button>
