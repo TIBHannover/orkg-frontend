@@ -330,18 +330,6 @@ class GraphView extends Component {
         this.child.current.clearGraphData();
     };
 
-    getLayoutIcon() {
-        if (this.state.layout === 'force') {
-            return faProjectDiagram;
-        }
-        if (this.state.layout === 'treeH') {
-            return faAngleDoubleLeft;
-        }
-        if (this.state.layout === 'treeV') {
-            return faAngleDoubleUp;
-        }
-    }
-
     updateDimensions = () => {
         // test
         const offset = 28 * 2 + 65;
@@ -477,7 +465,12 @@ class GraphView extends Component {
                                 >
                                     <DropdownToggle caret color="darkblue">
                                         Layout:
-                                        <Icon icon={this.getLayoutIcon()} className="mr-1" style={{ width: '40px' }} />
+                                        <Icon
+                                            icon={this.state.layout === 'force' ? faProjectDiagram : faSitemap}
+                                            rotation={this.state.layout === 'treeH' ? 270 : 0}
+                                            className="mr-1"
+                                            style={{ width: '40px' }}
+                                        />
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         <DropdownItem
