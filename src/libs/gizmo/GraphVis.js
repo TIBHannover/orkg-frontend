@@ -29,6 +29,7 @@ export default class GraphVis {
 
         // overloadingFunctions;
         this.getDataFromApi = undefined; // has to be set from graphView  modal;
+        this.fetchMultipleResourcesFromAPI = undefined;
         this.propagateMaxDepthValue = undefined; // has to be set from graphView modal;
 
         // state, load, unload functions
@@ -85,6 +86,88 @@ export default class GraphVis {
         this.performExplorations = this.performExplorations.bind(this);
         this.exploreCurrentDept = this.exploreCurrentDept.bind(this);
         this.singleNodeExploration = this.singleNodeExploration.bind(this);
+        this.fullExplore = this.fullExplore.bind(this);
+        this.exploreMultipleNodes = this.exploreMultipleNodes.bind(this);
+    }
+
+    async exploreMultipleNodes(nodesToExplore) {
+        const ResourceIds = nodesToExplore.map(o => {
+            return o._resourceId;
+        });
+        const incrementalData = await this.fetchMultipleResourcesFromAPI(ResourceIds);
+        let iterator = this.classNodes.length;
+        incrementalData.nodes.forEach(node => {
+            if (this.mapOfResources[node.id] === undefined) {
+                // create a node;
+                const aNode = this.createNode(node);
+                aNode.id(aNode.id() + iterator);
+                if (aNode.type() === 'resource') {
+                    aNode.status = 'unknown';
+                }
+                // put parent position to the child node for the expand animation
+                this.classNodes.push(aNode);
+                iterator++;
+            }
+        });
+
+        iterator = this.propNodes.length + 1;
+        if (incrementalData.edges) {
+            incrementalData.edges.forEach(edge => {
+                const anEdge = this.createEdge(edge, iterator);
+                this.propNodes.push(anEdge);
+                iterator++;
+            });
+        }
+
+        this.updateNodeStatus();
+        nodesToExplore.forEach(n => {
+            n.nodeHasBeenExplored = true;
+        });
+        this.computeDepth();
+        this.singleGroupExpand(nodesToExplore);
+    }
+
+    async fullExplore(doubleTheDepth = false, maxIterationCounter = 10) {
+        const explorationDepth = maxIterationCounter;
+        // fix max amount of tries to 20 for now;
+        let exploreCounter = 0;
+        while (exploreCounter < explorationDepth) {
+            // collect current states;
+            const unexploredNodes = [];
+            // this could be optimized by having explored levels state!
+            for (let it = 0; it < this.sortedByDepthNodes.length; it++) {
+                if (this.sortedByDepthNodes[it]) {
+                    this.sortedByDepthNodes[it].forEach(item => {
+                        if (item.type() === 'resource' && item.status === 'unknown') {
+                            unexploredNodes.push(item);
+                            item.setExploreAnimation(true);
+                        }
+                    });
+                }
+            }
+            if (unexploredNodes.length === 0) {
+                // we have no more nodes to explore, restart force animation,
+                // and forward the max value and disable the explore graph button (or even hide it)
+                this.layout.pauseForceLayoutAnimation(false);
+                if (!this.graphFullyExplored) {
+                    this.propagateMaxDepthValue(this.getMaxDepth(), true);
+                    this.graphFullyExplored = true;
+                }
+                return;
+            } else {
+                await this.exploreMultipleNodes(unexploredNodes);
+            }
+        }
+        exploreCounter++;
+
+        // fallback for the fixed iterations
+        // (when we have not found all the nodes we trie once more with the double amount of iterations)
+        // but only once
+        if (doubleTheDepth === false) {
+            this.fullExplore(true, explorationDepth * 2);
+        } else {
+            console.log('We have tried a lot , still the graph is not explored! ');
+        }
     }
 
     /** State Load Unload Functions **/
@@ -751,7 +834,6 @@ export default class GraphVis {
                     link.linkElement().visible(true);
                 }
             });
-            // adding functionality for outgoing links that have smaller depth;
             nodeRef = [].concat(nodeRef, this.collectChildrenAndSetVisibilityFlag(node, true, true));
         });
         this.clearGraphAnimation();
@@ -819,24 +901,14 @@ export default class GraphVis {
                 }
                 break;
             }
+
             await that.exploreCurrentDept(nodesOnLvlToExplore);
         }
         this.layout.pauseForceLayoutAnimation(false);
     }
 
     async exploreCurrentDept(nodesToExplore) {
-        for (let i = 0; i < nodesToExplore.length; i++) {
-            await this.singleNodeExploration(nodesToExplore[i], false);
-        }
-        // we have new data;
-        this.computeDepth();
-        this.clearGraphAnimation();
-        this.initializeLayers();
-        this.drawGraph();
-        this.layout.initializeLayoutEngine(); // creates force nodes and tree data
-        this.layout.pauseForceLayoutAnimation(true);
-        // make animation and resume ;
-        await this.layout.depthExplorationAnimation(nodesToExplore);
+        await this.exploreMultipleNodes(nodesToExplore);
     }
 
     async singleNodeExploration(node, redrawWhenFinished = true) {
