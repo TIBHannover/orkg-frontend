@@ -10,6 +10,7 @@ import ComparisonTable from './ComparisonTable.js';
 import ExportToLatex from './ExportToLatex.js';
 import GeneratePdf from './GeneratePdf.js';
 import SelectProperties from './SelectProperties.js';
+import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import Share from './Share.js';
 import Publish from './Publish.js';
 import { Link } from 'react-router-dom';
@@ -31,6 +32,7 @@ class Comparison extends Component {
             response_hash: null,
             title: '',
             description: '',
+            reference: '',
             createdAt: '',
             createdBy: '',
             contributions: [],
@@ -74,8 +76,8 @@ class Comparison extends Component {
         }
     };
 
-    updateComparisonMetadata = (title, description) => {
-        this.setState({ title, description });
+    updateComparisonMetadata = (title, description, reference) => {
+        this.setState({ title, description, reference });
     };
 
     generateMatrixOfComparison = () => {
@@ -191,6 +193,9 @@ class Comparison extends Component {
                         const descriptionStatement = comparisonStatement.find(
                             statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_DESCRIPTION
                         );
+                        const referenceStatement = comparisonStatement.find(
+                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_REFERENCE
+                        );
                         const urlStatement = comparisonStatement.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL);
                         if (urlStatement) {
                             this.getComparisonResult(urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')));
@@ -198,6 +203,7 @@ class Comparison extends Component {
                                 locationSearch: urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')),
                                 title: descriptionStatement.subject.label,
                                 description: descriptionStatement.object.label,
+                                reference: referenceStatement ? referenceStatement.object.label : '',
                                 createdAt: descriptionStatement.object.created_at,
                                 createdBy: descriptionStatement.object.created_by
                             });
@@ -439,10 +445,23 @@ class Comparison extends Component {
                                         </div>
                                     )}
                                 </div>
-                                {this.props.match.params.comparisonId && this.state.description ? (
-                                    <div style={{ marginBottom: '20px', lineHeight: 1.5 }} className="h6">
-                                        {this.state.description}
-                                    </div>
+                                {this.props.match.params.comparisonId ? (
+                                    <>
+                                        {this.state.description && (
+                                            <div style={{ marginBottom: '20px', lineHeight: 1.5 }} className="h6">
+                                                {this.state.description}
+                                            </div>
+                                        )}
+                                        {this.state.reference && (
+                                            <div style={{ marginBottom: '20px', lineHeight: 1.5 }}>
+                                                <small>
+                                                    <i>
+                                                        Reference: <ValuePlugins type={'literal'}>{this.state.reference}</ValuePlugins>
+                                                    </i>
+                                                </small>
+                                            </div>
+                                        )}
+                                    </>
                                 ) : (
                                     <br />
                                 )}

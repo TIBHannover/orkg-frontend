@@ -19,6 +19,7 @@ class Publish extends Component {
         this.state = {
             title: '',
             description: '',
+            reference: '',
             comparisonId: '',
             isLoading: false
         };
@@ -38,15 +39,17 @@ class Publish extends Component {
             const titleResponse = await createResource(this.state.title, [process.env.REACT_APP_CLASSES_COMPARISON]);
             const resourceId = titleResponse.id;
             const descriptionResponse = await createLiteral(this.state.description);
+            const referenceResponse = await createLiteral(this.state.reference);
             const link = queryString.parse(this.props.url).response_hash
                 ? this.props.url
                 : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
             const urlResponse = await createLiteral(link);
             await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_DESCRIPTION, descriptionResponse.id);
             await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_URL, urlResponse.id);
+            await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_REFERENCE, referenceResponse.id);
             toast.success('Comparison saved successfully');
             this.setState({ isLoading: false, comparisonId: resourceId });
-            this.props.updateComparisonMetadata(this.state.title, this.state.description);
+            this.props.updateComparisonMetadata(this.state.title, this.state.description, this.state.reference);
         } catch (error) {
             console.error(error);
             toast.error(`Error publishing a comparison : ${error.message}`);
@@ -81,6 +84,18 @@ class Publish extends Component {
                                     <Tooltip message={'Describe the goal and what is being compared'}>Description</Tooltip>
                                 </Label>
                                 <Input type="textarea" name="description" id="description" onChange={this.handleChange} />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="reference">
+                                    <Tooltip
+                                        message={
+                                            "Enter the reference to this comparison if it's imported/extracted from existing survey/review article."
+                                        }
+                                    >
+                                        Reference
+                                    </Tooltip>
+                                </Label>
+                                <Input type="text" name="reference" id="reference" onChange={this.handleChange} />
                             </FormGroup>
                         </>
                     ) : (
