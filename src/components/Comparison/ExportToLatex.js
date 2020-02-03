@@ -111,9 +111,10 @@ class ExportToLatex extends Component {
 
         if (res.length > 0) {
             let caption = 'This comparison table is built using ORKG \\protect \\cite{Auer2018Towards}';
-
+            let label = 'tab:ORKG';
             if (this.props.comparisonId && this.props.title) {
                 caption = `${this.props.title} - ${this.props.description}`;
+                label = `tab:${this.props.comparisonId}`;
             }
 
             if (this.state.includeFootnote) {
@@ -126,7 +127,8 @@ class ExportToLatex extends Component {
                     .fill('c')
                     .join('|')}|`,
                 captionPlacement: 'top',
-                caption: caption
+                caption: caption,
+                label: label
             };
 
             if (newTitles) {
