@@ -123,7 +123,7 @@ class ExportToLatex extends Component {
 
             const makeLatexOptions = {
                 digits: 2,
-                spec: `|${Array(nbColumns)
+                spec: `|l|${Array(nbColumns - 1)
                     .fill('c')
                     .join('|')}|`,
                 captionPlacement: 'top',
