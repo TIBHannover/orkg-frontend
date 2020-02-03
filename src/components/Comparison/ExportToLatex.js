@@ -69,11 +69,11 @@ class ExportToLatex extends Component {
             transposedData = this.props.data[0].map((col, i) => this.props.data.map(row => row[i]));
 
             if (this.state.replaceTitles) {
-                newTitles = ['Title'];
+                newTitles = ['\\textbf{Title}'];
                 const conTitles = ['Title'];
                 transposedData[0].forEach((title, i) => {
                     if (i > 0) {
-                        newTitles.push(` \\cite{${this.props.contributions[i - 1].paperId}} `);
+                        newTitles.push(`\\textbf{\\cite{${this.props.contributions[i - 1].paperId}}} `);
                         conTitles.push(`${this.props.contributions[i - 1].id}`);
                     }
                 });
@@ -84,7 +84,7 @@ class ExportToLatex extends Component {
                 if (i > 0) {
                     const con = {};
                     contribution.forEach((item, j) => {
-                        con[transposedData[0][j]] = item !== 'undefined' ? item : '-';
+                        con[transposedData[0][j]] = item !== 'undefined' ? (j === 0 ? `\\textit{${item}}` : item) : '-';
                     });
                     res.push(con);
                 }
@@ -97,9 +97,9 @@ class ExportToLatex extends Component {
                     const con = {};
                     contribution.forEach((item, j) => {
                         if (this.state.replaceTitles && j === 0) {
-                            item = ` \\cite{${this.props.contributions[i - 1].paperId}}`;
+                            item = `\\textbf{\\cite{${this.props.contributions[i - 1].paperId}}}`;
                         }
-                        con[this.props.data[0][j]] = item !== 'undefined' ? item : '-';
+                        con[`\\textit{${this.props.data[0][j]}}`] = item !== 'undefined' ? item : '-';
                     });
                     res.push(con);
                 }
