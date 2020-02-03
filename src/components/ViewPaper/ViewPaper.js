@@ -4,6 +4,7 @@ import { getStatementsBySubject, getResource, updateResource, createResource, cr
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar, faBars, faProjectDiagram, faPen, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader';
 import Contributions from './Contributions';
@@ -34,6 +35,8 @@ export const Title = styled.div`
     font-size: 1.1rem;
     flex-grow: 1;
 `;
+
+export const ShareButtons = styled.div``;
 
 class ViewPaper extends Component {
     state = {
@@ -428,7 +431,25 @@ class ViewPaper extends Component {
                             )}
                             {!this.state.loading_failed && !this.state.unfoundContribution && (
                                 <>
-                                    <hr className="mt-4 mb-5" />
+                                    <hr className="mt-4" />
+                                    <ShareButtons className={'mb-5 text-right'}>
+                                        Share this paper:
+                                        <a
+                                            href={`https://www.facebook.com/sharer/sharer.php?href=${window.location.protocol}//${window.location.host}${window.location.pathname}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            <Icon icon={faFacebook} className={'ml-2 mr-2'} />
+                                        </a>
+                                        <a
+                                            href={`https://twitter.com/share?url=${window.location.protocol}//${window.location.host}${window.location.pathname}&via=orkg_org&text=${this.props.viewPaper.title}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            <Icon icon={faTwitter} />
+                                        </a>
+                                    </ShareButtons>
+
                                     <Contributions
                                         selectedContribution={this.state.selectedContribution}
                                         contributions={this.state.contributions}
