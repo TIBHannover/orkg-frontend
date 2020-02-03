@@ -31,8 +31,8 @@ class ExportToLatex extends Component {
             selectedTab: 'table',
             latexTable: '',
             bibtexReferences: '',
-            replaceTitles: false,
-            includeFootnote: false,
+            replaceTitles: true,
+            includeFootnote: true,
             shortLink: null,
             showTooltipCopiedBibtex: false,
             showTooltipCopiedLatex: false
@@ -111,6 +111,11 @@ class ExportToLatex extends Component {
 
         if (res.length > 0) {
             let caption = 'This comparison table is built using ORKG \\protect \\cite{Auer2018Towards}';
+
+            if (this.props.comparisonId && this.props.title) {
+                caption = `${this.props.title} - ${this.props.description}`;
+            }
+
             if (this.state.includeFootnote) {
                 caption += ' \\protect \\footnotemark';
             }
@@ -150,10 +155,17 @@ class ExportToLatex extends Component {
                             this.setState({ latexTable: latexTable, latexTableLoading: false });
                         })
                         .then(data => {
-                            const shortLink = `${this.props.location.protocol}//${window.location.host}${window.location.pathname.replace(
-                                reverse(ROUTES.COMPARISON),
-                                ''
-                            )}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
+                            let shortLink;
+                            if (this.props.comparisonId) {
+                                shortLink = `${window.location.protocol}//${window.location.host}${window.location.pathname
+                                    .replace(reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparisonId }), '')
+                                    .replace(/\/$/, '')}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
+                            } else {
+                                shortLink = `${this.props.location.protocol}//${window.location.host}${window.location.pathname.replace(
+                                    reverse(ROUTES.COMPARISON),
+                                    ''
+                                )}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
+                            }
                             latexTable += `\n\\footnotetext{${shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
                             this.setState({ shortLink: shortLink, latexTable: latexTable, latexTableLoading: false });
                         });
@@ -421,7 +433,10 @@ ExportToLatex.propTypes = {
     toggle: PropTypes.func.isRequired,
     transpose: PropTypes.bool.isRequired,
     location: PropTypes.object.isRequired,
-    response_hash: PropTypes.string
+    response_hash: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    comparisonId: PropTypes.string
 };
 
 export default ExportToLatex;
