@@ -36,8 +36,6 @@ export const Title = styled.div`
     flex-grow: 1;
 `;
 
-export const ShareButtons = styled.div``;
-
 class ViewPaper extends Component {
     state = {
         loading: true,
@@ -432,23 +430,27 @@ class ViewPaper extends Component {
                             {!this.state.loading_failed && !this.state.unfoundContribution && (
                                 <>
                                     <hr className="mt-4" />
-                                    <ShareButtons className={'mb-5 text-right'}>
-                                        Share this paper:
+                                    <div className={'mb-5 text-right'}>
+                                        <small>Share this paper:</small>
                                         <a
-                                            href={`https://www.facebook.com/sharer/sharer.php?href=${window.location.protocol}//${window.location.host}${window.location.pathname}`}
+                                            href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.protocol}//${window.location.host}${window.location.pathname}`}
                                             target="_blank"
+                                            className={'text-secondary'}
+                                            title={'Share this paper on facebook'}
                                             rel="noopener noreferrer"
                                         >
-                                            <Icon icon={faFacebook} className={'ml-2 mr-2'} />
+                                            <Icon icon={faFacebook} className={'icon ml-2 mr-2'} />
                                         </a>
                                         <a
                                             href={`https://twitter.com/share?url=${window.location.protocol}//${window.location.host}${window.location.pathname}&via=orkg_org&text=${this.props.viewPaper.title}`}
                                             target="_blank"
+                                            className={'text-secondary'}
+                                            title={'Share this paper on twitter'}
                                             rel="noopener noreferrer"
                                         >
                                             <Icon icon={faTwitter} />
                                         </a>
-                                    </ShareButtons>
+                                    </div>
 
                                     <Contributions
                                         selectedContribution={this.state.selectedContribution}
