@@ -52,13 +52,25 @@ class SameAsStatements extends Component {
                 <div className="mt-5 mb-2">
                     {this.state.externalResources.map((resourceUrl, index) => {
                         if (resourceUrl.match(this.expressionDbPedia)) {
-                            return <DbpediaAbstract externalResource={resourceUrl} key={`db${index}`} />;
+                            return (
+                                <div className="list-group-item">
+                                    <DbpediaAbstract externalResource={resourceUrl} key={`db${index}`} />
+                                </div>
+                            );
                         }
                         if (resourceUrl.match(this.expressionWikiData)) {
-                            return <WikidataDescription externalResource={resourceUrl} key={`wiki${index}`} />;
+                            return (
+                                <div className="list-group-item">
+                                    <WikidataDescription externalResource={resourceUrl} key={`wiki${index}`} />
+                                </div>
+                            );
                         }
                         if (resourceUrl.match(this.expressionWikipedia)) {
-                            return <WikipediaSummary externalResource={resourceUrl} key={`wiki${index}`} />;
+                            return (
+                                <div className="list-group-item">
+                                    <WikipediaSummary externalResource={resourceUrl} key={`wiki${index}`} />
+                                </div>
+                            );
                         }
                         return null;
                     })}

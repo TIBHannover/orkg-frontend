@@ -66,7 +66,7 @@ class WikipediaSummary extends Component {
         const showReadMore = this.state.summary !== shortSummary;
 
         return (
-            <div className="list-group-item">
+            <div>
                 <h2 className="h5 mt-2 float-left">Summary from Wikipedia</h2>
                 <a href={this.props.externalResource} target="_blank" rel="noopener noreferrer">
                     <img alt="DBpedia logo" src={WIKIPEDIA_LOGO} style={{ height: 50, float: 'right' }} />
