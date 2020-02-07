@@ -5,7 +5,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { getStatementsByObject, getResource, getStatementsBySubject } from '../../network';
-import ComparisonPopup from '../ViewPaper/ComparisonPopup';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import PaperCard from '../PaperCard/PaperCard';
 import ROUTES from '../../constants/routes';
 
