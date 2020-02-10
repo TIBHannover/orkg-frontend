@@ -14,7 +14,7 @@ class StatementOptions extends Component {
     toggleDeleteStatement = async e => {
         e.stopPropagation();
 
-        let property = this.props.properties.byId[this.props.id];
+        const property = this.props.properties.byId[this.props.id];
         let title = '';
         let message = '';
         if (property.valueIds.length === 0) {
@@ -32,7 +32,7 @@ class StatementOptions extends Component {
             );
             message = `Also, ${property.valueIds.length} related ${property.valueIds.length === 1 ? 'value' : 'values'} will be deleted.`;
         }
-        let result = await Confirm({
+        const result = await Confirm({
             title: title,
             message: message,
             cancelColor: 'light'
@@ -42,8 +42,8 @@ class StatementOptions extends Component {
             if (this.props.syncBackend) {
                 // Delete All related statements
                 if (property.valueIds.length > 0) {
-                    for (let valueId of property.valueIds) {
-                        let value = this.props.values.byId[valueId];
+                    for (const valueId of property.valueIds) {
+                        const value = this.props.values.byId[valueId];
                         deleteStatementById(value.statementId);
                     }
                     toast.success(`${property.valueIds.length} ${property.valueIds.length === 1 ? 'Statement' : 'Statements'} deleted successfully`);

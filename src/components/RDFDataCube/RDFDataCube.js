@@ -4,6 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { getStatementsBySubject, getStatementsByObject, getAllClasses } from '../../network';
 import ReactTable from 'react-table';
+import { sortMethod } from 'utils';
 import CUBE from 'olap-cube';
 import 'react-table/react-table.css';
 import { CSVLink } from 'react-csv';
@@ -51,7 +52,7 @@ class RDFDataCube extends Component {
             // Convert to an object { class_label: class_ID }
             classes = Object.assign({}, ...classes.map(item => ({ [item.label]: item.id })));
             // Get Data Structure Definition (DSD)
-            let dsd = await getStatementsBySubject({ id: this.props.resourceId }).then(
+            const dsd = await getStatementsBySubject({ id: this.props.resourceId }).then(
                 s_dataset => s_dataset.find(s => s.object.classes.includes(classes['qb:DataStructureDefinition'])).object
             );
             // Get Component Specification
@@ -86,7 +87,7 @@ class RDFDataCube extends Component {
                 })
                 .then(({ sMeasures, sDimensions, sAttributes }) => {
                     // Observations (fetch statements of the dataset ressource by object)
-                    let allDim = Object.assign({}, sDimensions, sMeasures, sAttributes);
+                    const allDim = Object.assign({}, sDimensions, sMeasures, sAttributes);
                     getStatementsByObject({
                         id: this.props.resourceId,
                         items: 9999,
@@ -94,7 +95,7 @@ class RDFDataCube extends Component {
                         desc: true
                     }).then(statements => {
                         // Filter observations
-                        let observations = statements.filter(
+                        const observations = statements.filter(
                             statement =>
                                 statement.predicate.label.toLowerCase() === 'dataset' && statement.subject.classes.includes(classes['qb:Observation'])
                         );
@@ -102,16 +103,18 @@ class RDFDataCube extends Component {
                         const observations_data = observations.map(observation => {
                             return getStatementsBySubject({ id: observation.subject.id }).then(observationStatements => {
                                 // Measure
-                                let os_m = observationStatements.filter(statement => statement.predicate.label in sMeasures);
+                                const os_m = observationStatements.filter(statement => statement.predicate.label in sMeasures);
                                 // Dimensions
-                                let os_d = observationStatements.filter(statement => statement.predicate.label in sDimensions);
+                                const os_d = observationStatements.filter(statement => statement.predicate.label in sDimensions);
                                 // Attributes
-                                let os_a = observationStatements.filter(statement => statement.predicate.label in sAttributes);
-                                let ob = {
+                                const os_a = observationStatements.filter(statement => statement.predicate.label in sAttributes);
+                                const ob = {
                                     // OLAP table data is in the format data[pointIndex][fieldIndex], sort by order or predicate label is to keep same order in Table fields
                                     data: [
                                         ...os_m
-                                            .sort((first, second) => allDim[first.predicate.label].order > allDim[second.predicate.label].order)
+                                            .sort((first, second) =>
+                                                sortMethod(allDim[first.predicate.label].order, allDim[second.predicate.label].order)
+                                            )
                                             .map(o_m => {
                                                 return {
                                                     id: observation.subject.id,
@@ -123,10 +126,14 @@ class RDFDataCube extends Component {
                                     point: [
                                         // sort by order or predicate label because statements are not ordered by default
                                         ...os_d
-                                            .sort((first, second) => allDim[first.predicate.label].order > allDim[second.predicate.label].order)
+                                            .sort((first, second) =>
+                                                sortMethod(allDim[first.predicate.label].order, allDim[second.predicate.label].order)
+                                            )
                                             .map(o_d => o_d.object.id),
                                         ...os_a
-                                            .sort((first, second) => allDim[first.predicate.label].order > allDim[second.predicate.label].order)
+                                            .sort((first, second) =>
+                                                sortMethod(allDim[first.predicate.label].order, allDim[second.predicate.label].order)
+                                            )
                                             .map(o_a => o_a.object.id)
                                     ],
                                     point_label: [
@@ -146,10 +153,10 @@ class RDFDataCube extends Component {
                             try {
                                 const table = new CUBE.model.Table({
                                     dimensions: [
-                                        ...Object.keys(sDimensions).sort((first, second) => allDim[first].order > allDim[second].order),
-                                        ...Object.keys(sAttributes).sort((first, second) => allDim[first].order > allDim[second].order)
+                                        ...Object.keys(sDimensions).sort((first, second) => sortMethod(allDim[first].order, allDim[second].order)),
+                                        ...Object.keys(sAttributes).sort((first, second) => sortMethod(allDim[first].order, allDim[second].order))
                                     ],
-                                    fields: Object.keys(sMeasures).sort((first, second) => allDim[first].order > allDim[second].order),
+                                    fields: Object.keys(sMeasures).sort((first, second) => sortMethod(allDim[first].order, allDim[second].order)),
                                     points: observations.map(o => o.point),
                                     data: observations.map(o => o.data)
                                 });
@@ -223,7 +230,7 @@ class RDFDataCube extends Component {
                                     return String(row[filter.id].label).startsWith(filter.value);
                                 }}
                                 data={this.state.datacube.rows.map(r => {
-                                    let a = Object.assign(
+                                    const a = Object.assign(
                                         {},
                                         ...this.state.datacube.header.map((n, index) => ({ [n]: this.label2Resource(r[index]) }))
                                     );
@@ -234,34 +241,7 @@ class RDFDataCube extends Component {
                                         id: h,
                                         Header: columns[h].label,
                                         accessor: h,
-                                        sortMethod: (a, b, desc) => {
-                                            // use the label to compare
-                                            a = a.label;
-                                            b = b.label;
-                                            // force null and undefined to the bottom
-                                            a = a === null || a === undefined ? -Infinity : a;
-                                            b = b === null || b === undefined ? -Infinity : b;
-                                            // check if a and b are numbers (contains only digits)
-                                            const aisnum = /^\d+$/.test(a);
-                                            const bisnum = /^\d+$/.test(b);
-                                            if (aisnum && bisnum) {
-                                                a = parseInt(a);
-                                                b = parseInt(b);
-                                            } else {
-                                                // force any string values to lowercase
-                                                a = typeof a === 'string' ? a.toLowerCase() : a;
-                                                b = typeof b === 'string' ? b.toLowerCase() : b;
-                                            }
-                                            // Return either 1 or -1 to indicate a sort priority
-                                            if (a > b) {
-                                                return 1;
-                                            }
-                                            if (a < b) {
-                                                return -1;
-                                            }
-                                            // returning 0 or undefined will use any subsequent column sorting methods or the row index as a tiebreaker
-                                            return 0;
-                                        },
+                                        sortMethod: (a, b, desc) => sortMethod(a.label, b.label),
                                         Cell: props => <span onClick={() => this.handleCellClick(props.value)}>{props.value.label}</span>, // Custom cell components!
                                         Filter: ({ filter, onChange }) => (
                                             <input

@@ -14,7 +14,22 @@ class License extends Component {
                 </Container>
                 <Container className="box pt-4 pb-4 pl-5 pr-5">
                     <h2>Data</h2>
-                    <p>No decision has been made yet on the license of the data. {/* TODO: add correct license */}</p>
+                    <p>
+                        The published data is licensed under a{' '}
+                        <a rel="license noopener noreferrer" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">
+                            Creative Commons Attribution-ShareAlike 4.0 International License
+                        </a>
+                        .
+                    </p>
+                    <p>
+                        <a rel="license noopener noreferrer" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">
+                            <img
+                                alt="Creative Commons License"
+                                style={{ borderWidth: 0 }}
+                                src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png"
+                            />
+                        </a>
+                    </p>
 
                     <h2>Code</h2>
 

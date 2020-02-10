@@ -62,7 +62,7 @@ class AuthorPage extends Component {
     loadAuthorData = () => {
         // Get the author data
         getStatementsBySubject({ id: this.props.match.params.authorId }).then(authorStatements => {
-            let orcidStatement = authorStatements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_ORCID);
+            const orcidStatement = authorStatements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_ORCID);
             let orcid = null;
             if (orcidStatement) {
                 orcid = orcidStatement.object.label;
@@ -92,8 +92,8 @@ class AuthorPage extends Component {
                     ids: result.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR).map(p => p.subject.id)
                 })
                     .then(papersStatements => {
-                        let papers = papersStatements.map(paperStatements => {
-                            let paperSubject = find(result.map(p => p.subject), { id: paperStatements.id });
+                        const papers = papersStatements.map(paperStatements => {
+                            const paperSubject = find(result.map(p => p.subject), { id: paperStatements.id });
                             return getPaperData(
                                 paperStatements.id,
                                 paperSubject && paperSubject.label ? paperSubject.label : 'No Title',

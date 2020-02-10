@@ -60,7 +60,7 @@ class ResearchField extends Component {
             !this.props.cookies.get('showedReaseachFiled')
         ) {
             this.props.openTour();
-            this.props.cookies.set('showedReaseachFiled', true, { path: '/', maxAge: 604800 });
+            this.props.cookies.set('showedReaseachFiled', true, { path: process.env.PUBLIC_URL, maxAge: 604800 });
         }
     }
 
@@ -108,7 +108,7 @@ class ResearchField extends Component {
                 return a.label.localeCompare(b.label);
             });
 
-            let researchFieldsNew = [...this.props.researchFields];
+            const researchFieldsNew = [...this.props.researchFields];
             researchFieldsNew[level] = researchFields;
 
             // add active to selected field

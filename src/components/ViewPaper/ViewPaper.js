@@ -84,7 +84,7 @@ class ViewPaper extends Component {
                         }
 
                         // publication year
-                        let publicationYearStatements = paperStatements.filter(
+                        const publicationYearStatements = paperStatements.filter(
                             statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR
                         );
                         let publicationYearResourceId = 0;
@@ -95,7 +95,7 @@ class ViewPaper extends Component {
                         }
 
                         // publication month
-                        let publicationMonthStatements = paperStatements.filter(
+                        const publicationMonthStatements = paperStatements.filter(
                             statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH
                         );
                         let publicationMonthResourceId = 0;
@@ -107,11 +107,11 @@ class ViewPaper extends Component {
                         }
 
                         // authors
-                        let authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
-                        let authorNamesArray = [];
+                        const authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
+                        const authorNamesArray = [];
 
                         if (authors.length > 0) {
-                            for (let author of authors) {
+                            for (const author of authors) {
                                 authorNamesArray.push({
                                     id: author.object.id,
                                     statementId: author.id,
@@ -138,14 +138,14 @@ class ViewPaper extends Component {
                         }
 
                         // contributions
-                        let contributions = paperStatements.filter(
+                        const contributions = paperStatements.filter(
                             statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION
                         );
 
-                        let contributionArray = [];
+                        const contributionArray = [];
 
                         if (contributions.length > 0) {
-                            for (let contribution of contributions) {
+                            for (const contribution of contributions) {
                                 contributionArray.push({ ...contribution.object, statementId: contribution.id });
                             }
                         }
@@ -186,9 +186,9 @@ class ViewPaper extends Component {
                                 });
                         }
                         return Promise.all(authors).then(authorsORCID => {
-                            let authorsArray = [];
-                            for (let author of this.props.viewPaper.authors) {
-                                let orcid = authorsORCID.find(a => a.subject.id === author.id);
+                            const authorsArray = [];
+                            for (const author of this.props.viewPaper.authors) {
+                                const orcid = authorsORCID.find(a => a.subject.id === author.id);
                                 if (orcid) {
                                     author.orcid = orcid.object.label;
                                     authorsArray.push(author);
@@ -252,7 +252,7 @@ class ViewPaper extends Component {
             // set the label of the contribution
             const updatedObj = { ...this.state.contributions[objIndex], label: label };
             // update the contributions array
-            let newContributions = [...this.state.contributions.slice(0, objIndex), updatedObj, ...this.state.contributions.slice(objIndex + 1)];
+            const newContributions = [...this.state.contributions.slice(0, objIndex), updatedObj, ...this.state.contributions.slice(objIndex + 1)];
             this.setState({ contributions: newContributions });
             await updateResource(contributionId, label);
             toast.success('Contribution name updated successfully');
@@ -260,8 +260,10 @@ class ViewPaper extends Component {
     };
 
     handleCreateContribution = async () => {
-        let newContribution = await createResource(`Contribution ${this.state.contributions.length + 1}`);
-        let statement = await createResourceStatement(
+        const newContribution = await createResource(`Contribution ${this.state.contributions.length + 1}`, [
+            process.env.REACT_APP_CLASSES_CONTRIBUTION
+        ]);
+        const statement = await createResourceStatement(
             this.props.match.params.resourceId,
             process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION,
             newContribution.id
@@ -271,7 +273,7 @@ class ViewPaper extends Component {
     };
 
     toggleDeleteContribution = async contributionId => {
-        let result = await Confirm({
+        const result = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure you want to delete this contribution?',
             cancelColor: 'light'
@@ -279,8 +281,8 @@ class ViewPaper extends Component {
 
         if (result) {
             const objIndex = this.state.contributions.findIndex(obj => obj.id === contributionId);
-            let statementId = this.state.contributions[objIndex].statementId;
-            let newContributions = this.state.contributions.filter(function(contribution) {
+            const statementId = this.state.contributions[objIndex].statementId;
+            const newContributions = this.state.contributions.filter(function(contribution) {
                 return contribution.id !== contributionId;
             });
             this.setState(

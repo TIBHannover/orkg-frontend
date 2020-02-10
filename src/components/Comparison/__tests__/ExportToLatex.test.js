@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import ExportToLatex from './../ExportToLatex.js';
 
-let props = {
+const props = {
     data: [['Title', 'Property 1'], ['Paper 1', 'Value 1'], ['Paper 2', 'Value 2']],
     contributions: [
         {
@@ -48,7 +48,7 @@ let props = {
 it('generate Latex without crashing', async () => {
     const wrapper = mount(<ExportToLatex {...props} />);
     expect(wrapper).toHaveLength(1);
-    let latex =
+    const latex =
         '\\begin{table}\\centering \\caption{This comparison table is built using ORKG \\protect \\cite{Auer2018Towards}}\\begin{tabular}{|c|c|c|} Title & Paper 1 & Paper 2 \\\\ \\hline Property 1 & Value 1 & Value 2 \\\\ \\end{tabular} \\end{table}';
     // manually call function
     await wrapper.instance().generateLatex();
@@ -64,7 +64,7 @@ it('generate Latex without crashing', async () => {
 it('generate Bibtex without crashing', async () => {
     const wrapper = mount(<ExportToLatex {...props} />);
     expect(wrapper).toHaveLength(1);
-    let bibtex =
+    const bibtex =
         '@misc{R50010,	title = {Paper 1},}@misc{R50011,	title = {Paper 2},}@article{Auer2018Towards,	journal = {Zenodo},	doi = {10.5281/zenodo.1157185},	language = {en},	publisher = {Zenodo},	title = {Towards An Open Research Knowledge Graph},	url = {https://zenodo.org/record/1157185},	author = {Auer, Sören},	date = {2018-01-22},	year = {2018},	month = {1},	day = {22},}';
     // manually call function
     wrapper.setState({ selectedTab: 'references' });

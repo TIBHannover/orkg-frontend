@@ -8,11 +8,11 @@ import PropTypes from 'prop-types';
 
 class TemplateWizard extends Component {
     render() {
-        let propertyIds =
+        const propertyIds =
             Object.keys(this.props.resources.byId).length !== 0 && this.props.initialResourceId
                 ? this.props.resources.byId[this.props.initialResourceId].propertyIds
                 : [];
-        let shared =
+        const shared =
             Object.keys(this.props.resources.byId).length !== 0 && this.props.initialResourceId
                 ? this.props.resources.byId[this.props.initialResourceId].shared
                 : 1;
@@ -20,7 +20,7 @@ class TemplateWizard extends Component {
             <div className={'contributionData'}>
                 {propertyIds.length > 0 ? (
                     propertyIds.map((propertyId, index) => {
-                        let property = this.props.properties.byId[propertyId];
+                        const property = this.props.properties.byId[propertyId];
                         if (!property.isTemplate) {
                             return (
                                 <StatementItem
@@ -41,10 +41,10 @@ class TemplateWizard extends Component {
                                 />
                             );
                         } else {
-                            let valueIds =
+                            const valueIds =
                                 Object.keys(this.props.properties.byId).length !== 0 ? this.props.properties.byId[propertyId].valueIds : [];
                             return valueIds.map((valueId, index) => {
-                                let value = this.props.values.byId[valueId];
+                                const value = this.props.values.byId[valueId];
                                 return (
                                     <ContributionTemplate
                                         key={`template-${index}-${valueId}`}

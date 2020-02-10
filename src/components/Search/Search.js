@@ -9,12 +9,13 @@ import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import Results from './Results';
 import Filters from './Filters';
+import ContentLoader from 'react-content-loader';
 
 class Search extends Component {
     constructor(props) {
         super(props);
 
-        let value = this.props.match.params.searchTerm;
+        const value = this.props.match.params.searchTerm;
 
         this.itemsPerFilter = 10;
 
@@ -44,12 +45,19 @@ class Search extends Component {
             [
                 4,
                 {
+                    label: 'Comparison',
+                    class: process.env.REACT_APP_CLASSES_COMPARISON
+                }
+            ],
+            [
+                5,
+                {
                     label: 'Resource',
                     class: 'resource'
                 }
             ],
             [
-                5,
+                6,
                 {
                     label: 'Predicate',
                     class: 'predicate'
@@ -67,7 +75,7 @@ class Search extends Component {
             hasResourcesNextPage: false,
             resourcesPage: 1,
             isResourcesLastPageReached: false,
-
+            //TODO: create a general method for filtering, so there is less duplicate code
             predicates: [],
             isPredicatesNextPageLoading: false,
             hasPredicatesNextPage: false,
@@ -90,21 +98,30 @@ class Search extends Component {
             isAuthorsNextPageLoading: false,
             hasAuthorsNextPage: false,
             authorsPage: 1,
-            isAuthorsLastPageReached: false
+            isAuthorsLastPageReached: false,
+
+            comparisons: [],
+            isComparisonsNextPageLoading: false,
+            hasComparisonsNextPage: false,
+            comparisonsPage: 1,
+            isComparisonsLastPageReached: false
         };
     }
 
     componentDidMount() {
         document.title = 'Search - ORKG';
-        this.loadMoreResources(this.state.value);
-        this.loadMorePapers(this.state.value);
-        this.loadMoreProblems(this.state.value);
-        this.loadMoreAuthors(this.state.value);
-        this.loadMorePredicates(this.state.value);
+        if (this.state.value) {
+            this.loadMoreResources(this.state.value);
+            this.loadMorePapers(this.state.value);
+            this.loadMoreProblems(this.state.value);
+            this.loadMoreAuthors(this.state.value);
+            this.loadMorePredicates(this.state.value);
+            this.loadMoreComparisons(this.state.value);
+        }
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (this.props.match.params.searchTerm !== prevProps.match.params.searchTerm) {
+        if (this.props.match.params.searchTerm !== prevProps.match.params.searchTerm && this.props.match.params.searchTerm) {
             this.setState(
                 {
                     value: this.props.match.params.searchTerm,
@@ -132,7 +149,12 @@ class Search extends Component {
                     isAuthorsNextPageLoading: false,
                     hasAuthorsNextPage: false,
                     authorsPage: 1,
-                    isAuthorsLastPageReached: false
+                    isAuthorsLastPageReached: false,
+                    comparisons: [],
+                    isComparisonsNextPageLoading: false,
+                    hasComparisonsNextPage: false,
+                    comparisonsPage: 1,
+                    isComparisonsLastPageReached: false
                 },
                 () => {
                     this.loadMoreResources(this.state.value);
@@ -140,9 +162,30 @@ class Search extends Component {
                     this.loadMoreProblems(this.state.value);
                     this.loadMoreAuthors(this.state.value);
                     this.loadMorePredicates(this.state.value);
+                    this.loadMoreComparisons(this.state.value);
                 }
             );
         }
+    };
+
+    isLoading = () => {
+        const {
+            isResourcesNextPageLoading,
+            isPapersNextPageLoading,
+            isAuthorsNextPageLoading,
+            isComparisonsNextPageLoading,
+            isProblemsNextPageLoading,
+            isPredicatesNextPageLoading
+        } = this.state;
+
+        return (
+            isResourcesNextPageLoading ||
+            isPapersNextPageLoading ||
+            isAuthorsNextPageLoading ||
+            isComparisonsNextPageLoading ||
+            isProblemsNextPageLoading ||
+            isPredicatesNextPageLoading
+        );
     };
 
     handleChange(event) {
@@ -161,7 +204,15 @@ class Search extends Component {
             desc: true,
             q: searchQuery,
             exclude:
-                process.env.REACT_APP_CLASSES_CONTRIBUTION + ',' + process.env.REACT_APP_CLASSES_PAPER + ',' + process.env.REACT_APP_CLASSES_PROBLEM
+                process.env.REACT_APP_CLASSES_CONTRIBUTION +
+                ',' +
+                process.env.REACT_APP_CLASSES_PAPER +
+                ',' +
+                process.env.REACT_APP_CLASSES_PROBLEM +
+                ',' +
+                process.env.REACT_APP_CLASSES_AUTHOR +
+                ',' +
+                process.env.REACT_APP_CLASSES_COMPARISON
         }).then(resources => {
             if (resources.length > 0) {
                 this.setState({
@@ -270,6 +321,36 @@ class Search extends Component {
         });
     };
 
+    loadMoreComparisons = searchQuery => {
+        if (searchQuery.length === 0) {
+            return;
+        }
+        this.setState({ isComparisonsNextPageLoading: true });
+        getResourcesByClass({
+            page: this.state.comparisonsPage,
+            items: this.itemsPerFilter,
+            sortBy: 'id',
+            desc: true,
+            q: searchQuery,
+            id: process.env.REACT_APP_CLASSES_COMPARISON
+        }).then(comparisons => {
+            if (comparisons.length > 0) {
+                this.setState({
+                    comparisons: [...this.state.comparisons, ...comparisons],
+                    isComparisonsNextPageLoading: false,
+                    hasComparisonsNextPage: comparisons.length < this.itemsPerFilter ? false : true,
+                    comparisonsPage: this.state.comparisonsPage + 1
+                });
+            } else {
+                this.setState({
+                    isComparisonsNextPageLoading: false,
+                    hasComparisonsNextPage: false,
+                    isComparisonsLastPageReached: true
+                });
+            }
+        });
+    };
+
     loadMorePredicates = searchQuery => {
         if (searchQuery.length === 0) {
             return;
@@ -360,60 +441,112 @@ class Search extends Component {
                         </Col>
                         <Col className="col-sm-8 px-0">
                             <div className="box p-4 h-100">
-                                {(this.state.selectedFilters.length === 0 ||
-                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(1))) && (
-                                    <Results
-                                        loading={this.state.isPapersNextPageLoading}
-                                        hasNextPage={this.state.hasPapersNextPage}
-                                        loadMore={this.loadMorePapers}
-                                        items={this.state.papers}
-                                        label={'Papers'}
-                                        class={process.env.REACT_APP_CLASSES_PAPER}
-                                    />
-                                )}
-                                {(this.state.selectedFilters.length === 0 ||
-                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(2))) && (
-                                    <Results
-                                        loading={this.state.isProblemsNextPageLoading}
-                                        hasNextPage={this.state.hasProblemsNextPage}
-                                        loadMore={this.loadMoreProblems}
-                                        items={this.state.problems}
-                                        label={'Research problems'}
-                                        class={process.env.REACT_APP_CLASSES_PROBLEM}
-                                    />
-                                )}
-                                {(this.state.selectedFilters.length === 0 ||
-                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(3))) && (
-                                    <Results
-                                        loading={this.state.isAuthorsNextPageLoading}
-                                        hasNextPage={this.state.hasAuthorsNextPage}
-                                        loadMore={this.loadMoreAuthors}
-                                        items={this.state.authors}
-                                        label={'Authors'}
-                                        class={process.env.REACT_APP_CLASSES_AUTHOR}
-                                    />
-                                )}
-                                {(this.state.selectedFilters.length === 0 ||
-                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(4))) && (
-                                    <Results
-                                        loading={this.state.isResourcesNextPageLoading}
-                                        hasNextPage={this.state.hasResourcesNextPage}
-                                        loadMore={this.loadMoreResources}
-                                        items={this.state.resources}
-                                        label={'Resources'}
-                                        class={'resource'}
-                                    />
-                                )}
-                                {(this.state.selectedFilters.length === 0 ||
-                                    (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(5))) && (
-                                    <Results
-                                        loading={this.state.isPredicatesNextPageLoading}
-                                        hasNextPage={this.state.hasPredicatesNextPage}
-                                        loadMore={this.loadMorePredicates}
-                                        items={this.state.predicates}
-                                        label={'Predicates'}
-                                        class={'predicate'}
-                                    />
+                                {this.isLoading() &&
+                                    (this.state.papers.length === 0 &&
+                                        this.state.problems.length === 0 &&
+                                        this.state.authors.length === 0 &&
+                                        this.state.comparisons.length === 0 &&
+                                        this.state.resources.length === 0 &&
+                                        this.state.predicates.length === 0) && (
+                                        <ContentLoader height={210} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
+                                            <rect x="0" y="8" width="50" height="15" />
+                                            <rect x="0" y="25" width="100%" height="15" />
+                                            <rect x="0" y="42" width="100%" height="15" />
+                                            <rect x="0" y="59" width="100%" height="15" />
+                                            <rect x="0" y="76" width="100%" height="15" />
+
+                                            <rect x="0" y={8 + 100} width="50" height="15" />
+                                            <rect x="0" y={25 + 100} width="100%" height="15" />
+                                            <rect x="0" y={42 + 100} width="100%" height="15" />
+                                            <rect x="0" y={59 + 100} width="100%" height="15" />
+                                            <rect x="0" y={76 + 100} width="100%" height="15" />
+                                        </ContentLoader>
+                                    )}
+
+                                {!this.props.match.params.searchTerm ||
+                                (!this.isLoading() &&
+                                    (this.state.papers.length === 0 &&
+                                        this.state.problems.length === 0 &&
+                                        this.state.authors.length === 0 &&
+                                        this.state.comparisons.length === 0 &&
+                                        this.state.resources.length === 0 &&
+                                        this.state.predicates.length === 0)) ? (
+                                    <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
+                                ) : (
+                                    <div>
+                                        {(this.state.selectedFilters.length === 0 ||
+                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(1))) && (
+                                            <Results
+                                                loading={this.state.isPapersNextPageLoading}
+                                                hasNextPage={this.state.hasPapersNextPage}
+                                                loadMore={this.loadMorePapers}
+                                                items={this.state.papers}
+                                                label={'Papers'}
+                                                class={process.env.REACT_APP_CLASSES_PAPER}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(1)}
+                                            />
+                                        )}
+                                        {(this.state.selectedFilters.length === 0 ||
+                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(2))) && (
+                                            <Results
+                                                loading={this.state.isProblemsNextPageLoading}
+                                                hasNextPage={this.state.hasProblemsNextPage}
+                                                loadMore={this.loadMoreProblems}
+                                                items={this.state.problems}
+                                                label={'Research problems'}
+                                                class={process.env.REACT_APP_CLASSES_PROBLEM}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(2)}
+                                            />
+                                        )}
+                                        {(this.state.selectedFilters.length === 0 ||
+                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(3))) && (
+                                            <Results
+                                                loading={this.state.isAuthorsNextPageLoading}
+                                                hasNextPage={this.state.hasAuthorsNextPage}
+                                                loadMore={this.loadMoreAuthors}
+                                                items={this.state.authors}
+                                                label={'Authors'}
+                                                class={process.env.REACT_APP_CLASSES_AUTHOR}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(3)}
+                                            />
+                                        )}
+                                        {(this.state.selectedFilters.length === 0 ||
+                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(4))) && (
+                                            <Results
+                                                loading={this.state.isComparisonsNextPageLoading}
+                                                hasNextPage={this.state.hasComparisonsNextPage}
+                                                loadMore={this.loadMoreComparisons}
+                                                items={this.state.comparisons}
+                                                label={'Comparisons'}
+                                                class={process.env.REACT_APP_CLASSES_COMPARISON}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(4)}
+                                            />
+                                        )}
+                                        {(this.state.selectedFilters.length === 0 ||
+                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(5))) && (
+                                            <Results
+                                                loading={this.state.isResourcesNextPageLoading}
+                                                hasNextPage={this.state.hasResourcesNextPage}
+                                                loadMore={this.loadMoreResources}
+                                                items={this.state.resources}
+                                                label={'Resources'}
+                                                class={'resource'}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(5)}
+                                            />
+                                        )}
+                                        {(this.state.selectedFilters.length === 0 ||
+                                            (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(6))) && (
+                                            <Results
+                                                loading={this.state.isPredicatesNextPageLoading}
+                                                hasNextPage={this.state.hasPredicatesNextPage}
+                                                loadMore={this.loadMorePredicates}
+                                                items={this.state.predicates}
+                                                label={'Predicates'}
+                                                class={'predicate'}
+                                                showNoResultsMessage={this.state.selectedFilters.includes(6)}
+                                            />
+                                        )}
+                                    </div>
                                 )}
                             </div>
                         </Col>

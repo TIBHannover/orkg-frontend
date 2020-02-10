@@ -32,10 +32,10 @@ const Label = styled.div`
 
 class AddTemplateButton extends Component {
     addTemplate = () => {
-        let statements = { properties: [], values: [] };
-        let pID = guid();
-        let vID = guid();
-        let rID = guid();
+        const statements = { properties: [], values: [] };
+        const pID = guid();
+        const vID = guid();
+        const rID = guid();
         statements['properties'].push({
             propertyId: pID,
             existingPredicateId: this.props.predicateId,
@@ -53,8 +53,8 @@ class AddTemplateButton extends Component {
         this.props.prefillStatements({ statements, resourceId: this.props.selectedResource });
         // Add properties
         if (this.props.properties && this.props.properties.length > 0) {
-            let statements = { properties: [], values: [] };
-            for (let property of this.props.properties) {
+            const statements = { properties: [], values: [] };
+            for (const property of this.props.properties) {
                 statements['properties'].push({
                     existingPredicateId: property.id,
                     label: property.label

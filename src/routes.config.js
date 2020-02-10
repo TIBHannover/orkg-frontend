@@ -25,6 +25,7 @@ import Stats from './components/Stats/Stats';
 import UserSettings from './components/UserSettings/UserSettings';
 import UserProfile from './components/UserProfile/UserProfile';
 import FeaturedComparisons from 'components/FeaturedComparisons/FeaturedComparisons';
+import { reverse } from 'named-urls';
 
 const routes = [
     {
@@ -96,7 +97,7 @@ const routes = [
         component: ({ match, location }) => (
             <Redirect
                 // eslint-disable-next-line react/prop-types
-                to={`${ROUTES.COMPARISON}?contributions=${match.params[0].split('/').join(',')}${
+                to={`${reverse(ROUTES.COMPARISON)}?contributions=${match.params[0].split('/').join(',')}${
                     // eslint-disable-next-line react/prop-types
                     location.search ? '&' + (location.search.charAt(0) === '?' ? location.search.substr(1) : location.search) : ''
                 }`}

@@ -28,6 +28,9 @@ const StyledLoadMoreButton = styled.div`
 `;
 
 const StyledListGroupItem = styled(ListGroupItem)`
+    overflow-wrap: break-word;
+    word-break: break-all;
+
     &:last-child {
         border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
     }
@@ -48,6 +51,10 @@ const Results = props => {
             }
             case process.env.REACT_APP_CLASSES_AUTHOR: {
                 link = reverse(ROUTES.AUTHOR_PAGE, { authorId: resourceId });
+                break;
+            }
+            case process.env.REACT_APP_CLASSES_COMPARISON: {
+                link = reverse(ROUTES.COMPARISON, { comparisonId: resourceId });
                 break;
             }
             case 'resource': {
@@ -85,7 +92,7 @@ const Results = props => {
                 </ContentLoader>
             )}
 
-            {!props.loading && props.items.length === 0 && (
+            {!props.loading && props.items.length === 0 && props.showNoResultsMessage && (
                 <div>
                     <h2 className="h5">{props.label}</h2>
                     <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
@@ -132,7 +139,8 @@ Results.propTypes = {
     class: PropTypes.string.isRequired,
     items: PropTypes.array.isRequired,
     loadMore: PropTypes.func.isRequired,
-    hasNextPage: PropTypes.bool.isRequired
+    hasNextPage: PropTypes.bool.isRequired,
+    showNoResultsMessage: PropTypes.bool.isRequired
 };
 
 export default withRouter(Results);

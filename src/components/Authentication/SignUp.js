@@ -43,7 +43,7 @@ class SignUp extends Component {
             .then(() => {
                 signInWithEmailAndPassword(email, password)
                     .then(token => {
-                        cookies.set('token', token.access_token, { path: '/', maxAge: token.expires_in });
+                        cookies.set('token', token.access_token, { path: process.env.PUBLIC_URL, maxAge: token.expires_in });
                         this.props.toggleAuthDialog();
                         this.setState({ loading: false, errors: null });
                         window.location.reload();
@@ -125,6 +125,9 @@ class SignUp extends Component {
                             <FormFeedback>{get_error_message(this.state.errors, 'matching_password')}</FormFeedback>
                         )}
                     </FormGroup>
+                    <p style={{ fontStyle: 'italic' }}>
+                        By signing up you agree that any data you add to the service has a CC0 (Public Domain) license
+                    </p>
                     <Button
                         color="primary"
                         onClick={() => {

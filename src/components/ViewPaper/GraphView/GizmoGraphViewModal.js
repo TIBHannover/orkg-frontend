@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getStatementsBySubject } from '../../../network';
+import { getStatementsBySubject, getStatementsBySubjects } from '../../../network';
 import { connect } from 'react-redux';
 import * as PropTypes from 'prop-types';
 // import Graph from 'react-graph-vis';
@@ -7,8 +7,9 @@ import GizmoGraph from './GizmoGraph';
 import { Modal, ModalHeader, ModalBody, Input, Form, FormGroup, Label, Button } from 'reactstrap';
 import uniqBy from 'lodash/uniqBy';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faProjectDiagram, faAngleDoubleLeft, faAngleDoubleUp, faHome } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faProjectDiagram, faAngleDoubleLeft, faAngleDoubleUp, faHome, faSnowman, faSitemap } from '@fortawesome/free-solid-svg-icons';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import flattenDeep from 'lodash/flattenDeep';
 
 // moving GraphVis here in order to maintain the layouts and status related stuff;
 import GraphVis from '../../../libs/gizmo/GraphVis';
@@ -20,7 +21,17 @@ class GraphView extends Component {
         this.child = React.createRef();
         this.seenDepth = -1;
         this.graphVis = new GraphVis();
+
         this.updateDepthRange = this.updateDepthRange.bind(this);
+        this.getDataFromApi = this.getDataFromApi.bind(this);
+        this.processStatements = this.processStatements.bind(this);
+        this.fetchMultipleResourcesFromAPI = this.fetchMultipleResourcesFromAPI.bind(this);
+        this.processMultiStatements = this.processMultiStatements.bind(this);
+
+        // graphVis caller to this object (have to be set after the bind.this calls)
+        this.graphVis.propagateMaxDepthValue = this.updateDepthRange;
+        this.graphVis.getDataFromApi = this.getDataFromApi;
+        this.graphVis.fetchMultipleResourcesFromAPI = this.fetchMultipleResourcesFromAPI;
     }
 
     state = {
@@ -34,6 +45,7 @@ class GraphView extends Component {
         maxDepth: 25,
         seenFullGraph: false,
         layoutSelectionOpen: false,
+        exploringFullGraph: false,
         layout: 'force',
         windowHeight: 0 // want this for auto aligning the size of the modal window
     };
@@ -44,23 +56,12 @@ class GraphView extends Component {
         this.updateDimensions();
     }
 
-    componentDidUpdate = (prevProps, prevState) => {
+    componentDidUpdate = prevProps => {
         if (this.props.addPaperVisualization === true) {
             if (prevProps.showDialog === false && this.props.showDialog === true) {
                 // reload graph data when modal is shown
                 this.visualizeAddPaper();
             }
-        }
-        // load statements again if depth is changed
-        if (prevState.depth < this.state.depth) {
-            this.loadStatements().then(() => {
-                // todo remove code duplication >> create function for that
-                if (this.child && this.child.current) {
-                    this.child.current.propagateDepthMaxValue(this.graphVis.getMaxDepth());
-                    this.graphVis.ensureLayoutConsistency(this.state.layout);
-                }
-                this.seenDepth = this.graphVis.getMaxDepth();
-            });
         }
     };
 
@@ -89,44 +90,109 @@ class GraphView extends Component {
         }
     }
 
+    async getDataFromApi(resourceId) {
+        try {
+            const statements = await getStatementsBySubject({ id: resourceId });
+            if (statements.length === 0) {
+                return {}; // we dont have incremental data
+            } else {
+                // result is the incremental data we get;
+                return this.processStatements(statements);
+            }
+        } catch (error) {
+            return {}; // TODO: handle unsaved resources
+        }
+    }
+
+    async fetchMultipleResourcesFromAPI(resourceIds) {
+        try {
+            const objectStatements = await getStatementsBySubjects({ ids: resourceIds });
+            if (objectStatements.length === 0) {
+                return {}; // we dont have incremental data
+            } else {
+                return this.processMultiStatements(objectStatements);
+            }
+        } catch (error) {
+            return {}; // TODO: handle unsaved resources
+        }
+    }
+
+    processMultiStatements(objectStatements) {
+        let nodes = [];
+        let edges = [];
+        objectStatements.forEach(obj => {
+            for (const statement of obj.statements) {
+                // limit the label length to 20 chars
+                // remove duplicate nodes
+                this.processSingleStatement(nodes, edges, statement);
+            }
+        });
+        nodes = uniqBy(nodes, 'id');
+        edges = uniqBy(edges, e => [e.from, e.to, e.label].join());
+        return { nodes: nodes, edges: edges };
+    }
+
+    processSingleStatement(nodes, edges, statement) {
+        const subjectLabel = statement.subject.label.substring(0, 20);
+        const objectLabel = statement.object.label.substring(0, 20);
+
+        nodes.push({
+            id: statement.subject.id,
+            label: subjectLabel,
+            title: statement.subject.label,
+            classificationArray: statement.subject.classes
+        });
+        // check if node type is resource or literal
+        if (statement.object._class === 'resource') {
+            nodes.push({
+                id: statement.object.id,
+                label: objectLabel,
+                title: statement.object.label,
+                classificationArray: statement.object.classes
+            });
+        } else {
+            nodes.push({
+                id: statement.object.id,
+                label: objectLabel,
+                title: statement.object.label,
+                type: 'literal'
+            });
+        }
+
+        if (statement.predicate.id === 'P27') {
+            // add user Icon to target node if we have 'has author' property === P27
+            edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label, isAuthorProp: true });
+        } else if (statement.predicate.id === 'P26') {
+            // add DOI Icon to target node
+            edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label, isDOIProp: true });
+        } else {
+            // no Icon for the target node
+            edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label });
+        }
+    }
+
+    processStatements(statements) {
+        let nodes = [];
+        let edges = [];
+
+        for (const statement of statements) {
+            this.processSingleStatement(nodes, edges, statement);
+        }
+        // remove duplicate nodes
+        nodes = uniqBy(nodes, 'id');
+        edges = uniqBy(edges, e => [e.from, e.to, e.label].join());
+
+        return { nodes: nodes, edges: edges };
+    }
+
     loadStatements = async () => {
         this.setState({ isLoadingStatements: true, initializeGraph: false });
         this.graphVis.stopBackgroundProcesses();
         if (this.seenDepth < this.state.depth) {
             if (this.props.paperId) {
-                let statements = await this.getResourceAndStatements(this.props.paperId, 0, []);
-                let nodes = [];
-                let edges = [];
-
-                for (let statement of statements) {
-                    // limit the label length to 20 chars
-                    const subjectLabel = statement.subject.label.substring(0, 20);
-                    const objectLabel = statement.object.label.substring(0, 20);
-
-                    nodes.push({ id: statement.subject.id, label: subjectLabel, title: statement.subject.label });
-                    // check if node type is resource or literal
-                    if (statement.object._class === 'resource') {
-                        nodes.push({ id: statement.object.id, label: objectLabel, title: statement.object.label });
-                    } else {
-                        nodes.push({
-                            id: statement.object.id,
-                            label: objectLabel,
-                            title: statement.object.label,
-                            type: 'literal'
-                        });
-                    }
-                    edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label });
-                }
-                // remove duplicate nodes
-                nodes = uniqBy(nodes, 'id');
-
-                // remove duplicate edges TODO: EXPERIMENTAL
-                edges = uniqBy(edges, e => [e.from, e.to, e.label].join());
-
-                this.setState({
-                    nodes,
-                    edges
-                });
+                const statements = await this.getResourceAndStatements(this.props.paperId, 0, []);
+                const result = this.processStatements(statements);
+                this.setState({ nodes: result.nodes, edges: result.edges });
             } else {
                 await this.visualizeAddPaper();
             }
@@ -141,19 +207,19 @@ class GraphView extends Component {
         const { title, authors, doi, publicationMonth, publicationYear, selectedResearchField, contributions } = this.props.addPaper;
 
         // title
-        nodes.push({ id: 'title', label: title.substring(0, 20), title: title });
+        nodes.push({ id: 'title', label: title.substring(0, 20), title: title, classificationArray: [process.env.REACT_APP_CLASSES_PAPER] });
 
         // authors
         if (authors.length > 0) {
-            for (let author of authors) {
+            for (const author of authors) {
                 nodes.push({ id: author.label, label: author.label.substring(0, 20), title: author.label });
-                edges.push({ from: 'title', to: author.label, label: 'has author' });
+                edges.push({ from: 'title', to: author.label, label: 'has author', isAuthorProp: true });
             }
         }
 
         //doi
         nodes.push({ id: 'doi', label: doi.substring(0, 20), title: doi, type: 'literal' });
-        edges.push({ from: 'title', to: 'doi', label: 'has doi' });
+        edges.push({ from: 'title', to: 'doi', label: 'has doi', isDOIProp: true });
 
         //publicationMonth
         nodes.push({ id: 'publicationMonth', label: publicationMonth, title: publicationMonth, type: 'literal' });
@@ -163,21 +229,32 @@ class GraphView extends Component {
         nodes.push({ id: 'publicationYear', label: publicationYear, title: publicationYear, type: 'literal' });
         edges.push({ from: 'title', to: 'publicationYear', label: 'has publication year' });
 
-        //research field TODO: convert to readable label
-        nodes.push({ id: 'researchField', label: selectedResearchField, title: selectedResearchField });
+        //research field
+        let researchFieldLabel = selectedResearchField;
+        if (this.props.addPaper.researchFields && this.props.addPaper.researchFields.length > 0) {
+            const rF = flattenDeep(this.props.addPaper.researchFields).find(rf => rf.id === selectedResearchField);
+            researchFieldLabel = rF ? rF.label : selectedResearchField;
+        }
+
+        nodes.push({
+            id: 'researchField',
+            label: researchFieldLabel.substring(0, 20),
+            title: researchFieldLabel
+        });
+
         edges.push({ from: 'title', to: 'researchField', label: 'has research field' });
 
         //contributions
         if (Object.keys(contributions['byId']).length) {
-            for (let contributionId in contributions['byId']) {
+            for (const contributionId in contributions['byId']) {
                 if (contributions['byId'].hasOwnProperty(contributionId)) {
-                    let contribution = contributions['byId'][contributionId];
+                    const contribution = contributions['byId'][contributionId];
 
                     nodes.push({ id: contribution.resourceId, label: contribution.label, title: contribution.label });
                     edges.push({ from: 'title', to: contribution.resourceId, label: 'has contribution' });
 
                     //research problems
-                    for (let problem of contribution.researchProblems) {
+                    for (const problem of contribution.researchProblems) {
                         nodes.push({
                             id: contribution.resourceId + problem.label,
                             label: problem.label,
@@ -191,7 +268,7 @@ class GraphView extends Component {
                     }
 
                     //contribution statements
-                    let statements = this.addPaperStatementsToGraph(contribution.resourceId, [], []);
+                    const statements = this.addPaperStatementsToGraph(contribution.resourceId, [], []);
                     nodes.push(...statements.nodes);
                     edges.push(...statements.edges);
                 }
@@ -215,17 +292,17 @@ class GraphView extends Component {
         // select all nodes that have this value and only query these ones
         // >> faster performance since only retrieving what is needed !
 
-        let statementBrowser = this.props.statementBrowser;
-        let resource = statementBrowser.resources.byId[resourceId];
+        const statementBrowser = this.props.statementBrowser;
+        const resource = statementBrowser.resources.byId[resourceId];
 
         if (resource.propertyIds.length > 0) {
-            for (let propertyId of resource.propertyIds) {
-                let property = statementBrowser.properties.byId[propertyId];
+            for (const propertyId of resource.propertyIds) {
+                const property = statementBrowser.properties.byId[propertyId];
 
                 if (property.valueIds.length > 0) {
-                    for (let valueId of property.valueIds) {
-                        let value = statementBrowser.values.byId[valueId];
-                        let id = value.resourceId ? value.resourceId : valueId;
+                    for (const valueId of property.valueIds) {
+                        const value = statementBrowser.values.byId[valueId];
+                        const id = value.resourceId ? value.resourceId : valueId;
 
                         //add the node and relation
                         nodes.push({ id: id, label: value.label, title: value.label });
@@ -253,18 +330,6 @@ class GraphView extends Component {
         this.child.current.clearGraphData();
     };
 
-    getLayoutIcon() {
-        if (this.state.layout === 'force') {
-            return faProjectDiagram;
-        }
-        if (this.state.layout === 'treeH') {
-            return faAngleDoubleLeft;
-        }
-        if (this.state.layout === 'treeV') {
-            return faAngleDoubleUp;
-        }
-    }
-
     updateDimensions = () => {
         // test
         const offset = 28 * 2 + 65;
@@ -274,7 +339,13 @@ class GraphView extends Component {
     handleDepthChange = event => {
         if (event.target.value) {
             this.setState({ depth: parseInt(event.target.value) });
-        } // make sure the value is an integer
+            this.graphVis.depthUpdateEvent(parseInt(event.target.value)).then();
+        }
+    };
+    exploreTheFullGraph = async () => {
+        this.setState({ exploringFullGraph: true });
+        await this.graphVis.fullExplore();
+        this.setState({ exploringFullGraph: false });
     };
 
     getResourceAndStatements = async (resourceId, depth, list) => {
@@ -282,11 +353,11 @@ class GraphView extends Component {
             return list;
         }
 
-        let statements = await getStatementsBySubject({ id: resourceId });
+        const statements = await getStatementsBySubject({ id: resourceId });
 
         if (statements.length > 0) {
             list.push(...statements);
-            for (let statement of statements) {
+            for (const statement of statements) {
                 if (statement.object._class === 'resource') {
                     await this.getResourceAndStatements(statement.object.id, depth + 1, list);
                 }
@@ -310,13 +381,14 @@ class GraphView extends Component {
                 toggle={this.props.toggle}
                 size="lg"
                 onOpened={() => {
-                    this.loadStatements().then(() => {
-                        if (this.child && this.child.current) {
-                            this.child.current.propagateDepthMaxValue(this.graphVis.getMaxDepth());
-                            this.graphVis.ensureLayoutConsistency(this.state.layout);
-                        }
-                        this.seenDepth = this.graphVis.getMaxDepth();
-                    });
+                    if (!this.graphVis.graphIsInitialized) {
+                        this.loadStatements().then(() => {
+                            if (this.child && this.child.current) {
+                                this.graphVis.ensureLayoutConsistency(this.state.layout);
+                            }
+                            this.seenDepth = this.graphVis.getMaxDepth();
+                        });
+                    }
                 }}
                 style={{ maxWidth: '90%' }}
             >
@@ -341,6 +413,7 @@ class GraphView extends Component {
                                                 // prevent the reload when enter is pressed
                                                 if (event.keyCode === 13) {
                                                     event.preventDefault();
+                                                    this.graphVis.depthUpdateEvent(this.state.depth).then();
                                                 }
                                             }}
                                             value={this.state.depth}
@@ -357,21 +430,29 @@ class GraphView extends Component {
                                     size="sm"
                                     //    className='mb-4 mt-4'
                                     style={{ margin: '0 10px', flexGrow: '1', display: 'flex' }}
+                                    onClick={this.exploreTheFullGraph}
+                                    disabled={this.state.exploringFullGraph}
+                                >
+                                    {!this.state.exploringFullGraph ? (
+                                        <>
+                                            <Icon icon={faSnowman} className="mr-1 align-self-center" />
+                                            Expand All Nodes{' '}
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Icon icon={faSpinner} spin className="mr-1 align-self-center" /> Expanding Graph
+                                        </>
+                                    )}
+                                </Button>
+                                <Button
+                                    color="darkblue"
+                                    size="sm"
+                                    //    className='mb-4 mt-4'
+                                    style={{ margin: '0 10px', flexGrow: '1', display: 'flex' }}
                                     onClick={this.centerGraph}
                                 >
                                     <Icon icon={faHome} className="mr-1 align-self-center" /> Center Graph
                                 </Button>
-
-                                {/*/!*<Button*!/*/}
-                                {/*/!*  color='darkblue'*!/*/}
-                                {/*/!*  size='sm'*!/*/}
-                                {/*/!*  //    className='mb-4 mt-4'*!/*/}
-                                {/*/!*  // style={{position:'absolute', left: '450px', marginLeft: '10px'}}*!/*/}
-                                {/*/!*  style={{margin: '0 10px'}}*!/*/}
-                                {/*/!*  onClick={this.clearGraphData}*!/*/}
-                                {/*/!*>*!/*/}
-                                {/*  <Icon icon={faProjectDiagram} className='mr-1'/> Clear Data*/}
-                                {/*</Button>*/}
                                 <Dropdown
                                     color="darkblue"
                                     size="sm"
@@ -384,7 +465,12 @@ class GraphView extends Component {
                                 >
                                     <DropdownToggle caret color="darkblue">
                                         Layout:
-                                        <Icon icon={this.getLayoutIcon()} className="mr-1" style={{ width: '40px' }} />
+                                        <Icon
+                                            icon={this.state.layout === 'force' ? faProjectDiagram : faSitemap}
+                                            rotation={this.state.layout === 'treeH' ? 270 : 0}
+                                            className="mr-1"
+                                            style={{ width: '40px' }}
+                                        />
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         <DropdownItem
@@ -408,7 +494,7 @@ class GraphView extends Component {
                                                 this.setState({ layout: 'treeH' });
                                             }}
                                         >
-                                            <Icon icon={faAngleDoubleLeft} className="mr-1" style={{ width: '40px' }} />
+                                            <Icon icon={faSitemap} rotation={270} className="mr-1" style={{ width: '40px' }} />
                                             Horizontal Tree
                                         </DropdownItem>
                                         <DropdownItem
@@ -421,7 +507,7 @@ class GraphView extends Component {
                                                 this.setState({ layout: 'treeV' });
                                             }}
                                         >
-                                            <Icon icon={faAngleDoubleUp} className="mr-1" style={{ width: '40px' }} />
+                                            <Icon icon={faSitemap} className="mr-1" style={{ width: '40px' }} />
                                             Vertical Tree
                                         </DropdownItem>
                                     </DropdownMenu>

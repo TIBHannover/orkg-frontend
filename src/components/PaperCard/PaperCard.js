@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { withCookies } from 'react-cookie';
 import { compose } from 'redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from '../../constants/routes.js';
 import AddToComparison from './../ViewPaper/AddToComparison';
 import PropTypes from 'prop-types';
@@ -53,15 +53,16 @@ class PaperCard extends Component {
                         <small>
                             {this.props.paper.authorNames.length > 0 && (
                                 <>
-                                    <Icon size={'sm'} icon={faUser} /> {this.props.paper.authorNames.map(a => a.label).join(', ')} -
+                                    <Icon size={'sm'} icon={faUser} /> {this.props.paper.authorNames.map(a => a.label).join(', ')}
                                 </>
                             )}
-                            <i>
-                                {this.props.paper.publicationMonth &&
-                                    this.props.paper.publicationMonth.length > 0 &&
-                                    moment(this.props.paper.publicationMonth, 'M').format('MMMM')}{' '}
-                                {this.props.paper.publicationYear}
-                            </i>
+                            {(this.props.paper.publicationMonth || this.props.paper.publicationYear) && (
+                                <Icon size={'sm'} icon={faCalendar} className="ml-2 mr-1" />
+                            )}
+                            {this.props.paper.publicationMonth &&
+                                this.props.paper.publicationMonth.length > 0 &&
+                                moment(this.props.paper.publicationMonth, 'M').format('MMMM') + ' '}
+                            {this.props.paper.publicationYear}
                         </small>
                     </Col>
                     {this.props.contribution && (

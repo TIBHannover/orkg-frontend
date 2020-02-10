@@ -30,11 +30,11 @@ class Statements extends Component {
     }
 
     statements = () => {
-        let propertyIds =
+        const propertyIds =
             Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource
                 ? this.props.resources.byId[this.props.selectedResource].propertyIds
                 : [];
-        let shared =
+        const shared =
             Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource
                 ? this.props.resources.byId[this.props.selectedResource].shared
                 : 1;
@@ -44,7 +44,7 @@ class Statements extends Component {
                 {!this.props.isFetchingStatements ? (
                     propertyIds.length > 0 ? (
                         propertyIds.map((propertyId, index) => {
-                            let property = this.props.properties.byId[propertyId];
+                            const property = this.props.properties.byId[propertyId];
 
                             return (
                                 <StatementItem
@@ -88,13 +88,13 @@ class Statements extends Component {
     };
 
     render() {
-        let elements = this.addLevel(0, this.props.level);
+        const elements = this.addLevel(0, this.props.level);
 
         return (
             <>
                 {this.props.level !== 0 ? (
                     <>
-                        <Breadcrumbs />
+                        <Breadcrumbs openExistingResourcesInDialog={this.props.openExistingResourcesInDialog} />
                     </>
                 ) : (
                     ''

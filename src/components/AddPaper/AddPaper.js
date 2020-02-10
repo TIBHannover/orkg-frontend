@@ -14,7 +14,7 @@ import styled, { withTheme } from 'styled-components';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
-import { openTour, closeTour, blockNavigation } from '../../actions/addPaper';
+import { openTour, closeTour, blockNavigation, loadPaperData } from '../../actions/addPaper';
 import { Prompt } from 'react-router';
 import GizmoGraphViewModal from '../ViewPaper/GraphView/GizmoGraphViewModal';
 
@@ -111,18 +111,27 @@ class AddPaper extends Component {
     componentDidMount() {
         // Set document title
         document.title = 'Add paper - ORKG';
-
         this.props.resetStatementBrowser();
     }
 
     componentDidUpdate = prevProps => {
         //paperNewResourceId : means paper is saved
+        if (
+            !this.props.addPaper.shouldBlockNavigation &&
+            prevProps.addPaper.shouldBlockNavigation &&
+            prevProps.addPaper.currentStep !== 1 &&
+            this.props.addPaper.currentStep === 1 &&
+            !prevProps.addPaper.paperNewResourceId
+        ) {
+            console.log('Load data from the previous global state');
+            this.props.loadPaperData({ addPaper: prevProps.addPaper, statementBrowser: prevProps.statementBrowser });
+        }
 
-        if (!this.props.shouldBlockNavigation && this.props.currentStep > 1 && !this.props.paperNewResourceId) {
+        if (!this.props.addPaper.shouldBlockNavigation && this.props.currentStep > 1 && !this.props.addPaper.paperNewResourceId) {
             this.props.blockNavigation();
             window.onbeforeunload = () => true;
         }
-        if (!this.props.shouldBlockNavigation && prevProps.shouldBlockNavigation !== this.props.shouldBlockNavigation) {
+        if (!this.props.addPaper.shouldBlockNavigation && prevProps.addPaper.shouldBlockNavigation !== this.props.addPaper.shouldBlockNavigation) {
             window.onbeforeunload = null;
         }
     };
@@ -138,7 +147,7 @@ class AddPaper extends Component {
     };
 
     toggleTour = () => {
-        if (this.props.isTourOpen) {
+        if (this.props.addPaper.isTourOpen) {
             this.props.closeTour();
         } else {
             this.props.openTour();
@@ -146,7 +155,7 @@ class AddPaper extends Component {
     };
 
     render() {
-        let { currentStep } = this.props;
+        const { currentStep } = this.props;
         let currentStepDetails;
 
         switch (currentStep) {
@@ -183,7 +192,7 @@ class AddPaper extends Component {
 
         return (
             <div>
-                <Prompt when={this.props.shouldBlockNavigation} message="You have unsaved changes, are you sure you want to leave?" />
+                <Prompt when={this.props.addPaper.shouldBlockNavigation} message="You have unsaved changes, are you sure you want to leave?" />
                 <Container className="p-0 mt-4 mb-4 d-flex align-items-center">
                     <h1 className="h4 flex-shrink-0 mb-0">Add paper</h1>
 
@@ -191,7 +200,7 @@ class AddPaper extends Component {
                         <>
                             <SubtitleSeparator />
 
-                            <PaperTitle>{this.props.title}</PaperTitle>
+                            <PaperTitle>{this.props.addPaper.title}</PaperTitle>
                         </>
                     )}
 
@@ -238,7 +247,7 @@ class AddPaper extends Component {
                     id="helpIcon"
                 >
                     <HelpIcon icon={faQuestion} />
-                    <div className={'text ' + (this.props.showAbstractDialog ? 'white' : '')}>Help</div>
+                    <div className={'text ' + (this.props.addPaper.showAbstractDialog ? 'white' : '')}>Help</div>
                 </Help>
             </div>
         );
@@ -247,34 +256,28 @@ class AddPaper extends Component {
 
 AddPaper.propTypes = {
     currentStep: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
-    authors: PropTypes.array.isRequired,
-    isTourOpen: PropTypes.bool.isRequired,
-    shouldBlockNavigation: PropTypes.bool.isRequired,
     resetStatementBrowser: PropTypes.func.isRequired,
-    paperNewResourceId: PropTypes.string,
     openTour: PropTypes.func.isRequired,
     closeTour: PropTypes.func.isRequired,
     blockNavigation: PropTypes.func.isRequired,
     theme: PropTypes.object.isRequired,
-    showAbstractDialog: PropTypes.bool.isRequired
+    loadPaperData: PropTypes.func.isRequired,
+    addPaper: PropTypes.object.isRequired,
+    statementBrowser: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
     currentStep: state.addPaper.currentStep,
-    isTourOpen: state.addPaper.isTourOpen,
-    title: state.addPaper.title,
-    authors: state.addPaper.authors,
-    shouldBlockNavigation: state.addPaper.shouldBlockNavigation,
-    paperNewResourceId: state.addPaper.paperNewResourceId,
-    showAbstractDialog: state.addPaper.showAbstractDialog
+    addPaper: state.addPaper,
+    statementBrowser: state.statementBrowser
 });
 
 const mapDispatchToProps = dispatch => ({
     resetStatementBrowser: () => dispatch(resetStatementBrowser()),
     openTour: () => dispatch(openTour()),
     closeTour: () => dispatch(closeTour()),
-    blockNavigation: () => dispatch(blockNavigation())
+    blockNavigation: () => dispatch(blockNavigation()),
+    loadPaperData: data => dispatch(loadPaperData(data))
 });
 
 export default compose(

@@ -24,11 +24,11 @@ export const submitGetRequest = (url, headers, send_token = false) => {
         throw new Error('Cannot submit GET request. URL is null or undefined.');
     }
 
-    let myHeaders = new Headers(headers);
+    const myHeaders = headers ? new Headers(headers) : {};
 
     if (send_token) {
         const cookies = new Cookies();
-        let token = cookies.get('token') ? cookies.get('token') : null;
+        const token = cookies.get('token') ? cookies.get('token') : null;
         if (token) {
             myHeaders.append('Authorization', `Bearer ${token}`);
         }
@@ -64,11 +64,11 @@ const submitPostRequest = (url, headers, data, jsonStringify = true, send_token 
         throw new Error('Cannot submit POST request. URL is null or undefined.');
     }
 
-    let myHeaders = new Headers(headers);
+    const myHeaders = new Headers(headers);
 
     if (send_token) {
         const cookies = new Cookies();
-        let token = cookies.get('token') ? cookies.get('token') : null;
+        const token = cookies.get('token') ? cookies.get('token') : null;
         if (token) {
             myHeaders.append('Authorization', `Bearer ${token}`);
         }
@@ -107,8 +107,8 @@ const submitPutRequest = (url, headers, data) => {
     }
 
     const cookies = new Cookies();
-    let token = cookies.get('token') ? cookies.get('token') : null;
-    let myHeaders = new Headers(headers);
+    const token = cookies.get('token') ? cookies.get('token') : null;
+    const myHeaders = new Headers(headers);
     if (token) {
         myHeaders.append('Authorization', `Bearer ${token}`);
     }
@@ -235,7 +235,7 @@ export const getResource = id => {
 };
 
 export const getAllResources = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null, exclude = null }) => {
-    let params = queryString.stringify({
+    const params = queryString.stringify({
         page: page,
         items: items,
         sortBy: sortBy,
@@ -248,13 +248,13 @@ export const getAllResources = ({ page = 1, items = 9999, sortBy = 'created_at',
 };
 
 export const getAllPredicates = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null }) => {
-    let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc, ...(q ? { q: q } : {}) });
+    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc, ...(q ? { q: q } : {}) });
 
     return submitGetRequest(`${predicatesUrl}?${params}`);
 };
 
 export const getAllStatements = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
-    let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
+    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
 
     return submitGetRequest(`${statementsUrl}?${params}`);
 };
@@ -272,35 +272,35 @@ export const deleteStatementsByIds = ids => {
 };
 
 export const getStatementsBySubject = ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
-    let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
+    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
 
     return submitGetRequest(`${statementsUrl}subject/${encodeURIComponent(id)}/?${params}`);
 };
 
 export const getStatementsBySubjects = ({ ids, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
-    let params = queryString.stringify({ ids: ids.join(), page: page, items: items, sortBy: sortBy, desc: desc });
+    const params = queryString.stringify({ ids: ids.join(), page: page, items: items, sortBy: sortBy, desc: desc });
 
     return submitGetRequest(`${statementsUrl}subjects/?${params}`);
 };
 
 export const getStatementsByObject = async ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
-    let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
+    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
 
-    let statements = await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/?${params}`);
+    const statements = await submitGetRequest(`${statementsUrl}object/${encodeURIComponent(id)}/?${params}`);
 
     return statements;
 };
 
 export const getResourcesByClass = async ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null }) => {
-    let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc, ...(q ? { q: q } : {}) });
+    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc, ...(q ? { q: q } : {}) });
 
-    let resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/?${params}`);
+    const resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/?${params}`);
 
     return resources;
 };
 
 export const getStatementsByPredicate = ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
-    let params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
+    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
 
     return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/?${params}`);
 };
@@ -321,6 +321,10 @@ export const indexContribution = contribution_id => {
 
 export const getStats = () => {
     return submitGetRequest(statsUrl);
+};
+
+export const getResearchFieldsStats = () => {
+    return submitGetRequest(`${statsUrl}fields`);
 };
 
 export const createShortLink = data => {

@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
 export default function DrawTools() {
-    let dt = {};
+    const dt = {};
     dt.drawElement = drawElement;
     dt.measureTextWidth = measureTextWidth;
     dt.drawLinkElement = drawLinkElement;
@@ -10,6 +10,8 @@ export default function DrawTools() {
     dt.angle2NormedVec = angle2NormedVec;
     dt.angleFromVector = angleFromVector;
     dt.cropTextIfNeeded = cropTextIfNeeded;
+
+    dt.renderStackedItems = renderStackedItems;
     return dt;
 }
 
@@ -22,7 +24,7 @@ function cropTextIfNeeded(node, config, labelText) {
         const shapeSize = node.getExpectedShapeSize(config);
         if (config.renderingType === 'circle') {
             // use radius
-            result = cropText(labelText, config, Math.min(1.9 * shapeSize.r));
+            result = cropText(labelText, config, Math.min(1.9 * shapeSize.r - 15));
         }
         if (config.renderingType === 'rect') {
             // use width
@@ -92,11 +94,11 @@ function drawArrowHead(parent, container, identifier, configObject) {
 
         parent.attr('marker-end', 'url(#' + identifier + ')');
 
-        let m1X = -12 * scale;
-        let m1Y = 8 * scale;
-        let m2X = -12 * scale;
-        let m2Y = -8 * scale;
-        let renderingShape = arrowHead.append('path');
+        const m1X = -12 * scale;
+        const m1Y = 8 * scale;
+        const m2X = -12 * scale;
+        const m2Y = -8 * scale;
+        const renderingShape = arrowHead.append('path');
         renderingShape.attr('d', 'M0,0L ' + m1X + ',' + m1Y + 'L' + m2X + ',' + m2Y + 'L' + 0 + ',' + 0);
         addStrokeElements(renderingShape, configObject, 'link_arrowHead_stroke');
         return [arrowHead, renderingShape];
@@ -120,7 +122,7 @@ function addStrokeElements(element, cfg, selector) {
     }
 }
 
-function renderBaseShape(cfg, pNode, renderingShape) {
+function renderBaseShape(cfg, pNode, renderingShape, radiusOffset) {
     let radius = parseInt(cfg.radius);
     let width = parseInt(cfg.width);
     let height = parseInt(cfg.height);
@@ -134,6 +136,10 @@ function renderBaseShape(cfg, pNode, renderingShape) {
 
     // fix max width of element :
     width = Math.min(width, 250);
+    if (radiusOffset) {
+        radius += radiusOffset;
+    }
+
     // check if is uml style << TODO;
     /**  render a pure circle **/
     if (cfg.renderingType === 'circle') {
@@ -169,23 +175,38 @@ function renderBaseShape(cfg, pNode, renderingShape) {
     }
 
     /** apply stroke and fill colors as addition stroke style related parameters **/
-    renderingShape.attr('fill', cfg.bgColor);
+    if (pNode.multicoloring === true && pNode.type() === 'resource') {
+        renderingShape.attr('fill', pNode.colorState[pNode.status]);
+    } else {
+        renderingShape.attr('fill', cfg.bgColor);
+    }
     if (cfg.strokeElement === true || cfg.strokeElement === 'true') {
         addStrokeElements(renderingShape, cfg, 'stroke');
     }
 }
 
+function renderStackedItems(group, cfg, pNode) {
+    const renderingShapeA = group.append('rect');
+    const renderingShapeB = group.append('rect');
+
+    renderBaseShape(cfg, pNode, renderingShapeB, -4);
+    renderBaseShape(cfg, pNode, renderingShapeA, -8);
+
+    renderingShapeB.attr('transform', 'translate(8,8)');
+    renderingShapeA.attr('transform', 'translate(16,16)');
+}
+
 function drawElement(pGroup, cfg, pNode) {
     if (cfg.renderingType === 'umlStyle') {
         // currently ignored for beta release
-        let uml_renderingShape = pGroup.append('rect');
+        const uml_renderingShape = pGroup.append('rect');
         renderBaseShape(cfg.renderingAttributes, pNode, uml_renderingShape);
-        let linksToDraw = pNode.filterCollapsedLinks();
+        const linksToDraw = pNode.filterCollapsedLinks();
         console.log(linksToDraw);
         return uml_renderingShape;
     } else {
         // currently always native node-link visualization
-        let renderingShape = pGroup.append('rect');
+        const renderingShape = pGroup.append('rect');
         renderBaseShape(cfg, pNode, renderingShape);
         return renderingShape;
     }
@@ -207,12 +228,12 @@ function drawLinkElement(parentGroup, configObject) {
 }
 
 function measureTextWidth(text, fontFamily, fontSize) {
-    let d = d3.select('body').append('text');
+    const d = d3.select('body').append('text');
     d.attr('id', 'width-test');
     d.attr('style', 'position:absolute; float:left; white-space:nowrap; font-family:' + fontFamily + ';font-size: ' + fontSize);
 
     d.text(text);
-    let w = document.getElementById('width-test').offsetWidth;
+    const w = document.getElementById('width-test').offsetWidth;
     d.remove();
     return w;
 }
@@ -223,10 +244,10 @@ function computeIntersectionPointsForMLP(domain, property, range, offset) {
         distOffset = offset;
     }
 
-    let iP = { x1: domain.x, y1: domain.y, x2: range.x, y2: range.y };
+    const iP = { x1: domain.x, y1: domain.y, x2: range.x, y2: range.y };
 
-    let dom_cfgObj = domain.getConfigObj();
-    let ran_cfgObj = range.getConfigObj();
+    const dom_cfgObj = domain.getConfigObj();
+    const ran_cfgObj = range.getConfigObj();
 
     let offsetDirection = computeNormalizedOffsetDirection(domain, range);
     const p1 = shapeBasedIntersectionPoint(dom_cfgObj, domain, offsetDirection, distOffset);
@@ -251,10 +272,10 @@ function computeNormalizedOffsetDirection(source, target) {
 }
 
 function shapeBasedIntersectionPoint(config, element, offsetDirection, distOffset, origin) {
-    let IntPoint = {};
+    const IntPoint = {};
 
     if (config.renderingType === 'circle') {
-        let distanceToBorder = parseInt(element.getRadius()) + distOffset;
+        const distanceToBorder = parseInt(element.getRadius()) + distOffset;
         IntPoint.x = element.x + distanceToBorder * offsetDirection.x;
         IntPoint.y = element.y + distanceToBorder * offsetDirection.y;
         return IntPoint;
@@ -277,8 +298,8 @@ function shapeBasedIntersectionPoint(config, element, offsetDirection, distOffse
     if (config.renderingType === 'rect') {
         const shape = element.getExpectedShapeSize(config, true);
 
-        let width = Math.min(shape.w, 250);
-        let height = shape.h;
+        const width = Math.min(shape.w, 250);
+        const height = shape.h;
         // TODO
         // if (range.isUmlCustomShape()) {
         //
@@ -301,12 +322,12 @@ function shapeBasedIntersectionPoint(config, element, offsetDirection, distOffse
             IntPoint.y = element.y + scale * distanceToBorderY * offsetDirection.y;
             return IntPoint;
         } else {
-            let rad_angle = Math.atan2(offsetDirection.y, offsetDirection.x);
+            const rad_angle = Math.atan2(offsetDirection.y, offsetDirection.x);
 
-            let c1_x = distanceToBorderX;
-            let c1_y = Math.tan(rad_angle) * c1_x;
-            let c2_x = distanceToBorderY / Math.tan(rad_angle);
-            let c2_y = distanceToBorderY;
+            const c1_x = distanceToBorderX;
+            const c1_y = Math.tan(rad_angle) * c1_x;
+            const c2_x = distanceToBorderY / Math.tan(rad_angle);
+            const c2_y = distanceToBorderY;
 
             let ipX = 0;
             let ipY = 0;

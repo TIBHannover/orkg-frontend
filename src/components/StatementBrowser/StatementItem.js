@@ -49,7 +49,7 @@ class StatementItem extends Component {
     toggleDeleteStatement = async e => {
         e.stopPropagation();
 
-        let property = this.props.properties.byId[this.props.id];
+        const property = this.props.properties.byId[this.props.id];
         let title = '';
         let message = '';
         if (property.valueIds.length === 0) {
@@ -67,7 +67,7 @@ class StatementItem extends Component {
             );
             message = `Also, ${property.valueIds.length} related ${property.valueIds.length === 1 ? 'value' : 'values'} will be deleted.`;
         }
-        let result = await Confirm({
+        const result = await Confirm({
             title: title,
             message: message,
             cancelColor: 'light'
@@ -77,8 +77,8 @@ class StatementItem extends Component {
             if (this.props.syncBackend) {
                 // Delete All related statements
                 if (property.valueIds.length > 0) {
-                    for (let valueId of property.valueIds) {
-                        let value = this.props.values.byId[valueId];
+                    for (const valueId of property.valueIds) {
+                        const value = this.props.values.byId[valueId];
                         deleteStatementById(value.statementId);
                     }
                     toast.success(`${property.valueIds.length} ${property.valueIds.length === 1 ? 'Statement' : 'Statements'} deleted successfully`);
@@ -92,7 +92,7 @@ class StatementItem extends Component {
     };
 
     handleChange = async (selectedOption, a) => {
-        let property = this.props.properties.byId[this.props.id];
+        const property = this.props.properties.byId[this.props.id];
         // Check if the user changed the property
         if (this.props.predicateLabel !== selectedOption.label || property.existingPredicateId !== selectedOption.id) {
             this.props.isSavingProperty({ id: this.props.id }); // Show the saving message instead of the property label
@@ -113,11 +113,11 @@ class StatementItem extends Component {
 
     changePredicate = async newProperty => {
         if (this.props.syncBackend) {
-            let predicate = this.props.properties.byId[this.props.id];
-            let existingPredicateId = predicate ? predicate.existingPredicateId : false;
+            const predicate = this.props.properties.byId[this.props.id];
+            const existingPredicateId = predicate ? predicate.existingPredicateId : false;
             if (existingPredicateId) {
-                let values = predicate.valueIds;
-                for (let value of values) {
+                const values = predicate.valueIds;
+                for (const value of values) {
                     await updateStatement(this.props.values.byId[value].statementId, { predicate_id: newProperty.id });
                 }
                 this.props.changeProperty({ propertyId: this.props.id, newProperty: newProperty });
@@ -188,7 +188,7 @@ class StatementItem extends Component {
                 responseJson = responseJson.slice(0, this.maxResults);
             }
 
-            let options = [];
+            const options = [];
 
             responseJson.map(item =>
                 options.push({
@@ -227,9 +227,9 @@ class StatementItem extends Component {
             'rounded-bottom': this.props.isLastItem && !this.props.enableEdit
         });
 
-        let valueIds = Object.keys(this.props.properties.byId).length !== 0 ? this.props.properties.byId[this.props.id].valueIds : [];
+        const valueIds = Object.keys(this.props.properties.byId).length !== 0 ? this.props.properties.byId[this.props.id].valueIds : [];
 
-        let customStyles = {
+        const customStyles = {
             control: (provided, state) => ({
                 ...provided,
                 background: 'inherit',
@@ -373,7 +373,7 @@ class StatementItem extends Component {
                         <StyledListGroupOpen className={openBoxClass}>
                             <ListGroup flush>
                                 {valueIds.map((valueId, index) => {
-                                    let value = this.props.values.byId[valueId];
+                                    const value = this.props.values.byId[valueId];
 
                                     return (
                                         <ValueItem
@@ -455,7 +455,7 @@ class StatementItem extends Component {
                         <ValuesStyle className={'col-8 valuesList'}>
                             <div>
                                 {valueIds.map((valueId, index) => {
-                                    let value = this.props.values.byId[valueId];
+                                    const value = this.props.values.byId[valueId];
                                     return (
                                         <ValueItem
                                             key={index}

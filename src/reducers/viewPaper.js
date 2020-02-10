@@ -25,7 +25,7 @@ const cookies = new Cookies();
 export default (state = initialState, action) => {
     switch (action.type) {
         case type.LOAD_PAPER: {
-            let { payload } = action;
+            const { payload } = action;
 
             return {
                 ...state,
@@ -45,9 +45,9 @@ export default (state = initialState, action) => {
         }
 
         case type.SET_RESEARCH_PROBLEMS: {
-            let { payload } = action;
+            const { payload } = action;
 
-            let newState = dotProp.set(state, 'researchProblems', ids => ({
+            const newState = dotProp.set(state, 'researchProblems', ids => ({
                 ...ids,
                 [payload.resourceId]: payload.researchProblems
             }));
@@ -58,20 +58,20 @@ export default (state = initialState, action) => {
         }
 
         case type.SET_PAPER_AUTHORS: {
-            let { payload } = action;
+            const { payload } = action;
 
             return dotProp.set(state, 'authors', payload.authors);
         }
 
         case type.UPDATE_RESEARCH_PROBLEMS: {
-            let { payload } = action;
+            const { payload } = action;
 
             return dotProp.set(state, `researchProblems.${payload.contributionId}`, payload.problemsArray);
         }
 
         case type.LOAD_COMPARISON_FROM_COOKIE: {
-            let { payload } = action;
-            let newComparison = payload;
+            const { payload } = action;
+            const newComparison = payload;
             return {
                 ...state,
                 comparison: newComparison
@@ -79,20 +79,20 @@ export default (state = initialState, action) => {
         }
 
         case type.ADD_TO_COMPARISON: {
-            let { payload } = action;
+            const { payload } = action;
 
-            let comparisonContributions = assign(state.comparison.byId, {
+            const comparisonContributions = assign(state.comparison.byId, {
                 [payload.contributionId]: {
                     paperId: payload.contributionData.paperId,
                     paperTitle: payload.contributionData.paperTitle,
                     contributionTitle: payload.contributionData.contributionTitle
                 }
             });
-            let newComparison = {
+            const newComparison = {
                 allIds: [...state.comparison.allIds, payload.contributionId],
                 byId: comparisonContributions
             };
-            cookies.set('comparison', newComparison, { path: '/', maxAge: 604800 });
+            cookies.set('comparison', newComparison, { path: process.env.PUBLIC_URL, maxAge: 604800 });
             return {
                 ...state,
                 comparison: newComparison
@@ -100,15 +100,15 @@ export default (state = initialState, action) => {
         }
 
         case type.REMOVE_FROM_COMPARISON: {
-            let { payload } = action;
+            const { payload } = action;
 
-            let valueIndex = dotProp.get(state, 'comparison.allIds').indexOf(payload.id);
-            let newState = dotProp.delete(state, `comparison.allIds.${valueIndex}`);
-            let newComparison = {
+            const valueIndex = dotProp.get(state, 'comparison.allIds').indexOf(payload.id);
+            const newState = dotProp.delete(state, `comparison.allIds.${valueIndex}`);
+            const newComparison = {
                 allIds: newState.comparison.allIds,
                 byId: dotProp.delete(state.comparison.byId, payload.id)
             };
-            cookies.set('comparison', newComparison, { path: '/', maxAge: 604800 });
+            cookies.set('comparison', newComparison, { path: process.env.PUBLIC_URL, maxAge: 604800 });
             return {
                 ...newState,
                 comparison: newComparison

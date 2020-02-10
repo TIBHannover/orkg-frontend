@@ -93,7 +93,7 @@ class ContributionTemplate extends Component {
 
     getTemplateDetails = () => {
         return getStatementsBySubject({ id: this.props.match.params.id }).then(templateStaments => {
-            let templatePredicate = templateStaments.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE);
+            const templatePredicate = templateStaments.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE);
             return {
                 statements: templateStaments.map(s => s.id),
                 templatePredicate: templatePredicate
@@ -140,13 +140,13 @@ class ContributionTemplate extends Component {
                 templatePredicate: selected
             });
         } else if (action.action === 'create-option') {
-            let result = await Confirm({
+            const result = await Confirm({
                 title: 'Are you sure you need a new property?',
                 message: 'Often there are existing properties that you can use as well. It is better to use existing properties than new ones.',
                 cancelColor: 'light'
             });
             if (result) {
-                let newPredicate = await createPredicate(selected.label);
+                const newPredicate = await createPredicate(selected.label);
                 selected.id = newPredicate.id;
                 this.setState({
                     templatePredicate: selected
@@ -168,14 +168,14 @@ class ContributionTemplate extends Component {
 
     handlePropertiesSelect = async (selected, action) => {
         if (action.action === 'create-option') {
-            let result = await Confirm({
+            const result = await Confirm({
                 title: 'Are you sure you need a new property?',
                 message: 'Often there are existing properties that you can use as well. It is better to use existing properties than new ones.',
                 cancelColor: 'light'
             });
             if (result) {
-                var foundIndex = selected.findIndex(x => x.__isNew__);
-                let newPredicate = await createPredicate(selected[foundIndex].label);
+                const foundIndex = selected.findIndex(x => x.__isNew__);
+                const newPredicate = await createPredicate(selected[foundIndex].label);
                 selected[foundIndex] = { id: newPredicate.id, label: selected[foundIndex].label };
                 this.setState({
                     templateProperties: !selected ? [] : selected
@@ -195,7 +195,7 @@ class ContributionTemplate extends Component {
     };
 
     handleSave = async () => {
-        let promises = [];
+        const promises = [];
         this.setState({ isSaving: true, editMode: false });
         let templateResource;
         if (!this.props.match.params.id) {
@@ -216,25 +216,25 @@ class ContributionTemplate extends Component {
         promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_PREDICATE, this.state.templatePredicate.id));
         // save template research fields
         if (this.state.templateResearchFields.length > 0) {
-            for (let researchField of this.state.templateResearchFields.reverse()) {
+            for (const researchField of this.state.templateResearchFields.reverse()) {
                 promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD, researchField.id));
             }
         }
         // save template research problems
         if (this.state.templateResearchProblems.length > 0) {
-            for (let researchProblem of this.state.templateResearchProblems.reverse()) {
+            for (const researchProblem of this.state.templateResearchProblems.reverse()) {
                 promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM, researchProblem.id));
             }
         }
         // save template properties
         if (this.state.templateProperties.length > 0) {
-            for (let property of this.state.templateProperties.reverse()) {
+            for (const property of this.state.templateProperties.reverse()) {
                 promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_PROPERTY, property.id));
             }
         }
         // save template sub templates
         if (this.state.templateSubTemplates.length > 0) {
-            for (let subtemplate of this.state.templateSubTemplates.reverse()) {
+            for (const subtemplate of this.state.templateSubTemplates.reverse()) {
                 promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_SUB_TEMPLATE, subtemplate.id));
             }
         }

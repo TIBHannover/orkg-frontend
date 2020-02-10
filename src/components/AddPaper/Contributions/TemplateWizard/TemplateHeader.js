@@ -47,7 +47,7 @@ class TemplateHeader extends Component {
     };
 
     toggleDeleteTemplate = async () => {
-        let result = await Confirm({
+        const result = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure you want to delete this template with its statements?',
             cancelColor: 'light'

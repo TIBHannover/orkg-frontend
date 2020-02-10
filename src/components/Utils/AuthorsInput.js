@@ -1,76 +1,108 @@
 import React, { Component } from 'react';
 import { FormGroup, Label, Input, Button, Modal, ModalBody, ModalHeader, ModalFooter, FormFeedback } from 'reactstrap';
+import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faSpinner, faSort, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import styled, { withTheme } from 'styled-components';
 import { submitGetRequest } from 'network';
 import { get_error_message } from 'utils';
+import arrayMove from 'array-move';
 import PropTypes from 'prop-types';
 
 const AuthorTags = styled.div`
-    align-items: center;
     display: flex;
     flex: 1;
     flex-wrap: wrap;
-    padding: 2px 8px 2px 8px;
+    flex-direction: column;
     position: relative;
     overflow: hidden;
-    box-sizing: border-box;
-    background-color: #f7f7f7;
-    background-clip: padding-box;
-    border: 2px solid#ced4da;
-    border-top-left-radius: 12px;
-    border-bottom-left-radius: 12px;
-    cursor: default;
+`;
+
+const AddAuthor = styled(Button)`
+    margin: 0 0 2px 0;
+    &:hover {
+        background-color: #e9ecef;
+        color: ${props => props.theme.darkblueDarker};
+    }
+`;
+
+const StyledDragHandle = styled.div`
+    padding: 8px 10px;
+    cursor: move;
 `;
 
 const AuthorTag = styled.div`
-    background-color: rgb(232, 97, 97);
-    border-radius: 999px;
+    background-color: #e9ecef;
     display: flex;
-    margin: 0 0 2px 2px;
-    min-width: 0;
+    margin: 0 0 4px 0;
     box-sizing: border-box;
-    color: #fff;
-    font-size: 90%;
-    border-radius: 2px;
-    color: #fff;
-    border-radius: 999px;
+    color: rgb(147, 147, 147);
+    cursor: pointer;
+    border-radius: 12px;
+    overflow: hidden;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    &:hover {
+        background-color: #ffbdad;
+        color: #de350b;
+    }
 
     .name {
-        border-radius: 2px;
-        color: rgb(255, 255, 255);
-        font-size: 85%;
+        padding: 8px 10px;
+        color: #495057;
         overflow: hidden;
-        padding: 2px 2px 2px 6px;
         text-overflow: ellipsis;
         white-space: nowrap;
         box-sizing: border-box;
+        flex: 1;
+        display: flex;
     }
-    .name:hover {
-        background-color: #ffbdad;
-        color: #de350b;
-        border-bottom-left-radius: 999px;
-        border-top-left-radius: 999px;
-    }
+
     .delete {
-        margin-left: 5px;
+        padding: 8px 10px;
         align-items: center;
-        border-radius: 0 999px 999px 0;
         display: inline-block;
-        padding-left: 4px;
-        padding-right: 5px;
         box-sizing: border-box;
         margin-left: 2px;
         cursor: pointer;
     }
 
     .delete:hover {
-        background-color: #ffbdad;
+        background-color: #e9ecef;
         color: #de350b;
     }
 `;
+
+const SortableItem = sortableElement(({ author, index, authorIndex, editAuthor, removeAuthor }) => (
+    <AuthorTag>
+        <DragHandle />
+        <div className={'name'} onClick={e => editAuthor(authorIndex)}>
+            {author.label}
+            {author.orcid && <Icon style={{ margin: '4px' }} icon={faOrcid} />}
+        </div>
+        <div style={{ padding: '8px' }} onClick={e => editAuthor(authorIndex)}>
+            <Icon icon={faPen} />
+        </div>
+        <div title={'Delete author'} className={'delete'} onClick={e => removeAuthor(author.id)}>
+            <Icon icon={faTimes} />
+        </div>
+    </AuthorTag>
+));
+
+const DragHandle = sortableHandle(() => (
+    <StyledDragHandle className={'ml-2 mr-2'}>
+        <Icon icon={faSort} />
+    </StyledDragHandle>
+));
+
+const SortableContainer = sortableContainer(({ children }) => {
+    return <AuthorTags>{children}</AuthorTags>;
+});
 
 class AuthorsInput extends Component {
     constructor(props) {
@@ -98,8 +130,8 @@ class AuthorsInput extends Component {
 
     isORCID = value => {
         /** Regular expression to check whether an input string is a valid ORCID id.  */
-        let ORCID_REGEX = '^\\s*(?:(?:https?://)?orcid.org/)?([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?([0-9]{4})\\s*$';
-        let supportedORCID = new RegExp(ORCID_REGEX);
+        const ORCID_REGEX = '^\\s*(?:(?:https?://)?orcid.org/)?([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?([0-9]{4})\\s*$';
+        const supportedORCID = new RegExp(ORCID_REGEX);
         return Boolean(value && value.match(supportedORCID));
     };
 
@@ -114,11 +146,11 @@ class AuthorsInput extends Component {
             if (this.isORCID(this.state.authorInput)) {
                 this.setState({ authorNameLoading: true });
                 // Get the full name from ORCID API
-                let orcid = this.state.authorInput.match(/([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?([0-9]{4})/g)[0];
-                let ORCIDLink = 'https://pub.orcid.org/v2.0/' + orcid + '/person';
+                const orcid = this.state.authorInput.match(/([0-9]{4})-?([0-9]{4})-?([0-9]{4})-?([0-9]{4})/g)[0];
+                const ORCIDLink = 'https://pub.orcid.org/v2.0/' + orcid + '/person';
                 submitGetRequest(ORCIDLink, { Accept: 'application/orcid+json' })
                     .then(response => {
-                        let authorName = this.getFullname(response.name);
+                        const authorName = this.getFullname(response.name);
                         const newAuthor = {
                             label: authorName,
                             id: authorName,
@@ -196,45 +228,51 @@ class AuthorsInput extends Component {
         this.toggle('showAuthorForm');
     };
 
+    onSortEnd = ({ oldIndex, newIndex }) => {
+        this.props.handler(arrayMove(this.props.value, oldIndex, newIndex));
+    };
+
     render() {
         return (
             <div className={' clearfix'}>
-                <div className="input-group mb-3">
-                    <AuthorTags className={'clearfix'} onClick={this.props.value.length === 0 ? () => this.toggle('showAuthorForm') : undefined}>
-                        {this.props.value.length > 0 ? (
-                            this.props.value.map((author, index) => {
-                                return (
-                                    <AuthorTag key={`author-${index}`}>
-                                        <div className={'name'} onClick={e => this.editAuthor(index)}>
-                                            {author.label}
-                                            {author.orcid && <Icon style={{ margin: '4px 2px 0' }} icon={faOrcid} />}
-                                        </div>
-                                        <div className={'delete'} onClick={e => this.removeAuthor(author.id)}>
-                                            <Icon icon={faTimes} />
-                                        </div>
-                                    </AuthorTag>
-                                );
-                            })
-                        ) : (
-                            <div>{this.state.editMode ? 'Edit author' : 'Add author'}</div>
-                        )}
-                    </AuthorTags>
-
-                    <div className="input-group-append">
-                        <button
-                            className="btn btn-outline-primary"
-                            type="button"
-                            id="button-addon2"
-                            onClick={() => {
-                                this.setState({ authorName: '', authorORCID: '', errors: null, editMode: false });
-                                this.toggle('showAuthorForm');
-                            }}
+                <div>
+                    {this.props.value.length > 0 && (
+                        <SortableContainer
+                            useDragHandle
+                            helperClass="sortableHelperAuthors"
+                            onSortEnd={this.onSortEnd}
+                            className={'clearfix'}
+                            onClick={this.props.value.length === 0 ? () => this.toggle('showAuthorForm') : undefined}
+                            lockAxis="y"
                         >
-                            Add author
-                        </button>
-                    </div>
+                            {this.props.value.map((author, index) => {
+                                return (
+                                    <SortableItem
+                                        key={`author-${index}`}
+                                        author={author}
+                                        index={index}
+                                        authorIndex={index}
+                                        editAuthor={() => this.editAuthor(index)}
+                                        removeAuthor={() => this.removeAuthor(author.id)}
+                                    />
+                                );
+                            })}
+                        </SortableContainer>
+                    )}
                 </div>
-
+                <div>
+                    <AddAuthor
+                        id="button-addon2"
+                        color="light"
+                        className="w-100"
+                        onClick={() => {
+                            this.setState({ authorNameLoading: false, authorInput: '', errors: null, editMode: false });
+                            this.toggle('showAuthorForm');
+                        }}
+                    >
+                        <Icon icon={faPlus} className={'mr-2'} /> Add author
+                    </AddAuthor>
+                </div>
                 <Modal isOpen={this.state.showAuthorForm} toggle={() => this.toggle('showAuthorForm')}>
                     <ModalHeader toggle={this.toggleVideoDialog}>{this.state.editMode ? 'Edit author' : 'Add author'}</ModalHeader>
                     <ModalBody>

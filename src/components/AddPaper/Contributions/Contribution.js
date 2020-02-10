@@ -39,13 +39,13 @@ class Contribution extends Component {
     loadContirbutionTemplates = () => {
         this.setState({ isTemplatesLoading: true, isTemplatesFailesLoading: false });
         getStatementsByObject({ id: this.props.selectedResearchField }).then(statements => {
-            let contributionTemplates = statements.filter(statement =>
+            const contributionTemplates = statements.filter(statement =>
                 statement.subject.classes.includes(process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE)
             );
             Promise.all(
                 contributionTemplates.map(contributionTemplate =>
                     getStatementsBySubject({ id: contributionTemplate.subject.id }).then(templateStaments => {
-                        let templatePredicate = templateStaments
+                        const templatePredicate = templateStaments
                             .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE)
                             .map(statement => ({
                                 id: statement.object.id,

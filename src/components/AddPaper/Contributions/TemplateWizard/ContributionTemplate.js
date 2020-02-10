@@ -34,11 +34,11 @@ const AnimationContainer = styled(CSSTransition)`
 
 class ContributionTemplate extends Component {
     render() {
-        let propertyIds =
+        const propertyIds =
             Object.keys(this.props.resources.byId).length !== 0 && this.props.resourceId
                 ? this.props.resources.byId[this.props.resourceId].propertyIds
                 : [];
-        let shared =
+        const shared =
             Object.keys(this.props.resources.byId).length !== 0 && this.props.resourceId
                 ? this.props.resources.byId[this.props.resourceId].shared
                 : 1;
@@ -53,7 +53,7 @@ class ContributionTemplate extends Component {
                         propertyId={this.props.propertyId}
                     />
                     {propertyIds.map((propertyId, index) => {
-                        let property = this.props.properties.byId[propertyId];
+                        const property = this.props.properties.byId[propertyId];
 
                         return (
                             <StatementItem

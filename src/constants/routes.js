@@ -17,7 +17,7 @@ export default {
     },
     VIEW_PAPER: '/paper/:resourceId/:contributionId?',
     COMPARISON_SHORTLINK: '/c/:shortCode',
-    COMPARISON: '/comparison/',
+    COMPARISON: '/comparison/:comparisonId?',
     PAPERS: '/papers',
     RESEARCH_PROBLEM: '/problem/:researchProblemId',
     RESEARCH_FIELD: '/field/:researchFieldId',

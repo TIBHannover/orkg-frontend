@@ -59,7 +59,7 @@ class AddValue extends Component {
     };
 
     handleInputChange = (e, value) => {
-        let inputValue = e ? e.target.value : value;
+        const inputValue = e ? e.target.value : value;
 
         this.setState({
             inputValue
@@ -68,8 +68,8 @@ class AddValue extends Component {
 
     handleValueSelect = async ({ id, value, shared, classes }) => {
         if (this.props.syncBackend) {
-            let predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
-            let newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, id);
+            const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
+            const newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, id);
             this.props.createValue({
                 label: value,
                 type: this.state.valueType,
@@ -97,7 +97,7 @@ class AddValue extends Component {
 
     handleAddValue = async () => {
         if (this.props.syncBackend) {
-            let predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
+            const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
             let newObject = null;
             let newStatement = null;
             switch (this.state.valueType) {
@@ -135,10 +135,10 @@ class AddValue extends Component {
     };
 
     getNewResources = () => {
-        let resourceList = [];
+        const resourceList = [];
 
-        for (let key in this.props.newResources) {
-            let resource = this.props.newResources[key];
+        for (const key in this.props.newResources) {
+            const resource = this.props.newResources[key];
 
             if (!resource.existingResourceId) {
                 resourceList.push({

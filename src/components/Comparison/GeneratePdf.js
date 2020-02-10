@@ -12,16 +12,23 @@ class GeneratePdf extends Component {
         return (
             <DropdownItem
                 onClick={() => {
-                    const input = document.getElementById(this.props.id);
-                    const inputHeightMm = input.offsetHeight;
-                    const inputWidthMm = input.offsetWidth;
-
-                    html2canvas(input).then(canvas => {
+                    const header = document.getElementById(this.props.id).getElementsByClassName('rt-thead')[0];
+                    const headerHeightMm = header.offsetHeight;
+                    const headerWidthMm = header.offsetWidth;
+                    const body = document.getElementById(this.props.id).getElementsByClassName('rt-tbody')[0];
+                    const bodyHeightMm = body.offsetHeight;
+                    // Header
+                    html2canvas(header).then(canvas => {
                         const imgData = canvas.toDataURL('image/png');
-
-                        let pdf = new jsPDF('l', 'mm', [inputHeightMm, inputWidthMm]);
+                        const pdf = new jsPDF('l', 'mm', [headerHeightMm + bodyHeightMm, headerWidthMm]);
                         pdf.addImage(imgData, 'PNG', 0, 5);
-                        pdf.save('ORKG Comparison exported.pdf');
+                        // Body
+                        html2canvas(body).then(canvas => {
+                            const imgData2 = canvas.toDataURL('image/png');
+                            // multiply by 0.26 to convert from pixel to mm
+                            pdf.addImage(imgData2, 'PNG', 0, headerHeightMm * 0.26 + 5);
+                            pdf.save('ORKG Comparison exported.pdf');
+                        });
                     });
                 }}
             >

@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Carousel, CarouselItem, CarouselIndicators } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import ROUTES from '../../constants/routes.js';
-import { getResourcesByClass, getStatementsBySubjects } from '../../network';
+import ROUTES from 'constants/routes.js';
+import { getResourcesByClass, getStatementsBySubjects } from 'network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import Dotdotdot from 'react-dotdotdot';
 import styled from 'styled-components';
+import { reverse } from 'named-urls';
 import ContentLoader from 'react-content-loader';
 
 const CarouselContainer = styled.div`
@@ -22,6 +23,15 @@ const CarouselContainer = styled.div`
 
 const CarouselItemStyled = styled(CarouselItem)`
     border-left: 4px solid ${props => props.theme.orkgPrimaryColor};
+`;
+
+const DescriptionPreview = styled.div`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    font-style: italic;
 `;
 
 class FeaturedComparisons extends Component {
@@ -42,7 +52,7 @@ class FeaturedComparisons extends Component {
             loading: true
         });
 
-        let responseJson = await getResourcesByClass({
+        const responseJson = await getResourcesByClass({
             id: process.env.REACT_APP_CLASSES_FEATURED_COMPARISON,
             sortBy: 'created_at',
             desc: false
@@ -53,11 +63,11 @@ class FeaturedComparisons extends Component {
             ids
         });
 
-        let comparisons = [];
+        const comparisons = [];
         for (const comparison of responseJson) {
             let description = '';
             let icon = '';
-            let url = '';
+            const url = '';
             let type = '';
             let onHomepage = false;
 
@@ -77,11 +87,6 @@ class FeaturedComparisons extends Component {
                         statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_ICON
                     );
                     icon = iconStatement.length > 0 ? iconStatement[0].object.label : '';
-
-                    const urlStatement = comparisonStatement.statements.filter(
-                        statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL
-                    );
-                    url = urlStatement.length > 0 ? urlStatement[0].object.label : '';
 
                     const typeStatement = comparisonStatement.statements.filter(
                         statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_TYPE
@@ -142,13 +147,11 @@ class FeaturedComparisons extends Component {
                     <div style={{ minHeight: '120px' }} className="d-flex">
                         <div>
                             <h5>
-                                <Link className="" to={`${ROUTES.COMPARISON}${comparison.url}`}>
+                                <Link className="" to={reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })}>
                                     <Dotdotdot clamp={2}>{comparison.label}</Dotdotdot>
                                 </Link>
                             </h5>
-                            <div>
-                                <i>{comparison.description}</i>
-                            </div>
+                            <DescriptionPreview>{comparison.description}</DescriptionPreview>
                         </div>
                     </div>
                 </CarouselItemStyled>

@@ -91,12 +91,12 @@ class Abstract extends Component {
         this.setState({ isAnnotationLoading: true });
         return getAnnotations(this.props.abstract)
             .then(data => {
-                let annotated = [];
-                let ranges = {};
+                const annotated = [];
+                const ranges = {};
                 if (data && data.entities) {
                     data.entities
                         .map(entity => {
-                            let text = data.text.substring(entity[2][0][0], entity[2][0][1]);
+                            const text = data.text.substring(entity[2][0][0], entity[2][0][1]);
                             if (annotated.indexOf(text.toLowerCase()) < 0) {
                                 annotated.push(text.toLowerCase());
                                 // Predicate label entity[1]
@@ -195,7 +195,7 @@ class Abstract extends Component {
         if (this.state.classColors[rangeClass.toLowerCase()]) {
             return this.state.classColors[rangeClass.toLowerCase()];
         } else {
-            let newColor = randomcolor({ luminosity: 'light', seed: rangeClass.toLowerCase() });
+            const newColor = randomcolor({ luminosity: 'light', seed: rangeClass.toLowerCase() });
             this.setState({ classColors: { ...this.state.classColors, [rangeClass.toLowerCase()]: newColor } });
             return newColor;
         }
@@ -203,7 +203,7 @@ class Abstract extends Component {
 
     getExistingPredicateId = property => {
         if (this.props.properties.allIds.length > 0) {
-            let p = this.props.properties.allIds.filter(pId => this.props.properties.byId[pId].label === property.label);
+            const p = this.props.properties.allIds.filter(pId => this.props.properties.byId[pId].label === property.label);
             if (p.length > 0) {
                 // Property Already exists
                 return p[0];
@@ -214,11 +214,11 @@ class Abstract extends Component {
 
     getExistingRange = range => {
         if (this.props.properties.allIds.length > 0) {
-            let p = this.props.properties.allIds.filter(pId => this.props.properties.byId[pId].label === range.class.label);
+            const p = this.props.properties.allIds.filter(pId => this.props.properties.byId[pId].label === range.class.label);
             if (p.length > 0) {
                 // Property Already exists
                 // Check value
-                let v = this.props.properties.byId[p[0]].valueIds.filter(id => {
+                const v = this.props.properties.byId[p[0]].valueIds.filter(id => {
                     if (this.props.values.byId[id].label === range.text) {
                         return id;
                     } else {
@@ -234,10 +234,10 @@ class Abstract extends Component {
     };
 
     handleInsertData = () => {
-        let classesID = {};
-        let createdProperties = {};
-        let statements = { properties: [], values: [] };
-        let rangesArray = toArray(this.props.ranges).filter(r => r.certainty >= this.state.certaintyThreshold);
+        const classesID = {};
+        const createdProperties = {};
+        const statements = { properties: [], values: [] };
+        const rangesArray = toArray(this.props.ranges).filter(r => r.certainty >= this.state.certaintyThreshold);
         if (rangesArray.length > 0) {
             rangesArray.map(range => {
                 let propertyId;
@@ -245,12 +245,12 @@ class Abstract extends Component {
                     if (classesID[range.class.id]) {
                         propertyId = classesID[range.class.id];
                     } else {
-                        let pID = guid();
+                        const pID = guid();
                         classesID[range.class.id] = pID;
                         propertyId = pID;
                     }
                     if (!createdProperties[propertyId]) {
-                        let existingPredicateId = this.getExistingPredicateId(range.class);
+                        const existingPredicateId = this.getExistingPredicateId(range.class);
                         if (!existingPredicateId) {
                             statements['properties'].push({
                                 propertyId: propertyId,

@@ -161,7 +161,7 @@ class ValueItem extends Component {
     };
 
     toggleDeleteValue = async () => {
-        let result = await Confirm({
+        const result = await Confirm({
             title: 'Are you sure?',
             message: 'Are you sure you want to delete this value?',
             cancelColor: 'light'
@@ -180,8 +180,8 @@ class ValueItem extends Component {
     };
 
     handleResourceClick = e => {
-        let resource = this.props.resources.byId[this.props.resourceId];
-        let existingResourceId = resource.existingResourceId;
+        const resource = this.props.resources.byId[this.props.resourceId];
+        const existingResourceId = resource.existingResourceId;
 
         if (existingResourceId && !resource.isFechted) {
             this.props.fetchStatementsForResource({
@@ -217,9 +217,8 @@ class ValueItem extends Component {
     };
 
     handleExistingResourceClick = () => {
-        let resource = this.props.resources.byId[this.props.resourceId];
-        let existingResourceId = resource.existingResourceId ? resource.existingResourceId : this.props.resourceId;
-        console.log(existingResourceId);
+        const resource = this.props.resources.byId[this.props.resourceId];
+        const existingResourceId = resource.existingResourceId ? resource.existingResourceId : this.props.resourceId;
         this.setState({
             modal: true,
             dialogResourceId: existingResourceId,
@@ -228,8 +227,8 @@ class ValueItem extends Component {
     };
 
     handleDatasetClick = () => {
-        let resource = this.props.resources.byId[this.props.resourceId];
-        let existingResourceId = resource.existingResourceId;
+        const resource = this.props.resources.byId[this.props.resourceId];
+        const existingResourceId = resource.existingResourceId;
         this.setState({
             modalDataset: true,
             dialogResourceId: existingResourceId,
@@ -293,7 +292,7 @@ class ValueItem extends Component {
                 responseJson = responseJson.slice(0, this.maxResults);
             }
 
-            let options = [];
+            const options = [];
 
             responseJson.map(item =>
                 options.push({
@@ -322,8 +321,8 @@ class ValueItem extends Component {
             objectLink: this.props.type === 'object' && !this.props.isEditing && !isProperty
         });
 
-        let resource = this.props.resources.byId[this.props.resourceId];
-        let existingResourceId = resource ? resource.existingResourceId : false;
+        const resource = this.props.resources.byId[this.props.resourceId];
+        const existingResourceId = resource ? resource.existingResourceId : false;
         let onClick = null;
 
         if (
@@ -336,7 +335,7 @@ class ValueItem extends Component {
             onClick = this.handleResourceClick;
         }
 
-        let customStyles = {
+        const customStyles = {
             control: (provided, state) => ({
                 ...provided,
                 background: 'inherit',

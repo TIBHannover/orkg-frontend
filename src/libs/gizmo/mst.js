@@ -30,10 +30,16 @@ export default class MinimumSpanningTree {
         this.links = l;
     }
 
+    resetDepthValues() {
+        this.nodes.forEach(node => {
+            node.depthValue = -1;
+        });
+    }
+
     computeMinimumSpanningTree() {
         // find root node;
-        let rootCandidates = [];
-        let propagateArray = [];
+        const rootCandidates = [];
+        const propagateArray = [];
         this.nodes.forEach(node => {
             if (node.incommingLink.length === 0) {
                 rootCandidates.push(node);

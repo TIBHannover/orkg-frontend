@@ -17,6 +17,12 @@ export default class Property extends BaseElement {
         this.rangeNode = this.rangeNode.bind(this);
         this.linkElement = this.linkElement.bind(this);
         this.getForceLink = this.getForceLink.bind(this);
+        this.makeInvisibleForAnimation = this.makeInvisibleForAnimation.bind(this);
+    }
+
+    makeInvisibleForAnimation() {
+        this.svgRoot.classed('hidden', true);
+        this.linkElement().makeInvisibleForAnimation();
     }
 
     linkElement = function(d) {
@@ -60,7 +66,7 @@ export default class Property extends BaseElement {
     };
 
     getForceLink = function() {
-        let that = this;
+        const that = this;
         return [
             {
                 source: that.domain,

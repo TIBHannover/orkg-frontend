@@ -56,6 +56,10 @@ body {
     border-radius: 0 !important;
 }
 
+.sortableHelperAuthors {
+    z-index: 10000 !important;
+}
+
 // REACTOUR
 .reactourMask {
     opacity: 0.6;

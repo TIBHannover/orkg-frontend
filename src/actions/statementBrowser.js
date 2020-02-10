@@ -58,6 +58,13 @@ export const resetStatementBrowser = () => dispatch => {
     });
 };
 
+export const loadStatementBrowserData = data => dispatch => {
+    dispatch({
+        type: type.STATEMENT_BROWSER_LOAD_DATA,
+        payload: data
+    });
+};
+
 export const togglePropertyCollapse = id => dispatch => {
     dispatch({
         type: type.TOGGLE_PROPERTY_COLLAPSE,
@@ -118,7 +125,7 @@ export const updatePropertyLabel = data => dispatch => {
 };
 
 export const createValue = data => dispatch => {
-    let resourceId = data.existingResourceId ? data.existingResourceId : data.type === 'object' ? guid() : null;
+    const resourceId = data.existingResourceId ? data.existingResourceId : data.type === 'object' ? guid() : null;
     dispatch({
         type: type.CREATE_VALUE,
         payload: {
@@ -211,7 +218,8 @@ export const selectResource = data => dispatch => {
 
 // TODO: support literals (currently not working in backend)
 export const fetchStatementsForResource = data => {
-    let { resourceId, existingResourceId, isContribution } = data;
+    let { isContribution } = data;
+    const { resourceId, existingResourceId } = data;
     isContribution = isContribution ? isContribution : false;
 
     return dispatch => {
@@ -224,10 +232,10 @@ export const fetchStatementsForResource = data => {
                     type: type.DONE_FETCHING_STATEMENTS
                 });
 
-                let existingProperties = [];
-                let researchProblems = [];
+                const existingProperties = [];
+                const researchProblems = [];
 
-                for (let statement of response) {
+                for (const statement of response) {
                     let propertyId = guid();
                     const valueId = guid();
                     // filter out research problem to show differently

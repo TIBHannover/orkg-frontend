@@ -75,7 +75,7 @@ class TemplateEditorAutoComplete extends Component {
                 responseJson = responseJson.slice(0, this.maxResults);
             }
 
-            let options = [];
+            const options = [];
 
             responseJson.map(item =>
                 options.push({

@@ -2,7 +2,13 @@ import React from 'react';
 import { Container, Row, Col, Badge } from 'reactstrap';
 import ROUTES from '../../constants/routes';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { ReactComponent as Logo } from './../../assets/img/vertical_logo.svg';
+import TIB_LOGO from './../../assets/img/poweredby/TIB_Logo_EN.png';
+import LUH_LOGO from './../../assets/img/poweredby/LUH.png';
+import L3S_LOGO from './../../assets/img/poweredby/L3S.png';
+import INFAI_LOGO from './../../assets/img/poweredby/infAI.png';
 import styled from 'styled-components';
 
 const FooterWrapper = styled.div`
@@ -27,6 +33,12 @@ const FooterCol = styled(Col)`
     }
     a {
         color: ${props => props.theme.darkblueDarker};
+    }
+`;
+
+const TwitterLink = styled.a`
+    :hover {
+        color: #00acee;
     }
 `;
 
@@ -64,8 +76,13 @@ const Footer = () => (
                                 </a>
                             </li>
                             <li>
-                                <a href="https://twitter.com/orkg_org" target="_blank" rel="noopener noreferrer">
-                                    Follow us
+                                <a href="https://projects.tib.eu/orkg/data-protection/" target="_blank" rel="noopener noreferrer">
+                                    Data protection
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://projects.tib.eu/orkg/imprint/" target="_blank" rel="noopener noreferrer">
+                                    Imprint
                                 </a>
                             </li>
                         </ul>
@@ -74,6 +91,11 @@ const Footer = () => (
                         <h5>Technical</h5>
                         <hr className={'mr-5'} />
                         <ul className={'p-0'} style={{ listStyle: 'none' }}>
+                            <li>
+                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues" target="_blank" rel="noopener noreferrer">
+                                    Report an issue
+                                </a>
+                            </li>
                             <li>
                                 <Link to={ROUTES.CHANGELOG}>Changelog</Link>
                             </li>
@@ -93,9 +115,10 @@ const Footer = () => (
                         <hr className={'mr-5'} />
                         <ul className={'p-0'} style={{ listStyle: 'none' }}>
                             <li>
-                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues" target="_blank" rel="noopener noreferrer">
-                                    Report an issue
-                                </a>
+                                <TwitterLink href="https://twitter.com/orkg_org" target="_blank" rel="noopener noreferrer">
+                                    Follow us
+                                    <Icon className={'ml-2'} icon={faTwitter} />
+                                </TwitterLink>
                             </li>
                             <li>
                                 <a href="https://projects.tib.eu/orkg/contact/" target="_blank" rel="noopener noreferrer">
@@ -108,6 +131,25 @@ const Footer = () => (
                         </ul>
                     </FooterCol>
                 </Row>
+                <hr style={{ width: '70%' }} />
+                <div className="d-flex justify-content-center mt-4">
+                    <a href="https://www.tib.eu/en/" target="_blank" rel="noopener noreferrer">
+                        <img src={TIB_LOGO} alt="Logo Technische Informationsbibliothek (TIB)" style={{ borderWidth: 0, height: '50px' }} />
+                    </a>
+                    <a href="https://www.uni-hannover.de/en/" target="_blank" rel="noopener noreferrer">
+                        <img src={LUH_LOGO} alt="Logo Leibniz University Hannover" style={{ borderWidth: 0, height: '50px', marginLeft: 30 }} />
+                    </a>
+                    <a href="https://www.l3s.de/en/" target="_blank" rel="noopener noreferrer">
+                        <img src={L3S_LOGO} alt="Logo L3S Research Center" style={{ borderWidth: 0, height: '55px', marginLeft: 30 }} />
+                    </a>
+                    <a href="https://infai.org/en/" target="_blank" rel="noopener noreferrer">
+                        <img
+                            src={INFAI_LOGO}
+                            alt="Logo  Institute for Applied Informatics (InfAI)"
+                            style={{ borderWidth: 0, height: '50px', marginLeft: 30 }}
+                        />
+                    </a>
+                </div>
             </footer>
         </Container>
     </FooterWrapper>

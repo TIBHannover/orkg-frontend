@@ -135,7 +135,7 @@ class GeneralData extends Component {
 
         this.lookup.current.blur();
 
-        let validation = this.validator.validate({ entry: this.state.entry.trim() });
+        const validation = this.validator.validate({ entry: this.state.entry.trim() });
         this.setState({ validation });
 
         if (!validation.isValid) {
@@ -280,7 +280,7 @@ class GeneralData extends Component {
     };
 
     handleSkipTour = () => {
-        this.props.cookies.set('taketour', 'skip', { path: '/', maxAge: 604800 });
+        this.props.cookies.set('taketour', 'skip', { path: process.env.PUBLIC_URL, maxAge: 604800 });
         this.toggle('isFirstVisit');
         if (this.props.cookies.get('taketourClosed')) {
             this.props.closeTour();
@@ -291,7 +291,7 @@ class GeneralData extends Component {
     };
 
     takeTour = () => {
-        this.props.cookies.set('taketour', 'take', { path: '/', maxAge: 604800 });
+        this.props.cookies.set('taketour', 'take', { path: process.env.PUBLIC_URL, maxAge: 604800 });
         this.toggle('isFirstVisit');
         this.props.openTour();
     };
@@ -313,9 +313,9 @@ class GeneralData extends Component {
 
     handleNextClick = () => {
         // TODO do some sort of validation, before proceeding to the next step
-        let errors = [];
+        const errors = [];
 
-        let { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi, entry, showLookupTable } = this.state;
+        const { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi, entry, showLookupTable } = this.state;
 
         if (!paperTitle || paperTitle.trim().length < 1) {
             errors.push('Please enter the title of your paper or click on "Lookup" if you entered the doi.');

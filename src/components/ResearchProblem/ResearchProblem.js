@@ -97,12 +97,12 @@ class ResearchProblem extends Component {
                                     publicationMonth = '';
                                 }
                                 // authors
-                                let authors = paperStatements.filter(
+                                const authors = paperStatements.filter(
                                     statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR
                                 );
-                                let authorNamesArray = [];
+                                const authorNamesArray = [];
                                 if (authors.length > 0) {
-                                    for (let author of authors) {
+                                    for (const author of authors) {
                                         authorNamesArray.push({
                                             id: author.object.id,
                                             statementId: author.id,

@@ -1,4 +1,6 @@
 import capitalize from 'capitalize';
+import queryString from 'query-string';
+import rdf from 'rdf';
 
 export const popupDelay = process.env.REACT_APP_POPUP_DELAY;
 
@@ -42,7 +44,7 @@ export function groupByObjectWithId(array, propertyName) {
 }
 
 export function deleteArrayEntryByObjectValue(arr, object, value) {
-    let newArr = [...arr];
+    const newArr = [...arr];
 
     let indexToDelete = -1;
 
@@ -106,7 +108,7 @@ export const get_error_message = (errors, field = null) => {
     if (field === null) {
         return Boolean(errors.message) ? capitalize(errors.message) : null;
     }
-    let field_error = errors.errors ? errors.errors.find(e => e.field === field) : null;
+    const field_error = errors.errors ? errors.errors.find(e => e.field === field) : null;
     return field_error ? capitalize(field_error.message) : null;
 };
 
@@ -136,10 +138,10 @@ export const getPaperData = (id, label, paperStatements) => {
         publicationMonth = '';
     }
     // authors
-    let authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
-    let authorNamesArray = [];
+    const authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
+    const authorNamesArray = [];
     if (authors.length > 0) {
-        for (let author of authors) {
+        for (const author of authors) {
             authorNamesArray.push({
                 id: author.object.id,
                 statementId: author.id,
@@ -164,10 +166,10 @@ export const getPaperData = (id, label, paperStatements) => {
         doi = null;
     }
     // contributions
-    let contributions = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION);
-    let contributionArray = [];
+    const contributions = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION);
+    const contributionArray = [];
     if (contributions.length > 0) {
-        for (let contribution of contributions) {
+        for (const contribution of contributions) {
             contributionArray.push({ ...contribution.object, statementId: contribution.id });
         }
     }
@@ -182,4 +184,184 @@ export const getPaperData = (id, label, paperStatements) => {
         authorNames: authorNamesArray.sort((a, b) => a.created_at.localeCompare(b.created_at)),
         contributions: contributionArray.sort((a, b) => a.label.localeCompare(b.label))
     };
+};
+
+/**
+ * Sort Methode
+ *
+ * @param {String} a
+ * @param {String} b
+ */
+export const sortMethod = (a, b) => {
+    // force null and undefined to the bottom
+    a = a === null || a === undefined ? -Infinity : a;
+    b = b === null || b === undefined ? -Infinity : b;
+    // check if a and b are numbers (contains only digits)
+    const aisnum = /^\d+$/.test(a);
+    const bisnum = /^\d+$/.test(b);
+    if (aisnum && bisnum) {
+        a = parseInt(a);
+        b = parseInt(b);
+    } else {
+        // force any string values to lowercase
+        a = typeof a === 'string' ? a.toLowerCase() : a;
+        b = typeof b === 'string' ? b.toLowerCase() : b;
+    }
+    // Return either 1 or -1 to indicate a sort priority
+    if (a > b) {
+        return 1;
+    }
+    if (a < b) {
+        return -1;
+    }
+    // returning 0 or undefined will use any subsequent column sorting methods or the row index as a tiebreaker
+    return 0;
+};
+
+export const getContributionIdsFromUrl = locationSearch => {
+    let ids = queryString.parse(locationSearch, { arrayFormat: 'comma' }).contributions;
+    if (!ids) {
+        return [];
+    }
+    if (typeof ids === 'string' || ids instanceof String) {
+        return [ids];
+    }
+    ids = ids.filter(n => n); //filter out empty element ids
+    return ids;
+};
+
+export const getPropertyIdsFromUrl = locationSearch => {
+    let ids = queryString.parse(locationSearch).properties;
+
+    if (!ids) {
+        return [];
+    }
+    ids = ids.split(',');
+    ids = ids.filter(n => n); //filter out empty elements
+
+    return ids;
+};
+
+export const getTransposeOptionFromUrl = locationSearch => {
+    const transpose = queryString.parse(locationSearch).transpose;
+    if (!transpose || !['true', '1'].includes(transpose)) {
+        return false;
+    }
+    return true;
+};
+
+export const getResonseHashFromUrl = locationSearch => {
+    const response_hash = queryString.parse(locationSearch).response_hash;
+    if (response_hash) {
+        return response_hash;
+    }
+    return null;
+};
+
+export const generateRdfDataVocabularyFile = (data, contributions, properties, metadata) => {
+    const element = document.createElement('a');
+    const cubens = rdf.ns('http://purl.org/linked-data/cube#');
+    const orkgVocab = rdf.ns('http://orkg.org/orkg/vocab/#');
+    const orkgResource = rdf.ns('http://orkg.org/orkg/resource/');
+    const gds = new rdf.Graph();
+    //Vocabulary properties labels
+    gds.add(new rdf.Triple(cubens('dataSet'), rdf.rdfsns('label'), new rdf.Literal('dataSet')));
+    gds.add(new rdf.Triple(cubens('structure'), rdf.rdfsns('label'), new rdf.Literal('structure')));
+    gds.add(new rdf.Triple(cubens('component'), rdf.rdfsns('label'), new rdf.Literal('component')));
+    gds.add(new rdf.Triple(cubens('componentProperty'), rdf.rdfsns('label'), new rdf.Literal('component Property')));
+    gds.add(new rdf.Triple(cubens('componentAttachment'), rdf.rdfsns('label'), new rdf.Literal('component Attachment')));
+    gds.add(new rdf.Triple(cubens('dimension'), rdf.rdfsns('label'), new rdf.Literal('dimension')));
+    gds.add(new rdf.Triple(cubens('attribute'), rdf.rdfsns('label'), new rdf.Literal('attribute')));
+    gds.add(new rdf.Triple(cubens('measure'), rdf.rdfsns('label'), new rdf.Literal('measure')));
+    gds.add(new rdf.Triple(cubens('order'), rdf.rdfsns('label'), new rdf.Literal('order')));
+    //BNodes
+    const ds = new rdf.BlankNode();
+    const dsd = new rdf.BlankNode();
+    //Dataset
+    gds.add(new rdf.Triple(ds, rdf.rdfns('type'), cubens('DataSet')));
+    // Metadata
+    const dcterms = rdf.ns('http://purl.org/dc/terms/#');
+    gds.add(new rdf.Triple(ds, dcterms('title'), new rdf.Literal(metadata.title ? metadata.title : `Comparison - ORKG`)));
+    gds.add(new rdf.Triple(ds, dcterms('description'), new rdf.Literal(metadata.description ? metadata.description : `Description`)));
+    gds.add(new rdf.Triple(ds, dcterms('creator'), new rdf.Literal(metadata.creator ? metadata.creator : `Creator`)));
+    gds.add(new rdf.Triple(ds, dcterms('date'), new rdf.Literal(metadata.date ? metadata.date : `Date`)));
+    gds.add(new rdf.Triple(ds, dcterms('license'), new rdf.NamedNode('https://creativecommons.org/licenses/by-sa/4.0/')));
+    gds.add(new rdf.Triple(ds, rdf.rdfsns('label'), new rdf.Literal(`Comparison - ORKG`)));
+    gds.add(new rdf.Triple(ds, cubens('structure'), dsd));
+    // DataStructureDefinition
+    gds.add(new rdf.Triple(dsd, rdf.rdfns('type'), cubens('DataStructureDefinition')));
+    gds.add(new rdf.Triple(dsd, rdf.rdfsns('label'), new rdf.Literal('Data Structure Definition')));
+    const cs = {};
+    const dt = {};
+    //components
+    const columns = [
+        { id: 'Properties', title: 'Properties' },
+        ...contributions.map((contribution, index) => {
+            return contribution;
+        })
+    ];
+    columns.forEach(function(column, index) {
+        if (column.id === 'Properties') {
+            cs[column.id] = new rdf.BlankNode();
+            dt[column.id] = orkgVocab('Property');
+        } else {
+            cs[column.id] = new rdf.BlankNode();
+            dt[column.id] = orkgResource(`${column.id}`);
+        }
+
+        gds.add(new rdf.Triple(dsd, cubens('component'), cs[column.id]));
+        gds.add(new rdf.Triple(cs[column.id], rdf.rdfns('type'), cubens('ComponentSpecification')));
+        gds.add(new rdf.Triple(cs[column.id], rdf.rdfsns('label'), new rdf.Literal(`Component Specification`)));
+        gds.add(new rdf.Triple(cs[column.id], cubens('order'), new rdf.Literal(index.toString())));
+        if (column.id === 'Properties') {
+            gds.add(new rdf.Triple(cs[column.id], cubens('dimension'), dt[column.id]));
+            gds.add(new rdf.Triple(dt[column.id], rdf.rdfns('type'), cubens('DimensionProperty')));
+        } else {
+            gds.add(new rdf.Triple(cs[column.id], cubens('measure'), dt[column.id]));
+            gds.add(new rdf.Triple(dt[column.id], rdf.rdfns('type'), cubens('MeasureProperty')));
+        }
+        gds.add(new rdf.Triple(dt[column.id], rdf.rdfns('type'), cubens('ComponentProperty')));
+        gds.add(new rdf.Triple(dt[column.id], rdf.rdfsns('label'), new rdf.Literal(column.title.toString())));
+    });
+    //data
+    properties
+        .filter(property => property.active && data[property.id])
+        .map((property, index) => {
+            const bno = new rdf.BlankNode();
+            gds.add(new rdf.Triple(bno, rdf.rdfns('type'), cubens('Observation')));
+            gds.add(new rdf.Triple(bno, rdf.rdfsns('label'), new rdf.Literal(`Observation #{${index + 1}}`)));
+            gds.add(new rdf.Triple(bno, cubens('dataSet'), ds));
+            gds.add(new rdf.Triple(bno, dt['Properties'].toString(), new rdf.Literal(property.label.toString())));
+            contributions.map((contribution, index2) => {
+                const cell = data[property.id][index2];
+                if (cell.length > 0) {
+                    cell.map(v => {
+                        if (v.type && v.type === 'resource') {
+                            gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), orkgResource(`${v.resourceId}`)));
+                        } else {
+                            gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal(`${v.label ? v.label : ''}`)));
+                        }
+                        return null;
+                    });
+                } else {
+                    gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal('Empty')));
+                }
+                return null;
+            });
+            return null;
+        });
+    //Create the RDF file
+    const file = new Blob(
+        [
+            gds
+                .toArray()
+                .map(t => t.toString())
+                .join('\n')
+        ],
+        { type: 'text/n3' }
+    );
+    element.href = URL.createObjectURL(file);
+    element.download = 'ComparisonRDF.n3';
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
 };
