@@ -46,13 +46,6 @@ export const updateResearchField = data => dispatch => {
     });
 };
 
-export const updateTourCurrentStep = data => dispatch => {
-    dispatch({
-        type: type.UPDATE_TOUR_CURRENT_STEP,
-        payload: data
-    });
-};
-
 export const closeTour = () => dispatch => {
     dispatch({
         type: type.CLOSE_TOUR
