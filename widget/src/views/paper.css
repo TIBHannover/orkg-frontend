@@ -8,7 +8,7 @@
     border-color: rgb(232, 97, 97);
     padding: 6px 12px;
     display: block;
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
     font-size: 14px;
     font-weight: 400;
     line-height: 1.42857143;
@@ -21,7 +21,8 @@
     border: 1px solid transparent;
     text-decoration: none;
 }
-.orkg-widget-link:hover {
+.orkg-widget-link:hover,
+.orkg-widget-link:focus {
     color: #fff;
     background-color: #e34040;
     border-color: #e23434;

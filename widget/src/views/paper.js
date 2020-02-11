@@ -2,8 +2,6 @@ import html from './paper.html';
 import './paper.css';
 import img from './logo.png';
 
-let ORKGWidget;
-
 const dictionary = {
     add: {
         de: 'Artikel zu ORKG hinzufügen',
@@ -45,31 +43,36 @@ export const getPaperByDoi = doi => {
 };
 
 export function show(params) {
-    // convert plain HTML string into DOM elements
-    const temporary = document.createElement('div');
-    temporary.innerHTML = html;
-    // ORKG Logo
-    temporary.getElementsByClassName('orkg-widget-icon')[0].src = img;
-    // append elements to body
-    ORKGWidget = document.getElementById('orkg-widget');
+    const locations = document.getElementsByClassName('orkg-widget');
+    for (let i = 0; i < locations.length; i++) {
+        // convert plain HTML string into DOM elements
+        const temporary = document.createElement('div');
+        temporary.innerHTML = html;
+        // ORKG Logo
+        temporary.getElementsByClassName('orkg-widget-icon')[0].src = img;
+        // append elements to body
+        const ORKGWidget = locations[i];
 
-    // Paper DOI
-    const doi = ORKGWidget.getAttribute('data-doi');
-    getPaperByDoi(doi)
-        .then(result => {
-            ORKGWidget.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary['open'][params.language];
-            ORKGWidget.getElementsByClassName('orkg-widget-text-statements')[0].textContent = dictionary['numStatements'][params.language];
-            ORKGWidget.getElementsByClassName('orkg-widget-statements')[0].textContent = result.num_statements;
-            ORKGWidget.getElementsByClassName('orkg-widget-link')[0].href = 'http://localhost:3000/paper/' + result.id;
-        })
-        .catch(error => {
-            ORKGWidget.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary['add'][params.language];
-            ORKGWidget.getElementsByClassName('orkg-widget-link')[0].href = 'http://localhost:3000/add-paper';
-            const elem = ORKGWidget.getElementsByClassName('orkg-widget-description')[0];
-            elem.parentNode.removeChild(elem);
-        });
-
-    while (temporary.children.length > 0) {
-        ORKGWidget.appendChild(temporary.children[0]);
+        // Paper DOI
+        const doi = ORKGWidget.getAttribute('data-doi');
+        getPaperByDoi(doi)
+            .then(result => {
+                temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary['open'][params.language];
+                temporary.getElementsByClassName('orkg-widget-text-statements')[0].textContent = dictionary['numStatements'][params.language];
+                temporary.getElementsByClassName('orkg-widget-statements')[0].textContent = result.num_statements;
+                temporary.getElementsByClassName('orkg-widget-link')[0].href = 'http://localhost:3000/paper/' + result.id;
+                while (temporary.children.length > 0) {
+                    ORKGWidget.appendChild(temporary.children[0]);
+                }
+            })
+            .catch(error => {
+                temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary['add'][params.language];
+                temporary.getElementsByClassName('orkg-widget-link')[0].href = 'http://localhost:3000/add-paper';
+                const elem = temporary.getElementsByClassName('orkg-widget-description')[0];
+                elem.parentNode.removeChild(elem);
+                while (temporary.children.length > 0) {
+                    ORKGWidget.appendChild(temporary.children[0]);
+                }
+            });
     }
 }

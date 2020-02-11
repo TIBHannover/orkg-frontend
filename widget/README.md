@@ -1,13 +1,13 @@
 # ORKG Widget Documentation
 
-bundle size:
+bundle size: **11.3 kB**
 
 ### How to use:
 
 Place the following code on your website and set the paramater data-doi.
 
 ```html
-<div id="orkg-widget" data-doi="10.1007/s00799-015-0158-y"></div>
+<div class="orkg-widget" data-doi="10.1007/s00799-015-0158-y"></div>
 <script>
     (function(w, d, s, o, f, js, fjs) {
         w['ORKG-Widget'] = o;
@@ -55,7 +55,7 @@ The orkg widget uses this following html template to render the widget:
 ### Building
 
 ```
- ./node_modules/.bin/webpack --config webpack.config.js
+./node_modules/.bin/webpack --config webpack.config.js
 ```
 
 ### Serve
