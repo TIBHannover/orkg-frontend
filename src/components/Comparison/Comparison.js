@@ -504,6 +504,9 @@ class Comparison extends Component {
                     transpose={this.state.transpose}
                     location={window.location}
                     response_hash={this.state.response_hash}
+                    title={this.state.title}
+                    description={this.state.description}
+                    comparisonId={this.props.match.params.comparisonId}
                 />
             </div>
         );
