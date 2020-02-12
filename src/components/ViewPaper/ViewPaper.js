@@ -22,6 +22,7 @@ import { toast } from 'react-toastify';
 import Confirm from 'reactstrap-confirm';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
 import styled from 'styled-components';
+import SharePaper from './SharePaper';
 
 export const EditModeHeader = styled(Container)`
     background-color: #80869b !important;
@@ -429,28 +430,8 @@ class ViewPaper extends Component {
                             )}
                             {!this.state.loading_failed && !this.state.unfoundContribution && (
                                 <>
-                                    <hr className="mt-4" />
-                                    <div className={'mb-5 text-right'}>
-                                        <small>Share this paper:</small>
-                                        <a
-                                            href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.protocol}//${window.location.host}${window.location.pathname}`}
-                                            target="_blank"
-                                            className={'text-secondary'}
-                                            title={'Share this paper on facebook'}
-                                            rel="noopener noreferrer"
-                                        >
-                                            <Icon icon={faFacebook} className={'icon ml-2 mr-2'} />
-                                        </a>
-                                        <a
-                                            href={`https://twitter.com/share?url=${window.location.protocol}//${window.location.host}${window.location.pathname}&via=orkg_org&text=${this.props.viewPaper.title}`}
-                                            target="_blank"
-                                            className={'text-secondary'}
-                                            title={'Share this paper on twitter'}
-                                            rel="noopener noreferrer"
-                                        >
-                                            <Icon icon={faTwitter} />
-                                        </a>
-                                    </div>
+                                    <hr className="mt-3" />
+                                    <SharePaper title={this.props.viewPaper.title} />
 
                                     <Contributions
                                         selectedContribution={this.state.selectedContribution}
