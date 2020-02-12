@@ -66,9 +66,6 @@ class TemplateHeader extends Component {
                 id: this.props.propertyId,
                 resourceId: this.props.selectedResource
             });
-            console.log(this.props.id);
-            console.log(this.props.selectedResource);
-            console.log(this.props.propertyId);
         }
     };
 

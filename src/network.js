@@ -305,6 +305,14 @@ export const getStatementsByPredicate = ({ id, page = 1, items = 9999, sortBy = 
     return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/?${params}`);
 };
 
+export const getStatementsBySubjectAndPredicate = ({ subjectId, predicateId }) => {
+    return submitGetRequest(`${statementsUrl}subject/${subjectId}/predicate/${predicateId}`);
+};
+
+export const getStatementsByObjectAndPredicate = ({ objectId, predicateId }) => {
+    return submitGetRequest(`${statementsUrl}object/${objectId}/predicate/${predicateId}`);
+};
+
 export const getSimilaireContribution = id => {
     return submitGetRequest(`${similaireUrl}${encodeURIComponent(id)}/`);
 };
