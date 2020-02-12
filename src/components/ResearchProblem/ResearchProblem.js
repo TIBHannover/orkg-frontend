@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import Tippy from '@tippy.js/react';
 import { getStatementsByObject, getResource, getStatementsBySubject } from 'network';
-import ComparisonPopup from 'components/ViewPaper/ComparisonPopup';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ExternalDescription from './ExternalDescription';
 import ROUTES from 'constants/routes';

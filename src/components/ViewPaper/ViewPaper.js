@@ -12,7 +12,7 @@ import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import ComparisonPopup from './ComparisonPopup';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import { loadPaper, selectContribution, setPaperAuthors } from '../../actions/viewPaper';
 import GizmoGraphViewModal from './GraphView/GizmoGraphViewModal';
