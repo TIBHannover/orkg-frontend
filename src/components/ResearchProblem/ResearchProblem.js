@@ -2,12 +2,17 @@ import React, { Component } from 'react';
 import { Container, Button, Card, CardText, CardBody, CardHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faLink } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import { getStatementsByObject, getResource, getStatementsBySubject } from '../../network';
+import { reverse } from 'named-urls';
+import Tippy from '@tippy.js/react';
+import { getStatementsByObject, getResource, getStatementsBySubject } from 'network';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import PaperCard from '../PaperCard/PaperCard';
-import ROUTES from '../../constants/routes';
+import PaperCard from 'components/PaperCard/PaperCard';
+import ExternalDescription from './ExternalDescription';
+import ROUTES from 'constants/routes';
+import styled from 'styled-components';
+import { filterObjectOfStatementsByPredicate, getPaperData } from 'utils';
 
 class ResearchProblem extends Component {
     constructor(props) {
@@ -21,6 +26,8 @@ class ResearchProblem extends Component {
             hasNextPage: false,
             page: 1,
             researchProblem: null,
+            description: '',
+            sameAs: '',
             contributions: [],
             isLastPageReached: false
         };
@@ -54,6 +61,17 @@ class ResearchProblem extends Component {
                 document.title = `${this.state.researchProblem.label} - ORKG`;
             });
         });
+
+        // Get description of the research problem
+        getStatementsBySubject({ id: this.props.match.params.researchProblemId }).then(statements => {
+            const description = filterObjectOfStatementsByPredicate(statements, process.env.REACT_APP_PREDICATES_DESCRIPTION, true);
+            if (description) {
+                this.setState({ description: description.label });
+            } else {
+                const sameAs = filterObjectOfStatementsByPredicate(statements, process.env.REACT_APP_PREDICATES_SAME_AS, true);
+                this.setState({ sameAs: sameAs });
+            }
+        });
     };
 
     loadMorePapers = () => {
@@ -74,51 +92,10 @@ class ResearchProblem extends Component {
                         id: contribution.subject.id,
                         order: 'desc'
                     }).then(papers => {
-                        // TODO : use getPaperData(paperStatements) utils function and getStatementsBySubjects network function
                         // Fetch the data of each paper
                         const papers_data = papers.map(paper => {
                             return getStatementsBySubject({ id: paper.subject.id }).then(paperStatements => {
-                                // publication year
-                                let publicationYear = paperStatements.filter(
-                                    statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR
-                                );
-                                if (publicationYear.length > 0) {
-                                    publicationYear = publicationYear[0].object.label;
-                                } else {
-                                    publicationYear = '';
-                                }
-                                // publication month
-                                let publicationMonth = paperStatements.filter(
-                                    statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH
-                                );
-                                if (publicationMonth.length > 0) {
-                                    publicationMonth = publicationMonth[0].object.label;
-                                } else {
-                                    publicationMonth = '';
-                                }
-                                // authors
-                                const authors = paperStatements.filter(
-                                    statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR
-                                );
-                                const authorNamesArray = [];
-                                if (authors.length > 0) {
-                                    for (const author of authors) {
-                                        authorNamesArray.push({
-                                            id: author.object.id,
-                                            statementId: author.id,
-                                            class: author.object._class,
-                                            label: author.object.label,
-                                            classes: author.object.classes,
-                                            created_at: author.created_at
-                                        });
-                                    }
-                                }
-                                paper.data = {
-                                    publicationYear,
-                                    publicationMonth,
-                                    authorNames: authorNamesArray.sort((a, b) => a.created_at.localeCompare(b.created_at))
-                                };
-                                return paper;
+                                return { ...paper, data: getPaperData(paper.subject.id, paper.subject.label, paperStatements) };
                             });
                         });
                         return Promise.all(papers_data).then(results => {
@@ -157,21 +134,37 @@ class ResearchProblem extends Component {
                 {!this.state.loading && (
                     <div>
                         <Container className="p-0">
+                            <h1 className="h4 mt-4 mb-4 flex-grow-1">Research Problem</h1>
+                        </Container>
+                        <Container className="p-0">
                             <Card>
                                 <CardHeader>
                                     {/* TODO: Show the total number of contributions when number of items is provided with the paginated result
                                         <div className="float-right"><b>{this.state.contributions.length}</b> Contributions</div>
                                     */}
-                                    <h3 className="h4 mt-4 mb-4">{this.state.researchProblem && this.state.researchProblem.label}</h3>
+                                    <h2 className="h4 mb-1">
+                                        {this.state.researchProblem && this.state.researchProblem.label}
+                                        <Tippy content="Go to resource page">
+                                            <Link
+                                                className={'h6 ml-2 text-secondary'}
+                                                to={reverse(ROUTES.RESOURCE, { id: this.state.researchProblem.id })}
+                                            >
+                                                <Icon icon={faLink} />
+                                            </Link>
+                                        </Tippy>
+                                    </h2>
                                 </CardHeader>
                                 <CardBody>
-                                    <CardText>
-                                        List of papers in <i>{this.state.researchProblem && this.state.researchProblem.label}</i> research problem
-                                    </CardText>
+                                    {this.state.description && <CardText>{this.state.description}</CardText>}
+                                    {!this.state.description && (
+                                        <ExternalDescription query={this.state.sameAs ? this.state.sameAs.label : this.state.researchProblem.label} />
+                                    )}
                                 </CardBody>
                             </Card>
                         </Container>
-                        <br />
+                        <Container className="p-0">
+                            <h1 className="h4 mt-4 mb-4 flex-grow-1">Papers</h1>
+                        </Container>
                         <Container className={'p-0'}>
                             {this.state.contributions.length > 0 && (
                                 <div>
