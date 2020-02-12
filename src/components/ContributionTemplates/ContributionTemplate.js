@@ -17,6 +17,7 @@ import { faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled, { withTheme } from 'styled-components';
 import ROUTES from 'constants/routes.js';
 import Confirm from 'reactstrap-confirm';
+import { toast } from 'react-toastify';
 import AutoComplete from './TemplateEditorAutoComplete';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
@@ -239,6 +240,11 @@ class ContributionTemplate extends Component {
             }
         }
         Promise.all(promises).then(() => {
+            if (this.props.match.params.id) {
+                toast.success('Contribution Template updated successfully');
+            } else {
+                toast.success('Contribution Template created successfully');
+            }
             this.findTemplate();
             this.setState({ isSaving: false });
             if (!this.props.match.params.id) {
