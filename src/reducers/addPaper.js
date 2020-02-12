@@ -9,7 +9,6 @@ const initialState = {
     abstractDialogView: 'annotator', // annotator | input | list
     currentStep: 1,
     shouldBlockNavigation: false,
-    tourCurrentStep: 1,
     tourStartAt: 0,
     title: '',
     authors: [],
@@ -79,14 +78,6 @@ export default (state = initialState, action) => {
             const { payload } = action;
             return {
                 ...payload
-            };
-        }
-
-        case type.UPDATE_TOUR_CURRENT_STEP: {
-            const { payload } = action;
-            return {
-                ...state,
-                tourCurrentStep: payload
             };
         }
 

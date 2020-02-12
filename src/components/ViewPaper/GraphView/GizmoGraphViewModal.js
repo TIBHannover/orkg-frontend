@@ -7,7 +7,7 @@ import GizmoGraph from './GizmoGraph';
 import { Modal, ModalHeader, ModalBody, Input, Form, FormGroup, Label, Button } from 'reactstrap';
 import uniqBy from 'lodash/uniqBy';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faProjectDiagram, faAngleDoubleLeft, faAngleDoubleUp, faHome, faSnowman, faSitemap } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faProjectDiagram, faHome, faSnowman, faSitemap } from '@fortawesome/free-solid-svg-icons';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import flattenDeep from 'lodash/flattenDeep';
 
@@ -467,7 +467,7 @@ class GraphView extends Component {
                                         Layout:
                                         <Icon
                                             icon={this.state.layout === 'force' ? faProjectDiagram : faSitemap}
-                                            rotation={this.state.layout === 'treeH' ? 270 : 0}
+                                            rotation={this.state.layout === 'treeH' ? 270 : undefined}
                                             className="mr-1"
                                             style={{ width: '40px' }}
                                         />
