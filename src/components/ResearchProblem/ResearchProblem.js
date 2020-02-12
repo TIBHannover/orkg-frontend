@@ -14,23 +14,6 @@ import ROUTES from 'constants/routes';
 import styled from 'styled-components';
 import { filterObjectOfStatementsByPredicate, getPaperData } from 'utils';
 
-const TitleBox = styled.h3`
-    border-left: 4px solid ${props => props.theme.orkgPrimaryColor};
-    padding-top: 3px;
-    padding-bottom: 3px;
-    padding-left: 0.5rem;
-    margin-bottom: 1.5rem !important;
-    margin-top: 1.5rem;
-    font-size: 1.25rem;
-
-    &.primary {
-        border-color: ${props => props.theme.orkgPrimaryColor};
-    }
-    &.secondary {
-        border-color: ${props => props.theme.darkblueDarker};
-    }
-`;
-
 class ResearchProblem extends Component {
     constructor(props) {
         super(props);
@@ -151,7 +134,7 @@ class ResearchProblem extends Component {
                 {!this.state.loading && (
                     <div>
                         <Container className="p-0">
-                            <TitleBox className="secondary">Research Problem</TitleBox>
+                            <h1 className="h4 mt-4 mb-4 flex-grow-1">Research Problem</h1>
                         </Container>
                         <Container className="p-0">
                             <Card>
@@ -159,7 +142,7 @@ class ResearchProblem extends Component {
                                     {/* TODO: Show the total number of contributions when number of items is provided with the paginated result
                                         <div className="float-right"><b>{this.state.contributions.length}</b> Contributions</div>
                                     */}
-                                    <h1 className="h4 mt-4 mb-4">
+                                    <h2 className="h4 mb-1">
                                         {this.state.researchProblem && this.state.researchProblem.label}
                                         <Tippy content="Go to resource page">
                                             <Link
@@ -169,7 +152,7 @@ class ResearchProblem extends Component {
                                                 <Icon icon={faLink} />
                                             </Link>
                                         </Tippy>
-                                    </h1>
+                                    </h2>
                                 </CardHeader>
                                 <CardBody>
                                     {this.state.description && <CardText>{this.state.description}</CardText>}
@@ -180,7 +163,7 @@ class ResearchProblem extends Component {
                             </Card>
                         </Container>
                         <Container className="p-0">
-                            <TitleBox className="secondary">Papers</TitleBox>
+                            <h1 className="h4 mt-4 mb-4 flex-grow-1">Papers</h1>
                         </Container>
                         <Container className={'p-0'}>
                             {this.state.contributions.length > 0 && (
