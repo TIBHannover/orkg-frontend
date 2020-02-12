@@ -28,7 +28,8 @@ class ResearchProblemInput extends Component {
             });
             return responseJson.map(item => ({
                 label: item.label,
-                id: item.id
+                id: item.id,
+                _class: 'resource'
             }));
         } catch (err) {
             console.error(err);
