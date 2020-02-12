@@ -240,8 +240,7 @@ AbstractAnnotator.propTypes = {
 const mapStateToProps = state => ({
     abstract: state.addPaper.abstract,
     ranges: state.addPaper.ranges,
-    rangeIdIndex: state.addPaper.rangeIdIndex,
-    tourCurrentStep: state.addPaper.tourCurrentStep
+    rangeIdIndex: state.addPaper.rangeIdIndex
 });
 
 const mapDispatchToProps = dispatch => ({

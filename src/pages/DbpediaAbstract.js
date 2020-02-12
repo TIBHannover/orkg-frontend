@@ -81,7 +81,7 @@ class DbpediaAbstract extends Component {
         const showReadMore = this.state.abstract !== shortAbstract;
 
         return (
-            <div className="list-group-item">
+            <div>
                 <h2 className="h5 mt-2 float-left">Abstract from DBpedia</h2>
                 <a href={this.props.externalResource} target="_blank" rel="noopener noreferrer">
                     <img alt="DBpedia logo" src={DBPEDIA_LOGO} style={{ height: 40, float: 'right' }} />
