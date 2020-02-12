@@ -214,7 +214,9 @@ class ContributionTemplate extends Component {
         }
         // We use reverse() to create statements to keep the order of elements inside the input field
         // save template predicate
-        promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_PREDICATE, this.state.templatePredicate.id));
+        if (this.state.templatePredicate) {
+            promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_PREDICATE, this.state.templatePredicate.id));
+        }
         // save template research fields
         if (this.state.templateResearchFields.length > 0) {
             for (const researchField of this.state.templateResearchFields.reverse()) {
