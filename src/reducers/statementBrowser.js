@@ -328,6 +328,7 @@ export default (state = initialState, action) => {
         case type.CLEAR_RESOURCE_HISTORY: {
             return {
                 ...state,
+                level: 0,
                 resourceHistory: {
                     byId: {},
                     allIds: []
