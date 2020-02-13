@@ -218,25 +218,25 @@ class ContributionTemplate extends Component {
             promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_PREDICATE, this.state.templatePredicate.id));
         }
         // save template research fields
-        if (this.state.templateResearchFields.length > 0) {
+        if (this.state.templateResearchFields && this.state.templateResearchFields.length > 0) {
             for (const researchField of this.state.templateResearchFields.reverse()) {
                 promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD, researchField.id));
             }
         }
         // save template research problems
-        if (this.state.templateResearchProblems.length > 0) {
+        if (this.state.templateResearchProblems && this.state.templateResearchProblems.length > 0) {
             for (const researchProblem of this.state.templateResearchProblems.reverse()) {
                 promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM, researchProblem.id));
             }
         }
         // save template properties
-        if (this.state.templateProperties.length > 0) {
+        if (this.state.templateProperties && this.state.templateProperties.length > 0) {
             for (const property of this.state.templateProperties.reverse()) {
                 promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_PROPERTY, property.id));
             }
         }
         // save template sub templates
-        if (this.state.templateSubTemplates.length > 0) {
+        if (this.state.templateSubTemplates && this.state.templateSubTemplates.length > 0) {
             for (const subtemplate of this.state.templateSubTemplates.reverse()) {
                 promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_SUB_TEMPLATE, subtemplate.id));
             }
