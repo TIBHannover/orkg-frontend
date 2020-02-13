@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import {
     selectResource,
     fetchStatementsForResource,
+    fetchStructureForTemplate,
     deleteValue,
     toggleEditValue,
     updateValueLabel,
@@ -182,11 +183,17 @@ class ValueItem extends Component {
     handleResourceClick = e => {
         const resource = this.props.resources.byId[this.props.resourceId];
         const existingResourceId = resource.existingResourceId;
+        const templateId = resource.templateId;
 
         if (existingResourceId && !resource.isFechted) {
             this.props.fetchStatementsForResource({
                 resourceId: this.props.resourceId,
                 existingResourceId
+            });
+        } else if (templateId && !resource.isFechted) {
+            this.props.fetchStructureForTemplate({
+                resourceId: this.props.resourceId,
+                templateId
             });
         }
 
@@ -219,6 +226,15 @@ class ValueItem extends Component {
     handleExistingResourceClick = () => {
         const resource = this.props.resources.byId[this.props.resourceId];
         const existingResourceId = resource.existingResourceId ? resource.existingResourceId : this.props.resourceId;
+        const templateId = resource.templateId;
+
+        if (templateId && !resource.isFechted) {
+            this.props.fetchStructureForTemplate({
+                resourceId: this.props.resourceId,
+                templateId
+            });
+        }
+
         this.setState({
             modal: true,
             dialogResourceId: existingResourceId,
@@ -318,7 +334,7 @@ class ValueItem extends Component {
         );
 
         const labelClass = classNames({
-            objectLink: this.props.type === 'object' && !this.props.isEditing && !isProperty
+            objectLink: (this.props.type === 'object' || this.props.type === 'template') && !this.props.isEditing && !isProperty
         });
 
         const resource = this.props.resources.byId[this.props.resourceId];
@@ -326,12 +342,12 @@ class ValueItem extends Component {
         let onClick = null;
 
         if (
-            this.props.type === 'object' &&
+            (this.props.type === 'object' || this.props.type === 'template') &&
             (existingResourceId || this.props.contextStyle !== 'StatementBrowser') &&
             this.props.openExistingResourcesInDialog
         ) {
             onClick = this.handleExistingResourceClick;
-        } else if (this.props.type === 'object') {
+        } else if (this.props.type === 'object' || this.props.type === 'template') {
             onClick = this.handleResourceClick;
         }
 
@@ -656,6 +672,7 @@ ValueItem.propTypes = {
     createValue: PropTypes.func.isRequired,
     createResource: PropTypes.func.isRequired,
     fetchStatementsForResource: PropTypes.func.isRequired,
+    fetchStructureForTemplate: PropTypes.func.isRequired,
     resources: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
     properties: PropTypes.object.isRequired,
@@ -702,6 +719,7 @@ const mapDispatchToProps = dispatch => ({
     createResource: data => dispatch(createResource(data)),
     selectResource: data => dispatch(selectResource(data)),
     fetchStatementsForResource: data => dispatch(fetchStatementsForResource(data)),
+    fetchStructureForTemplate: data => dispatch(fetchStructureForTemplate(data)),
     deleteValue: data => dispatch(deleteValue(data)),
     toggleEditValue: data => dispatch(toggleEditValue(data)),
     updateValueLabel: data => dispatch(updateValueLabel(data)),

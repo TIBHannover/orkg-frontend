@@ -159,7 +159,7 @@ export default (state = initialState, action) => {
                 // add a new resource when a object value is created
 
                 //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
-                if (payload.type === 'object' && !state.resources.byId[payload.resourceId]) {
+                if ((payload.type === 'object' || payload.type === 'template') && !state.resources.byId[payload.resourceId]) {
                     newState = dotProp.set(newState, 'resources.allIds', ids => [...ids, payload.resourceId]);
 
                     newState = dotProp.set(newState, 'resources.byId', ids => ({
@@ -169,7 +169,8 @@ export default (state = initialState, action) => {
                             id: payload.resourceId,
                             label: payload.label,
                             shared: payload.shared ? payload.shared : 1,
-                            propertyIds: []
+                            propertyIds: [],
+                            templateId: payload.templateId ? payload.templateId : null
                         }
                     }));
                 }

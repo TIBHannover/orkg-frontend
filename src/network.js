@@ -435,3 +435,43 @@ export const updateUserPassword = ({ current_password, new_password, new_matchin
 
     return submitPutRequest(`${url}user/password/`, headers, data);
 };
+
+/**
+ * Load template by ID
+ *
+ * @param {String} templateId Template Id
+ */
+export const getTemplateById = templateId => {
+    return getStatementsBySubject({ id: templateId }).then(templateStatements => {
+        const templatePredicate = templateStatements
+            .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE)
+            .map(statement => ({
+                id: statement.object.id,
+                label: statement.object.label
+            }));
+
+        const subTemplates = templateStatements
+            .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_SUB_TEMPLATE)
+            .map(statement => ({
+                id: statement.object.id,
+                label: statement.object.label
+            }));
+        return Promise.all(
+            subTemplates.map(template =>
+                getStatementsBySubjectAndPredicate({ subjectId: template.id, predicateId: process.env.REACT_APP_TEMPLATE_OF_PREDICATE }).then(
+                    prediateStatements => ({ ...template, predicate: prediateStatements[0].object })
+                )
+            )
+        ).then(subs => ({
+            id: templateId,
+            predicate: templatePredicate[0],
+            properties: templateStatements
+                .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_PROPERTY)
+                .map(statement => ({
+                    id: statement.object.id,
+                    label: statement.object.label
+                })),
+            subTemplates: subs
+        }));
+    });
+};

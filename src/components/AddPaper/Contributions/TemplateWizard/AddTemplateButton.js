@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { createProperty } from 'actions/statementBrowser';
 import { prefillStatements } from 'actions/addPaper';
 import { guid } from 'utils';
-import { getStatementsBySubject } from 'network';
+import { getTemplateById } from 'network';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
@@ -43,7 +43,7 @@ class AddTemplateButton extends Component {
 
     addTemplate = () => {
         this.setState({ isTemplateLoading: true, isTemplateFailesLoading: false });
-        this.getTemplateById(this.props.id).then(template => {
+        getTemplateById(this.props.id).then(template => {
             // Add template to the statement browser
             const statements = { properties: [], values: [] };
             const pID = guid();
@@ -75,34 +75,28 @@ class AddTemplateButton extends Component {
                 }
                 this.props.prefillStatements({ statements, resourceId: rID });
             }
-
+            // Add templates
+            if (template.subTemplates && template.subTemplates.length > 0) {
+                const statementsSubTemplates = { properties: [], values: [] };
+                for (const subTemplate of template.subTemplates) {
+                    const tpID = guid();
+                    const tvID = guid();
+                    statementsSubTemplates['properties'].push({
+                        propertyId: tpID,
+                        existingPredicateId: subTemplate.predicate.id,
+                        label: subTemplate.predicate.label
+                    });
+                    statementsSubTemplates['values'].push({
+                        valueId: tvID,
+                        templateId: subTemplate.id,
+                        label: subTemplate.label,
+                        type: 'template',
+                        propertyId: tpID
+                    });
+                }
+                this.props.prefillStatements({ statements: statementsSubTemplates, resourceId: rID });
+            }
             this.setState({ isTemplateLoading: false, isTemplateFailesLoading: false });
-        });
-    };
-
-    /**
-     * Load template by ID
-     *
-     * @param {String} templateId Template Id
-     */
-    getTemplateById = templateId => {
-        return getStatementsBySubject({ id: templateId }).then(templateStatements => {
-            const templatePredicate = templateStatements
-                .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE)
-                .map(statement => ({
-                    id: statement.object.id,
-                    label: statement.object.label
-                }));
-            return {
-                id: templateId,
-                predicate: templatePredicate[0],
-                properties: templateStatements
-                    .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_PROPERTY)
-                    .map(statement => ({
-                        id: statement.object.id,
-                        label: statement.object.label
-                    }))
-            };
         });
     };
 
