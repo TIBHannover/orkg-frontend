@@ -153,7 +153,7 @@ class ResearchProblemInput extends Component {
                         cacheOptions
                         loadOptions={this.loadOptions}
                         onCreateOption={inputValue => this.handleCreate(inputValue, { action: 'create-option', createdOptionLabel: inputValue })}
-                        getNewOptionData={(inputValue, optionLabel) => ({ label: `Create a research problem : "${inputValue}"`, id: inputValue })}
+                        getNewOptionData={(inputValue, optionLabel) => ({ label: `Create research problem: "${inputValue}"`, id: inputValue })}
                     />
                 </StyledResearchFieldsInputFormControl>
                 {false && (
@@ -161,7 +161,7 @@ class ResearchProblemInput extends Component {
                         <button type="button" className={'close'} onClick={this.closeProblemBrowser}>
                             <span>×</span>
                         </button>
-                        <>Problem browser :</>
+                        <>Problem browser:</>
                         <br />
                         <>
                             <b>ID</b> {this.state.problemBrowser.id}

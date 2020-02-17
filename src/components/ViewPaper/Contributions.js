@@ -126,7 +126,7 @@ class Contributions extends Component {
             //find the index of research problem
             const objIndex = problemsArray.findIndex(obj => obj.id === a.createdOptionLabel);
             // set the statement of the research problem
-            const updatedObj = { ...problemsArray[objIndex], statementId: statement.id };
+            const updatedObj = { ...problemsArray[objIndex], statementId: statement.id, id: newResource.id };
             // update the research problem array
             problemsArray = [...problemsArray.slice(0, objIndex), updatedObj, ...problemsArray.slice(objIndex + 1)];
             toast.success('Research problem added successfully');
