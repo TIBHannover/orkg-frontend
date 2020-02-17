@@ -80,12 +80,14 @@ class AddTemplateButton extends Component {
                 const statementsSubTemplates = { properties: [], values: [] };
                 for (const subTemplate of template.subTemplates) {
                     const tpID = guid();
-                    const tvID = guid();
+                    //const tvID = guid();
                     statementsSubTemplates['properties'].push({
                         propertyId: tpID,
                         existingPredicateId: subTemplate.predicate.id,
-                        label: subTemplate.predicate.label
+                        label: subTemplate.predicate.label,
+                        templateId: subTemplate.id
                     });
+                    /*
                     statementsSubTemplates['values'].push({
                         valueId: tvID,
                         templateId: subTemplate.id,
@@ -93,6 +95,7 @@ class AddTemplateButton extends Component {
                         type: 'template',
                         propertyId: tpID
                     });
+                    */
                 }
                 this.props.prefillStatements({ statements: statementsSubTemplates, resourceId: rID });
             }

@@ -244,16 +244,18 @@ export const fetchStructureForTemplate = data => {
                 if (template.subTemplates && template.subTemplates.length > 0) {
                     for (const subTemplate of template.subTemplates) {
                         const tpID = guid();
-                        const tvID = guid();
+                        //const tvID = guid();
                         dispatch(
                             createProperty({
                                 resourceId: resourceId,
                                 existingPredicateId: subTemplate.predicate.id,
                                 propertyId: tpID,
                                 label: subTemplate.predicate.label,
-                                isExistingProperty: true
+                                isExistingProperty: true,
+                                templateId: subTemplate.id
                             })
                         );
+                        /*
                         dispatch(
                             createValue({
                                 valueId: tvID,
@@ -263,6 +265,7 @@ export const fetchStructureForTemplate = data => {
                                 templateId: subTemplate.id
                             })
                         );
+                        */
                     }
                 }
                 dispatch({

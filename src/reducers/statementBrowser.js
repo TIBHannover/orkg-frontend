@@ -68,7 +68,8 @@ export default (state = initialState, action) => {
                         isExistingProperty: payload.isExistingProperty ? payload.isExistingProperty : false,
                         isEditing: false,
                         isSaving: false,
-                        isTemplate: payload.isTemplate
+                        isTemplate: payload.isTemplate,
+                        templateId: payload.templateId ? payload.templateId : null
                     }
                 }));
                 newState = dotProp.set(newState, 'properties.allIds', ids => [...ids, payload.propertyId]);

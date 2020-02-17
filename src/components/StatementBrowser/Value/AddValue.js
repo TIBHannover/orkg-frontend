@@ -123,10 +123,12 @@ class AddValue extends Component {
                 shared: newObject.shared
             });
         } else {
+            const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
             this.props.createValue({
                 label: this.state.inputValue,
                 type: this.state.valueType,
                 propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
+                templateId: predicate.templateId ? predicate.templateId : null,
                 shared: 1
             });
         }
