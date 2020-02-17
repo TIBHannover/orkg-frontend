@@ -4,6 +4,7 @@ import { getStatementsBySubject, getResource, updateResource, createResource, cr
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar, faBars, faProjectDiagram, faPen, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader';
 import Contributions from './Contributions';
@@ -12,7 +13,7 @@ import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import ComparisonPopup from './ComparisonPopup';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import { resetStatementBrowser } from '../../actions/statementBrowser';
 import { loadPaper, selectContribution, setPaperAuthors } from '../../actions/viewPaper';
 import GizmoGraphViewModal from './GraphView/GizmoGraphViewModal';
@@ -21,6 +22,7 @@ import { toast } from 'react-toastify';
 import Confirm from 'reactstrap-confirm';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
 import styled from 'styled-components';
+import SharePaper from './SharePaper';
 
 export const EditModeHeader = styled(Container)`
     background-color: #80869b !important;
@@ -428,7 +430,9 @@ class ViewPaper extends Component {
                             )}
                             {!this.state.loading_failed && !this.state.unfoundContribution && (
                                 <>
-                                    <hr className="mt-4 mb-5" />
+                                    <hr className="mt-3" />
+                                    <SharePaper title={this.props.viewPaper.title} />
+
                                     <Contributions
                                         selectedContribution={this.state.selectedContribution}
                                         contributions={this.state.contributions}

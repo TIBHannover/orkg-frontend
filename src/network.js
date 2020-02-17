@@ -329,6 +329,10 @@ export const getStats = () => {
     return submitGetRequest(statsUrl);
 };
 
+export const getResearchFieldsStats = () => {
+    return submitGetRequest(`${statsUrl}fields`);
+};
+
 export const createShortLink = data => {
     return submitPostRequest(`${similaireServiceUrl}shortener/`, { 'Content-Type': 'application/json' }, data);
 };

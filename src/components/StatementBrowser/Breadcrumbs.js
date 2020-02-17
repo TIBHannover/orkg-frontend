@@ -91,7 +91,6 @@ class Breadcrumbs extends Component {
     };
 
     render() {
-        console.log(this.props);
         return (
             <Container>
                 <BackButton className="btn btn-link border-0 align-baseline" onClick={this.handleBackClick}>

@@ -26,7 +26,7 @@ import Tooltip from '../../Utils/Tooltip';
 import AuthorsInput from '../../Utils/AuthorsInput';
 import FormValidator from '../../Utils/FormValidator';
 import { connect } from 'react-redux';
-import { updateGeneralData, nextStep, openTour, closeTour, updateTourCurrentStep } from '../../../actions/addPaper';
+import { updateGeneralData, nextStep, openTour, closeTour } from '../../../actions/addPaper';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { withCookies, Cookies } from 'react-cookie';
 import styled, { withTheme } from 'styled-components';
@@ -280,7 +280,7 @@ class GeneralData extends Component {
     };
 
     handleSkipTour = () => {
-        this.props.cookies.set('taketour', 'skip', { path: '/', maxAge: 604800 });
+        this.props.cookies.set('taketour', 'skip', { path: process.env.PUBLIC_URL, maxAge: 604800 });
         this.toggle('isFirstVisit');
         if (this.props.cookies.get('taketourClosed')) {
             this.props.closeTour();
@@ -291,7 +291,7 @@ class GeneralData extends Component {
     };
 
     takeTour = () => {
-        this.props.cookies.set('taketour', 'take', { path: '/', maxAge: 604800 });
+        this.props.cookies.set('taketour', 'take', { path: process.env.PUBLIC_URL, maxAge: 604800 });
         this.toggle('isFirstVisit');
         this.props.openTour();
     };
@@ -622,7 +622,6 @@ class GeneralData extends Component {
                         onRequestClose={this.requestCloseTour}
                         isOpen={this.props.isTourOpen}
                         startAt={this.props.tourStartAt}
-                        getCurrentStep={curr => this.props.updateTourCurrentStep(curr)}
                         maskClassName="reactourMask"
                     />
                 )}
@@ -672,7 +671,6 @@ GeneralData.propTypes = {
     cookies: PropTypes.instanceOf(Cookies).isRequired,
     openTour: PropTypes.func.isRequired,
     closeTour: PropTypes.func.isRequired,
-    updateTourCurrentStep: PropTypes.func.isRequired,
     isTourOpen: PropTypes.bool.isRequired,
     tourStartAt: PropTypes.number.isRequired
 };
@@ -686,13 +684,11 @@ const mapStateToProps = state => ({
     publicationMonth: state.addPaper.publicationMonth,
     publicationYear: state.addPaper.publicationYear,
     isTourOpen: state.addPaper.isTourOpen,
-    tourCurrentStep: state.addPaper.tourCurrentStep,
     tourStartAt: state.addPaper.tourStartAt
 });
 
 const mapDispatchToProps = dispatch => ({
     updateGeneralData: data => dispatch(updateGeneralData(data)),
-    updateTourCurrentStep: data => dispatch(updateTourCurrentStep(data)),
     nextStep: () => dispatch(nextStep()),
     openTour: data => dispatch(openTour(data)),
     closeTour: () => dispatch(closeTour())

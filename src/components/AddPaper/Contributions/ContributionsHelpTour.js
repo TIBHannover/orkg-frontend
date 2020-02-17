@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { closeTour, openTour, updateTourCurrentStep } from '../../../actions/addPaper';
+import { closeTour, openTour } from '../../../actions/addPaper';
 import Tour from 'reactour';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
@@ -23,7 +23,7 @@ class ContributionsHelpTour extends Component {
         // check if a cookie of take a tour exist
         if (this.props.cookies && this.props.cookies.get('taketour') === 'take' && !this.props.cookies.get('showedContributions')) {
             this.props.openTour();
-            this.props.cookies.set('showedContributions', true, { path: '/', maxAge: 604800 });
+            this.props.cookies.set('showedContributions', true, { path: process.env.PUBLIC_URL, maxAge: 604800 });
         }
     }
 
@@ -161,9 +161,6 @@ class ContributionsHelpTour extends Component {
                     isOpen={this.props.isTourOpen}
                     startAt={this.props.tourStartAt}
                     maskClassName="reactourMask"
-                    getCurrentStep={curr => {
-                        this.props.updateTourCurrentStep(curr);
-                    }}
                     showButtons={!this.props.showAbstractDialog}
                     showNavigation={!this.props.showAbstractDialog}
                 />
@@ -197,9 +194,7 @@ ContributionsHelpTour.propTypes = {
     openTour: PropTypes.func.isRequired,
     closeTour: PropTypes.func.isRequired,
     isTourOpen: PropTypes.bool.isRequired,
-    tourCurrentStep: PropTypes.number.isRequired,
     tourStartAt: PropTypes.number.isRequired,
-    updateTourCurrentStep: PropTypes.func.isRequired,
     showAbstractDialog: PropTypes.bool.isRequired,
     abstractDialogView: PropTypes.string.isRequired
 };
@@ -207,7 +202,6 @@ ContributionsHelpTour.propTypes = {
 const mapStateToProps = state => {
     return {
         isTourOpen: state.addPaper.isTourOpen,
-        tourCurrentStep: state.addPaper.tourCurrentStep,
         tourStartAt: state.addPaper.tourStartAt,
         showAbstractDialog: state.addPaper.showAbstractDialog,
         abstractDialogView: state.addPaper.abstractDialogView
@@ -216,7 +210,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
     openTour: data => dispatch(openTour(data)),
-    updateTourCurrentStep: data => dispatch(updateTourCurrentStep(data)),
     closeTour: () => dispatch(closeTour())
 });
 

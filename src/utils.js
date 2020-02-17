@@ -365,3 +365,24 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
 };
+
+/**
+ * Filter a list of statements by predicate id and return the object
+ *
+ * @param {Array} statementsArray Array of statements
+ * @param {String} predicateID Predicate ID
+ * @param {Boolean} isUnique if this predicate is unique and has one value
+ */
+export const filterObjectOfStatementsByPredicate = (statementsArray, predicateID, oneStatement = true) => {
+    if (!statementsArray) {
+        return null;
+    }
+    const result = statementsArray.filter(statement => statement.predicate.id === predicateID);
+    if (result.length > 0 && oneStatement) {
+        return result[0].object;
+    } else if (result.length > 0 && !oneStatement) {
+        return result.map(s => s.object);
+    } else {
+        return null;
+    }
+};

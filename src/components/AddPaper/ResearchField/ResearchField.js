@@ -3,7 +3,7 @@ import { Button, Card, ListGroup, ListGroupItem, CardDeck } from 'reactstrap';
 import { getStatementsBySubject } from '../../../network';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { updateResearchField, nextStep, previousStep, openTour, closeTour, updateTourCurrentStep } from '../../../actions/addPaper';
+import { updateResearchField, nextStep, previousStep, openTour, closeTour } from '../../../actions/addPaper';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled, { withTheme } from 'styled-components';
 import { withCookies, Cookies } from 'react-cookie';
@@ -53,14 +53,9 @@ class ResearchField extends Component {
         };
 
         // check if a cookie of take a tour exist
-        if (
-            this.props.cookies &&
-            this.props.cookies.get('taketour') === 'take' &&
-            this.props.tourCurrentStep === 1 &&
-            !this.props.cookies.get('showedReaseachFiled')
-        ) {
+        if (this.props.cookies && this.props.cookies.get('taketour') === 'take' && !this.props.cookies.get('showedReaseachFiled')) {
             this.props.openTour();
-            this.props.cookies.set('showedReaseachFiled', true, { path: '/', maxAge: 604800 });
+            this.props.cookies.set('showedReaseachFiled', true, { path: process.env.PUBLIC_URL, maxAge: 604800 });
         }
     }
 
@@ -227,9 +222,6 @@ class ResearchField extends Component {
                     onRequestClose={this.requestCloseTour}
                     isOpen={this.props.isTourOpen}
                     startAt={this.props.tourStartAt}
-                    getCurrentStep={curr => {
-                        this.props.updateTourCurrentStep(curr);
-                    }}
                     showButtons={false}
                     showNavigation={false}
                     maskClassName="reactourMask"
@@ -249,9 +241,7 @@ ResearchField.propTypes = {
     cookies: PropTypes.instanceOf(Cookies).isRequired,
     openTour: PropTypes.func.isRequired,
     closeTour: PropTypes.func.isRequired,
-    updateTourCurrentStep: PropTypes.func.isRequired,
     isTourOpen: PropTypes.bool.isRequired,
-    tourCurrentStep: PropTypes.number.isRequired,
     tourStartAt: PropTypes.number.isRequired
 };
 
@@ -259,7 +249,6 @@ const mapStateToProps = state => ({
     selectedResearchField: state.addPaper.selectedResearchField,
     researchFields: state.addPaper.researchFields,
     isTourOpen: state.addPaper.isTourOpen,
-    tourCurrentStep: state.addPaper.tourCurrentStep,
     tourStartAt: state.addPaper.tourStartAt
 });
 
@@ -267,7 +256,6 @@ const mapDispatchToProps = dispatch => ({
     updateResearchField: data => dispatch(updateResearchField(data)),
     nextStep: () => dispatch(nextStep()),
     previousStep: () => dispatch(previousStep()),
-    updateTourCurrentStep: data => dispatch(updateTourCurrentStep(data)),
     openTour: data => dispatch(openTour(data)),
     closeTour: () => dispatch(closeTour())
 });

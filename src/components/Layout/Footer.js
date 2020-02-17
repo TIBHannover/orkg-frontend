@@ -6,6 +6,9 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { ReactComponent as Logo } from './../../assets/img/vertical_logo.svg';
 import TIB_LOGO from './../../assets/img/poweredby/TIB_Logo_EN.png';
+import LUH_LOGO from './../../assets/img/poweredby/LUH.png';
+import L3S_LOGO from './../../assets/img/poweredby/L3S.png';
+import INFAI_LOGO from './../../assets/img/poweredby/infAI.png';
 import styled from 'styled-components';
 
 const FooterWrapper = styled.div`
@@ -128,10 +131,23 @@ const Footer = () => (
                         </ul>
                     </FooterCol>
                 </Row>
-                <hr style={{ width: '30%' }} />
+                <hr style={{ width: '70%' }} />
                 <div className="d-flex justify-content-center mt-4">
                     <a href="https://www.tib.eu/en/" target="_blank" rel="noopener noreferrer">
                         <img src={TIB_LOGO} alt="Logo Technische Informationsbibliothek (TIB)" style={{ borderWidth: 0, height: '50px' }} />
+                    </a>
+                    <a href="https://www.uni-hannover.de/en/" target="_blank" rel="noopener noreferrer">
+                        <img src={LUH_LOGO} alt="Logo Leibniz University Hannover" style={{ borderWidth: 0, height: '50px', marginLeft: 30 }} />
+                    </a>
+                    <a href="https://www.l3s.de/en/" target="_blank" rel="noopener noreferrer">
+                        <img src={L3S_LOGO} alt="Logo L3S Research Center" style={{ borderWidth: 0, height: '55px', marginLeft: 30 }} />
+                    </a>
+                    <a href="https://infai.org/en/" target="_blank" rel="noopener noreferrer">
+                        <img
+                            src={INFAI_LOGO}
+                            alt="Logo  Institute for Applied Informatics (InfAI)"
+                            style={{ borderWidth: 0, height: '50px', marginLeft: 30 }}
+                        />
                     </a>
                 </div>
             </footer>

@@ -170,7 +170,7 @@ class Comparison extends Component {
             })
             .catch(error => {
                 this.setState({
-                    loadingFailed: true,
+                    loadingFailed: contributionIds.length > 1 ? true : false,
                     isLoading: false,
                     errors: get_error_message(error)
                 });
@@ -462,7 +462,7 @@ class Comparison extends Component {
                             ) : (
                                 <>
                                     <div className="clearfix" />
-                                    <Alert color="info">Please select a minimum of two research contributions to compare on</Alert>
+                                    <Alert color="info">Please select a minimum of two research contributions to compare on.</Alert>
                                 </>
                             )}
                         </>
@@ -504,6 +504,9 @@ class Comparison extends Component {
                     transpose={this.state.transpose}
                     location={window.location}
                     response_hash={this.state.response_hash}
+                    title={this.state.title}
+                    description={this.state.description}
+                    comparisonId={this.props.match.params.comparisonId}
                 />
             </div>
         );

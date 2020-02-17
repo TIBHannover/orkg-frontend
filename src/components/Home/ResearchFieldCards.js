@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components/macro';
-import { getStatementsBySubject, getStatementsByObject } from '../../network';
+import { getStatementsBySubject, getStatementsByObject, getResearchFieldsStats } from 'network';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import ROUTES from '../../constants/routes.js';
+import ROUTES from 'constants/routes.js';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 /* Bootstrap card column is not working correctly working with vertical alignment,
 thus used custom styling here */
@@ -16,13 +17,29 @@ const Card = styled.div`
     color: #fff !important;
     border: 0 !important;
     border-radius: 12px !important;
-    min-height: 75px;
+    min-height: 85px;
     flex: 0 0 calc(33% - 20px) !important;
     margin: 10px;
     transition: opacity 0.2s;
+    justify-content: center;
+    display: flex;
+    flex: 1 1 auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
 
     &:hover {
         opacity: 0.8;
+    }
+    &[disabled] {
+        opacity: 0.5;
+        cursor: default;
+        pointer-events: none;
+    }
+    &:active {
+        top: 4px;
     }
 `;
 
@@ -41,17 +58,45 @@ const BreadcrumbLink = styled.span`
     }
 `;
 
+const PaperAmount = styled.div`
+    opacity: 0.5;
+    font-size: 80%;
+    text-align: center;
+`;
+
+const AnimationContainer = styled(CSSTransition)`
+    //transition: 0.3s background-color, 0.3s border-color;
+
+    animation: scale-up-center 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+    @keyframes scale-up-center {
+        0% {
+            transform: scale(0.5);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+`;
+
 class ResearchFieldCards extends Component {
     state = {
         researchFields: [],
         breadcrumb: [],
         papers: null,
-        error: ''
+        error: '',
+        stats: {}
     };
 
     componentDidMount() {
         this.getFields(process.env.REACT_APP_RESEARCH_FIELD_MAIN, 'Main');
+        this.fetchResearchFieldsStats();
     }
+
+    fetchResearchFieldsStats = () => {
+        return getResearchFieldsStats().then(results => {
+            this.setState({ stats: results });
+        });
+    };
 
     async getFields(fieldId, label, addBreadcrumb = true) {
         try {
@@ -88,7 +133,7 @@ class ResearchFieldCards extends Component {
                         });
                     }
 
-                    if (researchFields.length === 0) {
+                    if (fieldId !== process.env.REACT_APP_RESEARCH_FIELD_MAIN) {
                         this.setState({
                             papers: null // to show loading indicator
                         });
@@ -136,7 +181,7 @@ class ResearchFieldCards extends Component {
             return <div className="text-center mt-5 text-danger">{this.state.error}</div>;
         }
 
-        const showPapers = this.state.researchFields.length === 0 && this.state.breadcrumb.length !== 0;
+        const showPapers = this.state.breadcrumb.length > 1;
 
         return (
             <div className="mt-5">
@@ -147,17 +192,23 @@ class ResearchFieldCards extends Component {
                 ))}
 
                 <hr className="mt-3 mb-5" />
-                <div id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap">
-                    {this.state.researchFields.map(field => (
-                        <Card
-                            className="card card-body p-0 justify-content-center"
-                            role="button"
-                            key={field.id}
-                            onClick={() => this.getFields(field.id, field.label)}
-                        >
-                            <CardTitle className="card-title m-0 text-center">{field.label}</CardTitle>
-                        </Card>
-                    ))}
+                <div>
+                    <TransitionGroup id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap" exit={false}>
+                        {this.state.researchFields.map(field => {
+                            return (
+                                <AnimationContainer key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
+                                    <Card
+                                        role="button"
+                                        disabled={this.state.stats[field.id] === 0}
+                                        onClick={() => this.getFields(field.id, field.label)}
+                                    >
+                                        <CardTitle className="card-title m-0 text-center">{field.label}</CardTitle>
+                                        <PaperAmount>{this.state.stats[field.id]} papers</PaperAmount>
+                                    </Card>
+                                </AnimationContainer>
+                            );
+                        })}
+                    </TransitionGroup>
                 </div>
                 {showPapers && (
                     <div>

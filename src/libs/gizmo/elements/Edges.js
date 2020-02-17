@@ -17,6 +17,7 @@ export default class Edge extends BaseElement {
         this.domainNode = this.domainNode.bind(this);
         this.rangeNode = this.rangeNode.bind(this);
         this.propertyNode = this.propertyNode.bind(this);
+        this.makeInvisibleForAnimation = this.makeInvisibleForAnimation.bind(this);
 
         // helper function
         this.lineFunction = d3.svg
@@ -28,6 +29,10 @@ export default class Edge extends BaseElement {
                 return d.y;
             })
             .interpolate('cardinal');
+    }
+
+    makeInvisibleForAnimation() {
+        this.svgRoot.classed('hidden', true);
     }
 
     propertyNode = function(p) {

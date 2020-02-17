@@ -43,7 +43,7 @@ class SignUp extends Component {
             .then(() => {
                 signInWithEmailAndPassword(email, password)
                     .then(token => {
-                        cookies.set('token', token.access_token, { path: '/', maxAge: token.expires_in });
+                        cookies.set('token', token.access_token, { path: process.env.PUBLIC_URL, maxAge: token.expires_in });
                         this.props.toggleAuthDialog();
                         this.setState({ loading: false, errors: null });
                         window.location.reload();
