@@ -35,6 +35,7 @@ import greetingTime from 'greeting-time';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { reverse } from 'named-urls';
 
 const StyledLink = styled(Link)`
     :focus {
@@ -221,15 +222,15 @@ class Header extends Component {
                                 >
                                     <Row>
                                         <div className="col-3 text-center">
-                                            {/*<Link onClick={this.toggleUserTooltip} to={reverse(ROUTES.USER_PROFILE, { userId: this.props.user.id })} >*/}
-                                            <StyledGravatar
-                                                className="rounded-circle"
-                                                style={{ border: '3px solid #fff' }}
-                                                email={email}
-                                                size={76}
-                                                id="TooltipExample"
-                                            />
-                                            {/*</Link>*/}
+                                            <Link onClick={this.toggleUserTooltip} to={reverse(ROUTES.USER_PROFILE, { userId: this.props.user.id })}>
+                                                <StyledGravatar
+                                                    className="rounded-circle"
+                                                    style={{ border: '3px solid #fff' }}
+                                                    email={email}
+                                                    size={76}
+                                                    id="TooltipExample"
+                                                />
+                                            </Link>
                                         </div>
                                         <div className="col-9">
                                             {greeting} {this.props.user.displayName}
