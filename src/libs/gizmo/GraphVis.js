@@ -27,7 +27,7 @@ export default class GraphVis {
         this.forceAnimationTickBetweenExpand = 100;
 
         this.graphFullyExplored = false;
-
+        this.hasIncrementalData = true;
         this.sortedByDepthNodes = [];
         this.mapOfResources = {}; // maps the present resources in the graph, helps to deal with duplicates and recursive links
 
@@ -404,6 +404,14 @@ export default class GraphVis {
                 return;
             } else {
                 await this.blackOpsExplore(unexploredNodes);
+                if (!this.hasIncrementalData) {
+                    this.graphFullyExplored = true;
+                    this.buildDictionary();
+                    this.mst.computeMinimumSpanningTree();
+                    // redraw full graph now;
+                    this.blackOpsRedraw();
+                    break;
+                }
             }
             exploreCounter++;
         }
@@ -417,9 +425,10 @@ export default class GraphVis {
         let iterator = this.classNodes.length + 1;
         if (!incrementalData.nodes && !incrementalData.edges) {
             // we dont have new data
+            this.hasIncrementalData = false;
             return;
         }
-
+        this.hasIncrementalData = true;
         incrementalData.nodes.forEach(node => {
             if (this.mapOfResources[node.id] === undefined) {
                 // create a node;
