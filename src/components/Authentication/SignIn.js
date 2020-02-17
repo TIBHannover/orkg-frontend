@@ -27,7 +27,8 @@ class SignIn extends Component {
         });
     };
 
-    signIn = async () => {
+    signIn = async e => {
+        e.preventDefault();
         this.setState({
             loading: true
         });
@@ -55,7 +56,7 @@ class SignIn extends Component {
     render() {
         return (
             <>
-                <Form className="pl-3 pr-3 pt-2">
+                <Form className="pl-3 pr-3 pt-2" onSubmit={this.signIn}>
                     {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
                     <FormGroup>
                         <Label for="Email">Email address</Label>
@@ -92,16 +93,7 @@ class SignIn extends Component {
                             placeholder="Password"
                         />
                     </FormGroup>
-                    <Button
-                        type="submit"
-                        color="primary"
-                        onClick={() => {
-                            this.signIn();
-                        }}
-                        className="mt-4 mb-2"
-                        block
-                        disabled={this.state.loading}
-                    >
+                    <Button type="submit" color="primary" className="mt-4 mb-2" block disabled={this.state.loading}>
                         {!this.state.loading ? (
                             'Sign in'
                         ) : (

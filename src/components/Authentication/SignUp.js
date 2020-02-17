@@ -31,7 +31,8 @@ class SignUp extends Component {
         });
     };
 
-    signUp = async () => {
+    signUp = async e => {
+        e.preventDefault();
         const { email, password, matching_password, name } = this.state;
 
         this.setState({
@@ -63,7 +64,7 @@ class SignUp extends Component {
     render() {
         return (
             <>
-                <Form className="pl-3 pr-3 pt-2">
+                <Form className="pl-3 pr-3 pt-2" onSubmit={this.signUp}>
                     {Boolean(get_error_message(this.state.errors)) && <Alert color="danger">{get_error_message(this.state.errors)}</Alert>}
                     <FormGroup>
                         <Label for="name">Display name</Label>
@@ -128,16 +129,7 @@ class SignUp extends Component {
                     <p style={{ fontStyle: 'italic' }}>
                         By signing up you agree that any data you add to the service has a CC0 (Public Domain) license
                     </p>
-                    <Button
-                        type="submit"
-                        color="primary"
-                        onClick={() => {
-                            this.signUp();
-                        }}
-                        className="mt-4 mb-2"
-                        block
-                        disabled={this.state.loading}
-                    >
+                    <Button type="submit" color="primary" className="mt-4 mb-2" block disabled={this.state.loading}>
                         {!this.state.loading ? (
                             'Sign up'
                         ) : (
