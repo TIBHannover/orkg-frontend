@@ -11,7 +11,6 @@ import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ExternalDescription from './ExternalDescription';
 import ROUTES from 'constants/routes';
-import styled from 'styled-components';
 import { filterObjectOfStatementsByPredicate, getPaperData } from 'utils';
 
 class ResearchProblem extends Component {

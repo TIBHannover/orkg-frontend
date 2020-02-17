@@ -305,12 +305,16 @@ export const getStatementsByPredicate = ({ id, page = 1, items = 9999, sortBy = 
     return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/?${params}`);
 };
 
-export const getStatementsBySubjectAndPredicate = ({ subjectId, predicateId }) => {
-    return submitGetRequest(`${statementsUrl}subject/${subjectId}/predicate/${predicateId}`);
+export const getStatementsBySubjectAndPredicate = ({ subjectId, predicateId, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
+    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
+
+    return submitGetRequest(`${statementsUrl}subject/${subjectId}/predicate/${predicateId}/?${params}`);
 };
 
-export const getStatementsByObjectAndPredicate = ({ objectId, predicateId }) => {
-    return submitGetRequest(`${statementsUrl}object/${objectId}/predicate/${predicateId}`);
+export const getStatementsByObjectAndPredicate = ({ objectId, predicateId, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
+    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
+
+    return submitGetRequest(`${statementsUrl}object/${objectId}/predicate/${predicateId}/?${params}`);
 };
 
 export const getSimilaireContribution = id => {

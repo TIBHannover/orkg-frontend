@@ -158,6 +158,7 @@ class TemplateEditorAutoComplete extends Component {
                     getOptionValue={({ id }) => id}
                     isMulti={this.props.isMulti ? true : false}
                     isDisabled={this.props.isDisabled}
+                    isClearable={this.props.isClearable}
                 />
             </StyledAutoCompleteInputFormControl>
         );
@@ -173,7 +174,8 @@ TemplateEditorAutoComplete.propTypes = {
     theme: PropTypes.object.isRequired,
     optionsClass: PropTypes.string,
     isMulti: PropTypes.bool,
-    isDisabled: PropTypes.bool
+    isDisabled: PropTypes.bool,
+    isClearable: PropTypes.bool
 };
 
 export default withTheme(TemplateEditorAutoComplete);
