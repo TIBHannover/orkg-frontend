@@ -4,6 +4,7 @@ import Boolean from './Boolean/Boolean';
 import Link from './Link/Link';
 import Latex from './Latex/Latex';
 import Video from './Video/Video';
+import Doi from './Doi/Doi';
 
 class ValuePlugins extends Component {
     render() {
@@ -11,11 +12,13 @@ class ValuePlugins extends Component {
         return (
             <Boolean>
                 <Latex type={this.props.type}>
-                    <Link type={this.props.type}>
-                        <Video type={this.props.type} options={this.props.options}>
-                            {this.props.children}
-                        </Video>
-                    </Link>
+                    <Doi type={this.props.type}>
+                        <Link type={this.props.type}>
+                            <Video type={this.props.type} options={this.props.options}>
+                                {this.props.children}
+                            </Video>
+                        </Link>
+                    </Doi>
                 </Latex>
             </Boolean>
         );

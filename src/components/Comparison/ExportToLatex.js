@@ -31,8 +31,8 @@ class ExportToLatex extends Component {
             selectedTab: 'table',
             latexTable: '',
             bibtexReferences: '',
-            replaceTitles: false,
-            includeFootnote: false,
+            replaceTitles: true,
+            includeFootnote: true,
             shortLink: null,
             showTooltipCopiedBibtex: false,
             showTooltipCopiedLatex: false
@@ -69,11 +69,11 @@ class ExportToLatex extends Component {
             transposedData = this.props.data[0].map((col, i) => this.props.data.map(row => row[i]));
 
             if (this.state.replaceTitles) {
-                newTitles = ['Title'];
+                newTitles = ['\\textbf{Title}'];
                 const conTitles = ['Title'];
                 transposedData[0].forEach((title, i) => {
                     if (i > 0) {
-                        newTitles.push(` \\cite{${this.props.contributions[i - 1].paperId}} `);
+                        newTitles.push(`\\textbf{\\cite{${this.props.contributions[i - 1].paperId}}} `);
                         conTitles.push(`${this.props.contributions[i - 1].id}`);
                     }
                 });
@@ -84,7 +84,7 @@ class ExportToLatex extends Component {
                 if (i > 0) {
                     const con = {};
                     contribution.forEach((item, j) => {
-                        con[transposedData[0][j]] = item !== 'undefined' ? item : '-';
+                        con[transposedData[0][j]] = item !== 'undefined' ? (j === 0 ? `\\textit{${item}}` : item) : '-';
                     });
                     res.push(con);
                 }
@@ -97,9 +97,9 @@ class ExportToLatex extends Component {
                     const con = {};
                     contribution.forEach((item, j) => {
                         if (this.state.replaceTitles && j === 0) {
-                            item = ` \\cite{${this.props.contributions[i - 1].paperId}}`;
+                            item = `\\textbf{\\cite{${this.props.contributions[i - 1].paperId}}}`;
                         }
-                        con[this.props.data[0][j]] = item !== 'undefined' ? item : '-';
+                        con[`\\textit{${this.props.data[0][j]}}`] = item !== 'undefined' ? item : '-';
                     });
                     res.push(con);
                 }
@@ -111,17 +111,24 @@ class ExportToLatex extends Component {
 
         if (res.length > 0) {
             let caption = 'This comparison table is built using ORKG \\protect \\cite{Auer2018Towards}';
+            let label = 'tab:ORKG';
+            if (this.props.comparisonId && this.props.title) {
+                caption = `${this.props.title} - ${this.props.description}`;
+                label = `tab:${this.props.comparisonId}`;
+            }
+
             if (this.state.includeFootnote) {
                 caption += ' \\protect \\footnotemark';
             }
 
             const makeLatexOptions = {
                 digits: 2,
-                spec: `|${Array(nbColumns)
+                spec: `|l|${Array(nbColumns - 1)
                     .fill('c')
                     .join('|')}|`,
                 captionPlacement: 'top',
-                caption: caption
+                caption: caption,
+                label: label
             };
 
             if (newTitles) {
@@ -150,10 +157,17 @@ class ExportToLatex extends Component {
                             this.setState({ latexTable: latexTable, latexTableLoading: false });
                         })
                         .then(data => {
-                            const shortLink = `${this.props.location.protocol}//${window.location.host}${window.location.pathname.replace(
-                                reverse(ROUTES.COMPARISON),
-                                ''
-                            )}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
+                            let shortLink;
+                            if (this.props.comparisonId) {
+                                shortLink = `${window.location.protocol}//${window.location.host}${window.location.pathname
+                                    .replace(reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparisonId }), '')
+                                    .replace(/\/$/, '')}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
+                            } else {
+                                shortLink = `${this.props.location.protocol}//${window.location.host}${window.location.pathname.replace(
+                                    reverse(ROUTES.COMPARISON),
+                                    ''
+                                )}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
+                            }
                             latexTable += `\n\\footnotetext{${shortLink} [accessed ${moment().format('YYYY MMM DD')}]}`;
                             this.setState({ shortLink: shortLink, latexTable: latexTable, latexTableLoading: false });
                         });
@@ -421,7 +435,10 @@ ExportToLatex.propTypes = {
     toggle: PropTypes.func.isRequired,
     transpose: PropTypes.bool.isRequired,
     location: PropTypes.object.isRequired,
-    response_hash: PropTypes.string
+    response_hash: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    comparisonId: PropTypes.string
 };
 
 export default ExportToLatex;
