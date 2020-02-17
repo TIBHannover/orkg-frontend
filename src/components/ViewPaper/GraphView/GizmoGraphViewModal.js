@@ -13,12 +13,14 @@ import flattenDeep from 'lodash/flattenDeep';
 
 // moving GraphVis here in order to maintain the layouts and status related stuff;
 import GraphVis from '../../../libs/gizmo/GraphVis';
+import SearchAutoComplete from './SearchAutoComplete';
 
 class GraphView extends Component {
     constructor(props) {
         super(props);
 
         this.child = React.createRef();
+        this.searchComponent = React.createRef();
         this.seenDepth = -1;
         this.graphVis = new GraphVis();
 
@@ -32,6 +34,7 @@ class GraphView extends Component {
         this.graphVis.propagateMaxDepthValue = this.updateDepthRange;
         this.graphVis.getDataFromApi = this.getDataFromApi;
         this.graphVis.fetchMultipleResourcesFromAPI = this.fetchMultipleResourcesFromAPI;
+        this.graphVis.propagateDictionary = this.propagateDictionary;
     }
 
     state = {
@@ -89,6 +92,10 @@ class GraphView extends Component {
             }
         }
     }
+
+    propagateDictionary = () => {
+        this.searchComponent.current.updateDictionary();
+    };
 
     async getDataFromApi(resourceId) {
         try {
@@ -164,7 +171,7 @@ class GraphView extends Component {
             edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label, isAuthorProp: true });
         } else if (statement.predicate.id === 'P26') {
             // add DOI Icon to target node
-            edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label, isDOIProp: true });
+            edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label, isDOIProp: false }); // remove doi icon for now
         } else {
             // no Icon for the target node
             edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label });
@@ -393,9 +400,9 @@ class GraphView extends Component {
                 style={{ maxWidth: '90%' }}
             >
                 <ModalHeader toggle={this.props.toggle}>
-                    <div className={'d-flex'}>
-                        Paper graph visualization
-                        <>
+                    <div className={'d-flex'} style={{ height: '40px' }}>
+                        <div style={{ width: '300px', height: '40px', paddingTop: '5px' }}>Paper graph visualization</div>
+                        <div style={{ width: '100%', display: 'flex' }}>
                             {' '}
                             {this.props.paperId && (
                                 <Form inline className="ml-4">
@@ -429,7 +436,7 @@ class GraphView extends Component {
                                     color="darkblue"
                                     size="sm"
                                     //    className='mb-4 mt-4'
-                                    style={{ margin: '0 10px', flexGrow: '1', display: 'flex' }}
+                                    style={{ margin: '0 10px', flexGrow: '1', display: 'flex', alignSelf: 'center', width: '155px' }}
                                     onClick={this.exploreTheFullGraph}
                                     disabled={this.state.exploringFullGraph}
                                 >
@@ -448,7 +455,7 @@ class GraphView extends Component {
                                     color="darkblue"
                                     size="sm"
                                     //    className='mb-4 mt-4'
-                                    style={{ margin: '0 10px', flexGrow: '1', display: 'flex' }}
+                                    style={{ margin: '0 10px', flexGrow: '1', display: 'flex', alignSelf: 'center', width: '130px' }}
                                     onClick={this.centerGraph}
                                 >
                                     <Icon icon={faHome} className="mr-1 align-self-center" /> Center Graph
@@ -457,7 +464,7 @@ class GraphView extends Component {
                                     color="darkblue"
                                     size="sm"
                                     //    className='mb-4 mt-4'
-                                    style={{ margin: '0 10px', flexGrow: '1', display: 'flex' }}
+                                    style={{ marginLeft: '10px', flexGrow: '1', display: 'flex', height: 'min-content', paddingTop: '5px' }}
                                     isOpen={this.state.layoutSelectionOpen}
                                     toggle={() => {
                                         this.setState({ layoutSelectionOpen: !this.state.layoutSelectionOpen });
@@ -512,8 +519,9 @@ class GraphView extends Component {
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </Dropdown>
+                                <SearchAutoComplete ref={this.searchComponent} placeHolder={'Search'} graphVis={this.graphVis} />
                             </div>
-                        </>
+                        </div>
                     </div>
                 </ModalHeader>
                 <ModalBody style={{ padding: '0', minHeight: '100px', height: this.state.windowHeight }}>

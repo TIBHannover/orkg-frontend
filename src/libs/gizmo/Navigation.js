@@ -179,6 +179,7 @@ export default class Navigation {
             that.zoomFactor = d3.event.scale;
             that.graphTranslation = d3.event.translate;
             graphContainer.attr('transform', 'translate(' + that.graphTranslation + ')scale(' + that.zoomFactor + ')');
+            graph.updateHaloRadius();
             return;
         }
         /** animate the transition **/
@@ -193,10 +194,12 @@ export default class Navigation {
                     that.graphTranslation[0] = tr.translate[0];
                     that.graphTranslation[1] = tr.translate[1];
                     that.zoomFactor = tr.scale[0];
+                    graph.updateHaloRadius();
                 };
             })
             .each('end', function() {
                 that.transformAnimation = false;
+                that.graph.updateHaloRadius();
             })
             .attr('transform', 'translate(' + that.graphTranslation + ')scale(' + that.zoomFactor + ')')
             .ease('linear')
@@ -240,11 +243,11 @@ export default class Navigation {
         const posY = 0.5 * (topLeft.y + botRight.y);
 
         // zoom factor calculations and fail safes;
-        let newZoomFactor = 1.0; // fail save if graph and window are squares
+        let newZoomFactor;
         //get the smaller one
         const a = w / g_w;
         const b = h / g_h;
-        if (a < b) {
+        if (a <= b) {
             newZoomFactor = a;
         } else {
             newZoomFactor = b;
@@ -283,6 +286,7 @@ export default class Navigation {
             .duration(lenAnimation)
             .attrTween('transform', function() {
                 return function(t) {
+                    graph.updateHaloRadius();
                     return that.transform(pos_interpolation(t), cx, cy, that);
                 };
             })
@@ -295,12 +299,52 @@ export default class Navigation {
             });
     }
 
+    zoomToNode = node => {
+        const graph = this.graph;
+        const that = this;
+        const svgBbox = graph.svgRoot.node().getBoundingClientRect();
+
+        const w = svgBbox.width;
+        const h = svgBbox.height;
+
+        const defaultZoom = 0.8;
+        const defaultTargetZoom = 0.7;
+        const cx = 0.5 * w;
+        const cy = 0.5 * h;
+        const cp = this.getWorldPosFromScreen(cx, cy, this.graphTranslation, this.zoomFactor);
+        const sP = [cp.x, cp.y, h / this.zoomFactor];
+        const zoomLevel = Math.max(defaultZoom + 0.5 * defaultZoom, defaultTargetZoom);
+        const eP = [node.x, node.y, h / zoomLevel];
+        const pos_intp = d3.interpolateZoom(sP, eP);
+
+        let lenAnimation = pos_intp.duration;
+        if (lenAnimation > 2500) {
+            lenAnimation = 2500;
+        }
+
+        graph.graphRoot
+            .attr('transform', that.transform(sP, cx, cy, that))
+            .transition()
+            .duration(lenAnimation)
+            .attrTween('transform', function() {
+                return function(t) {
+                    that.graph.updateHaloRadius();
+                    return that.transform(pos_intp(t), cx, cy, that);
+                };
+            })
+            .each('end', function() {
+                graph.graphRoot.attr('transform', 'translate(' + that.graphTranslation + ')scale(' + that.zoomFactor + ')');
+                that.zoom.translate(that.graphTranslation);
+                that.zoom.scale(that.zoomFactor);
+                graph.updateHaloRadius();
+            });
+    };
+
     /** Helper functions **/
     getWorldPosFromScreen(x, y, translate, scale) {
         // have to check if scale is array or value >> temp variable
-        let temp = scale[0],
-            xn,
-            yn;
+        const temp = scale[0];
+        let xn, yn;
         if (temp) {
             xn = (x - translate[0]) / temp;
             yn = (y - translate[1]) / temp;
@@ -311,6 +355,10 @@ export default class Navigation {
         return { x: xn, y: yn };
     }
 
+    getScreenCoords = (x, y) => {
+        return { x: this.graphTranslation[0] + x * this.zoomFactor, y: this.graphTranslation[1] + y * this.zoomFactor };
+    };
+
     transform(p, cx, cy, parent) {
         if (parent && parent.graph) {
             // one iteration step for the locate target animation
@@ -318,7 +366,7 @@ export default class Navigation {
             parent.graphTranslation = [cx - p[0] * parent.zoomFactor, cy - p[1] * parent.zoomFactor];
             parent.zoom.translate(parent.graphTranslation);
             parent.zoom.scale(parent.zoomFactor);
-            return 'translate(' + parent.graphTranslation[0] + ',' + parent.graphTranslation[1] + ')scale(' + parent.zoomFactor + ')';
+            return 'translate(' + parent.graphTranslation + ')scale(' + parent.zoomFactor + ')';
         }
     }
 } // end of class definition
