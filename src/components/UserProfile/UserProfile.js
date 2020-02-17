@@ -1,17 +1,15 @@
-import { Container, Row } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import { Container } from 'reactstrap';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Gravatar from 'react-gravatar';
 import { getUserInformationById } from 'network';
 import PaperCard from '../PaperCard/PaperCard';
-import { getStatementsByObject, getStatementsBySubject, getStatementsBySubjects, getResourcesByClass } from '../../network';
+import { getStatementsBySubjects, getResourcesByClass } from '../../network';
 import { getPaperData } from 'utils';
 import { find } from 'lodash';
 import NotFound from '../StaticPages/NotFound';
 
+/*
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.avatarBorderColor};
 `;
@@ -44,6 +42,7 @@ const StyledActivity = styled.div`
         padding-left: 1.2rem !important;
     }
 `;
+*/
 
 class UserProfile extends Component {
     state = {
