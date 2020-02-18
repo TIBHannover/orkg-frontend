@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import { Button, Card, ListGroup, ListGroupItem, CardDeck } from 'reactstrap';
-import { getStatementsBySubject } from '../../../network';
+import { getStatementsBySubject, getResourcesByClass } from 'network';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faAngleDoubleRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { updateResearchField, nextStep, previousStep, openTour, closeTour } from '../../../actions/addPaper';
+import { updateResearchField, nextStep, previousStep, openTour, closeTour } from 'actions/addPaper';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled, { withTheme } from 'styled-components';
 import { withCookies, Cookies } from 'react-cookie';
 import PropTypes from 'prop-types';
 import Tour from 'reactour';
 import Tooltip from '../../Utils/Tooltip';
+import flattenDeep from 'lodash/flattenDeep';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 const ListGroupItemTransition = styled(CSSTransition)`
@@ -35,7 +38,6 @@ const ListGroupItemStyled = styled(ListGroupItem)`
 
 const FieldSelector = styled(Card)`
     max-width: 260px;
-    height: 300px;
     overflow-y: auto;
 `;
 
@@ -150,10 +152,15 @@ class ResearchField extends Component {
     render() {
         let errorMessageClasses = 'text-danger mt-2 pl-2';
         errorMessageClasses += !this.state.showError ? ' d-none' : '';
+        let researchFieldLabel;
+        if (this.props.researchFields && this.props.researchFields.length > 0) {
+            const rF = flattenDeep(this.props.researchFields).find(rf => rf.id === this.props.selectedResearchField);
+            researchFieldLabel = rF ? rF.label : this.props.selectedResearchField;
+        }
 
         return (
             <div>
-                <h2 className="h4 mt-4 mb-5">
+                <h2 className="h4 mt-4">
                     <Tooltip
                         message={
                             <span>
@@ -167,18 +174,37 @@ class ResearchField extends Component {
                         Select the research field
                     </Tooltip>
                 </h2>
-
+                <p className="mb-5">
+                    Select the more appropriate research field for the paper from the list. The research field can be selected from a hierarchical
+                    structure of fields and their subfields.
+                </p>
                 <CardDeck>
                     {this.props.researchFields.length > 0 &&
                         this.props.researchFields.map((fields, level) => {
                             return fields.length > 0 ? (
-                                <FieldSelector className="fieldSelector" key={level}>
+                                <FieldSelector className="fieldSelector">
                                     <ListGroup flush>
                                         <TransitionGroup exit={false}>
                                             {fields.map(field => (
                                                 <ListGroupItemTransition key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
-                                                    <ListGroupItemStyled active={field.active} onClick={() => this.handleFieldClick(field.id, level)}>
-                                                        {field.label}
+                                                    <ListGroupItemStyled
+                                                        style={{ display: 'flex' }}
+                                                        className={'align-items-start'}
+                                                        active={field.active}
+                                                        onClick={() => this.handleFieldClick(field.id, level)}
+                                                    >
+                                                        <div>{field.label}</div>
+                                                        {field.active &&
+                                                            level < this.props.researchFields.length - 1 &&
+                                                            this.props.researchFields[level + 1] &&
+                                                            this.props.researchFields[level + 1].length > 0 && (
+                                                                <Icon
+                                                                    size={'1x'}
+                                                                    style={{ marginLeft: 'auto' }}
+                                                                    className="flex-shrink-0  align-self-center"
+                                                                    icon={faAngleDoubleRight}
+                                                                />
+                                                            )}
                                                     </ListGroupItemStyled>
                                                 </ListGroupItemTransition>
                                             ))}
@@ -190,9 +216,16 @@ class ResearchField extends Component {
                             );
                         })}
                 </CardDeck>
-                <p className={errorMessageClasses} style={{ borderLeft: '4px red solid' }}>
-                    Please select the research field
-                </p>
+
+                {researchFieldLabel && this.props.selectedResearchField !== process.env.REACT_APP_RESEARCH_FIELD_MAIN ? (
+                    <div className="mt-5 mb-3">
+                        Selected research field: <b>{researchFieldLabel}</b>
+                    </div>
+                ) : (
+                    <p className={errorMessageClasses} style={{ borderLeft: '4px red solid' }}>
+                        Please select the research field
+                    </p>
+                )}
 
                 <hr className="mt-5 mb-3" />
                 {/*<strong>Selected research field</strong> <br />
