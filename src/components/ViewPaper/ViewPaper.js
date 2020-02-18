@@ -35,6 +35,10 @@ export const EditModeHeader = styled(Container)`
 export const Title = styled.div`
     font-size: 1.1rem;
     flex-grow: 1;
+    & span {
+        font-size: small;
+        color: ${props => props.theme.ultraLightBlueDarker};
+    }
 `;
 
 class ViewPaper extends Component {
@@ -340,7 +344,7 @@ class ViewPaper extends Component {
                                         size="sm"
                                         onClick={() => this.toggle('editMode')}
                                     >
-                                        <Icon icon={faCheck} /> Finish
+                                        <Icon icon={faCheck} /> Close editing mode
                                     </Button>
                                 )}
                             </ButtonGroup>
@@ -348,7 +352,9 @@ class ViewPaper extends Component {
 
                         {this.state.editMode && (
                             <EditModeHeader className="box">
-                                <Title>Edit mode</Title>
+                                <Title>
+                                    Edit mode <span>Every change that you make is automatically saved.</span>
+                                </Title>
                             </EditModeHeader>
                         )}
                         <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
