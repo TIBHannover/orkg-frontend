@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Form, FormGroup, Label, FormText, Input } from 'reactstrap';
+import { Container, Button, Form, FormGroup, Label, FormText, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 import {
     getResource,
     predicatesUrl,
@@ -13,11 +13,12 @@ import {
 } from 'network';
 import { EditModeHeader, Title } from 'components/ViewPaper/ViewPaper';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faSpinner, faTrash, faInfo } from '@fortawesome/free-solid-svg-icons';
 import styled, { withTheme } from 'styled-components';
 import ROUTES from 'constants/routes.js';
 import Confirm from 'reactstrap-confirm';
 import { toast } from 'react-toastify';
+import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import AutoComplete from './TemplateEditorAutoComplete';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
@@ -56,6 +57,8 @@ class ContributionTemplate extends Component {
     constructor(props) {
         super(props);
 
+        this.inputRef = React.createRef();
+
         this.state = {
             error: null,
             label: '',
@@ -67,15 +70,31 @@ class ContributionTemplate extends Component {
             templateResearchProblems: null,
             templateProperties: [],
             templateSubTemplates: [],
-            statements: []
+            statements: [],
+            modal: false,
+            dialogTemplateId: null,
+            dialogTemplateLabel: null
         };
     }
 
     componentDidMount() {
         if (this.props.match.params.id) {
             this.findTemplate();
+            if (this.state.editMode === true) {
+                this.inputRef.current.focus();
+            }
+        } else {
+            this.inputRef.current.focus();
         }
     }
+
+    openStatementBrowser = (id, label) => {
+        this.setState({
+            modal: true,
+            dialogResourceId: id,
+            dialogResourceLabel: label
+        });
+    };
 
     findTemplate = () => {
         this.setState({ isLoading: true });
@@ -167,7 +186,7 @@ class ContributionTemplate extends Component {
         });
     };
 
-    handlePropertiesSelect = async (selected, action) => {
+    handlePropertiesSelect = async (selected, action, index) => {
         if (action.action === 'create-option') {
             const result = await Confirm({
                 title: 'Are you sure you need a new property?',
@@ -175,23 +194,46 @@ class ContributionTemplate extends Component {
                 cancelColor: 'light'
             });
             if (result) {
-                const foundIndex = selected.findIndex(x => x.__isNew__);
-                const newPredicate = await createPredicate(selected[foundIndex].label);
-                selected[foundIndex] = { id: newPredicate.id, label: selected[foundIndex].label };
-                this.setState({
-                    templateProperties: !selected ? [] : selected
+                const newPredicate = await createPredicate(selected.label);
+                selected = { id: newPredicate.id, label: selected.label };
+                this.setState(state => {
+                    const templateProperties = state.templateProperties.map((item, j) => {
+                        if (j === index) {
+                            item = !selected ? null : selected;
+                        }
+                        return item;
+                    });
+                    return {
+                        templateProperties
+                    };
                 });
             }
         } else {
-            this.setState({
-                templateProperties: !selected ? [] : selected
+            this.setState(state => {
+                const templateProperties = state.templateProperties.map((item, j) => {
+                    if (j === index) {
+                        item = !selected ? null : selected;
+                    }
+                    return item;
+                });
+                return {
+                    templateProperties
+                };
             });
         }
     };
 
-    handleSubTemplatesSelect = selected => {
-        this.setState({
-            templateSubTemplates: !selected ? [] : selected
+    handleSubTemplatesSelect = (selected, index) => {
+        this.setState(state => {
+            const templateSubTemplates = state.templateSubTemplates.map((item, j) => {
+                if (j === index) {
+                    item = !selected ? null : selected;
+                }
+                return item;
+            });
+            return {
+                templateSubTemplates
+            };
         });
     };
 
@@ -231,13 +273,13 @@ class ContributionTemplate extends Component {
         }
         // save template properties
         if (this.state.templateProperties && this.state.templateProperties.length > 0) {
-            for (const property of this.state.templateProperties.reverse()) {
+            for (const property of this.state.templateProperties.filter(tp => tp.id).reverse()) {
                 promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_PROPERTY, property.id));
             }
         }
         // save template sub templates
         if (this.state.templateSubTemplates && this.state.templateSubTemplates.length > 0) {
-            for (const subtemplate of this.state.templateSubTemplates.reverse()) {
+            for (const subtemplate of this.state.templateSubTemplates.filter(st => st.id).reverse()) {
                 promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_SUB_TEMPLATE, subtemplate.id));
             }
         }
@@ -259,6 +301,42 @@ class ContributionTemplate extends Component {
         this.setState(prevState => ({
             [type]: !prevState[type]
         }));
+    };
+
+    addTemplateProperty = () => {
+        this.setState(state => {
+            const templateProperties = [...state.templateProperties, {}];
+            return {
+                templateProperties
+            };
+        });
+    };
+
+    deleteTemplateProperty = index => {
+        this.setState(state => {
+            const templateProperties = state.templateProperties.filter((item, j) => index !== j);
+            return {
+                templateProperties
+            };
+        });
+    };
+
+    addSubTemplate = () => {
+        this.setState(state => {
+            const templateSubTemplates = [...state.templateSubTemplates, {}];
+            return {
+                templateSubTemplates
+            };
+        });
+    };
+
+    deleteSubTemplate = index => {
+        this.setState(state => {
+            const templateSubTemplates = state.templateSubTemplates.filter((item, j) => index !== j);
+            return {
+                templateSubTemplates
+            };
+        });
     };
 
     render() {
@@ -286,7 +364,12 @@ class ContributionTemplate extends Component {
                     <Form>
                         <FormGroup className="mb-4">
                             <Label>Name of template</Label>
-                            <Input value={this.state.label} onChange={this.handleChangeLabel} disabled={!this.state.editMode} />
+                            <Input
+                                innerRef={ref => (this.inputRef.current = ref)}
+                                value={this.state.label}
+                                onChange={this.handleChangeLabel}
+                                disabled={!this.state.editMode}
+                            />
                         </FormGroup>
                         <FormGroup className="mb-4">
                             <Label>Property</Label>
@@ -338,32 +421,113 @@ class ContributionTemplate extends Component {
                         <fieldset className="scheduler-border">
                             <legend className="scheduler-border">Template data</legend>
                             <FormGroup className="mb-4">
-                                <Label>Properties</Label>
-                                <AutoComplete
-                                    requestUrl={predicatesUrl}
-                                    placeholder={this.state.editMode ? 'Select or type to enter a property' : 'No properties'}
-                                    onItemSelected={this.handlePropertiesSelect}
-                                    onKeyUp={() => {}}
-                                    isMulti
-                                    allowCreate
-                                    value={this.state.templateProperties}
-                                    isDisabled={!this.state.editMode}
-                                />
+                                <Label>Properties {this.state.editMode && <FormText>List the properties of this template.</FormText>}</Label>
+                                <div className={'clearfix mb-3'} />
+                                {this.state.templateProperties &&
+                                    this.state.templateProperties.length > 0 &&
+                                    this.state.templateProperties.map((templateProperty, index) => {
+                                        return (
+                                            <InputGroup className={'mt-2 mb-2'}>
+                                                <InputGroupAddon addonType="prepend">{`${index + 1}`}</InputGroupAddon>
+                                                <AutoComplete
+                                                    requestUrl={predicatesUrl}
+                                                    placeholder={this.state.editMode ? 'Select or type to enter a property' : 'No properties'}
+                                                    onItemSelected={(selected, action) => this.handlePropertiesSelect(selected, action, index)}
+                                                    onKeyUp={() => {}}
+                                                    allowCreate
+                                                    autoFocus
+                                                    value={templateProperty}
+                                                    isDisabled={!this.state.editMode}
+                                                />
+
+                                                {this.state.editMode && (
+                                                    <InputGroupAddon addonType="append">
+                                                        <Button outline color="danger" onClick={() => this.deleteTemplateProperty(index)}>
+                                                            <Icon icon={faTrash} />
+                                                        </Button>
+                                                    </InputGroupAddon>
+                                                )}
+                                            </InputGroup>
+                                        );
+                                    })}
+                                {!this.state.editMode && this.state.templateProperties && this.state.templateProperties.length === 0 && (
+                                    <i>
+                                        <small>No properties specified.</small>
+                                    </i>
+                                )}
+                                {this.state.editMode && (
+                                    <Button outline size="sm" className={'mb-3'} onClick={this.addTemplateProperty}>
+                                        Add property
+                                    </Button>
+                                )}
                             </FormGroup>
+                            <hr />
                             <FormGroup className="mb-4">
-                                <Label>Sub-Templates</Label>
-                                <AutoComplete
-                                    requestUrl={resourcesUrl}
-                                    optionsClass={process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE}
-                                    placeholder={this.state.editMode ? 'Select or type to enter a contribution template' : 'No sub template'}
-                                    onItemSelected={this.handleSubTemplatesSelect}
-                                    onKeyUp={() => {}}
-                                    isMulti
-                                    value={this.state.templateSubTemplates}
-                                    isDisabled={!this.state.editMode}
-                                />
+                                <Label>Sub-Templates {this.state.editMode && <FormText>List the sub-templates of this template.</FormText>}</Label>
+                                <div className={'clearfix mb-3'} />
+                                {this.state.templateSubTemplates &&
+                                    this.state.templateSubTemplates.length > 0 &&
+                                    this.state.templateSubTemplates.map((templateSubTemplate, index) => {
+                                        return (
+                                            <>
+                                                <InputGroup className={'mt-2 mb-2'}>
+                                                    <InputGroupAddon addonType="prepend">{`${index + 1}`}</InputGroupAddon>
+                                                    <AutoComplete
+                                                        requestUrl={resourcesUrl}
+                                                        optionsClass={process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE}
+                                                        placeholder={
+                                                            this.state.editMode
+                                                                ? 'Select or type to enter a contribution template'
+                                                                : 'No sub template'
+                                                        }
+                                                        onItemSelected={selected => this.handleSubTemplatesSelect(selected, index)}
+                                                        onKeyUp={() => {}}
+                                                        value={templateSubTemplate}
+                                                        isDisabled={!this.state.editMode}
+                                                    />
+                                                    {templateSubTemplate.id && (
+                                                        <InputGroupAddon addonType="append">
+                                                            <Button
+                                                                outline
+                                                                color="info"
+                                                                onClick={() =>
+                                                                    this.openStatementBrowser(templateSubTemplate.id, templateSubTemplate.label)
+                                                                }
+                                                            >
+                                                                <Icon icon={faInfo} />
+                                                            </Button>
+                                                        </InputGroupAddon>
+                                                    )}
+                                                    {this.state.editMode && (
+                                                        <InputGroupAddon addonType="append">
+                                                            <Button outline color="danger" onClick={() => this.deleteSubTemplate(index)}>
+                                                                <Icon icon={faTrash} />
+                                                            </Button>
+                                                        </InputGroupAddon>
+                                                    )}
+                                                </InputGroup>
+                                            </>
+                                        );
+                                    })}
+                                {!this.state.editMode && this.state.templateSubTemplates && this.state.templateSubTemplates.length === 0 && (
+                                    <i>
+                                        <small>No sub-templates specified.</small>
+                                    </i>
+                                )}
+                                {this.state.editMode && (
+                                    <Button outline size="sm" className={'mb-3'} onClick={this.addSubTemplate}>
+                                        Add sub-template
+                                    </Button>
+                                )}
                             </FormGroup>
                         </fieldset>
+                        <StatementBrowserDialog
+                            show={this.state.modal}
+                            enableEdit={this.state.enableEdit}
+                            toggleModal={() => this.toggle('modal')}
+                            resourceId={this.state.dialogResourceId}
+                            resourceLabel={this.state.dialogResourceLabel}
+                        />
                         {(this.state.editMode || this.state.isSaving) && (
                             <>
                                 <hr className="mt-5 mb-3" />

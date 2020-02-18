@@ -101,6 +101,10 @@ class TemplateEditorAutoComplete extends Component {
         }
     };
 
+    noResults = () => {
+        return 'Start typing to get relevant suggestions';
+    };
+
     render() {
         this.customStyles = {
             control: (provided, state) => ({
@@ -175,7 +179,8 @@ TemplateEditorAutoComplete.propTypes = {
     optionsClass: PropTypes.string,
     isMulti: PropTypes.bool,
     isDisabled: PropTypes.bool,
-    isClearable: PropTypes.bool
+    isClearable: PropTypes.bool,
+    noOptionsMessage: PropTypes.string
 };
 
 export default withTheme(TemplateEditorAutoComplete);
