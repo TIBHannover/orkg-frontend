@@ -72,6 +72,7 @@ class ContributionTemplate extends Component {
                                 inTemplate={true}
                                 resourceId={this.props.resourceId}
                                 contextStyle={'Template'}
+                                templateId={property.templateId}
                             />
                         );
                     })}

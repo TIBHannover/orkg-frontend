@@ -38,6 +38,7 @@ class TemplateWizard extends Component {
                                     isSaving={property.isSaving}
                                     selectedResource={this.props.initialResourceId}
                                     contextStyle={'Template'}
+                                    templateId={property.templateId}
                                 />
                             );
                         } else {

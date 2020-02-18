@@ -59,6 +59,7 @@ class Statements extends Component {
                                     openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                                     isEditing={property.isEditing}
                                     isSaving={property.isSaving}
+                                    templateId={property.templateId}
                                 />
                             );
                         })

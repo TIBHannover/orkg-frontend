@@ -411,6 +411,11 @@ class StatementItem extends Component {
                             {!this.props.isEditing ? (
                                 <div>
                                     <div className={'propertyLabel'}>{this.state.predicateLabel}</div>
+                                    {this.props.templateId && (
+                                        <i>
+                                            <small>Typed property</small>
+                                        </i>
+                                    )}
                                     <div className={'propertyOptions'}>
                                         <TemplateOptionButton
                                             title={'Edit property'}
@@ -513,7 +518,8 @@ StatementItem.propTypes = {
     deleteProperty: PropTypes.func.isRequired,
     contextStyle: PropTypes.string.isRequired,
     resourceId: PropTypes.string,
-    inTemplate: PropTypes.bool
+    inTemplate: PropTypes.bool,
+    templateId: PropTypes.string
 };
 
 StatementItem.defaultProps = {
