@@ -124,7 +124,7 @@ class Contributions extends Component {
                 newResource.id
             );
             //find the index of research problem
-            const objIndex = problemsArray.findIndex(obj => obj.id === a.createdOptionLabel);
+            const objIndex = problemsArray.findIndex(obj => obj.id === a.createdOptionId);
             // set the statement of the research problem
             const updatedObj = { ...problemsArray[objIndex], statementId: statement.id, id: newResource.id };
             // update the research problem array

@@ -324,6 +324,8 @@ export const saveAddPaper = data => {
         newProperties = newProperties.map(propertyId => ({ id: propertyId, label: data.properties.byId[propertyId].label }));
         newProperties = uniqBy(newProperties, 'label');
         newProperties = newProperties.map(property => ({ [property.label]: `_${property.id}` }));
+        // list of new reaserch problems
+        const newResearchProblem = [];
         const paperObj = {
             // Set new predicates label and temp ID
             predicates: newProperties,
@@ -340,10 +342,15 @@ export const saveAddPaper = data => {
                     const contribution = data.contributions.byId[c];
                     const researhProblem = {
                         [researchProblemPredicate]: contribution.researchProblems.map(rp => {
-                            if (rp.hasOwnProperty('_class') && rp._class === 'resource') {
-                                return { '@id': rp.id };
+                            if (rp.hasOwnProperty('existingResourceId') && rp.existingResourceId) {
+                                return { '@id': rp.existingResourceId };
                             } else {
-                                return { label: rp.label };
+                                if (newResearchProblem.includes(rp.id)) {
+                                    return { '@id': `_${rp.id}` };
+                                } else {
+                                    newResearchProblem.push(rp.id);
+                                    return { label: rp.label, '@temp': `_${rp.id}` };
+                                }
                             }
                         })
                     };
