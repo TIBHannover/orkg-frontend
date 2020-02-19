@@ -64,7 +64,16 @@ class Statements extends Component {
                             );
                         })
                     ) : (
-                        <StyledStatementItem style={{ marginBottom: 0 }}>No values</StyledStatementItem>
+                        <StyledStatementItem style={{ marginBottom: 0 }}>
+                            No data yet
+                            <br />
+                            {this.props.enableEdit ? (
+                                <span style={{ fontSize: '0.875rem' }}>Start by adding a property from below</span>
+                            ) : (
+                                <span style={{ fontSize: '0.875rem' }}>Please contribute by editing.</span>
+                            )}
+                            <br />
+                        </StyledStatementItem>
                     )
                 ) : (
                     <StyledStatementItem>
