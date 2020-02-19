@@ -19,7 +19,7 @@ const dictionary = {
 
 export const getPaperByDoi = doi => {
     // http://localhost:8000/api/widgets/?doi=10.1007/s00799-015-0158-y
-    const url = 'http://localhost:8000/api/widgets/?doi=' + doi;
+    const url = process.env.SERVER_URL + 'api/widgets/?doi=' + doi;
     return new Promise((resolve, reject) => {
         fetch(url)
             .then(response => {
@@ -60,14 +60,14 @@ export function show(params) {
                 temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary['open'][params.language];
                 temporary.getElementsByClassName('orkg-widget-text-statements')[0].textContent = dictionary['numStatements'][params.language];
                 temporary.getElementsByClassName('orkg-widget-statements')[0].textContent = result.num_statements;
-                temporary.getElementsByClassName('orkg-widget-link')[0].href = 'http://localhost:3000/paper/' + result.id;
+                temporary.getElementsByClassName('orkg-widget-link')[0].href = process.env.FRONTEND_SERVER_URL + 'paper/' + result.id;
                 while (temporary.children.length > 0) {
                     ORKGWidget.appendChild(temporary.children[0]);
                 }
             })
             .catch(error => {
                 temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary['add'][params.language];
-                temporary.getElementsByClassName('orkg-widget-link')[0].href = 'http://localhost:3000/add-paper';
+                temporary.getElementsByClassName('orkg-widget-link')[0].href = process.env.FRONTEND_SERVER_URL + 'add-paper';
                 const elem = temporary.getElementsByClassName('orkg-widget-description')[0];
                 elem.parentNode.removeChild(elem);
                 while (temporary.children.length > 0) {

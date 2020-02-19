@@ -16,9 +16,15 @@ module.exports = env => {
             devServer: {
                 contentBase: bundleOutputDir
             },
-            plugins: isDevBuild
-                ? [new webpack.SourceMapDevToolPlugin(), new copyWebpackPlugin([{ from: 'demo/' }])]
-                : [new webpack.optimize.UglifyJsPlugin()],
+            plugins: [
+                new webpack.DefinePlugin({
+                    'process.env.SERVER_URL': JSON.stringify('http://localhost:8000/'),
+                    'process.env.FRONTEND_SERVER_URL': JSON.stringify('http://localhost:3000/')
+                }),
+                ...(isDevBuild
+                    ? [new webpack.SourceMapDevToolPlugin(), new copyWebpackPlugin([{ from: 'demo/' }])]
+                    : [new webpack.optimize.UglifyJsPlugin()])
+            ],
             module: {
                 rules: [
                     { test: /\.html$/i, use: 'html-loader' },
