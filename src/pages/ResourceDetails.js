@@ -66,7 +66,9 @@ class ResourceDetails extends Component {
                     <Container className="mt-5 clearfix">
                         {this.state.editMode && (
                             <EditModeHeader className="box">
-                                <Title>Edit mode</Title>
+                                <Title>
+                                    Edit mode <span>Every change that you make is automatically saved.</span>
+                                </Title>
                                 <Button
                                     className="float-left"
                                     style={{ marginLeft: 1 }}
@@ -74,7 +76,7 @@ class ResourceDetails extends Component {
                                     size="sm"
                                     onClick={() => this.toggle('editMode')}
                                 >
-                                    Finish
+                                    Close editing mode
                                 </Button>
                             </EditModeHeader>
                         )}
