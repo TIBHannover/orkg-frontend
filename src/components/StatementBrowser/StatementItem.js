@@ -4,7 +4,6 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleDown, faChevronCircleUp, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { getResource, predicatesUrl, submitGetRequest, updateStatement, createPredicate, deleteStatementById } from '../../network';
 import {
-    togglePropertyCollapse,
     toggleEditPropertyLabel,
     updatePropertyLabel,
     changeProperty,
@@ -32,7 +31,8 @@ class StatementItem extends Component {
 
         this.state = {
             deleteContributionModal: false,
-            predicateLabel: null
+            predicateLabel: null,
+            isCollapsed: true
         };
     }
 
@@ -45,6 +45,12 @@ class StatementItem extends Component {
             this.getPredicateLabel();
         }
     }
+
+    toggle = type => {
+        this.setState(prevState => ({
+            [type]: !prevState[type]
+        }));
+    };
 
     toggleDeleteStatement = async e => {
         e.stopPropagation();
@@ -206,7 +212,7 @@ class StatementItem extends Component {
     };
 
     render() {
-        const isCollapsed = this.props.selectedProperty === this.props.id;
+        const isCollapsed = this.state.isCollapsed;
 
         const listGroupClass = classNames({
             statementActive: isCollapsed,
@@ -291,7 +297,7 @@ class StatementItem extends Component {
                 <>
                     <StyledStatementItem
                         active={isCollapsed}
-                        onClick={() => (!this.props.isEditing ? this.props.togglePropertyCollapse(this.props.id) : undefined)}
+                        onClick={() => (!this.props.isEditing ? this.toggle('isCollapsed') : undefined)}
                         className={listGroupClass}
                     >
                         <div className="flex-grow-1 mr-4">
@@ -397,7 +403,7 @@ class StatementItem extends Component {
                                     );
                                 })}
 
-                                {this.props.enableEdit ? <AddValue syncBackend={this.props.syncBackend} /> : ''}
+                                {this.props.enableEdit ? <AddValue propertyId={this.props.id} syncBackend={this.props.syncBackend} /> : ''}
                             </ListGroup>
                         </StyledListGroupOpen>
                     </Collapse>
@@ -501,8 +507,6 @@ StatementItem.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     isLastItem: PropTypes.bool.isRequired,
-    togglePropertyCollapse: PropTypes.func.isRequired,
-    selectedProperty: PropTypes.string.isRequired,
     properties: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
@@ -529,7 +533,6 @@ StatementItem.defaultProps = {
 
 const mapStateToProps = state => {
     return {
-        selectedProperty: state.statementBrowser.selectedProperty,
         selectedResource: state.statementBrowser.selectedResource,
         properties: state.statementBrowser.properties,
         values: state.statementBrowser.values
@@ -538,7 +541,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
     deleteProperty: id => dispatch(deleteProperty(id)),
-    togglePropertyCollapse: id => dispatch(togglePropertyCollapse(id)),
     toggleEditPropertyLabel: data => dispatch(toggleEditPropertyLabel(data)),
     updatePropertyLabel: data => dispatch(updatePropertyLabel(data)),
     changeProperty: data => dispatch(changeProperty(data)),

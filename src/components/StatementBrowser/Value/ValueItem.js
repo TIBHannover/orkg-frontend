@@ -678,7 +678,6 @@ ValueItem.propTypes = {
     properties: PropTypes.object.isRequired,
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    selectedProperty: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     classes: PropTypes.array.isRequired,
     shared: PropTypes.number.isRequired,
@@ -709,8 +708,7 @@ const mapStateToProps = state => {
     return {
         resources: state.statementBrowser.resources,
         values: state.statementBrowser.values,
-        properties: state.statementBrowser.properties,
-        selectedProperty: state.statementBrowser.selectedProperty
+        properties: state.statementBrowser.properties
     };
 };
 

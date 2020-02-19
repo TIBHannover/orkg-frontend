@@ -65,13 +65,6 @@ export const loadStatementBrowserData = data => dispatch => {
     });
 };
 
-export const togglePropertyCollapse = id => dispatch => {
-    dispatch({
-        type: type.TOGGLE_PROPERTY_COLLAPSE,
-        id
-    });
-};
-
 export const createProperty = data => dispatch => {
     dispatch({
         type: type.CREATE_PROPERTY,
