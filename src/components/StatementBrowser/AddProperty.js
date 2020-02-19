@@ -147,9 +147,12 @@ class AddProperty extends Component {
         return (
             <>
                 {this.props.contextStyle === 'StatementBrowser' ? (
-                    <StyledStatementItem>
+                    <StyledStatementItem
+                        style={{ transition: '0.3s max-width', borderTop: '0', textAlign: 'center' }}
+                        className={`${this.state.showAddProperty ? 'col-12 large' : 'col-3'}`}
+                    >
                         {this.state.showAddProperty ? (
-                            <StyledAddProperty>
+                            <StyledAddProperty style={{ textAlign: 'left' }}>
                                 <AutoComplete
                                     requestUrl={predicatesUrl}
                                     placeholder="Select or type to enter a property"

@@ -229,8 +229,8 @@ class StatementItem extends Component {
         });
 
         const openBoxClass = classNames({
-            listGroupOpenBorderBottom: this.props.isLastItem && !this.props.enableEdit,
-            'rounded-bottom': this.props.isLastItem && !this.props.enableEdit
+            listGroupOpenBorderBottom: this.props.isLastItem,
+            'rounded-bottom': !this.props.enableEdit
         });
 
         const valueIds = Object.keys(this.props.properties.byId).length !== 0 ? this.props.properties.byId[this.props.id].valueIds : [];
@@ -505,6 +505,7 @@ StatementItem.propTypes = {
     index: PropTypes.number.isRequired,
     isExistingProperty: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
+    showAddProperty: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     isLastItem: PropTypes.bool.isRequired,
     properties: PropTypes.object.isRequired,

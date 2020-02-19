@@ -64,7 +64,7 @@ class Statements extends Component {
                             );
                         })
                     ) : (
-                        <StyledStatementItem>No values</StyledStatementItem>
+                        <StyledStatementItem style={{ marginBottom: 0 }}>No values</StyledStatementItem>
                     )
                 ) : (
                     <StyledStatementItem>
