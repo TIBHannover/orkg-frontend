@@ -133,25 +133,35 @@ class Contribution extends Component {
                             openExistingResourcesInDialog={true}
                             syncBackend={false}
                             initialResourceId={this.props.resourceId}
+                            templatesFound={uniqueTemplates.length > 0 ? true : false}
                         />
-                        <Label className={'mt-4'}>
-                            <Tooltip message={`Select a template to use it in your contribution data`}>Add template</Tooltip>
-                        </Label>
-                        <div className={'mt-2'}>
-                            {this.state.isTemplatesLoading && (
-                                <>
-                                    <Icon icon={faSpinner} spin /> Loading contribution templates.
-                                </>
-                            )}
-                            {!this.state.isTemplatesLoading && uniqueTemplates.length === 0 && <>No contribution template found.</>}
-                            {!this.state.isTemplatesLoading && uniqueTemplates.length > 0 && (
-                                <>
-                                    {uniqueTemplates.map(t => (
-                                        <AddTemplateButton key={`t${t.id}`} id={t.id} label={t.label} selectedResource={this.props.resourceId} />
-                                    ))}
-                                </>
-                            )}
-                        </div>
+                        {!this.state.isTemplatesLoading && uniqueTemplates.length > 0 && (
+                            <>
+                                <Label className={'mt-4'}>
+                                    <Tooltip message={`Select a template to use it in your contribution data`}>Add template</Tooltip>
+                                </Label>
+                                <div className={'mt-2'}>
+                                    {this.state.isTemplatesLoading && (
+                                        <>
+                                            <Icon icon={faSpinner} spin /> Loading contribution templates.
+                                        </>
+                                    )}
+                                    {!this.state.isTemplatesLoading && uniqueTemplates.length === 0 && <>No contribution template found.</>}
+                                    {!this.state.isTemplatesLoading && uniqueTemplates.length > 0 && (
+                                        <>
+                                            {uniqueTemplates.map(t => (
+                                                <AddTemplateButton
+                                                    key={`t${t.id}`}
+                                                    id={t.id}
+                                                    label={t.label}
+                                                    selectedResource={this.props.resourceId}
+                                                />
+                                            ))}
+                                        </>
+                                    )}
+                                </div>
+                            </>
+                        )}
                     </FormGroup>
                 </Form>
             </StyledHorizontalContribution>

@@ -67,7 +67,11 @@ class TemplateWizard extends Component {
                     <StyledEmptyData className="text-muted mt-3">
                         No data yet
                         <br />
-                        <span style={{ fontSize: '0.875rem' }}>Start by adding a template or a property from below</span>
+                        {this.props.templatesFound ? (
+                            <span style={{ fontSize: '0.875rem' }}>Start by adding a template or a property from below</span>
+                        ) : (
+                            <span style={{ fontSize: '0.875rem' }}>Start by a property from below</span>
+                        )}
                         <br />
                     </StyledEmptyData>
                 )}
@@ -85,7 +89,8 @@ TemplateWizard.propTypes = {
     initialResourceId: PropTypes.string,
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
-    openExistingResourcesInDialog: PropTypes.bool
+    openExistingResourcesInDialog: PropTypes.bool,
+    templatesFound: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => {
