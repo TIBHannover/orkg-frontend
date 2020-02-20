@@ -9,6 +9,7 @@ import { getTemplateById } from 'network';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
+import Tippy from '@tippy.js/react';
 
 const IconWrapper = styled.span`
     background-color: #d1d5e4;
@@ -31,20 +32,87 @@ const Label = styled.div`
     padding-left: 28px;
 `;
 
+class TemplateDetailsTooltip extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            template: {},
+            isTemplateLoading: false,
+            isTemplateFailedLoading: true
+        };
+    }
+
+    componentDidMount = () => {
+        this.loadTemplate();
+    };
+
+    loadTemplate = () => {
+        this.setState({ isTemplateLoading: true, isTemplateFailedLoading: false });
+        getTemplateById(this.props.id).then(template => {
+            this.setState({ template, isTemplateLoading: false, isTemplateFailedLoading: false });
+        });
+    };
+    render() {
+        return (
+            <div>
+                {this.state.isTemplateLoading && <>Loading...</>}
+                {!this.state.isTemplateLoading && (
+                    <>
+                        {this.props.source && (
+                            <div className={'mb-1'}>
+                                <b>Template for:</b>
+                                <br />
+                                <i>{this.props.source.label}</i>
+                            </div>
+                        )}
+                        {this.state.template.properties && this.state.template.properties.length > 0 && (
+                            <div>
+                                <b>Properties: </b>
+                                <ul>
+                                    {this.state.template.properties &&
+                                        this.state.template.properties.length > 0 &&
+                                        this.state.template.properties.map(property => {
+                                            return <li key={`t${property.id}`}>{property.label}</li>;
+                                        })}
+                                </ul>
+                            </div>
+                        )}
+                        {this.state.template.subTemplates && this.state.template.subTemplates.length > 0 && (
+                            <div>
+                                <b>Nested Templates: </b>
+                                <ul>
+                                    {this.state.template.subTemplates.map(subTemplate => {
+                                        return <li key={`st${subTemplate.id}`}>{subTemplate.label}</li>;
+                                    })}
+                                </ul>
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
+        );
+    }
+}
+
+TemplateDetailsTooltip.propTypes = {
+    id: PropTypes.string.isRequired,
+    source: PropTypes.object.isRequired
+};
+
 class AddTemplateButton extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             isTemplateLoading: false,
-            isTemplateFailesLoading: true
+            isTemplateFailedLoading: true
         };
     }
 
     addTemplate = templateID => {
-        this.setState({ isTemplateLoading: true, isTemplateFailesLoading: false });
+        this.setState({ isTemplateLoading: true, isTemplateFailedLoading: false });
         getTemplateById(templateID).then(template => {
-            console.log(template);
             // Check if it's a contribution template
             if (template.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION) {
                 // Add properties
@@ -112,26 +180,30 @@ class AddTemplateButton extends Component {
                     this.props.prefillStatements({ statements: statementsSubTemplates, resourceId: rID });
                 }
             }
-            this.setState({ isTemplateLoading: false, isTemplateFailesLoading: false });
+            this.setState({ isTemplateLoading: false, isTemplateFailedLoading: false });
         });
     };
 
     render() {
         return (
-            <Button
-                onClick={() => {
-                    this.addTemplate(this.props.id);
-                }}
-                size="sm"
-                color="light"
-                className="mr-2 position-relative px-3 rounded-pill border-0"
-            >
-                <IconWrapper>
-                    {!this.state.isTemplateLoading && <Icon size="sm" icon={faPlus} />}
-                    {this.state.isTemplateLoading && <Icon icon={faSpinner} spin />}
-                </IconWrapper>
-                <Label>{this.props.label}</Label>
-            </Button>
+            <Tippy content={<TemplateDetailsTooltip id={this.props.id} source={this.props.source} />}>
+                <span>
+                    <Button
+                        onClick={() => {
+                            this.addTemplate(this.props.id);
+                        }}
+                        size="sm"
+                        color="light"
+                        className="mr-2 position-relative px-3 rounded-pill border-0"
+                    >
+                        <IconWrapper>
+                            {!this.state.isTemplateLoading && <Icon size="sm" icon={faPlus} />}
+                            {this.state.isTemplateLoading && <Icon icon={faSpinner} spin />}
+                        </IconWrapper>
+                        <Label>{this.props.label}</Label>
+                    </Button>
+                </span>
+            </Tippy>
         );
     }
 }
@@ -141,7 +213,8 @@ AddTemplateButton.propTypes = {
     prefillStatements: PropTypes.func.isRequired,
     selectedResource: PropTypes.string,
     label: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
+    source: PropTypes.object.isRequired
 };
 
 AddTemplateButton.defaultProps = {

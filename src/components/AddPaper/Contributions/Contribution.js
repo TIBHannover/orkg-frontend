@@ -33,9 +33,10 @@ class Contribution extends Component {
     getTemplatesOfResourceId = (resourceId, predicateId) => {
         return getStatementsByObjectAndPredicate({ objectId: resourceId, predicateId: predicateId }).then(statements => {
             // Filter statement with subjects of type Contribution Template
+            const source = statements.length > 0 ? statements[0].object : '';
             return statements
                 .filter(statement => statement.subject.classes.includes(process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE))
-                .map(st => ({ id: st.subject.id, label: st.subject.label, source: resourceId })); // return the template Object
+                .map(st => ({ id: st.subject.id, label: st.subject.label, source })); // return the template Object
         });
     };
 
@@ -59,7 +60,7 @@ class Contribution extends Component {
             this.setState(prevState => ({
                 isTemplatesLoading: false,
                 isTemplatesFailesLoading: false,
-                templates: prevState.templates.filter(template => template.source !== a.removedValue.id)
+                templates: prevState.templates.filter(template => template.source.id !== a.removedValue.id)
             }));
         }
     };
@@ -154,6 +155,7 @@ class Contribution extends Component {
                                                     key={`t${t.id}`}
                                                     id={t.id}
                                                     label={t.label}
+                                                    source={t.source}
                                                     selectedResource={this.props.resourceId}
                                                 />
                                             ))}
