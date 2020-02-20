@@ -468,6 +468,7 @@ export const getTemplateById = templateId => {
             )
         ).then(subs => ({
             id: templateId,
+            label: templateStatements.length > 0 ? templateStatements[0].subject.label : '',
             predicate: templatePredicate[0],
             properties: templateStatements
                 .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_PROPERTY)

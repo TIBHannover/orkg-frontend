@@ -41,63 +41,76 @@ class AddTemplateButton extends Component {
         };
     }
 
-    addTemplate = () => {
+    addTemplate = templateID => {
         this.setState({ isTemplateLoading: true, isTemplateFailesLoading: false });
-        getTemplateById(this.props.id).then(template => {
-            // Add template to the statement browser
-            const statements = { properties: [], values: [] };
-            const pID = guid();
-            const vID = guid();
-            const rID = guid();
-            statements['properties'].push({
-                propertyId: pID,
-                existingPredicateId: template.predicate.id,
-                label: template.predicate.label,
-                isTemplate: true
-            });
-
-            statements['values'].push({
-                valueId: vID,
-                label: this.props.label,
-                existingResourceId: rID,
-                type: 'object',
-                propertyId: pID
-            });
-            this.props.prefillStatements({ statements, resourceId: this.props.selectedResource });
-            // Add properties
-            if (template.properties && template.properties.length > 0) {
+        getTemplateById(templateID).then(template => {
+            console.log(template);
+            // Check if it's a contribution template
+            if (template.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION) {
+                // Add properties
+                if (template.properties && template.properties.length > 0) {
+                    const statements = { properties: [], values: [] };
+                    for (const property of template.properties) {
+                        statements['properties'].push({
+                            existingPredicateId: property.id,
+                            label: property.label
+                        });
+                    }
+                    this.props.prefillStatements({ statements, resourceId: this.props.selectedResource });
+                }
+                // Add templates
+                if (template.subTemplates && template.subTemplates.length > 0) {
+                    for (const subTemplate of template.subTemplates) {
+                        this.addTemplate(subTemplate.id);
+                    }
+                }
+            } else {
+                // Add template to the statement browser
                 const statements = { properties: [], values: [] };
-                for (const property of template.properties) {
-                    statements['properties'].push({
-                        existingPredicateId: property.id,
-                        label: property.label
-                    });
+                const pID = guid();
+                const vID = guid();
+                const rID = guid();
+                statements['properties'].push({
+                    propertyId: pID,
+                    existingPredicateId: template.predicate.id,
+                    label: template.predicate.label,
+                    isTemplate: true
+                });
+
+                statements['values'].push({
+                    valueId: vID,
+                    label: template.label,
+                    existingResourceId: rID,
+                    type: 'object',
+                    propertyId: pID
+                });
+                this.props.prefillStatements({ statements, resourceId: this.props.selectedResource });
+                // Add properties
+                if (template.properties && template.properties.length > 0) {
+                    const statements = { properties: [], values: [] };
+                    for (const property of template.properties) {
+                        statements['properties'].push({
+                            existingPredicateId: property.id,
+                            label: property.label
+                        });
+                    }
+                    this.props.prefillStatements({ statements, resourceId: rID });
                 }
-                this.props.prefillStatements({ statements, resourceId: rID });
-            }
-            // Add templates
-            if (template.subTemplates && template.subTemplates.length > 0) {
-                const statementsSubTemplates = { properties: [], values: [] };
-                for (const subTemplate of template.subTemplates) {
-                    const tpID = guid();
-                    //const tvID = guid();
-                    statementsSubTemplates['properties'].push({
-                        propertyId: tpID,
-                        existingPredicateId: subTemplate.predicate.id,
-                        label: subTemplate.predicate.label,
-                        templateId: subTemplate.id
-                    });
-                    /*
-                    statementsSubTemplates['values'].push({
-                        valueId: tvID,
-                        templateId: subTemplate.id,
-                        label: subTemplate.label,
-                        type: 'template',
-                        propertyId: tpID
-                    });
-                    */
+                // Add templates
+                if (template.subTemplates && template.subTemplates.length > 0) {
+                    const statementsSubTemplates = { properties: [], values: [] };
+                    for (const subTemplate of template.subTemplates) {
+                        const tpID = guid();
+                        //const tvID = guid();
+                        statementsSubTemplates['properties'].push({
+                            propertyId: tpID,
+                            existingPredicateId: subTemplate.predicate.id,
+                            label: subTemplate.predicate.label,
+                            templateId: subTemplate.id
+                        });
+                    }
+                    this.props.prefillStatements({ statements: statementsSubTemplates, resourceId: rID });
                 }
-                this.props.prefillStatements({ statements: statementsSubTemplates, resourceId: rID });
             }
             this.setState({ isTemplateLoading: false, isTemplateFailesLoading: false });
         });
@@ -107,7 +120,7 @@ class AddTemplateButton extends Component {
         return (
             <Button
                 onClick={() => {
-                    this.addTemplate();
+                    this.addTemplate(this.props.id);
                 }}
                 size="sm"
                 color="light"

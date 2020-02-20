@@ -505,7 +505,6 @@ StatementItem.propTypes = {
     index: PropTypes.number.isRequired,
     isExistingProperty: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
-    showAddProperty: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     isLastItem: PropTypes.bool.isRequired,
     properties: PropTypes.object.isRequired,
