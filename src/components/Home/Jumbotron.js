@@ -1,9 +1,30 @@
 import React, { Component } from 'react';
-import { Container } from 'reactstrap';
+import { Container, Button } from 'reactstrap';
 import HomeBannerBg from 'assets/img/graph-background.svg';
 import styled from 'styled-components';
 import Typist from 'react-typist';
 import 'react-typist/dist/Typist.css';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faPlayCircle } from '@fortawesome/free-regular-svg-icons';
+import Video from './Video';
+
+const PlayButton = styled(Button)`
+    font-size: 0.9rem !important;
+    color: inherit !important;
+    text-decoration: none !important;
+    transition: opacity 0.2s !important;
+    text-align: center !important;
+
+    &:hover {
+        opacity: 0.7;
+    }
+
+    svg {
+        font-size: 65px !important;
+        line-height: normal;
+        margin-left: 3px;
+    }
+`;
 
 const JumbotronStyled = styled.div`
     padding: 120px 0;
@@ -102,15 +123,7 @@ export default class Jumbotron extends Component {
                         <div style={{ position: 'relative' }}>
                             <div className="mt-4 mb-4 text-shadow-dark text-center">
                                 <div className="flex-shrink-0 justify-content-center d-flex align-items-center">
-                                    <a
-                                        href="https://projects.tib.eu/orkg/"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="btn btn-darkblue btn-block btn-default"
-                                        style={{ width: 150, boxShadow: '0px 0px 8px 0px rgba(0, 0, 0, 0.13)' }}
-                                    >
-                                        Learn More
-                                    </a>
+                                    <Video />
                                 </div>
                             </div>
                         </div>
