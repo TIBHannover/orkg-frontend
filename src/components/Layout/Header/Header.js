@@ -58,7 +58,7 @@ const StyledAuthTooltip = styled(Tooltip)`
     & .tooltip-inner {
         font-size: 16px;
         background-color: ${props => props.theme.darkblue};
-        max-width: 400px;
+        max-width: 410px;
         box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.13);
 
         .btn {
