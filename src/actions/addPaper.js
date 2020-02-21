@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 
 export const updateGeneralData = data => dispatch => {
     dispatch({
-        type: type.UPFATE_GENERAL_DATA,
+        type: type.UPDATE_GENERAL_DATA,
         payload: data
     });
 };
@@ -336,6 +336,7 @@ export const saveAddPaper = data => {
                 authors: data.authors.map(author => ({ label: author.label, ...(author.orcid ? { orcid: author.orcid } : {}) })),
                 publicationMonth: data.publicationMonth,
                 publicationYear: data.publicationYear,
+                publishedIn: data.publishedIn,
                 researchField: data.selectedResearchField,
                 // Set the contributions data
                 contributions: data.contributions.allIds.map(c => {
