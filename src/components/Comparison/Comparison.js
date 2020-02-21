@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup } from 'reactstrap';
+import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, UncontrolledAlert } from 'reactstrap';
 import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject } from 'network';
 import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResonseHashFromUrl, get_error_message } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faDownload, faArrowsAltH } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faDownload, faArrowsAltH, faLightbulb } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import ComparisonLoadingComponent from './ComparisonLoadingComponent';
 import ComparisonTable from './ComparisonTable.js';
@@ -447,6 +447,19 @@ class Comparison extends Component {
                                     <br />
                                 )}
                             </div>
+                            {contributionAmount > 3 && (
+                                <UncontrolledAlert color="info">
+                                    <Icon icon={faLightbulb} /> Use{' '}
+                                    <b>
+                                        <i>Shift</i>
+                                    </b>{' '}
+                                    +{' '}
+                                    <b>
+                                        <i>Mouse Wheel</i>
+                                    </b>{' '}
+                                    for horizontal scrolling in the table.
+                                </UncontrolledAlert>
+                            )}
                             {contributionAmount > 1 || this.props.match.params.comparisonId ? (
                                 !this.state.isLoading ? (
                                     <ComparisonTable
