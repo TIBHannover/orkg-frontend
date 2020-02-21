@@ -51,6 +51,7 @@ class ContributionTemplate extends Component {
                         id={this.props.id}
                         isEditing={this.props.isEditing}
                         propertyId={this.props.propertyId}
+                        resourceId={this.props.selectedResource}
                     />
                     {propertyIds.map((propertyId, index) => {
                         const property = this.props.properties.byId[propertyId];
@@ -97,6 +98,7 @@ ContributionTemplate.propTypes = {
     id: PropTypes.string.isRequired,
     propertyId: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
+    selectedResource: PropTypes.string.isRequired,
     isEditing: PropTypes.bool.isRequired,
     resourceId: PropTypes.string.isRequired,
     resources: PropTypes.object.isRequired,

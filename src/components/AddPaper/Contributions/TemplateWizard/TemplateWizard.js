@@ -36,7 +36,7 @@ class TemplateWizard extends Component {
                                     openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                                     isEditing={property.isEditing}
                                     isSaving={property.isSaving}
-                                    selectedResource={this.props.initialResourceId}
+                                    resourceId={this.props.initialResourceId}
                                     contextStyle={'Template'}
                                     templateId={property.templateId}
                                 />
@@ -53,6 +53,7 @@ class TemplateWizard extends Component {
                                         label={value.label}
                                         propertyId={propertyId}
                                         resourceId={value.resourceId}
+                                        selectedResource={this.props.initialResourceId}
                                         enableEdit={this.props.enableEdit}
                                         syncBackend={this.props.syncBackend}
                                         openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
@@ -101,9 +102,4 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = dispatch => ({});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(TemplateWizard);
+export default connect(mapStateToProps)(TemplateWizard);

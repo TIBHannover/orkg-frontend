@@ -64,7 +64,7 @@ class TemplateHeader extends Component {
             });
             this.props.deleteProperty({
                 id: this.props.propertyId,
-                resourceId: this.props.selectedResource
+                resourceId: this.props.resourceId
             });
         }
     };
@@ -126,10 +126,9 @@ class TemplateHeader extends Component {
 TemplateHeader.propTypes = {
     deleteValue: PropTypes.func.isRequired,
     deleteProperty: PropTypes.func.isRequired,
-    selectedResource: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    resourceId: PropTypes.string,
+    resourceId: PropTypes.string.isRequired,
     propertyId: PropTypes.string.isRequired,
     statementId: PropTypes.string,
     syncBackend: PropTypes.bool.isRequired,
@@ -139,12 +138,6 @@ TemplateHeader.propTypes = {
     isSavingValue: PropTypes.func.isRequired,
     doneSavingValue: PropTypes.func.isRequired,
     updateValueLabel: PropTypes.func.isRequired
-};
-
-const mapStateToProps = state => {
-    return {
-        selectedResource: state.statementBrowser.selectedResource
-    };
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -157,6 +150,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
 )(TemplateHeader);
