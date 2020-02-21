@@ -87,12 +87,8 @@ class Publish extends Component {
                             </FormGroup>
                             <FormGroup>
                                 <Label for="reference">
-                                    <Tooltip
-                                        message={
-                                            "Enter the reference to this comparison if it's imported/extracted from existing survey/review article."
-                                        }
-                                    >
-                                        Reference
+                                    <Tooltip message={'Enter a reference to the paper from which the comparison is generated'}>
+                                        Reference (optional)
                                     </Tooltip>
                                 </Label>
                                 <Input type="text" name="reference" id="reference" onChange={this.handleChange} />
