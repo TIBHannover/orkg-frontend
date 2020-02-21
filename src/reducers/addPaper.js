@@ -18,6 +18,7 @@ const initialState = {
     entry: '',
     showLookupTable: false,
     doi: '',
+    publishedIn: '',
     researchFields: [],
     selectedResearchField: '',
     selectedContribution: '',
@@ -31,7 +32,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case type.UPFATE_GENERAL_DATA: {
+        case type.UPDATE_GENERAL_DATA: {
             const { payload } = action;
 
             return {
@@ -42,7 +43,8 @@ export default (state = initialState, action) => {
                 publicationYear: payload.publicationYear,
                 doi: payload.doi,
                 entry: payload.entry,
-                showLookupTable: payload.showLookupTable
+                showLookupTable: payload.showLookupTable,
+                publishedIn: payload.publishedIn
             };
         }
 

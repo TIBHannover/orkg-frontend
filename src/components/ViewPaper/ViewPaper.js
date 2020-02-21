@@ -3,7 +3,7 @@ import { Container, Button, Alert, UncontrolledAlert, ButtonGroup, Badge } from 
 import { getStatementsBySubject, getResource, updateResource, createResource, createResourceStatement, deleteStatementById } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faBars, faProjectDiagram, faPen, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faCalendar, faBars, faProjectDiagram, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader';
 import Contributions from './Contributions';
@@ -34,6 +34,10 @@ export const EditModeHeader = styled(Container)`
 export const Title = styled.div`
     font-size: 1.1rem;
     flex-grow: 1;
+    & span {
+        font-size: small;
+        color: ${props => props.theme.ultraLightBlueDarker};
+    }
 `;
 
 class ViewPaper extends Component {
@@ -82,6 +86,15 @@ class ViewPaper extends Component {
 
                         if (researchField.length > 0) {
                             researchField = researchField[0];
+                        }
+
+                        // venue
+                        let publishedIn = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_VENUE);
+
+                        if (publishedIn.length > 0) {
+                            publishedIn = { ...publishedIn[0].object, statementId: publishedIn[0].id };
+                        } else {
+                            publishedIn = '';
                         }
 
                         // publication year
@@ -164,7 +177,8 @@ class ViewPaper extends Component {
                             publicationYearResourceId,
                             doi,
                             doiResourceId,
-                            researchField
+                            researchField,
+                            publishedIn
                         });
 
                         this.setState({
@@ -227,6 +241,7 @@ class ViewPaper extends Component {
                         }
                     })
                     .catch(error => {
+                        console.log(error);
                         if (error.message === 'No Contribution found') {
                             this.setState({ unfoundContribution: true, loading: false, loading_failed: false });
                         } else {
@@ -339,7 +354,7 @@ class ViewPaper extends Component {
                                         size="sm"
                                         onClick={() => this.toggle('editMode')}
                                     >
-                                        <Icon icon={faCheck} /> Finish
+                                        <Icon icon={faTimes} /> Stop editing
                                     </Button>
                                 )}
                             </ButtonGroup>
@@ -347,7 +362,9 @@ class ViewPaper extends Component {
 
                         {this.state.editMode && (
                             <EditModeHeader className="box">
-                                <Title>Edit mode</Title>
+                                <Title>
+                                    Edit mode <span className="pl-2">Every change you make is automatically saved</span>
+                                </Title>
                             </EditModeHeader>
                         )}
                         <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
@@ -413,7 +430,19 @@ class ViewPaper extends Component {
                                     )}
                                     <br />
                                     <div className="d-flex justify-content-end align-items-center">
-                                        {this.state.editMode && <EditPaperDialog />}
+                                        {this.props.viewPaper.publishedIn && (
+                                            <div className="flex-grow-1">
+                                                <small>
+                                                    Published in:{' '}
+                                                    <Link
+                                                        style={{ color: '#60687a', fontStyle: 'italic' }}
+                                                        to={reverse(ROUTES.VENUE_PAGE, { venueId: this.props.viewPaper.publishedIn.id })}
+                                                    >
+                                                        {this.props.viewPaper.publishedIn.label}
+                                                    </Link>
+                                                </small>
+                                            </div>
+                                        )}
                                         {this.props.viewPaper.doi && this.props.viewPaper.doi.startsWith('10.') && (
                                             <div className="flex-shrink-0">
                                                 <small>
@@ -425,6 +454,7 @@ class ViewPaper extends Component {
                                             </div>
                                         )}
                                     </div>
+                                    {this.state.editMode && <EditPaperDialog />}
                                 </>
                             )}
                             {!this.state.loading_failed && !this.state.unfoundContribution && (

@@ -10,7 +10,9 @@ import {
     getStatementsByObject,
     createResourceStatement,
     createResource,
-    deleteStatementsByIds
+    deleteStatementsByIds,
+    deleteStatementById,
+    updateStatement
 } from 'network';
 import { connect } from 'react-redux';
 import EditItem from './EditItem';
@@ -44,7 +46,8 @@ class EditPaperDialog extends Component {
             publicationMonth: this.props.viewPaper.publicationMonth,
             publicationYear: this.props.viewPaper.publicationYear,
             doi: this.props.viewPaper.doi,
-            authors: this.props.viewPaper.authors
+            authors: this.props.viewPaper.authors,
+            publishedIn: this.props.viewPaper.publishedIn
         };
     };
 
@@ -78,6 +81,20 @@ class EditPaperDialog extends Component {
         //authors
         await this.updateAuthors(this.state.authors); //use await to prevent updating the props, which are needed to check whether authors exist
 
+        //venue
+        if (this.state.publishedIn && this.state.publishedIn.statementId && this.state.publishedIn.id) {
+            await updateStatement(this.state.publishedIn.statementId, { object_id: this.state.publishedIn.id });
+        } else if (this.state.publishedIn && !this.state.publishedIn.statementId) {
+            await createResourceStatement(
+                this.props.viewPaper.paperResourceId,
+                process.env.REACT_APP_PREDICATES_HAS_VENUE,
+                this.state.publishedIn.id
+            );
+        } else if (this.state.publishedIn && this.state.publishedIn.statementId && !this.state.publishedIn.id) {
+            await deleteStatementById(this.state.publishedIn.statementId);
+            this.setState({ publishedIn: '' });
+        }
+
         //publication month
         this.updateOrCreateLiteral({
             reducerName: 'publicationMonthResourceId',
@@ -106,7 +123,8 @@ class EditPaperDialog extends Component {
             publicationMonth: this.state.publicationMonth,
             publicationYear: this.state.publicationYear,
             doi: this.state.doi,
-            authors: this.state.authors
+            authors: this.state.authors,
+            publishedIn: this.state.publishedIn
         });
 
         this.setState({
@@ -223,6 +241,27 @@ class EditPaperDialog extends Component {
         });
     };
 
+    handleVenueChange = async (selected, action) => {
+        if (action.action === 'select-option') {
+            selected.statementId = this.state.publishedIn && this.state.publishedIn.statementId ? this.state.publishedIn.statementId : '';
+            this.setState({
+                publishedIn: selected
+            });
+        } else if (action.action === 'create-option') {
+            const newVenue = await createResource(selected.label, [process.env.REACT_APP_CLASSES_VENUE]);
+            selected.id = newVenue.id;
+            selected.statementId = this.state.publishedIn && this.state.publishedIn.statementId ? this.state.publishedIn.statementId : '';
+            this.setState({
+                publishedIn: selected
+            });
+        } else if (action.action === 'clear') {
+            const statementId = this.state.publishedIn && this.state.publishedIn.statementId ? this.state.publishedIn.statementId : '';
+            this.setState({
+                publishedIn: { statementId: statementId, id: null, label: null }
+            });
+        }
+    };
+
     render() {
         return (
             <>
@@ -287,12 +326,20 @@ class EditPaperDialog extends Component {
                                 />
                                 <EditItem
                                     open={this.state.openItem === 'doi'}
-                                    isLastItem={true}
                                     label="DOI"
                                     type="text"
                                     value={this.state.doi}
                                     onChange={e => this.handleChange(e, 'doi')}
                                     toggleItem={() => this.toggleItem('doi')}
+                                />
+                                <EditItem
+                                    open={this.state.openItem === 'publishedIn'}
+                                    isLastItem={true}
+                                    label="Published in"
+                                    type="publishedIn"
+                                    value={this.state.publishedIn}
+                                    onChange={this.handleVenueChange}
+                                    toggleItem={() => this.toggleItem('publishedIn')}
                                 />
                             </ListGroup>
 
@@ -315,6 +362,7 @@ EditPaperDialog.propTypes = {
         publicationMonth: PropTypes.number.isRequired,
         publicationYear: PropTypes.number.isRequired,
         doi: PropTypes.string.isRequired,
+        publishedIn: PropTypes.object,
         authors: PropTypes.arrayOf(
             PropTypes.shape({
                 id: PropTypes.string.isRequired,
