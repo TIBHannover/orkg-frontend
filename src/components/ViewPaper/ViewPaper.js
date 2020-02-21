@@ -3,8 +3,7 @@ import { Container, Button, Alert, UncontrolledAlert, ButtonGroup, Badge } from 
 import { getStatementsBySubject, getResource, updateResource, createResource, createResourceStatement, deleteStatementById } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faBars, faProjectDiagram, faPen, faCheck } from '@fortawesome/free-solid-svg-icons';
-import { faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faUser, faCalendar, faBars, faProjectDiagram, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader';
 import Contributions from './Contributions';
@@ -35,6 +34,10 @@ export const EditModeHeader = styled(Container)`
 export const Title = styled.div`
     font-size: 1.1rem;
     flex-grow: 1;
+    & span {
+        font-size: small;
+        color: ${props => props.theme.ultraLightBlueDarker};
+    }
 `;
 
 class ViewPaper extends Component {
@@ -340,7 +343,7 @@ class ViewPaper extends Component {
                                         size="sm"
                                         onClick={() => this.toggle('editMode')}
                                     >
-                                        <Icon icon={faCheck} /> Finish
+                                        <Icon icon={faTimes} /> Stop editing
                                     </Button>
                                 )}
                             </ButtonGroup>
@@ -348,7 +351,9 @@ class ViewPaper extends Component {
 
                         {this.state.editMode && (
                             <EditModeHeader className="box">
-                                <Title>Edit mode</Title>
+                                <Title>
+                                    Edit mode <span className="pl-2">Every change you make is automatically saved</span>
+                                </Title>
                             </EditModeHeader>
                         )}
                         <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
