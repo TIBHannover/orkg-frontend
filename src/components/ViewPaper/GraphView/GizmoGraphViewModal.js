@@ -397,7 +397,7 @@ class GraphView extends Component {
                         });
                     }
                 }}
-                style={{ maxWidth: '90%' }}
+                style={{ maxWidth: '90%', marginBottom: 0 }}
             >
                 <ModalHeader toggle={this.props.toggle}>
                     <div className={'d-flex'} style={{ height: '40px' }}>
