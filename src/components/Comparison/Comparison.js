@@ -448,7 +448,7 @@ class Comparison extends Component {
                                 {this.props.match.params.comparisonId ? (
                                     <>
                                         {this.state.description && (
-                                            <div style={{ marginBottom: '20px', lineHeight: 1.5 }} className="h6">
+                                            <div style={{ lineHeight: 1.5 }} className="h6 mb-2">
                                                 {this.state.description}
                                             </div>
                                         )}
