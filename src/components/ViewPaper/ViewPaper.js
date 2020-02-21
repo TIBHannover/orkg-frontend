@@ -3,8 +3,7 @@ import { Container, Button, Alert, UncontrolledAlert, ButtonGroup, Badge } from 
 import { getStatementsBySubject, getResource, updateResource, createResource, createResourceStatement, deleteStatementById } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faBars, faProjectDiagram, faPen, faCheck } from '@fortawesome/free-solid-svg-icons';
-import { faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faUser, faCalendar, faBars, faProjectDiagram, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader';
 import Contributions from './Contributions';
@@ -344,7 +343,7 @@ class ViewPaper extends Component {
                                         size="sm"
                                         onClick={() => this.toggle('editMode')}
                                     >
-                                        <Icon icon={faCheck} /> Close editing mode
+                                        <Icon icon={faTimes} /> Stop editing
                                     </Button>
                                 )}
                             </ButtonGroup>
@@ -353,7 +352,7 @@ class ViewPaper extends Component {
                         {this.state.editMode && (
                             <EditModeHeader className="box">
                                 <Title>
-                                    Edit mode <span>Every change that you make is automatically saved.</span>
+                                    Edit mode <span className="pl-2">Every change you make is automatically saved</span>
                                 </Title>
                             </EditModeHeader>
                         )}

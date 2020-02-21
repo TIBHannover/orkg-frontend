@@ -67,7 +67,7 @@ class ResourceDetails extends Component {
                         {this.state.editMode && (
                             <EditModeHeader className="box">
                                 <Title>
-                                    Edit mode <span>Every change that you make is automatically saved.</span>
+                                    Edit mode <span className="pl-2">Every change you make is automatically saved</span>
                                 </Title>
                                 <Button
                                     className="float-left"
@@ -76,7 +76,7 @@ class ResourceDetails extends Component {
                                     size="sm"
                                     onClick={() => this.toggle('editMode')}
                                 >
-                                    Close editing mode
+                                    Stop editing
                                 </Button>
                             </EditModeHeader>
                         )}
