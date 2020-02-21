@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSearch, faCrosshairs, faSnowman, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faCrosshairs, faEye, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import './locateNodeIcon.css';
-import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input } from 'reactstrap';
 
 class SearchAutoComplete extends Component {
     constructor(props) {
@@ -204,78 +204,98 @@ class SearchAutoComplete extends Component {
         if (foundElements.length > 0) {
             this.searchResultIsEmpty = false;
             // create search items
-            this.searchEntries = foundElements.map((item, i) => {
-                let croppedText = '';
-                if (item.label.length > 20) {
-                    croppedText = '...';
-                }
-                const finalItemLabel = item.label.substring(0, 20) + croppedText + ' (' + item.visible + '/' + item.nodeId.length + ')';
-                let expandIconClassNames = 'mr-1 align-self-center inSearchExpandIcon';
-                const expandIconDisabled = item.visible === item.nodeId.length;
-                if (expandIconDisabled) {
-                    expandIconClassNames = 'mr-1 align-self-center inSearchExpandIconDisabled';
-                }
+            this.searchEntries = [
+                <DropdownItem header className={'d-flex'}>
+                    <div className={'flex-shrink-0'}>Result</div>
+                    <div className="flex-shrink-0" style={{ marginLeft: 'auto', fontSize: 'small' }}>
+                        Visible/Total
+                    </div>
+                </DropdownItem>,
+                ...foundElements.map((item, i) => {
+                    let croppedText = '';
+                    if (item.label.length > 20) {
+                        croppedText = '...';
+                    }
+                    const finalItemLabel = item.label.substring(0, 20) + croppedText;
+                    let expandIconClassNames = 'mr-1 align-self-center inSearchExpandIcon';
+                    const expandIconDisabled = item.visible === item.nodeId.length;
+                    if (expandIconDisabled) {
+                        expandIconClassNames = 'mr-1 align-self-center inSearchExpandIconDisabled';
+                    }
 
-                // helper function
-                function callHaloVis(param, parent) {
-                    parent.setState({ activeTargetButton: true });
-                    parent.setState({ value: item.label });
-                    parent.setState({ updateFlip: !parent.state.updateFlip });
-                    parent.props.graphVis.haloVisForNodes(item.nodeId);
-                }
-                async function callExpandHaloVis(param, parent) {
-                    await parent.props.graphVis.expandNodesForHaloVis(item.nodeId);
-                    // >> tell the graph to do the halo stuff;
-                    parent.setState({ activeTargetButton: true });
-                    parent.setState({ value: item.label });
-                    parent.setState({ updateFlip: !parent.state.updateFlip });
-                    parent.props.graphVis.haloVisForNodes(item.nodeId);
-                }
+                    // helper function
+                    function callHaloVis(param, parent) {
+                        parent.setState({ activeTargetButton: true });
+                        parent.setState({ value: item.label });
+                        parent.setState({ updateFlip: !parent.state.updateFlip });
+                        parent.props.graphVis.haloVisForNodes(item.nodeId);
+                    }
+                    async function callExpandHaloVis(param, parent) {
+                        await parent.props.graphVis.expandNodesForHaloVis(item.nodeId);
+                        // >> tell the graph to do the halo stuff;
+                        parent.setState({ activeTargetButton: true });
+                        parent.setState({ value: item.label });
+                        parent.setState({ updateFlip: !parent.state.updateFlip });
+                        parent.props.graphVis.haloVisForNodes(item.nodeId);
+                    }
 
-                if (this.cursor === i) {
-                    // select the item that will be triggered on enter key
-                    this.onEnterPressedIds = item;
-                }
-                return (
-                    <DropdownItem
-                        onClick={event => {
-                            this.handleDropdownItemClick(false, event, expandIconDisabled, item.visible, callHaloVis, callExpandHaloVis, this);
-                        }}
-                        key={'selectionX' + item.nodeId}
-                        value={item.label}
-                        nodelabel={item.label}
-                        nodeid={item.nodeId}
-                        className={'dropdownDefault'}
-                        style={{ backgroundColor: this.cursor === i ? '#e9e9e9' : '#ffffff' }}
-                    >
-                        <div style={{ display: 'flex' }}>
-                            <Icon
-                                disabled={item.visible === item.nodeId.length}
-                                className={expandIconClassNames}
-                                icon={faSnowman}
-                                onClick={event => {
-                                    this.handleDropdownItemClick(true, event, expandIconDisabled, item.visible, callHaloVis, callExpandHaloVis, this);
-                                }}
-                            />
-                            <div
-                                onClick={event => {
-                                    this.handleDropdownItemClick(
-                                        false,
-                                        event,
-                                        expandIconDisabled,
-                                        item.visible,
-                                        callHaloVis,
-                                        callExpandHaloVis,
-                                        this
-                                    );
-                                }}
-                            >
-                                {finalItemLabel}
+                    if (this.cursor === i) {
+                        // select the item that will be triggered on enter key
+                        this.onEnterPressedIds = item;
+                    }
+                    return (
+                        <DropdownItem
+                            onClick={event => {
+                                this.handleDropdownItemClick(false, event, expandIconDisabled, item.visible, callHaloVis, callExpandHaloVis, this);
+                            }}
+                            key={'selectionX' + item.nodeId}
+                            value={item.label}
+                            nodelabel={item.label}
+                            nodeid={item.nodeId}
+                            className={'dropdownDefault'}
+                            style={{ backgroundColor: this.cursor === i ? '#e9e9e9' : '#ffffff' }}
+                        >
+                            <div style={{ display: 'flex' }}>
+                                <Icon
+                                    title={'View node in graph'}
+                                    disabled={item.visible === item.nodeId.length}
+                                    className={expandIconClassNames}
+                                    icon={faEye}
+                                    onClick={event => {
+                                        this.handleDropdownItemClick(
+                                            true,
+                                            event,
+                                            expandIconDisabled,
+                                            item.visible,
+                                            callHaloVis,
+                                            callExpandHaloVis,
+                                            this
+                                        );
+                                    }}
+                                />
+                                <div
+                                    onClick={event => {
+                                        this.handleDropdownItemClick(
+                                            false,
+                                            event,
+                                            expandIconDisabled,
+                                            item.visible,
+                                            callHaloVis,
+                                            callExpandHaloVis,
+                                            this
+                                        );
+                                    }}
+                                >
+                                    {finalItemLabel}
+                                </div>
+                                <div className="flex-shrink-0" style={{ marginLeft: 'auto', fontSize: 'small' }}>
+                                    {`(${item.visible}/${item.nodeId.length})`}
+                                </div>
                             </div>
-                        </div>
-                    </DropdownItem>
-                );
-            });
+                        </DropdownItem>
+                    );
+                })
+            ];
 
             // if graph is not fully explored add the explore button
             if (!this.props.graphVis.graphFullyExplored) {
@@ -378,11 +398,11 @@ class SearchAutoComplete extends Component {
     render() {
         return (
             <div style={{ paddingTop: '5px', display: 'flex', position: 'relative', left: '-20px' }}>
-                <Icon icon={faSearch} className="mr-1 align-self-center" style={{ position: 'relative', left: '30px' }} />
+                <Icon icon={faSearch} size={'sm'} className="mr-1 align-self-center" style={{ position: 'relative', left: '30px' }} />
 
-                <input
-                    className="form-control"
-                    style={{ width: '90%', fontSize: '16px', padding: '0 30px', height: '35px' }}
+                <Input
+                    style={{ padding: '0 30px' }}
+                    bsSize={'sm'}
                     type="text"
                     placeholder={this.props.placeHolder}
                     value={this.state.value}
