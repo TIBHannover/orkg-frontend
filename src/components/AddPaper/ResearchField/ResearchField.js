@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Card, ListGroup, ListGroupItem, CardDeck } from 'reactstrap';
-import { getStatementsBySubject, getResourcesByClass } from 'network';
+import { getStatementsBySubject } from 'network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faAngleDoubleRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { updateResearchField, nextStep, previousStep, openTour, closeTour } from 'actions/addPaper';
@@ -160,11 +160,11 @@ class ResearchField extends Component {
 
         return (
             <div>
-                <h2 className="h4 mt-4">
+                <h2 className="h4 mt-4 mb-5">
                     <Tooltip
                         message={
                             <span>
-                                Select the more appropriate research field for the paper.{' '}
+                                Select the most appropriate research field for the paper.{' '}
                                 <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(0)}>
                                     Learn more
                                 </span>
@@ -174,10 +174,6 @@ class ResearchField extends Component {
                         Select the research field
                     </Tooltip>
                 </h2>
-                <p className="mb-5">
-                    Select the more appropriate research field for the paper from the list. The research field can be selected from a hierarchical
-                    structure of fields and their subfields.
-                </p>
                 <CardDeck>
                     {this.props.researchFields.length > 0 &&
                         this.props.researchFields.map((fields, level) => {
