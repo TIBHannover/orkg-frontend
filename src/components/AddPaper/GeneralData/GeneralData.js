@@ -92,7 +92,7 @@ class GeneralData extends Component {
             paperAuthors: this.props.authors,
             paperPublicationMonth: this.props.publicationMonth,
             paperPublicationYear: this.props.publicationYear,
-            publishedIn: '',
+            publishedIn: this.props.publishedIn,
             validation: this.validator.valid(),
             errors: null
         };
@@ -687,6 +687,7 @@ GeneralData.propTypes = {
     entry: PropTypes.string.isRequired,
     doi: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
+    publishedIn: PropTypes.string.isRequired,
     authors: PropTypes.array.isRequired,
     publicationMonth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     publicationYear: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -706,6 +707,7 @@ const mapStateToProps = state => ({
     entry: state.addPaper.entry,
     doi: state.addPaper.doi,
     title: state.addPaper.title,
+    publishedIn: state.addPaper.publishedIn,
     authors: state.addPaper.authors,
     showLookupTable: state.addPaper.showLookupTable,
     publicationMonth: state.addPaper.publicationMonth,

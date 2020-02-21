@@ -33,7 +33,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case type.UPFATE_GENERAL_DATA: {
+        case type.UPDATE_GENERAL_DATA: {
             const { payload } = action;
 
             return {

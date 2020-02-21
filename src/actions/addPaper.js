@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 
 export const updateGeneralData = data => dispatch => {
     dispatch({
-        type: type.UPFATE_GENERAL_DATA,
+        type: type.UPDATE_GENERAL_DATA,
         payload: data
     });
 };
