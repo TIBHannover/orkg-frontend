@@ -108,6 +108,8 @@ class AuthorsInput extends Component {
     constructor(props) {
         super(props);
 
+        this.inputRef = React.createRef();
+
         this.state = {
             showAuthorForm: false,
             authorInput: '',
@@ -273,7 +275,7 @@ class AuthorsInput extends Component {
                         <Icon icon={faPlus} className={'mr-2'} /> Add author
                     </AddAuthor>
                 </div>
-                <Modal isOpen={this.state.showAuthorForm} toggle={() => this.toggle('showAuthorForm')}>
+                <Modal onOpened={() => this.inputRef.current.focus()} isOpen={this.state.showAuthorForm} toggle={() => this.toggle('showAuthorForm')}>
                     <ModalHeader toggle={this.toggleVideoDialog}>{this.state.editMode ? 'Edit author' : 'Add author'}</ModalHeader>
                     <ModalBody>
                         <FormGroup>
@@ -287,6 +289,7 @@ class AuthorsInput extends Component {
                                 id="authorInput"
                                 value={this.state.authorInput}
                                 invalid={Boolean(get_error_message(this.state.errors, 'authorInput'))}
+                                innerRef={ref => (this.inputRef.current = ref)}
                             />
                             {Boolean(get_error_message(this.state.errors, 'authorInput')) && (
                                 <FormFeedback>{get_error_message(this.state.errors, 'authorInput')}</FormFeedback>

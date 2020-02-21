@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 
 export const updateGeneralData = data => dispatch => {
     dispatch({
-        type: type.UPFATE_GENERAL_DATA,
+        type: type.UPDATE_GENERAL_DATA,
         payload: data
     });
 };
@@ -324,6 +324,8 @@ export const saveAddPaper = data => {
         newProperties = newProperties.map(propertyId => ({ id: propertyId, label: data.properties.byId[propertyId].label }));
         newProperties = uniqBy(newProperties, 'label');
         newProperties = newProperties.map(property => ({ [property.label]: `_${property.id}` }));
+        // list of new reaserch problems
+        const newResearchProblem = [];
         const paperObj = {
             // Set new predicates label and temp ID
             predicates: newProperties,
@@ -334,16 +336,22 @@ export const saveAddPaper = data => {
                 authors: data.authors.map(author => ({ label: author.label, ...(author.orcid ? { orcid: author.orcid } : {}) })),
                 publicationMonth: data.publicationMonth,
                 publicationYear: data.publicationYear,
+                publishedIn: data.publishedIn,
                 researchField: data.selectedResearchField,
                 // Set the contributions data
                 contributions: data.contributions.allIds.map(c => {
                     const contribution = data.contributions.byId[c];
                     const researhProblem = {
                         [researchProblemPredicate]: contribution.researchProblems.map(rp => {
-                            if (rp.hasOwnProperty('_class') && rp._class === 'resource') {
-                                return { '@id': rp.id };
+                            if (rp.hasOwnProperty('existingResourceId') && rp.existingResourceId) {
+                                return { '@id': rp.existingResourceId };
                             } else {
-                                return { label: rp.label };
+                                if (newResearchProblem.includes(rp.id)) {
+                                    return { '@id': `_${rp.id}` };
+                                } else {
+                                    newResearchProblem.push(rp.id);
+                                    return { label: rp.label, '@temp': `_${rp.id}` };
+                                }
                             }
                         })
                     };
