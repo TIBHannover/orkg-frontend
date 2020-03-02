@@ -53,7 +53,7 @@ export default class Video extends Component {
             <div>
                 <PlayButton color="link" className="p-0 m-0" onClick={this.toggleDialog}>
                     <Icon icon={faPlayCircle} /> <br />
-                    Play video
+                    Play the introduction video
                 </PlayButton>
 
                 <Modal isOpen={this.state.showDialog} toggle={this.toggleDialog} size="lg">
@@ -63,10 +63,10 @@ export default class Video extends Component {
                             <IframeFullWidth
                                 title="Explanation and introduction video of the ORKG"
                                 scrolling="no"
-                                frameborder="0"
-                                src="https://www.youtube-nocookie.com/embed/v1uGrq4QjuM"
+                                frameBorder="0"
+                                src="//av.tib.eu/player/16120"
                                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
+                                allowFullScreen={true}
                             />
                         </VideoContainer>
                     </ModalBody>

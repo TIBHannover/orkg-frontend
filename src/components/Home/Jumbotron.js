@@ -1,30 +1,10 @@
 import React, { Component } from 'react';
-import { Container, Button } from 'reactstrap';
+import { Container } from 'reactstrap';
 import HomeBannerBg from 'assets/img/graph-background.svg';
 import styled from 'styled-components';
 import Typist from 'react-typist';
 import 'react-typist/dist/Typist.css';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPlayCircle } from '@fortawesome/free-regular-svg-icons';
 import Video from './Video';
-
-const PlayButton = styled(Button)`
-    font-size: 0.9rem !important;
-    color: inherit !important;
-    text-decoration: none !important;
-    transition: opacity 0.2s !important;
-    text-align: center !important;
-
-    &:hover {
-        opacity: 0.7;
-    }
-
-    svg {
-        font-size: 65px !important;
-        line-height: normal;
-        margin-left: 3px;
-    }
-`;
 
 const JumbotronStyled = styled.div`
     padding: 120px 0;
