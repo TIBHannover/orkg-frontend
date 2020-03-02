@@ -71,7 +71,7 @@ class TemplateWizard extends Component {
                         {this.props.templatesFound ? (
                             <span style={{ fontSize: '0.875rem' }}>Start by adding a template or a property</span>
                         ) : (
-                            <span style={{ fontSize: '0.875rem' }}>Start by a property from below</span>
+                            <span style={{ fontSize: '0.875rem' }}>Start by adding a property</span>
                         )}
                         <br />
                     </StyledEmptyData>

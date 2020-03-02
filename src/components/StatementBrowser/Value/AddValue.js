@@ -30,6 +30,9 @@ class AddValue extends Component {
             valueType: 'object',
             inputValue: ''
         };
+
+        this.literalInputRef = React.createRef();
+        this.resourceInputRef = React.createRef();
     }
 
     toggleDropDownValueType = () => {
@@ -53,9 +56,18 @@ class AddValue extends Component {
     };
 
     handleDropdownSelect = valueType => {
-        this.setState({
-            valueType
-        });
+        this.setState(
+            {
+                valueType
+            },
+            () => {
+                if (valueType === 'literal') {
+                    this.literalInputRef.current.focus();
+                } else if (valueType === 'object' || valueType === 'property') {
+                    this.resourceInputRef.focus();
+                }
+            }
+        );
     };
 
     handleInputChange = (e, value) => {
@@ -153,6 +165,11 @@ class AddValue extends Component {
         return resourceList;
     };
 
+    /* Select component reference can be used to check if menu is opened */
+    isMenuOpen = () => {
+        return this.resourceInputRef.select.state.menuIsOpen && this.resourceInputRef.state.loadedOptions.length > 0;
+    };
+
     render() {
         return (
             <>
@@ -201,6 +218,15 @@ class AddValue extends Component {
                                         additionalData={this.getNewResources()}
                                         disableBorderRadiusRight
                                         disableBorderRadiusLeft
+                                        onKeyDown={e => {
+                                            if (e.keyCode === 27) {
+                                                // escape
+                                                this.handleHideAddValue();
+                                            } else if (e.keyCode === 13 && !this.isMenuOpen()) {
+                                                this.handleAddValue();
+                                            }
+                                        }}
+                                        innerRef={ref => (this.resourceInputRef = ref)}
                                     />
                                 ) : (
                                     <Input
@@ -208,6 +234,15 @@ class AddValue extends Component {
                                         name="literalValue"
                                         value={this.state.inputValue}
                                         onChange={this.handleInputChange}
+                                        innerRef={this.literalInputRef}
+                                        onKeyDown={e => {
+                                            if (e.keyCode === 27) {
+                                                // escape
+                                                this.handleHideAddValue();
+                                            } else if (e.keyCode === 13) {
+                                                this.handleAddValue();
+                                            }
+                                        }}
                                     />
                                 )}
 
@@ -282,6 +317,15 @@ class AddValue extends Component {
                                             disableBorderRadiusRight
                                             disableBorderRadiusLeft
                                             cssClasses={'form-control-sm'}
+                                            onKeyDown={e => {
+                                                if (e.keyCode === 27) {
+                                                    // escape
+                                                    this.handleHideAddValue();
+                                                } else if (e.keyCode === 13 && !this.isMenuOpen()) {
+                                                    this.handleAddValue();
+                                                }
+                                            }}
+                                            innerRef={ref => (this.resourceInputRef = ref)}
                                         />
                                     ) : (
                                         <Input
@@ -290,6 +334,15 @@ class AddValue extends Component {
                                             bsSize="sm"
                                             value={this.state.inputValue}
                                             onChange={this.handleInputChange}
+                                            onKeyDown={e => {
+                                                if (e.keyCode === 27) {
+                                                    // escape
+                                                    this.handleHideAddValue();
+                                                } else if (e.keyCode === 13) {
+                                                    this.handleAddValue();
+                                                }
+                                            }}
+                                            innerRef={this.literalInputRef}
                                         />
                                     )}
 

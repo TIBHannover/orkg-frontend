@@ -158,11 +158,19 @@ class AddProperty extends Component {
                                     placeholder="Select or type to enter a property"
                                     onItemSelected={this.handlePropertySelect}
                                     onNewItemSelected={this.toggleConfirmNewProperty}
-                                    onKeyUp={() => {}}
+                                    onKeyDown={e => {
+                                        if (e.keyCode === 27) {
+                                            // escape
+                                            this.handleHideAddProperty();
+                                        }
+                                    }}
                                     additionalData={this.getNewProperties()}
                                     disableBorderRadiusRight
                                     allowCreate
                                     defaultOptions={this.getDefaultProperties()}
+                                    onBlur={() => {
+                                        this.handleHideAddProperty();
+                                    }}
                                 />
 
                                 <InputGroupAddon addonType="append">
@@ -205,11 +213,19 @@ class AddProperty extends Component {
                                             placeholder="Select or type to enter a property"
                                             onItemSelected={this.handlePropertySelect}
                                             onNewItemSelected={this.toggleConfirmNewProperty}
-                                            onKeyUp={() => {}}
+                                            onKeyDown={e => {
+                                                if (e.keyCode === 27) {
+                                                    // escape
+                                                    this.handleHideAddProperty();
+                                                }
+                                            }}
                                             additionalData={this.getNewProperties()}
                                             disableBorderRadiusRight
                                             allowCreate
                                             defaultOptions={this.getDefaultProperties()}
+                                            onBlur={() => {
+                                                this.handleHideAddProperty();
+                                            }}
                                         />
                                         <InputGroupAddon addonType="append">
                                             <StyledButton outline onClick={() => this.handleHideAddProperty()}>

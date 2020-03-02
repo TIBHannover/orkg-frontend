@@ -206,6 +206,9 @@ class AutoComplete extends Component {
                     autoFocus
                     cacheOptions
                     defaultOptions={this.state.defaultOptions}
+                    onBlur={this.props.onBlur}
+                    onKeyDown={this.props.onKeyDown}
+                    ref={this.props.innerRef}
                 />
             </StyledAutoCompleteInputFormControl>
         );
@@ -221,14 +224,16 @@ AutoComplete.propTypes = {
     defaultOptions: PropTypes.array,
     additionalData: PropTypes.array,
     onNewItemSelected: PropTypes.func,
-    onKeyUp: PropTypes.func,
+    onKeyDown: PropTypes.func,
+    onBlur: PropTypes.func,
     disableBorderRadiusRight: PropTypes.bool,
     disableBorderRadiusLeft: PropTypes.bool,
     onInput: PropTypes.func,
     value: PropTypes.string,
     cssClasses: PropTypes.string,
     hideAfterSelection: PropTypes.bool,
-    theme: PropTypes.object.isRequired
+    theme: PropTypes.object.isRequired,
+    innerRef: PropTypes.func
 };
 
 AutoComplete.defaultProps = {

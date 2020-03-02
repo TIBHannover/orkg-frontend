@@ -78,13 +78,21 @@ class Contribution extends Component {
             ...this.props.researchProblems
                 .filter(rp => rp.id !== rp.label)
                 .map(rp => this.getTemplatesOfResourceId(rp.id, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM))
-        ]).then(templates => {
-            this.setState({
-                templates: templates.flat(),
-                isTemplatesLoading: false,
-                isTemplatesFailesLoading: false
+        ])
+            .then(templates => {
+                this.setState({
+                    templates: templates.flat(),
+                    isTemplatesLoading: false,
+                    isTemplatesFailesLoading: false
+                });
+            })
+            .catch(e => {
+                this.setState({
+                    templates: [],
+                    isTemplatesLoading: false,
+                    isTemplatesFailesLoading: false
+                });
             });
-        });
     };
 
     render() {
