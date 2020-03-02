@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { getStatementsByObjectAndPredicate } from 'network';
 import { updateResearchProblems, openTour } from 'actions/addPaper';
 import PropTypes from 'prop-types';
+import ContentLoader from 'react-content-loader';
 
 class Contribution extends Component {
     state = {
@@ -97,7 +98,7 @@ class Contribution extends Component {
         return (
             <StyledHorizontalContribution>
                 <Form>
-                    <FormGroup>
+                    {/*<FormGroup>
                         <Label>
                             <Tooltip
                                 message={
@@ -113,58 +114,78 @@ class Contribution extends Component {
                             </Tooltip>
                         </Label>
                         <ResearchProblemInput handler={this.handleResearchProblemsChange} value={this.props.researchProblems} />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label className="mb-0">
-                            <Tooltip
-                                message={
-                                    <span>
-                                        Provide details about this contribution by making statements.{' '}
-                                        <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(2)}>
-                                            Learn more
+                        </FormGroup>*/}
+                    {!this.state.isTemplatesLoading && (
+                        <>
+                            <FormGroup>
+                                {!this.state.isTemplatesLoading && uniqueTemplates.length > 0 && (
+                                    <>
+                                        <Label>
+                                            <Tooltip message={`Select a template to use it in your contribution data`}>Add template</Tooltip>
+                                        </Label>
+                                        <div>
+                                            {this.state.isTemplatesLoading && (
+                                                <>
+                                                    <Icon icon={faSpinner} spin /> Loading contribution templates.
+                                                </>
+                                            )}
+                                            {!this.state.isTemplatesLoading && uniqueTemplates.length === 0 && <>No contribution template found.</>}
+                                            {!this.state.isTemplatesLoading && uniqueTemplates.length > 0 && (
+                                                <>
+                                                    {uniqueTemplates.map(t => (
+                                                        <AddTemplateButton
+                                                            key={`t${t.id}`}
+                                                            id={t.id}
+                                                            label={t.label}
+                                                            source={t.source}
+                                                            selectedResource={this.props.resourceId}
+                                                        />
+                                                    ))}
+                                                </>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
+                            </FormGroup>
+                            <FormGroup>
+                                {/*<Label className="mb-0">
+                                <Tooltip
+                                    message={
+                                        <span>
+                                            Provide details about this contribution by making statements.{' '}
+                                            <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(2)}>
+                                                Learn more
+                                            </span>
                                         </span>
-                                    </span>
-                                }
-                            >
-                                Data
-                            </Tooltip>
-                        </Label>
-                        <TemplateWizard
-                            enableEdit={true}
-                            openExistingResourcesInDialog={true}
-                            syncBackend={false}
-                            initialResourceId={this.props.resourceId}
-                            templatesFound={uniqueTemplates.length > 0 ? true : false}
-                        />
-                        {!this.state.isTemplatesLoading && uniqueTemplates.length > 0 && (
-                            <>
-                                <Label className={'mt-4'}>
-                                    <Tooltip message={`Select a template to use it in your contribution data`}>Add template</Tooltip>
-                                </Label>
-                                <div className={'mt-2'}>
-                                    {this.state.isTemplatesLoading && (
-                                        <>
-                                            <Icon icon={faSpinner} spin /> Loading contribution templates.
-                                        </>
-                                    )}
-                                    {!this.state.isTemplatesLoading && uniqueTemplates.length === 0 && <>No contribution template found.</>}
-                                    {!this.state.isTemplatesLoading && uniqueTemplates.length > 0 && (
-                                        <>
-                                            {uniqueTemplates.map(t => (
-                                                <AddTemplateButton
-                                                    key={`t${t.id}`}
-                                                    id={t.id}
-                                                    label={t.label}
-                                                    source={t.source}
-                                                    selectedResource={this.props.resourceId}
-                                                />
-                                            ))}
-                                        </>
-                                    )}
-                                </div>
-                            </>
-                        )}
-                    </FormGroup>
+                                    }
+                                >
+                                    Data
+                                </Tooltip>
+                            </Label>*/}
+                                <TemplateWizard
+                                    enableEdit={true}
+                                    openExistingResourcesInDialog={true}
+                                    syncBackend={false}
+                                    initialResourceId={this.props.resourceId}
+                                    templatesFound={uniqueTemplates.length > 0 ? true : false}
+                                />
+                            </FormGroup>
+                        </>
+                    )}
+
+                    {this.state.isTemplatesLoading && (
+                        <>
+                            <ContentLoader height={120} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
+                                <rect x="0" y="0" width="90" height="12" />
+                                <rect x="0" y="18" rx="7" ry="7" width="55" height="15" />
+                                <rect x="60" y="18" rx="7" ry="7" width="55" height="15" />
+                                <rect x="120" y="18" rx="7" ry="7" width="55" height="15" />
+                                <rect x="180" y="18" rx="7" ry="7" width="55" height="15" />
+                                <rect x="0" y="40" width="100%" height="40" />
+                                <rect x="0" y="87" rx="5" ry="5" width="70" height="18" />
+                            </ContentLoader>
+                        </>
+                    )}
                 </Form>
             </StyledHorizontalContribution>
         );
