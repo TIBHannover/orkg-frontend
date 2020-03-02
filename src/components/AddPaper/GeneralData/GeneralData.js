@@ -34,6 +34,8 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import Cite from 'citation-js';
 import Tour from 'reactour';
+import { withRouter } from 'react-router-dom';
+import queryString from 'query-string';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 const Container = styled(CSSTransition)`
@@ -101,6 +103,13 @@ class GeneralData extends Component {
         if (this.props.cookies && this.props.cookies.get('taketour')) {
             this.state.isFirstVisit = false;
             this.props.closeTour();
+        }
+    }
+
+    componentDidMount() {
+        const entry = queryString.parse(this.props.location.search).entry;
+        if (entry && !this.state.entry) {
+            this.setState({ entry: entry }, () => this.handleLookupClick());
         }
     }
 
@@ -698,7 +707,8 @@ GeneralData.propTypes = {
     openTour: PropTypes.func.isRequired,
     closeTour: PropTypes.func.isRequired,
     isTourOpen: PropTypes.bool.isRequired,
-    tourStartAt: PropTypes.number.isRequired
+    tourStartAt: PropTypes.number.isRequired,
+    location: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -727,5 +737,6 @@ export default compose(
         mapDispatchToProps
     ),
     withTheme,
-    withCookies
+    withCookies,
+    withRouter
 )(GeneralData);
