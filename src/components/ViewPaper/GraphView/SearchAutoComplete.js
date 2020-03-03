@@ -401,6 +401,7 @@ class SearchAutoComplete extends Component {
                 <Input
                     bsSize={'sm'}
                     type="text"
+                    style={{ paddingRight: '30px' }}
                     placeholder={this.props.placeHolder}
                     value={this.state.value}
                     onChange={this.handleChange}
