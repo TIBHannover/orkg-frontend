@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSearch, faCrosshairs, faEye, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faCrosshairs, faEye, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import './locateNodeIcon.css';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input } from 'reactstrap';
 
@@ -33,7 +33,7 @@ class SearchAutoComplete extends Component {
         loadingIndicatorForBlackOps: false,
         updateFlip: false,
         locateClass: 'mr-1 align-self-center locateDisabled',
-        locateTitle: 'Nothing To locate'
+        locateTitle: 'Nothing to locate'
     };
 
     componentDidUpdate = (prevProps, prevState) => {
@@ -349,7 +349,7 @@ class SearchAutoComplete extends Component {
     };
 
     createNoResultFoundItem = () => {
-        const textForNoResult = 'No Result Found';
+        const textForNoResult = 'No result found';
         return (
             <DropdownItem key="noResultFoundItem" disabled={true} value={textForNoResult}>
                 <div style={{ display: 'flex' }}>{textForNoResult}</div>
@@ -384,7 +384,7 @@ class SearchAutoComplete extends Component {
                 key={'loadFullGraph'}
             >
                 <Icon id="fullExploreSpinIcon" icon={faSpinner} className="mr-1 align-self-center hidden" spin />
-                Load Full Graph and Try Again
+                Load full graph and try again
             </DropdownItem>
         );
     };
@@ -397,11 +397,8 @@ class SearchAutoComplete extends Component {
 
     render() {
         return (
-            <div style={{ paddingTop: '5px', display: 'flex', position: 'relative', left: '-20px' }}>
-                <Icon icon={faSearch} size={'sm'} className="mr-1 align-self-center" style={{ position: 'relative', left: '30px' }} />
-
+            <div className={'ml-2'} style={{ paddingTop: '5px', display: 'flex', position: 'relative', left: '-20px' }}>
                 <Input
-                    style={{ padding: '0 30px' }}
                     bsSize={'sm'}
                     type="text"
                     placeholder={this.props.placeHolder}
@@ -418,7 +415,7 @@ class SearchAutoComplete extends Component {
                     isOpen={this.state.dropdownMenuOpen}
                     toggle={this.toggleFunction}
                 >
-                    <DropdownToggle style={{ position: 'relative', right: '220px', zIndex: '-500', height: '30px' }} />
+                    <DropdownToggle style={{ position: 'relative', right: '160px', zIndex: '-500', height: '30px' }} />
                     <DropdownMenu>{this.searchEntries}</DropdownMenu>
                 </Dropdown>
 

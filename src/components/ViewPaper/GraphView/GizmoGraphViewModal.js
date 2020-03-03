@@ -7,7 +7,7 @@ import GizmoGraph from './GizmoGraph';
 import { Modal, ModalHeader, ModalBody, Input, Form, FormGroup, Label, Button } from 'reactstrap';
 import uniqBy from 'lodash/uniqBy';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faProjectDiagram, faHome, faSnowman, faSitemap } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faProjectDiagram, faHome, faSitemap, faExpandArrowsAlt } from '@fortawesome/free-solid-svg-icons';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import flattenDeep from 'lodash/flattenDeep';
 
@@ -442,12 +442,12 @@ class GraphView extends Component {
                                 >
                                     {!this.state.exploringFullGraph ? (
                                         <>
-                                            <Icon icon={faSnowman} className="mr-1 align-self-center" />
-                                            Expand All Nodes{' '}
+                                            <Icon icon={faExpandArrowsAlt} className="mr-1 align-self-center" />
+                                            Expand all nodes{' '}
                                         </>
                                     ) : (
                                         <>
-                                            <Icon icon={faSpinner} spin className="mr-1 align-self-center" /> Expanding Graph
+                                            <Icon icon={faSpinner} spin className="mr-1 align-self-center" /> Expanding graph
                                         </>
                                     )}
                                 </Button>
@@ -458,7 +458,7 @@ class GraphView extends Component {
                                     style={{ margin: '0 10px', flexGrow: '1', display: 'flex', alignSelf: 'center', width: '130px' }}
                                     onClick={this.centerGraph}
                                 >
-                                    <Icon icon={faHome} className="mr-1 align-self-center" /> Center Graph
+                                    <Icon icon={faHome} className="mr-1 align-self-center" /> Center graph
                                 </Button>
                                 <Dropdown
                                     color="darkblue"
@@ -489,7 +489,7 @@ class GraphView extends Component {
                                             }}
                                         >
                                             <Icon icon={faProjectDiagram} className="mr-1" style={{ width: '40px' }} />
-                                            Force Directed
+                                            Force directed
                                         </DropdownItem>
                                         <DropdownItem
                                             onClick={() => {
@@ -502,7 +502,7 @@ class GraphView extends Component {
                                             }}
                                         >
                                             <Icon icon={faSitemap} rotation={270} className="mr-1" style={{ width: '40px' }} />
-                                            Horizontal Tree
+                                            Horizontal tree
                                         </DropdownItem>
                                         <DropdownItem
                                             onClick={() => {
@@ -515,7 +515,7 @@ class GraphView extends Component {
                                             }}
                                         >
                                             <Icon icon={faSitemap} className="mr-1" style={{ width: '40px' }} />
-                                            Vertical Tree
+                                            Vertical tree
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </Dropdown>
