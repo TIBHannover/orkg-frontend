@@ -97,6 +97,24 @@ class StatementItem extends Component {
         }
     };
 
+    handleDeleteStatement = async () => {
+        const property = this.props.properties.byId[this.props.id];
+        if (this.props.syncBackend) {
+            // Delete All related statements
+            if (property.valueIds.length > 0) {
+                for (const valueId of property.valueIds) {
+                    const value = this.props.values.byId[valueId];
+                    deleteStatementById(value.statementId);
+                }
+                toast.success(`${property.valueIds.length} ${property.valueIds.length === 1 ? 'Statement' : 'Statements'} deleted successfully`);
+            }
+        }
+        this.props.deleteProperty({
+            id: this.props.id,
+            resourceId: this.props.resourceId ? this.props.resourceId : this.props.selectedResource
+        });
+    };
+
     handleChange = async (selectedOption, a) => {
         const property = this.props.properties.byId[this.props.id];
         // Check if the user changed the property
@@ -428,7 +446,13 @@ class StatementItem extends Component {
                                             icon={faPen}
                                             action={() => this.props.toggleEditPropertyLabel({ id: this.props.id })}
                                         />
-                                        <TemplateOptionButton title={'Delete property'} icon={faTrash} action={this.toggleDeleteStatement} />
+                                        <TemplateOptionButton
+                                            requireConfirmation={true}
+                                            confirmationMessage={'Are you sure you want to delete this property?'}
+                                            title={'Delete property'}
+                                            icon={faTrash}
+                                            action={this.handleDeleteStatement}
+                                        />
                                     </div>
                                 </div>
                             ) : (

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Form, FormGroup, Label } from 'reactstrap';
 import Tooltip from '../../Utils/Tooltip';
-import ResearchProblemInput from './ResearchProblemInput';
 import AddTemplateButton from './TemplateWizard/AddTemplateButton';
 import TemplateWizard from './TemplateWizard/TemplateWizard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

@@ -3,7 +3,6 @@ import { Input } from 'reactstrap';
 import { faTrash, faPen, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizard/TemplateOptionButton';
 import { TemplateHeaderStyle } from 'components/AddPaper/Contributions/styled';
-import Confirm from 'reactstrap-confirm';
 import { deleteStatementById, updateResource } from 'network';
 import { connect } from 'react-redux';
 import { deleteValue, toggleEditValue, updateValueLabel, isSavingValue, doneSavingValue, deleteProperty } from 'actions/statementBrowser';
@@ -46,27 +45,19 @@ class TemplateHeader extends Component {
         this.setState({ draftLabel: event.target.value });
     };
 
-    toggleDeleteTemplate = async () => {
-        const result = await Confirm({
-            title: 'Are you sure?',
-            message: 'Are you sure you want to delete this template with its statements?',
-            cancelColor: 'light'
-        });
-
-        if (result) {
-            if (this.props.syncBackend) {
-                await deleteStatementById(this.props.statementId);
-                toast.success('Statement deleted successfully');
-            }
-            this.props.deleteValue({
-                id: this.props.id,
-                propertyId: this.props.propertyId
-            });
-            this.props.deleteProperty({
-                id: this.props.propertyId,
-                resourceId: this.props.resourceId
-            });
+    handleDeleteTemplate = async () => {
+        if (this.props.syncBackend) {
+            await deleteStatementById(this.props.statementId);
+            toast.success('Statement deleted successfully');
         }
+        this.props.deleteValue({
+            id: this.props.id,
+            propertyId: this.props.propertyId
+        });
+        this.props.deleteProperty({
+            id: this.props.propertyId,
+            resourceId: this.props.resourceId
+        });
     };
 
     render() {
@@ -84,9 +75,11 @@ class TemplateHeader extends Component {
                                         action={() => this.props.toggleEditValue({ id: this.props.id })}
                                     />
                                     <TemplateOptionButton
+                                        requireConfirmation={true}
+                                        confirmationMessage={'Are you sure you want to delete this template with its statements?'}
                                         title={'Delete the template with its statements'}
                                         icon={faTrash}
-                                        action={this.toggleDeleteTemplate}
+                                        action={this.handleDeleteTemplate}
                                     />
                                 </div>
                             </>

@@ -5,7 +5,7 @@ import { faTrash, faPen, faExternalLinkAlt, faTable } from '@fortawesome/free-so
 import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizard/TemplateOptionButton';
 import { StyledValueItem, StyledButton, ValueItemStyle } from '../../AddPaper/Contributions/styled';
 import classNames from 'classnames';
-import Confirm from 'reactstrap-confirm';
+import StatementOptionButton from '../StatementOptionButton';
 import { connect } from 'react-redux';
 import {
     selectResource,
@@ -161,23 +161,15 @@ class ValueItem extends Component {
         }
     };
 
-    toggleDeleteValue = async () => {
-        const result = await Confirm({
-            title: 'Are you sure?',
-            message: 'Are you sure you want to delete this value?',
-            cancelColor: 'light'
-        });
-
-        if (result) {
-            if (this.props.syncBackend) {
-                await deleteStatementById(this.props.statementId);
-                toast.success('Statement deleted successfully');
-            }
-            this.props.deleteValue({
-                id: this.props.id,
-                propertyId: this.props.propertyId
-            });
+    handleDeleteValue = async () => {
+        if (this.props.syncBackend) {
+            await deleteStatementById(this.props.statementId);
+            toast.success('Statement deleted successfully');
         }
+        this.props.deleteValue({
+            id: this.props.id,
+            propertyId: this.props.propertyId
+        });
     };
 
     handleResourceClick = e => {
@@ -523,13 +515,15 @@ class ValueItem extends Component {
                                 )}
                                 {!this.props.isEditing && this.props.enableEdit ? (
                                     <>
-                                        <span className={'deleteValue float-right'} onClick={this.toggleDeleteValue}>
-                                            <Tippy content="Delete value">
-                                                <span>
-                                                    <Icon icon={faTrash} /> Delete
-                                                </span>
-                                            </Tippy>
-                                        </span>
+                                        <StatementOptionButton
+                                            className={'deleteValue float-right'}
+                                            requireConfirmation={true}
+                                            title={'Delete value'}
+                                            buttonText={'Delete'}
+                                            confirmationMessage={'Are you sure you want to delete this property?'}
+                                            icon={faTrash}
+                                            action={this.handleDeleteValue}
+                                        />
                                         {(!existingResourceId || this.props.shared <= 1) && !isProperty && (
                                             <span
                                                 className={'mr-3 deleteValue float-right'}
@@ -604,7 +598,13 @@ class ValueItem extends Component {
                                         />
                                     )}
 
-                                    <TemplateOptionButton title={'Delete value'} icon={faTrash} action={this.toggleDeleteValue} />
+                                    <TemplateOptionButton
+                                        requireConfirmation={true}
+                                        title={'Delete value'}
+                                        confirmationMessage={'Are you sure you want to delete this value?'}
+                                        icon={faTrash}
+                                        action={this.handleDeleteValue}
+                                    />
                                 </div>
                             </div>
                         ) : (

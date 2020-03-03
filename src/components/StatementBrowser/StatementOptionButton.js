@@ -1,34 +1,11 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Button, ButtonGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
 
-export const OptionButton = styled.div`
-    margin: 0 2px;
-    display: inline-block;
-    & .icon-wrapper {
-        border-radius: 100%;
-        text-align: center;
-        display: inline-block;
-        vertical-align: top;
-        background-color: ${props => props.theme.ultraLightBlueDarker};
-        cursor: pointer;
-        color: ${props => props.theme.buttonDark};
-        margin-right: 2px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        .icon {
-            padding: 0;
-            margin: 0;
-            font-size: 12px;
-        }
-    }
-`;
-class TemplateOptionButton extends Component {
+class StatementOptionButton extends Component {
     constructor(props) {
         super(props);
 
@@ -85,6 +62,7 @@ class TemplateOptionButton extends Component {
 
     handleClick = e => {
         e.stopPropagation();
+
         if (!this.props.requireConfirmation) {
             this.props.action();
         } else {
@@ -94,7 +72,6 @@ class TemplateOptionButton extends Component {
             });
         }
     };
-
     render() {
         const content =
             !this.props.requireConfirmation && !this.state.showConfirmation ? (
@@ -131,7 +108,7 @@ class TemplateOptionButton extends Component {
             );
 
         return (
-            <OptionButton>
+            <span className={this.props.className}>
                 <Tippy
                     onShow={this.onShow}
                     onShown={this.onShown}
@@ -142,39 +119,33 @@ class TemplateOptionButton extends Component {
                     content={content}
                 >
                     <span
-                        onClick={this.handleClick}
-                        className={'icon-wrapper'}
-                        style={{
-                            width: this.props.iconWrapperSize ? this.props.iconWrapperSize : '24px',
-                            height: this.props.iconWrapperSize ? this.props.iconWrapperSize : '24px'
+                        onClick={e => {
+                            e.stopPropagation();
+                            this.handleClick(e);
                         }}
                     >
-                        <Icon
-                            className={'icon'}
-                            style={{
-                                fontSize: this.props.iconSize ? this.props.iconSize : '12px'
-                            }}
-                            icon={this.props.icon}
-                        />
+                        <Icon icon={this.props.icon} /> {this.props.buttonText}
                     </span>
                 </Tippy>
-            </OptionButton>
+            </span>
         );
     }
 }
 
-TemplateOptionButton.propTypes = {
+StatementOptionButton.propTypes = {
     title: PropTypes.string.isRequired,
     icon: PropTypes.object.isRequired,
     iconWrapperSize: PropTypes.string,
     iconSize: PropTypes.string,
     action: PropTypes.func.isRequired,
     requireConfirmation: PropTypes.bool,
-    confirmationMessage: PropTypes.string
+    confirmationMessage: PropTypes.string,
+    buttonText: PropTypes.string,
+    className: PropTypes.string
 };
 
-TemplateOptionButton.defaultProps = {
+StatementOptionButton.defaultProps = {
     requireConfirmation: false
 };
 
-export default TemplateOptionButton;
+export default StatementOptionButton;
