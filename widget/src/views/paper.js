@@ -67,7 +67,7 @@ export function show(params) {
             })
             .catch(error => {
                 temporary.getElementsByClassName('orkg-widget-txt-link')[0].textContent = dictionary['add'][params.language];
-                temporary.getElementsByClassName('orkg-widget-link')[0].href = process.env.FRONTEND_SERVER_URL + 'add-paper';
+                temporary.getElementsByClassName('orkg-widget-link')[0].href = process.env.FRONTEND_SERVER_URL + 'add-paper?entry=' + doi;
                 const elem = temporary.getElementsByClassName('orkg-widget-description')[0];
                 elem.parentNode.removeChild(elem);
                 while (temporary.children.length > 0) {
