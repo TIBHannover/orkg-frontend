@@ -411,7 +411,6 @@ class SearchAutoComplete extends Component {
                 <Dropdown
                     color="darkblue"
                     size="sm"
-                    //    className='mb-4 mt-4'
                     style={{ marginLeft: '-40px', flexGrow: '1', display: 'flex', height: 'min-content', paddingTop: '5px' }}
                     isOpen={this.state.dropdownMenuOpen}
                     toggle={this.toggleFunction}
