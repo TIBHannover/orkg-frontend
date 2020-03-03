@@ -1,0 +1,53 @@
+.locateNodeIcon{
+    color:#373F45;
+}
+
+.locateNodeIcon:active{
+    color: #373f45;
+}
+
+.locateNodeIcon:disabled{
+    color:#DFE0E0;
+}
+
+.locateNodeIcon:hover{
+    color: #E86161;
+    cursor:pointer;
+}
+
+.locateDisabled{
+    color:#DFE0E0;
+}
+
+.locateDisabled:hover{
+    color: #b0b1b1;
+}
+
+.locateActive{
+    color:#373F45;
+}
+
+.locateActive:hover{
+    color: #E86161;
+    cursor:pointer;
+}
+
+.inSearchExpandIcon{
+    color: #E86161;
+}
+
+.inSearchExpandIcon:hover{
+    color: #994242;
+    cursor:pointer;
+}
+
+.inSearchExpandIconDisabled{
+    opacity: 0;
+}
+
+.dropdownDefault:hover {
+    background-color: #e9e9e9 !important;
+}
+.dropdownSelectedByCursor{
+    background-color: #5b6176;
+}

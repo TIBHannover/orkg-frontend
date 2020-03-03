@@ -9,6 +9,7 @@ export default class BaseElement {
         this.renderingElement = undefined;
         this.label = 'empty_label';
         this.renderConfig = undefined;
+        this.haloGroupElement = undefined;
         this.visibilityStatus = true;
 
         this.renderingText = null;
@@ -20,6 +21,8 @@ export default class BaseElement {
         this.x = undefined;
         this.y = undefined;
         this.mouseIn = false;
+        this.graph = null;
+        this.showHalo = false;
 
         this.addIcon = this.addIcon.bind(this);
         this.iconElement = undefined;
@@ -46,6 +49,80 @@ export default class BaseElement {
         this.mouseHoverOut = this.mouseHoverOut.bind(this);
         this.removeAllRenderedElementsFromParent = this.removeAllRenderedElementsFromParent.bind(this);
     }
+
+    drawHalo = pulseAnimation => {
+        if (this.haloGroupElement) {
+            this.haloGroupElement.remove();
+            this.haloGroupElement = undefined;
+        }
+
+        this.haloGroupElement = this.svgRoot.append('g');
+        DrawTools().renderHalo(this.haloGroupElement, this.configObject, this);
+        if (pulseAnimation) {
+            this.haloGroupElement.classed('searchResultA', true);
+            this.haloGroupElement.attr('animationRunning', true);
+        }
+
+        if (pulseAnimation === false) {
+            if (this.haloGroupElement) {
+                this.haloGroupElement.classed('searchResultA', false);
+                this.haloGroupElement.classed('searchResultB', true);
+                this.haloGroupElement.attr('animationRunning', false);
+            } else {
+                this.haloGroupElement.classed('searchResultB', true);
+            }
+        }
+        this.showHalo = true;
+    };
+
+    removeHalo = () => {
+        if (this.haloGroupElement) {
+            this.haloGroupElement.remove();
+            this.showHalo = false;
+        }
+    };
+
+    updateCircleHalo = (pulseItem, newRadius) => {
+        if (pulseItem && pulseItem.node()) {
+            this.haloGroupElement.classed('searchResultA', false);
+            this.haloGroupElement.classed('searchResultB', true);
+            this.haloGroupElement.attr('animationRunning', false);
+            DrawTools().setCircleAttribute(pulseItem, newRadius);
+        }
+    };
+
+    setOutOfViewportRadius = newRadius => {
+        if (this.haloGroupElement) {
+            // get the item;
+            const pulseItem = this.haloGroupElement.select('.haloRenderingShape');
+            this.updateCircleHalo(pulseItem, newRadius);
+        }
+    };
+    setInViewportRadius = () => {
+        // basically gets the rendering shape attributes and propagates them
+        const shapeSize = this.getExpectedShapeSize(this.renderConfig);
+        if (!this.haloGroupElement) {
+            return;
+        }
+        const pulseItem = this.haloGroupElement.select('.haloRenderingShape');
+
+        if (this.renderConfig.renderingType === 'circle') {
+            const haloRadius = shapeSize.r + 5;
+            this.updateCircleHalo(pulseItem, haloRadius);
+        } else {
+            const haloWidth = shapeSize.w + 5;
+            const haloHeight = shapeSize.h + 5;
+            const pulseItem = this.haloGroupElement.select('.haloRenderingShape');
+            if (pulseItem && pulseItem.node()) {
+                pulseItem.attr('x', -0.5 * haloWidth);
+                pulseItem.attr('y', -0.5 * haloHeight);
+                pulseItem.attr('width', haloWidth);
+                pulseItem.attr('height', haloHeight);
+                pulseItem.attr('rx', 0);
+                pulseItem.attr('ry', 0);
+            }
+        }
+    };
 
     addIcon(iconName) {
         if (!this.iconElement) {
@@ -76,7 +153,15 @@ export default class BaseElement {
         this.mouseEntered(false);
         this.svgRoot.on('mouseover', this.mouseHoverIn);
         this.svgRoot.on('mouseout', this.mouseHoverOut);
+        this.svgRoot.on('click', this.itemClicked);
     }
+
+    itemClicked = () => {
+        if (this.graph) {
+            this.graph.removeHalos();
+            this.graph.clearSearchEntryValue();
+        }
+    };
 
     mouseHoverIn() {
         if (this.mouseEntered()) {
@@ -167,6 +252,10 @@ export default class BaseElement {
         this.renderingText = this.drawLabelText(this.svgRoot, this.label);
         this.renderingElement.append('title').text(this.label);
         this.updateTextPosition();
+
+        if (this.showHalo) {
+            this.drawHalo(false);
+        }
     }
 
     updateDrawPosition = function() {

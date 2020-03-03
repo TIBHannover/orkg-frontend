@@ -30,6 +30,7 @@ export default class Node extends BaseElement {
         this._parentNodeForPosition = undefined;
         this.defaultDuration = 400;
         this.percentModifier = 1.0;
+        this.isLiteralItem = false;
         this.type('resource');
 
         this.filterCollapsedLinks = this.filterCollapsedLinks.bind(this);
@@ -73,6 +74,7 @@ export default class Node extends BaseElement {
 
     setStatusLeafNode() {
         this.status = 'leafNode';
+        this.isLiteralItem = true;
     }
 
     // redraw function for better performance;
@@ -203,7 +205,6 @@ export default class Node extends BaseElement {
             if (this.renderingAnimationGroup) {
                 this.renderingAnimationGroup.remove();
             }
-            this.renderingAnimationGrop = null;
         }
     }
 
@@ -222,6 +223,7 @@ export default class Node extends BaseElement {
         const f_y = parseInt(this.y);
         const that = this;
         let notHidden = false;
+
         that.svgRoot
             .transition()
             .tween('attr.translate', function() {
@@ -240,7 +242,9 @@ export default class Node extends BaseElement {
                         if (!that.visible()) {
                             that.makeInvisibleForAnimation();
                             that.outgoingLink.forEach(item => {
-                                item.makeInvisibleForAnimation();
+                                if (item.visible()) {
+                                    item.makeInvisibleForAnimation();
+                                }
                             });
                         }
                         notHidden = true;
@@ -327,7 +331,8 @@ export default class Node extends BaseElement {
 
     render(parentNode) {
         this.svgRoot = parentNode;
-        if (!this.graph) {
+
+        if (this.isLiteralItem) {
             this.setStatusLeafNode();
         }
 
@@ -372,7 +377,7 @@ export default class Node extends BaseElement {
         const that = this;
         that.svgRoot.on('dblclick', function() {
             d3.event.stopPropagation();
-            console.log(that.label + ' was double clicked');
+
             if (that._resourceId !== 'unknown') {
                 switch (that.status) {
                     case 'unknown':
