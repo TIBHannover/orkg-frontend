@@ -7,7 +7,8 @@ import ROUTES from '../../constants/routes.js';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { createResource, createLiteralStatement, createLiteral } from 'network';
+import { createResource, createLiteralStatement, createLiteral, getComparison } from 'network';
+import { getContributionIdsFromUrl } from 'utils';
 import Tooltip from '../Utils/Tooltip';
 import queryString from 'query-string';
 import { reverse } from 'named-urls';
@@ -36,13 +37,15 @@ class Publish extends Component {
     handleSubmit = async e => {
         this.setState({ isLoading: true });
         try {
+            const contributionIds = getContributionIdsFromUrl(this.props.url.substring(this.props.url.indexOf('?')));
+            const comparison = await getComparison({ contributionIds: contributionIds, save_response: true });
             const titleResponse = await createResource(this.state.title, [process.env.REACT_APP_CLASSES_COMPARISON]);
             const resourceId = titleResponse.id;
             const descriptionResponse = await createLiteral(this.state.description);
             const referenceResponse = await createLiteral(this.state.reference);
             const link = queryString.parse(this.props.url).response_hash
                 ? this.props.url
-                : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
+                : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${comparison.response_hash}`;
             const urlResponse = await createLiteral(link);
             await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_DESCRIPTION, descriptionResponse.id);
             await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_URL, urlResponse.id);

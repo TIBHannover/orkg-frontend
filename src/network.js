@@ -311,6 +311,10 @@ export const getStatementsByPredicate = ({ id, page = 1, items = 9999, sortBy = 
     return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/?${params}`);
 };
 
+export const getComparison = ({ contributionIds = [], save_response = false }) => {
+    return submitGetRequest(`${comparisonUrl}?contributions=${contributionIds.join()}&save_response=${save_response}`);
+};
+
 export const getSimilaireContribution = id => {
     return submitGetRequest(`${similaireUrl}${encodeURIComponent(id)}/`);
 };

@@ -1,25 +1,15 @@
 import React, { Component } from 'react';
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    Input,
-    InputGroup,
-    InputGroupAddon,
-    Button,
-    Tooltip as ReactstrapTooltip,
-    CustomInput,
-    Alert
-} from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, Input, InputGroup, InputGroupAddon, Button, Tooltip as ReactstrapTooltip, Alert } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
-import ROUTES from '../../constants/routes.js';
+import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { createShortLink } from '../../network';
+import { createShortLink, getComparison } from 'network';
+import { getContributionIdsFromUrl } from 'utils';
 
 class Share extends Component {
     constructor(props) {
@@ -27,8 +17,6 @@ class Share extends Component {
 
         this.state = {
             showTooltipCopiedLink: false,
-            shareShortLink: false,
-            link: null,
             shortLink: null,
             shortLinkIsLoading: false,
             shortLinkIsFailed: false
@@ -36,59 +24,41 @@ class Share extends Component {
     }
 
     componentDidMount() {
-        const link =
-            queryString.parse(this.props.url).response_hash || this.props.comparisonId
-                ? this.props.url
-                : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
-        this.setState({ link: link });
+        if (this.props.showDialog) {
+            this.generateShortLink();
+        }
     }
 
     componentDidUpdate = prevProps => {
-        if (this.props.url !== prevProps.url || this.props.response_hash !== prevProps.response_hash) {
-            const link =
-                queryString.parse(this.props.url).response_hash || this.props.comparisonId
-                    ? this.props.url
-                    : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
-            this.setState({ link: link, shortLink: null, shareShortLink: false });
+        if (
+            (this.props.url !== prevProps.url && this.props.showDialog) ||
+            (!this.state.shortLinkIsLoading && this.props.showDialog && !this.state.shortLink)
+        ) {
+            this.generateShortLink();
         }
     };
 
     generateShortLink = () => {
         this.setState({ shortLinkIsLoading: true, shortLinkIsFailed: false });
-        const link =
-            queryString.parse(this.props.url).response_hash || this.props.comparisonId
-                ? this.props.url
-                : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
-        createShortLink({
-            long_url: link
-        })
-            .catch(() => {
-                this.setState({ shortLink: null, link: link, shortLinkIsLoading: false, shortLinkIsFailed: true });
-            })
-            .then(data => {
-                const shortLink = `${window.location.protocol}//${window.location.host}${window.location.pathname
-                    .replace(reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparisonId }), '')
-                    .replace(/\/$/, '')}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
-                this.setState({ link: shortLink, shortLink: shortLink, shortLinkIsLoading: false, shortLinkIsFailed: false });
-            });
-    };
-
-    toggleShareShortLink = () => {
-        if (!this.state.shareShortLink) {
-            if (this.state.shortLink) {
-                this.setState({ shareShortLink: true, link: this.state.shortLink });
-            } else {
-                this.setState({ shareShortLink: true }, () => {
-                    this.generateShortLink();
-                });
-            }
-        } else {
+        const contributionIds = getContributionIdsFromUrl(this.props.url.substring(this.props.url.indexOf('?')));
+        getComparison({ contributionIds: contributionIds, save_response: true }).then(comparisonData => {
             const link =
                 queryString.parse(this.props.url).response_hash || this.props.comparisonId
                     ? this.props.url
-                    : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
-            this.setState({ shareShortLink: false, link: link, shortLinkIsFailed: false });
-        }
+                    : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${comparisonData.response_hash}`;
+            createShortLink({
+                long_url: link
+            })
+                .catch(() => {
+                    this.setState({ shortLink: link, shortLinkIsLoading: false, shortLinkIsFailed: true });
+                })
+                .then(data => {
+                    const shortLink = `${window.location.protocol}//${window.location.host}${window.location.pathname
+                        .replace(reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparisonId }), '')
+                        .replace(/\/$/, '')}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
+                    this.setState({ shortLink: shortLink, shortLinkIsLoading: false, shortLinkIsFailed: false });
+                });
+        });
     };
 
     toggleTooltip = e => {
@@ -105,11 +75,11 @@ class Share extends Component {
                     <p>The created comparison can be shared using the following link: </p>
 
                     <InputGroup>
-                        <Input value={!this.state.shortLinkIsLoading ? this.state.link : 'Loading...'} disabled />
+                        <Input value={!this.state.shortLinkIsLoading ? this.state.shortLink : 'Loading share link...'} disabled />
                         <InputGroupAddon addonType="append">
                             <CopyToClipboard
                                 id="copyToClipboardLink"
-                                text={!this.state.shortLinkIsLoading ? this.state.link : 'Loading...'}
+                                text={!this.state.shortLinkIsLoading ? this.state.shortLink : 'Loading share link...'}
                                 onCopy={() => {
                                     this.setState({ showTooltipCopiedLink: true });
                                 }}
@@ -130,14 +100,6 @@ class Share extends Component {
                         </InputGroupAddon>
                     </InputGroup>
 
-                    <CustomInput
-                        className="mt-1"
-                        type="checkbox"
-                        id={'shortLink'}
-                        label="Create a persistent short link for this page."
-                        onChange={() => this.toggleShareShortLink()}
-                        checked={this.state.shareShortLink}
-                    />
                     {this.state.shortLinkIsFailed && (
                         <Alert color="light" className="mb-0 mt-1">
                             Failed to create a short link, please try again later
@@ -154,7 +116,8 @@ Share.propTypes = {
     toggle: PropTypes.func.isRequired,
     url: PropTypes.string.isRequired,
     response_hash: PropTypes.string,
-    comparisonId: PropTypes.string
+    comparisonId: PropTypes.string,
+    locationSearch: PropTypes.string
 };
 
 const mapStateToProps = state => ({
