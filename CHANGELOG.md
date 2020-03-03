@@ -3,6 +3,13 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.5.8](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.7...V0.5.8) - 2020-03-03
+
+### Merged
+
+- Search in graph [`#196`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/196)
+
+---
 ## [V0.5.7](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.6...V0.5.7) - 2020-03-03
 
 ### Merged
