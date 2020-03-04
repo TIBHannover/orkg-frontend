@@ -168,7 +168,8 @@ export const prefillStatements = ({ statements, resourceId }) => dispatch => {
                 resourceId: resourceId,
                 label: property.label,
                 isTemplate: property.isTemplate ? property.isTemplate : false,
-                templateId: property.templateId ? property.templateId : null
+                templateId: property.templateId ? property.templateId : null,
+                isAnimated: property.isAnimated !== undefined ? property.isAnimated : false
             })
         );
     }

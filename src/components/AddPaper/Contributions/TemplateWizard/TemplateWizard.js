@@ -59,6 +59,7 @@ class TemplateWizard extends Component {
                                         openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                                         isEditing={value.isEditing}
                                         isSaving={value.isSaving}
+                                        isAnimated={property.isAnimated}
                                     />
                                 );
                             });

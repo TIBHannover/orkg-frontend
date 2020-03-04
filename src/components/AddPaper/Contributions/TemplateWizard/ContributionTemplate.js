@@ -3,6 +3,7 @@ import { ListGroup, ListGroupItem } from 'reactstrap';
 import AddProperty from 'components/StatementBrowser/AddProperty';
 import TemplateHeader from 'components/AddPaper/Contributions/TemplateWizard/TemplateHeader';
 import StatementItem from 'components/StatementBrowser/StatementItem';
+import { doneAnimation } from 'actions/statementBrowser';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -43,7 +44,18 @@ class ContributionTemplate extends Component {
                 ? this.props.resources.byId[this.props.resourceId].shared
                 : 1;
         return (
-            <AnimationContainer classNames="fadeIn" className="mt-3 pb-3" in={true} timeout={{ enter: 700 }} appear>
+            <AnimationContainer
+                classNames="fadeIn"
+                className="mt-3 pb-3"
+                in={true}
+                timeout={!this.props.isAnimated ? { enter: 700 } : { enter: 0 }}
+                addEndListener={(node, done) => {
+                    if (!this.props.isAnimated) {
+                        this.props.doneAnimation({ id: this.props.propertyId });
+                    }
+                }}
+                appear
+            >
                 <ListGroup>
                     <TemplateHeader
                         syncBackend={this.props.syncBackend}
@@ -106,7 +118,9 @@ ContributionTemplate.propTypes = {
     inTemplate: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
-    openExistingResourcesInDialog: PropTypes.bool
+    openExistingResourcesInDialog: PropTypes.bool,
+    isAnimated: PropTypes.bool,
+    doneAnimation: PropTypes.func.isRequired
 };
 
 ContributionTemplate.defaultProps = {
@@ -123,7 +137,9 @@ const mapStateToProps = state => {
     };
 };
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+    doneAnimation: data => dispatch(doneAnimation(data))
+});
 
 export default connect(
     mapStateToProps,

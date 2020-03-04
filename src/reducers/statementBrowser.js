@@ -61,7 +61,8 @@ export default (state = initialState, action) => {
                         isEditing: false,
                         isSaving: false,
                         isTemplate: payload.isTemplate,
-                        templateId: payload.templateId ? payload.templateId : null
+                        templateId: payload.templateId ? payload.templateId : null,
+                        isAnimated: payload.isAnimated !== undefined ? payload.isAnimated : false
                     }
                 }));
                 newState = dotProp.set(newState, 'properties.allIds', ids => [...ids, payload.propertyId]);
@@ -112,6 +113,12 @@ export default (state = initialState, action) => {
         case type.IS_SAVING_PROPERTY: {
             const { payload } = action;
             const newState = dotProp.set(state, `properties.byId.${payload.id}.isSaving`, v => true);
+            return newState;
+        }
+
+        case type.DONE_ANIMATION: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `properties.byId.${payload.id}.isAnimated`, v => true);
             return newState;
         }
 

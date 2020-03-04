@@ -142,7 +142,8 @@ class AddTemplateButton extends Component {
                     propertyId: pID,
                     existingPredicateId: template.predicate.id,
                     label: template.predicate.label,
-                    isTemplate: true
+                    isTemplate: true,
+                    isAnimated: false
                 });
 
                 statements['values'].push({

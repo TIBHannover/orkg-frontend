@@ -96,6 +96,13 @@ export const changeProperty = data => dispatch => {
     });
 };
 
+export const doneAnimation = data => dispatch => {
+    dispatch({
+        type: type.DONE_ANIMATION,
+        payload: data
+    });
+};
+
 export const isSavingProperty = data => dispatch => {
     dispatch({
         type: type.IS_SAVING_PROPERTY,
