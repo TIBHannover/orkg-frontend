@@ -247,6 +247,10 @@ class AddValue extends Component {
                                 )}
 
                                 <InputGroupAddon addonType="append">
+                                    <Button color="light" className={'valueActionButton'} onClick={this.handleHideAddValue}>
+                                        Cancel
+                                    </Button>
+
                                     {![process.env.REACT_APP_TEMPLATE_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
                                         this.props.properties.byId[this.props.propertyId].existingPredicateId
                                     ) && (
@@ -273,10 +277,6 @@ class AddValue extends Component {
                                             Create
                                         </Button>
                                     )}
-
-                                    <Button color="light" className={'valueActionButton'} onClick={this.handleHideAddValue}>
-                                        Cancel
-                                    </Button>
                                 </InputGroupAddon>
                             </InputGroup>
                         ) : (
