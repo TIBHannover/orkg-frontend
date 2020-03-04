@@ -61,25 +61,6 @@ class ContributionsHelpTour extends Component {
                         ...(!this.props.showAbstractDialog
                             ? [
                                   {
-                                      selector: '#researchProblemFormControl',
-                                      content: (
-                                          <span>
-                                              Specify the research problem that this contribution addresses. Normally, a research problem consists of{' '}
-                                              <strong>very few words</strong> (around 2 or 3).
-                                              <br />
-                                              <br />
-                                              Examples of research problems:
-                                              <ul>
-                                                  <li>Named entity recognition</li>
-                                                  <li>HCI performance evaluations</li>
-                                                  <li>Triple store benchmarking</li>
-                                              </ul>
-                                          </span>
-                                      ),
-                                      style: { borderTop: '4px solid #E86161' },
-                                      action: node => (node ? node.focus() : null)
-                                  },
-                                  {
                                       selector: '#contributionsList',
                                       content: (
                                           <span>
