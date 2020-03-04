@@ -66,8 +66,8 @@ class ContributionTemplate extends Component {
             isSaving: false,
             editMode: this.props.match.params.id ? false : true,
             templatePredicate: null,
-            templateResearchFields: null,
-            templateResearchProblems: null,
+            templateResearchFields: [],
+            templateResearchProblems: [],
             templateProperties: [],
             templateSubTemplates: [],
             statements: [],
@@ -289,7 +289,6 @@ class ContributionTemplate extends Component {
             } else {
                 toast.success('Contribution Template created successfully');
             }
-            this.findTemplate();
             this.setState({ isSaving: false });
             if (!this.props.match.params.id) {
                 this.props.history.push(reverse(ROUTES.CONTRIBUTION_TEMPLATE, { id: templateResource }));
@@ -427,7 +426,7 @@ class ContributionTemplate extends Component {
                                     this.state.templateProperties.length > 0 &&
                                     this.state.templateProperties.map((templateProperty, index) => {
                                         return (
-                                            <InputGroup className={'mt-2 mb-2'}>
+                                            <InputGroup className={'mt-2 mb-2'} key={`property-${index}`}>
                                                 <InputGroupAddon addonType="prepend">{`${index + 1}`}</InputGroupAddon>
                                                 <AutoComplete
                                                     requestUrl={predicatesUrl}
@@ -469,7 +468,7 @@ class ContributionTemplate extends Component {
                                     this.state.templateSubTemplates.length > 0 &&
                                     this.state.templateSubTemplates.map((templateSubTemplate, index) => {
                                         return (
-                                            <>
+                                            <div key={`subtemplate-${index}`}>
                                                 <InputGroup className={'mt-2 mb-2'}>
                                                     <InputGroupAddon addonType="prepend">{`${index + 1}`}</InputGroupAddon>
                                                     <AutoComplete
@@ -506,7 +505,7 @@ class ContributionTemplate extends Component {
                                                         </InputGroupAddon>
                                                     )}
                                                 </InputGroup>
-                                            </>
+                                            </div>
                                         );
                                     })}
                                 {!this.state.editMode && this.state.templateSubTemplates && this.state.templateSubTemplates.length === 0 && (
@@ -521,13 +520,15 @@ class ContributionTemplate extends Component {
                                 )}
                             </FormGroup>
                         </fieldset>
-                        <StatementBrowserDialog
-                            show={this.state.modal}
-                            enableEdit={this.state.enableEdit}
-                            toggleModal={() => this.toggle('modal')}
-                            resourceId={this.state.dialogResourceId}
-                            resourceLabel={this.state.dialogResourceLabel}
-                        />
+                        {this.state.modal && (
+                            <StatementBrowserDialog
+                                show={this.state.modal}
+                                enableEdit={this.state.enableEdit}
+                                toggleModal={() => this.toggle('modal')}
+                                resourceId={this.state.dialogResourceId}
+                                resourceLabel={this.state.dialogResourceLabel}
+                            />
+                        )}
                         {(this.state.editMode || this.state.isSaving) && (
                             <>
                                 <hr className="mt-5 mb-3" />
