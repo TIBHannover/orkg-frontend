@@ -13,15 +13,25 @@ import PropTypes from 'prop-types';
 import ContentLoader from 'react-content-loader';
 
 class Contribution extends Component {
-    state = {
-        showVideoDialog: false,
-        templates: [],
-        isTemplatesLoading: false,
-        isTemplatesFailesLoading: false
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            showVideoDialog: false,
+            templates: [],
+            isTemplatesLoading: false,
+            isTemplatesFailesLoading: false
+        };
+        this._isMounted = false;
+        // rest of your code
+    }
 
     componentDidMount() {
-        this.loadContirbutionTemplates();
+        this._isMounted = true;
+        this._isMounted && this.loadContirbutionTemplates();
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     /**
@@ -80,18 +90,20 @@ class Contribution extends Component {
                     .map(rp => this.getTemplatesOfResourceId(rp.id, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM))
             ])
                 .then(templates => {
-                    this.setState({
-                        templates: templates.flat(),
-                        isTemplatesLoading: false,
-                        isTemplatesFailesLoading: false
-                    });
+                    this._isMounted &&
+                        this.setState({
+                            templates: templates.flat(),
+                            isTemplatesLoading: false,
+                            isTemplatesFailesLoading: false
+                        });
                 })
                 .catch(e => {
-                    this.setState({
-                        templates: [],
-                        isTemplatesLoading: false,
-                        isTemplatesFailesLoading: false
-                    });
+                    this._isMounted &&
+                        this.setState({
+                            templates: [],
+                            isTemplatesLoading: false,
+                            isTemplatesFailesLoading: false
+                        });
                 });
         });
     };

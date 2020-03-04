@@ -20,16 +20,24 @@ class AutoComplete extends Component {
     constructor(props) {
         super(props);
 
-        this.state.value = this.props.value || '';
+        this.state = {
+            selectedItemId: null,
+            dropdownMenuJsx: null,
+            inputValue: '',
+            defaultOptions: this.props.defaultOptions ? this.props.defaultOptions : [],
+            value: this.props.value || ''
+        };
+
         this.maxResults = 100;
     }
 
-    state = {
-        selectedItemId: null,
-        dropdownMenuJsx: null,
-        inputValue: '',
-        defaultOptions: this.props.defaultOptions ? this.props.defaultOptions : []
-    };
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
 
     IdMatch = async (value, responseJson) => {
         if (value.startsWith('#')) {
@@ -110,9 +118,10 @@ class AutoComplete extends Component {
     loadDefaultOptions = async inputValue => {
         const defaultOptions = await this.loadOptions(inputValue);
 
-        this.setState({
-            defaultOptions
-        });
+        this._isMounted &&
+            this.setState({
+                defaultOptions
+            });
     };
 
     noResults = value => {
