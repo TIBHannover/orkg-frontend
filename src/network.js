@@ -480,3 +480,23 @@ export const getTemplateById = templateId => {
         }));
     });
 };
+
+/**
+ * Get Parents of research field
+ *
+ * @param {String} researchFieldId research field Id
+ */
+export const getParentResearchFields = (researchFieldId, parents = []) => {
+    if (researchFieldId === process.env.REACT_APP_RESEARCH_FIELD_MAIN) {
+        parents.push({ id: researchFieldId, label: 'Research Field' });
+        return Promise.resolve(parents);
+    } else {
+        return getStatementsByObjectAndPredicate({
+            objectId: researchFieldId,
+            predicateId: process.env.REACT_APP_PREDICATES_HAS_SUB_RESEARCH_FIELD
+        }).then(parentResearchField => {
+            parents.push(parentResearchField[0].object);
+            return getParentResearchFields(parentResearchField[0].subject.id, parents);
+        });
+    }
+};

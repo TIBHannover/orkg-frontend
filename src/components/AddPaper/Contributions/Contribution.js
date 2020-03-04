@@ -7,7 +7,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { StyledHorizontalContribution } from './styled';
 import { connect } from 'react-redux';
-import { getStatementsByObjectAndPredicate } from 'network';
+import { getStatementsByObjectAndPredicate, getParentResearchFields } from 'network';
 import { updateResearchProblems, openTour } from 'actions/addPaper';
 import PropTypes from 'prop-types';
 import ContentLoader from 'react-content-loader';
@@ -71,27 +71,29 @@ class Contribution extends Component {
 
     loadContirbutionTemplates = () => {
         this.setState({ isTemplatesLoading: true, isTemplatesFailesLoading: false });
-        // Load templates of the research field and the research problems
-        Promise.all([
-            this.getTemplatesOfResourceId(this.props.selectedResearchField, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD),
-            ...this.props.researchProblems
-                .filter(rp => rp.id !== rp.label)
-                .map(rp => this.getTemplatesOfResourceId(rp.id, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM))
-        ])
-            .then(templates => {
-                this.setState({
-                    templates: templates.flat(),
-                    isTemplatesLoading: false,
-                    isTemplatesFailesLoading: false
+        // Load templates of the research field and parents and the research problems
+        getParentResearchFields(this.props.selectedResearchField).then(parents => {
+            Promise.all([
+                ...parents.map(rf => this.getTemplatesOfResourceId(rf.id, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD)),
+                ...this.props.researchProblems
+                    .filter(rp => rp.id !== rp.label)
+                    .map(rp => this.getTemplatesOfResourceId(rp.id, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM))
+            ])
+                .then(templates => {
+                    this.setState({
+                        templates: templates.flat(),
+                        isTemplatesLoading: false,
+                        isTemplatesFailesLoading: false
+                    });
+                })
+                .catch(e => {
+                    this.setState({
+                        templates: [],
+                        isTemplatesLoading: false,
+                        isTemplatesFailesLoading: false
+                    });
                 });
-            })
-            .catch(e => {
-                this.setState({
-                    templates: [],
-                    isTemplatesLoading: false,
-                    isTemplatesFailesLoading: false
-                });
-            });
+        });
     };
 
     render() {
