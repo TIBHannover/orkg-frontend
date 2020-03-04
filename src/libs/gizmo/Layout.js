@@ -58,6 +58,7 @@ export default class Layout {
         const animationWaiter = new Promise(function(resolve) {
             const max = that.graph.classNodes.length - 1;
             let it = 0;
+
             that.graph.classNodes.forEach(async node => {
                 node.setAnimationDurationPercentage(durationPercentage);
                 if (it === max) {
@@ -384,6 +385,7 @@ export default class Layout {
         this.graph.classNodes.forEach(node => {
             node.updateDrawPosition();
         });
+        this.graph.updateHaloRadius();
     }
 
     createForceElements() {
@@ -466,7 +468,7 @@ export default class Layout {
             }
         }
         if (node.incommingLink.length > 1) {
-            //&& some are visiblke
+            //&& some are visible
             multiParent = false;
 
             node.incommingLink.forEach(income => {

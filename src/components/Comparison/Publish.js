@@ -7,7 +7,8 @@ import ROUTES from '../../constants/routes.js';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import { createResource, createLiteralStatement, createLiteral } from 'network';
+import { createResource, createLiteralStatement, createLiteral, getComparison } from 'network';
+import { getContributionIdsFromUrl } from 'utils';
 import Tooltip from '../Utils/Tooltip';
 import queryString from 'query-string';
 import { reverse } from 'named-urls';
@@ -19,6 +20,7 @@ class Publish extends Component {
         this.state = {
             title: '',
             description: '',
+            reference: '',
             comparisonId: '',
             isLoading: false
         };
@@ -35,18 +37,22 @@ class Publish extends Component {
     handleSubmit = async e => {
         this.setState({ isLoading: true });
         try {
+            const contributionIds = getContributionIdsFromUrl(this.props.url.substring(this.props.url.indexOf('?')));
+            const comparison = await getComparison({ contributionIds: contributionIds, save_response: true });
             const titleResponse = await createResource(this.state.title, [process.env.REACT_APP_CLASSES_COMPARISON]);
             const resourceId = titleResponse.id;
             const descriptionResponse = await createLiteral(this.state.description);
+            const referenceResponse = await createLiteral(this.state.reference);
             const link = queryString.parse(this.props.url).response_hash
                 ? this.props.url
-                : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
+                : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${comparison.response_hash}`;
             const urlResponse = await createLiteral(link);
             await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_DESCRIPTION, descriptionResponse.id);
             await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_URL, urlResponse.id);
+            await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_REFERENCE, referenceResponse.id);
             toast.success('Comparison saved successfully');
             this.setState({ isLoading: false, comparisonId: resourceId });
-            this.props.updateComparisonMetadata(this.state.title, this.state.description);
+            this.props.updateComparisonMetadata(this.state.title, this.state.description, this.state.reference);
         } catch (error) {
             console.error(error);
             toast.error(`Error publishing a comparison : ${error.message}`);
@@ -81,6 +87,14 @@ class Publish extends Component {
                                     <Tooltip message={'Describe the goal and what is being compared'}>Description</Tooltip>
                                 </Label>
                                 <Input type="textarea" name="description" id="description" onChange={this.handleChange} />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="reference">
+                                    <Tooltip message={'Enter a reference to the paper from which the comparison is generated'}>
+                                        Reference (optional)
+                                    </Tooltip>
+                                </Label>
+                                <Input type="text" name="reference" id="reference" onChange={this.handleChange} />
                             </FormGroup>
                         </>
                     ) : (

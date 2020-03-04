@@ -35,6 +35,7 @@ import greetingTime from 'greeting-time';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { reverse } from 'named-urls';
 
 const StyledLink = styled(Link)`
     :focus {
@@ -57,7 +58,7 @@ const StyledAuthTooltip = styled(Tooltip)`
     & .tooltip-inner {
         font-size: 16px;
         background-color: ${props => props.theme.darkblue};
-        max-width: 350px;
+        max-width: 410px;
         box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.13);
 
         .btn {
@@ -88,10 +89,13 @@ class Header extends Component {
             userTooltipOpen: false,
             redirectLogout: false
         };
+
+        this.userPopup = React.createRef();
     }
 
     componentDidMount() {
         this.userInformation();
+        document.addEventListener('mousedown', this.handleClickOutside);
     }
 
     componentDidUpdate() {
@@ -101,6 +105,16 @@ class Header extends Component {
             });
         }
     }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+
+    handleClickOutside = event => {
+        if (this.userPopup.current && !this.userPopup.current.contains(event.target) && this.state.userTooltipOpen) {
+            this.toggleUserTooltip();
+        }
+    };
 
     userInformation = () => {
         const cookies = new Cookies();
@@ -224,22 +238,33 @@ class Header extends Component {
                                     isOpen={this.state.userTooltipOpen}
                                     target="TooltipExample"
                                     toggle={this.toggleUserTooltip}
+                                    innerRef={this.userPopup}
                                 >
                                     <Row>
                                         <div className="col-3 text-center">
-                                            {/*<Link onClick={this.toggleUserTooltip} to={reverse(ROUTES.USER_PROFILE, { userId: this.props.user.id })} >*/}
-                                            <StyledGravatar
-                                                className="rounded-circle"
-                                                style={{ border: '3px solid #fff' }}
-                                                email={email}
-                                                size={76}
-                                                id="TooltipExample"
-                                            />
-                                            {/*</Link>*/}
+                                            <Link onClick={this.toggleUserTooltip} to={reverse(ROUTES.USER_PROFILE, { userId: this.props.user.id })}>
+                                                <StyledGravatar
+                                                    className="rounded-circle"
+                                                    style={{ border: '3px solid #fff' }}
+                                                    email={email}
+                                                    size={76}
+                                                    id="TooltipExample"
+                                                />
+                                            </Link>
                                         </div>
-                                        <div className="col-9">
-                                            {greeting} {this.props.user.displayName},
+                                        <div className="col-9 text-left">
+                                            <span className="ml-1">
+                                                {greeting} {this.props.user.displayName}
+                                            </span>
                                             <ButtonGroup className="mt-2" size="sm">
+                                                <Button
+                                                    color="secondary"
+                                                    onClick={this.toggleUserTooltip}
+                                                    tag={Link}
+                                                    to={reverse(ROUTES.USER_PROFILE, { userId: this.props.user.id })}
+                                                >
+                                                    Profile
+                                                </Button>
                                                 <Button color="secondary" onClick={this.toggleUserTooltip} tag={Link} to={ROUTES.USER_SETTINGS}>
                                                     Settings
                                                 </Button>

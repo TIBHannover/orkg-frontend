@@ -17,13 +17,17 @@ export default class GraphVis {
         this.layout = new Layout({ graph: this }); // possible 'force, treeV, treeH'
         this.rootContainer = 'graphRendering';
         this.nodeMap = {};
+        this.Id2NodeMap = {};
+        this.Id2PropnodeMap = {};
         this.graphIsInitialized = false;
 
         this.renderedNodes = undefined;
         this.maxDepth = -1;
 
-        this.graphFullyExplored = false;
+        this.forceAnimationTickBetweenExpand = 100;
 
+        this.graphFullyExplored = false;
+        this.hasIncrementalData = true;
         this.sortedByDepthNodes = [];
         this.mapOfResources = {}; // maps the present resources in the graph, helps to deal with duplicates and recursive links
 
@@ -31,8 +35,15 @@ export default class GraphVis {
         this.getDataFromApi = undefined; // has to be set from graphView  modal;
         this.fetchMultipleResourcesFromAPI = undefined;
         this.propagateMaxDepthValue = undefined; // has to be set from graphView modal;
+        this.propagateDictionary = undefined;
 
-        // state, load, unload functions
+        // dictionary stuff
+        this.dictinary = [];
+        this.drawHalo = false;
+        this.pulseNodeIds = [];
+        this.pulseNodeIterator = 0;
+
+        // state, load, unload functions`
         this.graphInitialized = this.graphInitialized.bind(this);
         this.loadData = this.loadData.bind(this);
         this.getMaxDepth = this.getMaxDepth.bind(this);
@@ -88,7 +99,234 @@ export default class GraphVis {
         this.singleNodeExploration = this.singleNodeExploration.bind(this);
         this.fullExplore = this.fullExplore.bind(this);
         this.exploreMultipleNodes = this.exploreMultipleNodes.bind(this);
+
+        this.planExpandAnimationsForHalos = this.planExpandAnimationsForHalos.bind(this);
     }
+
+    async planExpandAnimationsForHalos(ids) {
+        const nodesThatMustBeVisible = [];
+        ids.forEach(item => {
+            // search in maps
+            if (this.Id2NodeMap[item]) {
+                nodesThatMustBeVisible.push(this.Id2NodeMap[item]);
+            }
+            if (this.Id2PropnodeMap[item]) {
+                // get the range node out of it;
+                nodesThatMustBeVisible.push(this.Id2PropnodeMap[item].rangeNode());
+            }
+        });
+
+        const nodesThatMustBeExpanded = [];
+        this.findNodesThatNeedToBeExpanded(nodesThatMustBeVisible, nodesThatMustBeExpanded);
+        nodesThatMustBeExpanded.sort((a, b) => (a.depthValue > b.depthValue ? 1 : b.depthValue > a.depthValue ? -1 : 0));
+
+        // sort them by depth;
+        const sortedByDepthArray = [];
+        nodesThatMustBeExpanded.forEach(node => {
+            if (!sortedByDepthArray[node.depthValue]) {
+                sortedByDepthArray[node.depthValue] = [];
+            }
+            sortedByDepthArray[node.depthValue].push(node);
+        });
+
+        const groupsToExpand = [];
+        sortedByDepthArray.forEach(lvl => {
+            if (lvl) {
+                groupsToExpand.push(lvl);
+            }
+        });
+
+        await this.promisedGroupExpand(groupsToExpand).then();
+        // for each depth make the expand;
+    }
+
+    findNodesThatNeedToBeExpanded = (currentSet, nodesThatMustBeExpanded) => {
+        const nextSet = [];
+        currentSet.forEach(node => {
+            node.incommingLink.forEach(inLink => {
+                if (!inLink.domainNode().visible()) {
+                    nextSet.push(inLink.domainNode());
+                }
+                if (nodesThatMustBeExpanded.indexOf(inLink.domainNode()) === -1) {
+                    if (inLink.domainNode().status !== 'expanded') {
+                        nodesThatMustBeExpanded.push(inLink.domainNode());
+                    }
+                }
+            });
+        });
+        if (nextSet.length > 0) {
+            this.findNodesThatNeedToBeExpanded(nextSet, nodesThatMustBeExpanded);
+        }
+    };
+
+    updateHaloRadius = () => {
+        if (this.pulseNodeIds && this.pulseNodeIds.length > 0) {
+            this.pulseNodeIds.forEach(nodeId => {
+                if (this.Id2NodeMap[nodeId]) {
+                    this.computeDistanceToCenterAndUpdateHaloRadius(this.Id2NodeMap[nodeId]);
+                }
+                if (this.Id2PropnodeMap[nodeId]) {
+                    this.computeDistanceToCenterAndUpdateHaloRadius(this.Id2PropnodeMap[nodeId]);
+                }
+            });
+        }
+    };
+    computeDistanceToCenterAndUpdateHaloRadius = node => {
+        const posXY = this.nav.getScreenCoords(node.x, node.y);
+        const w = this.layout.layoutSize[0];
+        const h = this.layout.layoutSize[1];
+        const translation = this.nav.graphTranslation;
+        const zoomFactor = this.nav.zoomFactor;
+
+        const x = posXY.x;
+        const y = posXY.y;
+        let borderPoint_x = 0;
+        let borderPoint_y = 0;
+        const defaultRadius = 55;
+
+        if (x < 0 || x > w || y < 0 || y > h) {
+            // node outside viewport;
+            // check for quadrant and get the correct boarder point (intersection with viewport)
+            if (x < 0 && y < 0) {
+                borderPoint_x = 0;
+                borderPoint_y = 0;
+            } else if (x > 0 && x < w && y < 0) {
+                borderPoint_x = x;
+                borderPoint_y = 0;
+            } else if (x > w && y < 0) {
+                borderPoint_x = w;
+                borderPoint_y = 0;
+            } else if (x > w && y > 0 && y < h) {
+                borderPoint_x = w;
+                borderPoint_y = y;
+            } else if (x > w && y > h) {
+                borderPoint_x = w;
+                borderPoint_y = h;
+            } else if (x > 0 && x < w && y > h) {
+                borderPoint_x = x;
+                borderPoint_y = h;
+            } else if (x < 0 && y > h) {
+                borderPoint_x = 0;
+                borderPoint_y = h;
+            } else if (x < 0 && y > 0 && y < h) {
+                borderPoint_x = 0;
+                borderPoint_y = y;
+            }
+            // kill all pulses of nodes that are outside the viewport
+            const borderRadius_x = borderPoint_x - x;
+            const borderRadius_y = borderPoint_y - y;
+
+            let len = borderRadius_x * borderRadius_x + borderRadius_y * borderRadius_y;
+            len = Math.sqrt(len);
+
+            const normedX = borderRadius_x / len;
+            const normedY = borderRadius_y / len;
+
+            len = len + 25; // add 20 px;
+
+            // re-normalized vector
+            const newVectorX = normedX * len + x;
+            const newVectorY = normedY * len + y;
+            // compute world coordinates of this point
+            const wX = (newVectorX - translation[0]) / zoomFactor;
+            const wY = (newVectorY - translation[1]) / zoomFactor;
+            const dx = wX - node.x;
+            const dy = wY - node.y;
+
+            const newRadius = Math.sqrt(dx * dx + dy * dy);
+
+            if (newRadius > defaultRadius) {
+                node.setOutOfViewportRadius(newRadius);
+            } else if (node.renderConfig.renderingType === 'rect') {
+                node.setOutOfViewportRadius(newRadius);
+            } else {
+                node.setInViewportRadius();
+            }
+        } else {
+            node.setInViewportRadius();
+        }
+    };
+
+    getDictionary = () => {
+        return this.dictinary;
+    };
+
+    buildDictionary = () => {
+        this.dictinary = []; // clear the array;
+        this.classNodes.forEach(node => {
+            this.dictinary.push({ text: node.label, nodeId: node.id() });
+        });
+        this.propNodes.forEach(node => {
+            this.dictinary.push({ text: node.label, nodeId: node.id() });
+        });
+        //give the dictionary to the search component;
+        this.propagateDictionary();
+    };
+
+    countVisibleProps = id => {
+        let visibleCount = 0;
+        if (id) {
+            id.forEach(item => {
+                if (this.Id2NodeMap[item] && this.Id2NodeMap[item].visible()) {
+                    visibleCount++;
+                }
+                if (this.Id2PropnodeMap[item] && this.Id2PropnodeMap[item].visible()) {
+                    visibleCount++;
+                }
+            });
+        }
+        return visibleCount;
+    };
+
+    removeHalos = () => {
+        this.pulseNodeIds.forEach(id => {
+            if (this.Id2NodeMap[id]) {
+                this.Id2NodeMap[id].removeHalo();
+            }
+            if (this.Id2PropnodeMap[id]) {
+                this.Id2PropnodeMap[id].removeHalo();
+            }
+        });
+    };
+
+    haloVisForNodes = id => {
+        this.removeHalos();
+        this.pulseNodeIds = []; // clear pulse Ids;
+        id.forEach(itemToHighlight => {
+            if (this.Id2NodeMap[itemToHighlight]) {
+                this.Id2NodeMap[itemToHighlight].drawHalo(true);
+                if (this.Id2NodeMap[itemToHighlight].visible()) {
+                    this.pulseNodeIds.push(itemToHighlight);
+                }
+            }
+            if (this.Id2PropnodeMap[itemToHighlight]) {
+                this.Id2PropnodeMap[itemToHighlight].drawHalo(true);
+
+                if (this.Id2PropnodeMap[itemToHighlight].visible()) {
+                    this.pulseNodeIds.push(itemToHighlight);
+                }
+            }
+        });
+        this.pulseNodeIterator = 0;
+        this.updateHaloRadius();
+    };
+
+    zoomToANode = () => {
+        // zoom to current id;
+        const nodeId = this.pulseNodeIds[this.pulseNodeIterator];
+        if (this.Id2PropnodeMap[nodeId]) {
+            this.nav.zoomToNode(this.Id2PropnodeMap[nodeId]);
+        }
+        if (this.Id2NodeMap[nodeId]) {
+            this.nav.zoomToNode(this.Id2NodeMap[nodeId]);
+        }
+
+        this.pulseNodeIterator = (this.pulseNodeIterator + 1) % this.pulseNodeIds.length;
+    };
+
+    expandNodesForHaloVis = async ids => {
+        await this.planExpandAnimationsForHalos(ids);
+    };
 
     async exploreMultipleNodes(nodesToExplore) {
         const ResourceIds = nodesToExplore.map(o => {
@@ -110,6 +348,7 @@ export default class GraphVis {
                 }
                 // put parent position to the child node for the expand animation
                 this.classNodes.push(aNode);
+                this.Id2NodeMap[aNode.id()] = aNode;
                 iterator++;
             }
         });
@@ -119,6 +358,7 @@ export default class GraphVis {
             incrementalData.edges.forEach(edge => {
                 const anEdge = this.createEdge(edge, iterator);
                 this.propNodes.push(anEdge);
+                this.Id2PropnodeMap[anEdge.id()] = anEdge;
                 iterator++;
             });
         }
@@ -128,7 +368,100 @@ export default class GraphVis {
             n.nodeHasBeenExplored = true;
         });
         this.computeDepth();
-        this.singleGroupExpand(nodesToExplore);
+        await this.singleGroupExpand(nodesToExplore);
+        this.layout.pauseForceLayoutAnimation(false);
+        await this.runForceAnimation(this.forceAnimationTickBetweenExpand);
+        this.layout.pauseForceLayoutAnimation(true);
+        this.buildDictionary();
+    }
+
+    blackOpsSearch = async () => {
+        const explorationDepth = 20; // fallback
+        let exploreCounter = 0;
+        while (exploreCounter < explorationDepth) {
+            // collect current states;
+            const unexploredNodes = [];
+
+            for (let it = 0; it < this.sortedByDepthNodes.length; it++) {
+                if (this.sortedByDepthNodes[it]) {
+                    this.sortedByDepthNodes[it].forEach(item => {
+                        if (item.isLiteralItem) {
+                            item.nodeHasBeenExplored = true;
+                        }
+                        if (item.type() === 'resource' && item.status === 'unknown') {
+                            unexploredNodes.push(item);
+                        }
+                    });
+                }
+            }
+            if (unexploredNodes.length === 0) {
+                this.graphFullyExplored = true;
+                this.buildDictionary();
+                this.mst.computeMinimumSpanningTree();
+                // redraw full graph now;
+                this.blackOpsRedraw();
+                // this should force the redraw of all new items and then we are allowed to work on the expansions stuff
+                return;
+            } else {
+                await this.blackOpsExplore(unexploredNodes);
+                if (!this.hasIncrementalData) {
+                    this.graphFullyExplored = true;
+                    this.buildDictionary();
+                    this.mst.computeMinimumSpanningTree();
+                    // redraw full graph now;
+                    this.blackOpsRedraw();
+                    break;
+                }
+            }
+            exploreCounter++;
+        }
+    };
+
+    async blackOpsExplore(nodesToExplore) {
+        const ResourceIds = nodesToExplore.map(o => {
+            return o._resourceId;
+        });
+        const incrementalData = await this.fetchMultipleResourcesFromAPI(ResourceIds);
+        let iterator = this.classNodes.length + 1;
+        if (!incrementalData.nodes && !incrementalData.edges) {
+            // we dont have new data
+            this.hasIncrementalData = false;
+            return;
+        }
+        this.hasIncrementalData = true;
+        incrementalData.nodes.forEach(node => {
+            if (this.mapOfResources[node.id] === undefined) {
+                // create a node;
+                const aNode = this.createNode(node);
+                aNode.id(aNode.id() + iterator);
+                if (aNode.type() === 'resource') {
+                    aNode.status = 'unknown';
+                }
+                aNode.visible(false);
+                // put parent position to the child node for the expand animation
+                this.classNodes.push(aNode);
+                this.Id2NodeMap[aNode.id()] = aNode;
+                iterator++;
+            }
+        });
+
+        iterator = this.propNodes.length + 1;
+        if (incrementalData.edges) {
+            incrementalData.edges.forEach(edge => {
+                const anEdge = this.createEdge(edge, iterator);
+                this.propNodes.push(anEdge);
+                anEdge.visible(false);
+                anEdge.linkElement().visible(false);
+                this.Id2PropnodeMap[anEdge.id()] = anEdge;
+                iterator++;
+            });
+        }
+
+        this.updateNodeStatus();
+        nodesToExplore.forEach(n => {
+            n.nodeHasBeenExplored = true;
+        });
+        this.computeDepth();
     }
 
     async fullExplore(doubleTheDepth = false, maxIterationCounter = 10) {
@@ -208,6 +541,7 @@ export default class GraphVis {
             this.nodes.forEach(node => {
                 const aNode = this.createNode(node);
                 aNode.id(aNode.id() + iterator);
+                this.Id2NodeMap[aNode.id()] = aNode;
                 classNodes.push(aNode);
                 iterator++;
             });
@@ -218,6 +552,7 @@ export default class GraphVis {
             this.edges.forEach(edge => {
                 const anEdge = this.createEdge(edge, iterator);
                 properties.push(anEdge);
+                this.Id2PropnodeMap[anEdge.id()] = anEdge;
                 iterator++;
             });
             this.propNodes = properties;
@@ -235,6 +570,7 @@ export default class GraphVis {
                 this.nav.zoomToExtent();
             }
         }
+        this.buildDictionary();
     }
 
     updateNodeStatus() {
@@ -348,6 +684,49 @@ export default class GraphVis {
         this.nav.initializeRendering();
     }
 
+    blackOpsRedraw() {
+        this.graphRoot.selectAll('defs').remove();
+        this.graphRoot.selectAll('g').remove();
+        this.initializeLayers();
+        this.layout.initializeLayoutEngine();
+
+        // force to set the svg root to all elements
+        const nodeContainer = d3.select('#graphRendering_nodes');
+        this.renderedNodes = this.createRenderingElements(nodeContainer, this.classNodes);
+        this.drawRenderingElements(this.renderedNodes, true);
+
+        // create and draw properties
+        const propContainer = d3.select('#graphRendering_properties');
+        this.edgeElements = this.createRenderingElements(propContainer, this.propNodes);
+        this.drawRenderingElements(this.edgeElements, true);
+
+        // links are a bit different
+        this.renderedLink = d3
+            .select('#graphRendering_edges')
+            .selectAll('.linkElements')
+            .data(this.links)
+            .enter()
+            .append('g')
+            .classed('.linkElements', true)
+            .call(this.nav.getDragBehaviour());
+
+        // create the links
+        const makerContainer = d3.select('#graphRendering_arrows');
+        if (this.renderedLink) {
+            this.renderedLink.each(function(link) {
+                // force it to be draw!
+                link.render(d3.select(this), makerContainer);
+                if (link.visible()) {
+                    link.updateDrawPosition();
+                } else {
+                    d3.select(this).remove();
+                }
+            });
+        }
+
+        // this.drawGraph();
+    }
+
     redrawGraph() {
         // remove svg;
         this.graphRoot.selectAll('defs').remove();
@@ -405,8 +784,12 @@ export default class GraphVis {
             .call(this.nav.getDragBehaviour());
     }
 
-    drawRenderingElements(elements) {
+    drawRenderingElements(elements, forceDraw) {
         elements.each(function(item) {
+            if (forceDraw === true) {
+                item.render(d3.select(this));
+                item.addHoverEvents();
+            }
             if (item.visible()) {
                 item.render(d3.select(this));
                 item.addHoverEvents();
@@ -476,6 +859,7 @@ export default class GraphVis {
 
         property.setLabel(edge_data.label);
         property.id(property.id() + iterator);
+        property.graph = this;
 
         const srcNode = this.nodeMap[edge_data.from];
         const tarNode = this.nodeMap[edge_data.to];
@@ -531,9 +915,11 @@ export default class GraphVis {
         const node = new Node({ configObject: this.graphOptions.nodeConfig() });
         node.setLabel(node_data.title);
         node.setPosition(-1, -1);
+        node.graph = this;
         if (node_data.type === 'literal') {
             node.type('literal');
             node.setConfigObj(this.graphOptions.datatypeConfig());
+            node.setStatusLeafNode();
             if (this.graphOptions.renderingStyle() === 'uml') {
                 node.visible(false);
             }
@@ -546,7 +932,6 @@ export default class GraphVis {
         this.nodeMap[node_data.id] = node;
 
         if (node_data.classificationArray) {
-            // console.log(node_data.classificationArray);
             // todo: based on the classificationArray, add further icons
             if (node_data.classificationArray.indexOf(process.env.REACT_APP_CLASSES_PAPER) !== -1) {
                 node.addIcon('paperIcon');
@@ -657,7 +1042,8 @@ export default class GraphVis {
                 this.performExplorations(needToExploreLevel, internalDepth);
             }
             if (requiresExpansions) {
-                this.performExpansion(needToExpandLevel);
+                await this.performExpansion(needToExpandLevel);
+                this.layout.pauseForceLayoutAnimation(false);
             }
         } else {
             this.performMultipleTasks(needToCollapseLevel, needToExpandLevel, needToExploreLevel, internalDepth);
@@ -782,14 +1168,29 @@ export default class GraphVis {
         });
         if (groupsToExpand.length > 0) {
             await this.promisedGroupExpand(groupsToExpand);
-            this.layout.pauseForceLayoutAnimation(false);
         }
     }
 
     async promisedGroupExpand(groupsToExpand) {
         // keep it an iterative for loop to ensure the correct execution of collapse operations
         for (let i = 0; i < groupsToExpand.length; i++) {
-            await this.singleGroupExpand(groupsToExpand[i], Math.max(0.125, 1.0 - (i + 1) / groupsToExpand.length));
+            if (groupsToExpand[i]) {
+                await this.singleGroupExpand(groupsToExpand[i], Math.max(0.125, 1.0 - i / groupsToExpand.length));
+                this.layout.pauseForceLayoutAnimation(false);
+                await this.runForceAnimation(this.forceAnimationTickBetweenExpand);
+                this.layout.pauseForceLayoutAnimation(true);
+            }
+        }
+    }
+
+    async runForceAnimation(duration) {
+        if (this.layout.layoutType() === 'force') {
+            const animationWaiter = new Promise(function(resolve) {
+                setTimeout(function() {
+                    resolve(true);
+                }, duration);
+            });
+            await animationWaiter;
         }
     }
 
@@ -861,7 +1262,6 @@ export default class GraphVis {
 
     async singleNodeExpansion(node) {
         // fetch the nodes that need to be expanded;
-
         node.incommingLink.forEach(link => {
             if (node.depthValue > link.domainNode().depthValue) {
                 link.visible(true);
@@ -919,10 +1319,12 @@ export default class GraphVis {
             await that.exploreCurrentDept(nodesOnLvlToExplore);
         }
         this.layout.pauseForceLayoutAnimation(false);
+        this.buildDictionary();
     }
 
     async exploreCurrentDept(nodesToExplore) {
         await this.exploreMultipleNodes(nodesToExplore);
+        this.buildDictionary();
     }
 
     async singleNodeExploration(node, redrawWhenFinished = true) {
@@ -950,6 +1352,7 @@ export default class GraphVis {
                     // create a node;
                     const aNode = that.createNode(node);
                     aNode.id(aNode.id() + iterator);
+                    this.Id2NodeMap[aNode.id()] = aNode;
                     nodeRef.push(aNode);
                     if (aNode.type() === 'resource') {
                         aNode.status = 'unknown';
@@ -966,12 +1369,14 @@ export default class GraphVis {
                 incrementalData.edges.forEach(edge => {
                     const anEdge = that.createEdge(edge, iterator);
                     that.propNodes.push(anEdge);
+                    this.Id2PropnodeMap[anEdge.id()] = anEdge;
                     iterator++;
                 });
             }
             if (redrawWhenFinished) {
                 this.computeDepth();
                 this.redrawGraphAfterExpand(nodeRef, node);
+                this.buildDictionary();
             }
         }
     }
@@ -1034,9 +1439,6 @@ export default class GraphVis {
                     }
                 });
             }
-            // } else {
-            //     console.log('skipping this child! ' + childNode.label);
-            // }
         });
 
         return recursivePlan;

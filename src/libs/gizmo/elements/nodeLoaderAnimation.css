@@ -37,3 +37,52 @@
     stroke:#000;
     stroke-width: 1px;
 }
+
+@keyframes pulseAnimation {
+    0% {
+        -webkit-transform: scale(1.5);
+        stroke-width: 0.75;
+    }
+    50% {
+        stroke-width: 1.25;
+    }
+    100% {
+        -webkit-transform: scale(1.0);
+        stroke-width: 2;
+    }
+}
+
+.searchResultA{
+    fill: none;
+    stroke-width: 2;
+    stroke: #f00;
+    -webkit-animation-name: pulseAnimation;
+    -moz-animation-name: pulseAnimation;
+    -o-animation-name: pulseAnimation;
+    animation-name: pulseAnimation;
+
+    -webkit-animation-duration: 0.5s;
+    -moz-animation-duration: 0.5s;
+    -o-animation-duration: 0.5s;
+    animation-duration: 0.5s;
+
+    -webkit-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    -webkit-animation-iteration-count: 4;
+    -moz-animation-iteration-count: 4;
+    -o-animation-iteration-count: 4;
+    animation-iteration-count: 4;
+
+    -webkit-animation-timing-function: linear;
+    -moz-animation-timing-function: linear;
+    -o-animation-timing-function: linear;
+    animation-timing-function: linear;
+
+}
+
+/* a class for not animated search results (hovered over node)*/
+.searchResultB {
+    fill: none;
+    stroke-width: 2;
+    stroke: #f00;
+}

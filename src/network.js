@@ -291,8 +291,8 @@ export const getStatementsByObject = async ({ id, page = 1, items = 9999, sortBy
     return statements;
 };
 
-export const getResourcesByClass = async ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null }) => {
-    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc, ...(q ? { q: q } : {}) });
+export const getResourcesByClass = async ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null, creator = null }) => {
+    const params = queryString.stringify({ page, items, sortBy, desc, creator, ...(q ? { q } : {}) });
 
     const resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/?${params}`);
 
@@ -315,6 +315,10 @@ export const getStatementsByObjectAndPredicate = ({ objectId, predicateId, page 
     const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
 
     return submitGetRequest(`${statementsUrl}object/${objectId}/predicate/${predicateId}/?${params}`);
+};
+
+export const getComparison = ({ contributionIds = [], save_response = false }) => {
+    return submitGetRequest(`${comparisonUrl}?contributions=${contributionIds.join()}&save_response=${save_response}`);
 };
 
 export const getSimilaireContribution = id => {
@@ -415,6 +419,10 @@ export const registerWithEmailAndPassword = (email, password, matching_password,
 
 export const getUserInformation = () => {
     return submitGetRequest(`${url}user/`, {}, true);
+};
+
+export const getUserInformationById = userId => {
+    return submitGetRequest(`${url}user/` + userId, {}, true);
 };
 
 export const updateUserInformation = ({ email, display_name }) => {

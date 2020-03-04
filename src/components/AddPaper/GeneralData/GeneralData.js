@@ -92,6 +92,7 @@ class GeneralData extends Component {
             paperAuthors: this.props.authors,
             paperPublicationMonth: this.props.publicationMonth,
             paperPublicationYear: this.props.publicationYear,
+            publishedIn: this.props.publishedIn,
             validation: this.validator.valid(),
             errors: null
         };
@@ -190,7 +191,8 @@ class GeneralData extends Component {
                         paperAuthors = [],
                         paperPublicationMonth = '',
                         paperPublicationYear = '',
-                        doi = '';
+                        doi = '',
+                        publishedIn = '';
                     try {
                         paperTitle = paper.data[0].title;
                         if (paper.data[0].subtitle && paper.data[0].subtitle.length > 0) {
@@ -218,6 +220,9 @@ class GeneralData extends Component {
                             paperPublicationYear = paper.data[0].issued['date-parts'][0][0];
                         }
                         doi = paper.data[0].DOI ? paper.data[0].DOI : '';
+                        if (paper.data[0]['container-title']) {
+                            publishedIn = paper.data[0]['container-title'];
+                        }
                     } catch (e) {
                         console.log('Error setting paper data: ', e);
                     }
@@ -231,6 +236,7 @@ class GeneralData extends Component {
                             paperPublicationMonth,
                             paperPublicationYear,
                             doi: doi,
+                            publishedIn,
                             errors: null
                         },
                         this.updateGlobalStateForVisualization
@@ -315,7 +321,7 @@ class GeneralData extends Component {
         // TODO do some sort of validation, before proceeding to the next step
         const errors = [];
 
-        const { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi, entry, showLookupTable } = this.state;
+        const { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi, entry, showLookupTable, publishedIn } = this.state;
 
         if (!paperTitle || paperTitle.trim().length < 1) {
             errors.push('Please enter the title of your paper or click on "Lookup" if you entered the doi.');
@@ -329,7 +335,8 @@ class GeneralData extends Component {
                 publicationYear: paperPublicationYear,
                 doi: doi,
                 entry: entry,
-                showLookupTable: showLookupTable
+                showLookupTable: showLookupTable,
+                publishedIn: publishedIn
             });
             this.props.nextStep();
         } else {
@@ -485,6 +492,11 @@ class GeneralData extends Component {
                                                                                 {this.state.paperPublicationYear}
                                                                             </td>
                                                                         </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <strong>Published in:</strong> {this.state.publishedIn}
+                                                                            </td>
+                                                                        </tr>
                                                                     </tbody>
                                                                 </Table>
                                                             </Card>
@@ -576,6 +588,19 @@ class GeneralData extends Component {
                                                     </FormGroup>
                                                 </Col>
                                             </Row>
+                                            <FormGroup>
+                                                <Label for="publishedIn">
+                                                    <Tooltip message="The paper venue ">Published in</Tooltip>
+                                                </Label>
+                                                <Input
+                                                    type="text"
+                                                    name="publishedIn"
+                                                    id="publishedIn"
+                                                    value={this.state.publishedIn}
+                                                    onChange={this.handleInputChange}
+                                                />
+                                                <FormFeedback />
+                                            </FormGroup>
                                         </Form>
                                     </Container>
                                 );
@@ -661,6 +686,7 @@ GeneralData.propTypes = {
     entry: PropTypes.string.isRequired,
     doi: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
+    publishedIn: PropTypes.string.isRequired,
     authors: PropTypes.array.isRequired,
     publicationMonth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     publicationYear: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -679,6 +705,7 @@ const mapStateToProps = state => ({
     entry: state.addPaper.entry,
     doi: state.addPaper.doi,
     title: state.addPaper.title,
+    publishedIn: state.addPaper.publishedIn,
     authors: state.addPaper.authors,
     showLookupTable: state.addPaper.showLookupTable,
     publicationMonth: state.addPaper.publicationMonth,

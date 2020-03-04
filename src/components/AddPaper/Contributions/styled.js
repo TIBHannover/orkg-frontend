@@ -238,8 +238,7 @@ export const StyledLevelBox = styled.div`
     margin-top: -2px;
     margin-right: -2px;
     margin-bottom: -2px;
-    display: flex;
-    flex: 1;
+    display: block;
 
     .listGroupEnlarge {
         margin-top: -2px;

@@ -3,7 +3,28 @@ import { StyledResearchFieldsInputFormControl, StyledResearchFieldBrowser } from
 import PropTypes from 'prop-types';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { components } from 'react-select';
-import { getResourcesByClass } from '../../../network';
+import { connect } from 'react-redux';
+import { guid } from 'utils';
+import { getResourcesByClass } from 'network';
+import styled from 'styled-components';
+
+const StyledSelectOption = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .badge {
+        background-color: #ebecf0;
+        border-radius: 2em;
+        color: #172b4d;
+        display: inline-block;
+        font-size: 12;
+        font-weight: normal;
+        line-height: '1';
+        min-width: 1;
+        padding: 0.16666666666667em 0.5em;
+        text-align: center;
+    }
+`;
 
 class ResearchProblemInput extends Component {
     constructor(props) {
@@ -26,11 +47,26 @@ class ResearchProblemInput extends Component {
                 desc: true,
                 q: value
             });
-            return responseJson.map(item => ({
-                label: item.label,
-                id: item.id,
-                _class: 'resource'
-            }));
+
+            const research_problems = [];
+            // Add newly added problem from other contributions
+            for (const contributionId of this.props.contributions.allIds) {
+                const contribution = this.props.contributions.byId[contributionId];
+                for (const rp of contribution.researchProblems) {
+                    if (!rp.existingResourceId) {
+                        research_problems.push({ ...rp, new: true });
+                    }
+                }
+            }
+            responseJson.map(item =>
+                research_problems.push({
+                    label: item.label,
+                    id: item.id,
+                    existingResourceId: item.id
+                })
+            );
+
+            return research_problems;
         } catch (err) {
             console.error(err);
             return [];
@@ -40,9 +76,9 @@ class ResearchProblemInput extends Component {
     handleCreate = (inputValue, val) => {
         const newOption = {
             label: inputValue,
-            id: inputValue
+            id: guid()
         };
-        this.props.handler([...this.props.value, newOption], val);
+        this.props.handler([...this.props.value, newOption], { ...val, createdOptionId: newOption.id });
     };
 
     closeProblemBrowser = () => {
@@ -132,6 +168,17 @@ class ResearchProblemInput extends Component {
             );
         };
 
+        const Option = ({ children, ...props }) => {
+            return (
+                <components.Option {...props}>
+                    <StyledSelectOption>
+                        <span>{children}</span>
+                        {props.data.new && <span className={'badge'}>New</span>}
+                    </StyledSelectOption>
+                </components.Option>
+            );
+        };
+
         return (
             <>
                 <StyledResearchFieldsInputFormControl id="researchProblemFormControl" className="form-control">
@@ -148,7 +195,7 @@ class ResearchProblemInput extends Component {
                         openMenuOnClick={false}
                         placeholder="Select or type something..."
                         styles={customStyles}
-                        components={{ Menu, MultiValueLabel }}
+                        components={{ Menu, MultiValueLabel, Option }}
                         onKeyDown={this.onKeyDown}
                         cacheOptions
                         loadOptions={this.loadOptions}
@@ -179,7 +226,19 @@ class ResearchProblemInput extends Component {
 
 ResearchProblemInput.propTypes = {
     handler: PropTypes.func.isRequired,
-    value: PropTypes.array.isRequired
+    value: PropTypes.array.isRequired,
+    contributions: PropTypes.object.isRequired
 };
 
-export default ResearchProblemInput;
+const mapStateToProps = state => {
+    return {
+        contributions: state.addPaper.contributions
+    };
+};
+
+const mapDispatchToProps = dispatch => ({});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ResearchProblemInput);

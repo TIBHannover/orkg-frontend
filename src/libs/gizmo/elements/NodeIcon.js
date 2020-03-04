@@ -48,10 +48,12 @@ export default class NodeIcon {
                 iconDef.primitiveData.forEach(prim => {
                     const subPrim = this.renderedIcon.append(prim.primitive);
                     for (const name in prim.attributes) {
-                        if (name === 'strokeWidth') {
-                            subPrim.attr('stroke-width', prim.attributes[name]);
-                        } else {
-                            subPrim.attr(name, prim.attributes[name]);
+                        if (prim.attributes.hasOwnProperty(name)) {
+                            if (name === 'strokeWidth') {
+                                subPrim.attr('stroke-width', prim.attributes[name]);
+                            } else {
+                                subPrim.attr(name, prim.attributes[name]);
+                            }
                         }
                     }
                 });

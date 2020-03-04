@@ -10,7 +10,8 @@ export default function DrawTools() {
     dt.angle2NormedVec = angle2NormedVec;
     dt.angleFromVector = angleFromVector;
     dt.cropTextIfNeeded = cropTextIfNeeded;
-
+    dt.renderHalo = renderHalo;
+    dt.setCircleAttribute = setCircleAttribute;
     dt.renderStackedItems = renderStackedItems;
     return dt;
 }
@@ -76,12 +77,11 @@ function angle2NormedVec(angle) {
 
 function drawArrowHead(parent, container, identifier, configObject) {
     if (configObject.link_arrowHead === 'true') {
-        let v1, v2, v3, v4;
         const scale = configObject.link_arrowHead_scaleFactor;
-        v1 = scale * -14;
-        v2 = scale * -10;
-        v3 = scale * 28;
-        v4 = scale * 20;
+        const v1 = scale * -14;
+        const v2 = scale * -10;
+        const v3 = scale * 28;
+        const v4 = scale * 20;
 
         const vB_String = v1 + ' ' + v2 + ' ' + v3 + ' ' + v4;
         const arrowHead = container
@@ -122,6 +122,15 @@ function addStrokeElements(element, cfg, selector) {
     }
 }
 
+function setCircleAttribute(container, radius) {
+    container.attr('x', -radius);
+    container.attr('y', -radius);
+    container.attr('width', 2 * radius);
+    container.attr('height', 2 * radius);
+    container.attr('rx', radius);
+    container.attr('ry', radius);
+}
+
 function renderBaseShape(cfg, pNode, renderingShape, radiusOffset) {
     let radius = parseInt(cfg.radius);
     let width = parseInt(cfg.width);
@@ -143,12 +152,7 @@ function renderBaseShape(cfg, pNode, renderingShape, radiusOffset) {
     // check if is uml style << TODO;
     /**  render a pure circle **/
     if (cfg.renderingType === 'circle') {
-        renderingShape.attr('x', -radius);
-        renderingShape.attr('y', -radius);
-        renderingShape.attr('width', 2 * radius);
-        renderingShape.attr('height', 2 * radius);
-        renderingShape.attr('rx', radius);
-        renderingShape.attr('ry', radius);
+        setCircleAttribute(renderingShape, radius);
     }
 
     /**  render a rectangle with possible rounded corners provided by config **/
@@ -196,13 +200,35 @@ function renderStackedItems(group, cfg, pNode) {
     renderingShapeA.attr('transform', 'translate(16,16)');
 }
 
+function renderHalo(group, cfg, pNode) {
+    const renderingShapeForHalo = group.append('rect');
+    renderingShapeForHalo.classed('haloRenderingShape', true); // aux class for selection later
+    renderBaseShape(cfg, pNode, renderingShapeForHalo, +5);
+    // overwrite some colors;
+    renderingShapeForHalo.style('fill', 'none');
+    renderingShapeForHalo.style('stroke', 'red');
+    renderingShapeForHalo.style('stroke-width', '2');
+
+    function animationEnd() {
+        group
+            .classed('searchResultA', false)
+            .classed('searchResultB', true)
+            .attr('animationRunning', false);
+
+        // remove eventListener to prevent memory leaks
+        group.node().removeEventListener('webkitAnimationEnd', animationEnd);
+        group.node().removeEventListener('animationend', animationEnd);
+    }
+
+    group.node().addEventListener('webkitAnimationEnd', animationEnd);
+    group.node().addEventListener('animationend', animationEnd);
+}
+
 function drawElement(pGroup, cfg, pNode) {
     if (cfg.renderingType === 'umlStyle') {
         // currently ignored for beta release
         const uml_renderingShape = pGroup.append('rect');
         renderBaseShape(cfg.renderingAttributes, pNode, uml_renderingShape);
-        const linksToDraw = pNode.filterCollapsedLinks();
-        console.log(linksToDraw);
         return uml_renderingShape;
     } else {
         // currently always native node-link visualization
@@ -312,7 +338,7 @@ function shapeBasedIntersectionPoint(config, element, offsetDirection, distOffse
         distanceToBorderY = 0.5 * parseFloat(height);
 
         if (!origin) {
-            let scale = 1.0;
+            let scale;
             if (Math.abs(offsetDirection.x) >= Math.abs(offsetDirection.y)) {
                 scale = 1.0 / Math.abs(offsetDirection.x);
             } else {
@@ -329,8 +355,7 @@ function shapeBasedIntersectionPoint(config, element, offsetDirection, distOffse
             const c2_x = distanceToBorderY / Math.tan(rad_angle);
             const c2_y = distanceToBorderY;
 
-            let ipX = 0;
-            let ipY = 0;
+            let ipX, ipY;
 
             if (Math.abs(c1_y) < distanceToBorderY) {
                 // use this point;
