@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { submitGetRequest } from '../../network';
+import { submitGetRequest, getResourcesByClass } from '../../network';
 import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';
@@ -73,14 +73,19 @@ class AutoComplete extends Component {
                 value = value.substring(1, value.length - 1);
                 queryParams = '&exact=true';
             }
+            let responseJson;
+            if (this.props.optionsClass) {
+                responseJson = await getResourcesByClass({ id: this.props.optionsClass, q: value });
+            } else {
+                responseJson = await submitGetRequest(
+                    this.props.requestUrl +
+                        '?q=' +
+                        encodeURIComponent(value) +
+                        queryParams +
+                        (this.props.excludeClasses ? '&exclude=' + encodeURIComponent(this.props.excludeClasses) : '')
+                );
+            }
 
-            let responseJson = await submitGetRequest(
-                this.props.requestUrl +
-                    '?q=' +
-                    encodeURIComponent(value) +
-                    queryParams +
-                    (this.props.excludeClasses ? '&exclude=' + encodeURIComponent(this.props.excludeClasses) : '')
-            );
             responseJson = await this.IdMatch(value, responseJson);
 
             if (this.props.additionalData && this.props.additionalData.length > 0) {
@@ -227,6 +232,7 @@ class AutoComplete extends Component {
 AutoComplete.propTypes = {
     requestUrl: PropTypes.string.isRequired,
     excludeClasses: PropTypes.string,
+    optionsClass: PropTypes.string,
     placeholder: PropTypes.string.isRequired,
     onItemSelected: PropTypes.func.isRequired,
     allowCreate: PropTypes.bool,
