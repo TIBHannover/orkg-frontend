@@ -60,7 +60,7 @@ const EditItem = props => {
                 placeholder={'Select or type to enter a venue'}
                 autoFocus
                 cacheOptions
-                value={props.value}
+                value={props.value ? props.value : null}
                 isClearable={true}
             />
         );
