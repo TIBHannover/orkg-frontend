@@ -345,8 +345,8 @@ export const getLongLink = shortCode => {
     return submitGetRequest(`${similaireServiceUrl}shortener/${encodeURIComponent(shortCode)}/`);
 };
 
-export const getAllClasses = () => {
-    return submitGetRequest(classesUrl);
+export const getRDFDataCubeVocabularyClasses = () => {
+    return submitGetRequest(`${classesUrl}?q=qb:`);
 };
 
 export const saveFullPaper = data => {
