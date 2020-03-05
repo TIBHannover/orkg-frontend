@@ -55,17 +55,17 @@ The orkg widget uses this following html template to render the widget:
 ### Building
 
 ```
-./node_modules/.bin/webpack --config webpack.config.js
+npm run build
 ```
 
 ### Serve
 
 ```
-./node_modules/.bin/webpack-dev-server --open
+npm run start
 ```
 
 ### Building release
 
 ```
-./node_modules/.bin/webpack --config webpack.config.js --env.prod
+npm run build-release
 ```

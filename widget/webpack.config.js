@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const copyWebpackPlugin = require('copy-webpack-plugin');
 const bundleOutputDir = './dist';
+const bundleReleaseOutputDir = './../public';
 
 module.exports = env => {
     const isDevBuild = !(env && env.prod);
@@ -11,15 +12,19 @@ module.exports = env => {
             entry: './src/main.js',
             output: {
                 filename: 'widget.js',
-                path: path.resolve(bundleOutputDir)
+                path: isDevBuild ? path.resolve(bundleOutputDir) : path.resolve(bundleReleaseOutputDir)
             },
             devServer: {
                 contentBase: bundleOutputDir
             },
             plugins: [
                 new webpack.DefinePlugin({
-                    'process.env.SERVER_URL': JSON.stringify('http://localhost:8000/'),
-                    'process.env.FRONTEND_SERVER_URL': JSON.stringify('http://localhost:3000/')
+                    'process.env.SERVER_URL': isDevBuild
+                        ? JSON.stringify('http://localhost:8000/api/')
+                        : JSON.stringify('https://www.orkg.org/orkg/api/'),
+                    'process.env.FRONTEND_SERVER_URL': isDevBuild
+                        ? JSON.stringify('http://localhost:3000/')
+                        : JSON.stringify('https://www.orkg.org/orkg/')
                 }),
                 ...(isDevBuild
                     ? [new webpack.SourceMapDevToolPlugin(), new copyWebpackPlugin([{ from: 'demo/' }])]
