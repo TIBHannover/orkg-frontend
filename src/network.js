@@ -174,6 +174,10 @@ export const createLiteral = label => {
     return submitPostRequest(literalsUrl, { 'Content-Type': 'application/json' }, { label: label });
 };
 
+export const createClass = label => {
+    return submitPostRequest(classesUrl, { 'Content-Type': 'application/json' }, { label: label });
+};
+
 export const createResourceStatement = (subjectId, predicateId, objectId) => {
     return submitPostRequest(
         `${statementsUrl}`,
@@ -462,6 +466,13 @@ export const getTemplateById = templateId => {
                 label: statement.object.label
             }));
 
+        const templateClass = templateStatements
+            .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS)
+            .map(statement => ({
+                id: statement.object.id,
+                label: statement.object.label
+            }));
+
         const subTemplates = templateStatements
             .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_SUB_TEMPLATE)
             .map(statement => ({
@@ -470,14 +481,31 @@ export const getTemplateById = templateId => {
             }));
         return Promise.all(
             subTemplates.map(template =>
-                getStatementsBySubjectAndPredicate({ subjectId: template.id, predicateId: process.env.REACT_APP_TEMPLATE_OF_PREDICATE }).then(
-                    prediateStatements => ({ ...template, predicate: prediateStatements[0].object })
-                )
+                getStatementsBySubject({ id: template.id }).then(subTemplateStatements => {
+                    const subTemplatePredicate = subTemplateStatements
+                        .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE)
+                        .map(statement => ({
+                            id: statement.object.id,
+                            label: statement.object.label
+                        }));
+                    const subTemplateClass = subTemplateStatements
+                        .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS)
+                        .map(statement => ({
+                            id: statement.object.id,
+                            label: statement.object.label
+                        }));
+                    return {
+                        ...template,
+                        predicate: subTemplatePredicate[0],
+                        class: subTemplateClass && subTemplateClass.length > 0 ? subTemplateClass[0] : null
+                    };
+                })
             )
         ).then(subs => ({
             id: templateId,
             label: templateStatements.length > 0 ? templateStatements[0].subject.label : '',
             predicate: templatePredicate[0],
+            class: templateClass && templateClass.length > 0 ? templateClass[0] : null,
             properties: templateStatements
                 .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_PROPERTY)
                 .map(statement => ({

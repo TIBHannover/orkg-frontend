@@ -141,6 +141,7 @@ class AddValue extends Component {
                 type: this.state.valueType,
                 propertyId: this.props.propertyId,
                 templateId: predicate.templateId ? predicate.templateId : null,
+                classes: predicate.templateClass ? [predicate.templateClass] : [],
                 shared: 1
             });
         }
@@ -314,6 +315,8 @@ class AddValue extends Component {
                                             optionsClass={
                                                 predicate.existingPredicateId === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM
                                                     ? process.env.REACT_APP_CLASSES_PROBLEM
+                                                    : predicate.templateClass
+                                                    ? predicate.templateClass.id
                                                     : undefined
                                             }
                                             placeholder="Enter a resource"

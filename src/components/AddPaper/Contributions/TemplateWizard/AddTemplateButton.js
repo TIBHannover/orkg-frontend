@@ -151,7 +151,8 @@ class AddTemplateButton extends Component {
                     label: template.label,
                     existingResourceId: rID,
                     type: 'object',
-                    propertyId: pID
+                    propertyId: pID,
+                    classes: template.class ? [template.class] : []
                 });
                 this.props.prefillStatements({ statements, resourceId: this.props.selectedResource });
                 // Add properties
@@ -175,7 +176,8 @@ class AddTemplateButton extends Component {
                             propertyId: tpID,
                             existingPredicateId: subTemplate.predicate.id,
                             label: subTemplate.predicate.label,
-                            templateId: subTemplate.id
+                            templateId: subTemplate.id,
+                            templateClass: subTemplate.class
                         });
                     }
                     this.props.prefillStatements({ statements: statementsSubTemplates, resourceId: rID });

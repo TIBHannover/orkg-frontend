@@ -252,7 +252,8 @@ export const fetchStructureForTemplate = data => {
                                 propertyId: tpID,
                                 label: subTemplate.predicate.label,
                                 isExistingProperty: true,
-                                templateId: subTemplate.id
+                                templateId: subTemplate.id,
+                                templateClass: subTemplate.class
                             })
                         );
                         /*

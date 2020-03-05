@@ -62,6 +62,7 @@ export default (state = initialState, action) => {
                         isSaving: false,
                         isTemplate: payload.isTemplate,
                         templateId: payload.templateId ? payload.templateId : null,
+                        templateClass: payload.templateClass ? payload.templateClass : null,
                         isAnimated: payload.isAnimated !== undefined ? payload.isAnimated : false
                     }
                 }));

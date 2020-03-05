@@ -5,8 +5,10 @@ import {
     predicatesUrl,
     getStatementsBySubject,
     resourcesUrl,
+    classesUrl,
     createResource,
     createPredicate,
+    createClass,
     updateResource,
     deleteStatementsByIds,
     createResourceStatement
@@ -66,6 +68,7 @@ class ContributionTemplate extends Component {
             isSaving: false,
             editMode: this.props.match.params.id ? false : true,
             templatePredicate: null,
+            templateClass: null,
             templateResearchFields: [],
             templateResearchProblems: [],
             templateProperties: [],
@@ -114,12 +117,19 @@ class ContributionTemplate extends Component {
     getTemplateDetails = () => {
         return getStatementsBySubject({ id: this.props.match.params.id }).then(templateStaments => {
             const templatePredicate = templateStaments.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE);
+            const templateClass = templateStaments.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS);
             return {
                 statements: templateStaments.map(s => s.id),
                 templatePredicate: templatePredicate
                     ? {
                           id: templatePredicate.object.id,
                           label: templatePredicate.object.label
+                      }
+                    : {},
+                templateClass: templateClass
+                    ? {
+                          id: templateClass.object.id,
+                          label: templateClass.object.label
                       }
                     : {},
                 templateProperties: templateStaments
@@ -172,6 +182,31 @@ class ContributionTemplate extends Component {
                     templatePredicate: selected
                 });
             }
+        }
+    };
+
+    handleClassSelect = async (selected, action) => {
+        if (action.action === 'select-option') {
+            this.setState({
+                templateClass: selected
+            });
+        } else if (action.action === 'create-option') {
+            const result = await Confirm({
+                title: 'Are you sure you need a new class?',
+                message: 'Often there are existing classes that you can use as well. It is better to use existing classes than new ones.',
+                cancelColor: 'light'
+            });
+            if (result) {
+                const newClass = await createClass(selected.label);
+                selected.id = newClass.id;
+                this.setState({
+                    templateClass: selected
+                });
+            }
+        } else if (action.action === 'clear') {
+            this.setState({
+                templateClass: null
+            });
         }
     };
 
@@ -258,6 +293,10 @@ class ContributionTemplate extends Component {
         // save template predicate
         if (this.state.templatePredicate) {
             promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_PREDICATE, this.state.templatePredicate.id));
+        }
+        // save template class
+        if (this.state.templateClass) {
+            promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_CLASS, this.state.templateClass.id));
         }
         // save template research fields
         if (this.state.templateResearchFields && this.state.templateResearchFields.length > 0) {
@@ -383,6 +422,21 @@ class ContributionTemplate extends Component {
                                 isDisabled={!this.state.editMode}
                             />
                             {this.state.editMode && <FormText>Specify the property of this template.</FormText>}
+                        </FormGroup>
+                        <FormGroup className="mb-4">
+                            <Label>Class</Label>
+                            <AutoComplete
+                                allowCreate
+                                requestUrl={classesUrl}
+                                onItemSelected={this.handleClassSelect}
+                                placeholder={this.state.editMode ? 'Select or type to enter a class' : 'No Classes'}
+                                autoFocus
+                                isClearable
+                                cacheOptions
+                                value={this.state.templateClass}
+                                isDisabled={!this.state.editMode}
+                            />
+                            {this.state.editMode && <FormText>Specify the class of this template.</FormText>}
                         </FormGroup>
                         <fieldset className="scheduler-border">
                             <legend className="scheduler-border">Template use cases</legend>
