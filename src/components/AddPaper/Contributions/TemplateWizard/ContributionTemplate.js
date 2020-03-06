@@ -6,6 +6,8 @@ import StatementItem from 'components/StatementBrowser/StatementItem';
 import { doneAnimation } from 'actions/statementBrowser';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { compose } from 'redux';
+import { withCookies, Cookies } from 'react-cookie';
 import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 
@@ -86,6 +88,7 @@ class ContributionTemplate extends Component {
                                 resourceId={this.props.resourceId}
                                 contextStyle={'Template'}
                                 templateId={property.templateId}
+                                showValueHelp={this.props.cookies && !this.props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                             />
                         );
                     })}
@@ -120,7 +123,8 @@ ContributionTemplate.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
     isAnimated: PropTypes.bool,
-    doneAnimation: PropTypes.func.isRequired
+    doneAnimation: PropTypes.func.isRequired,
+    cookies: PropTypes.instanceOf(Cookies).isRequired
 };
 
 ContributionTemplate.defaultProps = {
@@ -141,7 +145,10 @@ const mapDispatchToProps = dispatch => ({
     doneAnimation: data => dispatch(doneAnimation(data))
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    ),
+    withCookies
 )(ContributionTemplate);

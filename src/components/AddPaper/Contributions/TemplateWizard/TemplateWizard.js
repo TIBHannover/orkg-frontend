@@ -3,6 +3,8 @@ import { StyledEmptyData } from 'components/AddPaper/Contributions/styled';
 import AddProperty from 'components/StatementBrowser/AddProperty';
 import StatementItem from 'components/StatementBrowser/StatementItem';
 import ContributionTemplate from './ContributionTemplate';
+import { compose } from 'redux';
+import { withCookies, Cookies } from 'react-cookie';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -39,6 +41,7 @@ class TemplateWizard extends Component {
                                     resourceId={this.props.initialResourceId}
                                     contextStyle={'Template'}
                                     templateId={property.templateId}
+                                    showValueHelp={this.props.cookies && !this.props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                                 />
                             );
                         } else {
@@ -92,7 +95,8 @@ TemplateWizard.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
-    templatesFound: PropTypes.bool
+    templatesFound: PropTypes.bool,
+    cookies: PropTypes.instanceOf(Cookies).isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -103,4 +107,7 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-export default connect(mapStateToProps)(TemplateWizard);
+export default compose(
+    connect(mapStateToProps),
+    withCookies
+)(TemplateWizard);

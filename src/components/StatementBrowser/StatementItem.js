@@ -417,6 +417,7 @@ class StatementItem extends Component {
                                             isSaving={value.isSaving}
                                             statementId={value.statementId}
                                             shared={value.shared}
+                                            showHelp={this.props.showValueHelp && index === 0 ? true : false}
                                         />
                                     );
                                 })}
@@ -510,6 +511,7 @@ class StatementItem extends Component {
                                             statementId={value.statementId}
                                             shared={value.shared}
                                             contextStyle="Template"
+                                            showHelp={this.props.showValueHelp && index === 0 ? true : false}
                                         />
                                     );
                                 })}
@@ -547,12 +549,14 @@ StatementItem.propTypes = {
     contextStyle: PropTypes.string.isRequired,
     resourceId: PropTypes.string,
     inTemplate: PropTypes.bool,
-    templateId: PropTypes.string
+    templateId: PropTypes.string,
+    showValueHelp: PropTypes.bool
 };
 
 StatementItem.defaultProps = {
     resourceId: null,
-    contextStyle: 'StatementBrowser'
+    contextStyle: 'StatementBrowser',
+    showValueHelp: false
 };
 
 const mapStateToProps = state => {

@@ -5,6 +5,7 @@ import { faTrash, faPen, faExternalLinkAlt, faTable } from '@fortawesome/free-so
 import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizard/TemplateOptionButton';
 import { StyledValueItem, StyledButton, ValueItemStyle } from '../../AddPaper/Contributions/styled';
 import classNames from 'classnames';
+import Pulse from 'components/Utils/Pulse';
 import StatementOptionButton from '../StatementOptionButton';
 import { connect } from 'react-redux';
 import {
@@ -402,9 +403,17 @@ class ValueItem extends Component {
                                 <span className={labelClass} onClick={!this.props.isEditing && !isProperty ? onClick : undefined}>
                                     {!this.props.isSaving ? (
                                         !this.props.isEditing ? (
-                                            <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>
-                                                {this.props.label}
-                                            </ValuePlugins>
+                                            this.props.showHelp && this.props.type === 'object' ? (
+                                                <Pulse content={'Click on the resource to browse it'}>
+                                                    <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>
+                                                        {this.props.label}
+                                                    </ValuePlugins>
+                                                </Pulse>
+                                            ) : (
+                                                <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>
+                                                    {this.props.label}
+                                                </ValuePlugins>
+                                            )
                                         ) : this.props.type === 'object' ? (
                                             existingResourceId && this.props.shared > 1 ? (
                                                 <StyledAutoCompleteInputFormControl className="form-control" style={{ borderRadius: 0 }}>
@@ -562,7 +571,16 @@ class ValueItem extends Component {
                         {!this.props.isEditing ? (
                             <div>
                                 <div className={`${this.props.type === 'literal' ? 'literalLabel' : 'objectLabel'}`} onClick={onClick}>
-                                    <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>{this.props.label}</ValuePlugins>
+                                    {this.props.showHelp && this.props.type === 'object' ? (
+                                        <Pulse content={'Click on the resource to browse it'}>
+                                            <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>
+                                                {this.props.label}
+                                            </ValuePlugins>
+                                        </Pulse>
+                                    ) : (
+                                        <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>{this.props.label}</ValuePlugins>
+                                    )}
+
                                     {existingResourceId && this.props.openExistingResourcesInDialog ? (
                                         <span>
                                             {' '}
@@ -695,13 +713,15 @@ ValueItem.propTypes = {
     statementId: PropTypes.string,
     inline: PropTypes.bool,
     openExistingResourcesInDialog: PropTypes.bool,
-    contextStyle: PropTypes.string.isRequired
+    contextStyle: PropTypes.string.isRequired,
+    showHelp: PropTypes.bool
 };
 
 ValueItem.defaultProps = {
     inline: false,
     resourceId: null,
-    contextStyle: 'StatementBrowser'
+    contextStyle: 'StatementBrowser',
+    showHelp: false
 };
 
 const mapStateToProps = state => {

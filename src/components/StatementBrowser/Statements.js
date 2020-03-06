@@ -5,6 +5,8 @@ import StatementItem from './StatementItem';
 import AddProperty from './AddProperty';
 import { connect } from 'react-redux';
 import Breadcrumbs from './Breadcrumbs';
+import { compose } from 'redux';
+import { withCookies, Cookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
@@ -60,6 +62,7 @@ class Statements extends Component {
                                     isEditing={property.isEditing}
                                     isSaving={property.isSaving}
                                     templateId={property.templateId}
+                                    showValueHelp={this.props.cookies && !this.props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                                 />
                             );
                         })
@@ -129,6 +132,7 @@ Statements.propTypes = {
     initialResourceId: PropTypes.string,
     initialResourceLabel: PropTypes.string,
     openExistingResourcesInDialog: PropTypes.bool,
+    cookies: PropTypes.instanceOf(Cookies).isRequired,
     newStore: PropTypes.bool
 };
 
@@ -155,7 +159,10 @@ const mapDispatchToProps = dispatch => ({
     initializeWithResource: data => dispatch(initializeWithResource(data))
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    ),
+    withCookies
 )(Statements);
