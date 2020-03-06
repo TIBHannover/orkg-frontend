@@ -295,7 +295,7 @@ class ContributionTemplate extends Component {
             promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_PREDICATE, this.state.templatePredicate.id));
         }
         // save template class
-        if (this.state.templateClass) {
+        if (this.state.templateClass && this.state.templateClass.id) {
             promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_CLASS, this.state.templateClass.id));
         }
         // save template research fields
