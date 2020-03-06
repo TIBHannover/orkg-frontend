@@ -8,7 +8,7 @@ import {
     predicatesUrl,
     createPredicate
 } from '../../../network';
-import { Input, InputGroup, InputGroupAddon, Button, DropdownToggle, DropdownMenu, InputGroupButtonDropdown, DropdownItem } from 'reactstrap';
+import { Input, InputGroup, InputGroupAddon, Button, DropdownToggle, DropdownMenu, InputGroupButtonDropdown } from 'reactstrap';
 import Tooltip from '../../Utils/Tooltip';
 import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
