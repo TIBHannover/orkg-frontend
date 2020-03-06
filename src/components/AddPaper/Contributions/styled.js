@@ -337,6 +337,7 @@ export const StyledDropdownToggle = styled(DropdownToggle)`
 export const ValueItemStyle = styled.div`
     background-color: #fff;
     margin-bottom: 10px;
+    overflow-wrap: break-word;
 
     .valueOptions {
         visibility: hidden;
@@ -466,6 +467,8 @@ export const StatementsGroupStyle = styled(ListGroupItem)`
 
 export const PropertyStyle = styled.div`
     background-color: ${props => props.theme.ultraLightBlue};
+    overflow-wrap: break-word;
+
     & > div {
         padding: 8px;
     }
@@ -516,6 +519,8 @@ export const TemplateHeaderStyle = styled.div`
     position: relative;
     display: block;
     padding: 0.55rem 1.25rem;
+    overflow-wrap: break-word;
+    word-break: break-all;
 
     .headerOptions {
         visibility: none;
