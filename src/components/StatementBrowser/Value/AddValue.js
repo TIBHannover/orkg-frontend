@@ -10,6 +10,7 @@ import {
 } from '../../../network';
 import { Input, InputGroup, InputGroupAddon, Button, DropdownToggle, DropdownMenu, InputGroupButtonDropdown, DropdownItem } from 'reactstrap';
 import Tooltip from '../../Utils/Tooltip';
+import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars } from '@fortawesome/free-solid-svg-icons';
 import { StyledValueItem, StyledDropdownItem, StyledButton, StyledDropdownToggle, ValueItemStyle } from '../../AddPaper/Contributions/styled';
@@ -301,11 +302,20 @@ class AddValue extends Component {
                                         toggle={this.toggleDropDownValueType}
                                     >
                                         <StyledDropdownToggle>
+                                            <small>{this.state.valueType.charAt(0).toUpperCase() + this.state.valueType.slice(1) + ' '}</small>
                                             <Icon size="xs" icon={faBars} />
                                         </StyledDropdownToggle>
                                         <DropdownMenu>
-                                            <DropdownItem onClick={() => this.handleDropdownSelect('object')}>Object</DropdownItem>
-                                            <DropdownItem onClick={() => this.handleDropdownSelect('literal')}>Literal</DropdownItem>
+                                            <StyledDropdownItem onClick={() => this.handleDropdownSelect('object')}>
+                                                <Tippy content="Choose object to link this to an object, which can contain values on its own">
+                                                    <span>Object</span>
+                                                </Tippy>
+                                            </StyledDropdownItem>
+                                            <StyledDropdownItem onClick={() => this.handleDropdownSelect('literal')}>
+                                                <Tippy content="Choose literal for values like numbers or plain text">
+                                                    <span>Literal</span>
+                                                </Tippy>
+                                            </StyledDropdownItem>
                                         </DropdownMenu>
                                     </InputGroupButtonDropdown>
                                     {this.state.valueType === 'object' ? (
