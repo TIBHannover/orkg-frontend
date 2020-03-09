@@ -228,13 +228,13 @@ export const fetchStructureForTemplate = data => {
                     type: type.DONE_FETCHING_STATEMENTS
                 });
                 // Add properties
-                if (template.properties && template.properties.length > 0) {
-                    for (const property of template.properties) {
+                if (template.components && template.components.length > 0) {
+                    for (const component of template.components) {
                         dispatch(
                             createProperty({
                                 resourceId: resourceId,
-                                existingPredicateId: property.id,
-                                label: property.label,
+                                existingPredicateId: component.property.id,
+                                label: component.property.label,
                                 isExistingProperty: true
                             })
                         );

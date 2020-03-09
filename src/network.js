@@ -473,47 +473,73 @@ export const getTemplateById = templateId => {
                 label: statement.object.label
             }));
 
-        const subTemplates = templateStatements
-            .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_SUB_TEMPLATE)
-            .map(statement => ({
-                id: statement.object.id,
-                label: statement.object.label
-            }));
-        return Promise.all(
-            subTemplates.map(template =>
-                getStatementsBySubject({ id: template.id }).then(subTemplateStatements => {
-                    const subTemplatePredicate = subTemplateStatements
-                        .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE)
-                        .map(statement => ({
-                            id: statement.object.id,
-                            label: statement.object.label
-                        }));
-                    const subTemplateClass = subTemplateStatements
-                        .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS)
-                        .map(statement => ({
-                            id: statement.object.id,
-                            label: statement.object.label
-                        }));
-                    return {
-                        ...template,
-                        predicate: subTemplatePredicate[0],
-                        class: subTemplateClass && subTemplateClass.length > 0 ? subTemplateClass[0] : null
-                    };
-                })
-            )
-        ).then(subs => ({
-            id: templateId,
-            label: templateStatements.length > 0 ? templateStatements[0].subject.label : '',
-            predicate: templatePredicate[0],
-            class: templateClass && templateClass.length > 0 ? templateClass[0] : null,
-            properties: templateStatements
-                .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_PROPERTY)
+        const templateComponents = templateStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT);
+
+        const components = getStatementsBySubjects({ ids: templateComponents.map(property => property.object.id) }).then(componentsStatements => {
+            return componentsStatements.map(componentStatements => {
+                const property = componentStatements.statements.find(
+                    statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY
+                );
+                const value = componentStatements.statements.find(
+                    statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALUE
+                );
+
+                return {
+                    id: componentStatements.id,
+                    property: property
+                        ? {
+                              id: property.object.id,
+                              label: property.object.label
+                          }
+                        : {},
+                    value: value
+                        ? {
+                              id: value.object.id,
+                              label: value.object.label
+                          }
+                        : {}
+                };
+            });
+        });
+
+        return Promise.all([components]).then(templateComponents => {
+            const subTemplates = templateStatements
+                .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_SUB_TEMPLATE)
                 .map(statement => ({
                     id: statement.object.id,
                     label: statement.object.label
-                })),
-            subTemplates: subs
-        }));
+                }));
+            return Promise.all(
+                subTemplates.map(template =>
+                    getStatementsBySubject({ id: template.id }).then(subTemplateStatements => {
+                        const subTemplatePredicate = subTemplateStatements
+                            .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE)
+                            .map(statement => ({
+                                id: statement.object.id,
+                                label: statement.object.label
+                            }));
+                        const subTemplateClass = subTemplateStatements
+                            .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS)
+                            .map(statement => ({
+                                id: statement.object.id,
+                                label: statement.object.label
+                            }));
+                        return {
+                            ...template,
+                            predicate: subTemplatePredicate[0],
+                            class: subTemplateClass && subTemplateClass.length > 0 ? subTemplateClass[0] : null
+                        };
+                    })
+                )
+            ).then(subs => ({
+                id: templateId,
+                label: templateStatements.length > 0 ? templateStatements[0].subject.label : '',
+                predicate: templatePredicate[0],
+                class: templateClass && templateClass.length > 0 ? templateClass[0] : null,
+                components: templateComponents[0],
+                subTemplates: subs
+            }));
+        });
     });
 };
 
@@ -535,4 +561,16 @@ export const getParentResearchFields = (researchFieldId, parents = []) => {
             return getParentResearchFields(parentResearchField[0].subject.id, parents);
         });
     }
+};
+
+/**
+ * Get Template by Class
+ *
+ * @param {String} researchFieldId research field Id
+ */
+export const getTemplatesByClass = classID => {
+    return getStatementsByObjectAndPredicate({
+        objectId: classID,
+        predicateId: process.env.REACT_APP_TEMPLATE_OF_CLASS
+    }).then(statements => Promise.all(statements.map(st => getTemplateById(st.subject.id))));
 };

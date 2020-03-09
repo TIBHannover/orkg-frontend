@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Form, FormGroup, Label, FormText, Input, InputGroup, InputGroupAddon } from 'reactstrap';
+import { Container, Button, Form, FormGroup, Label, FormText, Input, InputGroup, InputGroupAddon, Row, Col } from 'reactstrap';
 import {
     getResource,
     predicatesUrl,
@@ -11,11 +11,12 @@ import {
     createClass,
     updateResource,
     deleteStatementsByIds,
-    createResourceStatement
+    createResourceStatement,
+    getStatementsBySubjects
 } from 'network';
 import { EditModeHeader, Title } from 'components/ViewPaper/ViewPaper';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faSpinner, faTrash, faInfo } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faSpinner, faTrash, faInfo, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
 import styled, { withTheme } from 'styled-components';
 import ROUTES from 'constants/routes.js';
 import Confirm from 'reactstrap-confirm';
@@ -71,7 +72,7 @@ class ContributionTemplate extends Component {
             templateClass: null,
             templateResearchFields: [],
             templateResearchProblems: [],
-            templateProperties: [],
+            templateComponents: [],
             templateSubTemplates: [],
             statements: [],
             modal: false,
@@ -115,48 +116,75 @@ class ContributionTemplate extends Component {
     };
 
     getTemplateDetails = () => {
-        return getStatementsBySubject({ id: this.props.match.params.id }).then(templateStaments => {
-            const templatePredicate = templateStaments.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE);
-            const templateClass = templateStaments.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS);
-            return {
-                statements: templateStaments.map(s => s.id),
-                templatePredicate: templatePredicate
-                    ? {
-                          id: templatePredicate.object.id,
-                          label: templatePredicate.object.label
-                      }
-                    : {},
-                templateClass: templateClass
-                    ? {
-                          id: templateClass.object.id,
-                          label: templateClass.object.label
-                      }
-                    : {},
-                templateProperties: templateStaments
-                    .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_PROPERTY)
-                    .map(statement => ({
-                        id: statement.object.id,
-                        label: statement.object.label
-                    })),
-                templateResearchFields: templateStaments
-                    .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD)
-                    .map(statement => ({
-                        id: statement.object.id,
-                        label: statement.object.label
-                    })),
-                templateResearchProblems: templateStaments
-                    .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM)
-                    .map(statement => ({
-                        id: statement.object.id,
-                        label: statement.object.label
-                    })),
-                templateSubTemplates: templateStaments
-                    .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_SUB_TEMPLATE)
-                    .map(statement => ({
-                        id: statement.object.id,
-                        label: statement.object.label
-                    }))
-            };
+        return getStatementsBySubject({ id: this.props.match.params.id }).then(templateStatements => {
+            const templatePredicate = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE);
+            const templateClass = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS);
+
+            const templateComponents = templateStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT);
+
+            const components = getStatementsBySubjects({ ids: templateComponents.map(property => property.object.id) }).then(componentsStatements => {
+                return componentsStatements.map(componentStatements => {
+                    const property = componentStatements.statements.find(
+                        statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY
+                    );
+                    const value = componentStatements.statements.find(
+                        statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALUE
+                    );
+
+                    return {
+                        id: componentStatements.id,
+                        property: property
+                            ? {
+                                  id: property.object.id,
+                                  label: property.object.label
+                              }
+                            : {},
+                        value: value
+                            ? {
+                                  id: value.object.id,
+                                  label: value.object.label
+                              }
+                            : {}
+                    };
+                });
+            });
+
+            return Promise.all([components]).then(templateComponents => {
+                return {
+                    statements: templateStatements.map(s => s.id),
+                    templatePredicate: templatePredicate
+                        ? {
+                              id: templatePredicate.object.id,
+                              label: templatePredicate.object.label
+                          }
+                        : {},
+                    templateClass: templateClass
+                        ? {
+                              id: templateClass.object.id,
+                              label: templateClass.object.label
+                          }
+                        : {},
+                    templateComponents: templateComponents[0],
+                    templateResearchFields: templateStatements
+                        .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD)
+                        .map(statement => ({
+                            id: statement.object.id,
+                            label: statement.object.label
+                        })),
+                    templateResearchProblems: templateStatements
+                        .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM)
+                        .map(statement => ({
+                            id: statement.object.id,
+                            label: statement.object.label
+                        })),
+                    templateSubTemplates: templateStatements
+                        .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_SUB_TEMPLATE)
+                        .map(statement => ({
+                            id: statement.object.id,
+                            label: statement.object.label
+                        }))
+                };
+            });
         });
     };
 
@@ -232,27 +260,64 @@ class ContributionTemplate extends Component {
                 const newPredicate = await createPredicate(selected.label);
                 selected = { id: newPredicate.id, label: selected.label };
                 this.setState(state => {
-                    const templateProperties = state.templateProperties.map((item, j) => {
+                    const templateComponents = state.templateComponents.map((item, j) => {
                         if (j === index) {
-                            item = !selected ? null : selected;
+                            item.property = !selected ? null : selected;
                         }
                         return item;
                     });
                     return {
-                        templateProperties
+                        templateComponents
                     };
                 });
             }
         } else {
             this.setState(state => {
-                const templateProperties = state.templateProperties.map((item, j) => {
+                const templateComponents = state.templateComponents.map((item, j) => {
                     if (j === index) {
-                        item = !selected ? null : selected;
+                        item.property = !selected ? null : selected;
                     }
                     return item;
                 });
                 return {
-                    templateProperties
+                    templateComponents
+                };
+            });
+        }
+    };
+
+    handleClassOfPropertySelect = async (selected, action, index) => {
+        if (action.action === 'create-option') {
+            const result = await Confirm({
+                title: 'Are you sure you need a new class?',
+                message: 'Often there are existing classes that you can use as well. It is better to use existing classes than new ones.',
+                cancelColor: 'light'
+            });
+            if (result) {
+                const newPredicate = await createClass(selected.label);
+                selected = { id: newPredicate.id, label: selected.label };
+                this.setState(state => {
+                    const templateComponents = state.templateComponents.map((item, j) => {
+                        if (j === index) {
+                            item.value = !selected ? null : selected;
+                        }
+                        return item;
+                    });
+                    return {
+                        templateComponents
+                    };
+                });
+            }
+        } else {
+            this.setState(state => {
+                const templateComponents = state.templateComponents.map((item, j) => {
+                    if (j === index) {
+                        item.value = !selected ? null : selected;
+                    }
+                    return item;
+                });
+                return {
+                    templateComponents
                 };
             });
         }
@@ -311,9 +376,14 @@ class ContributionTemplate extends Component {
             }
         }
         // save template properties
-        if (this.state.templateProperties && this.state.templateProperties.length > 0) {
-            for (const property of this.state.templateProperties.filter(tp => tp.id).reverse()) {
-                promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_PROPERTY, property.id));
+        if (this.state.templateComponents && this.state.templateComponents.length > 0) {
+            for (const property of this.state.templateComponents.filter(tp => tp.property.id).reverse()) {
+                const component = await createResource(`Component for template ${templateResource}`);
+                promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_COMPONENT, component.id));
+                promises.push(createResourceStatement(component.id, process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY, property.property.id));
+                if (property.value && property.value.id) {
+                    promises.push(createResourceStatement(component.id, process.env.REACT_APP_TEMPLATE_COMPONENT_VALUE, property.value.id));
+                }
             }
         }
         // save template sub templates
@@ -343,18 +413,18 @@ class ContributionTemplate extends Component {
 
     addTemplateProperty = () => {
         this.setState(state => {
-            const templateProperties = [...state.templateProperties, {}];
+            const templateComponents = [...state.templateComponents, {}];
             return {
-                templateProperties
+                templateComponents
             };
         });
     };
 
     deleteTemplateProperty = index => {
         this.setState(state => {
-            const templateProperties = state.templateProperties.filter((item, j) => index !== j);
+            const templateComponents = state.templateComponents.filter((item, j) => index !== j);
             return {
-                templateProperties
+                templateComponents
             };
         });
     };
@@ -471,17 +541,23 @@ class ContributionTemplate extends Component {
                                 {this.state.editMode && <FormText>Specify the research problems that uses this template.</FormText>}
                             </FormGroup>
                         </fieldset>
-                        <fieldset className="scheduler-border">
-                            <legend className="scheduler-border">Template data</legend>
-                            <FormGroup className="mb-4">
-                                <Label>Properties {this.state.editMode && <FormText>List the properties of this template.</FormText>}</Label>
-                                <div className={'clearfix mb-3'} />
-                                {this.state.templateProperties &&
-                                    this.state.templateProperties.length > 0 &&
-                                    this.state.templateProperties.map((templateProperty, index) => {
-                                        return (
-                                            <InputGroup className={'mt-2 mb-2'} key={`property-${index}`}>
+
+                        <fieldset className="scheduler-border pb-4">
+                            <legend className="scheduler-border">Properties</legend>
+                            {this.state.templateComponents && this.state.templateComponents.length > 0 && (
+                                <Row className={'text-center'}>
+                                    <Col md={6}>Property</Col>
+                                    <Col md={5}>Class</Col>
+                                </Row>
+                            )}
+                            {this.state.templateComponents &&
+                                this.state.templateComponents.length > 0 &&
+                                this.state.templateComponents.map((templateProperty, index) => {
+                                    return (
+                                        <div key={`property-${index}`}>
+                                            <InputGroup className={'mt-3 mb-3'}>
                                                 <InputGroupAddon addonType="prepend">{`${index + 1}`}</InputGroupAddon>
+
                                                 <AutoComplete
                                                     requestUrl={predicatesUrl}
                                                     placeholder={this.state.editMode ? 'Select or type to enter a property' : 'No properties'}
@@ -489,34 +565,50 @@ class ContributionTemplate extends Component {
                                                     onKeyUp={() => {}}
                                                     allowCreate
                                                     autoFocus
-                                                    value={templateProperty}
+                                                    value={templateProperty.property}
                                                     isDisabled={!this.state.editMode}
                                                 />
-
+                                                <InputGroupAddon addonType="prepend">
+                                                    <div className={'input-group-text p-2'}>
+                                                        <Icon icon={faAngleDoubleRight} />
+                                                    </div>
+                                                </InputGroupAddon>
+                                                <AutoComplete
+                                                    requestUrl={classesUrl}
+                                                    placeholder={this.state.editMode ? 'Select or type to enter a class' : 'No Class'}
+                                                    onItemSelected={(selected, action) => this.handleClassOfPropertySelect(selected, action, index)}
+                                                    onKeyUp={() => {}}
+                                                    allowCreate
+                                                    value={templateProperty.value}
+                                                    isDisabled={!this.state.editMode || !templateProperty.property}
+                                                    isClearable={true}
+                                                />
                                                 {this.state.editMode && (
                                                     <InputGroupAddon addonType="append">
-                                                        <Button outline color="danger" onClick={() => this.deleteTemplateProperty(index)}>
+                                                        <Button onClick={() => this.deleteTemplateProperty(index)}>
                                                             <Icon icon={faTrash} />
                                                         </Button>
                                                     </InputGroupAddon>
                                                 )}
                                             </InputGroup>
-                                        );
-                                    })}
-                                {!this.state.editMode && this.state.templateProperties && this.state.templateProperties.length === 0 && (
-                                    <i>
-                                        <small>No properties specified.</small>
-                                    </i>
-                                )}
-                                {this.state.editMode && (
-                                    <Button outline size="sm" className={'mb-3'} onClick={this.addTemplateProperty}>
-                                        Add property
-                                    </Button>
-                                )}
-                            </FormGroup>
-                            <hr />
+                                        </div>
+                                    );
+                                })}
+                            {!this.state.editMode && this.state.templateComponents && this.state.templateComponents.length === 0 && (
+                                <i>
+                                    <small>No properties specified.</small>
+                                </i>
+                            )}
+                            {this.state.editMode && (
+                                <Button className={'mt-3 mb-3'} onClick={this.addTemplateProperty}>
+                                    Add property
+                                </Button>
+                            )}
+                        </fieldset>
+                        <fieldset className="scheduler-border">
+                            <legend className="scheduler-border">Sub-Templates</legend>
                             <FormGroup className="mb-4">
-                                <Label>Sub-Templates {this.state.editMode && <FormText>List the sub-templates of this template.</FormText>}</Label>
+                                <Label>{this.state.editMode && <FormText>List the sub-templates of this template.</FormText>}</Label>
                                 <div className={'clearfix mb-3'} />
                                 {this.state.templateSubTemplates &&
                                     this.state.templateSubTemplates.length > 0 &&

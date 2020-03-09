@@ -322,13 +322,7 @@ class AddValue extends Component {
                                         <AutoComplete
                                             requestUrl={resourcesUrl}
                                             excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM},${process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE}`}
-                                            optionsClass={
-                                                predicate.existingPredicateId === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM
-                                                    ? process.env.REACT_APP_CLASSES_PROBLEM
-                                                    : predicate.templateClass
-                                                    ? predicate.templateClass.id
-                                                    : undefined
-                                            }
+                                            optionsClass={predicate.templateClass ? predicate.templateClass.id : undefined}
                                             placeholder="Enter a resource"
                                             onItemSelected={this.handleValueSelect}
                                             onInput={this.handleInputChange}

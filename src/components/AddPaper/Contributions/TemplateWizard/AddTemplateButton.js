@@ -66,14 +66,14 @@ class TemplateDetailsTooltip extends Component {
                                 <i>{this.props.source.label}</i>
                             </div>
                         )}
-                        {this.state.template.properties && this.state.template.properties.length > 0 && (
+                        {this.state.template.components && this.state.template.components.length > 0 && (
                             <div>
                                 <b>Properties: </b>
                                 <ul>
-                                    {this.state.template.properties &&
-                                        this.state.template.properties.length > 0 &&
-                                        this.state.template.properties.map(property => {
-                                            return <li key={`t${property.id}`}>{property.label}</li>;
+                                    {this.state.template.components &&
+                                        this.state.template.components.length > 0 &&
+                                        this.state.template.components.map(component => {
+                                            return <li key={`t${component.property.id}`}>{component.property.label}</li>;
                                         })}
                                 </ul>
                             </div>
@@ -116,12 +116,13 @@ class AddTemplateButton extends Component {
             // Check if it's a contribution template
             if (template.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION) {
                 // Add properties
-                if (template.properties && template.properties.length > 0) {
+                if (template.components && template.components.length > 0) {
                     const statements = { properties: [], values: [] };
-                    for (const property of template.properties) {
+                    for (const component of template.components) {
                         statements['properties'].push({
-                            existingPredicateId: property.id,
-                            label: property.label
+                            existingPredicateId: component.property.id,
+                            label: component.property.label,
+                            templateClass: component.value
                         });
                     }
                     this.props.prefillStatements({ statements, resourceId: this.props.selectedResource });
@@ -156,12 +157,13 @@ class AddTemplateButton extends Component {
                 });
                 this.props.prefillStatements({ statements, resourceId: this.props.selectedResource });
                 // Add properties
-                if (template.properties && template.properties.length > 0) {
+                if (template.components && template.components.length > 0) {
                     const statements = { properties: [], values: [] };
-                    for (const property of template.properties) {
+                    for (const component of template.components) {
                         statements['properties'].push({
-                            existingPredicateId: property.id,
-                            label: property.label
+                            existingPredicateId: component.property.id,
+                            label: component.property.label,
+                            templateClass: component.value
                         });
                     }
                     this.props.prefillStatements({ statements, resourceId: rID });
