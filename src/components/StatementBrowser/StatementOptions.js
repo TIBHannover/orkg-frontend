@@ -52,7 +52,7 @@ class StatementOptions extends Component {
                     requireConfirmation={true}
                     title={'Delete statement'}
                     buttonText={'Delete'}
-                    confirmationMessage={'Are you sure you want to delete this property?'}
+                    confirmationMessage={'Are you sure to delete?'}
                     icon={faTrash}
                     action={this.handleDeleteStatement}
                 />

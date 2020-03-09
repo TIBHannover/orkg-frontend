@@ -15,6 +15,10 @@ class StatementOptionButton extends Component {
 
     onShow = () => {
         document.addEventListener('keydown', this.onKeyPressed);
+
+        if (this.props.onVisibilityChange) {
+            this.props.onVisibilityChange(true);
+        }
     };
 
     onShown = () => {
@@ -23,6 +27,10 @@ class StatementOptionButton extends Component {
 
     onHide = () => {
         document.removeEventListener('keydown', this.onKeyPressed);
+
+        if (this.props.onVisibilityChange) {
+            this.props.onVisibilityChange(false);
+        }
     };
 
     onKeyPressed = e => {
@@ -80,35 +88,39 @@ class StatementOptionButton extends Component {
                             interactive={true}
                             trigger={'click'}
                             content={
-                                <span>
-                                    <div className={'text-center'} style={{ color: '#fff' }}>
-                                        {this.props.confirmationMessage}
-                                        <br />
-                                        <ButtonGroup size="sm" className={'mt-1 mb-1'}>
-                                            <Button
-                                                onClick={e => {
-                                                    e.stopPropagation();
-                                                    this.props.action();
-                                                    this.closeTippy();
-                                                }}
-                                                innerRef={this.yesButtonRef}
-                                            >
-                                                <Icon icon={faCheck} className={'mr-1'} />
-                                                Yes
-                                            </Button>
-                                            <Button
-                                                onClick={e => {
-                                                    e.stopPropagation();
-                                                    this.closeTippy();
-                                                }}
-                                                innerRef={this.cancelButtonRef}
-                                            >
-                                                {' '}
-                                                <Icon icon={faTimes} className={'mr-1'} /> Cancel
-                                            </Button>
-                                        </ButtonGroup>
-                                    </div>
-                                </span>
+                                <div
+                                    className={'text-center p-1'}
+                                    style={{ color: '#fff', fontSize: '0.95rem', wordBreak: 'normal', cursor: 'default' }}
+                                >
+                                    <p className="mb-2">{this.props.confirmationMessage}</p>
+                                    <ButtonGroup size="sm" className={'mt-1 mb-1'}>
+                                        <Button
+                                            onClick={e => {
+                                                e.stopPropagation();
+                                                this.props.action();
+                                                this.closeTippy();
+                                            }}
+                                            innerRef={this.yesButtonRef}
+                                            className="px-2"
+                                            color="danger"
+                                            style={{ paddingTop: 2, paddingBottom: 2 }}
+                                        >
+                                            <Icon icon={faCheck} className={'mr-1'} /> Delete
+                                        </Button>
+                                        <Button
+                                            onClick={e => {
+                                                e.stopPropagation();
+                                                this.closeTippy();
+                                            }}
+                                            innerRef={this.cancelButtonRef}
+                                            className="px-2"
+                                            style={{ paddingTop: 2, paddingBottom: 2 }}
+                                        >
+                                            {' '}
+                                            <Icon icon={faTimes} className={'mr-1'} /> Cancel
+                                        </Button>
+                                    </ButtonGroup>
+                                </div>
                             }
                         >
                             {tippyTarget}
@@ -133,7 +145,8 @@ StatementOptionButton.propTypes = {
     requireConfirmation: PropTypes.bool,
     confirmationMessage: PropTypes.string,
     buttonText: PropTypes.string,
-    className: PropTypes.string
+    className: PropTypes.string,
+    onVisibilityChange: PropTypes.func
 };
 
 StatementOptionButton.defaultProps = {

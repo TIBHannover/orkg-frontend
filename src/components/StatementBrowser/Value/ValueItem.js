@@ -58,7 +58,8 @@ class ValueItem extends Component {
             modalDataset: false,
             dialogResourceId: null,
             dialogResourceLabel: null,
-            draftLabel: this.props.label
+            draftLabel: this.props.label,
+            disableHover: false
         };
     }
 
@@ -321,6 +322,12 @@ class ValueItem extends Component {
         }
     };
 
+    onVisibilityChange = visible => {
+        this.setState({
+            disableHover: visible
+        });
+    };
+
     render() {
         const isProperty = [process.env.REACT_APP_TEMPLATE_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
             this.props.properties.byId[this.props.propertyId].existingPredicateId
@@ -328,6 +335,11 @@ class ValueItem extends Component {
 
         const labelClass = classNames({
             objectLink: (this.props.type === 'object' || this.props.type === 'template') && !this.props.isEditing && !isProperty
+        });
+
+        const valueOptionClasses = classNames({
+            valueOptions: true,
+            disableHover: this.state.disableHover
         });
 
         const resource = this.props.resources.byId[this.props.resourceId];
@@ -399,7 +411,7 @@ class ValueItem extends Component {
                 {this.props.contextStyle === 'StatementBrowser' ? (
                     <>
                         {!this.props.inline ? (
-                            <StyledValueItem>
+                            <StyledValueItem className={this.state.disableHover && 'disableHover'}>
                                 <span className={labelClass} onClick={!this.props.isEditing && !isProperty ? onClick : undefined}>
                                     {!this.props.isSaving ? (
                                         !this.props.isEditing ? (
@@ -529,9 +541,10 @@ class ValueItem extends Component {
                                             requireConfirmation={true}
                                             title={'Delete value'}
                                             buttonText={'Delete'}
-                                            confirmationMessage={'Are you sure you want to delete this property?'}
+                                            confirmationMessage={'Are you sure to delete?'}
                                             icon={faTrash}
                                             action={this.handleDeleteValue}
+                                            onVisibilityChange={this.onVisibilityChange}
                                         />
                                         {(!existingResourceId || this.props.shared <= 1) && !isProperty && (
                                             <span
@@ -590,7 +603,7 @@ class ValueItem extends Component {
                                         ''
                                     )}
                                 </div>
-                                <div className={'valueOptions'}>
+                                <div className={valueOptionClasses}>
                                     {!this.props.isEditing &&
                                         this.props.classes &&
                                         this.props.classes.includes(process.env.REACT_APP_QB_DATASET_CLASS) && (
@@ -613,15 +626,17 @@ class ValueItem extends Component {
                                             title={'A shared resource cannot be edited directly'}
                                             icon={faPen}
                                             action={() => null}
+                                            onVisibilityChange={this.onVisibilityChange}
                                         />
                                     )}
 
                                     <TemplateOptionButton
                                         requireConfirmation={true}
                                         title={'Delete value'}
-                                        confirmationMessage={'Are you sure you want to delete this value?'}
+                                        confirmationMessage={'Are you sure to delete?'}
                                         icon={faTrash}
                                         action={this.handleDeleteValue}
+                                        onVisibilityChange={this.onVisibilityChange}
                                     />
                                 </div>
                             </div>

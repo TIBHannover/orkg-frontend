@@ -32,7 +32,8 @@ class StatementItem extends Component {
         this.state = {
             deleteContributionModal: false,
             predicateLabel: null,
-            isCollapsed: true
+            isCollapsed: true,
+            disableHover: false
         };
     }
 
@@ -229,6 +230,12 @@ class StatementItem extends Component {
         }
     };
 
+    onVisibilityChange = visible => {
+        this.setState({
+            disableHover: visible
+        });
+    };
+
     render() {
         const isCollapsed = this.state.isCollapsed;
 
@@ -249,6 +256,11 @@ class StatementItem extends Component {
         const openBoxClass = classNames({
             listGroupOpenBorderBottom: this.props.isLastItem,
             'rounded-bottom': !this.props.enableEdit
+        });
+
+        const propertyOptionsClasses = classNames({
+            propertyOptions: true,
+            disableHover: this.state.disableHover
         });
 
         const valueIds = Object.keys(this.props.properties.byId).length !== 0 ? this.props.properties.byId[this.props.id].valueIds : [];
@@ -441,7 +453,7 @@ class StatementItem extends Component {
                                             <small>Typed property</small>
                                         </i>
                                     )}
-                                    <div className={'propertyOptions'}>
+                                    <div className={propertyOptionsClasses}>
                                         <TemplateOptionButton
                                             title={'Edit property'}
                                             icon={faPen}
@@ -449,10 +461,11 @@ class StatementItem extends Component {
                                         />
                                         <TemplateOptionButton
                                             requireConfirmation={true}
-                                            confirmationMessage={'Are you sure you want to delete this property?'}
+                                            confirmationMessage={'Are you sure to delete?'}
                                             title={'Delete property'}
                                             icon={faTrash}
                                             action={this.handleDeleteStatement}
+                                            onVisibilityChange={this.onVisibilityChange}
                                         />
                                     </div>
                                 </div>

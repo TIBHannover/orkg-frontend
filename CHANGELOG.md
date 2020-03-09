@@ -3,6 +3,58 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.5.8](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.7...V0.5.8) - 2020-03-03
+
+### Merged
+
+- Search in graph [`#196`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/196)
+
+---
+## [V0.5.7](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.6...V0.5.7) - 2020-03-03
+
+### Merged
+
+- refactor(Comparison): save comparison response only on share and publish actions [`#202`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/202)
+- feat(Home): add ORKG marketing video to the homepage [`#203`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/203)
+- Resolve "Improvements to sign in / account settings / user profile" [`#179`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/179)
+- style: fix problem of autocomplete width with long texts [`#204`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/204)
+- feat: Add paper venue #115 [`#182`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/182)
+- feat(Comparison): Add reference to contribution comparison [`#185`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/185)
+- improvement(UX): Auto focus on author input field [`#197`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/197)
+- improvement(UX): research field input [`#198`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/198)
+- improvement(UX): Edit paper [`#199`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/199)
+- feat(ResearchProblemInput): Suggest newly added research problems from other contributions [`#200`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/200)
+- style(UX): Show a keyboard shortcut to navigate horizontally in comparison results [`#201`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/201)
+- fix(EditPaper): fix link to research problem after editing [`#194`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/194)
+- fix(AddPaper): use existing research problems [`#193`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/193)
+- feat(ValuePlugin): Add Doi value plugin [`#186`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/186)
+- improvement(Comparison) : LaTeX/BibTeX Export [`#187`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/187)
+- feat(Paper): Share paper in social media [`#188`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/188)
+- improvement(ResearchProblem) : show description of research problem [`#190`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/190)
+- Close the comparison popup when the user clicks ouside of it [`#189`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/189)
+- fix(HelpTour): remove updateTourCurrentStep action [`#191`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/191)
+- feat(Graph visualization): Add expand all nodes option and improve the performance for getting new data [`#184`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/184)
+- fixed rendering animation group remove [`#183`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/183)
+- feat(Resource): show DBpedia/Wikipedia/WikiData abstract when a resource is sameAs wiki's resource [`#177`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/177)
+- Visualization module [`#178`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/178)
+- feat(ResearchFields): grey out empty fields, better UX with animations [`#176`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/176)
+- fix: User logout [`#181`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/181)
+- feat(Footer): add more partner logos [`#180`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/180)
+
+### Fixed
+
+- Merge branch '118-improvements-to-sign-in-account-settings-user-profile' into 'master' [`#118`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/118)
+- Merge branch '141-add-references-to-contribution-comparisons' into 'master' [`#141`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/141)
+- Merge branch '146-show-newly-added-research-problems-from-other-contributions-in-the-autocomplete-suggestions' into 'master' [`#146`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/146)
+- Merge branch '136-comparison-latex-bibtex-export' into 'master' [`#136`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/136)
+- Merge branch '139-share-paper-on-social-media' into 'master' [`#139`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/139)
+- Merge branch '144-close-the-comparison-popup-when-the-user-clicks-ouside-of-it' into 'master' [`#144`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/144)
+- Merge branch '145-bug-when-using-help-tour-in-add-paper-wizard' into 'master' [`#145`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/145)
+- Merge branch '130-add-edit-link-to-view-existing-resource-in-contribution-comparison' into 'master' [`#130`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/130)
+- Merge branch '129-hide-research-fields-without-papers' into 'master' [`#129`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/129)
+- Merge branch '135-add-missing-logos-in-footer' into 'master' [`#135`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/135)
+
+---
 ## [V0.5.6](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.5...V0.5.6) - 2020-01-21
 
 ### Merged
