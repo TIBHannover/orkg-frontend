@@ -3,6 +3,7 @@ import dotProp from 'dot-prop-immutable';
 
 const initialState = {
     selectedResource: '',
+    selectedProperty: '',
     level: 0,
     isFetchingStatements: false,
     resources: {
@@ -43,6 +44,13 @@ export default (state = initialState, action) => {
             return newState;
         }
 
+        case type.TOGGLE_PROPERTY_COLLAPSE: {
+            return {
+                ...state,
+                selectedProperty: action.id !== state.selectedProperty ? action.id : ''
+            };
+        }
+
         case type.CREATE_PROPERTY: {
             const { payload } = action;
             let newState;
@@ -67,6 +75,9 @@ export default (state = initialState, action) => {
                     }
                 }));
                 newState = dotProp.set(newState, 'properties.allIds', ids => [...ids, payload.propertyId]);
+            }
+            if (payload.createAndSelect) {
+                newState = dotProp.set(newState, 'selectedProperty', payload.propertyId);
             }
             return newState ? newState : state;
         }
@@ -293,7 +304,8 @@ export default (state = initialState, action) => {
                 ...(lastResourceId
                     ? {
                           [lastResourceId]: {
-                              ...state.resourceHistory.byId[lastResourceId]
+                              ...state.resourceHistory.byId[lastResourceId],
+                              selectedProperty: state.selectedProperty
                           }
                       }
                     : {})
@@ -312,6 +324,7 @@ export default (state = initialState, action) => {
                 ...state,
                 level: payload.historyIndex,
                 selectedResource: payload.id,
+                selectedProperty: state.resourceHistory.byId[payload.id].selectedProperty,
                 resourceHistory: {
                     allIds: ids,
                     byId: {
@@ -329,6 +342,13 @@ export default (state = initialState, action) => {
                     byId: {},
                     allIds: []
                 }
+            };
+        }
+
+        case type.CLEAR_SELECTED_PROPERTY: {
+            return {
+                ...state,
+                selectedProperty: ''
             };
         }
 
