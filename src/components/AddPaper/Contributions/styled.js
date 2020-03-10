@@ -273,7 +273,8 @@ export const StyledValueItem = styled(ListGroupItem)`
             cursor: not-allowed;
         }
     }
-    &:hover {
+    &:hover,
+    &.disableHover {
         & .deleteValue {
             display: inline-block;
         }
@@ -344,6 +345,11 @@ export const ValueItemStyle = styled.div`
         display: inline-block !important;
         transition: visibility 0.2s, opacity 0.2s;
         opacity: 0;
+
+        &.disableHover {
+            visibility: visible;
+            opacity: 1;
+        }
     }
 
     &:hover .valueOptions {
@@ -493,6 +499,11 @@ export const PropertyStyle = styled.div`
         visibility: hidden;
         opacity: 0;
         transition: visibility 0.2s, opacity 0.2s;
+
+        &.disableHover {
+            visibility: visible;
+            opacity: 1;
+        }
     }
     &:hover .propertyOptions {
         visibility: visible;
@@ -531,6 +542,11 @@ export const TemplateHeaderStyle = styled.div`
         span {
             background-color: ${props => props.theme.buttonDark};
             color: ${props => props.theme.ultraLightBlue};
+        }
+
+        &.disableHover {
+            visibility: visible;
+            opacity: 1;
         }
     }
 

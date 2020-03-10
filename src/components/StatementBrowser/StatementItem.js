@@ -4,6 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleDown, faChevronCircleUp, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { getResource, predicatesUrl, submitGetRequest, updateStatement, createPredicate, deleteStatementById } from '../../network';
 import {
+    togglePropertyCollapse,
     toggleEditPropertyLabel,
     updatePropertyLabel,
     changeProperty,
@@ -32,7 +33,8 @@ class StatementItem extends Component {
         this.state = {
             deleteContributionModal: false,
             predicateLabel: null,
-            isCollapsed: true
+            isCollapsed: true,
+            disableHover: false
         };
     }
 
@@ -229,8 +231,14 @@ class StatementItem extends Component {
         }
     };
 
+    onVisibilityChange = visible => {
+        this.setState({
+            disableHover: visible
+        });
+    };
+
     render() {
-        const isCollapsed = this.state.isCollapsed;
+        const isCollapsed = this.props.selectedProperty === this.props.id;
 
         const listGroupClass = classNames({
             statementActive: isCollapsed,
@@ -249,6 +257,11 @@ class StatementItem extends Component {
         const openBoxClass = classNames({
             listGroupOpenBorderBottom: this.props.isLastItem,
             'rounded-bottom': !this.props.enableEdit
+        });
+
+        const propertyOptionsClasses = classNames({
+            propertyOptions: true,
+            disableHover: this.state.disableHover
         });
 
         const valueIds = Object.keys(this.props.properties.byId).length !== 0 ? this.props.properties.byId[this.props.id].valueIds : [];
@@ -315,7 +328,7 @@ class StatementItem extends Component {
                 <>
                     <StyledStatementItem
                         active={isCollapsed}
-                        onClick={() => (!this.props.isEditing ? this.toggle('isCollapsed') : undefined)}
+                        onClick={() => (!this.props.isEditing ? this.props.togglePropertyCollapse(this.props.id) : undefined)}
                         className={listGroupClass}
                     >
                         <div className="flex-grow-1 mr-4">
@@ -441,7 +454,7 @@ class StatementItem extends Component {
                                             <small>Typed property</small>
                                         </i>
                                     )}
-                                    <div className={'propertyOptions'}>
+                                    <div className={propertyOptionsClasses}>
                                         <TemplateOptionButton
                                             title={'Edit property'}
                                             icon={faPen}
@@ -449,10 +462,11 @@ class StatementItem extends Component {
                                         />
                                         <TemplateOptionButton
                                             requireConfirmation={true}
-                                            confirmationMessage={'Are you sure you want to delete this property?'}
+                                            confirmationMessage={'Are you sure to delete?'}
                                             title={'Delete property'}
                                             icon={faTrash}
                                             action={this.handleDeleteStatement}
+                                            onVisibilityChange={this.onVisibilityChange}
                                         />
                                     </div>
                                 </div>
@@ -533,6 +547,8 @@ StatementItem.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     isLastItem: PropTypes.bool.isRequired,
+    togglePropertyCollapse: PropTypes.func.isRequired,
+    selectedProperty: PropTypes.string.isRequired,
     properties: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
@@ -561,6 +577,7 @@ StatementItem.defaultProps = {
 
 const mapStateToProps = state => {
     return {
+        selectedProperty: state.statementBrowser.selectedProperty,
         selectedResource: state.statementBrowser.selectedResource,
         properties: state.statementBrowser.properties,
         values: state.statementBrowser.values
@@ -569,6 +586,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
     deleteProperty: id => dispatch(deleteProperty(id)),
+    togglePropertyCollapse: id => dispatch(togglePropertyCollapse(id)),
     toggleEditPropertyLabel: data => dispatch(toggleEditPropertyLabel(data)),
     updatePropertyLabel: data => dispatch(updatePropertyLabel(data)),
     changeProperty: data => dispatch(changeProperty(data)),

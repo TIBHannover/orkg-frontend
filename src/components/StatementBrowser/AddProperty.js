@@ -64,7 +64,8 @@ class AddProperty extends Component {
             resourceId: this.props.resourceId ? this.props.resourceId : this.props.selectedResource,
             existingPredicateId: id,
             label: label,
-            isTemplate: false
+            isTemplate: false,
+            createAndSelect: true
         });
     };
 
@@ -81,13 +82,15 @@ class AddProperty extends Component {
                 resourceId: this.props.resourceId ? this.props.resourceId : this.props.selectedResource,
                 existingPredicateId: newPredicate.id,
                 label: newPredicate.label,
-                isTemplate: false
+                isTemplate: false,
+                createAndSelect: true
             });
         } else {
             this.props.createProperty({
                 resourceId: this.props.resourceId ? this.props.resourceId : this.props.selectedResource,
                 label: this.state.newPropertyLabel,
-                isTemplate: false
+                isTemplate: false,
+                createAndSelect: true
             });
         }
     };

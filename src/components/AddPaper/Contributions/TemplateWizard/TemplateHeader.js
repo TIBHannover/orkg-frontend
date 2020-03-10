@@ -8,12 +8,14 @@ import { connect } from 'react-redux';
 import { deleteValue, toggleEditValue, updateValueLabel, isSavingValue, doneSavingValue, deleteProperty } from 'actions/statementBrowser';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 class TemplateHeader extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            draftLabel: this.props.label
+            draftLabel: this.props.label,
+            disableHover: false
         };
     }
 
@@ -60,7 +62,18 @@ class TemplateHeader extends Component {
         });
     };
 
+    onVisibilityChange = visible => {
+        this.setState({
+            disableHover: visible
+        });
+    };
+
     render() {
+        const headerClasses = classNames({
+            headerOptions: true,
+            disableHover: this.state.disableHover
+        });
+
         return (
             <div>
                 <TemplateHeaderStyle className={'d-flex'}>
@@ -68,7 +81,7 @@ class TemplateHeader extends Component {
                         {!this.props.isEditing ? (
                             <>
                                 {this.props.label}{' '}
-                                <div className={'headerOptions'}>
+                                <div className={headerClasses}>
                                     <TemplateOptionButton
                                         title={'Edit label'}
                                         icon={faPen}
@@ -76,10 +89,11 @@ class TemplateHeader extends Component {
                                     />
                                     <TemplateOptionButton
                                         requireConfirmation={true}
-                                        confirmationMessage={'Are you sure you want to delete this template with its statements?'}
+                                        confirmationMessage={'Are you sure to delete?'}
                                         title={'Delete the template with its statements'}
                                         icon={faTrash}
                                         action={this.handleDeleteTemplate}
+                                        onVisibilityChange={this.onVisibilityChange}
                                     />
                                 </div>
                             </>
@@ -133,6 +147,10 @@ TemplateHeader.propTypes = {
     updateValueLabel: PropTypes.func.isRequired
 };
 
+const mapStateToProps = state => ({
+    disableHoverOptionButton: state.statementBrowser.disableHoverOptionButton
+});
+
 const mapDispatchToProps = dispatch => ({
     toggleEditValue: data => dispatch(toggleEditValue(data)),
     deleteValue: data => dispatch(deleteValue(data)),
@@ -143,6 +161,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(TemplateHeader);
