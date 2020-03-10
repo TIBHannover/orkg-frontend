@@ -1,6 +1,6 @@
 import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, Tooltip as ReactstrapTooltip } from 'reactstrap';
 import React, { Component } from 'react';
-import { createShortLink, getStatementsBySubject } from '../../network';
+import { createShortLink, getStatementsBySubject, getComparison } from '../../network';
 
 import Cite from 'citation-js';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -15,6 +15,7 @@ import moment from 'moment';
 import queryString from 'query-string';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
+import { getContributionIdsFromUrl } from 'utils';
 
 const Textarea = styled(Input)`
     font-family: 'Courier New';
@@ -42,6 +43,7 @@ class ExportToLatex extends Component {
     componentDidUpdate = (prevProps, prevState) => {
         if (this.props.location.href !== prevProps.location.href) {
             this.setState({ shortLink: null });
+            this.generateLatex();
         }
         if (this.props.contributions !== prevProps.contributions) {
             this.setState({ shortLink: null });
@@ -53,7 +55,7 @@ class ExportToLatex extends Component {
         }
     };
 
-    generateLatex = () => {
+    generateLatex = async () => {
         this.setState({ latexTableLoading: true });
 
         if (this.props.data.length === 0) {
@@ -140,13 +142,20 @@ class ExportToLatex extends Component {
             // Add a persistent link to this page as a footnote
             if (this.state.includeFootnote) {
                 if (!this.state.shortLink) {
+                    let comparison;
+                    if (!this.props.response_hash) {
+                        const contributionIds = getContributionIdsFromUrl(this.props.location.href.substring(this.props.location.href.indexOf('?')));
+                        comparison = await getComparison({ contributionIds: contributionIds, save_response: true });
+                    }
                     const link = queryString.parse(this.props.location.search).response_hash
                         ? this.props.location.href
                         : this.props.location.href +
-                          `${this.props.location.href.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${this.props.response_hash}`;
+                          `${this.props.location.href.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${
+                              this.props.response_hash ? this.props.response_hash : comparison.response_hash
+                          }`;
                     createShortLink({
                         long_url: link,
-                        response_hash: this.props.response_hash,
+                        response_hash: this.props.response_hash ? this.props.response_hash : comparison.response_hash,
                         contributions: this.props.contributions.map(c => c.id),
                         properties: this.props.properties.filter(p => p.active).map(p => p.id),
                         transpose: this.props.transpose
