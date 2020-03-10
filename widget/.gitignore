@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+src/npm-debug.log
+.env
+
+build/
+!build/favicon.ico
+!build/manifest.json
+
+*.iml
+.vscode
+
+# IntelliJ  files
+.idea/

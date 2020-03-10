@@ -1,0 +1,47 @@
+.orkg-widget-box {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    border: 1px solid rgb(232, 97, 97);
+}
+.orkg-widget-link {
+    color: #fff;
+    background-color: rgb(232, 97, 97);
+    border-color: rgb(232, 97, 97);
+    padding: 6px 12px;
+    display: block;
+    margin-bottom: 0 !important;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    touch-action: manipulation;
+    cursor: pointer;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    text-decoration: none;
+}
+.orkg-widget-link:hover,
+.orkg-widget-link:focus {
+    color: #fff;
+    background-color: #e34040;
+    border-color: #e23434;
+}
+.orkg-widget-description {
+    padding: 5px;
+}
+.orkg-widget-label {
+    position: relative;
+    left: -3px;
+    text-align: left;
+    display: inline-block;
+    background: transparent;
+}
+.orkg-widget-icon {
+    width: 24px;
+    vertical-align: middle;
+}
+.orkg-widget-statements {
+    float: right;
+    font-weight: bold;
+}
