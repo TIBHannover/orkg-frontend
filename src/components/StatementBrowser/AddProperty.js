@@ -148,8 +148,8 @@ class AddProperty extends Component {
             <>
                 {this.props.contextStyle === 'StatementBrowser' ? (
                     <StyledStatementItem
-                        style={{ transition: '0.3s max-width', borderTop: '0', textAlign: 'center' }}
-                        className={`${this.state.showAddProperty ? 'col-12 large' : 'col-3'}`}
+                        style={{ transition: '0.3s max-width', borderTop: '0' }}
+                        //className={`${this.state.showAddProperty ? 'col-12 large' : 'col-3'}`}
                     >
                         {this.state.showAddProperty ? (
                             <StyledAddProperty style={{ textAlign: 'left' }}>
@@ -180,7 +180,7 @@ class AddProperty extends Component {
                                 </InputGroupAddon>
                             </StyledAddProperty>
                         ) : (
-                            <span className="btn btn-link p-0 border-0 align-baseline" onClick={this.handleShowAddProperty}>
+                            <span className="btn btn-link p-0 border-0" onClick={this.handleShowAddProperty}>
                                 + Add property
                             </span>
                         )}
