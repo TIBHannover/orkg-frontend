@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Modal, ModalHeader, ModalBody, Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import { getStatementsBySubject, getStatementsByObject, getAllClasses } from '../../network';
+import { getStatementsBySubject, getStatementsByObject, getRDFDataCubeVocabularyClasses } from '../../network';
 import ReactTable from 'react-table';
 import { sortMethod } from 'utils';
 import CUBE from 'olap-cube';
@@ -48,7 +48,7 @@ class RDFDataCube extends Component {
         let resources = {};
         if (this.props.resourceId) {
             // Get all the classes
-            let classes = await getAllClasses();
+            let classes = await getRDFDataCubeVocabularyClasses();
             // Convert to an object { class_label: class_ID }
             classes = Object.assign({}, ...classes.map(item => ({ [item.label]: item.id })));
             // Get Data Structure Definition (DSD)
@@ -77,9 +77,9 @@ class RDFDataCube extends Component {
                 .then(cso => cso.flat(1))
                 .then(cso => {
                     // Get Dimensions and Measures
-                    let sDimensions = cso.filter(s => s.classes.includes(classes['qb:DimensionProperty']));
-                    let sMeasures = cso.filter(s => s.classes.includes(classes['qb:MeasureProperty']));
-                    let sAttributes = cso.filter(s => s.classes.includes(classes['qb:AttributeProperty']));
+                    let sDimensions = cso.filter(s => s.classes && s.classes.includes(classes['qb:DimensionProperty']));
+                    let sMeasures = cso.filter(s => s.classes && s.classes.includes(classes['qb:MeasureProperty']));
+                    let sAttributes = cso.filter(s => s.classes && s.classes.includes(classes['qb:AttributeProperty']));
                     sDimensions = Object.assign({}, ...sDimensions.map(item => ({ [item.id]: item })));
                     sMeasures = Object.assign({}, ...sMeasures.map(item => ({ [item.id]: item })));
                     sAttributes = Object.assign({}, ...sAttributes.map(item => ({ [item.id]: item })));
