@@ -53,11 +53,11 @@ class RDFDataCube extends Component {
             classes = Object.assign({}, ...classes.map(item => ({ [item.label]: item.id })));
             // Get Data Structure Definition (DSD)
             const dsd = await getStatementsBySubject({ id: this.props.resourceId }).then(
-                s_dataset => s_dataset.find(s => s.classes && s.object.classes.includes(classes['qb:DataStructureDefinition'])).object
+                s_dataset => s_dataset.find(s => s.object.classes && s.object.classes.includes(classes['qb:DataStructureDefinition'])).object
             );
             // Get Component Specification
             let cspecifications = await getStatementsBySubject({ id: dsd.id })
-                .then(s_dataset => s_dataset.filter(s => s.classes && s.object.classes.includes(classes['qb:ComponentSpecification'])))
+                .then(s_dataset => s_dataset.filter(s => s.object.classes && s.object.classes.includes(classes['qb:ComponentSpecification'])))
                 .then(css => css.map(cs => cs.object));
             // Fetch Statements of each component specification
             cspecifications = cspecifications.map(cs => {
