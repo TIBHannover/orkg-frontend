@@ -1,21 +1,38 @@
 import React, { Component } from 'react';
 import { createLiteralStatement, createResource, crossrefUrl, submitGetRequest, createLiteral } from '../network';
 import { Redirect } from 'react-router-dom';
-import { Container } from 'reactstrap';
+import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { toast } from 'react-toastify';
+import { getAllClasses } from 'network';
+import Select from 'react-select';
 import { reverse } from 'named-urls';
 import ROUTES from '../constants/routes';
 
 export default class AddResource extends Component {
-    state = {
-        redirect: false,
-        value: '',
-        /* Possible values: 'edit', 'loading'. */
-        editorState: 'edit',
-        resourceId: ''
+    constructor(props) {
+        super(props);
+
+        this.doi = null;
+        this.state = {
+            redirect: false,
+            value: '',
+            classes: [],
+            /* Possible values: 'edit', 'loading'. */
+            editorState: 'edit',
+            resourceId: '',
+            classesOptions: []
+        };
+    }
+
+    componentDidMount = () => {
+        this.getClasses();
     };
 
-    doi = null;
+    getClasses = () => {
+        getAllClasses().then(classes => {
+            this.setState({ classesOptions: classes });
+        });
+    };
 
     setEditorState = editorState => {
         this.setState({ editorState: editorState });
@@ -46,8 +63,12 @@ export default class AddResource extends Component {
         }
     };
 
-    handleInput = event => {
-        this.setState({ value: event.target.value.trim() });
+    handleChange = event => {
+        this.setState({ [event.target.name]: event.target.value.trim() });
+    };
+
+    handleClassesChange = classesArray => {
+        this.setState({ classes: classesArray });
     };
 
     handleKeyUp = async event => {
@@ -66,7 +87,7 @@ export default class AddResource extends Component {
         const value = this.state.value;
         if (value && value.length !== 0) {
             try {
-                const responseJson = await createResource(value);
+                const responseJson = await createResource(value, this.state.classes ? this.state.classes.map(c => c.id) : []);
                 const resourceId = responseJson.id;
 
                 if (usingDoi) {
@@ -110,29 +131,45 @@ export default class AddResource extends Component {
 
         return (
             <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5">
-                <div className="input-group mb-3">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Research contribution title or DOI"
+                <Form className="pl-3 pr-3 pt-2">
+                    {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
+                    <FormGroup>
+                        <Label for="ResourceLabel">Resource title or DOI</Label>
+                        <Input
+                            onChange={this.handleChange}
+                            onKeyUp={this.handleKeyUp}
+                            type="text"
+                            name="value"
+                            id="ResourceLabel"
+                            disabled={loading}
+                            placeholder="Resource title or DOI"
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="Classes">Classes</Label>
+                        <Select
+                            isClearable
+                            isMulti
+                            value={this.state.classes}
+                            onChange={this.handleClassesChange}
+                            options={this.state.classesOptions}
+                            getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
+                            getOptionValue={({ id }) => id}
+                        />
+                    </FormGroup>
+                    <Button
+                        color="primary"
+                        onClick={() => {
+                            this.handleAdd();
+                        }}
+                        outline
+                        className="mt-4 mb-2"
+                        block
                         disabled={loading}
-                        onInput={this.handleInput}
-                        onKeyUp={this.handleKeyUp}
-                        aria-label="Resource title or DOI"
-                        aria-describedby="basic-addon2"
-                    />
-                    {!loading ? (
-                        <div className="input-group-append">
-                            <button className="btn btn-outline-primary" type="button" onClick={this.handleAdd}>
-                                Add
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="container vertical-centered">
-                            <span className="fa fa-spinner fa-spin" />
-                        </div>
-                    )}
-                </div>
+                    >
+                        {!loading ? 'Create Resource' : <span>Loading</span>}
+                    </Button>
+                </Form>
             </Container>
         );
     }

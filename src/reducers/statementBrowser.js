@@ -67,7 +67,11 @@ export default (state = initialState, action) => {
                         valueIds: [],
                         isExistingProperty: payload.isExistingProperty ? payload.isExistingProperty : false,
                         isEditing: false,
-                        isSaving: false
+                        isSaving: false,
+                        isTemplate: payload.isTemplate,
+                        templateId: payload.templateId ? payload.templateId : null,
+                        templateClass: payload.templateClass ? payload.templateClass : null,
+                        isAnimated: payload.isAnimated !== undefined ? payload.isAnimated : false
                     }
                 }));
                 newState = dotProp.set(newState, 'properties.allIds', ids => [...ids, payload.propertyId]);
@@ -124,6 +128,12 @@ export default (state = initialState, action) => {
             return newState;
         }
 
+        case type.DONE_ANIMATION: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `properties.byId.${payload.id}.isAnimated`, v => true);
+            return newState;
+        }
+
         case type.DONE_SAVING_PROPERTY: {
             const { payload } = action;
             const newState = dotProp.set(state, `properties.byId.${payload.id}.isSaving`, v => false);
@@ -158,7 +168,7 @@ export default (state = initialState, action) => {
                 // add a new resource when a object value is created
 
                 //only create a new object when the id doesn't exist yet (for sharing changes on existing resources)
-                if (payload.type === 'object' && !state.resources.byId[payload.resourceId]) {
+                if ((payload.type === 'object' || payload.type === 'template') && !state.resources.byId[payload.resourceId]) {
                     newState = dotProp.set(newState, 'resources.allIds', ids => [...ids, payload.resourceId]);
 
                     newState = dotProp.set(newState, 'resources.byId', ids => ({
@@ -168,7 +178,8 @@ export default (state = initialState, action) => {
                             id: payload.resourceId,
                             label: payload.label,
                             shared: payload.shared ? payload.shared : 1,
-                            propertyIds: []
+                            propertyIds: [],
+                            templateId: payload.templateId ? payload.templateId : null
                         }
                     }));
                 }
@@ -326,6 +337,7 @@ export default (state = initialState, action) => {
         case type.CLEAR_RESOURCE_HISTORY: {
             return {
                 ...state,
+                level: 0,
                 resourceHistory: {
                     byId: {},
                     allIds: []

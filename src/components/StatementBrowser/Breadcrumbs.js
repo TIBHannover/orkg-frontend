@@ -99,7 +99,10 @@ class Breadcrumbs extends Component {
                 <BreadcrumbList>
                     {this.props.resourceHistory.allIds.map((history, index) => {
                         const item = this.props.resourceHistory.byId[history];
-
+                        const existingResourceId =
+                            Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource
+                                ? this.props.resources.byId[this.props.selectedResource].existingResourceId
+                                : null;
                         return (
                             <BreadcrumbItem
                                 key={index}
@@ -108,17 +111,19 @@ class Breadcrumbs extends Component {
                                 }
                             >
                                 {item.label}
-                                {this.props.resourceHistory.allIds.length === index + 1 && !this.props.openExistingResourcesInDialog && (
-                                    <Tippy content="Go to resource page">
-                                        <Link
-                                            title={'Go to resource page'}
-                                            className={'ml-2'}
-                                            to={reverse(ROUTES.RESOURCE, { id: this.props.selectedResource })}
-                                        >
-                                            <Icon icon={faLink} color={'#fff'} />
-                                        </Link>
-                                    </Tippy>
-                                )}
+                                {this.props.resourceHistory.allIds.length === index + 1 &&
+                                    !this.props.openExistingResourcesInDialog &&
+                                    existingResourceId && (
+                                        <Tippy content="Go to resource page">
+                                            <Link
+                                                title={'Go to resource page'}
+                                                className={'ml-2'}
+                                                to={reverse(ROUTES.RESOURCE, { id: this.props.selectedResource })}
+                                            >
+                                                <Icon icon={faLink} color={'#fff'} />
+                                            </Link>
+                                        </Tippy>
+                                    )}
                             </BreadcrumbItem>
                         );
                     })}
@@ -134,14 +139,16 @@ Breadcrumbs.propTypes = {
     resourceHistory: PropTypes.object.isRequired,
     goToResourceHistory: PropTypes.func.isRequired,
     selectedResource: PropTypes.string.isRequired,
-    openExistingResourcesInDialog: PropTypes.bool.isRequired
+    openExistingResourcesInDialog: PropTypes.bool.isRequired,
+    resources: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => {
     return {
         resourceHistory: state.statementBrowser.resourceHistory,
         level: state.statementBrowser.level,
-        selectedResource: state.statementBrowser.selectedResource
+        selectedResource: state.statementBrowser.selectedResource,
+        resources: state.statementBrowser.resources
     };
 };
 

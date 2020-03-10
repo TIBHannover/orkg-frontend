@@ -362,7 +362,7 @@ EditPaperDialog.propTypes = {
         publicationMonth: PropTypes.number.isRequired,
         publicationYear: PropTypes.number.isRequired,
         doi: PropTypes.string.isRequired,
-        publishedIn: PropTypes.object,
+        publishedIn: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
         authors: PropTypes.arrayOf(
             PropTypes.shape({
                 id: PropTypes.string.isRequired,

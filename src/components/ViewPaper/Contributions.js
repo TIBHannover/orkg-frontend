@@ -256,7 +256,7 @@ class Contributions extends Component {
                                                                 No research problems added yet. Please contribute by{' '}
                                                                 <Button
                                                                     color="link"
-                                                                    style={{ verticalAlign: 'None', fontStyle: 'italic' }}
+                                                                    style={{ verticalAlign: 'initial', fontStyle: 'italic' }}
                                                                     className={'m-0 p-0'}
                                                                     onClick={() => this.props.toggleEditMode()}
                                                                 >

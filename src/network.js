@@ -174,6 +174,10 @@ export const createLiteral = label => {
     return submitPostRequest(literalsUrl, { 'Content-Type': 'application/json' }, { label: label });
 };
 
+export const createClass = label => {
+    return submitPostRequest(classesUrl, { 'Content-Type': 'application/json' }, { label: label });
+};
+
 export const createResourceStatement = (subjectId, predicateId, objectId) => {
     return submitPostRequest(
         `${statementsUrl}`,
@@ -181,25 +185,19 @@ export const createResourceStatement = (subjectId, predicateId, objectId) => {
         {
             subject_id: subjectId,
             predicate_id: predicateId,
-            object: {
-                id: objectId,
-                _class: 'resource'
-            }
+            object_id: objectId
         }
     );
 };
 
-export const createLiteralStatement = (subjectId, predicateId, property) => {
+export const createLiteralStatement = (subjectId, predicateId, literalId) => {
     return submitPostRequest(
         `${statementsUrl}`,
         { 'Content-Type': 'application/json' },
         {
             subject_id: subjectId,
             predicate_id: predicateId,
-            object: {
-                id: property,
-                _class: 'literal'
-            }
+            object_id: literalId
         }
     );
 };
@@ -309,6 +307,18 @@ export const getStatementsByPredicate = ({ id, page = 1, items = 9999, sortBy = 
     const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
 
     return submitGetRequest(`${statementsUrl}predicate/${encodeURIComponent(id)}/?${params}`);
+};
+
+export const getStatementsBySubjectAndPredicate = ({ subjectId, predicateId, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
+    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
+
+    return submitGetRequest(`${statementsUrl}subject/${subjectId}/predicate/${predicateId}/?${params}`);
+};
+
+export const getStatementsByObjectAndPredicate = ({ objectId, predicateId, page = 1, items = 9999, sortBy = 'created_at', desc = true }) => {
+    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc });
+
+    return submitGetRequest(`${statementsUrl}object/${objectId}/predicate/${predicateId}/?${params}`);
 };
 
 export const getComparison = ({ contributionIds = [], save_response = false }) => {
@@ -440,4 +450,127 @@ export const updateUserPassword = ({ current_password, new_password, new_matchin
     };
 
     return submitPutRequest(`${url}user/password/`, headers, data);
+};
+
+/**
+ * Load template by ID
+ *
+ * @param {String} templateId Template Id
+ */
+export const getTemplateById = templateId => {
+    return getStatementsBySubject({ id: templateId }).then(templateStatements => {
+        const templatePredicate = templateStatements
+            .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE)
+            .map(statement => ({
+                id: statement.object.id,
+                label: statement.object.label
+            }));
+
+        const templateClass = templateStatements
+            .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS)
+            .map(statement => ({
+                id: statement.object.id,
+                label: statement.object.label
+            }));
+
+        const templateComponents = templateStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT);
+
+        const components = getStatementsBySubjects({ ids: templateComponents.map(property => property.object.id) }).then(componentsStatements => {
+            return componentsStatements.map(componentStatements => {
+                const property = componentStatements.statements.find(
+                    statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY
+                );
+                const value = componentStatements.statements.find(
+                    statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALUE
+                );
+
+                return {
+                    id: componentStatements.id,
+                    property: property
+                        ? {
+                              id: property.object.id,
+                              label: property.object.label
+                          }
+                        : {},
+                    value: value
+                        ? {
+                              id: value.object.id,
+                              label: value.object.label
+                          }
+                        : {}
+                };
+            });
+        });
+
+        return Promise.all([components]).then(templateComponents => {
+            const subTemplates = templateStatements
+                .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_SUB_TEMPLATE)
+                .map(statement => ({
+                    id: statement.object.id,
+                    label: statement.object.label
+                }));
+            return Promise.all(
+                subTemplates.map(template =>
+                    getStatementsBySubject({ id: template.id }).then(subTemplateStatements => {
+                        const subTemplatePredicate = subTemplateStatements
+                            .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE)
+                            .map(statement => ({
+                                id: statement.object.id,
+                                label: statement.object.label
+                            }));
+                        const subTemplateClass = subTemplateStatements
+                            .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS)
+                            .map(statement => ({
+                                id: statement.object.id,
+                                label: statement.object.label
+                            }));
+                        return {
+                            ...template,
+                            predicate: subTemplatePredicate[0],
+                            class: subTemplateClass && subTemplateClass.length > 0 ? subTemplateClass[0] : null
+                        };
+                    })
+                )
+            ).then(subs => ({
+                id: templateId,
+                label: templateStatements.length > 0 ? templateStatements[0].subject.label : '',
+                predicate: templatePredicate[0],
+                class: templateClass && templateClass.length > 0 ? templateClass[0] : null,
+                components: templateComponents[0],
+                subTemplates: subs
+            }));
+        });
+    });
+};
+
+/**
+ * Get Parents of research field
+ *
+ * @param {String} researchFieldId research field Id
+ */
+export const getParentResearchFields = (researchFieldId, parents = []) => {
+    if (researchFieldId === process.env.REACT_APP_RESEARCH_FIELD_MAIN) {
+        parents.push({ id: researchFieldId, label: 'Research Field' });
+        return Promise.resolve(parents);
+    } else {
+        return getStatementsByObjectAndPredicate({
+            objectId: researchFieldId,
+            predicateId: process.env.REACT_APP_PREDICATES_HAS_SUB_RESEARCH_FIELD
+        }).then(parentResearchField => {
+            parents.push(parentResearchField[0].object);
+            return getParentResearchFields(parentResearchField[0].subject.id, parents);
+        });
+    }
+};
+
+/**
+ * Get Template by Class
+ *
+ * @param {String} researchFieldId research field Id
+ */
+export const getTemplatesByClass = classID => {
+    return getStatementsByObjectAndPredicate({
+        objectId: classID,
+        predicateId: process.env.REACT_APP_TEMPLATE_OF_CLASS
+    }).then(statements => Promise.all(statements.map(st => getTemplateById(st.subject.id))));
 };

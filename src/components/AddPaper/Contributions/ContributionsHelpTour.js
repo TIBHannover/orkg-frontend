@@ -36,11 +36,7 @@ class ContributionsHelpTour extends Component {
 
     requestCloseTour = () => {
         this.enableBody();
-        if (this.props.cookies.get('taketourClosed')) {
-            this.props.closeTour();
-        } else {
-            this.setState({ isClosed: true });
-        }
+        this.props.closeTour();
     };
 
     toggleVideoDialog = () => {
@@ -61,25 +57,6 @@ class ContributionsHelpTour extends Component {
                         ...(!this.props.showAbstractDialog
                             ? [
                                   {
-                                      selector: '#researchProblemFormControl',
-                                      content: (
-                                          <span>
-                                              Specify the research problem that this contribution addresses. Normally, a research problem consists of{' '}
-                                              <strong>very few words</strong> (around 2 or 3).
-                                              <br />
-                                              <br />
-                                              Examples of research problems:
-                                              <ul>
-                                                  <li>Named entity recognition</li>
-                                                  <li>HCI performance evaluations</li>
-                                                  <li>Triple store benchmarking</li>
-                                              </ul>
-                                          </span>
-                                      ),
-                                      style: { borderTop: '4px solid #E86161' },
-                                      action: node => (node ? node.focus() : null)
-                                  },
-                                  {
                                       selector: '#contributionsList',
                                       content: (
                                           <span>
@@ -94,7 +71,7 @@ class ContributionsHelpTour extends Component {
                                       action: node => (node ? node.focus() : null)
                                   },
                                   {
-                                      selector: '.listGroupEnlarge',
+                                      selector: '.contributionData',
                                       content: (
                                           <span>
                                               Entering contribution data is the most important part of adding a paper (this part takes around 10-20
@@ -178,7 +155,7 @@ class ContributionsHelpTour extends Component {
                             title="ORKG - How to add contribution data"
                         />
                         <hr />
-                        <a href="https://labs.tib.eu/orkg/paper/R1020" target="_blank" rel="noopener noreferrer">
+                        <a href="https://www.orkg.org/orkg/paper/R1020" target="_blank" rel="noopener noreferrer">
                             View paper that has been used in this example <Icon size="sm" icon={faExternalLinkAlt} />
                         </a>
                     </ModalBody>

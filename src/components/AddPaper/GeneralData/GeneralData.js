@@ -120,6 +120,7 @@ class GeneralData extends Component {
             publicationYear: this.state.paperPublicationYear,
             doi: this.state.doi,
             entry: this.state.entry,
+            publishedIn: this.state.publishedIn,
             showLookupTable: true
         });
     };
@@ -310,9 +311,8 @@ class GeneralData extends Component {
 
     requestCloseTour = () => {
         this.enableBody();
-        if (this.props.cookies.get('taketourClosed')) {
-            this.props.closeTour();
-        } else {
+        this.props.closeTour();
+        if (!this.props.cookies.get('taketourClosed')) {
             this.setState({ showHelpButton: true });
         }
     };

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { submitGetRequest, getResourcesByClass } from '../../network';
+import { submitGetRequest, getResourcesByClass } from 'network';
 import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';
@@ -16,27 +16,17 @@ export const StyledAutoCompleteInputFormControl = styled.div`
     padding: 0 !important;
 `;
 
-class AutoComplete extends Component {
+class TemplateEditorAutoComplete extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             selectedItemId: null,
             dropdownMenuJsx: null,
-            inputValue: '',
-            defaultOptions: this.props.defaultOptions ? this.props.defaultOptions : [],
-            value: this.props.value || ''
+            inputValue: ''
         };
 
         this.maxResults = 100;
-    }
-
-    componentDidMount() {
-        this._isMounted = true;
-    }
-
-    componentWillUnmount() {
-        this._isMounted = false;
     }
 
     IdMatch = async (value, responseJson) => {
@@ -64,7 +54,7 @@ class AutoComplete extends Component {
     loadOptions = async value => {
         try {
             if (value === '' || value.trim() === '') {
-                return this.props.defaultOptions ? this.props.defaultOptions : [];
+                return [];
             }
 
             let queryParams = '';
@@ -77,23 +67,9 @@ class AutoComplete extends Component {
             if (this.props.optionsClass) {
                 responseJson = await getResourcesByClass({ id: this.props.optionsClass, q: value });
             } else {
-                responseJson = await submitGetRequest(
-                    this.props.requestUrl +
-                        '?q=' +
-                        encodeURIComponent(value) +
-                        queryParams +
-                        (this.props.excludeClasses ? '&exclude=' + encodeURIComponent(this.props.excludeClasses) : '')
-                );
+                responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value) + queryParams);
             }
-
             responseJson = await this.IdMatch(value, responseJson);
-
-            if (this.props.additionalData && this.props.additionalData.length > 0) {
-                let newProperties = this.props.additionalData;
-                newProperties = newProperties.filter(({ label }) => label.toLowerCase().includes(value.toLowerCase())); // ensure the label of the new property contains the search value
-
-                responseJson.unshift(...newProperties);
-            }
 
             if (responseJson.length > this.maxResults) {
                 responseJson = responseJson.slice(0, this.maxResults);
@@ -117,47 +93,16 @@ class AutoComplete extends Component {
         }
     };
 
-    // this fixes a problem (or a bug by design) from react-select
-    // options were lost after blurring and then focusing the select menu
-    // probably because the inputValue is controlled by this component
-    loadDefaultOptions = async inputValue => {
-        const defaultOptions = await this.loadOptions(inputValue);
-
-        this._isMounted &&
-            this.setState({
-                defaultOptions
-            });
-    };
-
-    noResults = value => {
-        return value.inputValue !== '' ? 'No results found' : 'Start typing to find results';
-    };
-
-    handleChange = (selected, action) => {
-        if (action.action === 'select-option') {
-            this.props.onItemSelected({
-                id: selected.id,
-                value: selected.label,
-                shared: selected.shared,
-                classes: selected.classes
-            });
-        } else if (action.action === 'create-option') {
-            this.props.onNewItemSelected && this.props.onNewItemSelected(selected.label);
-        }
-    };
-
     handleInputChange = (inputValue, action) => {
         if (action.action === 'input-change') {
             this.setState({
                 inputValue
             });
-
-            if (this.props.onInput) {
-                this.props.onInput(null, inputValue);
-            }
-        } else if (action.action === 'menu-close') {
-            this.loadDefaultOptions(this.state.inputValue);
         }
+    };
+
+    noResults = () => {
+        return 'Start typing to get relevant suggestions';
     };
 
     render() {
@@ -172,27 +117,21 @@ class AutoComplete extends Component {
                 cursor: 'text',
                 minHeight: 'initial',
                 borderRadius: 'inherit',
-                '&>div:first-of-type': {
-                    ...(this.props.cssClasses && this.props.cssClasses.includes('form-control-sm') ? { padding: '0 8px !important' } : {})
-                },
                 whiteSpace: 'nowrap' /* ensure the placeholder is not wrapped when animating the width */
             }),
             container: provided => ({
                 ...provided,
                 padding: 0,
                 height: 'auto',
-                borderTopLeftRadius: this.props.disableBorderRadiusLeft ? 0 : 'inherit',
-                borderBottomLeftRadius: this.props.disableBorderRadiusLeft ? 0 : 'inherit',
-                borderTopRightRadius: this.props.disableBorderRadiusRight ? 0 : 'inherit',
-                borderBottomRightRadius: this.props.disableBorderRadiusRight ? 0 : 'inherit',
+                borderTopLeftRadius: 'inherit',
+                borderBottomLeftRadius: 'inherit',
+                borderTopRightRadius: 'inherit',
+                borderBottomRightRadius: 'inherit',
                 background: '#fff'
             }),
             indicatorsContainer: provided => ({
                 ...provided,
-                cursor: 'pointer',
-                '&>div:last-of-type': {
-                    ...(this.props.cssClasses && this.props.cssClasses.includes('form-control-sm') ? { padding: '4px !important' } : {})
-                }
+                cursor: 'pointer'
             }),
             menu: provided => ({
                 ...provided,
@@ -208,50 +147,40 @@ class AutoComplete extends Component {
         const Select = this.props.allowCreate ? AsyncCreatableSelect : AsyncSelect;
 
         return (
-            <StyledAutoCompleteInputFormControl className={`form-control ${this.props.cssClasses ? this.props.cssClasses : 'default'}`}>
+            <StyledAutoCompleteInputFormControl className={`form-control default`}>
                 <Select
                     loadOptions={this.loadOptions}
                     noOptionsMessage={this.noResults}
-                    onChange={this.handleChange}
+                    onChange={this.props.onItemSelected}
                     onInputChange={this.handleInputChange}
-                    inputValue={this.state.inputValue}
                     styles={this.customStyles}
                     placeholder={this.props.placeholder}
                     autoFocus
                     cacheOptions
-                    defaultOptions={this.state.defaultOptions}
-                    onBlur={this.props.onBlur}
-                    onKeyDown={this.props.onKeyDown}
-                    ref={this.props.innerRef}
+                    value={this.props.value}
+                    getOptionLabel={({ label }) => label}
+                    getOptionValue={({ id }) => id}
+                    isMulti={this.props.isMulti ? true : false}
+                    isDisabled={this.props.isDisabled}
+                    isClearable={this.props.isClearable}
                 />
             </StyledAutoCompleteInputFormControl>
         );
     }
 }
 
-AutoComplete.propTypes = {
+TemplateEditorAutoComplete.propTypes = {
     requestUrl: PropTypes.string.isRequired,
-    excludeClasses: PropTypes.string,
-    optionsClass: PropTypes.string,
-    placeholder: PropTypes.string.isRequired,
     onItemSelected: PropTypes.func.isRequired,
+    placeholder: PropTypes.string.isRequired,
     allowCreate: PropTypes.bool,
-    defaultOptions: PropTypes.array,
-    additionalData: PropTypes.array,
-    onNewItemSelected: PropTypes.func,
-    onKeyDown: PropTypes.func,
-    onBlur: PropTypes.func,
-    disableBorderRadiusRight: PropTypes.bool,
-    disableBorderRadiusLeft: PropTypes.bool,
-    onInput: PropTypes.func,
-    value: PropTypes.string,
-    cssClasses: PropTypes.string,
-    hideAfterSelection: PropTypes.bool,
+    value: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     theme: PropTypes.object.isRequired,
-    innerRef: PropTypes.func
+    optionsClass: PropTypes.string,
+    isMulti: PropTypes.bool,
+    isDisabled: PropTypes.bool,
+    isClearable: PropTypes.bool,
+    noOptionsMessage: PropTypes.string
 };
 
-AutoComplete.defaultProps = {
-    cssClasses: ''
-};
-export default withTheme(AutoComplete);
+export default withTheme(TemplateEditorAutoComplete);

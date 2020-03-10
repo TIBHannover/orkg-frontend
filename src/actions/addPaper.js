@@ -163,10 +163,14 @@ export const prefillStatements = ({ statements, resourceId }) => dispatch => {
     for (const property of statements.properties) {
         dispatch(
             createProperty({
-                propertyId: property.propertyId,
+                propertyId: property.propertyId ? property.propertyId : guid(),
                 existingPredicateId: property.existingPredicateId,
                 resourceId: resourceId,
-                label: property.label
+                label: property.label,
+                isTemplate: property.isTemplate ? property.isTemplate : false,
+                templateId: property.templateId ? property.templateId : null,
+                templateClass: property.templateClass ? property.templateClass : null,
+                isAnimated: property.isAnimated !== undefined ? property.isAnimated : false
             })
         );
     }
@@ -175,9 +179,13 @@ export const prefillStatements = ({ statements, resourceId }) => dispatch => {
     for (const value of statements.values) {
         dispatch(
             createValue({
+                valueId: value.valueId,
                 label: value.label,
-                type: 'object',
-                propertyId: value.propertyId
+                type: value.type ? value.type : 'object',
+                templateId: value.templateId ? value.templateId : null,
+                propertyId: value.propertyId,
+                existingResourceId: value.existingResourceId ? value.existingResourceId : null,
+                classes: value.classes ? value.classes : []
             })
         );
     }
@@ -300,6 +308,7 @@ export const getResourceObject = (data, resourceId, newProperties) => {
                             return {
                                 '@temp': `_${value.resourceId}`,
                                 label: value.label,
+                                class: value.classes && value.classes.length > 0 ? value.classes[0].id : null,
                                 values: Object.assign({}, getResourceObject(data, value.resourceId, newProperties))
                             };
                         } else {

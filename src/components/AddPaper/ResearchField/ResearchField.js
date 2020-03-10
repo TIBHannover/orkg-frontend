@@ -138,11 +138,7 @@ class ResearchField extends Component {
 
     requestCloseTour = () => {
         this.enableBody();
-        if (this.props.cookies.get('taketourClosed')) {
-            this.props.closeTour();
-        } else {
-            this.setState({ isClosed: true });
-        }
+        this.props.closeTour();
     };
 
     handleLearnMore = step => {
@@ -177,8 +173,8 @@ class ResearchField extends Component {
                 <CardDeck>
                     {this.props.researchFields.length > 0 &&
                         this.props.researchFields.map((fields, level) => {
-                            return fields.length > 0 ? (
-                                <FieldSelector className="fieldSelector">
+                            return fields && fields.length > 0 ? (
+                                <FieldSelector className="fieldSelector" key={level}>
                                     <ListGroup flush>
                                         <TransitionGroup exit={false}>
                                             {fields.map(field => (

@@ -4,56 +4,29 @@ import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
 import { deleteProperty, toggleEditPropertyLabel } from '../../actions/statementBrowser';
 import { deleteStatementById } from '../../network';
-import Confirm from 'reactstrap-confirm';
+import StatementOptionButton from './StatementOptionButton';
 import { toast } from 'react-toastify';
 import Tippy from '@tippy.js/react';
 import 'tippy.js/dist/tippy.css';
 import PropTypes from 'prop-types';
 
 class StatementOptions extends Component {
-    toggleDeleteStatement = async e => {
-        e.stopPropagation();
-
+    handleDeleteStatement = () => {
         const property = this.props.properties.byId[this.props.id];
-        let title = '';
-        let message = '';
-        if (property.valueIds.length === 0) {
-            title = (
-                <>
-                    Delete the <i>{property.label}</i> property?
-                </>
-            );
-            message = 'Are you sure you want to delete this property?';
-        } else {
-            title = (
-                <>
-                    Delete the <i>{property.label}</i> property and all related values?
-                </>
-            );
-            message = `Also, ${property.valueIds.length} related ${property.valueIds.length === 1 ? 'value' : 'values'} will be deleted.`;
-        }
-        const result = await Confirm({
-            title: title,
-            message: message,
-            cancelColor: 'light'
-        });
-
-        if (result) {
-            if (this.props.syncBackend) {
-                // Delete All related statements
-                if (property.valueIds.length > 0) {
-                    for (const valueId of property.valueIds) {
-                        const value = this.props.values.byId[valueId];
-                        deleteStatementById(value.statementId);
-                    }
-                    toast.success(`${property.valueIds.length} ${property.valueIds.length === 1 ? 'Statement' : 'Statements'} deleted successfully`);
+        if (this.props.syncBackend) {
+            // Delete All related statements
+            if (property.valueIds.length > 0) {
+                for (const valueId of property.valueIds) {
+                    const value = this.props.values.byId[valueId];
+                    deleteStatementById(value.statementId);
                 }
+                toast.success(`${property.valueIds.length} ${property.valueIds.length === 1 ? 'Statement' : 'Statements'} deleted successfully`);
             }
-            this.props.deleteProperty({
-                id: this.props.id,
-                resourceId: this.props.selectedResource
-            });
         }
+        this.props.deleteProperty({
+            id: this.props.id,
+            resourceId: this.props.selectedResource
+        });
     };
 
     render() {
@@ -74,13 +47,15 @@ class StatementOptions extends Component {
                         </Tippy>
                     </span>
                 )}
-                <span className={'deletePredicate mr-4'} onClick={this.toggleDeleteStatement}>
-                    <Tippy content="Delete statement">
-                        <span>
-                            <Icon icon={faTrash} /> Delete
-                        </span>
-                    </Tippy>
-                </span>
+                <StatementOptionButton
+                    className={'deletePredicate mr-4'}
+                    requireConfirmation={true}
+                    title={'Delete statement'}
+                    buttonText={'Delete'}
+                    confirmationMessage={'Are you sure to delete?'}
+                    icon={faTrash}
+                    action={this.handleDeleteStatement}
+                />
             </>
         );
     }

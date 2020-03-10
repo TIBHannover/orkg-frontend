@@ -10,6 +10,8 @@ export default {
     ADD_RESOURCE: '/addResource',
     PREDICATES: '/predicates',
     PREDICATE: '/predicate/:id',
+    CONTRIBUTION_TEMPLATES: '/templates',
+    CONTRIBUTION_TEMPLATE: '/template/:id?',
     ADD_PAPER: {
         GENERAL_DATA: '/add-paper'
     },

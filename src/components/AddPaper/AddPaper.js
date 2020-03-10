@@ -29,7 +29,7 @@ const Help = styled.div`
     padding: 0;
     bottom: 24px;
     right: 24px;
-    color: '#80869b';
+    color: #80869b;
 
     .text {
         cursor: pointer;

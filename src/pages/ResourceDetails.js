@@ -117,6 +117,7 @@ class ResourceDetails extends Component {
                                     openExistingResourcesInDialog={false}
                                     initialResourceId={this.props.match.params.id}
                                     initialResourceLabel={this.state.label}
+                                    newStore={true}
                                 />
 
                                 <SameAsStatements />

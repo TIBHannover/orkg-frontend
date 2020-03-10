@@ -35,6 +35,23 @@ export const initializeWithoutContribution = data => dispatch => {
     );
 };
 
+export const initializeWithResource = data => dispatch => {
+    const label = data.label;
+    const resourceId = data.resourceId;
+
+    dispatch({
+        type: type.CLEAR_RESOURCE_HISTORY
+    });
+
+    dispatch(
+        selectResource({
+            increaseLevel: false,
+            resourceId: resourceId,
+            label: label
+        })
+    );
+};
+
 export const resetStatementBrowser = () => dispatch => {
     dispatch({
         type: type.RESET_STATEMENT_BROWSER
@@ -86,6 +103,13 @@ export const changeProperty = data => dispatch => {
     });
 };
 
+export const doneAnimation = data => dispatch => {
+    dispatch({
+        type: type.DONE_ANIMATION,
+        payload: data
+    });
+};
+
 export const isSavingProperty = data => dispatch => {
     dispatch({
         type: type.IS_SAVING_PROPERTY,
@@ -108,7 +132,7 @@ export const updatePropertyLabel = data => dispatch => {
 };
 
 export const createValue = data => dispatch => {
-    const resourceId = data.existingResourceId ? data.existingResourceId : data.type === 'object' ? guid() : null;
+    const resourceId = data.existingResourceId ? data.existingResourceId : data.type === 'object' || data.type === 'template' ? guid() : null;
     dispatch({
         type: type.CREATE_VALUE,
         payload: {
@@ -199,6 +223,69 @@ export const selectResource = data => dispatch => {
     }
 };
 
+export const fetchStructureForTemplate = data => {
+    const { resourceId, templateId } = data;
+    return dispatch => {
+        dispatch({
+            type: type.IS_FETCHING_STATEMENTS
+        });
+        return network.getTemplateById(templateId).then(
+            template => {
+                dispatch({
+                    type: type.DONE_FETCHING_STATEMENTS
+                });
+                // Add properties
+                if (template.components && template.components.length > 0) {
+                    for (const component of template.components) {
+                        dispatch(
+                            createProperty({
+                                resourceId: resourceId,
+                                existingPredicateId: component.property.id,
+                                label: component.property.label,
+                                isExistingProperty: true
+                            })
+                        );
+                    }
+                }
+                // Add templates
+                if (template.subTemplates && template.subTemplates.length > 0) {
+                    for (const subTemplate of template.subTemplates) {
+                        const tpID = guid();
+                        //const tvID = guid();
+                        dispatch(
+                            createProperty({
+                                resourceId: resourceId,
+                                existingPredicateId: subTemplate.predicate.id,
+                                propertyId: tpID,
+                                label: subTemplate.predicate.label,
+                                isExistingProperty: true,
+                                templateId: subTemplate.id,
+                                templateClass: subTemplate.class
+                            })
+                        );
+                        /*
+                        dispatch(
+                            createValue({
+                                valueId: tvID,
+                                propertyId: tpID,
+                                label: subTemplate.label,
+                                type: 'template',
+                                templateId: subTemplate.id
+                            })
+                        );
+                        */
+                    }
+                }
+                dispatch({
+                    type: type.SET_STATEMENT_IS_FECHTED,
+                    resourceId: resourceId
+                });
+            },
+            error => console.log('An error occurred.', error)
+        );
+    };
+};
+
 // TODO: support literals (currently not working in backend)
 export const fetchStatementsForResource = data => {
     let { isContribution } = data;
@@ -237,7 +324,8 @@ export const fetchStatementsForResource = data => {
                                     resourceId: resourceId,
                                     existingPredicateId: statement.predicate.id,
                                     label: statement.predicate.label,
-                                    isExistingProperty: true
+                                    isExistingProperty: true,
+                                    isTemplate: false
                                 })
                             );
 

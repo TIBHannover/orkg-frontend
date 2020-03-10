@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Button } from 'reactstrap';
+import { Row, Col, Button } from 'reactstrap';
 import ContributionItemList from './ContributionItemList';
 import ContributionsHelpTour from './ContributionsHelpTour';
 import Tooltip from '../../Utils/Tooltip';
-import { StyledContributionsList } from './styled';
+import { StyledHorizontalContributionsList } from './styled';
 import { connect } from 'react-redux';
 import {
     nextStep,
@@ -21,8 +21,9 @@ import Confirm from 'reactstrap-confirm';
 import Contribution from './Contribution';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faMagic } from '@fortawesome/free-solid-svg-icons';
+import { faMagic, faPlus } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
+import Tippy from '@tippy.js/react';
 import PropTypes from 'prop-types';
 
 const AnimationContainer = styled(CSSTransition)`
@@ -32,9 +33,9 @@ const AnimationContainer = styled(CSSTransition)`
         opacity: 0;
     }
 
-    &.fadeIn-enter.fadeIn-enter-active {
+    &.fadeIn-enter-active {
         opacity: 1;
-        transition: 0.5s opacity;
+        transition: 0.7s opacity;
     }
 `;
 
@@ -152,40 +153,44 @@ class Contributions extends Component {
                         <Icon icon={faMagic} /> Abstract annotator
                     </Button>
                 </div>
-                <Container>
-                    <Row noGutters={true}>
-                        <Col xs="3">
-                            <StyledContributionsList id="contributionsList">
-                                {this.props.contributions.allIds.map((contributionId, index) => {
-                                    const contribution = this.props.contributions.byId[contributionId];
+                <Row noGutters={true}>
+                    <Col md="9">
+                        <StyledHorizontalContributionsList id="contributionsList">
+                            {this.props.contributions.allIds.map((contributionId, index) => {
+                                const contribution = this.props.contributions.byId[contributionId];
 
-                                    return (
-                                        <ContributionItemList
-                                            handleChangeContributionLabel={this.handleChange}
-                                            isSelected={contributionId === selectedResourceId}
-                                            canDelete={this.props.contributions.allIds.length !== 1}
-                                            selectedContributionId={this.state.selectedContribution}
-                                            contribution={contribution}
-                                            key={contributionId}
-                                            toggleDeleteContribution={this.toggleDeleteContribution}
-                                            handleSelectContribution={this.handleSelectContribution}
-                                        />
-                                    );
-                                })}
+                                return (
+                                    <ContributionItemList
+                                        handleChangeContributionLabel={this.handleChange}
+                                        isSelected={contributionId === selectedResourceId}
+                                        canDelete={this.props.contributions.allIds.length !== 1}
+                                        selectedContributionId={this.state.selectedContribution}
+                                        contribution={contribution}
+                                        key={contributionId}
+                                        toggleDeleteContribution={this.toggleDeleteContribution}
+                                        handleSelectContribution={this.handleSelectContribution}
+                                    />
+                                );
+                            })}
 
-                                <li className={'addContribution text-primary'}>
-                                    <span onClick={this.props.createContribution}>+ Add another contribution</span>
-                                </li>
-                            </StyledContributionsList>
-                        </Col>
+                            <li className={'addContribution'} onClick={this.props.createContribution}>
+                                <Tippy content="Add contribution">
+                                    <span>
+                                        <Icon size="xs" icon={faPlus} />
+                                    </span>
+                                </Tippy>
+                            </li>
+                        </StyledHorizontalContributionsList>
+                    </Col>
 
-                        <TransitionGroup className="col-9" exit={false}>
-                            <AnimationContainer classNames="fadeIn" timeout={{ enter: 500, exit: 0 }} key={selectedResourceId}>
+                    <TransitionGroup className="col-md-9" exit={false}>
+                        <AnimationContainer classNames="fadeIn" timeout={{ enter: 700, exit: 0 }} key={selectedResourceId}>
+                            <div>
                                 <Contribution id={selectedResourceId} />
-                            </AnimationContainer>
-                        </TransitionGroup>
-                    </Row>
-                </Container>
+                            </div>
+                        </AnimationContainer>
+                    </TransitionGroup>
+                </Row>
 
                 <hr className="mt-5 mb-3" />
 

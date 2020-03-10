@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ListGroupItem, InputGroup, DropdownItem } from 'reactstrap';
+import { ListGroupItem, InputGroup, DropdownItem, Button, DropdownToggle } from 'reactstrap';
 
 /*contribution*/
 export const StyledContribution = styled.div`
@@ -8,6 +8,16 @@ export const StyledContribution = styled.div`
     border-color: ${props => props.theme.orkgPrimaryColor};
     border-style: solid;
     padding: 15px 30px;
+`;
+
+/*contribution*/
+export const StyledHorizontalContribution = styled.div`
+    border-radius: ${props => props.theme.borderRadius};
+    border-width: ${props => props.theme.borderWidth};
+    border-color: ${props => props.theme.ultraLightBlueDarker};
+    border-style: solid;
+    border-top-left-radius: 0;
+    padding: 25px 30px;
 `;
 
 /*contributionsList*/
@@ -47,6 +57,74 @@ export const StyledContributionsList = styled.ul`
         }
         &.addContribution span:hover {
             text-decoration: underline;
+        }
+    }
+`;
+
+export const StyledHorizontalContributionsList = styled.ul`
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+
+    > li {
+        &:nth-last-child(2) {
+            border-top-right-radius: ${props => props.theme.borderRadius};
+        }
+
+        &:first-child {
+            border-top-left-radius: ${props => props.theme.borderRadius};
+        }
+
+        border: 1px solid ${props => props.theme.ultraLightBlueDarker};
+        background-color: ${props => props.theme.ultraLightBlue};
+        margin-right: 2px;
+        border-bottom: 0;
+        margin-bottom: -1px;
+        position: relative;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        display: inline-block;
+        padding: 7px 15px 7px 15px;
+        transition: 0.3s background;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: none;
+        }
+        &.activeContribution {
+            background: ${props => props.theme.orkgPrimaryColor};
+            border: 1px solid ${props => props.theme.orkgPrimaryColor};
+            color: #fff;
+            cursor: initial !important;
+        }
+        &.activeContribution a {
+            color: #fff;
+        }
+        .deleteContribution {
+            cursor: pointer;
+            color: #fff;
+        }
+        &.addContribution {
+            padding: 0;
+            border: 1px solid ${props => props.theme.ultraLightBlueDarker};
+            border-radius: 60px;
+            margin: 0 5px;
+            cursor: pointer;
+
+            span {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 25px;
+                height: 25px;
+            }
+        }
+        &.addContribution:hover {
+            background-color: ${props => props.theme.orkgPrimaryColor};
+            border: 1px solid ${props => props.theme.orkgPrimaryColor};
+            color: #fff;
         }
     }
 `;
@@ -195,7 +273,8 @@ export const StyledValueItem = styled(ListGroupItem)`
             cursor: not-allowed;
         }
     }
-    &:hover {
+    &:hover,
+    &.disableHover {
         & .deleteValue {
             display: inline-block;
         }
@@ -212,6 +291,13 @@ export const StyledValueItem = styled(ListGroupItem)`
     }
 `;
 
+export const StyledEmptyData = styled(ListGroupItem)`
+    padding: 8px 8px;
+    margin-top: 8px;
+    border-radius: 6px !important;
+    border-style: dashed !important;
+`;
+
 /*dropdownItem*/
 export const StyledDropdownItem = styled(DropdownItem)`
     outline: 0;
@@ -221,5 +307,274 @@ export const StyledDropdownItem = styled(DropdownItem)`
     }
     &:hover svg {
         display: inline-block;
+    }
+`;
+
+/* Template Wizard */
+export const StyledButton = styled(Button)`
+    border-color: #ced4da !important;
+    color: ${props => props.theme.buttonDark} !important;
+    background: ${props => props.theme.ultraLightBlueDarker} !important;
+    &:hover {
+        color: #fff !important;
+        background-color: ${props => props.theme.darkblue} !important;
+        border-color: ${props => props.theme.darkblue} !important;
+    }
+`;
+
+export const StyledDropdownToggle = styled(DropdownToggle)`
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+    background: ${props => props.theme.ultraLightBlueDarker} !important;
+    color: ${props => props.theme.buttonDark} !important;
+    border-color: #ced4da !important;
+    &:hover {
+        color: #fff !important;
+        background-color: ${props => props.theme.darkblue} !important;
+        border-color: ${props => props.theme.darkblue} !important;
+    }
+`;
+
+export const ValueItemStyle = styled.div`
+    background-color: #fff;
+    margin-bottom: 10px;
+    overflow-wrap: break-word;
+
+    .valueOptions {
+        visibility: hidden;
+        display: inline-block !important;
+        transition: visibility 0.2s, opacity 0.2s;
+        opacity: 0;
+
+        &.disableHover {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+
+    &:hover .valueOptions {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    &.editingLabel {
+        margin-bottom: 1px !important;
+    }
+
+    & input,
+    & input:focus {
+        outline: 0 !important;
+        box-shadow: none !important;
+        border-color: #ced4da !important;
+    }
+
+    .objectLabel {
+        display: inline;
+        margin-right: 4px;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .literalLabel {
+        display: inline;
+        margin-right: 4px;
+        text-decoration: none;
+        cursor: default;
+    }
+`;
+
+export const AddPropertyStyle = styled.div`
+    &.inTemplate {
+        background-color: transparent;
+        border: 0;
+        margin: -14.5px 10px;
+        padding: 0;
+        height: 30px; /* fixed height: prevents bug in chrome that moves items around, even though the height doesn't change */
+    }
+`;
+
+export const AddPropertyContentStyle = styled.span`
+    display: inline-block !important;
+    position: relative;
+    z-index: 10px;
+    border-radius: 4px;
+    max-width: 33.33%;
+    font-size: 0.875rem;
+    color: ${props => props.theme.darkblue};
+    transition: 0.3s max-width;
+    cursor: pointer;
+
+    &.noTemplate {
+        &.large {
+            width: 100%;
+            padding: 0;
+            border: 0 !important;
+        }
+    }
+
+    &.inTemplate {
+        width: 30%;
+
+        button {
+            padding: 2px 10px;
+            width: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.125);
+        }
+
+        &.large {
+            width: 100%;
+            padding: 0;
+            border: 0 !important;
+            .icon {
+                color: ${props => props.theme.darkblue};
+            }
+        }
+    }
+`;
+
+export const AddPropertyFormStyle = styled.div`
+    text-align: left;
+
+    & input,
+    & input:focus {
+        border-left: 0;
+        outline: 0;
+        box-shadow: none;
+    }
+
+    .input-group-prepend {
+        background-color: ${props => props.theme.ultraLightBlue};
+        cursor: default;
+        display: flex;
+        border: 1px solid rgba(0, 0, 0, 0.125);
+        border-bottom-left-radius: 4px;
+        border-top-left-radius: 4px;
+        width: 28px;
+        align-items: center;
+        justify-content: center;
+    }
+`;
+
+export const StatementsGroupStyle = styled(ListGroupItem)`
+    position: relative;
+    padding: 0 !important;
+    :last-of-type {
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+    &.inTemplate:first-of-type {
+        border-top: 0;
+    }
+    &.noTemplate {
+        border-top: 1px solid rgba(0, 0, 0, 0.125);
+        border-radius: 4px !important;
+    }
+`;
+
+export const PropertyStyle = styled.div`
+    background-color: ${props => props.theme.ultraLightBlue};
+    overflow-wrap: break-word;
+
+    & > div {
+        padding: 8px;
+    }
+    .propertyLabel {
+        margin-right: 4px;
+        font-weight: 500;
+    }
+    & input,
+    & input:focus {
+        outline: 0 !important;
+        box-shadow: none !important;
+        border-color: #ced4da !important;
+        border-top-left-radius: 4px !important;
+        border-bottom-left-radius: 4px !important;
+    }
+
+    &.editingLabel {
+        padding-bottom: 15px !important;
+    }
+
+    & .propertyOptions {
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0.2s, opacity 0.2s;
+
+        &.disableHover {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+    &:hover .propertyOptions {
+        visibility: visible;
+        opacity: 1;
+        span {
+            color: ${props => props.theme.buttonDark};
+        }
+    }
+`;
+export const ValuesStyle = styled.div`
+    & > div {
+        padding: 8px;
+    }
+    background-color: #fff;
+`;
+
+export const TemplateHeaderStyle = styled.div`
+    cursor: default;
+    background-color: ${props => props.theme.darkblue};
+    border-color: ${props => props.theme.darkblue};
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    color: #fff;
+    position: relative;
+    display: block;
+    padding: 0.55rem 1.25rem;
+    overflow-wrap: break-word;
+    word-break: break-all;
+
+    .headerOptions {
+        visibility: none;
+        transition: visibility 0.2s, opacity 0.2s;
+        opacity: 0;
+        display: inline-block;
+
+        span {
+            background-color: ${props => props.theme.buttonDark};
+            color: ${props => props.theme.ultraLightBlue};
+        }
+
+        &.disableHover {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+
+    &:hover .headerOptions {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .form-control {
+        border-width: 0;
+        border-radius: 0 !important;
+        height: calc(1em + 0.25rem + 4px) !important;
+        padding: 0 0.5rem;
+        outline: 0;
+
+        &:focus {
+            outline: 0;
+            border: 1px dashed ${props => props.theme.ultraLightBlueDarker};
+            box-shadow: none;
+        }
+    }
+    & .type {
+        font-size: 0.9rem;
+        color: ${props => props.theme.ultraLightBlueDarker};
+        opacity: 0.9;
+        .span {
+            background-color: ${props => props.theme.buttonDark};
+            color: ${props => props.theme.darkblue};
+        }
     }
 `;

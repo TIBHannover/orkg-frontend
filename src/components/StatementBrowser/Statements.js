@@ -5,28 +5,31 @@ import StatementItem from './StatementItem';
 import AddProperty from './AddProperty';
 import { connect } from 'react-redux';
 import Breadcrumbs from './Breadcrumbs';
+import { compose } from 'redux';
+import { withCookies, Cookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import { initializeWithoutContribution } from '../../actions/statementBrowser';
+import { initializeWithoutContribution, initializeWithResource } from '../../actions/statementBrowser';
 
 class Statements extends Component {
     constructor(props) {
         super(props);
 
         if (this.props.initialResourceId) {
-            this.props.initializeWithoutContribution({
-                resourceId: this.props.initialResourceId,
-                label: this.props.initialResourceLabel
-            });
+            if (this.props.newStore) {
+                this.props.initializeWithoutContribution({
+                    resourceId: this.props.initialResourceId,
+                    label: this.props.initialResourceLabel
+                });
+            } else {
+                this.props.initializeWithResource({
+                    resourceId: this.props.initialResourceId,
+                    label: this.props.initialResourceLabel
+                });
+            }
         }
     }
-
-    handleInputChange = e => {
-        this.setState({
-            [e.target.name]: e.target.value
-        });
-    };
 
     statements = () => {
         const propertyIds =
@@ -58,11 +61,22 @@ class Statements extends Component {
                                     openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                                     isEditing={property.isEditing}
                                     isSaving={property.isSaving}
+                                    templateId={property.templateId}
+                                    showValueHelp={this.props.cookies && !this.props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                                 />
                             );
                         })
                     ) : (
-                        <StyledStatementItem>No values</StyledStatementItem>
+                        <StyledStatementItem style={{ marginBottom: 0 }}>
+                            No data yet
+                            <br />
+                            {this.props.enableEdit ? (
+                                <span style={{ fontSize: '0.875rem' }}>Start by adding a property from below</span>
+                            ) : (
+                                <span style={{ fontSize: '0.875rem' }}>Please contribute by editing.</span>
+                            )}
+                            <br />
+                        </StyledStatementItem>
                     )
                 ) : (
                     <StyledStatementItem>
@@ -114,16 +128,20 @@ Statements.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     initializeWithoutContribution: PropTypes.func.isRequired,
+    initializeWithResource: PropTypes.func.isRequired,
     initialResourceId: PropTypes.string,
     initialResourceLabel: PropTypes.string,
-    openExistingResourcesInDialog: PropTypes.bool
+    openExistingResourcesInDialog: PropTypes.bool,
+    cookies: PropTypes.instanceOf(Cookies).isRequired,
+    newStore: PropTypes.bool
 };
 
 Statements.defaultProps = {
     openExistingResourcesInDialog: false,
     initialResourceId: null,
     initialResourceLabel: null,
-    syncBackend: false
+    syncBackend: false,
+    newStore: false
 };
 
 const mapStateToProps = state => {
@@ -137,10 +155,14 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-    initializeWithoutContribution: data => dispatch(initializeWithoutContribution(data))
+    initializeWithoutContribution: data => dispatch(initializeWithoutContribution(data)),
+    initializeWithResource: data => dispatch(initializeWithResource(data))
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    ),
+    withCookies
 )(Statements);
