@@ -401,6 +401,7 @@ class SearchAutoComplete extends Component {
                 <Input
                     bsSize={'sm'}
                     type="text"
+                    style={{ paddingRight: '30px' }}
                     placeholder={this.props.placeHolder}
                     value={this.state.value}
                     onChange={this.handleChange}
@@ -410,7 +411,6 @@ class SearchAutoComplete extends Component {
                 <Dropdown
                     color="darkblue"
                     size="sm"
-                    //    className='mb-4 mt-4'
                     style={{ marginLeft: '-40px', flexGrow: '1', display: 'flex', height: 'min-content', paddingTop: '5px' }}
                     isOpen={this.state.dropdownMenuOpen}
                     toggle={this.toggleFunction}
