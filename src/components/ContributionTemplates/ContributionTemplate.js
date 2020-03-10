@@ -16,7 +16,7 @@ import {
 } from 'network';
 import { EditModeHeader, Title } from 'components/ViewPaper/ViewPaper';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faSpinner, faTrash, faInfo, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faSpinner, faTrash, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
 import styled, { withTheme } from 'styled-components';
 import ROUTES from 'constants/routes.js';
 import Confirm from 'reactstrap-confirm';

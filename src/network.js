@@ -359,6 +359,10 @@ export const getRDFDataCubeVocabularyClasses = () => {
     return submitGetRequest(`${classesUrl}?q=qb:`);
 };
 
+export const getAllClasses = () => {
+    return submitGetRequest(`${classesUrl}`);
+};
+
 export const saveFullPaper = data => {
     return submitPostRequest(`${url}papers/`, { 'Content-Type': 'application/json' }, data);
 };
