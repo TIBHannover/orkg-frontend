@@ -81,12 +81,12 @@ class AddValue extends Component {
 
     handleValueSelect = async ({ id, value, shared, classes }) => {
         if (this.props.syncBackend) {
-            const predicate = this.props.properties.byId[this.props.propertyId];
+            const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
             const newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, id);
             this.props.createValue({
                 label: value,
                 type: this.state.valueType,
-                propertyId: this.props.propertyId,
+                propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
                 classes: classes,
                 existingResourceId: id,
                 isExistingValue: true,
@@ -97,7 +97,7 @@ class AddValue extends Component {
             this.props.createValue({
                 label: value,
                 type: this.state.valueType,
-                propertyId: this.props.propertyId,
+                propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
                 classes: classes,
                 existingResourceId: id,
                 isExistingValue: true,
@@ -110,7 +110,7 @@ class AddValue extends Component {
 
     handleAddValue = async () => {
         if (this.props.syncBackend) {
-            const predicate = this.props.properties.byId[this.props.propertyId];
+            const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
             let newObject = null;
             let newStatement = null;
             switch (this.state.valueType) {
@@ -129,18 +129,18 @@ class AddValue extends Component {
             this.props.createValue({
                 label: this.state.inputValue,
                 type: this.state.valueType,
-                propertyId: this.props.propertyId,
+                propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
                 existingResourceId: newObject.id,
                 isExistingValue: true,
                 statementId: newStatement.id,
                 shared: newObject.shared
             });
         } else {
-            const predicate = this.props.properties.byId[this.props.propertyId];
+            const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
             this.props.createValue({
                 label: this.state.inputValue,
                 type: this.state.valueType,
-                propertyId: this.props.propertyId,
+                propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
                 templateId: predicate.templateId ? predicate.templateId : null,
                 classes: predicate.templateClass ? [predicate.templateClass] : [],
                 shared: 1
@@ -182,7 +182,8 @@ class AddValue extends Component {
                         {this.state.showAddValue ? (
                             <InputGroup>
                                 {![process.env.REACT_APP_TEMPLATE_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
-                                    this.props.properties.byId[this.props.propertyId].existingPredicateId
+                                    this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty]
+                                        .existingPredicateId
                                 ) && (
                                     <InputGroupButtonDropdown
                                         addonType="prepend"
@@ -209,7 +210,9 @@ class AddValue extends Component {
                                     <AutoComplete
                                         requestUrl={
                                             ![process.env.REACT_APP_TEMPLATE_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
-                                                this.props.properties.byId[this.props.propertyId].existingPredicateId
+                                                this.props.properties.byId[
+                                                    this.props.propertyId ? this.props.propertyId : this.props.selectedProperty
+                                                ].existingPredicateId
                                             )
                                                 ? resourcesUrl
                                                 : predicatesUrl
@@ -256,7 +259,8 @@ class AddValue extends Component {
                                     </Button>
 
                                     {![process.env.REACT_APP_TEMPLATE_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
-                                        this.props.properties.byId[this.props.propertyId].existingPredicateId
+                                        this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty]
+                                            .existingPredicateId
                                     ) && (
                                         <Button color="light" className={'valueActionButton'} onClick={this.handleAddValue}>
                                             Create
@@ -264,7 +268,8 @@ class AddValue extends Component {
                                     )}
 
                                     {[process.env.REACT_APP_TEMPLATE_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
-                                        this.props.properties.byId[this.props.propertyId].existingPredicateId
+                                        this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty]
+                                            .existingPredicateId
                                     ) && (
                                         <Button
                                             color="light"
@@ -386,6 +391,7 @@ class AddValue extends Component {
 
 AddValue.propTypes = {
     createValue: PropTypes.func.isRequired,
+    selectedProperty: PropTypes.string.isRequired,
     propertyId: PropTypes.string,
     selectedResource: PropTypes.string.isRequired,
     newResources: PropTypes.object.isRequired,
@@ -401,6 +407,7 @@ AddValue.defaultProps = {
 
 const mapStateToProps = state => {
     return {
+        selectedProperty: state.statementBrowser.selectedProperty,
         selectedResource: state.statementBrowser.selectedResource,
         newResources: state.statementBrowser.resources.byId,
         properties: state.statementBrowser.properties
