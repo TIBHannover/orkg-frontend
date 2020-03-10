@@ -35,6 +35,8 @@ class StatementBrowserDialog extends Component {
                             title={'Go to resource page'}
                             className={'ml-2'}
                             to={reverse(ROUTES.RESOURCE, { id: this.props.resourceId })}
+                            target="_blank"
+                            rel="noopener noreferrer"
                         >
                             <Button color="link" className="p-0">
                                 Open resource <Icon icon={faExternalLinkAlt} className="mr-1" />

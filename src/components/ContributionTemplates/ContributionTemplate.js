@@ -600,7 +600,7 @@ class ContributionTemplate extends Component {
                                 </i>
                             )}
                             {this.state.editMode && (
-                                <Button className={'mt-3 mb-3'} onClick={this.addTemplateProperty}>
+                                <Button className={'mt-3 mb-3'} size="sm" onClick={this.addTemplateProperty}>
                                     Add property
                                 </Button>
                             )}
@@ -639,7 +639,7 @@ class ContributionTemplate extends Component {
                                                                     this.openStatementBrowser(templateSubTemplate.id, templateSubTemplate.label)
                                                                 }
                                                             >
-                                                                <Icon icon={faInfo} />
+                                                                View template
                                                             </Button>
                                                         </InputGroupAddon>
                                                     )}

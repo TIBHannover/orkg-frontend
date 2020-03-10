@@ -449,11 +449,11 @@ class StatementItem extends Component {
                             {!this.props.isEditing ? (
                                 <div>
                                     <div className={'propertyLabel'}>{this.state.predicateLabel}</div>
-                                    {this.props.templateId && (
+                                    {/*this.props.templateId && (
                                         <i>
                                             <small>Typed property</small>
                                         </i>
-                                    )}
+                                    )*/}
                                     <div className={propertyOptionsClasses}>
                                         <TemplateOptionButton
                                             title={'Edit property'}
