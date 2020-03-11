@@ -189,27 +189,6 @@ export const prefillStatements = ({ statements, resourceId }) => dispatch => {
             })
         );
     }
-
-    // This data is only added for demo purposes
-    /*if (researchField === 'R133') {
-        dispatch(createProperty({
-            resourceId: resourceId,
-            existingPredicateId: 'P63',
-            label: 'Approach',
-        }));
-
-        dispatch(createProperty({
-            resourceId: resourceId,
-            existingPredicateId: 'P58',
-            label: 'Evaluation',
-        }));
-
-        dispatch(createProperty({
-            resourceId: resourceId,
-            existingPredicateId: 'P16',
-            label: 'Implementation',
-        }));
-    }*/
 };
 
 export const toggleAbstractDialog = data => dispatch => {
