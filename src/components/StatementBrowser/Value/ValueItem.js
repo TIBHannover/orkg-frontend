@@ -329,7 +329,7 @@ class ValueItem extends Component {
     };
 
     render() {
-        const isProperty = [process.env.REACT_APP_TEMPLATE_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
+        const isProperty = [process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
             this.props.properties.byId[this.props.propertyId].existingPredicateId
         );
 

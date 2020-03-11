@@ -263,17 +263,6 @@ export const fetchStructureForTemplate = data => {
                                 templateClass: subTemplate.class
                             })
                         );
-                        /*
-                        dispatch(
-                            createValue({
-                                valueId: tvID,
-                                propertyId: tpID,
-                                label: subTemplate.label,
-                                type: 'template',
-                                templateId: subTemplate.id
-                            })
-                        );
-                        */
                     }
                 }
                 dispatch({

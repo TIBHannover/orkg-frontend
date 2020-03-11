@@ -181,7 +181,7 @@ class AddValue extends Component {
                     <StyledValueItem>
                         {this.state.showAddValue ? (
                             <InputGroup>
-                                {![process.env.REACT_APP_TEMPLATE_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
+                                {![process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
                                     this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty]
                                         .existingPredicateId
                                 ) && (
@@ -209,7 +209,10 @@ class AddValue extends Component {
                                 {this.state.valueType === 'object' ? (
                                     <AutoComplete
                                         requestUrl={
-                                            ![process.env.REACT_APP_TEMPLATE_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
+                                            ![
+                                                process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY,
+                                                process.env.REACT_APP_TEMPLATE_OF_PREDICATE
+                                            ].includes(
                                                 this.props.properties.byId[
                                                     this.props.propertyId ? this.props.propertyId : this.props.selectedProperty
                                                 ].existingPredicateId
@@ -258,7 +261,7 @@ class AddValue extends Component {
                                         Cancel
                                     </Button>
 
-                                    {![process.env.REACT_APP_TEMPLATE_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
+                                    {![process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
                                         this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty]
                                             .existingPredicateId
                                     ) && (
@@ -267,7 +270,7 @@ class AddValue extends Component {
                                         </Button>
                                     )}
 
-                                    {[process.env.REACT_APP_TEMPLATE_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
+                                    {[process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
                                         this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty]
                                             .existingPredicateId
                                     ) && (
