@@ -21,7 +21,7 @@ Place the following code on your website and set the paramater data-doi.
         js.src = f;
         js.async = 1;
         fjs.parentNode.insertBefore(js, fjs);
-    })(window, document, 'script', 'orkgw', './widget.js');
+    })(window, document, 'script', 'orkgw', '//www.orkg.org/orkg/widget.js');
     orkgw('paper', { language: 'en' });
 </script>
 ```
