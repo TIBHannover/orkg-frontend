@@ -8,6 +8,10 @@ export const StyledContribution = styled.div`
     border-color: ${props => props.theme.orkgPrimaryColor};
     border-style: solid;
     padding: 15px 30px;
+
+    @media (max-width: 768px) {
+        padding: 5px 8px;
+    }
 `;
 
 /*contribution*/

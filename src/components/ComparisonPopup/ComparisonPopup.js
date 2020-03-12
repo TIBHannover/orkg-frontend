@@ -86,7 +86,7 @@ class ComparisonPopup extends Component {
         const comparisonUrl = reverse(ROUTES.COMPARISON) + '?contributions=' + ids; // with named-urls it is not possible to use wildcard URLs, so replace the asterisk
 
         return (
-            <div ref={node => (this.comparisionPopup.current = node)} className="fixed-bottom p-0 offset-8" style={{ width: '340px' }}>
+            <div ref={node => (this.comparisionPopup.current = node)} className="fixed-bottom p-0 offset-sm-2 offset-md-8" style={{ width: '340px' }}>
                 <Navbar className="p-0">
                     <Container>
                         {!this.state.showComparisonBox ? (
