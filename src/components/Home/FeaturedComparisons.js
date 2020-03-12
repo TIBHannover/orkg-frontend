@@ -161,7 +161,7 @@ class FeaturedComparisons extends Component {
 
     render() {
         return (
-            <div className="mr-4 box rounded-lg" style={{ overflow: 'hidden' }}>
+            <div className="box rounded-lg" style={{ overflow: 'hidden' }}>
                 <h2
                     className="h5"
                     style={{

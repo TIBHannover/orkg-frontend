@@ -34,6 +34,14 @@ const FeaturedTabs = styled.div`
     }
 `;
 
+const SidebarStyledBox = styled.div`
+    flex-grow: 1;
+    overflow: hidden;
+    @media (max-width: 768px) {
+        margin-top: 20px;
+    }
+`;
+
 class Sidebar extends Component {
     constructor(props) {
         super(props);
@@ -71,7 +79,7 @@ class Sidebar extends Component {
         }
 
         return (
-            <div className="box rounded-lg" style={{ flexGrow: '1', overflow: 'hidden' }}>
+            <SidebarStyledBox className="box rounded-lg">
                 <FeaturedTabs className="clearfix row">
                     <div className={`h6 col-md-6 text-center tab ${this.state.activeTab === 1 ? 'active' : ''}`} onClick={() => this.toggle(1)}>
                         Featured papers
@@ -81,7 +89,7 @@ class Sidebar extends Component {
                     </div>
                 </FeaturedTabs>
                 <TransitionGroup exit={false}>{rightSidebar}</TransitionGroup>
-            </div>
+            </SidebarStyledBox>
         );
     };
 }
