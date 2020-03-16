@@ -52,7 +52,7 @@ export default class Jumbotron extends Component {
         super(props);
 
         this.state = {
-            motto: ['Structured.', 'Findable.', 'Comparable.'],
+            motto: ['Structured.', 'FAIR.', 'Comparable.'],
             currentMotto: 0
         };
     }
