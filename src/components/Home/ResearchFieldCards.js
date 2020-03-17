@@ -27,7 +27,7 @@ const Card = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
-    min-width: 0;
+    min-width: 140px;
     word-wrap: break-word;
 
     &:hover {
@@ -40,6 +40,10 @@ const Card = styled.div`
     }
     &:active {
         top: 4px;
+    }
+
+    @media (max-width: 400px) {
+        flex: 0 0 80% !important;
     }
 `;
 

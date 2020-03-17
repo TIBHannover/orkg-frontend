@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Alert, UncontrolledAlert, ButtonGroup, Badge, Row } from 'reactstrap';
+import { Container, Button, Alert, UncontrolledAlert, ButtonGroup, Badge } from 'reactstrap';
 import { getStatementsBySubject, getResource, updateResource, createResource, createResourceStatement, deleteStatementById } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
