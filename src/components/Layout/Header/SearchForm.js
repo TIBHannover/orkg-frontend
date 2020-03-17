@@ -40,7 +40,7 @@ class SearchForm extends Component {
         }
 
         return (
-            <form className="form-inline mt-2 mt-md-0 mr-3 search-box mb-2 mb-md-0" onSubmit={this.handleSubmit}>
+            <form className="form-inline mt-2 mt-md-0 mr-3 search-box mb-2 mb-md-0" onSubmit={this.handleSubmit} style={{ minWidth: 57 }}>
                 <div className="input-group">
                     <input
                         type="text"

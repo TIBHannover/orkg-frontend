@@ -177,7 +177,7 @@ class Header extends Component {
                     <NavbarToggler onClick={this.toggle} />
 
                     <Collapse isOpen={this.state.isOpen} navbar>
-                        <Nav className="mr-auto" navbar>
+                        <Nav className="mr-auto flex-shrink-0" navbar>
                             <NavItem className="ml-2 ml-md-0">
                                 <NavLink tag={RouterNavLink} exact to={ROUTES.PAPERS}>
                                     Papers
@@ -223,7 +223,7 @@ class Header extends Component {
 
                         <SearchForm placeholder="Search..." />
 
-                        <Button color="primary" className="mr-3 pl-4 pr-4" tag={Link} to={ROUTES.ADD_PAPER.GENERAL_DATA}>
+                        <Button color="primary" className="mr-3 pl-4 pr-4 flex-shrink-0" tag={Link} to={ROUTES.ADD_PAPER.GENERAL_DATA}>
                             Add paper
                         </Button>
 
@@ -277,7 +277,7 @@ class Header extends Component {
                         )}
 
                         {!this.props.user && (
-                            <Button color="darkblue" className="pl-4 pr-4" outline onClick={() => this.props.openAuthDialog('signin')}>
+                            <Button color="darkblue" className="pl-4 pr-4 flex-shrink-0" outline onClick={() => this.props.openAuthDialog('signin')}>
                                 {' '}
                                 <FontAwesomeIcon className="mr-1" icon={faUser} /> Sign in
                             </Button>
