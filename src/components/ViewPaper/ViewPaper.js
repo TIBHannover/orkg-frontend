@@ -325,7 +325,7 @@ class ViewPaper extends Component {
                 {!this.state.loading && this.state.loading_failed && <NotFound />}
                 {!this.state.loading_failed && (
                     <>
-                        <Container className="p-0 d-flex align-items-center">
+                        <Container className="d-flex align-items-center">
                             <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
                             <ButtonGroup className="flex-shrink-0">
                                 <Button className="flex-shrink-0" color="darkblue" size="sm" onClick={() => this.toggle('showGraphModal')}>
@@ -363,7 +363,7 @@ class ViewPaper extends Component {
                                 </Title>
                             </EditModeHeader>
                         )}
-                        <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
+                        <Container className="box pt-md-4 pb-md-4 pl-md-5 pr-md-5 pt-sm-2 pb-sm-2 pl-sm-2 pr-sm-2   clearfix">
                             {this.state.loading && (
                                 <ContentLoader height={38} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
                                     <rect x="0" y="10" width="350" height="12" />
