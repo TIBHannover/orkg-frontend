@@ -171,7 +171,7 @@ class FeaturedComparisons extends Component {
                 >
                     <Icon icon={faStar} className="text-primary" /> Featured paper comparisons
                     <Link to={ROUTES.FEATURED_COMPARISONS}>
-                        <span style={{ fontSize: '0.9rem', float: 'right', marginTop: 2 }}>More comparisons</span>
+                        <span style={{ fontSize: '0.9rem', float: 'right', marginTop: 2, marginBottom: 15 }}>More comparisons</span>
                     </Link>
                 </h2>
 

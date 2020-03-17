@@ -80,7 +80,7 @@ class Sidebar extends Component {
 
         return (
             <SidebarStyledBox className="box rounded-lg">
-                <FeaturedTabs className="clearfix row">
+                <FeaturedTabs className="clearfix d-flex">
                     <div className={`h6 col-md-6 text-center tab ${this.state.activeTab === 1 ? 'active' : ''}`} onClick={() => this.toggle(1)}>
                         Featured papers
                     </div>
