@@ -168,6 +168,22 @@ class AddTemplateButton extends Component {
                     }
                     this.props.prefillStatements({ statements, resourceId: rID });
                 }
+                // Tag resource with used template
+                const tagResourceStatements = { properties: [], values: [] };
+                const ipID = guid();
+                tagResourceStatements['properties'].push({
+                    propertyId: ipID,
+                    existingPredicateId: process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE,
+                    label: 'Instance Of Template'
+                });
+                tagResourceStatements['values'].push({
+                    label: template.label,
+                    existingResourceId: templateID,
+                    type: 'object',
+                    propertyId: ipID
+                });
+                this.props.prefillStatements({ statements: tagResourceStatements, resourceId: rID });
+
                 // Add templates
                 if (template.subTemplates && template.subTemplates.length > 0) {
                     const statementsSubTemplates = { properties: [], values: [] };

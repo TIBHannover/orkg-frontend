@@ -21,53 +21,58 @@ class TemplateWizard extends Component {
         return (
             <div className={'contributionData'}>
                 {propertyIds.length > 0 ? (
-                    propertyIds.map((propertyId, index) => {
-                        const property = this.props.properties.byId[propertyId];
-                        if (!property.isTemplate) {
-                            return (
-                                <StatementItem
-                                    id={propertyId}
-                                    label={property.label}
-                                    predicateLabel={property.label}
-                                    key={'statement-' + index}
-                                    index={index}
-                                    isExistingProperty={property.isExistingProperty ? true : false}
-                                    enableEdit={shared <= 1 ? this.props.enableEdit : false}
-                                    syncBackend={this.props.syncBackend}
-                                    isLastItem={propertyIds.length === index + 1}
-                                    openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
-                                    isEditing={property.isEditing}
-                                    isSaving={property.isSaving}
-                                    resourceId={this.props.initialResourceId}
-                                    contextStyle={'Template'}
-                                    templateId={property.templateId}
-                                    showValueHelp={this.props.cookies && !this.props.cookies.get('showedValueHelp') && index === 0 ? true : false}
-                                />
-                            );
-                        } else {
-                            const valueIds =
-                                Object.keys(this.props.properties.byId).length !== 0 ? this.props.properties.byId[propertyId].valueIds : [];
-                            return valueIds.map((valueId, index) => {
-                                const value = this.props.values.byId[valueId];
+                    propertyIds
+                        .filter(propertyId => {
+                            const property = this.props.properties.byId[propertyId];
+                            return property.existingPredicateId !== process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE;
+                        })
+                        .map((propertyId, index) => {
+                            const property = this.props.properties.byId[propertyId];
+                            if (!property.isTemplate) {
                                 return (
-                                    <ContributionTemplate
-                                        key={`template-${index}-${valueId}`}
-                                        id={valueId}
-                                        label={value.label}
-                                        propertyId={propertyId}
-                                        resourceId={value.resourceId}
-                                        selectedResource={this.props.initialResourceId}
-                                        enableEdit={this.props.enableEdit}
+                                    <StatementItem
+                                        id={propertyId}
+                                        label={property.label}
+                                        predicateLabel={property.label}
+                                        key={'statement-' + index}
+                                        index={index}
+                                        isExistingProperty={property.isExistingProperty ? true : false}
+                                        enableEdit={shared <= 1 ? this.props.enableEdit : false}
                                         syncBackend={this.props.syncBackend}
+                                        isLastItem={propertyIds.length === index + 1}
                                         openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
-                                        isEditing={value.isEditing}
-                                        isSaving={value.isSaving}
-                                        isAnimated={property.isAnimated}
+                                        isEditing={property.isEditing}
+                                        isSaving={property.isSaving}
+                                        resourceId={this.props.initialResourceId}
+                                        contextStyle={'Template'}
+                                        templateId={property.templateId}
+                                        showValueHelp={this.props.cookies && !this.props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                                     />
                                 );
-                            });
-                        }
-                    })
+                            } else {
+                                const valueIds =
+                                    Object.keys(this.props.properties.byId).length !== 0 ? this.props.properties.byId[propertyId].valueIds : [];
+                                return valueIds.map((valueId, index) => {
+                                    const value = this.props.values.byId[valueId];
+                                    return (
+                                        <ContributionTemplate
+                                            key={`template-${index}-${valueId}`}
+                                            id={valueId}
+                                            label={value.label}
+                                            propertyId={propertyId}
+                                            resourceId={value.resourceId}
+                                            selectedResource={this.props.initialResourceId}
+                                            enableEdit={this.props.enableEdit}
+                                            syncBackend={this.props.syncBackend}
+                                            openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
+                                            isEditing={value.isEditing}
+                                            isSaving={value.isSaving}
+                                            isAnimated={property.isAnimated}
+                                        />
+                                    );
+                                });
+                            }
+                        })
                 ) : (
                     <StyledEmptyData className="text-muted mt-3">
                         No data yet

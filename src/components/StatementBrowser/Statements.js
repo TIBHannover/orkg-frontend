@@ -45,27 +45,32 @@ class Statements extends Component {
             <ListGroup className={'listGroupEnlarge'}>
                 {!this.props.isFetchingStatements ? (
                     propertyIds.length > 0 ? (
-                        propertyIds.map((propertyId, index) => {
-                            const property = this.props.properties.byId[propertyId];
+                        propertyIds
+                            .filter(propertyId => {
+                                const property = this.props.properties.byId[propertyId];
+                                return property.existingPredicateId !== process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE;
+                            })
+                            .map((propertyId, index) => {
+                                const property = this.props.properties.byId[propertyId];
 
-                            return (
-                                <StatementItem
-                                    id={propertyId}
-                                    predicateLabel={property.label}
-                                    key={'statement-' + index}
-                                    index={index}
-                                    isExistingProperty={property.isExistingProperty ? true : false}
-                                    enableEdit={shared <= 1 ? this.props.enableEdit : false}
-                                    syncBackend={this.props.syncBackend}
-                                    isLastItem={propertyIds.length === index + 1}
-                                    openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
-                                    isEditing={property.isEditing}
-                                    isSaving={property.isSaving}
-                                    templateId={property.templateId}
-                                    showValueHelp={this.props.cookies && !this.props.cookies.get('showedValueHelp') && index === 0 ? true : false}
-                                />
-                            );
-                        })
+                                return (
+                                    <StatementItem
+                                        id={propertyId}
+                                        predicateLabel={property.label}
+                                        key={'statement-' + index}
+                                        index={index}
+                                        isExistingProperty={property.isExistingProperty ? true : false}
+                                        enableEdit={shared <= 1 ? this.props.enableEdit : false}
+                                        syncBackend={this.props.syncBackend}
+                                        isLastItem={propertyIds.length === index + 1}
+                                        openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
+                                        isEditing={property.isEditing}
+                                        isSaving={property.isSaving}
+                                        templateId={property.templateId}
+                                        showValueHelp={this.props.cookies && !this.props.cookies.get('showedValueHelp') && index === 0 ? true : false}
+                                    />
+                                );
+                            })
                     ) : (
                         <StyledStatementItem style={{ marginBottom: 0 }}>
                             No data yet
