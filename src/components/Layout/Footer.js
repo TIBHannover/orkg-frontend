@@ -36,6 +36,11 @@ const FooterCol = styled(Col)`
     }
 `;
 
+const PartnerLogoCol = styled(Col)`
+    margin: 10px 0;
+    text-align: center;
+`;
+
 const TwitterLink = styled.a`
     :hover {
         color: #00acee;
@@ -132,24 +137,28 @@ const Footer = () => (
                     </FooterCol>
                 </Row>
                 <hr style={{ width: '70%' }} />
-                <div className="d-flex justify-content-center mt-4">
-                    <a href="https://www.tib.eu/en/" target="_blank" rel="noopener noreferrer">
-                        <img src={TIB_LOGO} alt="Logo Technische Informationsbibliothek (TIB)" style={{ borderWidth: 0, height: '50px' }} />
-                    </a>
-                    <a href="https://www.uni-hannover.de/en/" target="_blank" rel="noopener noreferrer">
-                        <img src={LUH_LOGO} alt="Logo Leibniz University Hannover" style={{ borderWidth: 0, height: '50px', marginLeft: 30 }} />
-                    </a>
-                    <a href="https://www.l3s.de/en/" target="_blank" rel="noopener noreferrer">
-                        <img src={L3S_LOGO} alt="Logo L3S Research Center" style={{ borderWidth: 0, height: '55px', marginLeft: 30 }} />
-                    </a>
-                    <a href="https://infai.org/en/" target="_blank" rel="noopener noreferrer">
-                        <img
-                            src={INFAI_LOGO}
-                            alt="Logo  Institute for Applied Informatics (InfAI)"
-                            style={{ borderWidth: 0, height: '50px', marginLeft: 30 }}
-                        />
-                    </a>
-                </div>
+                <Row className="mt-4">
+                    <PartnerLogoCol md={3} style={{}}>
+                        <a href="https://www.tib.eu/en/" target="_blank" rel="noopener noreferrer">
+                            <img src={TIB_LOGO} alt="Logo Technische Informationsbibliothek (TIB)" style={{ borderWidth: 0, height: '50px' }} />
+                        </a>
+                    </PartnerLogoCol>
+                    <PartnerLogoCol md={3} style={{ textAlign: 'center' }}>
+                        <a href="https://www.uni-hannover.de/en/" target="_blank" rel="noopener noreferrer">
+                            <img src={LUH_LOGO} alt="Logo Leibniz University Hannover" style={{ borderWidth: 0, height: '50px' }} />
+                        </a>
+                    </PartnerLogoCol>
+                    <PartnerLogoCol md={3} style={{ textAlign: 'center' }}>
+                        <a href="https://www.l3s.de/en/" target="_blank" rel="noopener noreferrer">
+                            <img src={L3S_LOGO} alt="Logo L3S Research Center" style={{ borderWidth: 0, height: '55px' }} />
+                        </a>
+                    </PartnerLogoCol>
+                    <PartnerLogoCol md={3} style={{ textAlign: 'center' }}>
+                        <a href="https://infai.org/en/" target="_blank" rel="noopener noreferrer">
+                            <img src={INFAI_LOGO} alt="Logo  Institute for Applied Informatics (InfAI)" style={{ borderWidth: 0, height: '50px' }} />
+                        </a>
+                    </PartnerLogoCol>
+                </Row>
             </footer>
         </Container>
     </FooterWrapper>

@@ -31,16 +31,16 @@ class Home extends Component {
 
                 <Container style={{ marginTop: -50 }}>
                     <Row>
-                        <Col className="col-sm-7 px-0" style={{ display: 'flex', flexDirection: 'column' }}>
+                        <Col md={7} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
                             <FeaturedComparisons />
-                            <div className="box rounded-lg mt-4 mr-4 p-4" style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
+                            <div className="box rounded-lg mt-4 p-4" style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
                                 <h2 className="h5">
                                     <Icon icon={faStream} className="text-primary" /> Browse by research field
                                 </h2>
                                 <ResearchFieldCards />
                             </div>
                         </Col>
-                        <Col className="col-sm-5 px-0" style={{ display: 'flex', flexDirection: 'column' }}>
+                        <Col md={5} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
                             <Sidebar />
                         </Col>
                     </Row>

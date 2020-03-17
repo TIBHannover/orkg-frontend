@@ -94,7 +94,7 @@ class Breadcrumbs extends Component {
         return (
             <Container>
                 <BackButton className="btn btn-link border-0 align-baseline" onClick={this.handleBackClick}>
-                    <Icon icon={faArrowLeft} /> Back
+                    <Icon icon={faArrowLeft} /> <div className={'d-none d-md-inline'}>Back</div>
                 </BackButton>
                 <BreadcrumbList>
                     {this.props.resourceHistory.allIds.map((history, index) => {

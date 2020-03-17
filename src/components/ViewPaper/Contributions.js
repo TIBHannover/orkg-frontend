@@ -147,7 +147,7 @@ class Contributions extends Component {
             <div>
                 <Container>
                     <Row noGutters={true}>
-                        <Col xs="3">
+                        <Col md="3">
                             {this.state.loading && (
                                 <div>
                                     <ContentLoader height={20} width={100} speed={2} primaryColor="#E86161" secondaryColor="#ecebeb">
@@ -207,7 +207,7 @@ class Contributions extends Component {
                                 </StyledContributionsList>
                             )}
                         </Col>
-                        <TransitionGroup className="col-9" exit={false}>
+                        <TransitionGroup className="col-md-9" exit={false}>
                             <AnimationContainer key={selectedContributionId} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
                                 <StyledContribution>
                                     {!this.state.loading && (
