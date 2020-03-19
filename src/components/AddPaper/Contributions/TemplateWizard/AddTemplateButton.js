@@ -176,7 +176,9 @@ class AddTemplateButton extends Component {
                     existingPredicateId: process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE,
                     label: 'Instance Of Template'
                 });
+                const ivID = guid();
                 tagResourceStatements['values'].push({
+                    valueId: ivID,
                     label: template.label,
                     existingResourceId: templateID,
                     type: 'object',
