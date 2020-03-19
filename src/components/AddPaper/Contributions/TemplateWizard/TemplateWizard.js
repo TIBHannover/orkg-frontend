@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyledEmptyData } from 'components/AddPaper/Contributions/styled';
-import AddProperty from 'components/StatementBrowser/AddProperty';
+import AddProperty from 'components/StatementBrowser/AddProperty/index';
 import StatementItem from 'components/StatementBrowser/StatementItem';
 import ContributionTemplate from './ContributionTemplate';
 import { compose } from 'redux';

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ListGroup } from 'reactstrap';
 import { StyledLevelBox, StyledStatementItem } from '../AddPaper/Contributions/styled';
 import StatementItem from './StatementItem';
-import AddProperty from './AddProperty';
+import AddProperty from './AddProperty/index';
 import { connect } from 'react-redux';
 import Breadcrumbs from './Breadcrumbs';
 import { compose } from 'redux';
