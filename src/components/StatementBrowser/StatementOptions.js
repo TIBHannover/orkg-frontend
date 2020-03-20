@@ -4,7 +4,7 @@ import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
 import { deleteProperty, toggleEditPropertyLabel } from '../../actions/statementBrowser';
 import { deleteStatementById } from '../../network';
-import StatementOptionButton from './StatementOptionButton';
+import StatementOptionButton from 'components/StatementBrowser/StmOptionBtn/StmOptionBtn';
 import { toast } from 'react-toastify';
 import Tippy from '@tippy.js/react';
 import 'tippy.js/dist/tippy.css';

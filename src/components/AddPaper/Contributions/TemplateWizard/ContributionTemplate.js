@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ListGroup, ListGroupItem } from 'reactstrap';
-import AddProperty from 'components/StatementBrowser/AddProperty/index';
+import AddProperty from 'components/StatementBrowser/AddProperty/AddPropertyContainer';
 import TemplateHeader from 'components/AddPaper/Contributions/TemplateWizard/TemplateHeader';
 import StatementItem from 'components/StatementBrowser/StatementItem';
 import { doneAnimation } from 'actions/statementBrowser';
