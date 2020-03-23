@@ -340,10 +340,11 @@ export const StyledDropdownToggle = styled(DropdownToggle)`
     }
 `;
 
-export const ValueItemStyle = styled.div`
+export const ValueItemStyle = styled(ListGroupItem)`
     background-color: #fff;
     margin-bottom: 10px;
     overflow-wrap: break-word;
+    padding: 8px 0px !important;
 
     &:last-child {
         margin-bottom: 5px;
@@ -488,6 +489,7 @@ export const StatementsGroupStyle = styled(ListGroupItem)`
 export const PropertyStyle = styled.div`
     background-color: ${props => props.theme.ultraLightBlue};
     overflow-wrap: break-word;
+    border-radius: 3px 0 0 3px;
 
     & > div {
         padding: 8px;
@@ -532,6 +534,7 @@ export const ValuesStyle = styled.div`
         padding: 8px;
     }
     background-color: #fff;
+    border-radius: 0 3px 3px 0;
 `;
 
 export const TemplateHeaderStyle = styled.div`

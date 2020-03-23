@@ -506,7 +506,7 @@ class StatementItem extends Component {
                         )}
                     </PropertyStyle>
                     <ValuesStyle className={'col-8 valuesList'}>
-                        <div>
+                        <ListGroup flush className="px-3">
                             {valueIds.map((valueId, index) => {
                                 const value = this.props.values.byId[valueId];
                                 return (
@@ -535,7 +535,7 @@ class StatementItem extends Component {
                             {this.props.enableEdit && (
                                 <AddValue contextStyle="Template" propertyId={this.props.id} syncBackend={this.props.syncBackend} />
                             )}
-                        </div>
+                        </ListGroup>
                     </ValuesStyle>
                 </div>
             </StatementsGroupStyle>
