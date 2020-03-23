@@ -113,7 +113,7 @@ AddValue.propTypes = {
     selectedProperty: PropTypes.string.isRequired,
     propertyId: PropTypes.string,
     selectedResource: PropTypes.string.isRequired,
-    newResources: PropTypes.object.isRequired,
+    newResources: PropTypes.array.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     properties: PropTypes.object.isRequired,
     contextStyle: PropTypes.string.isRequired,

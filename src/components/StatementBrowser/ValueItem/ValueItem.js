@@ -289,16 +289,16 @@ export default class ValueItem extends Component {
         const value = this.props.values.byId[this.props.id];
 
         const existingResourceId = resource ? resource.existingResourceId : false;
-        let onClick = null;
+        let hundleOnClick = null;
 
         if (
             (this.props.type === 'object' || this.props.type === 'template') &&
             (existingResourceId || this.props.contextStyle !== 'StatementBrowser') &&
             this.props.openExistingResourcesInDialog
         ) {
-            onClick = this.handleExistingResourceClick;
+            hundleOnClick = this.handleExistingResourceClick;
         } else if (this.props.type === 'object' || this.props.type === 'template') {
-            onClick = this.handleResourceClick;
+            hundleOnClick = this.handleResourceClick;
         }
 
         return (
@@ -311,7 +311,7 @@ export default class ValueItem extends Component {
                         id={this.props.id}
                         value={value}
                         resource={resource}
-                        hundleOnClick={onClick}
+                        hundleOnClick={hundleOnClick}
                         inline={this.props.inline}
                         loadOptions={this.loadOptions}
                         handleChangeResource={this.handleChangeResource}
@@ -319,7 +319,7 @@ export default class ValueItem extends Component {
                         commitChangeLabel={this.commitChangeLabel}
                         commitChangeLiteral={this.commitChangeLiteral}
                         openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
-                        handleDatasetClick={this.handlceDatasetClick}
+                        handleDatasetClick={this.handleDatasetClick}
                         enableEdit={this.props.enableEdit}
                         handleDeleteValue={this.handleDeleteValue}
                     />
@@ -331,7 +331,7 @@ export default class ValueItem extends Component {
                         id={this.props.id}
                         value={value}
                         resource={resource}
-                        hundleOnClick={onClick}
+                        hundleOnClick={hundleOnClick}
                         inline={this.props.inline}
                         loadOptions={this.loadOptions}
                         handleChangeResource={this.handleChangeResource}
@@ -339,7 +339,7 @@ export default class ValueItem extends Component {
                         commitChangeLabel={this.commitChangeLabel}
                         commitChangeLiteral={this.commitChangeLiteral}
                         openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
-                        handleDatasetClick={this.handlceDatasetClick}
+                        handleDatasetClick={this.handleDatasetClick}
                         enableEdit={this.props.enableEdit}
                         handleDeleteValue={this.handleDeleteValue}
                     />

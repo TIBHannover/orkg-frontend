@@ -131,7 +131,7 @@ AddProperty.propTypes = {
     createProperty: PropTypes.func.isRequired,
     selectedResource: PropTypes.string.isRequired,
     resourceId: PropTypes.string,
-    newProperties: PropTypes.object.isRequired,
+    newProperties: PropTypes.array.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     contextStyle: PropTypes.string.isRequired,
     inTemplate: PropTypes.bool.isRequired

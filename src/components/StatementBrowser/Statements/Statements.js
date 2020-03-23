@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
 import { ListGroup } from 'reactstrap';
-import { StyledLevelBox, StyledStatementItem } from '../AddPaper/Contributions/styled';
-import StatementItem from './StatementItem';
-import AddProperty from './AddProperty/AddPropertyContainer';
-import { connect } from 'react-redux';
-import Breadcrumbs from './Breadcrumbs';
-import { compose } from 'redux';
-import { withCookies, Cookies } from 'react-cookie';
+import { StyledLevelBox, StyledStatementItem } from 'components/AddPaper/Contributions/styled';
+import StatementItem from 'components/StatementBrowser/StatementItem/StatementItemContainer';
+import AddProperty from 'components/StatementBrowser/AddProperty/AddPropertyContainer';
+import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs';
+import { Cookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import { initializeWithoutContribution, initializeWithResource } from '../../actions/statementBrowser';
 
-class Statements extends Component {
+export default class Statements extends Component {
     constructor(props) {
         super(props);
 
@@ -56,6 +53,7 @@ class Statements extends Component {
                                 return (
                                     <StatementItem
                                         id={propertyId}
+                                        property={property}
                                         predicateLabel={property.label}
                                         key={'statement-' + index}
                                         index={index}
@@ -148,26 +146,3 @@ Statements.defaultProps = {
     syncBackend: false,
     newStore: false
 };
-
-const mapStateToProps = state => {
-    return {
-        level: state.statementBrowser.level,
-        resources: state.statementBrowser.resources,
-        properties: state.statementBrowser.properties,
-        isFetchingStatements: state.statementBrowser.isFetchingStatements,
-        selectedResource: state.statementBrowser.selectedResource
-    };
-};
-
-const mapDispatchToProps = dispatch => ({
-    initializeWithoutContribution: data => dispatch(initializeWithoutContribution(data)),
-    initializeWithResource: data => dispatch(initializeWithResource(data))
-});
-
-export default compose(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    ),
-    withCookies
-)(Statements);

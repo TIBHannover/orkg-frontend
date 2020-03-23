@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ROUTES from '../../constants/routes';
 import SimilarContributions from './SimilarContributions';
-import StatementBrowser from '../StatementBrowser/Statements';
+import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProblemInput';
 import ContributionItemList from 'components/AddPaper/Contributions/ContributionItemList';
 import { connect } from 'react-redux';

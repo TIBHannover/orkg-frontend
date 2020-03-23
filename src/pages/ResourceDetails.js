@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Button } from 'reactstrap';
 import { getResource } from '../network';
-import StatementBrowser from '../components/StatementBrowser/Statements';
+import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import EditableHeader from '../components/EditableHeader';
 import InternalServerError from '../components/StaticPages/InternalServerError';
 import NotFound from '../components/StaticPages/NotFound';

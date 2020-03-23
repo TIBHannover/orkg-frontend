@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyledEmptyData } from 'components/AddPaper/Contributions/styled';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddPropertyContainer';
-import StatementItem from 'components/StatementBrowser/StatementItem';
+import StatementItem from 'components/StatementBrowser/StatementItem/StatementItemContainer';
 import ContributionTemplate from './ContributionTemplate';
 import { compose } from 'redux';
 import { withCookies, Cookies } from 'react-cookie';
@@ -32,6 +32,7 @@ class TemplateWizard extends Component {
                                 return (
                                     <StatementItem
                                         id={propertyId}
+                                        property={property}
                                         label={property.label}
                                         predicateLabel={property.label}
                                         key={'statement-' + index}

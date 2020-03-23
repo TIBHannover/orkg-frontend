@@ -255,7 +255,7 @@ ValueItemSB.propTypes = {
     resource: PropTypes.object.isRequired,
     hundleOnClick: PropTypes.func.isRequired,
     inline: PropTypes.bool.isRequired,
-    showHelp: PropTypes.bool.isRequired,
+    showHelp: PropTypes.bool,
     enableEdit: PropTypes.bool.isRequired,
     loadOptions: PropTypes.func.isRequired,
 
@@ -263,11 +263,7 @@ ValueItemSB.propTypes = {
     toggleEditValue: PropTypes.func.isRequired,
     commitChangeLabel: PropTypes.func.isRequired,
     commitChangeLiteral: PropTypes.func.isRequired,
-    openExistingResourcesInDialog: PropTypes.bool.isRequired,
+    openExistingResourcesInDialog: PropTypes.bool,
     handleDatasetClick: PropTypes.func.isRequired,
-    handleDeleteValue: PropTypes.func.isRequired,
-
-    handleValueSelect: PropTypes.func.isRequired,
-    newResources: PropTypes.array.isRequired,
-    handleAddValue: PropTypes.func.isRequired
+    handleDeleteValue: PropTypes.func.isRequired
 };
