@@ -613,31 +613,36 @@ class ValueItem extends Component {
                                                 action={this.handleDatasetClick}
                                             />
                                         )}
-                                    {(!existingResourceId || this.props.shared <= 1) && (
-                                        <TemplateOptionButton
-                                            title={'Edit value'}
-                                            icon={faPen}
-                                            action={() => this.props.toggleEditValue({ id: this.props.id })}
-                                        />
-                                    )}
 
-                                    {existingResourceId && this.props.shared > 1 && (
-                                        <TemplateOptionButton
-                                            title={'A shared resource cannot be edited directly'}
-                                            icon={faPen}
-                                            action={() => null}
-                                            onVisibilityChange={this.onVisibilityChange}
-                                        />
-                                    )}
+                                    {this.props.enableEdit && (
+                                        <>
+                                            {(!existingResourceId || this.props.shared <= 1) && (
+                                                <TemplateOptionButton
+                                                    title={'Edit value'}
+                                                    icon={faPen}
+                                                    action={() => this.props.toggleEditValue({ id: this.props.id })}
+                                                />
+                                            )}
 
-                                    <TemplateOptionButton
-                                        requireConfirmation={true}
-                                        title={'Delete value'}
-                                        confirmationMessage={'Are you sure to delete?'}
-                                        icon={faTrash}
-                                        action={this.handleDeleteValue}
-                                        onVisibilityChange={this.onVisibilityChange}
-                                    />
+                                            {existingResourceId && this.props.shared > 1 && (
+                                                <TemplateOptionButton
+                                                    title={'A shared resource cannot be edited directly'}
+                                                    icon={faPen}
+                                                    action={() => null}
+                                                    onVisibilityChange={this.onVisibilityChange}
+                                                />
+                                            )}
+
+                                            <TemplateOptionButton
+                                                requireConfirmation={true}
+                                                title={'Delete value'}
+                                                confirmationMessage={'Are you sure to delete?'}
+                                                icon={faTrash}
+                                                action={this.handleDeleteValue}
+                                                onVisibilityChange={this.onVisibilityChange}
+                                            />
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         ) : (

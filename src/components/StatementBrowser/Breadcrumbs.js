@@ -25,7 +25,7 @@ const BreadcrumbList = styled.ul`
 `;
 
 const BreadcrumbItem = styled.li`
-    border-radius: 11px;
+    border-radius: 6px;
     background: #f7f7f7;
     padding: 4px 10px;
     float: left;

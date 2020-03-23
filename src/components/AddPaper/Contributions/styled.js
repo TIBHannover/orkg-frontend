@@ -233,16 +233,17 @@ export const StyledListGroupOpen = styled.div`
 
 /*levelBox*/
 export const StyledLevelBox = styled.div`
-    border-color: #dfdfdf; /*don't use default color, since it is partially transparent $list-group-border-color;*/
+    // The hierarchy indicator doesn't look nice when properties have a space between them
+    /*border-color: #dfdfdf; //don't use default color, since it is partially transparent $list-group-border-color;
     border-radius: ${props => props.theme.borderRadius};
     padding-left: 8px;
     border-style: solid;
-    border-width: 2px;
-    //box-shadow: -2px 0px 4px 0px rgba(0, 0, 0, 0.06);
-    margin-top: -2px;
-    margin-right: -2px;
-    margin-bottom: -2px;
-    display: block;
+    border-width: 1px;
+    box-shadow: -2px 0px 4px 0px rgba(0, 0, 0, 0.06);
+    margin-top: -1px;
+    margin-right: -1px;
+    margin-bottom: -1px;
+    display: block;*/
 
     .listGroupEnlarge {
         margin-top: -2px;
@@ -343,6 +344,10 @@ export const ValueItemStyle = styled.div`
     background-color: #fff;
     margin-bottom: 10px;
     overflow-wrap: break-word;
+
+    &:last-child {
+        margin-bottom: 5px;
+    }
 
     .valueOptions {
         visibility: hidden;
@@ -472,6 +477,11 @@ export const StatementsGroupStyle = styled(ListGroupItem)`
     &.noTemplate {
         border-top: 1px solid rgba(0, 0, 0, 0.125);
         border-radius: 4px !important;
+        margin-top: 0.75rem;
+
+        &:first-child {
+            margin-top: 0;
+        }
     }
 `;
 
