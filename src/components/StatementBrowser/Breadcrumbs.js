@@ -65,6 +65,7 @@ const BackButton = styled.div`
     padding: 4px 0 0 0 !important;
     font-size: 95% !important;
     text-align: left !important;
+    cursor: pointer;
 `;
 
 const Container = styled.div`

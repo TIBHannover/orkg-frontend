@@ -446,7 +446,7 @@ class StatementItem extends Component {
         return (
             <StatementsGroupStyle className={`${this.props.inTemplate ? 'inTemplate' : 'noTemplate'}`}>
                 <div className={'row no-gutters'}>
-                    <PropertyStyle className={`col-4 ${this.props.isEditing ? 'editingLabel' : ''}`}>
+                    <PropertyStyle className={`col-4 ${this.props.isEditing ? 'editingLabel' : ''}`} tabIndex="0">
                         {!this.props.isEditing ? (
                             <div>
                                 <div className={'propertyLabel'}>{this.state.predicateLabel}</div>

@@ -6,26 +6,27 @@ import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Button, ButtonGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
 
-export const OptionButton = styled.div`
-    margin: 0 2px;
-    display: inline-block;
+export const OptionButton = styled(Button)`
+    margin: 0 2px !important;
+    display: inline-block !important;
+    border-radius: 100% !important;
+    background-color: ${props => props.theme.ultraLightBlueDarker}!important;
+    color: ${props => props.theme.buttonDark}!important;
+
     & .icon-wrapper {
-        border-radius: 100%;
-        text-align: center;
-        display: inline-block;
-        vertical-align: top;
-        background-color: ${props => props.theme.ultraLightBlueDarker};
-        cursor: pointer;
-        color: ${props => props.theme.buttonDark};
-        margin-right: 2px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
         .icon {
             padding: 0;
             margin: 0;
             font-size: 12px;
         }
+    }
+
+    :focus {
+        box-shadow: 0 0 0 0.2rem rgba(203, 206, 209, 0.5) !important;
     }
 `;
 class TemplateOptionButton extends Component {
@@ -90,75 +91,75 @@ class TemplateOptionButton extends Component {
 
     render() {
         const tippyTarget = (
-            <span
-                onClick={this.handleClick}
-                className={'icon-wrapper'}
-                style={{
-                    width: this.props.iconWrapperSize ? this.props.iconWrapperSize : '24px',
-                    height: this.props.iconWrapperSize ? this.props.iconWrapperSize : '24px'
-                }}
-            >
-                <Icon
-                    className={'icon'}
-                    style={{
-                        fontSize: this.props.iconSize ? this.props.iconSize : '12px'
-                    }}
-                    icon={this.props.icon}
-                />
+            <span>
+                <OptionButton color="link" className="p-0" onClick={this.handleClick}>
+                    <span
+                        className={'icon-wrapper'}
+                        style={{
+                            width: this.props.iconWrapperSize ? this.props.iconWrapperSize : '24px',
+                            height: this.props.iconWrapperSize ? this.props.iconWrapperSize : '24px'
+                        }}
+                    >
+                        <Icon
+                            className={'icon'}
+                            style={{
+                                fontSize: this.props.iconSize ? this.props.iconSize : '12px'
+                            }}
+                            icon={this.props.icon}
+                        />
+                    </span>
+                </OptionButton>
             </span>
         );
-        return (
-            <OptionButton>
-                {this.props.requireConfirmation ? (
-                    <Tippy trigger={'mouseenter'} content={this.props.title} zIndex={999}>
-                        <Tippy
-                            onShow={this.onShow}
-                            onShown={this.onShown}
-                            onHide={this.onHide}
-                            onCreate={this.onCreate}
-                            interactive={true}
-                            trigger={'click'}
-                            content={
-                                <div className={'text-center p-1'} style={{ color: '#fff', fontSize: '0.95rem', wordBreak: 'normal' }}>
-                                    <p className="mb-2">{this.props.confirmationMessage}</p>
-                                    <ButtonGroup size="sm" className={'mt-1 mb-1'}>
-                                        <Button
-                                            onClick={() => {
-                                                this.props.action();
-                                                this.closeTippy();
-                                            }}
-                                            innerRef={this.yesButtonRef}
-                                            className="px-2"
-                                            color="danger"
-                                            style={{ paddingTop: 2, paddingBottom: 2 }}
-                                        >
-                                            <Icon icon={faCheck} className={'mr-1'} />
-                                            Delete
-                                        </Button>
-                                        <Button
-                                            onClick={() => {
-                                                this.closeTippy();
-                                            }}
-                                            innerRef={this.cancelButtonRef}
-                                            className="px-2"
-                                            style={{ paddingTop: 2, paddingBottom: 2 }}
-                                        >
-                                            {' '}
-                                            <Icon icon={faTimes} className={'mr-1'} /> Cancel
-                                        </Button>
-                                    </ButtonGroup>
-                                </div>
-                            }
-                        >
-                            {tippyTarget}
-                        </Tippy>
-                    </Tippy>
-                ) : (
-                    <Tippy interactive={false} trigger={'mouseenter'} content={this.props.title}>
-                        {tippyTarget}
-                    </Tippy>
-                )}
-            </OptionButton>
+
+        return this.props.requireConfirmation ? (
+            <Tippy trigger={'mouseenter'} content={this.props.title} zIndex={999}>
+                <Tippy
+                    onShow={this.onShow}
+                    onShown={this.onShown}
+                    onHide={this.onHide}
+                    onCreate={this.onCreate}
+                    interactive={true}
+                    trigger={'click'}
+                    content={
+                        <div className={'text-center p-1'} style={{ color: '#fff', fontSize: '0.95rem', wordBreak: 'normal' }}>
+                            <p className="mb-2">{this.props.confirmationMessage}</p>
+                            <ButtonGroup size="sm" className={'mt-1 mb-1'}>
+                                <Button
+                                    onClick={() => {
+                                        this.props.action();
+                                        this.closeTippy();
+                                    }}
+                                    innerRef={this.yesButtonRef}
+                                    className="px-2"
+                                    color="danger"
+                                    style={{ paddingTop: 2, paddingBottom: 2 }}
+                                >
+                                    <Icon icon={faCheck} className={'mr-1'} />
+                                    Delete
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        this.closeTippy();
+                                    }}
+                                    innerRef={this.cancelButtonRef}
+                                    className="px-2"
+                                    style={{ paddingTop: 2, paddingBottom: 2 }}
+                                >
+                                    {' '}
+                                    <Icon icon={faTimes} className={'mr-1'} /> Cancel
+                                </Button>
+                            </ButtonGroup>
+                        </div>
+                    }
+                >
+                    {tippyTarget}
+                </Tippy>
+            </Tippy>
+        ) : (
+            <Tippy interactive={false} trigger={'mouseenter'} content={this.props.title}>
+                {tippyTarget}
+            </Tippy>
         );
     }
 }

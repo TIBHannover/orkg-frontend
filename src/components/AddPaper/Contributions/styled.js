@@ -397,7 +397,8 @@ export const ValueItemStyle = styled(ListGroupItem)`
         }
     }
 
-    &:hover .valueOptions {
+    &:hover .valueOptions,
+    &:focus-within .valueOptions {
         visibility: visible;
         opacity: 1;
     }
@@ -556,7 +557,11 @@ export const PropertyStyle = styled.div`
             opacity: 1;
         }
     }
-    &:hover .propertyOptions {
+    &:focus {
+        outline: 0;
+    }
+    &:hover .propertyOptions,
+    &:focus-within .propertyOptions {
         visibility: visible;
         opacity: 1;
         span {
