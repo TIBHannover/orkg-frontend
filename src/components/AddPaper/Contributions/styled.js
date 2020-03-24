@@ -71,7 +71,37 @@ export const StyledHorizontalContributionsList = styled.ul`
     margin: 0;
     box-sizing: border-box;
 
-    > li {
+    // support for a > li (used in ViewPaper)
+    a {
+        color: inherit;
+
+        li:first-child {
+            border-top-left-radius: 0;
+        }
+        &:first-child li {
+            border-top-left-radius: ${props => props.theme.borderRadius};
+        }
+        &:nth-last-child(2) li {
+            border-top-right-radius: ${props => props.theme.borderRadius};
+        }
+    }
+
+    &.noEdit {
+        a:last-child li,
+        > li:last-child {
+            border-top-right-radius: ${props => props.theme.borderRadius};
+        }
+        a:nth-last-child(2) li,
+        > li:nth-last-child(2) {
+            border-top-right-radius: 0;
+        }
+    }
+
+    li {
+        a {
+            color: inherit;
+        }
+
         &:nth-last-child(2) {
             border-top-right-radius: ${props => props.theme.borderRadius};
         }
@@ -93,6 +123,11 @@ export const StyledHorizontalContributionsList = styled.ul`
         padding: 7px 15px 7px 15px;
         transition: 0.3s background;
         cursor: pointer;
+
+        &.disabled {
+            pointer-events: none;
+            cursor: default;
+        }
 
         &:hover {
             text-decoration: none;
