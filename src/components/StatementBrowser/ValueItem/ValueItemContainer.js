@@ -6,7 +6,6 @@ import {
     deleteValue,
     toggleEditValue,
     updateValueLabel,
-    createValue,
     createResource,
     doneSavingValue,
     isSavingValue,
@@ -24,7 +23,6 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-    createValue: data => dispatch(createValue(data)),
     createResource: data => dispatch(createResource(data)),
     selectResource: data => dispatch(selectResource(data)),
     fetchStatementsForResource: data => dispatch(fetchStatementsForResource(data)),

@@ -83,6 +83,7 @@ export default function StatementItemTemplate(props) {
                             const value = props.values.byId[valueId];
                             return (
                                 <ValueItem
+                                    value={value}
                                     key={index}
                                     label={value.label}
                                     id={valueId}

@@ -79,17 +79,10 @@ export default function StatementItemSB(props) {
                             :{' '}
                             <em className="text-muted">
                                 <ValueItem
-                                    label={props.values.byId[props.property.valueIds[0]].label}
+                                    value={props.values.byId[props.property.valueIds[0]]}
                                     id={props.property.valueIds[0]}
-                                    type={props.values.byId[props.property.valueIds[0]].type}
-                                    classes={props.values.byId[props.property.valueIds[0]].classes}
-                                    resourceId={props.values.byId[props.property.valueIds[0]].resourceId}
                                     propertyId={props.id}
-                                    existingStatement={props.values.byId[props.property.valueIds[0]].existingStatement}
                                     inline
-                                    isExistingValue={props.values.byId[props.property.valueIds[0]].isExistingValue}
-                                    isEditing={false}
-                                    isSaving={false}
                                     enableEdit={false}
                                     syncBackend={false}
                                     shared={1}
@@ -118,22 +111,13 @@ export default function StatementItemSB(props) {
 
                             return (
                                 <ValueItem
+                                    value={value}
                                     key={index}
-                                    label={value.label}
                                     id={valueId}
-                                    type={value.type}
-                                    classes={value.classes}
                                     enableEdit={props.enableEdit}
                                     syncBackend={props.syncBackend}
-                                    resourceId={value.resourceId}
                                     propertyId={props.id}
-                                    existingStatement={value.existingStatement}
                                     openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                                    isExistingValue={value.isExistingValue}
-                                    isEditing={value.isEditing}
-                                    isSaving={value.isSaving}
-                                    statementId={value.statementId}
-                                    shared={value.shared}
                                     showHelp={props.showValueHelp && index === 0 ? true : false}
                                 />
                             );

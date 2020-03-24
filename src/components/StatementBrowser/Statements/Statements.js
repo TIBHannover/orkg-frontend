@@ -47,7 +47,6 @@ export default function Statements(props) {
                     propertyIds.length > 0 ? (
                         propertyIds.map((propertyId, index) => {
                             const property = props.properties.byId[propertyId];
-
                             return (
                                 <StatementItem
                                     key={'statement-' + index}
