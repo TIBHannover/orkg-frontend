@@ -12,6 +12,7 @@ import Tippy from '@tippy.js/react';
 import 'tippy.js/dist/tippy.css';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { StyledAutoCompleteInputFormControl } from 'components/StatementBrowser/AutoComplete';
+import { customStyles } from './style';
 import styled from 'styled-components';
 
 const StyledInput = styled(Input)`
@@ -28,56 +29,6 @@ export default function ValueItemSB(props) {
     const labelClass = classNames({
         objectLink: (props.value.type === 'object' || props.value.type === 'template') && !props.value.isEditing && !props.isProperty
     });
-
-    const customStyles = {
-        control: (provided, state) => ({
-            ...provided,
-            background: 'inherit',
-            boxShadow: state.isFocused ? 0 : 0,
-            border: 0,
-            paddingLeft: 0,
-            paddingRight: 0,
-            cursor: 'text',
-            minHeight: 'initial',
-            borderRadius: 'inherit',
-            padding: 0,
-            '&>div:first-of-type': {
-                padding: 0
-            }
-        }),
-        container: provided => ({
-            padding: 0,
-            height: 'auto',
-            borderTopLeftRadius: 0,
-            borderBottomLeftRadius: 0,
-            borderTopRightRadius: 0,
-            borderBottomRightRadius: 0,
-            background: '#fff',
-            '&>div:first-of-type': {
-                padding: 0
-            }
-        }),
-        menu: provided => ({
-            ...provided,
-            zIndex: 10,
-            color: '#000'
-        }),
-        option: provided => ({
-            ...provided,
-            cursor: 'pointer',
-            whiteSpace: 'normal'
-        }),
-        indicatorsContainer: provided => ({
-            ...provided,
-            '&>div:last-child': {
-                padding: '0 8px'
-            }
-        }),
-        input: provided => ({
-            ...provided,
-            margin: '0 4px'
-        })
-    };
 
     return (
         <>
@@ -252,8 +203,8 @@ ValueItemSB.propTypes = {
     id: PropTypes.string.isRequired,
     isProperty: PropTypes.bool.isRequired,
     value: PropTypes.object.isRequired,
-    resource: PropTypes.object.isRequired,
-    hundleOnClick: PropTypes.func.isRequired,
+    resource: PropTypes.object,
+    hundleOnClick: PropTypes.func,
     inline: PropTypes.bool.isRequired,
     showHelp: PropTypes.bool,
     enableEdit: PropTypes.bool.isRequired,

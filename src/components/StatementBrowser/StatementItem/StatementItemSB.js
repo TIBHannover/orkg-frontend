@@ -2,12 +2,12 @@ import React from 'react';
 import { ListGroup, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
-import classNames from 'classnames';
+import { StyledStatementItem, StyledListGroupOpen } from 'components/StatementBrowser/styled';
 import ValueItem from 'components/StatementBrowser/ValueItem/ValueItemContainer';
 import AddValue from 'components/StatementBrowser/AddValue/AddValueContainer';
-import { StyledStatementItem, StyledListGroupOpen } from 'components/AddPaper/Contributions/styled';
 import StatementOptions from 'components/StatementBrowser/StatementOptions';
 import AsyncCreatableSelect from 'react-select/async-creatable';
+import classNames from 'classnames';
 import { customStyles } from './style';
 import PropTypes from 'prop-types';
 

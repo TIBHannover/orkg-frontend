@@ -1,85 +1,69 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { ListGroup } from 'reactstrap';
-import { StyledLevelBox, StyledStatementItem } from 'components/AddPaper/Contributions/styled';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItemContainer';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddPropertyContainer';
-import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs';
+import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/BreadcrumbsContainer';
+import NoData from 'components/StatementBrowser/NoData/NoData';
+import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
 import { Cookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 
-export default class Statements extends Component {
-    constructor(props) {
-        super(props);
-
-        if (this.props.initialResourceId) {
-            if (this.props.newStore) {
-                this.props.initializeWithoutContribution({
-                    resourceId: this.props.initialResourceId,
-                    label: this.props.initialResourceLabel
+export default function Statements(props) {
+    useEffect(() => {
+        if (props.initialResourceId) {
+            if (props.newStore) {
+                props.initializeWithoutContribution({
+                    resourceId: props.initialResourceId,
+                    label: props.initialResourceLabel
                 });
             } else {
-                this.props.initializeWithResource({
-                    resourceId: this.props.initialResourceId,
-                    label: this.props.initialResourceLabel
+                props.initializeWithResource({
+                    resourceId: props.initialResourceId,
+                    label: props.initialResourceLabel
                 });
             }
         }
-    }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // run only once : https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects
 
-    statements = () => {
-        const propertyIds =
-            Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource
-                ? this.props.resources.byId[this.props.selectedResource].propertyIds
-                : [];
-        const shared =
-            Object.keys(this.props.resources.byId).length !== 0 && this.props.selectedResource
-                ? this.props.resources.byId[this.props.selectedResource].shared
-                : 1;
+    const statements = () => {
+        let propertyIds = [];
+        let shared = 1;
+        if (Object.keys(props.resources.byId).length !== 0 && props.selectedResource) {
+            propertyIds = props.resources.byId[props.selectedResource].propertyIds;
+            shared = props.resources.byId[props.selectedResource].shared;
+        }
+        // filter public properties
+        propertyIds = propertyIds.filter(propertyId => {
+            const property = props.properties.byId[propertyId];
+            return property.existingPredicateId !== process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE;
+        });
 
         return (
             <ListGroup className={'listGroupEnlarge'}>
-                {!this.props.isFetchingStatements ? (
+                {!props.isFetchingStatements ? (
                     propertyIds.length > 0 ? (
-                        propertyIds
-                            .filter(propertyId => {
-                                const property = this.props.properties.byId[propertyId];
-                                return property.existingPredicateId !== process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE;
-                            })
-                            .map((propertyId, index) => {
-                                const property = this.props.properties.byId[propertyId];
+                        propertyIds.map((propertyId, index) => {
+                            const property = props.properties.byId[propertyId];
 
-                                return (
-                                    <StatementItem
-                                        id={propertyId}
-                                        property={property}
-                                        predicateLabel={property.label}
-                                        key={'statement-' + index}
-                                        index={index}
-                                        isExistingProperty={property.isExistingProperty ? true : false}
-                                        enableEdit={shared <= 1 ? this.props.enableEdit : false}
-                                        syncBackend={this.props.syncBackend}
-                                        isLastItem={propertyIds.length === index + 1}
-                                        openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
-                                        isEditing={property.isEditing}
-                                        isSaving={property.isSaving}
-                                        templateId={property.templateId}
-                                        showValueHelp={this.props.cookies && !this.props.cookies.get('showedValueHelp') && index === 0 ? true : false}
-                                    />
-                                );
-                            })
+                            return (
+                                <StatementItem
+                                    key={'statement-' + index}
+                                    id={propertyId}
+                                    property={property}
+                                    predicateLabel={property.label}
+                                    enableEdit={shared <= 1 ? props.enableEdit : false}
+                                    syncBackend={props.syncBackend}
+                                    isLastItem={propertyIds.length === index + 1}
+                                    openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+                                    showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
+                                />
+                            );
+                        })
                     ) : (
-                        <StyledStatementItem style={{ marginBottom: 0 }}>
-                            No data yet
-                            <br />
-                            {this.props.enableEdit ? (
-                                <span style={{ fontSize: '0.875rem' }}>Start by adding a property from below</span>
-                            ) : (
-                                <span style={{ fontSize: '0.875rem' }}>Please contribute by editing.</span>
-                            )}
-                            <br />
-                        </StyledStatementItem>
+                        <NoData enableEdit={props.enableEdit} />
                     )
                 ) : (
                     <StyledStatementItem>
@@ -87,39 +71,37 @@ export default class Statements extends Component {
                     </StyledStatementItem>
                 )}
 
-                {(shared <= 1) & this.props.enableEdit ? <AddProperty syncBackend={this.props.syncBackend} /> : ''}
+                {(shared <= 1) & props.enableEdit ? <AddProperty syncBackend={props.syncBackend} /> : ''}
             </ListGroup>
         );
     };
 
-    addLevel = (level, maxLevel) => {
+    const addLevel = (level, maxLevel) => {
         return maxLevel !== 0 ? (
             <StyledLevelBox>
-                {maxLevel !== level + 1 && this.addLevel(level + 1, maxLevel)}
-                {maxLevel === level + 1 && this.statements()}
+                {maxLevel !== level + 1 && addLevel(level + 1, maxLevel)}
+                {maxLevel === level + 1 && statements()}
             </StyledLevelBox>
         ) : (
-            this.statements()
+            statements()
         );
     };
 
-    render() {
-        const elements = this.addLevel(0, this.props.level);
+    const elements = addLevel(0, props.level);
 
-        return (
-            <>
-                {this.props.level !== 0 ? (
-                    <>
-                        <Breadcrumbs openExistingResourcesInDialog={this.props.openExistingResourcesInDialog} />
-                    </>
-                ) : (
-                    ''
-                )}
+    return (
+        <>
+            {props.level !== 0 ? (
+                <>
+                    <Breadcrumbs openExistingResourcesInDialog={props.openExistingResourcesInDialog} />
+                </>
+            ) : (
+                ''
+            )}
 
-                {elements}
-            </>
-        );
-    }
+            {elements}
+        </>
+    );
 }
 
 Statements.propTypes = {
@@ -128,14 +110,15 @@ Statements.propTypes = {
     properties: PropTypes.object.isRequired,
     isFetchingStatements: PropTypes.bool.isRequired,
     selectedResource: PropTypes.string.isRequired,
-    enableEdit: PropTypes.bool.isRequired,
-    syncBackend: PropTypes.bool.isRequired,
+    cookies: PropTypes.instanceOf(Cookies).isRequired,
     initializeWithoutContribution: PropTypes.func.isRequired,
     initializeWithResource: PropTypes.func.isRequired,
+
+    enableEdit: PropTypes.bool.isRequired,
+    openExistingResourcesInDialog: PropTypes.bool,
     initialResourceId: PropTypes.string,
     initialResourceLabel: PropTypes.string,
-    openExistingResourcesInDialog: PropTypes.bool,
-    cookies: PropTypes.instanceOf(Cookies).isRequired,
+    syncBackend: PropTypes.bool.isRequired,
     newStore: PropTypes.bool
 };
 

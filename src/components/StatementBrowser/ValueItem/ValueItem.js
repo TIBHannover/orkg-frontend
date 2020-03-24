@@ -322,6 +322,7 @@ export default class ValueItem extends Component {
                         handleDatasetClick={this.handleDatasetClick}
                         enableEdit={this.props.enableEdit}
                         handleDeleteValue={this.handleDeleteValue}
+                        showHelp={this.props.showHelp}
                     />
                 ) : (
                     <ValueItemTemplate
@@ -342,6 +343,7 @@ export default class ValueItem extends Component {
                         handleDatasetClick={this.handleDatasetClick}
                         enableEdit={this.props.enableEdit}
                         handleDeleteValue={this.handleDeleteValue}
+                        showHelp={this.props.showHelp}
                     />
                 )}
                 {this.state.modal ? (
@@ -393,8 +395,6 @@ ValueItem.propTypes = {
     existingStatement: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
-    isEditing: PropTypes.bool.isRequired,
-    isSaving: PropTypes.bool.isRequired,
     isSavingValue: PropTypes.func.isRequired,
     doneSavingValue: PropTypes.func.isRequired,
     changeValue: PropTypes.func.isRequired,
