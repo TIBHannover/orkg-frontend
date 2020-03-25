@@ -71,7 +71,7 @@ class ContributionItemList extends Component {
     };
 
     render() {
-        return (
+        const listItem = (
             <li
                 className={this.props.isSelected ? 'activeContribution' : ''}
                 onClick={
@@ -101,16 +101,17 @@ class ContributionItemList extends Component {
                     )}
                     {!this.state.isEditing && (
                         <span>
-                            {this.props.paperId && !this.props.isSelected ? (
+                            {/*this.props.paperId && !this.props.isSelected ? (
                                 <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paperId, contributionId: this.props.contribution.id })}>
                                     {this.props.contribution.label}
                                 </Link>
                             ) : (
                                 this.props.contribution.label
-                            )}
+                            )*/}
+                            {this.props.contribution.label}
                         </span>
                     )}
-                    {!this.state.isEditing && (
+                    {this.props.enableEdit && !this.state.isEditing && (
                         <>
                             {this.props.canDelete && (
                                 <span className={`deleteContribution float-right mr-1 ${!this.props.isSelected && 'd-none'}`}>
@@ -145,6 +146,14 @@ class ContributionItemList extends Component {
                 </span>
             </li>
         );
+
+        return this.props.paperId && !this.props.isSelected && !this.state.isEditing ? (
+            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paperId, contributionId: this.props.contribution.id })}>{listItem}</Link>
+        ) : (
+            listItem
+        );
+
+        //return listItem;
     }
 }
 
@@ -155,7 +164,8 @@ ContributionItemList.propTypes = {
     paperId: PropTypes.string,
     handleSelectContribution: PropTypes.func,
     handleChangeContributionLabel: PropTypes.func.isRequired,
-    toggleDeleteContribution: PropTypes.func.isRequired
+    toggleDeleteContribution: PropTypes.func.isRequired.length,
+    enableEdit: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => {

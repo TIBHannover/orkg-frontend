@@ -1,6 +1,7 @@
 import * as type from './types.js';
 import { guid } from '../utils';
 import * as network from '../network';
+import { orderBy } from 'lodash';
 
 export const initializeWithoutContribution = data => dispatch => {
     // To initialise:
@@ -312,6 +313,12 @@ export const fetchStatementsForResource = data => {
                 dispatch({
                     type: type.DONE_FETCHING_STATEMENTS
                 });
+
+                response = orderBy(
+                    response,
+                    [response => response.predicate.label.toLowerCase(), response => response.object.label.toLowerCase()],
+                    ['asc']
+                );
 
                 const existingProperties = [];
                 const researchProblems = [];

@@ -17,6 +17,10 @@ import { reverse } from 'named-urls';
 import { toast } from 'react-toastify';
 import { selectContribution, updateResearchProblems } from '../../actions/viewPaper';
 import styled from 'styled-components';
+import { StyledHorizontalContributionsList, StyledHorizontalContribution } from '../AddPaper/Contributions/styled';
+import Tippy from '@tippy.js/react';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const Title = styled.div`
     font-size: 18px;
@@ -147,47 +151,19 @@ class Contributions extends Component {
             <div>
                 <Container>
                     <Row noGutters={true}>
-                        <Col md="3">
+                        <Col md="9">
                             {this.state.loading && (
                                 <div>
-                                    <ContentLoader height={20} width={100} speed={2} primaryColor="#E86161" secondaryColor="#ecebeb">
-                                        <rect x="0" y="5" rx="0" ry="0" width={100} height="15" />
-                                    </ContentLoader>
-                                    <ContentLoader height={40} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
-                                        <rect x="0" y="5" rx="0" ry="0" width={100} height="15" />
-                                        <rect x="0" y="25" rx="0" ry="0" width={100} height="15" />
+                                    <ContentLoader height={6} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
+                                        <rect x="0" y="0" rx="1" ry="1" width={20} height="5" />
+                                        <rect x="21" y="0" rx="1" ry="1" width={20} height="5" />
+                                        <rect x="42" y="0" rx="1" ry="1" width={20} height="5" />
                                     </ContentLoader>
                                 </div>
                             )}
-                            {!this.state.loading && !this.props.enableEdit && (
-                                <StyledContributionsList>
-                                    {this.props.contributions.map((contribution, index) => {
-                                        return (
-                                            <li
-                                                className={contribution.id === selectedContributionId ? 'activeContribution' : ''}
-                                                key={contribution.id}
-                                            >
-                                                {contribution.id !== selectedContributionId ? (
-                                                    <Link
-                                                        to={reverse(ROUTES.VIEW_PAPER, {
-                                                            resourceId: this.props.paperId,
-                                                            contributionId: contribution.id
-                                                        })}
-                                                        className={'selectContribution'}
-                                                    >
-                                                        {contribution.label}
-                                                    </Link>
-                                                ) : (
-                                                    contribution.label
-                                                )}
-                                            </li>
-                                        );
-                                    })}
-                                </StyledContributionsList>
-                            )}
-                            {!this.state.loading && this.props.enableEdit && (
-                                <StyledContributionsList>
-                                    {this.props.contributions.map((contribution, index) => {
+                            {!this.state.loading && (
+                                <StyledHorizontalContributionsList className={!this.props.enableEdit && 'noEdit'}>
+                                    {this.props.contributions.map(contribution => {
                                         return (
                                             <ContributionItemList
                                                 paperId={this.props.paperId}
@@ -198,18 +174,26 @@ class Contributions extends Component {
                                                 contribution={contribution}
                                                 key={contribution.id}
                                                 toggleDeleteContribution={this.props.toggleDeleteContribution}
+                                                enableEdit={this.props.enableEdit}
                                             />
                                         );
                                     })}
-                                    <li className={'addContribution text-primary'}>
-                                        <span onClick={() => this.props.handleCreateContribution()}>+ Add another contribution</span>
-                                    </li>
-                                </StyledContributionsList>
+                                    {this.props.enableEdit && (
+                                        <li className={'addContribution'} onClick={() => this.props.handleCreateContribution()}>
+                                            <Tippy content="Add contribution">
+                                                <span>
+                                                    <Icon size="xs" icon={faPlus} />
+                                                </span>
+                                            </Tippy>
+                                        </li>
+                                    )}
+                                </StyledHorizontalContributionsList>
                             )}
                         </Col>
+
                         <TransitionGroup className="col-md-9" exit={false}>
                             <AnimationContainer key={selectedContributionId} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
-                                <StyledContribution>
+                                <StyledHorizontalContribution>
                                     {!this.state.loading && (
                                         <AddToComparison
                                             contributionId={selectedContributionId}
@@ -340,7 +324,7 @@ class Contributions extends Component {
                                             )}
                                         </FormGroup>
                                     </Form>
-                                </StyledContribution>
+                                </StyledHorizontalContribution>
                             </AnimationContainer>
                         </TransitionGroup>
                     </Row>

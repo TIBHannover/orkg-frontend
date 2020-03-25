@@ -4,7 +4,7 @@ import { faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import PropTypes from 'prop-types';
 
 const SharePaper = ({ title }) => (
-    <div className={'mb-4 text-right'}>
+    <div className={'mb-2 text-right'}>
         <small>Share this paper:</small>
         <a
             href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.protocol}//${window.location.host}${window.location.pathname}`}
