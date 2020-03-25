@@ -323,7 +323,7 @@ class StatementItem extends Component {
             })
         };
 
-        if (this.props.contextStyle === 'StatementBrowser') {
+        /*if (this.props.contextStyle !== 'StatementBrowser') {
             return (
                 <>
                     <StyledStatementItem
@@ -441,19 +441,21 @@ class StatementItem extends Component {
                     </Collapse>
                 </>
             );
-        } else {
-            return (
-                <StatementsGroupStyle className={`${this.props.inTemplate ? 'inTemplate' : 'noTemplate'} ${!this.props.inTemplate ? ' mt-3' : ''}`}>
-                    <div className={'row no-gutters'}>
-                        <PropertyStyle className={`col-4 ${this.props.isEditing ? 'editingLabel' : ''}`}>
-                            {!this.props.isEditing ? (
-                                <div>
-                                    <div className={'propertyLabel'}>{this.state.predicateLabel}</div>
-                                    {/*this.props.templateId && (
-                                        <i>
-                                            <small>Typed property</small>
-                                        </i>
-                                    )*/}
+        } else {*/
+
+        return (
+            <StatementsGroupStyle className={`${this.props.inTemplate ? 'inTemplate' : 'noTemplate'}`}>
+                <div className={'row no-gutters'}>
+                    <PropertyStyle className={`col-4 ${this.props.isEditing ? 'editingLabel' : ''}`} tabIndex="0">
+                        {!this.props.isEditing ? (
+                            <div>
+                                <div className={'propertyLabel'}>{this.state.predicateLabel}</div>
+                                {/*this.props.templateId && (
+                                    <i>
+                                        <small>Typed property</small>
+                                    </i>
+                                )*/}
+                                {this.props.enableEdit && (
                                     <div className={propertyOptionsClasses}>
                                         <TemplateOptionButton
                                             title={'Edit property'}
@@ -469,73 +471,76 @@ class StatementItem extends Component {
                                             onVisibilityChange={this.onVisibilityChange}
                                         />
                                     </div>
-                                </div>
-                            ) : (
-                                <div>
-                                    <InputGroup size="sm">
-                                        <AsyncCreatableSelect
-                                            className="form-control"
-                                            loadOptions={this.loadOptions}
-                                            noOptionsMessage={this.noResults}
-                                            styles={customStyles}
-                                            autoFocus
-                                            getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
-                                            getOptionValue={({ id }) => id}
-                                            defaultOptions={[
-                                                {
-                                                    label: this.state.predicateLabel,
-                                                    id: this.props.properties.byId[this.props.id].existingPredicateId
-                                                }
-                                            ]}
-                                            placeholder={this.state.predicateLabel}
-                                            cacheOptions
-                                            onChange={(selectedOption, a) => {
-                                                this.handleChange(selectedOption, a);
-                                                this.props.toggleEditPropertyLabel({ id: this.props.id });
-                                            }}
-                                            onBlur={e => {
-                                                this.props.toggleEditPropertyLabel({ id: this.props.id });
-                                            }}
-                                            onKeyDown={e => e.keyCode === 27 && e.target.blur()}
-                                        />
-                                    </InputGroup>
-                                </div>
-                            )}
-                        </PropertyStyle>
-                        <ValuesStyle className={'col-8 valuesList'}>
-                            <div>
-                                {valueIds.map((valueId, index) => {
-                                    const value = this.props.values.byId[valueId];
-                                    return (
-                                        <ValueItem
-                                            key={index}
-                                            label={value.label}
-                                            id={valueId}
-                                            type={value.type}
-                                            classes={value.classes}
-                                            enableEdit={this.props.enableEdit}
-                                            syncBackend={this.props.syncBackend}
-                                            resourceId={value.resourceId}
-                                            propertyId={this.props.id}
-                                            existingStatement={value.existingStatement}
-                                            openExistingResourcesInDialog={true}
-                                            isExistingValue={value.isExistingValue}
-                                            isEditing={value.isEditing}
-                                            isSaving={value.isSaving}
-                                            statementId={value.statementId}
-                                            shared={value.shared}
-                                            contextStyle="Template"
-                                            showHelp={this.props.showValueHelp && index === 0 ? true : false}
-                                        />
-                                    );
-                                })}
-                                <AddValue contextStyle="Template" propertyId={this.props.id} syncBackend={this.props.syncBackend} />
+                                )}
                             </div>
-                        </ValuesStyle>
-                    </div>
-                </StatementsGroupStyle>
-            );
-        }
+                        ) : (
+                            <div>
+                                <InputGroup size="sm">
+                                    <AsyncCreatableSelect
+                                        className="form-control"
+                                        loadOptions={this.loadOptions}
+                                        noOptionsMessage={this.noResults}
+                                        styles={customStyles}
+                                        autoFocus
+                                        getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
+                                        getOptionValue={({ id }) => id}
+                                        defaultOptions={[
+                                            {
+                                                label: this.state.predicateLabel,
+                                                id: this.props.properties.byId[this.props.id].existingPredicateId
+                                            }
+                                        ]}
+                                        placeholder={this.state.predicateLabel}
+                                        cacheOptions
+                                        onChange={(selectedOption, a) => {
+                                            this.handleChange(selectedOption, a);
+                                            this.props.toggleEditPropertyLabel({ id: this.props.id });
+                                        }}
+                                        onBlur={e => {
+                                            this.props.toggleEditPropertyLabel({ id: this.props.id });
+                                        }}
+                                        onKeyDown={e => e.keyCode === 27 && e.target.blur()}
+                                    />
+                                </InputGroup>
+                            </div>
+                        )}
+                    </PropertyStyle>
+                    <ValuesStyle className={'col-8 valuesList'}>
+                        <ListGroup flush className="px-3">
+                            {valueIds.map((valueId, index) => {
+                                const value = this.props.values.byId[valueId];
+                                return (
+                                    <ValueItem
+                                        key={index}
+                                        label={value.label}
+                                        id={valueId}
+                                        type={value.type}
+                                        classes={value.classes}
+                                        enableEdit={this.props.enableEdit}
+                                        syncBackend={this.props.syncBackend}
+                                        resourceId={value.resourceId}
+                                        propertyId={this.props.id}
+                                        existingStatement={value.existingStatement}
+                                        openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
+                                        isExistingValue={value.isExistingValue}
+                                        isEditing={value.isEditing}
+                                        isSaving={value.isSaving}
+                                        statementId={value.statementId}
+                                        shared={value.shared}
+                                        contextStyle="Template"
+                                        showHelp={this.props.showValueHelp && index === 0 ? true : false}
+                                    />
+                                );
+                            })}
+                            {this.props.enableEdit && (
+                                <AddValue contextStyle="Template" propertyId={this.props.id} syncBackend={this.props.syncBackend} />
+                            )}
+                        </ListGroup>
+                    </ValuesStyle>
+                </div>
+            </StatementsGroupStyle>
+        );
+        //}
     }
 }
 

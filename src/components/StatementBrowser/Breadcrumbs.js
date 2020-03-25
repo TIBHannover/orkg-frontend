@@ -25,7 +25,7 @@ const BreadcrumbList = styled.ul`
 `;
 
 const BreadcrumbItem = styled.li`
-    border-radius: 11px;
+    border-radius: 6px;
     background: #f7f7f7;
     padding: 4px 10px;
     float: left;
@@ -65,6 +65,7 @@ const BackButton = styled.div`
     padding: 4px 0 0 0 !important;
     font-size: 95% !important;
     text-align: left !important;
+    cursor: pointer;
 `;
 
 const Container = styled.div`

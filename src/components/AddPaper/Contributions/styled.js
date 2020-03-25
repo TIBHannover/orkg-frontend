@@ -71,7 +71,37 @@ export const StyledHorizontalContributionsList = styled.ul`
     margin: 0;
     box-sizing: border-box;
 
-    > li {
+    // support for a > li (used in ViewPaper)
+    a {
+        color: inherit;
+
+        li:first-child {
+            border-top-left-radius: 0;
+        }
+        &:first-child li {
+            border-top-left-radius: ${props => props.theme.borderRadius};
+        }
+        &:nth-last-child(2) li {
+            border-top-right-radius: ${props => props.theme.borderRadius};
+        }
+    }
+
+    &.noEdit {
+        a:last-child li,
+        > li:last-child {
+            border-top-right-radius: ${props => props.theme.borderRadius};
+        }
+        a:nth-last-child(2) li,
+        > li:nth-last-child(2) {
+            border-top-right-radius: 0;
+        }
+    }
+
+    li {
+        a {
+            color: inherit;
+        }
+
         &:nth-last-child(2) {
             border-top-right-radius: ${props => props.theme.borderRadius};
         }
@@ -93,6 +123,11 @@ export const StyledHorizontalContributionsList = styled.ul`
         padding: 7px 15px 7px 15px;
         transition: 0.3s background;
         cursor: pointer;
+
+        &.disabled {
+            pointer-events: none;
+            cursor: default;
+        }
 
         &:hover {
             text-decoration: none;
@@ -233,16 +268,17 @@ export const StyledListGroupOpen = styled.div`
 
 /*levelBox*/
 export const StyledLevelBox = styled.div`
-    border-color: #dfdfdf; /*don't use default color, since it is partially transparent $list-group-border-color;*/
+    // The hierarchy indicator doesn't look nice when properties have a space between them
+    /*border-color: #dfdfdf; //don't use default color, since it is partially transparent $list-group-border-color;
     border-radius: ${props => props.theme.borderRadius};
     padding-left: 8px;
     border-style: solid;
-    border-width: 2px;
-    //box-shadow: -2px 0px 4px 0px rgba(0, 0, 0, 0.06);
-    margin-top: -2px;
-    margin-right: -2px;
-    margin-bottom: -2px;
-    display: block;
+    border-width: 1px;
+    box-shadow: -2px 0px 4px 0px rgba(0, 0, 0, 0.06);
+    margin-top: -1px;
+    margin-right: -1px;
+    margin-bottom: -1px;
+    display: block;*/
 
     .listGroupEnlarge {
         margin-top: -2px;
@@ -339,10 +375,15 @@ export const StyledDropdownToggle = styled(DropdownToggle)`
     }
 `;
 
-export const ValueItemStyle = styled.div`
+export const ValueItemStyle = styled(ListGroupItem)`
     background-color: #fff;
     margin-bottom: 10px;
     overflow-wrap: break-word;
+    padding: 8px 0px !important;
+
+    &:last-child {
+        margin-bottom: 5px;
+    }
 
     .valueOptions {
         visibility: hidden;
@@ -356,7 +397,8 @@ export const ValueItemStyle = styled.div`
         }
     }
 
-    &:hover .valueOptions {
+    &:hover .valueOptions,
+    &:focus-within .valueOptions {
         visibility: visible;
         opacity: 1;
     }
@@ -472,12 +514,18 @@ export const StatementsGroupStyle = styled(ListGroupItem)`
     &.noTemplate {
         border-top: 1px solid rgba(0, 0, 0, 0.125);
         border-radius: 4px !important;
+        margin-top: 0.75rem;
+
+        &:first-child {
+            margin-top: 0;
+        }
     }
 `;
 
 export const PropertyStyle = styled.div`
     background-color: ${props => props.theme.ultraLightBlue};
     overflow-wrap: break-word;
+    border-radius: 3px 0 0 3px;
 
     & > div {
         padding: 8px;
@@ -509,7 +557,11 @@ export const PropertyStyle = styled.div`
             opacity: 1;
         }
     }
-    &:hover .propertyOptions {
+    &:focus {
+        outline: 0;
+    }
+    &:hover .propertyOptions,
+    &:focus-within .propertyOptions {
         visibility: visible;
         opacity: 1;
         span {
@@ -522,6 +574,7 @@ export const ValuesStyle = styled.div`
         padding: 8px;
     }
     background-color: #fff;
+    border-radius: 0 3px 3px 0;
 `;
 
 export const TemplateHeaderStyle = styled.div`

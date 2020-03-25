@@ -149,7 +149,8 @@ class AddProperty extends Component {
     render() {
         return (
             <>
-                {this.props.contextStyle === 'StatementBrowser' ? (
+                {
+                    /*this.props.contextStyle === 'StatementBrowser' ? (
                     <StyledStatementItem
                         style={{ transition: '0.3s max-width', borderTop: '0' }}
                         //className={`${this.state.showAddProperty ? 'col-12 large' : 'col-3'}`}
@@ -188,8 +189,8 @@ class AddProperty extends Component {
                             </span>
                         )}
                     </StyledStatementItem>
-                ) : (
-                    <AddPropertyStyle className={this.props.inTemplate ? 'inTemplate' : 'mt-4'}>
+                ) : (*/
+                    <AddPropertyStyle className={this.props.inTemplate ? 'inTemplate' : 'mt-3'}>
                         <AddPropertyContentStyle
                             onClick={() => (this.props.inTemplate && !this.state.showAddProperty ? this.handleShowAddProperty() : undefined)}
                             className={`${this.props.inTemplate ? 'inTemplate' : 'noTemplate'} ${this.state.showAddProperty ? 'col-12 large' : ''}`}
@@ -240,7 +241,8 @@ class AddProperty extends Component {
                             )}
                         </AddPropertyContentStyle>
                     </AddPropertyStyle>
-                )}
+                    /*)*/
+                }
 
                 <Modal isOpen={this.state.confirmNewPropertyModal} toggle={this.toggleConfirmNewProperty}>
                     <ModalHeader toggle={this.toggleConfirmNewProperty}>Are you sure you need a new property?</ModalHeader>

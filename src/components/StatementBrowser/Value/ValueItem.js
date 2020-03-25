@@ -408,7 +408,8 @@ class ValueItem extends Component {
 
         return (
             <>
-                {this.props.contextStyle === 'StatementBrowser' ? (
+                {
+                    /*this.props.contextStyle === 'StatementBrowser' ? (
                     <>
                         {!this.props.inline ? (
                             <StyledValueItem className={this.state.disableHover && 'disableHover'}>
@@ -579,30 +580,37 @@ class ValueItem extends Component {
                             this.props.label
                         )}
                     </>
-                ) : (
+                ) : (*/
                     <ValueItemStyle className={this.state.editValueLabel ? 'editingLabel' : ''}>
                         {!this.props.isEditing ? (
                             <div>
-                                <div className={`${this.props.type === 'literal' ? 'literalLabel' : 'objectLabel'}`} onClick={onClick}>
-                                    {this.props.showHelp && this.props.type === 'object' ? (
-                                        <Pulse content={'Click on the resource to browse it'}>
-                                            <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>
-                                                {this.props.label}
-                                            </ValuePlugins>
-                                        </Pulse>
-                                    ) : (
-                                        <ValuePlugins type={this.props.type === 'object' ? 'resource' : 'literal'}>{this.props.label}</ValuePlugins>
-                                    )}
+                                {this.props.type === 'object' && (
+                                    <Button className="p-0" color="link" onClick={onClick}>
+                                        {this.props.showHelp && this.props.type === 'object' ? (
+                                            <Pulse content={'Click on the resource to browse it'}>
+                                                <ValuePlugins type={'resource'}>{this.props.label}</ValuePlugins>
+                                            </Pulse>
+                                        ) : (
+                                            <ValuePlugins type={'resource'}>{this.props.label}</ValuePlugins>
+                                        )}
 
-                                    {existingResourceId && this.props.openExistingResourcesInDialog ? (
-                                        <span>
-                                            {' '}
-                                            <Icon icon={faExternalLinkAlt} />
-                                        </span>
-                                    ) : (
-                                        ''
-                                    )}
-                                </div>
+                                        {existingResourceId && this.props.openExistingResourcesInDialog ? (
+                                            <span>
+                                                {' '}
+                                                <Icon icon={faExternalLinkAlt} />
+                                            </span>
+                                        ) : (
+                                            ''
+                                        )}
+                                    </Button>
+                                )}
+
+                                {this.props.type === 'literal' && (
+                                    <div className={'literalLabel'}>
+                                        <ValuePlugins type={'literal'}>{this.props.label}</ValuePlugins>
+                                    </div>
+                                )}
+
                                 <div className={valueOptionClasses}>
                                     {!this.props.isEditing &&
                                         this.props.classes &&
@@ -613,31 +621,36 @@ class ValueItem extends Component {
                                                 action={this.handleDatasetClick}
                                             />
                                         )}
-                                    {(!existingResourceId || this.props.shared <= 1) && (
-                                        <TemplateOptionButton
-                                            title={'Edit value'}
-                                            icon={faPen}
-                                            action={() => this.props.toggleEditValue({ id: this.props.id })}
-                                        />
-                                    )}
 
-                                    {existingResourceId && this.props.shared > 1 && (
-                                        <TemplateOptionButton
-                                            title={'A shared resource cannot be edited directly'}
-                                            icon={faPen}
-                                            action={() => null}
-                                            onVisibilityChange={this.onVisibilityChange}
-                                        />
-                                    )}
+                                    {this.props.enableEdit && (
+                                        <>
+                                            {(!existingResourceId || this.props.shared <= 1) && (
+                                                <TemplateOptionButton
+                                                    title={'Edit value'}
+                                                    icon={faPen}
+                                                    action={() => this.props.toggleEditValue({ id: this.props.id })}
+                                                />
+                                            )}
 
-                                    <TemplateOptionButton
-                                        requireConfirmation={true}
-                                        title={'Delete value'}
-                                        confirmationMessage={'Are you sure to delete?'}
-                                        icon={faTrash}
-                                        action={this.handleDeleteValue}
-                                        onVisibilityChange={this.onVisibilityChange}
-                                    />
+                                            {existingResourceId && this.props.shared > 1 && (
+                                                <TemplateOptionButton
+                                                    title={'A shared resource cannot be edited directly'}
+                                                    icon={faPen}
+                                                    action={() => null}
+                                                    onVisibilityChange={this.onVisibilityChange}
+                                                />
+                                            )}
+
+                                            <TemplateOptionButton
+                                                requireConfirmation={true}
+                                                title={'Delete value'}
+                                                confirmationMessage={'Are you sure to delete?'}
+                                                icon={faTrash}
+                                                action={this.handleDeleteValue}
+                                                onVisibilityChange={this.onVisibilityChange}
+                                            />
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         ) : (
@@ -669,7 +682,8 @@ class ValueItem extends Component {
                             </div>
                         )}
                     </ValueItemStyle>
-                )}
+                    /*)*/
+                }
                 {this.state.modal ? (
                     <StatementBrowserDialog
                         show={this.state.modal}
