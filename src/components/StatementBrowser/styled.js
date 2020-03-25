@@ -47,16 +47,17 @@ export const StyledStatementItem = styled(ListGroupItem)`
 
 /*levelBox*/
 export const StyledLevelBox = styled.div`
-    border-color: #dfdfdf; /*don't use default color, since it is partially transparent $list-group-border-color;*/
+    // The hierarchy indicator doesn't look nice when properties have a space between them
+    /*border-color: #dfdfdf; //don't use default color, since it is partially transparent $list-group-border-color;
     border-radius: ${props => props.theme.borderRadius};
     padding-left: 8px;
     border-style: solid;
-    border-width: 2px;
-    //box-shadow: -2px 0px 4px 0px rgba(0, 0, 0, 0.06);
-    margin-top: -2px;
-    margin-right: -2px;
-    margin-bottom: -2px;
-    display: block;
+    border-width: 1px;
+    box-shadow: -2px 0px 4px 0px rgba(0, 0, 0, 0.06);
+    margin-top: -1px;
+    margin-right: -1px;
+    margin-bottom: -1px;
+    display: block;*/
 
     .listGroupEnlarge {
         margin-top: -2px;
