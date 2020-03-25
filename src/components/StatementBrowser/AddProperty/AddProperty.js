@@ -87,26 +87,15 @@ export default class AddProperty extends Component {
     render() {
         return (
             <>
-                {this.props.contextStyle === 'StatementBrowser' ? (
-                    <AddPropertySB
-                        showAddProperty={this.state.showAddProperty}
-                        handlePropertySelect={this.handlePropertySelect}
-                        toggleConfirmNewProperty={this.toggleConfirmNewProperty}
-                        handleHideAddProperty={this.handleHideAddProperty}
-                        newProperties={this.props.newProperties}
-                        handleShowAddProperty={this.handleShowAddProperty}
-                    />
-                ) : (
-                    <AddPropertyTemplate
-                        inTemplate={this.props.inTemplate}
-                        showAddProperty={this.state.showAddProperty}
-                        handlePropertySelect={this.handlePropertySelect}
-                        toggleConfirmNewProperty={this.toggleConfirmNewProperty}
-                        handleHideAddProperty={this.handleHideAddProperty}
-                        newProperties={this.props.newProperties}
-                        handleShowAddProperty={this.handleShowAddProperty}
-                    />
-                )}
+                <AddPropertyTemplate
+                    inTemplate={this.props.inTemplate}
+                    showAddProperty={this.state.showAddProperty}
+                    handlePropertySelect={this.handlePropertySelect}
+                    toggleConfirmNewProperty={this.toggleConfirmNewProperty}
+                    handleHideAddProperty={this.handleHideAddProperty}
+                    newProperties={this.props.newProperties}
+                    handleShowAddProperty={this.handleShowAddProperty}
+                />
 
                 <Modal isOpen={this.state.confirmNewPropertyModal} toggle={this.toggleConfirmNewProperty}>
                     <ModalHeader toggle={this.toggleConfirmNewProperty}>Are you sure you need a new property?</ModalHeader>

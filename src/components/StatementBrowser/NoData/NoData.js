@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 
 export default function NoData(props) {
     return (
-        <StyledStatementItem style={{ marginBottom: 0 }}>
+        <StyledStatementItem style={{ marginBottom: 0 }} className="noTemplate">
             No data yet
             <br />
             {props.enableEdit ? (
                 <span style={{ fontSize: '0.875rem' }}>Start by adding a property from below</span>
             ) : (
-                <span style={{ fontSize: '0.875rem' }}>Please contribute by editing.</span>
+                <span style={{ fontSize: '0.875rem' }}>Please contribute by editing</span>
             )}
             <br />
         </StyledStatementItem>

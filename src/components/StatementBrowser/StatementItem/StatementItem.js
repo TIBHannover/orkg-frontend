@@ -138,47 +138,26 @@ export default function StatementItem(props) {
         }
     };
 
-    if (props.contextStyle === 'StatementBrowser') {
-        return (
-            <StatementItemSB
-                togglePropertyCollapse={props.togglePropertyCollapse}
-                property={props.property}
-                id={props.id}
-                selectedProperty={props.selectedProperty}
-                isLastItem={props.isLastItem}
-                enableEdit={props.enableEdit}
-                loadOptions={loadOptions}
-                predicateLabel={predicateLabel}
-                values={props.values}
-                syncBackend={props.syncBackend}
-                handleChange={handleChange}
-                toggleEditPropertyLabel={props.toggleEditPropertyLabel}
-                showValueHelp={props.showValueHelp}
-                openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-            />
-        );
-    } else {
-        return (
-            <StatementItemTemplate
-                togglePropertyCollapse={props.togglePropertyCollapse}
-                property={props.property}
-                id={props.id}
-                selectedProperty={props.selectedProperty}
-                isLastItem={props.isLastItem}
-                enableEdit={props.enableEdit}
-                loadOptions={loadOptions}
-                predicateLabel={predicateLabel}
-                values={props.values}
-                syncBackend={props.syncBackend}
-                handleChange={handleChange}
-                toggleEditPropertyLabel={props.toggleEditPropertyLabel}
-                inTemplate={props.inTemplate}
-                showValueHelp={props.showValueHelp}
-                openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                handleDeleteStatement={handleDeleteStatement}
-            />
-        );
-    }
+    return (
+        <StatementItemTemplate
+            togglePropertyCollapse={props.togglePropertyCollapse}
+            property={props.property}
+            id={props.id}
+            selectedProperty={props.selectedProperty}
+            isLastItem={props.isLastItem}
+            enableEdit={props.enableEdit}
+            loadOptions={loadOptions}
+            predicateLabel={predicateLabel}
+            values={props.values}
+            syncBackend={props.syncBackend}
+            handleChange={handleChange}
+            toggleEditPropertyLabel={props.toggleEditPropertyLabel}
+            inTemplate={props.inTemplate}
+            showValueHelp={props.showValueHelp}
+            openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+            handleDeleteStatement={handleDeleteStatement}
+        />
+    );
 }
 
 StatementItem.propTypes = {

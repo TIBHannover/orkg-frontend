@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 
 export default function AddPropertyTemplate(props) {
     return (
-        <AddPropertyStyle className={props.inTemplate ? 'inTemplate' : 'mt-4'}>
+        <AddPropertyStyle className={props.inTemplate ? 'inTemplate' : 'mt-3'}>
             <AddPropertyContentStyle
                 onClick={() => (props.inTemplate && !props.showAddProperty ? props.handleShowAddProperty() : undefined)}
                 className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'} ${props.showAddProperty ? 'col-12 large' : ''}`}

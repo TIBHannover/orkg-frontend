@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { InputGroup } from 'reactstrap';
+import { ListGroup, Collapse, InputGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import ValueItem from 'components/StatementBrowser/ValueItem/ValueItemContainer';
@@ -19,32 +19,29 @@ export default function StatementItemTemplate(props) {
     });
 
     return (
-        <StatementsGroupStyle className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'} ${!props.inTemplate ? ' mt-3' : ''}`}>
+        <StatementsGroupStyle className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'}`}>
             <div className={'row no-gutters'}>
-                <PropertyStyle className={`col-4 ${props.property.isEditing ? 'editingLabel' : ''}`}>
+                <PropertyStyle className={`col-4 ${props.property.isEditing ? 'editingLabel' : ''}`} tabIndex="0">
                     {!props.property.isEditing ? (
                         <div>
                             <div className={'propertyLabel'}>{props.predicateLabel}</div>
-                            {/*this.props.templateId && (
-                                        <i>
-                                            <small>Typed property</small>
-                                        </i>
-                                    )*/}
-                            <div className={propertyOptionsClasses}>
-                                <TemplateOptionButton
-                                    title={'Edit property'}
-                                    icon={faPen}
-                                    action={() => props.toggleEditPropertyLabel({ id: props.id })}
-                                />
-                                <TemplateOptionButton
-                                    requireConfirmation={true}
-                                    confirmationMessage={'Are you sure to delete?'}
-                                    title={'Delete property'}
-                                    icon={faTrash}
-                                    action={props.handleDeleteStatement}
-                                    onVisibilityChange={() => setDisableHover(!disableHover)}
-                                />
-                            </div>
+                            {props.enableEdit && (
+                                <div className={propertyOptionsClasses}>
+                                    <TemplateOptionButton
+                                        title={'Edit property'}
+                                        icon={faPen}
+                                        action={() => props.toggleEditPropertyLabel({ id: props.id })}
+                                    />
+                                    <TemplateOptionButton
+                                        requireConfirmation={true}
+                                        confirmationMessage={'Are you sure to delete?'}
+                                        title={'Delete property'}
+                                        icon={faTrash}
+                                        action={props.handleDeleteStatement}
+                                        onVisibilityChange={() => setDisableHover(!disableHover)}
+                                    />
+                                </div>
+                            )}
                         </div>
                     ) : (
                         <div>
@@ -78,7 +75,7 @@ export default function StatementItemTemplate(props) {
                     )}
                 </PropertyStyle>
                 <ValuesStyle className={'col-8 valuesList'}>
-                    <div>
+                    <ListGroup flush className="px-3">
                         {props.property.valueIds.map((valueId, index) => {
                             const value = props.values.byId[valueId];
                             return (
@@ -94,7 +91,7 @@ export default function StatementItemTemplate(props) {
                                     resourceId={value.resourceId}
                                     propertyId={props.id}
                                     existingStatement={value.existingStatement}
-                                    openExistingResourcesInDialog={true}
+                                    openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                     isExistingValue={value.isExistingValue}
                                     isEditing={value.isEditing}
                                     isSaving={value.isSaving}
@@ -105,8 +102,8 @@ export default function StatementItemTemplate(props) {
                                 />
                             );
                         })}
-                        <AddValue contextStyle="Template" propertyId={props.id} syncBackend={props.syncBackend} />
-                    </div>
+                        {props.enableEdit && <AddValue contextStyle="Template" propertyId={props.id} syncBackend={props.syncBackend} />}
+                    </ListGroup>
                 </ValuesStyle>
             </div>
         </StatementsGroupStyle>

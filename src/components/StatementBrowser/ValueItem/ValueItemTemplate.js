@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, InputGroup, InputGroupAddon } from 'reactstrap';
+import { Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faExternalLinkAlt, faTable } from '@fortawesome/free-solid-svg-icons';
 import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizard/TemplateOptionButton';
@@ -22,49 +22,63 @@ export default function ValueItemTemplate(props) {
         <ValueItemStyle>
             {!props.value.isEditing ? (
                 <div>
-                    <div className={`${props.value.type === 'literal' ? 'literalLabel' : 'objectLabel'}`} onClick={props.hundleOnClick}>
-                        {props.showHelp && props.value.type === 'object' ? (
-                            <Pulse content={'Click on the resource to browse it'}>
-                                <ValuePlugins type={props.value.type === 'object' ? 'resource' : 'literal'}>{props.value.label}</ValuePlugins>
-                            </Pulse>
-                        ) : (
-                            <ValuePlugins type={props.value.type === 'object' ? 'resource' : 'literal'}>{props.value.label}</ValuePlugins>
-                        )}
+                    {props.value.type === 'object' && (
+                        <Button className="p-0" color="link" onClick={props.hundleOnClick}>
+                            {props.showHelp && props.value.type === 'object' ? (
+                                <Pulse content={'Click on the resource to browse it'}>
+                                    <ValuePlugins type={'resource'}>{props.value.label}</ValuePlugins>
+                                </Pulse>
+                            ) : (
+                                <ValuePlugins type={'resource'}>{props.value.label}</ValuePlugins>
+                            )}
 
-                        {props.resource && props.resource.existingResourceId && props.openExistingResourcesInDialog ? (
-                            <span>
-                                {' '}
-                                <Icon icon={faExternalLinkAlt} />
-                            </span>
-                        ) : (
-                            ''
-                        )}
-                    </div>
+                            {props.resource && props.resource.existingResourceId && props.openExistingResourcesInDialog ? (
+                                <span>
+                                    {' '}
+                                    <Icon icon={faExternalLinkAlt} />
+                                </span>
+                            ) : (
+                                ''
+                            )}
+                        </Button>
+                    )}
+
+                    {props.value.type === 'literal' && (
+                        <div className={'literalLabel'}>
+                            <ValuePlugins type={'literal'}>{props.value.label}</ValuePlugins>
+                        </div>
+                    )}
+
                     <div className={valueOptionClasses}>
                         {!props.value.isEditing && props.value.classes && props.value.classes.includes(process.env.REACT_APP_QB_DATASET_CLASS) && (
                             <TemplateOptionButton title={'Visualize data in tabular form'} icon={faTable} action={props.handleDatasetClick} />
                         )}
-                        {((props.resource && !props.resource.existingResourceId) || props.value.shared <= 1) && (
-                            <TemplateOptionButton title={'Edit value'} icon={faPen} action={() => props.toggleEditValue({ id: props.id })} />
-                        )}
 
-                        {props.resource && props.resource.existingResourceId && props.value.shared > 1 && (
-                            <TemplateOptionButton
-                                title={'A shared resource cannot be edited directly'}
-                                icon={faPen}
-                                action={() => null}
-                                onVisibilityChange={() => setDisableHover(!disableHover)}
-                            />
-                        )}
+                        {props.enableEdit && (
+                            <>
+                                {((props.resource && !props.resource.existingResourceId) || props.value.shared <= 1) && (
+                                    <TemplateOptionButton title={'Edit value'} icon={faPen} action={() => props.toggleEditValue({ id: props.id })} />
+                                )}
 
-                        <TemplateOptionButton
-                            requireConfirmation={true}
-                            title={'Delete value'}
-                            confirmationMessage={'Are you sure to delete?'}
-                            icon={faTrash}
-                            action={props.handleDeleteValue}
-                            onVisibilityChange={() => setDisableHover(!disableHover)}
-                        />
+                                {props.resource && props.resource.existingResourceId && props.value.shared > 1 && (
+                                    <TemplateOptionButton
+                                        title={'A shared resource cannot be edited directly'}
+                                        icon={faPen}
+                                        action={() => null}
+                                        onVisibilityChange={() => setDisableHover(!disableHover)}
+                                    />
+                                )}
+
+                                <TemplateOptionButton
+                                    requireConfirmation={true}
+                                    title={'Delete value'}
+                                    confirmationMessage={'Are you sure to delete?'}
+                                    icon={faTrash}
+                                    action={props.handleDeleteValue}
+                                    onVisibilityChange={() => setDisableHover(!disableHover)}
+                                />
+                            </>
+                        )}
                     </div>
                 </div>
             ) : (

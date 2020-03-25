@@ -276,49 +276,27 @@ export default function ValueItem(props) {
 
     return (
         <>
-            {props.contextStyle === 'StatementBrowser' ? (
-                <ValueItemSB
-                    isProperty={[process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
-                        props.properties.byId[props.propertyId].existingPredicateId
-                    )}
-                    id={props.id}
-                    value={value}
-                    resource={resource}
-                    hundleOnClick={hundleOnClick}
-                    inline={props.inline}
-                    loadOptions={loadOptions}
-                    handleChangeResource={handleChangeResource}
-                    toggleEditValue={props.toggleEditValue}
-                    commitChangeLabel={commitChangeLabel}
-                    commitChangeLiteral={commitChangeLiteral}
-                    openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                    handleDatasetClick={handleDatasetClick}
-                    enableEdit={props.enableEdit}
-                    handleDeleteValue={handleDeleteValue}
-                    showHelp={props.showHelp}
-                />
-            ) : (
-                <ValueItemTemplate
-                    isProperty={[process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
-                        props.properties.byId[props.propertyId].existingPredicateId
-                    )}
-                    id={props.id}
-                    value={value}
-                    resource={resource}
-                    hundleOnClick={hundleOnClick}
-                    inline={props.inline}
-                    loadOptions={loadOptions}
-                    handleChangeResource={handleChangeResource}
-                    toggleEditValue={props.toggleEditValue}
-                    commitChangeLabel={commitChangeLabel}
-                    commitChangeLiteral={commitChangeLiteral}
-                    openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                    handleDatasetClick={handleDatasetClick}
-                    enableEdit={props.enableEdit}
-                    handleDeleteValue={handleDeleteValue}
-                    showHelp={props.showHelp}
-                />
-            )}
+            <ValueItemTemplate
+                isProperty={[process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
+                    props.properties.byId[props.propertyId].existingPredicateId
+                )}
+                id={props.id}
+                value={value}
+                resource={resource}
+                hundleOnClick={hundleOnClick}
+                inline={props.inline}
+                loadOptions={loadOptions}
+                handleChangeResource={handleChangeResource}
+                toggleEditValue={props.toggleEditValue}
+                commitChangeLabel={commitChangeLabel}
+                commitChangeLiteral={commitChangeLiteral}
+                openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+                handleDatasetClick={handleDatasetClick}
+                enableEdit={props.enableEdit}
+                handleDeleteValue={handleDeleteValue}
+                showHelp={props.showHelp}
+            />
+
             {modal ? (
                 <StatementBrowserDialog
                     show={modal}
