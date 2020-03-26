@@ -596,11 +596,6 @@ export const TemplateHeaderStyle = styled.div`
         opacity: 0;
         display: inline-block;
 
-        span {
-            background-color: ${props => props.theme.buttonDark};
-            color: ${props => props.theme.ultraLightBlue};
-        }
-
         &.disableHover {
             visibility: visible;
             opacity: 1;
