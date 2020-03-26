@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faExternalLinkAlt, faTable } from '@fortawesome/free-solid-svg-icons';
-import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizard/TemplateOptionButton';
-import { StyledButton, ValueItemStyle } from 'components/AddPaper/Contributions/styled';
+import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
+import { StyledButton, ValueItemStyle } from 'components/StatementBrowser/styled';
 import Pulse from 'components/Utils/Pulse';
 import classNames from 'classnames';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
@@ -51,17 +51,17 @@ export default function ValueItemTemplate(props) {
 
                     <div className={valueOptionClasses}>
                         {!props.value.isEditing && props.value.classes && props.value.classes.includes(process.env.REACT_APP_QB_DATASET_CLASS) && (
-                            <TemplateOptionButton title={'Visualize data in tabular form'} icon={faTable} action={props.handleDatasetClick} />
+                            <StatementOptionButton title={'Visualize data in tabular form'} icon={faTable} action={props.handleDatasetClick} />
                         )}
 
                         {props.enableEdit && (
                             <>
                                 {((props.resource && !props.resource.existingResourceId) || props.value.shared <= 1) && (
-                                    <TemplateOptionButton title={'Edit value'} icon={faPen} action={() => props.toggleEditValue({ id: props.id })} />
+                                    <StatementOptionButton title={'Edit value'} icon={faPen} action={() => props.toggleEditValue({ id: props.id })} />
                                 )}
 
                                 {props.resource && props.resource.existingResourceId && props.value.shared > 1 && (
-                                    <TemplateOptionButton
+                                    <StatementOptionButton
                                         title={'A shared resource cannot be edited directly'}
                                         icon={faPen}
                                         action={() => null}
@@ -69,7 +69,7 @@ export default function ValueItemTemplate(props) {
                                     />
                                 )}
 
-                                <TemplateOptionButton
+                                <StatementOptionButton
                                     requireConfirmation={true}
                                     title={'Delete value'}
                                     confirmationMessage={'Are you sure to delete?'}
@@ -130,9 +130,5 @@ ValueItemTemplate.propTypes = {
     commitChangeLiteral: PropTypes.func.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
     handleDatasetClick: PropTypes.func.isRequired,
-    handleDeleteValue: PropTypes.func.isRequired,
-
-    handleValueSelect: PropTypes.func.isRequired,
-    newResources: PropTypes.array.isRequired,
-    handleAddValue: PropTypes.func.isRequired
+    handleDeleteValue: PropTypes.func.isRequired
 };

@@ -8,7 +8,11 @@ export default function NoData(props) {
             No data yet
             <br />
             {props.enableEdit ? (
-                <span style={{ fontSize: '0.875rem' }}>Start by adding a property from below</span>
+                !props.templatesFound ? (
+                    <span style={{ fontSize: '0.875rem' }}>Start by adding a property from below</span>
+                ) : (
+                    <span style={{ fontSize: '0.875rem' }}>Start by using a template or adding property</span>
+                )
             ) : (
                 <span style={{ fontSize: '0.875rem' }}>Please contribute by editing</span>
             )}
@@ -18,7 +22,8 @@ export default function NoData(props) {
 }
 
 NoData.propTypes = {
-    enableEdit: PropTypes.bool.isRequired
+    enableEdit: PropTypes.bool.isRequired,
+    templatesFound: PropTypes.bool.isRequired
 };
 
 NoData.defaultProps = {

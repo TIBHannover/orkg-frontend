@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { resourcesUrl } from 'network';
 import { Input, InputGroup, InputGroupAddon, DropdownMenu, InputGroupButtonDropdown } from 'reactstrap';
-import { StyledDropdownItem, StyledButton, StyledDropdownToggle, ValueItemStyle } from 'components/AddPaper/Contributions/styled';
-import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizard/TemplateOptionButton';
+import { StyledDropdownItem, StyledButton, StyledDropdownToggle, ValueItemStyle } from 'components/StatementBrowser/styled';
+import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars } from '@fortawesome/free-solid-svg-icons';
@@ -10,7 +10,7 @@ import AutoComplete from 'components/StatementBrowser/AutoComplete';
 import useTogggle from './helpers/useToggle';
 import PropTypes from 'prop-types';
 
-export default function AddvalueTemplate(props) {
+export default function AddValueTemplate(props) {
     const literalInputRef = useRef(null);
     const resourceInputRef = useRef(null);
 
@@ -42,7 +42,7 @@ export default function AddvalueTemplate(props) {
     return (
         <ValueItemStyle className={showAddValue ? 'editingLabel' : ''}>
             {!showAddValue ? (
-                <TemplateOptionButton title={'Add value'} icon={faPlus} action={() => setShowAddValue(true)} />
+                <StatementOptionButton title={'Add value'} icon={faPlus} action={() => setShowAddValue(true)} />
             ) : (
                 <div>
                     <InputGroup size="sm">
@@ -132,7 +132,7 @@ export default function AddvalueTemplate(props) {
     );
 }
 
-AddvalueTemplate.propTypes = {
+AddValueTemplate.propTypes = {
     predicate: PropTypes.object.isRequired,
     handleValueSelect: PropTypes.func.isRequired,
     newResources: PropTypes.array.isRequired,

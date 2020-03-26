@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { createResourceStatement, createResource, createLiteral, createLiteralStatement, createPredicate } from 'network';
 import AddValueTemplate from './AddValueTemplate';
-import AddValueSB from './AddValueSB';
 import PropTypes from 'prop-types';
 
 export default class AddValue extends Component {
@@ -77,32 +76,16 @@ export default class AddValue extends Component {
 
         return (
             <>
-                {this.props.contextStyle === 'StatementBrowser' ? (
-                    <AddValueSB
-                        isProperty={[process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
-                            predicate.existingPredicateId
-                        )}
-                        predicate={predicate}
-                        properties={this.props.properties}
-                        propertyId={this.props.propertyId}
-                        selectedProperty={this.props.selectedProperty}
-                        handleValueSelect={this.handleValueSelect}
-                        handleInputChange={this.handleInputChange}
-                        newResources={this.props.newResources}
-                        handleAddValue={this.handleAddValue}
-                    />
-                ) : (
-                    <AddValueTemplate
-                        predicate={predicate}
-                        properties={this.props.properties}
-                        propertyId={this.props.propertyId}
-                        selectedProperty={this.props.selectedProperty}
-                        handleValueSelect={this.handleValueSelect}
-                        handleInputChange={this.handleInputChange}
-                        newResources={this.props.newResources}
-                        handleAddValue={this.handleAddValue}
-                    />
-                )}
+                <AddValueTemplate
+                    predicate={predicate}
+                    properties={this.props.properties}
+                    propertyId={this.props.propertyId}
+                    selectedProperty={this.props.selectedProperty}
+                    handleValueSelect={this.handleValueSelect}
+                    handleInputChange={this.handleInputChange}
+                    newResources={this.props.newResources}
+                    handleAddValue={this.handleAddValue}
+                />
             </>
         );
     }

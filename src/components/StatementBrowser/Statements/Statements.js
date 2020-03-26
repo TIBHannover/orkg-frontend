@@ -3,6 +3,7 @@ import { ListGroup } from 'reactstrap';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItemContainer';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddPropertyContainer';
 import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/BreadcrumbsContainer';
+import ContributionTemplate from 'components/StatementBrowser/ContributionTemplate/ContributionTemplateContainer';
 import NoData from 'components/StatementBrowser/NoData/NoData';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
 import { Cookies } from 'react-cookie';
@@ -47,22 +48,41 @@ export default function Statements(props) {
                     propertyIds.length > 0 ? (
                         propertyIds.map((propertyId, index) => {
                             const property = props.properties.byId[propertyId];
-                            return (
-                                <StatementItem
-                                    key={'statement-' + index}
-                                    id={propertyId}
-                                    property={property}
-                                    predicateLabel={property.label}
-                                    enableEdit={shared <= 1 ? props.enableEdit : false}
-                                    syncBackend={props.syncBackend}
-                                    isLastItem={propertyIds.length === index + 1}
-                                    openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                                    showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
-                                />
-                            );
+                            if (!property.isTemplate) {
+                                return (
+                                    <StatementItem
+                                        key={'statement-' + index}
+                                        id={propertyId}
+                                        property={property}
+                                        predicateLabel={property.label}
+                                        enableEdit={shared <= 1 ? props.enableEdit : false}
+                                        syncBackend={props.syncBackend}
+                                        isLastItem={propertyIds.length === index + 1}
+                                        openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+                                        showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
+                                    />
+                                );
+                            } else {
+                                return property.valueIds.map((valueId, index) => {
+                                    const value = props.values.byId[valueId];
+                                    return (
+                                        <ContributionTemplate
+                                            key={`template-${index}-${valueId}`}
+                                            id={valueId}
+                                            value={value}
+                                            propertyId={propertyId}
+                                            selectedResource={props.initialResourceId}
+                                            enableEdit={props.enableEdit}
+                                            syncBackend={props.syncBackend}
+                                            openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+                                            isAnimated={property.isAnimated}
+                                        />
+                                    );
+                                });
+                            }
                         })
                     ) : (
-                        <NoData enableEdit={props.enableEdit} />
+                        <NoData enableEdit={props.enableEdit} templatesFound={props.templatesFound} />
                     )
                 ) : (
                     <StyledStatementItem>
@@ -107,6 +127,7 @@ Statements.propTypes = {
     level: PropTypes.number.isRequired,
     resources: PropTypes.object.isRequired,
     properties: PropTypes.object.isRequired,
+    values: PropTypes.object.isRequired,
     isFetchingStatements: PropTypes.bool.isRequired,
     selectedResource: PropTypes.string.isRequired,
     cookies: PropTypes.instanceOf(Cookies).isRequired,
@@ -118,7 +139,8 @@ Statements.propTypes = {
     initialResourceId: PropTypes.string,
     initialResourceLabel: PropTypes.string,
     syncBackend: PropTypes.bool.isRequired,
-    newStore: PropTypes.bool
+    newStore: PropTypes.bool,
+    templatesFound: PropTypes.bool
 };
 
 Statements.defaultProps = {
@@ -126,5 +148,6 @@ Statements.defaultProps = {
     initialResourceId: null,
     initialResourceLabel: null,
     syncBackend: false,
-    newStore: false
+    newStore: false,
+    templatesFound: false
 };

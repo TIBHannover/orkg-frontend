@@ -29,7 +29,7 @@ export const OptionButton = styled(Button)`
         box-shadow: 0 0 0 0.2rem rgba(203, 206, 209, 0.5) !important;
     }
 `;
-class TemplateOptionButton extends Component {
+class StatementOptionButton extends Component {
     constructor(props) {
         super(props);
 
@@ -164,7 +164,7 @@ class TemplateOptionButton extends Component {
     }
 }
 
-TemplateOptionButton.propTypes = {
+StatementOptionButton.propTypes = {
     title: PropTypes.string.isRequired,
     icon: PropTypes.object.isRequired,
     iconWrapperSize: PropTypes.string,
@@ -175,8 +175,8 @@ TemplateOptionButton.propTypes = {
     onVisibilityChange: PropTypes.func
 };
 
-TemplateOptionButton.defaultProps = {
+StatementOptionButton.defaultProps = {
     requireConfirmation: false
 };
 
-export default TemplateOptionButton;
+export default StatementOptionButton;

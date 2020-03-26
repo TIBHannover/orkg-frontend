@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import ValueItem from 'components/StatementBrowser/ValueItem/ValueItemContainer';
 import AddValue from 'components/StatementBrowser/AddValue/AddValueContainer';
-import TemplateOptionButton from 'components/AddPaper/Contributions/TemplateWizard/TemplateOptionButton';
-import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/AddPaper/Contributions/styled';
+import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
+import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import { customStyles } from './style';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 
@@ -27,12 +27,12 @@ export default function StatementItemTemplate(props) {
                             <div className={'propertyLabel'}>{props.predicateLabel}</div>
                             {props.enableEdit && (
                                 <div className={propertyOptionsClasses}>
-                                    <TemplateOptionButton
+                                    <StatementOptionButton
                                         title={'Edit property'}
                                         icon={faPen}
                                         action={() => props.toggleEditPropertyLabel({ id: props.id })}
                                     />
-                                    <TemplateOptionButton
+                                    <StatementOptionButton
                                         requireConfirmation={true}
                                         confirmationMessage={'Are you sure to delete?'}
                                         title={'Delete property'}
@@ -113,9 +113,8 @@ StatementItemTemplate.propTypes = {
     syncBackend: PropTypes.bool.isRequired,
     handleChange: PropTypes.func.isRequired,
     toggleEditPropertyLabel: PropTypes.func.isRequired,
-    inTemplate: PropTypes.bool.isRequired,
+    inTemplate: PropTypes.bool,
     showValueHelp: PropTypes.bool,
     openExistingResourcesInDialog: PropTypes.bool.isRequired,
-    handleDeleteStatement: PropTypes.func.isRequired,
-    onVisibilityChange: PropTypes.func.isRequired
+    handleDeleteStatement: PropTypes.func.isRequired
 };

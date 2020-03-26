@@ -1,6 +1,6 @@
 import React from 'react';
 import { Collapse, Input } from 'reactstrap';
-import { StyledStatementItem, StyledListGroupOpen } from 'components/AddPaper/Contributions/styled';
+import { StyledStatementItem, StyledListGroupOpen } from './styled';
 import classNames from 'classnames';
 import moment from 'moment';
 import { range } from 'utils';

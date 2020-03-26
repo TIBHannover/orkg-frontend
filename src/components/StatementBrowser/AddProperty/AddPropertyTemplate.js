@@ -1,7 +1,7 @@
 import React from 'react';
 import { predicatesUrl } from 'network';
 import { InputGroupAddon, Button, InputGroup } from 'reactstrap';
-import { AddPropertyStyle, AddPropertyContentStyle, AddPropertyFormStyle, StyledButton } from 'components/AddPaper/Contributions/styled';
+import { AddPropertyStyle, AddPropertyContentStyle, AddPropertyFormStyle, StyledButton } from 'components/StatementBrowser/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/StatementBrowser/AutoComplete';

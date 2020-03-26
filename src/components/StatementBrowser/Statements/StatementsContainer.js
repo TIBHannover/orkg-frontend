@@ -9,6 +9,7 @@ const mapStateToProps = state => {
         level: state.statementBrowser.level,
         resources: state.statementBrowser.resources,
         properties: state.statementBrowser.properties,
+        values: state.statementBrowser.values,
         isFetchingStatements: state.statementBrowser.isFetchingStatements,
         selectedResource: state.statementBrowser.selectedResource
     };
