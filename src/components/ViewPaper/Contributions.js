@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Alert, Col, Container, Form, FormGroup, Row, Button } from 'reactstrap';
-import { StyledContribution, StyledContributionsList } from '../AddPaper/Contributions/styled';
 import { getResource, getSimilaireContribution, deleteStatementById, createResource, createResourceStatement } from '../../network';
 import AddToComparison from './AddToComparison';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';

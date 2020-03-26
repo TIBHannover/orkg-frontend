@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { createPredicate } from 'network';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import AddPropertySB from './AddPropertySB';
 import AddPropertyTemplate from './AddPropertyTemplate';
 
 import PropTypes from 'prop-types';

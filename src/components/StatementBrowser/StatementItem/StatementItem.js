@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { getResource, predicatesUrl, submitGetRequest, updateStatement, createPredicate, deleteStatementById } from 'network';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import StatementItemSB from './StatementItemSB';
 import StatementItemTemplate from './StatementItemTemplate';
 import { guid } from 'utils';
 

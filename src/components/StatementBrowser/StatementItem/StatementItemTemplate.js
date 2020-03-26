@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { ListGroup, Collapse, InputGroup } from 'reactstrap';
+import { ListGroup, InputGroup } from 'reactstrap';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import ValueItem from 'components/StatementBrowser/ValueItem/ValueItemContainer';
@@ -82,21 +82,11 @@ export default function StatementItemTemplate(props) {
                                 <ValueItem
                                     value={value}
                                     key={index}
-                                    label={value.label}
                                     id={valueId}
-                                    type={value.type}
-                                    classes={value.classes}
                                     enableEdit={props.enableEdit}
                                     syncBackend={props.syncBackend}
-                                    resourceId={value.resourceId}
                                     propertyId={props.id}
-                                    existingStatement={value.existingStatement}
                                     openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                                    isExistingValue={value.isExistingValue}
-                                    isEditing={value.isEditing}
-                                    isSaving={value.isSaving}
-                                    statementId={value.statementId}
-                                    shared={value.shared}
                                     contextStyle="Template"
                                     showHelp={props.showValueHelp && index === 0 ? true : false}
                                 />

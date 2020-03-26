@@ -12,7 +12,6 @@ import {
 } from 'network';
 import { toast } from 'react-toastify';
 import { guid } from 'utils';
-import ValueItemSB from './ValueItemSB';
 import ValueItemTemplate from './ValueItemTemplate';
 import PropTypes from 'prop-types';
 
