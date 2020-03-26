@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Form, FormGroup, Label } from 'reactstrap';
 import Tooltip from '../../Utils/Tooltip';
 import AddTemplateButton from './TemplateWizard/AddTemplateButton';
-import Statements from 'components/StatementBrowser/Statements/StatementsContainer';
+import TemplateWizard from 'components/AddPaper/Contributions/TemplateWizard/TemplateWizard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { StyledHorizontalContribution } from './styled';
@@ -169,7 +169,7 @@ class Contribution extends Component {
                                 )}
                             </FormGroup>
                             <FormGroup>
-                                <Statements
+                                <TemplateWizard
                                     enableEdit={true}
                                     openExistingResourcesInDialog={true}
                                     syncBackend={false}
