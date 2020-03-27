@@ -96,7 +96,8 @@ class GeneralData extends Component {
             paperPublicationYear: this.props.publicationYear,
             publishedIn: this.props.publishedIn,
             validation: this.validator.valid(),
-            errors: null
+            errors: null,
+            url: this.props.url
         };
 
         // Hide the tour if a cookie 'taketour' exist
@@ -130,7 +131,8 @@ class GeneralData extends Component {
             doi: this.state.doi,
             entry: this.state.entry,
             publishedIn: this.state.publishedIn,
-            showLookupTable: true
+            showLookupTable: true,
+            url: this.state.url
         });
     };
 
@@ -330,7 +332,7 @@ class GeneralData extends Component {
         // TODO do some sort of validation, before proceeding to the next step
         const errors = [];
 
-        const { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi, entry, showLookupTable, publishedIn } = this.state;
+        const { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi, entry, showLookupTable, publishedIn, url } = this.state;
 
         if (!paperTitle || paperTitle.trim().length < 1) {
             errors.push('Please enter the title of your paper or click on "Lookup" if you entered the doi.');
@@ -342,10 +344,11 @@ class GeneralData extends Component {
                 authors: paperAuthors,
                 publicationMonth: paperPublicationMonth,
                 publicationYear: paperPublicationYear,
-                doi: doi,
-                entry: entry,
-                showLookupTable: showLookupTable,
-                publishedIn: publishedIn
+                doi,
+                entry,
+                showLookupTable,
+                publishedIn,
+                url
             });
             this.props.nextStep();
         } else {
@@ -610,6 +613,13 @@ class GeneralData extends Component {
                                                 />
                                                 <FormFeedback />
                                             </FormGroup>
+                                            <FormGroup>
+                                                <Label for="publishedIn">
+                                                    <Tooltip message="Add the URL to the paper PDF (optional)">Paper URL</Tooltip>
+                                                </Label>
+                                                <Input type="text" name="url" id="url" value={this.state.url} onChange={this.handleInputChange} />
+                                                <FormFeedback />
+                                            </FormGroup>
                                         </Form>
                                     </Container>
                                 );
@@ -696,6 +706,7 @@ GeneralData.propTypes = {
     doi: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     publishedIn: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
     authors: PropTypes.array.isRequired,
     publicationMonth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     publicationYear: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -716,6 +727,7 @@ const mapStateToProps = state => ({
     doi: state.addPaper.doi,
     title: state.addPaper.title,
     publishedIn: state.addPaper.publishedIn,
+    url: state.addPaper.url,
     authors: state.addPaper.authors,
     showLookupTable: state.addPaper.showLookupTable,
     publicationMonth: state.addPaper.publicationMonth,

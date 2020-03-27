@@ -23,6 +23,7 @@ const initialState = {
     selectedResearchField: '',
     selectedContribution: '',
     paperNewResourceId: null,
+    url: '',
     ranges: {},
     contributions: {
         byId: {},
@@ -44,7 +45,8 @@ export default (state = initialState, action) => {
                 doi: payload.doi,
                 entry: payload.entry,
                 showLookupTable: payload.showLookupTable,
-                publishedIn: payload.publishedIn
+                publishedIn: payload.publishedIn,
+                url: payload.url
             };
         }
 

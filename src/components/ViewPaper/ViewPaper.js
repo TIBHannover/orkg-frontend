@@ -3,7 +3,7 @@ import { Container, Button, Alert, UncontrolledAlert, ButtonGroup, Badge } from 
 import { getStatementsBySubject, getResource, updateResource, createResource, createResourceStatement, deleteStatementById } from '../../network';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faUser, faCalendar, faBars, faProjectDiagram, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faCalendar, faBars, faProjectDiagram, faPen, faTimes, faFile, faFileAlt } from '@fortawesome/free-solid-svg-icons';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader';
 import Contributions from './Contributions';
@@ -164,6 +164,17 @@ class ViewPaper extends Component {
                             }
                         }
 
+                        //url
+                        let url = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL);
+                        let urlResourceId = 0;
+
+                        if (url.length > 0) {
+                            urlResourceId = url[0].object.id;
+                            url = url[0].object.label;
+                        } else {
+                            url = null;
+                        }
+
                         // Set document title
                         document.title = `${paperResource.label} - ORKG`;
 
@@ -178,7 +189,9 @@ class ViewPaper extends Component {
                             doi,
                             doiResourceId,
                             researchField,
-                            publishedIn
+                            publishedIn,
+                            url,
+                            urlResourceId
                         });
 
                         this.setState({
@@ -324,6 +337,14 @@ class ViewPaper extends Component {
         let comingFromWizard = queryString.parse(this.props.location.search);
         comingFromWizard = comingFromWizard ? comingFromWizard.comingFromWizard === 'true' : false;
 
+        let paperLink = '';
+
+        if (this.props.viewPaper.url) {
+            paperLink = this.props.viewPaper.url;
+        } else if (this.props.viewPaper.doi && this.props.viewPaper.doi.startsWith('10.')) {
+            paperLink = 'https://doi.org/' + this.props.viewPaper.doi;
+        }
+
         return (
             <div>
                 {!this.state.loading && this.state.loading_failed && <NotFound />}
@@ -332,7 +353,18 @@ class ViewPaper extends Component {
                         <Container className="d-flex align-items-center">
                             <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
                             <ButtonGroup className="flex-shrink-0">
-                                <Button className="flex-shrink-0" color="darkblue" size="sm" onClick={() => this.toggle('showGraphModal')}>
+                                {paperLink && (
+                                    <a href={paperLink} className="btn btn-darkblue flex-shrink-0 btn-sm" target="_blank" rel="noopener noreferrer">
+                                        <Icon icon={faFile} style={{ margin: '2px 4px 0 0' }} /> View paper
+                                    </a>
+                                )}
+                                <Button
+                                    className="flex-shrink-0"
+                                    color="darkblue"
+                                    size="sm"
+                                    style={{ marginLeft: 1 }}
+                                    onClick={() => this.toggle('showGraphModal')}
+                                >
                                     <Icon icon={faProjectDiagram} style={{ margin: '2px 4px 0 0' }} /> Graph view
                                 </Button>
 

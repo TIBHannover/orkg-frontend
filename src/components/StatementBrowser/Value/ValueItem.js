@@ -585,7 +585,7 @@ class ValueItem extends Component {
                         {!this.props.isEditing ? (
                             <div>
                                 {this.props.type === 'object' && (
-                                    <Button className="p-0" color="link" onClick={onClick}>
+                                    <Button className="p-0 text-left" color="link" onClick={onClick}>
                                         {this.props.showHelp && this.props.type === 'object' ? (
                                             <Pulse content={'Click on the resource to browse it'}>
                                                 <ValuePlugins type={'resource'}>{this.props.label}</ValuePlugins>
