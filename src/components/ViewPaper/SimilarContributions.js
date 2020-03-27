@@ -6,15 +6,18 @@ import styled from 'styled-components';
 import ROUTES from '../../constants/routes.js';
 import { Row, Col, Alert } from 'reactstrap';
 
-const CardContainer = styled.div`
+const CardsContainer = styled(Row)`
+    display: flex;
+`;
+
+const CardWrapper = styled(Col)`
     display: flex;
 `;
 
 const Card = styled(Link)`
     border: 2px;
-    width: calc(33% - 5px);
-    flex-grow: 0;
-    margin: 10px 10px 0 0;
+    margin: 0 0;
+    flex: 1;
     border-radius: 11px;
     background: ${props => props.theme.darkblue};
     cursor: pointer;
@@ -67,37 +70,42 @@ class SimilarContributions extends Component {
         return (
             <>
                 {this.props.similaireContributions.length > 0 && (
-                    <CardContainer>
+                    <CardsContainer>
                         {this.props.similaireContributions.map((contribution, index) => {
                             return (
-                                <Card
-                                    key={`s${contribution.contributionId}`}
-                                    to={reverse(ROUTES.VIEW_PAPER, { resourceId: contribution.paperId, contributionId: contribution.contributionId })}
-                                    className="justify-content-center"
-                                    role="button"
-                                >
-                                    <Row className="h-100">
-                                        <Col md={2} style={{ marginRight: 10 }}>
-                                            <Similarity>
-                                                <span>
-                                                    {parseInt(contribution.similarityPercentage) === 1
-                                                        ? 99
-                                                        : parseInt(contribution.similarityPercentage * 100)}
-                                                    <br />%
-                                                </span>
-                                            </Similarity>
-                                        </Col>
-                                        <Col>
-                                            {contribution.title ? contribution.title : <em>No title</em>}
-                                            {contribution.contributionLabel && (
-                                                <div className={'simContributionLabel'}>{contribution.contributionLabel}</div>
-                                            )}
-                                        </Col>
-                                    </Row>
-                                </Card>
+                                <CardWrapper md={4} className="mt-2 justify-content-center">
+                                    <Card
+                                        key={`s${contribution.contributionId}`}
+                                        to={reverse(ROUTES.VIEW_PAPER, {
+                                            resourceId: contribution.paperId,
+                                            contributionId: contribution.contributionId
+                                        })}
+                                        className="justify-content-center"
+                                        role="button"
+                                    >
+                                        <Row className="h-100">
+                                            <Col xs={2} style={{ marginRight: 10 }}>
+                                                <Similarity>
+                                                    <span>
+                                                        {parseInt(contribution.similarityPercentage) === 1
+                                                            ? 99
+                                                            : parseInt(contribution.similarityPercentage * 100)}
+                                                        <br />%
+                                                    </span>
+                                                </Similarity>
+                                            </Col>
+                                            <Col>
+                                                {contribution.title ? contribution.title : <em>No title</em>}
+                                                {contribution.contributionLabel && (
+                                                    <div className={'simContributionLabel'}>{contribution.contributionLabel}</div>
+                                                )}
+                                            </Col>
+                                        </Row>
+                                    </Card>
+                                </CardWrapper>
                             );
                         })}
-                    </CardContainer>
+                    </CardsContainer>
                 )}
                 {this.props.similaireContributions.length === 0 && (
                     <Alert color="light">We couldn't find any similar contribution, please try again later</Alert>
