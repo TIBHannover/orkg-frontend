@@ -41,7 +41,7 @@ const EditItem = props => {
                 })}
             </Input>
         );
-        stringValue = moment(props.value + 1, 'M').format('MMMM');
+        stringValue = props.value ? moment(props.value, 'M').format('MMMM') : 'Not specified';
     } else if (props.type === 'year') {
         input = (
             <Input type="select" value={props.value} onChange={props.onChange}>
