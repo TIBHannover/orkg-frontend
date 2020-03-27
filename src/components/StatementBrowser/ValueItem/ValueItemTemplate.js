@@ -23,7 +23,7 @@ export default function ValueItemTemplate(props) {
             {!props.value.isEditing ? (
                 <div>
                     {props.value.type === 'object' && (
-                        <Button className="p-0" color="link" onClick={props.hundleOnClick}>
+                        <Button className="p-0" color="link" onClick={props.handleOnClick}>
                             {props.showHelp && props.value.type === 'object' ? (
                                 <Pulse content={'Click on the resource to browse it'}>
                                     <ValuePlugins type={'resource'}>{props.value.label}</ValuePlugins>
@@ -118,7 +118,7 @@ ValueItemTemplate.propTypes = {
     isProperty: PropTypes.bool.isRequired,
     value: PropTypes.object.isRequired,
     resource: PropTypes.object,
-    hundleOnClick: PropTypes.func,
+    handleOnClick: PropTypes.func,
     inline: PropTypes.bool.isRequired,
     showHelp: PropTypes.bool,
     enableEdit: PropTypes.bool.isRequired,
