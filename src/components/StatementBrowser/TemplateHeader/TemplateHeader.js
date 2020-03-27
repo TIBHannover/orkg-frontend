@@ -65,7 +65,7 @@ export default function TemplateHeader(props) {
                                     title={'Delete the template with its statements'}
                                     icon={faTrash}
                                     action={handleDeleteTemplate}
-                                    onVisibilityChange={() => setDisableHover(!disableHover)}
+                                    onVisibilityChange={disable => setDisableHover(disable)}
                                 />
                             </div>
                         </>

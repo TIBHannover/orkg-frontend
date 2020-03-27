@@ -65,7 +65,7 @@ export default function ValueItemTemplate(props) {
                                         title={'A shared resource cannot be edited directly'}
                                         icon={faPen}
                                         action={() => null}
-                                        onVisibilityChange={() => setDisableHover(!disableHover)}
+                                        onVisibilityChange={disable => setDisableHover(disable)}
                                     />
                                 )}
 
@@ -75,7 +75,7 @@ export default function ValueItemTemplate(props) {
                                     confirmationMessage={'Are you sure to delete?'}
                                     icon={faTrash}
                                     action={props.handleDeleteValue}
-                                    onVisibilityChange={() => setDisableHover(!disableHover)}
+                                    onVisibilityChange={disable => setDisableHover(disable)}
                                 />
                             </>
                         )}
