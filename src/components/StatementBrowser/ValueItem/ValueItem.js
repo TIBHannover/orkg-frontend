@@ -23,24 +23,6 @@ export default function ValueItem(props) {
 
     const maxResults = 15;
 
-    const commitChangeLiteral = async draftLabel => {
-        // Check if the user changed the label
-        if (draftLabel !== props.value.label) {
-            props.updateValueLabel({
-                label: draftLabel,
-                valueId: props.id
-            });
-            if (props.syncBackend) {
-                props.isSavingValue({ id: props.id }); // To show the saving message instead of the value label
-                if (props.value.resourceId) {
-                    await updateLiteral(props.value.resourceId, draftLabel);
-                    toast.success('Literal label updated successfully');
-                }
-                props.doneSavingValue({ id: props.id });
-            }
-        }
-    };
-
     const commitChangeLabel = async draftLabel => {
         // Check if the user changed the label
         if (draftLabel !== props.value.label) {
@@ -51,8 +33,13 @@ export default function ValueItem(props) {
             if (props.syncBackend) {
                 props.isSavingValue({ id: props.id }); // To show the saving message instead of the value label
                 if (props.value.resourceId) {
-                    await updateResource(props.value.resourceId, draftLabel);
-                    toast.success('Resource label updated successfully');
+                    if (props.value.type === 'literal') {
+                        await updateLiteral(props.value.resourceId, draftLabel);
+                        toast.success('Literal label updated successfully');
+                    } else {
+                        await updateResource(props.value.resourceId, draftLabel);
+                        toast.success('Resource label updated successfully');
+                    }
                 }
                 props.doneSavingValue({ id: props.id });
             }
@@ -288,7 +275,6 @@ export default function ValueItem(props) {
                 handleChangeResource={handleChangeResource}
                 toggleEditValue={props.toggleEditValue}
                 commitChangeLabel={commitChangeLabel}
-                commitChangeLiteral={commitChangeLiteral}
                 openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                 handleDatasetClick={handleDatasetClick}
                 enableEdit={props.enableEdit}

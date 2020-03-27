@@ -127,7 +127,6 @@ ValueItemTemplate.propTypes = {
     handleChangeResource: PropTypes.func.isRequired,
     toggleEditValue: PropTypes.func.isRequired,
     commitChangeLabel: PropTypes.func.isRequired,
-    commitChangeLiteral: PropTypes.func.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
     handleDatasetClick: PropTypes.func.isRequired,
     handleDeleteValue: PropTypes.func.isRequired
