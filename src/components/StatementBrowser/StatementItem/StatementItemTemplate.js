@@ -38,7 +38,7 @@ export default function StatementItemTemplate(props) {
                                         title={'Delete property'}
                                         icon={faTrash}
                                         action={props.handleDeleteStatement}
-                                        onVisibilityChange={() => setDisableHover(!disableHover)}
+                                        onVisibilityChange={disable => setDisableHover(disable)}
                                     />
                                 </div>
                             )}

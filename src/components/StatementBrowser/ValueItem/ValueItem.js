@@ -248,16 +248,16 @@ export default function ValueItem(props) {
     const value = props.values.byId[props.id];
 
     const existingResourceId = resource ? resource.existingResourceId : false;
-    let hundleOnClick = null;
+    let handleOnClick = null;
 
     if (
         (props.value.type === 'object' || props.value.type === 'template') &&
         (existingResourceId || props.contextStyle !== 'StatementBrowser') &&
         props.openExistingResourcesInDialog
     ) {
-        hundleOnClick = handleExistingResourceClick;
+        handleOnClick = handleExistingResourceClick;
     } else if (props.value.type === 'object' || props.value.type === 'template') {
-        hundleOnClick = handleResourceClick;
+        handleOnClick = handleResourceClick;
     }
 
     return (
@@ -269,7 +269,7 @@ export default function ValueItem(props) {
                 id={props.id}
                 value={value}
                 resource={resource}
-                hundleOnClick={hundleOnClick}
+                handleOnClick={handleOnClick}
                 inline={props.inline}
                 loadOptions={loadOptions}
                 handleChangeResource={handleChangeResource}

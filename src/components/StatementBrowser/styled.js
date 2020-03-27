@@ -155,7 +155,7 @@ export const ValueItemStyle = styled(ListGroupItem)`
         display: inline;
         margin-right: 4px;
         text-decoration: none;
-        cursor: default;
+        cursor: text;
     }
 `;
 
