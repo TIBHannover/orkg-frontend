@@ -1,6 +1,7 @@
 import * as type from './types.js';
 import { guid } from '../utils';
 import * as network from '../network';
+import { orderBy } from 'lodash';
 
 export const initializeWithoutContribution = data => dispatch => {
     // To initialise:
@@ -247,6 +248,28 @@ export const fetchStructureForTemplate = data => {
                         );
                     }
                 }
+
+                // Tag resource with used template
+                const ipID = guid();
+                dispatch(
+                    createProperty({
+                        propertyId: ipID,
+                        resourceId: resourceId,
+                        existingPredicateId: process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE,
+                        label: 'Instance Of Template',
+                        isExistingProperty: true
+                    })
+                );
+                dispatch(
+                    createValue({
+                        existingResourceId: templateId,
+                        propertyId: ipID,
+                        label: template.label,
+                        type: 'object',
+                        isExistingValue: true
+                    })
+                );
+
                 // Add templates
                 if (template.subTemplates && template.subTemplates.length > 0) {
                     for (const subTemplate of template.subTemplates) {
@@ -290,6 +313,12 @@ export const fetchStatementsForResource = data => {
                 dispatch({
                     type: type.DONE_FETCHING_STATEMENTS
                 });
+
+                response = orderBy(
+                    response,
+                    [response => response.predicate.label.toLowerCase(), response => response.object.label.toLowerCase()],
+                    ['asc']
+                );
 
                 const existingProperties = [];
                 const researchProblems = [];

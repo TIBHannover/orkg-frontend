@@ -169,6 +169,7 @@ class Contributions extends Component {
                                         key={contributionId}
                                         toggleDeleteContribution={this.toggleDeleteContribution}
                                         handleSelectContribution={this.handleSelectContribution}
+                                        enableEdit={true}
                                     />
                                 );
                             })}

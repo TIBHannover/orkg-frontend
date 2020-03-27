@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Form, FormGroup, Label } from 'reactstrap';
 import Tooltip from '../../Utils/Tooltip';
 import AddTemplateButton from './TemplateWizard/AddTemplateButton';
-import TemplateWizard from './TemplateWizard/TemplateWizard';
+import TemplateWizard from 'components/AddPaper/Contributions/TemplateWizard/TemplateWizard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { StyledHorizontalContribution } from './styled';
@@ -142,7 +142,7 @@ class Contribution extends Component {
                                 {!this.state.isTemplatesLoading && uniqueTemplates.length > 0 && (
                                     <>
                                         <Label>
-                                            <Tooltip message={`Select a template to use it in your contribution data`}>Add template</Tooltip>
+                                            <Tooltip message={`Select a template to use it in your contribution data`}>Use template</Tooltip>
                                         </Label>
                                         <div>
                                             {this.state.isTemplatesLoading && (
@@ -169,20 +169,6 @@ class Contribution extends Component {
                                 )}
                             </FormGroup>
                             <FormGroup>
-                                {/*<Label className="mb-0">
-                                <Tooltip
-                                    message={
-                                        <span>
-                                            Provide details about this contribution by making statements.{' '}
-                                            <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => this.handleLearnMore(2)}>
-                                                Learn more
-                                            </span>
-                                        </span>
-                                    }
-                                >
-                                    Data
-                                </Tooltip>
-                            </Label>*/}
                                 <TemplateWizard
                                     enableEdit={true}
                                     openExistingResourcesInDialog={true}
