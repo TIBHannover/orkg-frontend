@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Alert, Col, Container, Form, FormGroup, Row, Button } from 'reactstrap';
-import { StyledContribution, StyledContributionsList } from '../AddPaper/Contributions/styled';
 import { getResource, getSimilaireContribution, deleteStatementById, createResource, createResourceStatement } from '../../network';
 import AddToComparison from './AddToComparison';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
@@ -9,7 +8,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ROUTES from '../../constants/routes';
 import SimilarContributions from './SimilarContributions';
-import StatementBrowser from '../StatementBrowser/Statements';
+import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProblemInput';
 import ContributionItemList from 'components/AddPaper/Contributions/ContributionItemList';
 import { connect } from 'react-redux';
