@@ -22,6 +22,7 @@ import dotProp from 'dot-prop-immutable';
 import { reverse } from 'named-urls';
 import { generateRdfDataVocabularyFile } from 'utils';
 import { ContainerAnimated } from './styled';
+import RelatedResources from './RelatedResources';
 
 class Comparison extends Component {
     constructor(props) {
@@ -49,7 +50,8 @@ class Comparison extends Component {
             loadingFailed: false,
             fullWidth: false,
             errors: null,
-            locationSearch: ''
+            locationSearch: '',
+            relatedResources: []
         };
     }
 
@@ -197,6 +199,14 @@ class Comparison extends Component {
                             statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_REFERENCE
                         );
                         const urlStatement = comparisonStatement.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL);
+                        const resourcesStatements = comparisonStatement.filter(
+                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_RELATED_RESOURCES
+                        );
+                        const relatedResources = [];
+                        for (const resource of resourcesStatements) {
+                            relatedResources.push(resource.object.label);
+                        }
+
                         if (urlStatement) {
                             this.getComparisonResult(urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')));
                             this.setState({
@@ -205,7 +215,8 @@ class Comparison extends Component {
                                 description: descriptionStatement.object.label,
                                 reference: referenceStatement ? referenceStatement.object.label : '',
                                 createdAt: descriptionStatement.object.created_at,
-                                createdBy: descriptionStatement.object.created_by
+                                createdBy: descriptionStatement.object.created_by,
+                                relatedResources
                             });
                         } else {
                             throw new Error('The requested comparison has no contributions.');
@@ -499,6 +510,8 @@ class Comparison extends Component {
                             )}
                         </>
                     )}
+
+                    <RelatedResources resources={this.state.relatedResources} />
                 </ContainerAnimated>
 
                 <SelectProperties
