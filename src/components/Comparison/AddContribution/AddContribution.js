@@ -168,7 +168,7 @@ export default function AddContribution(props) {
                             <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
                         </div>
                     )}
-                    {!isNextPageLoading && paperResult.length > 0 && (
+                    {paperResult.length > 0 && (
                         <>
                             <p>
                                 Select contributions from the list then click on the <i>Add to comparison</i> button:
