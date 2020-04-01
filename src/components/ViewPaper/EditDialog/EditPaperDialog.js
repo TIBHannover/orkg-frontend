@@ -97,28 +97,28 @@ class EditPaperDialog extends Component {
         }
 
         //publication month
-        this.updateOrCreateLiteral({
+        loadPaper['publicationMonthResourceId'] = await this.updateOrCreateLiteral({
             reducerName: 'publicationMonthResourceId',
             value: this.state.publicationMonth,
             predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH
         });
 
         //publication year
-        this.updateOrCreateLiteral({
+        loadPaper['publicationYearResourceId'] = await this.updateOrCreateLiteral({
             reducerName: 'publicationYearResourceId',
             value: this.state.publicationYear,
             predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR
         });
 
         //doi
-        this.updateOrCreateLiteral({
+        loadPaper['doiResourceId'] = await this.updateOrCreateLiteral({
             reducerName: 'doiResourceId',
             value: this.state.doi,
             predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_DOI
         });
 
         //url
-        this.updateOrCreateLiteral({
+        loadPaper['urlResourceId'] = await this.updateOrCreateLiteral({
             reducerName: 'urlResourceId',
             value: this.state.url,
             predicateIdForCreate: process.env.REACT_APP_PREDICATES_URL
@@ -148,11 +148,13 @@ class EditPaperDialog extends Component {
 
         if (literalId) {
             updateLiteral(literalId, value);
+            return literalId;
         } else if (value) {
             // only create a new literal if a value has been provided
             const newLiteral = await this.createNewLiteral(this.props.viewPaper.paperResourceId, predicateIdForCreate, value);
-            loadPaper[reducerName] = newLiteral.literalId;
+            return newLiteral.literalId;
         }
+        return null;
     };
 
     createNewLiteral = async (resourceId, predicateId, label) => {
@@ -380,7 +382,7 @@ EditPaperDialog.propTypes = {
         publicationYear: PropTypes.number.isRequired,
         doi: PropTypes.string.isRequired,
         publishedIn: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-        url: PropTypes.string.isRequired,
+        url: PropTypes.string,
         authors: PropTypes.arrayOf(
             PropTypes.shape({
                 id: PropTypes.string.isRequired,
