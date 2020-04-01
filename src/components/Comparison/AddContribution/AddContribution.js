@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, FormGroup, Input, Label, ListGroup, ListGroupItem, InputGroup } from 'reactstrap';
 import { getResourcesByClass, getStatementsBySubjectAndPredicate } from 'network';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'react-content-loader';
 import Tooltip from 'components/Utils/Tooltip';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes.js';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -44,7 +49,7 @@ export default function AddContribution(props) {
     const [paperResult, setPaperResult] = useState([]);
     const [selectedContributions, setSelectedContributions] = useState([]);
 
-    const numberOfPaper = 10;
+    const numberOfPaper = 5;
 
     const loadMoreResults = (searchQuery, page) => {
         if (searchQuery.length === 0) {
@@ -151,35 +156,54 @@ export default function AddContribution(props) {
                             <rect x="0" y="76" width="100%" height="15" />
                         </ContentLoader>
                     )}
-                    <ListGroup>
-                        {paperResult.map((paper, index) => {
-                            return (
-                                <StyledListGroupItem action key={`result-${index}`} className="pt-1 pb-1">
-                                    <Label check className="pr-1 pl-1">
-                                        <Input type="checkbox" onChange={e => togglePaper(paper, e)} /> {paper.label}
-                                    </Label>
-                                    {paper.contributions.length > 1 && (
-                                        <ul style={{ listStyle: 'none' }}>
-                                            {paper.contributions.map(contribution => {
-                                                return (
-                                                    <li key={`ccb${contribution.id}`}>
-                                                        <Label check className="pr-1 pl-1">
-                                                            <Input
-                                                                type="checkbox"
-                                                                checked={selectedContributions.includes(contribution.id)}
-                                                                onChange={() => toggleContribution(contribution.id)}
-                                                            />{' '}
-                                                            {contribution.label}
-                                                        </Label>
-                                                    </li>
-                                                );
-                                            })}
-                                        </ul>
-                                    )}
-                                </StyledListGroupItem>
-                            );
-                        })}
-                    </ListGroup>
+                    {!isNextPageLoading && searchPaper && paperResult.length === 0 && (
+                        <div>
+                            <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
+                        </div>
+                    )}
+                    {!isNextPageLoading && paperResult.length > 0 && (
+                        <>
+                            <p>
+                                Select contributions from the following list then click on <i>'add to comparison'</i> button:
+                            </p>
+                            <ListGroup>
+                                {paperResult.map((paper, index) => {
+                                    return (
+                                        <StyledListGroupItem action key={`result-${index}`} className="pt-2 pb-2">
+                                            <Label check className="pr-2 pl-2">
+                                                <Input type="checkbox" onChange={e => togglePaper(paper, e)} /> {paper.label}{' '}
+                                                <Link
+                                                    title="View the paper page"
+                                                    target="_blank"
+                                                    to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.id })}
+                                                >
+                                                    <Icon icon={faExternalLinkAlt} />
+                                                </Link>
+                                            </Label>
+                                            {paper.contributions.length > 1 && (
+                                                <ul style={{ listStyle: 'none' }}>
+                                                    {paper.contributions.map(contribution => {
+                                                        return (
+                                                            <li key={`ccb${contribution.id}`}>
+                                                                <Label check className="pr-1 pl-1">
+                                                                    <Input
+                                                                        type="checkbox"
+                                                                        checked={selectedContributions.includes(contribution.id)}
+                                                                        onChange={() => toggleContribution(contribution.id)}
+                                                                    />{' '}
+                                                                    {contribution.label}
+                                                                </Label>
+                                                            </li>
+                                                        );
+                                                    })}
+                                                </ul>
+                                            )}
+                                        </StyledListGroupItem>
+                                    );
+                                })}
+                            </ListGroup>
+                        </>
+                    )}
                     {!isNextPageLoading && hasNextPage && (
                         <StyledLoadMoreButton className="text-right action">
                             <span className="btn btn-link btn-sm" onClick={() => loadMoreResults(searchPaper, currentPage + 1)}>
