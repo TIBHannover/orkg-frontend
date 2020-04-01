@@ -13,7 +13,17 @@ const RelatedResources = props => {
                     {props.resources.map(resource => {
                         const isLink = new RegExp(urlRegex).test(resource);
 
-                        return <li key={resource}>{isLink ? <a href={resource}>{resource}</a> : resource}</li>;
+                        return (
+                            <li key={resource}>
+                                {isLink ? (
+                                    <a href={resource} target="_blank" rel="noopener noreferrer">
+                                        {resource}
+                                    </a>
+                                ) : (
+                                    resource
+                                )}
+                            </li>
+                        );
                     })}
                 </ul>
             </>
