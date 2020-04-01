@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, FormGroup, Input, Label, ListGroup, ListGroupItem, InputGroup } from 'reactstrap';
 import { getResourcesByClass, getStatementsBySubjectAndPredicate } from 'network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -11,7 +11,8 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { uniqBy } from 'lodash';
+import { debounce } from 'lodash';
+
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
     & span {
@@ -84,12 +85,15 @@ export default function AddContribution(props) {
                         })
                     );
                     Promise.all(paper).then(paperData => {
-                        setPaperResult(prev => [...(prev || []), ...paperData]);
+                        setPaperResult([...(page === 1 ? [] : paperResult), ...paperData]);
                         setIsNextPageLoading(false);
                         setHasNextPage(results.length < numberOfPaper ? false : true);
                         setCurrentPage(page);
                     });
                 } else {
+                    if (page === 1) {
+                        setPaperResult([]);
+                    }
                     setIsNextPageLoading(false);
                     setHasNextPage(false);
                 }
@@ -99,6 +103,8 @@ export default function AddContribution(props) {
                 toast.error('Something went wrong while loading search results.');
             });
     };
+
+    const debouncedGetLoadMoreResults = useCallback(debounce(loadMoreResults, 500), []);
 
     const toggleContribution = contributionsID => {
         if (!selectedContributions.includes(contributionsID)) {
@@ -124,20 +130,11 @@ export default function AddContribution(props) {
         setSelectedContributions(newSelectedContributions);
     };
 
-    // ensure papers are only displayed once in the results
     useEffect(() => {
-        const papers = uniqBy(paperResult, 'id');
-        if (papers.length !== paperResult.length) {
-            setPaperResult(papers);
-        }
-    }, [paperResult]);
-
-    useEffect(() => {
-        setPaperResult([]);
         setHasNextPage(false);
         setCurrentPage(1);
         setSelectedContributions([]);
-        loadMoreResults(searchPaper, 1);
+        debouncedGetLoadMoreResults(searchPaper, 1);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchPaper]);
 
