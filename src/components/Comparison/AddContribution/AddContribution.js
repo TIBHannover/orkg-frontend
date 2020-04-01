@@ -11,7 +11,7 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-
+import { uniqBy } from 'lodash';
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
     & span {
@@ -109,7 +109,6 @@ export default function AddContribution(props) {
     };
 
     const togglePaper = (paper, e) => {
-        console.log(e.target.checked);
         let newSelectedContributions = selectedContributions;
         if (paper.contributions.length > 0) {
             paper.contributions.map(contribution => {
@@ -125,6 +124,14 @@ export default function AddContribution(props) {
         setSelectedContributions(newSelectedContributions);
     };
 
+    // ensure papers are only displayed once in the results
+    useEffect(() => {
+        const papers = uniqBy(paperResult, 'id');
+        if (papers.length !== paperResult.length) {
+            setPaperResult(papers);
+        }
+    }, [paperResult]);
+
     useEffect(() => {
         setPaperResult([]);
         setHasNextPage(false);
@@ -138,10 +145,10 @@ export default function AddContribution(props) {
         <Modal isOpen={props.showDialog} toggle={props.toggle} size="lg">
             <ModalHeader toggle={props.toggle}>Add contribution</ModalHeader>
             <ModalBody>
-                <p>Use the form below to search for a paper and add its contribution to comparison table.</p>
+                <p>Use the form below to search for a paper and add its contribution to comparison table</p>
                 <FormGroup>
                     <Label for="title">
-                        <Tooltip message={'Enter the title of the paer'}>Paper title</Tooltip>
+                        <Tooltip message={'Enter the title of the paper'}>Paper title</Tooltip>
                     </Label>
                     <InputGroup>
                         <Input value={searchPaper} type="text" name="title" id="title" onChange={e => setSearchPaper(e.target.value)} />
@@ -164,7 +171,7 @@ export default function AddContribution(props) {
                     {!isNextPageLoading && paperResult.length > 0 && (
                         <>
                             <p>
-                                Select contributions from the following list then click on <i>'add to comparison'</i> button:
+                                Select contributions from the list then click on the <i>Add to comparison</i> button:
                             </p>
                             <ListGroup>
                                 {paperResult.map((paper, index) => {
