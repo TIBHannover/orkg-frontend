@@ -82,7 +82,6 @@ class PaperHeader extends Component {
 }
 
 PaperHeader.propTypes = {
-    location: PropTypes.object.isRequired,
     viewPaper: PropTypes.object.isRequired,
     editMode: PropTypes.bool.isRequired
 };

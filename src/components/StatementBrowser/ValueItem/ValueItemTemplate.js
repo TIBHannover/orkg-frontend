@@ -23,7 +23,7 @@ export default function ValueItemTemplate(props) {
             {!props.value.isEditing ? (
                 <div>
                     {props.value.type === 'object' && (
-                        <Button className="p-0" color="link" onClick={props.handleOnClick}>
+                        <Button className="p-0 text-left" color="link" onClick={props.handleOnClick}>
                             {props.showHelp && props.value.type === 'object' ? (
                                 <Pulse content={'Click on the resource to browse it'}>
                                     <ValuePlugins type={'resource'}>{props.value.label}</ValuePlugins>

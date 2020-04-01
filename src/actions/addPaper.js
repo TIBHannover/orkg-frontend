@@ -325,6 +325,7 @@ export const saveAddPaper = data => {
                 publicationMonth: data.publicationMonth,
                 publicationYear: data.publicationYear,
                 publishedIn: data.publishedIn,
+                url: data.url,
                 researchField: data.selectedResearchField,
                 // Set the contributions data
                 contributions: data.contributions.allIds.map(c => {

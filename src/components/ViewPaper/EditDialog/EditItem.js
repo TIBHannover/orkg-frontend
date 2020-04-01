@@ -27,8 +27,8 @@ const EditItem = props => {
     let stringValue;
 
     if (props.type === 'text') {
-        input = <Input value={props.value} onChange={props.onChange} />;
-        stringValue = truncate(props.value, { length: 60 });
+        input = <Input value={props.value ? props.value : ''} onChange={props.onChange} />;
+        stringValue = truncate(props.value ? props.value : '', { length: 60 });
     } else if (props.type === 'month') {
         input = (
             <Input type="select" value={props.value} onChange={props.onChange}>

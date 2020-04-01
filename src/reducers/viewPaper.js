@@ -19,7 +19,9 @@ const initialState = {
     doi: '',
     doiResourceId: 0,
     researchField: '',
-    publishedIn: ''
+    publishedIn: '',
+    url: '',
+    urlResourceId: 0
 };
 const cookies = new Cookies();
 
@@ -42,7 +44,9 @@ export default (state = initialState, action) => {
                 doi: typeof payload.doi !== 'undefined' ? payload.doi : state.doi,
                 doiResourceId: typeof payload.doiResourceId !== 'undefined' ? payload.doiResourceId : state.doiResourceId,
                 researchField: typeof payload.researchField !== 'undefined' ? payload.researchField : state.researchField,
-                publishedIn: typeof payload.publishedIn !== 'undefined' ? payload.publishedIn : state.publishedIn
+                publishedIn: typeof payload.publishedIn !== 'undefined' ? payload.publishedIn : state.publishedIn,
+                url: typeof payload.url !== 'undefined' ? payload.url : state.url,
+                urlResourceId: typeof payload.urlResourceId !== 'undefined' ? payload.urlResourceId : state.urlResourceId
             };
         }
 

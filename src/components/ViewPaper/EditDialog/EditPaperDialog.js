@@ -48,6 +48,7 @@ class EditPaperDialog extends Component {
             doi: this.props.viewPaper.doi,
             authors: this.props.viewPaper.authors,
             publishedIn: this.props.viewPaper.publishedIn,
+            url: this.props.viewPaper.url,
             researchField: this.props.viewPaper.researchField
         };
     };
@@ -102,24 +103,31 @@ class EditPaperDialog extends Component {
         }
 
         //publication month
-        this.updateOrCreateLiteral({
+        loadPaper['publicationMonthResourceId'] = await this.updateOrCreateLiteral({
             reducerName: 'publicationMonthResourceId',
             value: this.state.publicationMonth,
             predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH
         });
 
         //publication year
-        this.updateOrCreateLiteral({
+        loadPaper['publicationYearResourceId'] = await this.updateOrCreateLiteral({
             reducerName: 'publicationYearResourceId',
             value: this.state.publicationYear,
             predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR
         });
 
         //doi
-        this.updateOrCreateLiteral({
+        loadPaper['doiResourceId'] = await this.updateOrCreateLiteral({
             reducerName: 'doiResourceId',
             value: this.state.doi,
             predicateIdForCreate: process.env.REACT_APP_PREDICATES_HAS_DOI
+        });
+
+        //url
+        loadPaper['urlResourceId'] = await this.updateOrCreateLiteral({
+            reducerName: 'urlResourceId',
+            value: this.state.url,
+            predicateIdForCreate: process.env.REACT_APP_PREDICATES_URL
         });
 
         //update redux state with changes, so it is updated on the view paper page
@@ -131,6 +139,7 @@ class EditPaperDialog extends Component {
             doi: this.state.doi,
             authors: this.state.authors,
             publishedIn: this.state.publishedIn,
+            url: this.state.url,
             researchField: this.state.researchField
         });
 
@@ -146,11 +155,13 @@ class EditPaperDialog extends Component {
 
         if (literalId) {
             updateLiteral(literalId, value);
+            return literalId;
         } else if (value) {
             // only create a new literal if a value has been provided
             const newLiteral = await this.createNewLiteral(this.props.viewPaper.paperResourceId, predicateIdForCreate, value);
-            loadPaper[reducerName] = newLiteral.literalId;
+            return newLiteral.literalId;
         }
+        return null;
     };
 
     createNewLiteral = async (resourceId, predicateId, label) => {
@@ -350,7 +361,6 @@ class EditPaperDialog extends Component {
                                 />
                                 <EditItem
                                     open={this.state.openItem === 'publishedIn'}
-                                    isLastItem={false}
                                     label="Published in"
                                     type="publishedIn"
                                     value={this.state.publishedIn}
@@ -359,12 +369,20 @@ class EditPaperDialog extends Component {
                                 />
                                 <EditItem
                                     open={this.state.openItem === 'researchField'}
-                                    isLastItem={true}
                                     label="Research Field"
                                     type="researchField"
                                     value={this.state.researchField}
                                     onChange={this.handleResearchFieldChange}
                                     toggleItem={() => this.toggleItem('researchField')}
+                                />
+                                <EditItem
+                                    open={this.state.openItem === 'url'}
+                                    isLastItem={true}
+                                    label="Paper URL"
+                                    type="text"
+                                    value={this.state.url}
+                                    onChange={e => this.handleChange(e, 'url')}
+                                    toggleItem={() => this.toggleItem('url')}
                                 />
                             </ListGroup>
 
@@ -388,6 +406,7 @@ EditPaperDialog.propTypes = {
         publicationYear: PropTypes.number.isRequired,
         doi: PropTypes.string.isRequired,
         publishedIn: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+        url: PropTypes.string,
         researchField: PropTypes.object.isRequired,
         authors: PropTypes.arrayOf(
             PropTypes.shape({
