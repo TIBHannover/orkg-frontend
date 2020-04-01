@@ -248,6 +248,28 @@ export const fetchStructureForTemplate = data => {
                         );
                     }
                 }
+
+                // Tag resource with used template
+                const ipID = guid();
+                dispatch(
+                    createProperty({
+                        propertyId: ipID,
+                        resourceId: resourceId,
+                        existingPredicateId: process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE,
+                        label: 'Instance Of Template',
+                        isExistingProperty: true
+                    })
+                );
+                dispatch(
+                    createValue({
+                        existingResourceId: templateId,
+                        propertyId: ipID,
+                        label: template.label,
+                        type: 'object',
+                        isExistingValue: true
+                    })
+                );
+
                 // Add templates
                 if (template.subTemplates && template.subTemplates.length > 0) {
                     for (const subTemplate of template.subTemplates) {

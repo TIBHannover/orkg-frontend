@@ -164,7 +164,7 @@ ContributionItemList.propTypes = {
     paperId: PropTypes.string,
     handleSelectContribution: PropTypes.func,
     handleChangeContributionLabel: PropTypes.func.isRequired,
-    toggleDeleteContribution: PropTypes.func.isRequired.length,
+    toggleDeleteContribution: PropTypes.func.isRequired,
     enableEdit: PropTypes.bool.isRequired
 };
 

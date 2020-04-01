@@ -99,6 +99,10 @@ class AutoComplete extends Component {
         }
     };
 
+    noResults = value => {
+        return value.inputValue !== '' ? 'No results found' : 'Start typing to find results';
+    };
+
     render() {
         this.customStyles = {
             control: (provided, state) => ({

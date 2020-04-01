@@ -54,7 +54,7 @@ class GraphView extends Component {
     };
 
     componentDidMount() {
-        console.log('Graph View Modal is mounted');
+        //console.log('Graph View Modal is mounted');
         window.addEventListener('resize', this.updateDimensions);
         this.updateDimensions();
     }
@@ -69,7 +69,7 @@ class GraphView extends Component {
     };
 
     componentWillUnmount() {
-        console.log('View modal un mounting');
+        //console.log('View modal un mounting');
         window.removeEventListener('resize', this.updateDimensions);
     }
 

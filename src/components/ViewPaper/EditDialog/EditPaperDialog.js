@@ -48,7 +48,8 @@ class EditPaperDialog extends Component {
             doi: this.props.viewPaper.doi,
             authors: this.props.viewPaper.authors,
             publishedIn: this.props.viewPaper.publishedIn,
-            url: this.props.viewPaper.url
+            url: this.props.viewPaper.url,
+            researchField: this.props.viewPaper.researchField
         };
     };
 
@@ -96,6 +97,11 @@ class EditPaperDialog extends Component {
             this.setState({ publishedIn: '' });
         }
 
+        // research field
+        if (this.state.researchField && this.state.researchField.statementId && this.state.researchField.id) {
+            await updateStatement(this.state.researchField.statementId, { object_id: this.state.researchField.id });
+        }
+
         //publication month
         loadPaper['publicationMonthResourceId'] = await this.updateOrCreateLiteral({
             reducerName: 'publicationMonthResourceId',
@@ -133,7 +139,8 @@ class EditPaperDialog extends Component {
             doi: this.state.doi,
             authors: this.state.authors,
             publishedIn: this.state.publishedIn,
-            url: this.state.url
+            url: this.state.url,
+            researchField: this.state.researchField
         });
 
         this.setState({
@@ -273,6 +280,15 @@ class EditPaperDialog extends Component {
         }
     };
 
+    handleResearchFieldChange = async (selected, action) => {
+        if (action.action === 'select-option') {
+            selected.statementId = this.state.researchField && this.state.researchField.statementId ? this.state.researchField.statementId : '';
+            this.setState({
+                researchField: selected
+            });
+        }
+    };
+
     render() {
         return (
             <>
@@ -352,6 +368,14 @@ class EditPaperDialog extends Component {
                                     toggleItem={() => this.toggleItem('publishedIn')}
                                 />
                                 <EditItem
+                                    open={this.state.openItem === 'researchField'}
+                                    label="Research Field"
+                                    type="researchField"
+                                    value={this.state.researchField}
+                                    onChange={this.handleResearchFieldChange}
+                                    toggleItem={() => this.toggleItem('researchField')}
+                                />
+                                <EditItem
                                     open={this.state.openItem === 'url'}
                                     isLastItem={true}
                                     label="Paper URL"
@@ -362,7 +386,7 @@ class EditPaperDialog extends Component {
                                 />
                             </ListGroup>
 
-                            <Button color="primary" className="float-right mt-2 mb-2" onClick={this.handleSave}>
+                            <Button disabled={this.state.isLoading} color="primary" className="float-right mt-2 mb-2" onClick={this.handleSave}>
                                 Save
                             </Button>
                         </ModalBody>
@@ -383,6 +407,7 @@ EditPaperDialog.propTypes = {
         doi: PropTypes.string.isRequired,
         publishedIn: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
         url: PropTypes.string,
+        researchField: PropTypes.object.isRequired,
         authors: PropTypes.arrayOf(
             PropTypes.shape({
                 id: PropTypes.string.isRequired,

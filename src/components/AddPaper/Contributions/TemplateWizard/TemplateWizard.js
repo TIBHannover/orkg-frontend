@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { StyledEmptyData } from 'components/AddPaper/Contributions/styled';
-import AddProperty from 'components/StatementBrowser/AddProperty';
-import StatementItem from 'components/StatementBrowser/StatementItem';
-import ContributionTemplate from './ContributionTemplate';
+import AddProperty from 'components/StatementBrowser/AddProperty/AddPropertyContainer';
+import StatementItem from 'components/StatementBrowser/StatementItem/StatementItemContainer';
+import ContributionTemplate from 'components/StatementBrowser/ContributionTemplate/ContributionTemplateContainer';
+import NoData from 'components/StatementBrowser/NoData/NoData';
 import { compose } from 'redux';
 import { withCookies, Cookies } from 'react-cookie';
 import { connect } from 'react-redux';
@@ -26,22 +26,18 @@ class TemplateWizard extends Component {
                         if (!property.isTemplate) {
                             return (
                                 <StatementItem
-                                    id={propertyId}
-                                    label={property.label}
-                                    predicateLabel={property.label}
                                     key={'statement-' + index}
-                                    index={index}
-                                    isExistingProperty={property.isExistingProperty ? true : false}
+                                    id={propertyId}
+                                    property={property}
+                                    predicateLabel={property.label}
                                     enableEdit={shared <= 1 ? this.props.enableEdit : false}
                                     syncBackend={this.props.syncBackend}
                                     isLastItem={propertyIds.length === index + 1}
                                     openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
-                                    isEditing={property.isEditing}
-                                    isSaving={property.isSaving}
+                                    showValueHelp={this.props.cookies && !this.props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                                     resourceId={this.props.initialResourceId}
                                     contextStyle={'Template'}
                                     templateId={property.templateId}
-                                    showValueHelp={this.props.cookies && !this.props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                                 />
                             );
                         } else {
@@ -53,15 +49,12 @@ class TemplateWizard extends Component {
                                     <ContributionTemplate
                                         key={`template-${index}-${valueId}`}
                                         id={valueId}
-                                        label={value.label}
+                                        value={value}
                                         propertyId={propertyId}
-                                        resourceId={value.resourceId}
                                         selectedResource={this.props.initialResourceId}
                                         enableEdit={this.props.enableEdit}
                                         syncBackend={this.props.syncBackend}
                                         openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
-                                        isEditing={value.isEditing}
-                                        isSaving={value.isSaving}
                                         isAnimated={property.isAnimated}
                                     />
                                 );
@@ -69,16 +62,7 @@ class TemplateWizard extends Component {
                         }
                     })
                 ) : (
-                    <StyledEmptyData className="text-muted mt-3">
-                        No data yet
-                        <br />
-                        {this.props.templatesFound ? (
-                            <span style={{ fontSize: '0.875rem' }}>Start by adding a template or a property</span>
-                        ) : (
-                            <span style={{ fontSize: '0.875rem' }}>Start by adding a property</span>
-                        )}
-                        <br />
-                    </StyledEmptyData>
+                    <NoData enableEdit={this.props.enableEdit} templatesFound={this.props.templatesFound} />
                 )}
 
                 <AddProperty contextStyle="Template" syncBackend={false} resourceId={this.props.initialResourceId} />
