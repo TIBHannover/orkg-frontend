@@ -3,6 +3,17 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.7.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.7...V0.7.1) - 2020-04-02
+
+### Merged
+
+- fix: delete property of template [`#224`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/224)
+
+### Fixed
+
+- Merge branch '164-delete-a-property-of-a-template' into 'master' [`#164`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/164)
+
+---
 ## [V0.7](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.6.2...V0.7) - 2020-04-02
 
 ### Merged
