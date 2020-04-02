@@ -11,6 +11,7 @@ import ExportToLatex from './ExportToLatex.js';
 import GeneratePdf from './GeneratePdf.js';
 import SelectProperties from './SelectProperties.js';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
+import AddContribution from 'components/Comparison/AddContribution/AddContribution';
 import Share from './Share.js';
 import Publish from './Publish.js';
 import { Link } from 'react-router-dom';
@@ -46,6 +47,7 @@ class Comparison extends Component {
             showShareDialog: false,
             showLatexDialog: false,
             showPublishDialog: false,
+            showAddContribuion: false,
             isLoading: false,
             loadingFailed: false,
             fullWidth: false,
@@ -249,6 +251,11 @@ class Comparison extends Component {
         this.generateUrl(contributionIds.join(','));
     };
 
+    addContributions = newContributionIds => {
+        const contributionIds = getContributionIdsFromUrl(this.state.locationSearch || this.props.location.search);
+        this.generateUrl(contributionIds.concat(newContributionIds).join(','));
+    };
+
     toggle = type => {
         this.setState(prevState => ({
             [type]: !prevState[type]
@@ -447,6 +454,9 @@ class Comparison extends Component {
                                                             Select properties
                                                         </DropdownItem>
                                                         <DropdownItem onClick={() => this.toggleTranpose()}>Transpose table</DropdownItem>
+                                                        <DropdownItem onClick={() => this.toggle('showAddContribuion')}>
+                                                            Add contribution
+                                                        </DropdownItem>
                                                         <DropdownItem divider />
                                                         <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
                                                         <DropdownItem onClick={() => this.toggle('showPublishDialog')}>Publish</DropdownItem>
@@ -538,6 +548,12 @@ class Comparison extends Component {
                     response_hash={this.state.response_hash}
                     comparisonId={this.props.match.params.comparisonId}
                     updateComparisonMetadata={this.updateComparisonMetadata}
+                />
+
+                <AddContribution
+                    addContributions={this.addContributions}
+                    showDialog={this.state.showAddContribuion}
+                    toggle={() => this.toggle('showAddContribuion')}
                 />
 
                 <ExportToLatex

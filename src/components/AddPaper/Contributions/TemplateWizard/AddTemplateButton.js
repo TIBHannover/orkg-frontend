@@ -150,7 +150,7 @@ class AddTemplateButton extends Component {
                         }}
                         size="sm"
                         color="light"
-                        className="mr-2 position-relative px-3 rounded-pill border-0"
+                        className="mr-2 mb-2 position-relative px-3 rounded-pill border-0"
                     >
                         <IconWrapper>
                             {!this.state.isTemplateLoading && <Icon size="sm" icon={faPlus} />}
