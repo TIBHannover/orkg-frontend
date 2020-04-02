@@ -56,6 +56,7 @@ export default function ContributionTemplate(props) {
                             showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                             inTemplate={true}
                             contextStyle={'Template'}
+                            resourceId={props.value.resourceId}
                         />
                     );
                 })}
