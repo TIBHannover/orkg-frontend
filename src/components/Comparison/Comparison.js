@@ -3,7 +3,7 @@ import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, Bu
 import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject } from 'network';
 import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResonseHashFromUrl, get_error_message } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faDownload, faArrowsAltH, faLightbulb } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faDownload, faPlus, faArrowsAltH, faLightbulb } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import ComparisonLoadingComponent from './ComparisonLoadingComponent';
 import ComparisonTable from './ComparisonTable.js';
@@ -39,7 +39,6 @@ class Comparison extends Component {
             createdBy: '',
             contributions: [],
             dropdownOpen: false,
-            dropdownExportOpen: false,
             properties: [],
             data: {},
             csvData: [],
@@ -346,8 +345,17 @@ class Comparison extends Component {
 
         return (
             <div>
-                <ContainerAnimated className="p-0 d-flex align-items-center" style={containerStyle}>
-                    <h1 className="h4 mt-4 mb-4 ">Contribution comparison</h1>
+                <ContainerAnimated className="d-flex align-items-center">
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">Contribution comparison</h1>
+                    <Button
+                        className="flex-shrink-0"
+                        color="darkblue"
+                        size="sm"
+                        style={{ marginLeft: 1 }}
+                        onClick={() => this.toggle('showAddContribuion')}
+                    >
+                        <Icon icon={faPlus} style={{ margin: '2px 4px 0 0' }} /> Add contribution
+                    </Button>
                     {/* 
                     // Created a breadcrumb so it is possible to navigate back to the original paper (or the first paper)
                     // problem is: when a contribution is performed, the first paper is not the paper from where the contribution started 
@@ -398,15 +406,18 @@ class Comparison extends Component {
                                                 <Button color="darkblue" size="sm" onClick={this.handleFullWidth} style={{ marginRight: 3 }}>
                                                     <span className="mr-2">Full width</span> <Icon icon={faArrowsAltH} />
                                                 </Button>
-                                                <Dropdown
-                                                    group
-                                                    isOpen={this.state.dropdownExportOpen}
-                                                    toggle={() => this.toggle('dropdownExportOpen')}
-                                                >
-                                                    <DropdownToggle color="darkblue" size="sm" style={{ marginRight: 3 }}>
-                                                        <span className="mr-2">Export</span> <Icon icon={faDownload} />
+                                                <Dropdown group isOpen={this.state.dropdownOpen} toggle={() => this.toggle('dropdownOpen')}>
+                                                    <DropdownToggle color="darkblue" size="sm" className="rounded-right">
+                                                        <span className="mr-2">More</span> <Icon icon={faEllipsisV} />
                                                     </DropdownToggle>
                                                     <DropdownMenu>
+                                                        <DropdownItem header>Customize</DropdownItem>
+                                                        <DropdownItem onClick={() => this.toggle('showPropertiesDialog')}>
+                                                            Select properties
+                                                        </DropdownItem>
+                                                        <DropdownItem onClick={() => this.toggleTranpose()}>Transpose table</DropdownItem>
+                                                        <DropdownItem divider />
+                                                        <DropdownItem header>Export</DropdownItem>
                                                         <DropdownItem onClick={() => this.toggle('showLatexDialog')}>Export as LaTeX</DropdownItem>
                                                         {this.state.csvData ? (
                                                             <CSVLink
@@ -414,7 +425,7 @@ class Comparison extends Component {
                                                                 filename={'ORKG Contribution Comparison.csv'}
                                                                 className="dropdown-item"
                                                                 target="_blank"
-                                                                onClick={() => this.toggle('dropdownExportOpen')}
+                                                                onClick={() => this.toggle('dropdownOpen')}
                                                             >
                                                                 Export as CSV
                                                             </CSVLink>
@@ -440,22 +451,6 @@ class Comparison extends Component {
                                                             }
                                                         >
                                                             Export as RDF
-                                                        </DropdownItem>
-                                                    </DropdownMenu>
-                                                </Dropdown>
-
-                                                <Dropdown group isOpen={this.state.dropdownOpen} toggle={() => this.toggle('dropdownOpen')}>
-                                                    <DropdownToggle color="darkblue" size="sm" className="rounded-right">
-                                                        <span className="mr-2">More</span> <Icon icon={faEllipsisV} />
-                                                    </DropdownToggle>
-                                                    <DropdownMenu>
-                                                        <DropdownItem header>Customize</DropdownItem>
-                                                        <DropdownItem onClick={() => this.toggle('showPropertiesDialog')}>
-                                                            Select properties
-                                                        </DropdownItem>
-                                                        <DropdownItem onClick={() => this.toggleTranpose()}>Transpose table</DropdownItem>
-                                                        <DropdownItem onClick={() => this.toggle('showAddContribuion')}>
-                                                            Add contribution
                                                         </DropdownItem>
                                                         <DropdownItem divider />
                                                         <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
