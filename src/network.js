@@ -158,6 +158,14 @@ export const updateResource = (id, label) => {
     return submitPutRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' }, { label: label });
 };
 
+export const updateResourceClasses = (id, classes = null) => {
+    return submitPutRequest(
+        `${resourcesUrl}${id}`,
+        { 'Content-Type': 'application/json' },
+        { ...(classes && classes.length > 0 ? { classes: classes } : null) }
+    );
+};
+
 export const updateLiteral = (id, label) => {
     return submitPutRequest(`${literalsUrl}${id}`, { 'Content-Type': 'application/json' }, { label: label });
 };

@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
-import { Container, Button } from 'reactstrap';
-import { getResource } from '../network';
+import { Container, Button, FormGroup, Label, FormText } from 'reactstrap';
+import { getResource, classesUrl, submitGetRequest, createClass, updateResourceClasses } from 'network';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
-import EditableHeader from '../components/EditableHeader';
-import InternalServerError from '../components/StaticPages/InternalServerError';
-import NotFound from '../components/StaticPages/NotFound';
+import EditableHeader from 'components/EditableHeader';
+import InternalServerError from 'components/StaticPages/InternalServerError';
+import NotFound from 'components/StaticPages/NotFound';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { EditModeHeader, Title } from 'components/ViewPaper/ViewPaper';
+import Confirm from 'reactstrap-confirm';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
+import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
 import SameAsStatements from './SameAsStatements';
 
 class ResourceDetails extends Component {
@@ -39,7 +42,10 @@ class ResourceDetails extends Component {
         getResource(this.props.match.params.id)
             .then(responseJson => {
                 document.title = `${responseJson.label} - Resource - ORKG`;
-                this.setState({ label: responseJson.label, isLoading: false, classes: responseJson.classes });
+                const classesCalls = responseJson.classes.map(classe => submitGetRequest(`${classesUrl}${classe}`));
+                Promise.all(classesCalls).then(classes => {
+                    this.setState({ label: responseJson.label, isLoading: false, classes: classes });
+                });
             })
             .catch(error => {
                 this.setState({ label: null, isLoading: false, error: error });
@@ -50,6 +56,31 @@ class ResourceDetails extends Component {
         this.setState(prevState => ({
             [type]: !prevState[type]
         }));
+    };
+
+    /* TODO: remove all the classes */
+    handleClassSelect = async (selected, action) => {
+        if (action.action === 'create-option') {
+            const result = await Confirm({
+                title: 'Are you sure you need a new class?',
+                message: 'Often there are existing classes that you can use as well. It is better to use existing classes than new ones.',
+                cancelColor: 'light'
+            });
+            if (result) {
+                const foundIndex = selected.findIndex(x => x.__isNew__);
+                const newClass = await createClass(selected[foundIndex].label);
+                selected[foundIndex] = newClass;
+            }
+        }
+        this.setState(
+            {
+                classes: !selected ? [] : selected
+            },
+            async () => {
+                await updateResourceClasses(this.props.match.params.id, this.state.classes.map(c => c.id));
+                toast.success('Resource classes updated successfully');
+            }
+        );
     };
 
     handleHeaderChange = event => {
@@ -93,12 +124,12 @@ class ResourceDetails extends Component {
                                         {this.state.classes.length > 0 && (
                                             <span style={{ fontSize: '90%' }}>
                                                 Classes:{' '}
-                                                {this.state.classes.map((className, index) => {
+                                                {this.state.classes.map((classObject, index) => {
                                                     const separator = index < this.state.classes.length - 1 ? ', ' : '';
 
                                                     return (
                                                         <i key={index}>
-                                                            {className}
+                                                            {classObject.label}
                                                             {separator}
                                                         </i>
                                                     );
@@ -107,9 +138,25 @@ class ResourceDetails extends Component {
                                         )}
                                     </div>
                                 ) : (
-                                    <EditableHeader id={id} value={this.state.label} onChange={this.handleHeaderChange} />
+                                    <>
+                                        <EditableHeader id={id} value={this.state.label} onChange={this.handleHeaderChange} />
+                                        <FormGroup className="mb-4">
+                                            <Label>Classes:</Label>
+                                            <AutoComplete
+                                                allowCreate
+                                                requestUrl={classesUrl}
+                                                onItemSelected={this.handleClassSelect}
+                                                cacheOptions
+                                                isMulti
+                                                value={this.state.classes}
+                                            />
+                                            {this.state.editMode && <FormText>Specify the classes of the resource.</FormText>}
+                                        </FormGroup>
+                                    </>
                                 )}
                             </div>
+                            <hr />
+                            <p>Statements:</p>
                             <div className={'clearfix'}>
                                 <StatementBrowser
                                     enableEdit={this.state.editMode}
