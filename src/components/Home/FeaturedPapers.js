@@ -3,7 +3,7 @@ import { ListGroup, ListGroupItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from '../../constants/routes.js';
 import { getResourcesByClass, getStatementsBySubjects } from '../../network';
-import { getPaperData } from 'utils';
+import { getPaperData, sortMethod } from 'utils';
 import { find } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -28,7 +28,7 @@ class FeaturedPapers extends Component {
         }).then(result => {
             getStatementsBySubjects({ ids: result.map(p => p.id) })
                 .then(papersStatements => {
-                    const papers = papersStatements.map(paperStatements => {
+                    let papers = papersStatements.map(paperStatements => {
                         const paperSubject = find(result, { id: paperStatements.id });
                         return getPaperData(
                             paperStatements.id,
@@ -36,6 +36,10 @@ class FeaturedPapers extends Component {
                             paperStatements.statements
                         );
                     });
+
+                    // order featured comparison
+                    papers = papers.sort((p1, p2) => sortMethod(p1.order, p2.order));
+
                     this.setState({
                         papers: papers
                     });

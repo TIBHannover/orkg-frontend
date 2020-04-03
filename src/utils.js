@@ -173,6 +173,14 @@ export const getPaperData = (id, label, paperStatements) => {
             contributionArray.push({ ...contribution.object, statementId: contribution.id });
         }
     }
+    // order (used for the featured paper list)
+    let order = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_ORDER);
+    if (order.length > 0) {
+        order = order[0].object.label;
+    } else {
+        order = Infinity;
+    }
+
     return {
         id,
         label,
@@ -182,7 +190,8 @@ export const getPaperData = (id, label, paperStatements) => {
         doi,
         doiResourceId,
         authorNames: authorNamesArray.sort((a, b) => a.created_at.localeCompare(b.created_at)),
-        contributions: contributionArray.sort((a, b) => a.label.localeCompare(b.label))
+        contributions: contributionArray.sort((a, b) => a.label.localeCompare(b.label)),
+        order
     };
 };
 
