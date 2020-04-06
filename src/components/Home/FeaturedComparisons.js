@@ -7,6 +7,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import Dotdotdot from 'react-dotdotdot';
 import styled from 'styled-components';
+import { sortMethod } from 'utils';
 import { reverse } from 'named-urls';
 import ContentLoader from 'react-content-loader';
 
@@ -63,12 +64,13 @@ class FeaturedComparisons extends Component {
             ids
         });
 
-        const comparisons = [];
+        let comparisons = [];
         for (const comparison of responseJson) {
             let description = '';
             let icon = '';
             const url = '';
             let type = '';
+            let order = Infinity;
             let onHomepage = false;
 
             for (const comparisonStatement of comparisonStatements) {
@@ -92,6 +94,11 @@ class FeaturedComparisons extends Component {
                         statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_TYPE
                     );
                     type = typeStatement.length > 0 ? typeStatement[0].object.id : '';
+
+                    const orderStatement = comparisonStatement.statements.filter(
+                        statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_ORDER
+                    );
+                    order = orderStatement.length > 0 ? orderStatement[0].object.label : Infinity;
                 }
             }
 
@@ -105,9 +112,13 @@ class FeaturedComparisons extends Component {
                 description,
                 url,
                 icon,
-                type
+                type,
+                order
             });
         }
+
+        // order featured comparison
+        comparisons = comparisons.sort((c1, c2) => sortMethod(c1.order, c2.order));
 
         this.setState({
             comparisons,
