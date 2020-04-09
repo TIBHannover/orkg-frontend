@@ -75,7 +75,7 @@ function GeneralSettings(props) {
                 <div>
                     <CustomInput
                         onChange={handleSwitchIsDescription}
-                        value={props.isClassDescription}
+                        checked={props.isClassDescription}
                         id="switchIsClassDescription"
                         type="switch"
                         name="customSwitch"
