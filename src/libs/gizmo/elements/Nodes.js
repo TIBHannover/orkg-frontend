@@ -50,11 +50,17 @@ export default class Node extends BaseElement {
 
         this.setAnimationDurationPercentage = this.setAnimationDurationPercentage.bind(this);
 
+        this.collapseThisNode = this.collapseThisNode.bind(this);
+
         // performance optimization stuff;
         this.redraw = this.redraw.bind(this);
 
         // some helper functions; [ensures that status values are correctly set!]
         this.setStatusLeafNode = this.setStatusLeafNode.bind(this);
+    }
+
+    collapseThisNode() {
+        this.graph.collapseThisNodeToParent(this);
     }
 
     setAnimationDurationPercentage(val) {
@@ -90,6 +96,20 @@ export default class Node extends BaseElement {
         });
     }
 
+    mouseHoverIn = () => {
+        super.mouseHoverIn();
+        if (this.singleCollapseGroup) {
+            this.singleCollapseGroup.classed('hidden', false);
+        }
+    };
+
+    mouseHoverOut = () => {
+        super.mouseHoverOut();
+        if (this.singleCollapseGroup) {
+            this.singleCollapseGroup.classed('hidden', true);
+        }
+    };
+
     collapseButton_mouseHoverIn() {
         this.mouseHoverIn();
         this.circ.classed('collapseExpandButtonHovered', true);
@@ -98,6 +118,55 @@ export default class Node extends BaseElement {
     collapseButton_mouseHoverOut() {
         this.mouseHoverOut();
         this.circ.classed('collapseExpandButtonHovered', false);
+    }
+
+    singleCollapseButton_mouseHoverIn = () => {
+        this.mouseHoverIn();
+        this.singleCirc.classed('collapseExpandButtonHovered', true);
+    };
+
+    singleCollapseButton_mouseHoverOut = () => {
+        this.mouseHoverOut();
+        this.singleCirc.classed('collapseExpandButtonHovered', false);
+    };
+
+    addSingleCollapseHoverButton() {
+        const that = this;
+        if (this.singleCollapseGroup) {
+            this.singleCollapseGroup.class('hidden', true);
+        } else {
+            // create the hover thing;
+            const offsetX = Math.sqrt(50 * 25);
+
+            this.singleCollapseGroup = this.svgRoot.append('g');
+            this.singleCirc = this.singleCollapseGroup.append('circle');
+            const radius = 15;
+            this.singleCirc.attr('r', radius);
+            this.singleCirc.attr('cx', -offsetX);
+            this.singleCirc.attr('cy', offsetX);
+            this.singleCirc.classed('collapseExpandButton', true);
+            this.singleCollapseGroup.on('mouseover', this.singleCollapseButton_mouseHoverIn);
+            this.singleCollapseGroup.on('mouseout', this.singleCollapseButton_mouseHoverOut);
+            this.singleCollapseGroup
+                .append('polygon')
+                .attr('points', '15.5,5 11,5 16,12 11,19 15.5,19 20.5,12 ')
+                .attr('transform', 'translate(-21,23), scale(-1,1)');
+
+            this.singleCollapseGroup.classed('hidden', true);
+            if (this.type() === 'literal') {
+                const shape = this.getExpectedShapeSize(this.renderConfig);
+                let width = shape.w;
+                if (this.getRenderingShape()) {
+                    width = this.getRenderingShape().attr('width');
+                }
+                // push back to origin;
+                this.singleCollapseGroup.attr('cx', -Math.sqrt(50 * 25));
+                this.singleCollapseGroup.attr('transform', 'translate(' + (offsetX - 15 - 0.5 * width) + ',' + -offsetX + ')');
+            }
+            this.singleCollapseGroup.on('click', function() {
+                that.collapseThisNode();
+            });
+        }
     }
 
     addHoverCollapseExpandButton() {
@@ -341,6 +410,11 @@ export default class Node extends BaseElement {
             this.collapseExapandGroup = undefined;
         }
 
+        if (this.singleCollapseGroup) {
+            this.singleCollapseGroup.remove();
+            this.singleCollapseGroup = undefined;
+        }
+
         if (this.stackViewGroup) {
             this.stackViewGroup.remove();
             this.stackViewGroup = undefined;
@@ -370,6 +444,11 @@ export default class Node extends BaseElement {
             if (this.status !== 'leafNode') {
                 this.addHoverCollapseExpandButton();
             }
+        }
+
+        if (this.incommingLink.length > 0) {
+            // make sure the root not can not be single collapsed;
+            this.addSingleCollapseHoverButton();
         }
     }
 
