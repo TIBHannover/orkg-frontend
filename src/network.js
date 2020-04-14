@@ -159,11 +159,7 @@ export const updateResource = (id, label) => {
 };
 
 export const updateResourceClasses = (id, classes = null) => {
-    return submitPutRequest(
-        `${resourcesUrl}${id}`,
-        { 'Content-Type': 'application/json' },
-        { ...(classes && classes.length > 0 ? { classes: classes } : null) }
-    );
+    return submitPutRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' }, { ...(classes ? { classes: classes } : null) });
 };
 
 export const updateLiteral = (id, label) => {

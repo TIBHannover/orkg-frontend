@@ -58,7 +58,6 @@ class ResourceDetails extends Component {
         }));
     };
 
-    /* TODO: remove all the classes */
     handleClassSelect = async (selected, action) => {
         if (action.action === 'create-option') {
             const result = await Confirm({
