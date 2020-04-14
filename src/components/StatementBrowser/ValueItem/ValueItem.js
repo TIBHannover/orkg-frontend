@@ -269,6 +269,7 @@ export default function ValueItem(props) {
                 id={props.id}
                 value={value}
                 resource={resource}
+                predicate={props.properties.byId[props.propertyId]}
                 handleOnClick={handleOnClick}
                 inline={props.inline}
                 loadOptions={loadOptions}

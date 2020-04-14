@@ -5,6 +5,7 @@ import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDa
 import { InputGroup } from 'reactstrap';
 import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
 import PropTypes from 'prop-types';
+import ValidationRules from '../ValidationRules/ValidationRules';
 
 function TemplateComponentValue(props) {
     return (
@@ -24,6 +25,9 @@ function TemplateComponentValue(props) {
                         cssClasses={'form-control-sm'}
                     />
                 </InputGroup>
+                {props.value && ['Number', 'String'].includes(props.value.id) && (
+                    <ValidationRules validationRules={props.validationRules} id={props.id} value={props.value} enableEdit={props.enableEdit} />
+                )}
             </div>
         </ValuesStyle>
     );
@@ -33,6 +37,7 @@ TemplateComponentValue.propTypes = {
     id: PropTypes.number.isRequired,
     value: PropTypes.object.isRequired,
     enableEdit: PropTypes.bool.isRequired,
+    validationRules: PropTypes.object.isRequired,
     handleClassOfPropertySelect: PropTypes.func.isRequired
 };
 

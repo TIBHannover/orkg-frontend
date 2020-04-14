@@ -55,7 +55,8 @@ class AddTemplateButton extends Component {
                         statements['properties'].push({
                             existingPredicateId: component.property.id,
                             label: component.property.label,
-                            templateClass: component.value
+                            templateClass: component.value,
+                            validationRules: component.validationRules
                         });
                     }
                     this.props.prefillStatements({ statements, resourceId: this.props.selectedResource });
@@ -96,7 +97,8 @@ class AddTemplateButton extends Component {
                         statements['properties'].push({
                             existingPredicateId: component.property.id,
                             label: component.property.label,
-                            templateClass: component.value
+                            templateClass: component.value,
+                            validationRules: component.validationRules
                         });
                     }
                     this.props.prefillStatements({ statements, resourceId: rID });
@@ -115,7 +117,8 @@ class AddTemplateButton extends Component {
                     label: template.label,
                     existingResourceId: templateID,
                     type: 'object',
-                    propertyId: ipID
+                    propertyId: ipID,
+                    isExistingValue: true
                 });
                 this.props.prefillStatements({ statements: tagResourceStatements, resourceId: rID });
 

@@ -488,6 +488,10 @@ export const getTemplateById = templateId => {
                     statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALUE
                 );
 
+                const validationRules = componentStatements.statements.filter(
+                    statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALIDATION_RULE
+                );
+
                 return {
                     id: componentStatements.id,
                     property: property
@@ -501,7 +505,15 @@ export const getTemplateById = templateId => {
                               id: value.object.id,
                               label: value.object.label
                           }
-                        : {}
+                        : {},
+                    validationRules:
+                        validationRules && Object.keys(validationRules).length > 0
+                            ? validationRules.reduce((obj, item) => {
+                                  const rule = item.object.label.split(/#(.+)/)[0];
+                                  const value = item.object.label.split(/#(.+)/)[1];
+                                  return Object.assign(obj, { [rule]: value });
+                              }, {})
+                            : {}
                 };
             });
         });

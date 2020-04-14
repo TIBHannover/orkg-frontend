@@ -68,6 +68,7 @@ function ComponentsTab(props) {
                 const templateComponents = props.components.map((item, j) => {
                     if (j === index) {
                         item.value = !selected ? null : selected;
+                        item.validationRules = {};
                     }
                     return item;
                 });
@@ -77,6 +78,7 @@ function ComponentsTab(props) {
             const templateComponents = props.components.map((item, j) => {
                 if (j === index) {
                     item.value = !selected ? null : selected;
+                    item.validationRules = {};
                 }
                 return item;
             });
@@ -86,7 +88,7 @@ function ComponentsTab(props) {
     };
 
     const handleSelectNewProperty = ({ id, value: label }) => {
-        const templateComponents = [...props.components, { property: { id, label: label }, value: {} }];
+        const templateComponents = [...props.components, { property: { id, label: label }, value: {}, validationRules: {} }];
         props.setComponents(templateComponents);
         setShowAddProperty(false);
     };
@@ -99,7 +101,10 @@ function ComponentsTab(props) {
     const handleCreateNewProperty = async () => {
         const newPredicate = await createPredicate(newPropertyLabel);
         toggleConfirmNewProperty(); // hide dialog
-        const templateComponents = [...props.components, { property: { id: newPredicate.id, label: newPredicate.label } }];
+        const templateComponents = [
+            ...props.components,
+            { property: { id: newPredicate.id, label: newPredicate.label }, value: {}, validationRules: {} }
+        ];
         props.setComponents(templateComponents);
         setShowAddProperty(false);
     };
@@ -150,6 +155,7 @@ function ComponentsTab(props) {
                                     id={index}
                                     property={templateProperty.property}
                                     value={templateProperty.value}
+                                    validationRules={templateProperty.validationRules}
                                     handlePropertiesSelect={handlePropertiesSelect}
                                     handleClassOfPropertySelect={handleClassOfPropertySelect}
                                 />

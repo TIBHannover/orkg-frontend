@@ -198,6 +198,18 @@ export const createResource = data => dispatch => {
     });
 };
 
+export const setTemplateOfResource = data => {
+    const templateId = data.templateId;
+    return dispatch => {
+        return network.getTemplateById(templateId).then(template => {
+            dispatch({
+                type: type.SET_TEMPLATE_OF_RESOURCE,
+                payload: { ...data, template }
+            });
+        });
+    };
+};
+
 export const selectResource = data => dispatch => {
     // use redux thunk for async action, for capturing the resource properties
     dispatch({
@@ -243,6 +255,7 @@ export const fetchStructureForTemplate = data => {
                                 resourceId: resourceId,
                                 existingPredicateId: component.property.id,
                                 label: component.property.label,
+                                validationRules: component.validationRules,
                                 isExistingProperty: true
                             })
                         );
@@ -322,6 +335,17 @@ export const fetchStatementsForResource = data => {
 
                 const existingProperties = [];
                 const researchProblems = [];
+
+                //Get template used to create this resource
+                const templateID = response.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE);
+                if (templateID) {
+                    dispatch(
+                        setTemplateOfResource({
+                            resourceId: resourceId,
+                            templateId: templateID.object.id
+                        })
+                    );
+                }
 
                 for (const statement of response) {
                     let propertyId = guid();

@@ -19,6 +19,7 @@ function TemplateComponent(props) {
                     id={props.id}
                     value={props.value}
                     enableEdit={props.enableEdit}
+                    validationRules={props.validationRules}
                     handleClassOfPropertySelect={props.handleClassOfPropertySelect}
                 />
             </div>
@@ -30,6 +31,7 @@ TemplateComponent.propTypes = {
     id: PropTypes.number.isRequired,
     property: PropTypes.object.isRequired,
     value: PropTypes.object.isRequired,
+    validationRules: PropTypes.object.isRequired,
     handleDeleteTemplateComponent: PropTypes.func.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     handlePropertiesSelect: PropTypes.func.isRequired,

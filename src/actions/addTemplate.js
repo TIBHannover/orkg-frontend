@@ -6,7 +6,8 @@ import {
     deleteStatementsByIds,
     createResourceStatement,
     getStatementsBySubjects,
-    getResource
+    getResource,
+    createLiteral
 } from 'network';
 import { toast } from 'react-toastify';
 
@@ -105,6 +106,9 @@ export const loadTemplate = data => dispatch => {
                     const value = componentStatements.statements.find(
                         statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALUE
                     );
+                    const validationRules = componentStatements.statements.filter(
+                        statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALIDATION_RULE
+                    );
 
                     return {
                         id: componentStatements.id,
@@ -119,7 +123,15 @@ export const loadTemplate = data => dispatch => {
                                   id: value.object.id,
                                   label: value.object.label
                               }
-                            : {}
+                            : {},
+                        validationRules:
+                            validationRules && Object.keys(validationRules).length > 0
+                                ? validationRules.reduce((obj, item) => {
+                                      const rule = item.object.label.split(/#(.+)/)[0];
+                                      const value = item.object.label.split(/#(.+)/)[1];
+                                      return Object.assign(obj, { [rule]: value });
+                                  }, {})
+                                : {}
                     };
                 });
             });
@@ -233,6 +245,20 @@ export const saveTemplate = data => {
                 promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_COMPONENT, component.id));
                 promises.push(createResourceStatement(component.id, process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY, property.property.id));
                 if (property.value && property.value.id) {
+                    promises.push(createResourceStatement(component.id, process.env.REACT_APP_TEMPLATE_COMPONENT_VALUE, property.value.id));
+                }
+                // save validation rules
+                if (property.value && ['Number', 'String'].includes(property.value.id) && property.validationRules) {
+                    for (const key in property.validationRules) {
+                        if (property.validationRules.hasOwnProperty(key)) {
+                            if (property.validationRules[key]) {
+                                const ruleLiteral = await createLiteral(`${key}#${property.validationRules[key]}`);
+                                promises.push(
+                                    createResourceStatement(component.id, process.env.REACT_APP_TEMPLATE_COMPONENT_VALIDATION_RULE, ruleLiteral.id)
+                                );
+                            }
+                        }
+                    }
                     promises.push(createResourceStatement(component.id, process.env.REACT_APP_TEMPLATE_COMPONENT_VALUE, property.value.id));
                 }
             }

@@ -42,8 +42,8 @@ export default class TemplateDetailsTooltip extends Component {
                                 <ul>
                                     {this.state.template.components &&
                                         this.state.template.components.length > 0 &&
-                                        this.state.template.components.map(component => {
-                                            return <li key={`t${component.property.id}`}>{component.property.label}</li>;
+                                        this.state.template.components.map((component, index) => {
+                                            return <li key={`t-${index}-${component.property.id}`}>{component.property.label}</li>;
                                         })}
                                 </ul>
                             </div>
@@ -52,8 +52,8 @@ export default class TemplateDetailsTooltip extends Component {
                             <div>
                                 <b>Nested Templates: </b>
                                 <ul>
-                                    {this.state.template.subTemplates.map(subTemplate => {
-                                        return <li key={`st${subTemplate.id}`}>{subTemplate.label}</li>;
+                                    {this.state.template.subTemplates.map((subTemplate, index) => {
+                                        return <li key={`st-${index}-${subTemplate.id}`}>{subTemplate.label}</li>;
                                     })}
                                 </ul>
                             </div>

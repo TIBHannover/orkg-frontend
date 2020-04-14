@@ -80,6 +80,7 @@ function GeneralSettings(props) {
                         type="switch"
                         name="customSwitch"
                         label="This template is a classs description"
+                        disabled={!props.editMode}
                     />
                 </div>
             </FormGroup>

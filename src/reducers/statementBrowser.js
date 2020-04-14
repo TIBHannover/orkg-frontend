@@ -51,6 +51,29 @@ export default (state = initialState, action) => {
             };
         }
 
+        case type.SET_TEMPLATE_OF_RESOURCE: {
+            const { payload } = action;
+
+            let newState = dotProp.set(state, `resources.byId.${payload.resourceId}.templateId`, payload.templateId);
+
+            const propertyIds = dotProp.get(newState, `resources.byId.${payload.resourceId}.propertyIds`);
+
+            if (payload.template.components && payload.template.components.length > 0) {
+                for (const component of payload.template.components) {
+                    for (const propertyId of propertyIds) {
+                        const property = dotProp.get(newState, `properties.byId.${propertyId}`);
+                        if (property.existingPredicateId === component.property.id) {
+                            newState = dotProp.set(newState, `properties.byId.${propertyId}.templateClass`, component.value);
+                            newState = dotProp.set(newState, `properties.byId.${propertyId}.validationRules`, component.validationRules);
+                        }
+                    }
+                }
+            }
+            return {
+                ...newState
+            };
+        }
+
         case type.CREATE_PROPERTY: {
             const { payload } = action;
             let newState;
@@ -71,6 +94,7 @@ export default (state = initialState, action) => {
                         isTemplate: payload.isTemplate,
                         templateId: payload.templateId ? payload.templateId : null,
                         templateClass: payload.templateClass ? payload.templateClass : null,
+                        validationRules: payload.validationRules ? payload.validationRules : null,
                         isAnimated: payload.isAnimated !== undefined ? payload.isAnimated : false
                     }
                 }));

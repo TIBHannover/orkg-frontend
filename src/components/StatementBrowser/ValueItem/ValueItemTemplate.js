@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
+import { Input, InputGroup, InputGroupAddon, Button, FormFeedback } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faExternalLinkAlt, faTable } from '@fortawesome/free-solid-svg-icons';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
@@ -7,16 +7,48 @@ import { StyledButton, ValueItemStyle } from 'components/StatementBrowser/styled
 import Pulse from 'components/Utils/Pulse';
 import classNames from 'classnames';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
+import validationSchema from 'components/StatementBrowser/AddValue/helpers/validationSchema';
 import PropTypes from 'prop-types';
 
 export default function ValueItemTemplate(props) {
     const [disableHover, setDisableHover] = useState(false);
     const [draftLabel, setDraftLabel] = useState(props.value.label);
 
+    const [isValid, setIsValid] = useState(true);
+    const [formFeedback, setFormFeedback] = useState(null);
+
     const valueOptionClasses = classNames({
         valueOptions: true,
         disableHover: disableHover
     });
+
+    const validateValue = () => {
+        console.log(props.predicate.validationRules);
+        if (props.predicate.templateClass && ['Date', 'Number', 'String'].includes(props.predicate.templateClass.id)) {
+            const schema = validationSchema(props.predicate);
+            const { error, value } = schema.validate(draftLabel);
+            if (error) {
+                setFormFeedback(error.message);
+                setIsValid(false);
+                return false;
+            } else {
+                setDraftLabel(value);
+                setFormFeedback(null);
+                return value;
+            }
+        } else {
+            setFormFeedback(null);
+            return draftLabel;
+        }
+    };
+
+    const onSubmit = () => {
+        const validatedValue = validateValue();
+        if (validatedValue !== false) {
+            props.commitChangeLabel(draftLabel);
+            props.toggleEditValue({ id: props.id });
+        }
+    };
 
     return (
         <ValueItemStyle>
@@ -87,26 +119,19 @@ export default function ValueItemTemplate(props) {
                         <Input
                             bsSize="sm"
                             value={draftLabel}
+                            invalid={!isValid}
                             onChange={e => setDraftLabel(e.target.value)}
                             onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
-                            onBlur={e => {
-                                props.commitChangeLabel(draftLabel);
-                                props.toggleEditValue({ id: props.id });
-                            }}
+                            onBlur={() => onSubmit()}
                             autoFocus
                         />
                         <InputGroupAddon addonType="append">
-                            <StyledButton
-                                outline
-                                onClick={e => {
-                                    props.commitChangeLabel(draftLabel);
-                                    props.toggleEditValue({ id: props.id });
-                                }}
-                            >
+                            <StyledButton outline onClick={() => onSubmit()}>
                                 Done
                             </StyledButton>
                         </InputGroupAddon>
                     </InputGroup>
+                    {!isValid && <FormFeedback className={'d-block'}>{formFeedback}</FormFeedback>}
                 </div>
             )}
         </ValueItemStyle>
@@ -123,6 +148,7 @@ ValueItemTemplate.propTypes = {
     showHelp: PropTypes.bool,
     enableEdit: PropTypes.bool.isRequired,
     loadOptions: PropTypes.func.isRequired,
+    predicate: PropTypes.object.isRequired,
 
     handleChangeResource: PropTypes.func.isRequired,
     toggleEditValue: PropTypes.func.isRequired,

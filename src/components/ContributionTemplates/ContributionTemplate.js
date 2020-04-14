@@ -7,13 +7,22 @@ import { EditModeHeader, Title } from 'components/ViewPaper/ViewPaper';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { setEditMode, loadTemplate, saveTemplate, setIsLoading, doneLoading } from 'actions/addTemplate';
 import { faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { withTheme } from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 import ROUTES from 'constants/routes.js';
 import { StyledContainer } from './styled';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import GeneralSettings from './Tabs/GeneralSettings/GeneralSettings';
 import ComponentsTab from './Tabs/ComponentsTab/ComponentsTab';
+
+const TabPaneStyled = styled(TabPane)`
+    border: 1px solid #ced4da;
+    border-top: 0;
+`;
+
+const NavItemStyled = styled(NavItem)`
+    cursor: pointer;
+`;
 
 class ContributionTemplate extends Component {
     constructor(props) {
@@ -33,9 +42,12 @@ class ContributionTemplate extends Component {
         }
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         if (!this.props.match.params.id && this.props.templateID) {
             this.props.history.push(reverse(ROUTES.CONTRIBUTION_TEMPLATE, { id: this.props.templateID }));
+        }
+        if (this.props.match.params.id && this.props.match.params.id !== prevProps.match.params.id) {
+            this.props.loadTemplate(this.props.match.params.id);
         }
     }
 
@@ -67,19 +79,19 @@ class ContributionTemplate extends Component {
                             ''
                         )}
                     </div>
-                    <div>
+                    <div className={'mb-3'}>
                         <Nav tabs>
-                            <NavItem>
+                            <NavItemStyled>
                                 <NavLink
                                     className={classnames({ active: this.state.activeTab === '1' })}
                                     onClick={() => {
                                         this.toggleTab('1');
                                     }}
                                 >
-                                    General Settings
+                                    Description
                                 </NavLink>
-                            </NavItem>
-                            <NavItem>
+                            </NavItemStyled>
+                            <NavItemStyled>
                                 <NavLink
                                     className={classnames({ active: this.state.activeTab === '2' })}
                                     onClick={() => {
@@ -88,8 +100,8 @@ class ContributionTemplate extends Component {
                                 >
                                     Properties
                                 </NavLink>
-                            </NavItem>
-                            <NavItem>
+                            </NavItemStyled>
+                            <NavItemStyled>
                                 <NavLink
                                     className={classnames({ active: this.state.activeTab === '3' })}
                                     onClick={() => {
@@ -98,28 +110,27 @@ class ContributionTemplate extends Component {
                                 >
                                     Format
                                 </NavLink>
-                            </NavItem>
+                            </NavItemStyled>
                         </Nav>
                         <TabContent activeTab={this.state.activeTab}>
-                            <TabPane tabId="1">
+                            <TabPaneStyled tabId="1">
                                 <Row>
                                     <Col sm="12">
                                         <GeneralSettings />
                                     </Col>
                                 </Row>
-                            </TabPane>
-                            <TabPane tabId="2">
+                            </TabPaneStyled>
+                            <TabPaneStyled tabId="2">
                                 <Row>
                                     <Col sm="12">
                                         <ComponentsTab />
                                     </Col>
                                 </Row>
-                            </TabPane>
+                            </TabPaneStyled>
                         </TabContent>
                     </div>
                     {(this.props.editMode || this.props.isSaving) && (
                         <>
-                            <hr className="mt-5 mb-3" />
                             <Button
                                 disabled={this.props.isSaving}
                                 color="primary"
