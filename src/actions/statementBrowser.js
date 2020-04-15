@@ -255,6 +255,7 @@ export const fetchStructureForTemplate = data => {
                                 resourceId: resourceId,
                                 existingPredicateId: component.property.id,
                                 label: component.property.label,
+                                templateClass: component.value,
                                 validationRules: component.validationRules,
                                 isExistingProperty: true
                             })

@@ -6,7 +6,7 @@ export default function validationSchema(predicate) {
     if (predicate.templateClass) {
         switch (predicate.templateClass.id) {
             case 'Date':
-                schema = Joi.date().iso();
+                schema = Joi.date();
                 break;
             case 'Number':
                 schema = Joi.number();

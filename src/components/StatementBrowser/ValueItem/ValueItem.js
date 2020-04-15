@@ -8,7 +8,8 @@ import {
     resourcesUrl,
     updateStatement,
     createResource as createResourceAPICall,
-    updateResource
+    updateResource,
+    getTemplatesByClass
 } from 'network';
 import { toast } from 'react-toastify';
 import { guid } from 'utils';
@@ -111,7 +112,7 @@ export default function ValueItem(props) {
         });
     };
 
-    const handleResourceClick = e => {
+    const handleResourceClick = async e => {
         const resource = props.resources.byId[props.value.resourceId];
         const existingResourceId = resource.existingResourceId;
         const templateId = resource.templateId;
@@ -126,6 +127,17 @@ export default function ValueItem(props) {
                 resourceId: props.value.resourceId,
                 templateId
             });
+        } else if (props.value.classes && props.value.classes.length > 0) {
+            // load the template of this value
+            console.log(props.value.classes);
+            const template = await getTemplatesByClass(props.value.classes[0].id ? props.value.classes[0].id : props.value.classes[0]);
+
+            if (template && template.length > 0 && !resource.isFechted) {
+                props.fetchStructureForTemplate({
+                    resourceId: props.value.resourceId,
+                    templateId: template[0].id
+                });
+            }
         }
 
         props.selectResource({
@@ -133,6 +145,7 @@ export default function ValueItem(props) {
             resourceId: props.value.resourceId,
             label: props.value.label
         });
+        console.log(props.value);
     };
 
     const handleDatasetResourceClick = ressource => {
@@ -154,7 +167,7 @@ export default function ValueItem(props) {
         });
     };
 
-    const handleExistingResourceClick = () => {
+    const handleExistingResourceClick = async () => {
         const resource = props.resources.byId[props.value.resourceId];
         const existingResourceId = resource.existingResourceId ? resource.existingResourceId : props.value.resourceId;
         const templateId = resource.templateId;
@@ -164,11 +177,24 @@ export default function ValueItem(props) {
                 resourceId: props.value.resourceId,
                 templateId
             });
+        } else if (props.value.classes && props.value.classes.length > 0) {
+            // load the template of this value
+            console.log(props.value.classes);
+            const template = await getTemplatesByClass(props.value.classes[0].id);
+
+            if (template && template.length > 0 && !resource.isFechted) {
+                props.fetchStructureForTemplate({
+                    resourceId: props.value.resourceId,
+                    templateId: template[0].id
+                });
+            }
         }
 
-        setModal(true);
+        // Load template of this class
+        //show the statement browser
         setDialogResourceId(existingResourceId);
         setDialogResourceLabel(resource.label);
+        setModal(true);
     };
 
     const handleDatasetClick = () => {

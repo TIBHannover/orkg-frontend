@@ -24,7 +24,12 @@ export default function StatementItemTemplate(props) {
                 <PropertyStyle className={`col-4 ${props.property.isEditing ? 'editingLabel' : ''}`} tabIndex="0">
                     {!props.property.isEditing ? (
                         <div>
-                            <div className={'propertyLabel'}>{props.predicateLabel}</div>
+                            <div className={'propertyLabel'}>
+                                {props.predicateLabel}{' '}
+                                {props.property.templateClass && ['Date', 'Number', 'String'].includes(props.property.templateClass.id) && (
+                                    <small>[{props.property.templateClass.label}]</small>
+                                )}
+                            </div>
                             {props.enableEdit && (
                                 <div className={propertyOptionsClasses}>
                                     <StatementOptionButton
