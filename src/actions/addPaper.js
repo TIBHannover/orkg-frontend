@@ -179,7 +179,7 @@ export const prefillStatements = ({ statements, resourceId }) => dispatch => {
     for (const value of statements.values) {
         dispatch(
             createValue({
-                valueId: value.valueId,
+                valueId: value.valueId ? value.valueId : guid(),
                 label: value.label,
                 type: value.type ? value.type : 'object',
                 templateId: value.templateId ? value.templateId : null,
