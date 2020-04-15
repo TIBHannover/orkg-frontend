@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
 import SameAsStatements from './SameAsStatements';
+import { orderBy } from 'lodash';
 
 class ResourceDetails extends Component {
     constructor(props) {
@@ -42,8 +43,9 @@ class ResourceDetails extends Component {
         getResource(this.props.match.params.id)
             .then(responseJson => {
                 document.title = `${responseJson.label} - Resource - ORKG`;
-                const classesCalls = responseJson.classes.map(classe => submitGetRequest(`${classesUrl}${classe}`));
+                const classesCalls = responseJson.classes.map(classResource => submitGetRequest(`${classesUrl}${classResource}`));
                 Promise.all(classesCalls).then(classes => {
+                    classes = orderBy(classes, [classLabel => classLabel.label.toLowerCase()], ['asc']);
                     this.setState({ label: responseJson.label, isLoading: false, classes: classes });
                 });
             })
