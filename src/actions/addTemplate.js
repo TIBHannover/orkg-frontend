@@ -276,6 +276,9 @@ export const saveTemplate = data => {
             } else {
                 toast.success('Contribution Template created successfully');
             }
+
+            dispatch(loadTemplate(templateResource)); //reload the template
+
             dispatch({
                 type: type.SAVE_TEMPLATE_DONE,
                 id: templateResource
