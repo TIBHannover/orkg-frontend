@@ -3,6 +3,25 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.8](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.7.1...V0.8) - 2020-04-15
+
+### Merged
+
+- Change comparison menu [`#227`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/227)
+- feat: edit the classes of a resource [`#226`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/226)
+- fix inserting data from abstract annotator to contribution data [`#231`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/231)
+- fix create a shareable link for published comparisons [`#229`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/229)
+- feat: Support ordering for featured comparisons and papers on homepage [`#225`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/225)
+
+### Fixed
+
+- Merge branch '169-change-comparison-menu' into 'master' [`#169`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/169)
+- Merge branch '157-edit-the-classes-of-a-resource-from-the-ui' into 'master' [`#157`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/157)
+- Merge branch '173-bug-insetting-data-from-abstract-annotator-to-contribution-data' into 'master' [`#173`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/173)
+- Merge branch '172-bug-cannot-create-a-shareable-link-for-published-comparisons' into 'master' [`#172`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/172)
+- Merge branch '166-support-ordering-for-featured-comparisons-on-homepage' into 'master' [`#166`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/166)
+
+---
 ## [V0.7.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.7...V0.7.1) - 2020-04-02
 
 ### Merged
