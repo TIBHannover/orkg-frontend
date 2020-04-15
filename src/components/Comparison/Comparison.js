@@ -537,6 +537,7 @@ class Comparison extends Component {
                     showDialog={this.state.showShareDialog}
                     toggle={() => this.toggle('showShareDialog')}
                     url={window.location.href}
+                    locationSearch={this.state.locationSearch || this.props.location.search}
                     comparisonId={this.props.match.params.comparisonId}
                     response_hash={this.state.response_hash}
                 />

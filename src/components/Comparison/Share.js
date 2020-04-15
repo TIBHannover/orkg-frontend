@@ -19,7 +19,8 @@ class Share extends Component {
             showTooltipCopiedLink: false,
             shortLink: null,
             shortLinkIsLoading: false,
-            shortLinkIsFailed: false
+            shortLinkIsFailed: false,
+            url: null
         };
     }
 
@@ -29,18 +30,9 @@ class Share extends Component {
         }
     }
 
-    componentDidUpdate = prevProps => {
-        if (
-            (this.props.url !== prevProps.url && this.props.showDialog) ||
-            (!this.state.shortLinkIsLoading && this.props.showDialog && !this.state.shortLink)
-        ) {
-            this.generateShortLink();
-        }
-    };
-
     generateShortLink = () => {
         this.setState({ shortLinkIsLoading: true, shortLinkIsFailed: false });
-        const contributionIds = getContributionIdsFromUrl(this.props.url.substring(this.props.url.indexOf('?')));
+        const contributionIds = getContributionIdsFromUrl(this.props.locationSearch);
         getComparison({ contributionIds: contributionIds, save_response: true }).then(comparisonData => {
             const link =
                 queryString.parse(this.props.url).response_hash || this.props.comparisonId
@@ -50,13 +42,13 @@ class Share extends Component {
                 long_url: link
             })
                 .catch(() => {
-                    this.setState({ shortLink: link, shortLinkIsLoading: false, shortLinkIsFailed: true });
+                    this.setState({ url: this.props.url, shortLink: link, shortLinkIsLoading: false, shortLinkIsFailed: true });
                 })
                 .then(data => {
                     const shortLink = `${window.location.protocol}//${window.location.host}${window.location.pathname
                         .replace(reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparisonId }), '')
                         .replace(/\/$/, '')}${reverse(ROUTES.COMPARISON_SHORTLINK, { shortCode: data.short_code })}`;
-                    this.setState({ shortLink: shortLink, shortLinkIsLoading: false, shortLinkIsFailed: false });
+                    this.setState({ url: this.props.url, shortLink: shortLink, shortLinkIsLoading: false, shortLinkIsFailed: false });
                 });
         });
     };
@@ -69,7 +61,15 @@ class Share extends Component {
 
     render() {
         return (
-            <Modal isOpen={this.props.showDialog} toggle={this.props.toggle}>
+            <Modal
+                onOpened={() => {
+                    if (this.state.url !== this.props.url) {
+                        this.generateShortLink();
+                    }
+                }}
+                isOpen={this.props.showDialog}
+                toggle={this.props.toggle}
+            >
                 <ModalHeader toggle={this.props.toggle}>Share link</ModalHeader>
                 <ModalBody>
                     <p>The created comparison can be shared using the following link: </p>
