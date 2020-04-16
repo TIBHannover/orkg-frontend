@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import GeneralSettings from './Tabs/GeneralSettings/GeneralSettings';
 import ComponentsTab from './Tabs/ComponentsTab/ComponentsTab';
+import Format from './Tabs/Format/Format';
 
 const TabPaneStyled = styled(TabPane)`
     border: 1px solid #ced4da;
@@ -124,6 +125,13 @@ class ContributionTemplate extends Component {
                                 <Row>
                                     <Col sm="12">
                                         <ComponentsTab />
+                                    </Col>
+                                </Row>
+                            </TabPaneStyled>
+                            <TabPaneStyled tabId="3">
+                                <Row>
+                                    <Col sm="12">
+                                        <Format />
                                     </Col>
                                 </Row>
                             </TabPaneStyled>
