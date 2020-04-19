@@ -37,15 +37,13 @@ class Publish extends Component {
     handleSubmit = async e => {
         this.setState({ isLoading: true });
         try {
-            if (this.state.title && this.state.title.trim() !== '') {
+            if (this.state.title && this.state.title.trim() !== '' && this.state.description && this.state.description.trim() !== '') {
                 const contributionIds = getContributionIdsFromUrl(this.props.url.substring(this.props.url.indexOf('?')));
                 const comparison = await getComparison({ contributionIds: contributionIds, save_response: true });
                 const titleResponse = await createResource(this.state.title, [process.env.REACT_APP_CLASSES_COMPARISON]);
                 const resourceId = titleResponse.id;
-                if (this.state.description && this.state.description.trim() !== '') {
-                    const descriptionResponse = await createLiteral(this.state.description);
-                    await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_DESCRIPTION, descriptionResponse.id);
-                }
+                const descriptionResponse = await createLiteral(this.state.description);
+                await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_DESCRIPTION, descriptionResponse.id);
                 if (this.state.reference && this.state.reference.trim() !== '') {
                     const referenceResponse = await createLiteral(this.state.reference);
                     await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_REFERENCE, referenceResponse.id);
@@ -59,7 +57,7 @@ class Publish extends Component {
                 this.setState({ isLoading: false, comparisonId: resourceId });
                 this.props.updateComparisonMetadata(this.state.title, this.state.description, this.state.reference);
             } else {
-                throw Error('Please enter a title');
+                throw Error('Please enter a title and a description');
             }
         } catch (error) {
             console.error(error);
