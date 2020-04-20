@@ -9,6 +9,8 @@ const initialState = {
     class: null,
     templateID: '',
     isClassDescription: false,
+    hasLabelFormat: false,
+    labelFormat: '',
     error: null,
     components: [],
     subTemplates: [],
@@ -43,6 +45,24 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 isClassDescription: payload
+            };
+        }
+
+        case type.TEMPLATE_SET_HAS_LABEL_FORMAT: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                hasLabelFormat: payload
+            };
+        }
+
+        case type.TEMPLATE_SET_LABEL_FORMAT: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                labelFormat: payload
             };
         }
 
@@ -106,6 +126,8 @@ export default (state = initialState, action) => {
                 ...initialState,
                 templateID: payload.templateID,
                 label: payload.label,
+                labelFormat: payload.labelFormat,
+                hasLabelFormat: payload.hasLabelFormat,
                 isClassDescription: payload.isClassDescription,
                 statements: payload.statements,
                 predicate: payload.predicate,

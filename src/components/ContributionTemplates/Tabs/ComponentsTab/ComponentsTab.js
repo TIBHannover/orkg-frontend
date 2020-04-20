@@ -150,18 +150,17 @@ function ComponentsTab(props) {
                     props.components.length > 0 &&
                     props.components.map((templateProperty, index) => {
                         return (
-                            <>
-                                <TemplateComponent
-                                    enableEdit={props.editMode}
-                                    handleDeleteTemplateComponent={handleDeleteTemplateComponent}
-                                    id={index}
-                                    property={templateProperty.property}
-                                    value={templateProperty.value}
-                                    validationRules={templateProperty.validationRules}
-                                    handlePropertiesSelect={handlePropertiesSelect}
-                                    handleClassOfPropertySelect={handleClassOfPropertySelect}
-                                />
-                            </>
+                            <TemplateComponent
+                                key={`tc${index}`}
+                                enableEdit={props.editMode}
+                                handleDeleteTemplateComponent={handleDeleteTemplateComponent}
+                                id={index}
+                                property={templateProperty.property}
+                                value={templateProperty.value}
+                                validationRules={templateProperty.validationRules}
+                                handlePropertiesSelect={handlePropertiesSelect}
+                                handleClassOfPropertySelect={handleClassOfPropertySelect}
+                            />
                         );
                     })}
                 {props.components && props.components.length === 0 && <i>No properties specified.</i>}
@@ -270,7 +269,7 @@ function ComponentsTab(props) {
 
 ComponentsTab.propTypes = {
     components: PropTypes.array.isRequired,
-    subTemplates: PropTypes.array.isRequired,
+    subTemplates: PropTypes.array,
     editMode: PropTypes.bool.isRequired,
     setComponents: PropTypes.func.isRequired,
     setSubTemplates: PropTypes.func.isRequired,

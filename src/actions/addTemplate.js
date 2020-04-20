@@ -32,6 +32,20 @@ export const setIsClassDescription = data => dispatch => {
     });
 };
 
+export const setHasLabelFormat = data => dispatch => {
+    dispatch({
+        type: type.TEMPLATE_SET_HAS_LABEL_FORMAT,
+        payload: data
+    });
+};
+
+export const setLabelFormat = data => dispatch => {
+    dispatch({
+        type: type.TEMPLATE_SET_LABEL_FORMAT,
+        payload: data
+    });
+};
+
 export const setPredicate = data => dispatch => {
     dispatch({
         type: type.TEMPLATE_SET_PREDICATE,
@@ -95,6 +109,7 @@ export const loadTemplate = data => dispatch => {
         getStatementsBySubject({ id: data }).then(templateStatements => {
             const templatePredicate = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE);
             const templateClass = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS);
+            const templateFormatLabel = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_LABEL_FORMAT);
 
             const templateComponents = templateStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT);
 
@@ -149,6 +164,8 @@ export const loadTemplate = data => dispatch => {
                                   label: templatePredicate.object.label
                               }
                             : {},
+                        labelFormat: templateFormatLabel ? templateFormatLabel.object.label : '',
+                        hasLabelFormat: templateFormatLabel ? true : false,
                         components: templateComponents[0],
                         ...(templateClass
                             ? {
@@ -263,6 +280,13 @@ export const saveTemplate = data => {
                 }
             }
         }
+
+        //save Label Format
+        if (data.hasLabelFormat) {
+            const labelFormatLiteral = await createLiteral(data.labelFormat);
+            promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_LABEL_FORMAT, labelFormatLiteral.id));
+        }
+
         // save template sub templates
         if (data.subTemplates && data.subTemplates.length > 0) {
             for (const subtemplate of data.subTemplates.filter(st => st.id).reverse()) {
