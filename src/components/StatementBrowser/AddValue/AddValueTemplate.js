@@ -19,6 +19,18 @@ export default function AddValueTemplate(props) {
     const isLiteral = props.predicate.templateClass && defaultDatatypes.map(t => t.id).includes(props.predicate.templateClass.id) ? true : false;
     const isTyped = props.predicate.templateClass ? true : false;
 
+    let inputFormType = 'text';
+    if (isTyped) {
+        switch (props.predicate.templateClass.id) {
+            case 'Date':
+                inputFormType = 'date';
+                break;
+            default:
+                inputFormType = 'text';
+                break;
+        }
+    }
+
     const [valueType, setValueType] = useState(isLiteral ? 'literal' : 'object');
     const [inputValue, setInputValue] = useState('');
     const [dropdownValueTypeOpen, setDropdownValueTypeOpen] = useTogggle(false);
@@ -130,6 +142,7 @@ export default function AddValueTemplate(props) {
                             <Input
                                 placeholder="Enter a value"
                                 name="literalValue"
+                                type={inputFormType}
                                 bsSize="sm"
                                 value={inputValue}
                                 onChange={(e, value) => setInputValue(e ? e.target.value : value)}

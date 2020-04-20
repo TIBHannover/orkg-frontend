@@ -179,7 +179,6 @@ export default function ValueItem(props) {
             });
         } else if (props.value.classes && props.value.classes.length > 0) {
             // load the template of this value
-            console.log(props.value.classes);
             const template = await getTemplatesByClass(props.value.classes[0].id);
 
             if (template && template.length > 0 && !resource.isFechted) {

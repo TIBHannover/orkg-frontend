@@ -1,14 +1,5 @@
 import * as type from './types.js';
-import {
-    getStatementsBySubject,
-    createResource,
-    updateResource,
-    deleteStatementsByIds,
-    createResourceStatement,
-    getStatementsBySubjects,
-    getResource,
-    createLiteral
-} from 'network';
+import { createResource, updateResource, deleteStatementsByIds, createResourceStatement, getTemplateById, createLiteral } from 'network';
 import { toast } from 'react-toastify';
 
 export const setEditMode = data => dispatch => {
@@ -105,107 +96,18 @@ export const loadTemplate = data => dispatch => {
         type: type.IS_FETCHING_TEMPLATE
     });
 
-    return getResource(data).then(template =>
-        getStatementsBySubject({ id: data }).then(templateStatements => {
-            const templatePredicate = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE);
-            const templateClass = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS);
-            const templateFormatLabel = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_LABEL_FORMAT);
-
-            const templateComponents = templateStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT);
-
-            const components = getStatementsBySubjects({ ids: templateComponents.map(property => property.object.id) }).then(componentsStatements => {
-                return componentsStatements.map(componentStatements => {
-                    const property = componentStatements.statements.find(
-                        statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY
-                    );
-                    const value = componentStatements.statements.find(
-                        statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALUE
-                    );
-                    const validationRules = componentStatements.statements.filter(
-                        statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALIDATION_RULE
-                    );
-
-                    return {
-                        id: componentStatements.id,
-                        property: property
-                            ? {
-                                  id: property.object.id,
-                                  label: property.object.label
-                              }
-                            : {},
-                        value: value
-                            ? {
-                                  id: value.object.id,
-                                  label: value.object.label
-                              }
-                            : {},
-                        validationRules:
-                            validationRules && Object.keys(validationRules).length > 0
-                                ? validationRules.reduce((obj, item) => {
-                                      const rule = item.object.label.split(/#(.+)/)[0];
-                                      const value = item.object.label.split(/#(.+)/)[1];
-                                      return Object.assign(obj, { [rule]: value });
-                                  }, {})
-                                : {}
-                    };
-                });
-            });
-
-            return Promise.all([components]).then(templateComponents => {
-                dispatch({
-                    type: type.TEMPLATE_INIT,
-                    payload: {
-                        templateID: data,
-                        label: template.label,
-                        statements: templateStatements.map(s => s.id),
-                        predicate: templatePredicate
-                            ? {
-                                  id: templatePredicate.object.id,
-                                  label: templatePredicate.object.label
-                              }
-                            : {},
-                        labelFormat: templateFormatLabel ? templateFormatLabel.object.label : '',
-                        hasLabelFormat: templateFormatLabel ? true : false,
-                        components: templateComponents[0],
-                        ...(templateClass
-                            ? {
-                                  isClassDescription: true,
-                                  class: templateClass
-                                      ? {
-                                            id: templateClass.object.id,
-                                            label: templateClass.object.label
-                                        }
-                                      : {}
-                              }
-                            : {
-                                  isClassDescription: false,
-                                  researchFields: templateStatements
-                                      .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD)
-                                      .map(statement => ({
-                                          id: statement.object.id,
-                                          label: statement.object.label
-                                      })),
-                                  researchProblems: templateStatements
-                                      .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM)
-                                      .map(statement => ({
-                                          id: statement.object.id,
-                                          label: statement.object.label
-                                      })),
-                                  subTemplates: templateStatements
-                                      .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_SUB_TEMPLATE)
-                                      .map(statement => ({
-                                          id: statement.object.id,
-                                          label: statement.object.label
-                                      }))
-                              })
-                    }
-                });
-                dispatch({
-                    type: type.DONE_FETCHING_TEMPLATE
-                });
-            });
-        })
-    );
+    return getTemplateById(data).then(templateData => {
+        dispatch({
+            type: type.TEMPLATE_INIT,
+            payload: {
+                templateID: data,
+                ...templateData
+            }
+        });
+        dispatch({
+            type: type.DONE_FETCHING_TEMPLATE
+        });
+    });
 };
 
 export const saveTemplate = data => {

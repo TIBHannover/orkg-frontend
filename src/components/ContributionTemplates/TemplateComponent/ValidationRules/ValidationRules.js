@@ -87,7 +87,6 @@ ValidationRules.propTypes = {
     value: PropTypes.object.isRequired,
     validationRules: PropTypes.object.isRequired,
     enableEdit: PropTypes.bool.isRequired,
-    handleClassOfPropertySelect: PropTypes.func.isRequired,
     updateValidationRules: PropTypes.func.isRequired,
     components: PropTypes.array.isRequired,
     setComponents: PropTypes.func.isRequired
