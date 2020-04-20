@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, FormGroup, Label, FormText } from 'reactstrap';
+import { Container, Button, FormGroup, Label, FormText, Table } from 'reactstrap';
 import { getResource, classesUrl, submitGetRequest, createClass, updateResourceClasses } from 'network';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import EditableHeader from 'components/EditableHeader';
@@ -14,6 +14,10 @@ import { toast } from 'react-toastify';
 import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
 import SameAsStatements from './SameAsStatements';
 import { orderBy } from 'lodash';
+import { getStatementsByObject } from 'network';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes.js';
+import { Link } from 'react-router-dom';
 
 class ResourceDetails extends Component {
     constructor(props) {
@@ -24,17 +28,20 @@ class ResourceDetails extends Component {
             label: '',
             isLoading: false,
             editMode: false,
-            classes: []
+            classes: [],
+            objectStatements: []
         };
     }
 
     componentDidMount() {
         this.findResource();
+        this.loadStatementByObject();
     }
 
     componentDidUpdate = prevProps => {
         if (this.props.match.params.id !== prevProps.match.params.id) {
             this.findResource();
+            this.loadStatementByObject();
         }
     };
 
@@ -86,6 +93,21 @@ class ResourceDetails extends Component {
 
     handleHeaderChange = event => {
         this.setState({ label: event.value });
+    };
+
+    loadStatementByObject = () => {
+        getStatementsByObject({
+            id: this.props.match.params.id,
+            page: 1,
+            items: 15,
+            sortBy: 'id',
+            desc: true
+        }).then(result => {
+            console.log(result);
+            this.setState({
+                objectStatements: result
+            });
+        });
     };
 
     render() {
@@ -157,7 +179,7 @@ class ResourceDetails extends Component {
                                 )}
                             </div>
                             <hr />
-                            <p>Statements:</p>
+                            <h3 className="h5">Statements</h3>
                             <div className={'clearfix'}>
                                 <StatementBrowser
                                     enableEdit={this.state.editMode}
@@ -170,6 +192,34 @@ class ResourceDetails extends Component {
 
                                 <SameAsStatements />
                             </div>
+
+                            <h3 className="h5 mt-5">Statements with this resource as object</h3>
+                            <Table size="sm">
+                                <thead>
+                                    <tr>
+                                        <th width="33%">Subject</th>
+                                        <th width="33%">Predicate</th>
+                                        <th width="33%">Object</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {this.state.objectStatements.map(statement => {
+                                        return (
+                                            <tr>
+                                                <td>
+                                                    <Link to={reverse(ROUTES.RESOURCE, { id: statement.subject.id })}>{statement.subject.label}</Link>
+                                                </td>
+                                                <td>
+                                                    <Link to={reverse(ROUTES.PREDICATE, { id: statement.predicate.id })}>
+                                                        {statement.predicate.label}
+                                                    </Link>
+                                                </td>
+                                                <td>{statement.object.label}</td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </Table>
                         </div>
                     </Container>
                 )}
