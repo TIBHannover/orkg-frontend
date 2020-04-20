@@ -94,7 +94,9 @@ function ComponentsTab(props) {
     };
 
     const toggleConfirmNewProperty = propertyLabel => {
-        newPropertyLabel(propertyLabel);
+        if (!confirmNewPropertyModal) {
+            setNewPropertyLabel(propertyLabel);
+        }
         setConfirmNewPropertyModal(prev => !prev);
     };
 
@@ -172,7 +174,6 @@ function ComponentsTab(props) {
                             toggleConfirmNewProperty={toggleConfirmNewProperty}
                             handleHideAddProperty={() => {
                                 setShowAddProperty(false);
-                                setNewPropertyLabel('');
                             }}
                             handleShowAddProperty={() => {
                                 setShowAddProperty(true);
