@@ -275,11 +275,12 @@ export default function ValueItem(props) {
                 handleChangeResource={handleChangeResource}
                 toggleEditValue={props.toggleEditValue}
                 commitChangeLabel={commitChangeLabel}
-                openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                 handleDatasetClick={handleDatasetClick}
                 enableEdit={props.enableEdit}
                 handleDeleteValue={handleDeleteValue}
                 showHelp={props.showHelp}
+                openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+                resourcesAsLinks={props.resourcesAsLinks}
             />
 
             {modal ? (
@@ -331,7 +332,8 @@ ValueItem.propTypes = {
     inline: PropTypes.bool,
     openExistingResourcesInDialog: PropTypes.bool,
     contextStyle: PropTypes.string.isRequired,
-    showHelp: PropTypes.bool
+    showHelp: PropTypes.bool,
+    resourcesAsLinks: PropTypes.bool.isRequired
 };
 
 ValueItem.defaultProps = {

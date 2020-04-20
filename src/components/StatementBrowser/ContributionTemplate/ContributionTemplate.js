@@ -52,7 +52,6 @@ export default function ContributionTemplate(props) {
                             enableEdit={shared <= 1 ? props.enableEdit : false}
                             syncBackend={props.syncBackend}
                             isLastItem={propertyIds.length === index + 1}
-                            openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                             showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                             inTemplate={true}
                             contextStyle={'Template'}
@@ -79,7 +78,6 @@ ContributionTemplate.propTypes = {
     inTemplate: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
-    openExistingResourcesInDialog: PropTypes.bool,
     isAnimated: PropTypes.bool,
 
     resources: PropTypes.object.isRequired,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, FormGroup, Label, FormText, Table } from 'reactstrap';
+import { Container, Button, FormGroup, Label, FormText, Table, Collapse } from 'reactstrap';
 import { getResource, classesUrl, submitGetRequest, createClass, updateResourceClasses } from 'network';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import EditableHeader from 'components/EditableHeader';
@@ -29,7 +29,8 @@ class ResourceDetails extends Component {
             isLoading: false,
             editMode: false,
             classes: [],
-            objectStatements: []
+            objectStatements: [],
+            objectStatementsOpen: false
         };
     }
 
@@ -103,11 +104,16 @@ class ResourceDetails extends Component {
             sortBy: 'id',
             desc: true
         }).then(result => {
-            console.log(result);
             this.setState({
                 objectStatements: result
             });
         });
+    };
+
+    toggleCollapse = () => {
+        this.setState(prevState => ({
+            objectStatementsOpen: !prevState.objectStatementsOpen
+        }));
     };
 
     render() {
@@ -188,24 +194,28 @@ class ResourceDetails extends Component {
                                     initialResourceId={this.props.match.params.id}
                                     initialResourceLabel={this.state.label}
                                     newStore={true}
+                                    propertiesAsLinks={true}
+                                    resourcesAsLinks={true}
                                 />
 
                                 <SameAsStatements />
                             </div>
-
-                            <h3 className="h5 mt-5">Statements with this resource as object</h3>
-                            <Table size="sm">
-                                <thead>
-                                    <tr>
-                                        <th width="33%">Subject</th>
-                                        <th width="33%">Predicate</th>
-                                        <th width="33%">Object</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {this.state.objectStatements.map(statement => {
-                                        return (
-                                            <tr>
+                            <Button color="darkblue" size="sm" className="mt-5" onClick={this.toggleCollapse}>
+                                {!this.state.objectStatementsOpen ? 'Show' : 'Hide'} object statements ({this.state.objectStatements.length})
+                            </Button>
+                            <Collapse isOpen={this.state.objectStatementsOpen}>
+                                <h3 className="h5 mt-3">Statements with this resource as object</h3>
+                                <Table size="sm" bordered>
+                                    <thead>
+                                        <tr>
+                                            <th width="33%">Subject</th>
+                                            <th width="33%">Predicate</th>
+                                            <th width="33%">Object</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.state.objectStatements.map(statement => (
+                                            <tr key={statement.id}>
                                                 <td>
                                                     <Link to={reverse(ROUTES.RESOURCE, { id: statement.subject.id })}>{statement.subject.label}</Link>
                                                 </td>
@@ -216,10 +226,10 @@ class ResourceDetails extends Component {
                                                 </td>
                                                 <td>{statement.object.label}</td>
                                             </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </Table>
+                                        ))}
+                                    </tbody>
+                                </Table>
+                            </Collapse>
                         </div>
                     </Container>
                 )}

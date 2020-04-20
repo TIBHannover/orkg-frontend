@@ -8,6 +8,9 @@ import Pulse from 'components/Utils/Pulse';
 import classNames from 'classnames';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import PropTypes from 'prop-types';
+import { reverse } from 'named-urls';
+import { Link } from 'react-router-dom';
+import ROUTES from 'constants/routes.js';
 
 export default function ValueItemTemplate(props) {
     const [disableHover, setDisableHover] = useState(false);
@@ -22,7 +25,7 @@ export default function ValueItemTemplate(props) {
         <ValueItemStyle>
             {!props.value.isEditing ? (
                 <div>
-                    {props.value.type === 'object' && (
+                    {props.value.type === 'object' && !props.resourcesAsLinks && (
                         <Button className="p-0 text-left" color="link" onClick={props.handleOnClick}>
                             {props.showHelp && props.value.type === 'object' ? (
                                 <Pulse content={'Click on the resource to browse it'}>
@@ -41,6 +44,10 @@ export default function ValueItemTemplate(props) {
                                 ''
                             )}
                         </Button>
+                    )}
+
+                    {props.value.type === 'object' && props.resourcesAsLinks && (
+                        <Link to={reverse(ROUTES.RESOURCE, { id: props.value.resourceId })}>{props.value.label}</Link>
                     )}
 
                     {props.value.type === 'literal' && (
@@ -129,5 +136,6 @@ ValueItemTemplate.propTypes = {
     commitChangeLabel: PropTypes.func.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
     handleDatasetClick: PropTypes.func.isRequired,
-    handleDeleteValue: PropTypes.func.isRequired
+    handleDeleteValue: PropTypes.func.isRequired,
+    resourcesAsLinks: PropTypes.bool.isRequired
 };

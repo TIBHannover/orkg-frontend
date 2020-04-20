@@ -14,7 +14,8 @@ const mapStateToProps = state => {
         selectedProperty: state.statementBrowser.selectedProperty,
         selectedResource: state.statementBrowser.selectedResource,
         properties: state.statementBrowser.properties,
-        values: state.statementBrowser.values
+        values: state.statementBrowser.values,
+        propertiesAsLinks: state.statementBrowser.propertiesAsLinks
     };
 };
 

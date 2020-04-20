@@ -18,7 +18,9 @@ const mapStateToProps = state => {
         resources: state.statementBrowser.resources,
         values: state.statementBrowser.values,
         properties: state.statementBrowser.properties,
-        selectedProperty: state.statementBrowser.selectedProperty
+        selectedProperty: state.statementBrowser.selectedProperty,
+        openExistingResourcesInDialog: state.statementBrowser.openExistingResourcesInDialog,
+        resourcesAsLinks: state.statementBrowser.resourcesAsLinks
     };
 };
 

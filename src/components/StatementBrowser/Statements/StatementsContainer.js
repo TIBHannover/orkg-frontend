@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withCookies } from 'react-cookie';
-import { initializeWithoutContribution, initializeWithResource } from 'actions/statementBrowser';
+import { initializeWithoutContribution, initializeWithResource, updateSettings } from 'actions/statementBrowser';
 import Statements from './Statements';
 
 const mapStateToProps = state => {
@@ -17,7 +17,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
     initializeWithoutContribution: data => dispatch(initializeWithoutContribution(data)),
-    initializeWithResource: data => dispatch(initializeWithResource(data))
+    initializeWithResource: data => dispatch(initializeWithResource(data)),
+    updateSettings: data => dispatch(updateSettings(data))
 });
 
 export default compose(

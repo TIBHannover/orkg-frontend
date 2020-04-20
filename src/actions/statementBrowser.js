@@ -3,6 +3,13 @@ import { guid } from '../utils';
 import * as network from '../network';
 import { orderBy } from 'lodash';
 
+export const updateSettings = data => dispatch => {
+    dispatch({
+        type: type.STATEMENT_BROWSER_UPDATE_SETTINGS,
+        payload: data
+    });
+};
+
 export const initializeWithoutContribution = data => dispatch => {
     // To initialise:
     // 1. Create a resource (the one that is requested), so properties can be connected to this

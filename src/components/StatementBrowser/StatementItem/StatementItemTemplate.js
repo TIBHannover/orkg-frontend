@@ -9,6 +9,9 @@ import StatementOptionButton from 'components/StatementBrowser/StatementOptionBu
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import { customStyles } from './style';
 import AsyncCreatableSelect from 'react-select/async-creatable';
+import { reverse } from 'named-urls';
+import { Link } from 'react-router-dom';
+import ROUTES from 'constants/routes.js';
 
 export default function StatementItemTemplate(props) {
     const [disableHover, setDisableHover] = useState(false);
@@ -17,14 +20,19 @@ export default function StatementItemTemplate(props) {
         propertyOptions: true,
         disableHover: disableHover
     });
-
     return (
         <StatementsGroupStyle className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'}`}>
             <div className={'row no-gutters'}>
                 <PropertyStyle className={`col-4 ${props.property.isEditing ? 'editingLabel' : ''}`} tabIndex="0">
                     {!props.property.isEditing ? (
                         <div>
-                            <div className={'propertyLabel'}>{props.predicateLabel}</div>
+                            <div className={'propertyLabel'}>
+                                {props.propertiesAsLinks ? (
+                                    <Link to={reverse(ROUTES.PREDICATE, { id: props.property.existingPredicateId })}>{props.predicateLabel}</Link>
+                                ) : (
+                                    props.predicateLabel
+                                )}
+                            </div>
                             {props.enableEdit && (
                                 <div className={propertyOptionsClasses}>
                                     <StatementOptionButton
@@ -86,7 +94,6 @@ export default function StatementItemTemplate(props) {
                                     enableEdit={props.enableEdit}
                                     syncBackend={props.syncBackend}
                                     propertyId={props.id}
-                                    openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                     contextStyle="Template"
                                     showHelp={props.showValueHelp && index === 0 ? true : false}
                                 />
@@ -115,6 +122,6 @@ StatementItemTemplate.propTypes = {
     toggleEditPropertyLabel: PropTypes.func.isRequired,
     inTemplate: PropTypes.bool,
     showValueHelp: PropTypes.bool,
-    openExistingResourcesInDialog: PropTypes.bool.isRequired,
-    handleDeleteStatement: PropTypes.func.isRequired
+    handleDeleteStatement: PropTypes.func.isRequired,
+    propertiesAsLinks: PropTypes.bool.isRequired
 };

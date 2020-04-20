@@ -25,6 +25,11 @@ export default function Statements(props) {
                     label: props.initialResourceLabel
                 });
             }
+            props.updateSettings({
+                openExistingResourcesInDialog: props.openExistingResourcesInDialog,
+                propertiesAsLinks: props.propertiesAsLinks,
+                resourcesAsLinks: props.resourcesAsLinks
+            });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // run only once : https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects
@@ -58,7 +63,6 @@ export default function Statements(props) {
                                         enableEdit={shared <= 1 ? props.enableEdit : false}
                                         syncBackend={props.syncBackend}
                                         isLastItem={propertyIds.length === index + 1}
-                                        openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                         showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                                     />
                                 );
@@ -74,7 +78,6 @@ export default function Statements(props) {
                                             selectedResource={props.initialResourceId}
                                             enableEdit={props.enableEdit}
                                             syncBackend={props.syncBackend}
-                                            openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                             isAnimated={property.isAnimated}
                                         />
                                     );
@@ -112,7 +115,7 @@ export default function Statements(props) {
         <>
             {props.level !== 0 ? (
                 <>
-                    <Breadcrumbs openExistingResourcesInDialog={props.openExistingResourcesInDialog} />
+                    <Breadcrumbs />
                 </>
             ) : (
                 ''
@@ -133,14 +136,16 @@ Statements.propTypes = {
     cookies: PropTypes.instanceOf(Cookies).isRequired,
     initializeWithoutContribution: PropTypes.func.isRequired,
     initializeWithResource: PropTypes.func.isRequired,
-
+    updateSettings: PropTypes.func.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
     initialResourceId: PropTypes.string,
     initialResourceLabel: PropTypes.string,
     syncBackend: PropTypes.bool.isRequired,
     newStore: PropTypes.bool,
-    templatesFound: PropTypes.bool
+    templatesFound: PropTypes.bool,
+    propertiesAsLinks: PropTypes.bool,
+    resourcesAsLinks: PropTypes.bool
 };
 
 Statements.defaultProps = {
@@ -149,5 +154,7 @@ Statements.defaultProps = {
     initialResourceLabel: null,
     syncBackend: false,
     newStore: false,
-    templatesFound: false
+    templatesFound: false,
+    propertiesAsLinks: false,
+    resourcesAsLinks: false
 };

@@ -6,6 +6,9 @@ const initialState = {
     selectedProperty: '',
     level: 0,
     isFetchingStatements: false,
+    openExistingResourcesInDialog: false,
+    propertiesAsLinks: false,
+    resourcesAsLinks: false,
     resources: {
         byId: {},
         allIds: []
@@ -331,6 +334,19 @@ export default (state = initialState, action) => {
                         ...state.resourceHistory.byId // TODO: remove the history item from byId object (not really necessary, but it is cleaner)
                     }
                 }
+            };
+        }
+
+        case type.STATEMENT_BROWSER_UPDATE_SETTINGS: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                openExistingResourcesInDialog: payload.openExistingResourcesInDialog
+                    ? payload.openExistingResourcesInDialog
+                    : state.openExistingResourcesInDialog,
+                propertiesAsLinks: payload.propertiesAsLinks ? payload.propertiesAsLinks : state.propertiesAsLinks,
+                resourcesAsLinks: payload.resourcesAsLinks ? payload.resourcesAsLinks : state.resourcesAsLinks
             };
         }
 

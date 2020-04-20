@@ -7,7 +7,8 @@ const mapStateToProps = state => {
         resourceHistory: state.statementBrowser.resourceHistory,
         level: state.statementBrowser.level,
         selectedResource: state.statementBrowser.selectedResource,
-        resources: state.statementBrowser.resources
+        resources: state.statementBrowser.resources,
+        openExistingResourcesInDialog: state.statementBrowser.openExistingResourcesInDialog
     };
 };
 
