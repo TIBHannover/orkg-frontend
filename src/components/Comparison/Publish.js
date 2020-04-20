@@ -37,22 +37,28 @@ class Publish extends Component {
     handleSubmit = async e => {
         this.setState({ isLoading: true });
         try {
-            const contributionIds = getContributionIdsFromUrl(this.props.url.substring(this.props.url.indexOf('?')));
-            const comparison = await getComparison({ contributionIds: contributionIds, save_response: true });
-            const titleResponse = await createResource(this.state.title, [process.env.REACT_APP_CLASSES_COMPARISON]);
-            const resourceId = titleResponse.id;
-            const descriptionResponse = await createLiteral(this.state.description);
-            const referenceResponse = await createLiteral(this.state.reference);
-            const link = queryString.parse(this.props.url).response_hash
-                ? this.props.url
-                : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${comparison.response_hash}`;
-            const urlResponse = await createLiteral(link);
-            await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_DESCRIPTION, descriptionResponse.id);
-            await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_URL, urlResponse.id);
-            await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_REFERENCE, referenceResponse.id);
-            toast.success('Comparison saved successfully');
-            this.setState({ isLoading: false, comparisonId: resourceId });
-            this.props.updateComparisonMetadata(this.state.title, this.state.description, this.state.reference);
+            if (this.state.title && this.state.title.trim() !== '' && this.state.description && this.state.description.trim() !== '') {
+                const contributionIds = getContributionIdsFromUrl(this.props.url.substring(this.props.url.indexOf('?')));
+                const comparison = await getComparison({ contributionIds: contributionIds, save_response: true });
+                const titleResponse = await createResource(this.state.title, [process.env.REACT_APP_CLASSES_COMPARISON]);
+                const resourceId = titleResponse.id;
+                const descriptionResponse = await createLiteral(this.state.description);
+                await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_DESCRIPTION, descriptionResponse.id);
+                if (this.state.reference && this.state.reference.trim() !== '') {
+                    const referenceResponse = await createLiteral(this.state.reference);
+                    await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_REFERENCE, referenceResponse.id);
+                }
+                const link = queryString.parse(this.props.url).response_hash
+                    ? this.props.url
+                    : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${comparison.response_hash}`;
+                const urlResponse = await createLiteral(link);
+                await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_URL, urlResponse.id);
+                toast.success('Comparison saved successfully');
+                this.setState({ isLoading: false, comparisonId: resourceId });
+                this.props.updateComparisonMetadata(this.state.title, this.state.description, this.state.reference);
+            } else {
+                throw Error('Please enter a title and a description');
+            }
         } catch (error) {
             console.error(error);
             toast.error(`Error publishing a comparison : ${error.message}`);
