@@ -18,6 +18,8 @@ const mapStateToProps = state => {
         resources: state.statementBrowser.resources,
         values: state.statementBrowser.values,
         properties: state.statementBrowser.properties,
+        classes: state.statementBrowser.classes,
+        templates: state.statementBrowser.templates,
         selectedProperty: state.statementBrowser.selectedProperty
     };
 };

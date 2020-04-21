@@ -137,6 +137,50 @@ export default function StatementItem(props) {
         }
     };
 
+    const getComponents = () => {
+        // filter components of this predicate
+        const components = props.resourceComponents.filter(c => c.property.id === props.property.existingPredicateId);
+        /*
+        console.log('COMPONENTS');
+        console.log(props.resources.byId[props.resourceId ? props.resourceId : props.selectedResource]);
+        let resource = props.resources.byId[props.resourceId ? props.resourceId : props.selectedResource];
+        console.log(resource);
+        console.log(resource.classes);
+        console.log(resource.templateId);
+        // get template components
+        // get all template ids
+        let templateIds = resource.templateId ? [resource.templateId] : [];
+        resource.classes.map(c => {
+            console.log(c);
+            if (props.classes[c]) {
+                console.log('hello class exists');
+                console.log(props.classes[c].templateIds);
+                templateIds = templateIds.concat(props.classes[c].templateIds);
+            }
+        });
+        templateIds = uniq(templateIds);
+        console.log('loaded templates' + templateIds);
+
+        let components = [];
+        // get components of this statement predicate
+        for (const templateId of templateIds) {
+            const template = props.templates[templateId];
+            console.log(templateIds);
+            console.log(template);
+            if (template && template.components) {
+                components = components.concat(template.components.filter(c => c.property.id === props.property.existingPredicateId));
+                console.group('TTTTTT');
+                console.log(components);
+                console.groupEnd();
+            } else {
+                console.log('no components for the temaplte');
+            }
+        }
+        console.log(components);
+        */
+        return components;
+    };
+
     return (
         <StatementItemTemplate
             togglePropertyCollapse={props.togglePropertyCollapse}
@@ -155,6 +199,7 @@ export default function StatementItem(props) {
             showValueHelp={props.showValueHelp}
             openExistingResourcesInDialog={props.openExistingResourcesInDialog}
             handleDeleteStatement={handleDeleteStatement}
+            typeComponents={getComponents()}
         />
     );
 }
@@ -168,6 +213,11 @@ StatementItem.propTypes = {
     isLastItem: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
     showValueHelp: PropTypes.bool,
+
+    resourceComponents: PropTypes.array.isRequired,
+    templates: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
+    resources: PropTypes.object.isRequired,
 
     contextStyle: PropTypes.string.isRequired,
     resourceId: PropTypes.string,

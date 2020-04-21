@@ -21,7 +21,9 @@ const initialState = {
     resourceHistory: {
         byId: {},
         allIds: []
-    }
+    },
+    templates: {},
+    classes: {}
 };
 
 export default (state = initialState, action) => {
@@ -35,13 +37,68 @@ export default (state = initialState, action) => {
                     label: payload.label ? payload.label : '',
                     existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
                     shared: payload.shared ? payload.shared : 1,
-                    propertyIds: []
+                    propertyIds: [],
+                    classes: []
                 }
             }));
 
             newState = dotProp.set(newState, 'resources.allIds', ids => [...ids, payload.resourceId]);
 
             return newState;
+        }
+
+        case type.CREATE_TEMPLATE: {
+            const { payload } = action;
+            let newState = dotProp.set(state, `templates.${payload.id}`, payload);
+            if (payload.isClassDescription) {
+                if (dotProp.get(state, `classes.${payload.class.id}`) && dotProp.get(state, `classes.${payload.class.id}.templateIds`)) {
+                    newState = dotProp.set(newState, `classes.${payload.class.id}.templateIds`, ids => [...ids, payload.id]);
+                } else {
+                    newState = dotProp.set(newState, `classes.${payload.class.id}`, { ...payload.class, templateIds: [payload.id] });
+                }
+            }
+            return newState;
+        }
+
+        case type.IS_FETCHING_TEMPLATES_OF_CLASS: {
+            const { classID } = action;
+
+            const newState = dotProp.set(state, `classes.${classID}.isFetching`, true);
+
+            return {
+                ...newState
+            };
+        }
+
+        case type.DONE_FETCHING_TEMPLATES_OF_CLASS: {
+            const { classID } = action;
+
+            let newState = dotProp.set(state, `classes.${classID}.isFetching`, false);
+            newState = dotProp.set(newState, `classes.${classID}.templateIds`, []); // in case there is no template for this class
+
+            return {
+                ...newState
+            };
+        }
+
+        case type.IS_FETCHING_TEMPLATE_DATA: {
+            const { templateID } = action;
+
+            const newState = dotProp.set(state, `templates.${templateID}.isFetching`, true);
+
+            return {
+                ...newState
+            };
+        }
+
+        case type.DONE_FETCHING_TEMPLATE_DATA: {
+            const { templateID } = action;
+
+            const newState = dotProp.set(state, `templates.${templateID}.isFetching`, false);
+
+            return {
+                ...newState
+            };
         }
 
         case type.TOGGLE_PROPERTY_COLLAPSE: {
@@ -203,7 +260,8 @@ export default (state = initialState, action) => {
                             label: payload.label,
                             shared: payload.shared ? payload.shared : 1,
                             propertyIds: [],
-                            templateId: payload.templateId ? payload.templateId : null
+                            templateId: payload.templateId ? payload.templateId : null,
+                            classes: payload.classes ? payload.classes : []
                         }
                     }));
                 }
@@ -252,7 +310,8 @@ export default (state = initialState, action) => {
                             id: payload.resourceId,
                             label: payload.label,
                             shared: payload.shared ? payload.shared : 1,
-                            propertyIds: []
+                            propertyIds: [],
+                            classes: payload.classes ? payload.classes : []
                         }
                     }));
                 }
@@ -392,7 +451,8 @@ export default (state = initialState, action) => {
         case type.SET_STATEMENT_IS_FECHTED: {
             const { resourceId } = action;
 
-            const newState = dotProp.set(state, `resources.byId.${resourceId}.isFechted`, true);
+            let newState = dotProp.set(state, `resources.byId.${resourceId}.isFechted`, true);
+            newState = dotProp.set(newState, `resources.byId.${resourceId}.isFetching`, false);
 
             return {
                 ...newState
@@ -400,9 +460,14 @@ export default (state = initialState, action) => {
         }
 
         case type.IS_FETCHING_STATEMENTS: {
+            const { resourceId } = action;
+            let newState = dotProp.set(state, `isFetchingStatements`, true);
+            if (resourceId) {
+                newState = dotProp.set(newState, `resources.byId.${resourceId}.isFetching`, true);
+            }
+
             return {
-                ...state,
-                isFetchingStatements: true
+                ...newState
             };
         }
 

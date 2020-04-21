@@ -142,6 +142,9 @@ export const createValue = data => dispatch => {
             ...data
         }
     });
+
+    // dispatch loading classes
+    data.classes && data.classes.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
 };
 
 export const toggleEditValue = data => dispatch => {
@@ -198,10 +201,46 @@ export const createResource = data => dispatch => {
     });
 };
 
+/*
+    Fetch template by ID
+*/
+function shouldFetchTemplate(state, templateID) {
+    const template = state.statementBrowser.templates[templateID];
+    if (!template) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+export function fetchTemplateIfNeeded(templateID) {
+    return (dispatch, getState) => {
+        if (shouldFetchTemplate(getState(), templateID)) {
+            dispatch({
+                type: type.IS_FETCHING_TEMPLATE_DATA,
+                templateID
+            });
+            return network.getTemplateById(templateID).then(template => {
+                // Add template to the global state
+                dispatch({
+                    type: type.DONE_FETCHING_TEMPLATE_DATA,
+                    templateID
+                });
+                dispatch({ type: type.CREATE_TEMPLATE, payload: template });
+                return template;
+            });
+        } else {
+            // Let the calling code know there's nothing to wait for.
+            return Promise.resolve();
+        }
+    };
+}
+
 export const setTemplateOfResource = data => {
     const templateId = data.templateId;
-    return dispatch => {
-        return network.getTemplateById(templateId).then(template => {
+    return (dispatch, getState) => {
+        return dispatch(fetchTemplateIfNeeded(templateId)).then(() => {
+            const template = getState().statementBrowser.templates[templateId];
             dispatch({
                 type: type.SET_TEMPLATE_OF_RESOURCE,
                 payload: { ...data, template }
@@ -209,6 +248,39 @@ export const setTemplateOfResource = data => {
         });
     };
 };
+
+/*
+    Fetch templates by class ID
+*/
+function shouldFetchTemplatesofClass(state, classID) {
+    const classObj = state.statementBrowser.classes[classID];
+    if (!classObj) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+export function fetchTemplatesofClassIfNeeded(classID) {
+    return (dispatch, getState) => {
+        if (shouldFetchTemplatesofClass(getState(), classID)) {
+            dispatch({
+                type: type.IS_FETCHING_TEMPLATES_OF_CLASS,
+                classID
+            });
+            return network.getTemplatesByClass(classID).then(templateIds => {
+                dispatch({
+                    type: type.DONE_FETCHING_TEMPLATES_OF_CLASS,
+                    classID
+                });
+                return templateIds.map(tempalteId => dispatch(fetchTemplateIfNeeded(tempalteId)));
+            });
+        } else {
+            // Let the calling code know there's nothing to wait for.
+            return Promise.resolve();
+        }
+    };
+}
 
 export const selectResource = data => dispatch => {
     // use redux thunk for async action, for capturing the resource properties
@@ -320,7 +392,8 @@ export const fetchStatementsForResource = data => {
 
     return dispatch => {
         dispatch({
-            type: type.IS_FETCHING_STATEMENTS
+            type: type.IS_FETCHING_STATEMENTS,
+            resourceId: resourceId
         });
         return network.getStatementsBySubject({ id: existingResourceId }).then(
             response => {
@@ -394,6 +467,9 @@ export const fetchStatementsForResource = data => {
                                 shared: statement.object.shared
                             })
                         );
+
+                        //Load template of objects
+                        statement.object.classes && statement.object.classes.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
                     }
                 }
 

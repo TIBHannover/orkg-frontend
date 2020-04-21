@@ -25,9 +25,9 @@ export default function StatementItemTemplate(props) {
                     {!props.property.isEditing ? (
                         <div>
                             <div className={'propertyLabel'}>
-                                {props.predicateLabel}{' '}
-                                {props.property.templateClass && ['Date', 'Number', 'String'].includes(props.property.templateClass.id) && (
-                                    <small>[{props.property.templateClass.label}]</small>
+                                {props.predicateLabel} {}
+                                {props.enableEdit && props.typeComponents && props.typeComponents.length > 0 && (
+                                    <small>[{props.typeComponents.map(c => c.value.label).join(',')}]</small>
                                 )}
                             </div>
                             {props.enableEdit && (
@@ -94,10 +94,18 @@ export default function StatementItemTemplate(props) {
                                     openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                     contextStyle="Template"
                                     showHelp={props.showValueHelp && index === 0 ? true : false}
+                                    typeComponents={props.typeComponents}
                                 />
                             );
                         })}
-                        {props.enableEdit && <AddValue contextStyle="Template" propertyId={props.id} syncBackend={props.syncBackend} />}
+                        {props.enableEdit && (
+                            <AddValue
+                                typeComponents={props.typeComponents}
+                                contextStyle="Template"
+                                propertyId={props.id}
+                                syncBackend={props.syncBackend}
+                            />
+                        )}
                     </ListGroup>
                 </ValuesStyle>
             </div>
@@ -121,5 +129,6 @@ StatementItemTemplate.propTypes = {
     inTemplate: PropTypes.bool,
     showValueHelp: PropTypes.bool,
     openExistingResourcesInDialog: PropTypes.bool.isRequired,
-    handleDeleteStatement: PropTypes.func.isRequired
+    handleDeleteStatement: PropTypes.func.isRequired,
+    typeComponents: PropTypes.array.isRequired
 };

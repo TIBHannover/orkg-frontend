@@ -32,13 +32,21 @@ export default class AddValue extends Component {
     };
 
     handleAddValue = async (valueType, inputValue) => {
+        const valueClassType =
+            this.props.typeComponents &&
+            this.props.typeComponents.length > 0 &&
+            this.props.typeComponents[0].value &&
+            this.props.typeComponents[0].value.id
+                ? this.props.typeComponents[0].value
+                : null;
+
         if (this.props.syncBackend) {
             const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
             let newObject = null;
             let newStatement = null;
             switch (valueType) {
                 case 'object':
-                    newObject = await createResource(inputValue);
+                    newObject = await createResource(inputValue, valueClassType ? [valueClassType.id] : []);
                     newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
                     break;
                 case 'property':
@@ -56,7 +64,8 @@ export default class AddValue extends Component {
                 existingResourceId: newObject.id,
                 isExistingValue: true,
                 statementId: newStatement.id,
-                shared: newObject.shared
+                shared: newObject.shared,
+                classes: valueClassType ? [valueClassType.id] : []
             });
         } else {
             const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
@@ -65,7 +74,7 @@ export default class AddValue extends Component {
                 type: valueType,
                 propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
                 templateId: predicate.templateId ? predicate.templateId : null,
-                classes: predicate.templateClass ? [predicate.templateClass] : [],
+                classes: valueClassType ? [valueClassType.id] : [],
                 shared: 1
             });
         }
@@ -85,6 +94,7 @@ export default class AddValue extends Component {
                     handleInputChange={this.handleInputChange}
                     newResources={this.props.newResources}
                     handleAddValue={this.handleAddValue}
+                    typeComponents={this.props.typeComponents}
                 />
             </>
         );
@@ -100,7 +110,9 @@ AddValue.propTypes = {
     syncBackend: PropTypes.bool.isRequired,
     properties: PropTypes.object.isRequired,
     contextStyle: PropTypes.string.isRequired,
-    createProperty: PropTypes.func.isRequired
+    createProperty: PropTypes.func.isRequired,
+
+    typeComponents: PropTypes.array.isRequired
 };
 
 AddValue.defaultProps = {

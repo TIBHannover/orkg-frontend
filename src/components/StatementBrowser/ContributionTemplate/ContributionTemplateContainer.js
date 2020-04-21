@@ -7,7 +7,9 @@ import { withCookies } from 'react-cookie';
 const mapStateToProps = state => {
     return {
         properties: state.statementBrowser.properties,
-        resources: state.statementBrowser.resources
+        resources: state.statementBrowser.resources,
+        classes: state.statementBrowser.classes,
+        templates: state.statementBrowser.templates
     };
 };
 

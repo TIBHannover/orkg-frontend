@@ -1,10 +1,9 @@
 import Joi from '@hapi/joi';
 
-export default function validationSchema(predicate) {
-    console.log(predicate.validationRules);
+export default function validationSchema(component) {
     let schema;
-    if (predicate.templateClass) {
-        switch (predicate.templateClass.id) {
+    if (component.value) {
+        switch (component.value.id) {
             case 'Date':
                 schema = Joi.date();
                 break;
@@ -17,21 +16,17 @@ export default function validationSchema(predicate) {
             default:
                 break;
         }
-        for (const key in predicate.validationRules) {
-            if (predicate.validationRules.hasOwnProperty(key)) {
+        for (const key in component.validationRules) {
+            if (component.validationRules.hasOwnProperty(key)) {
                 switch (key) {
                     case 'min':
-                        console.log(predicate.validationRules[key]);
-                        schema = schema.min(parseFloat(predicate.validationRules[key]));
+                        schema = schema.min(parseFloat(component.validationRules[key]));
                         break;
                     case 'max':
-                        console.log(predicate.validationRules[key]);
-                        schema = schema.max(parseFloat(predicate.validationRules[key]));
+                        schema = schema.max(parseFloat(component.validationRules[key]));
                         break;
                     case 'pattern':
-                        console.log(predicate.validationRules[key]);
-                        console.log(schema);
-                        schema = schema.regex(new RegExp(predicate.validationRules[key]));
+                        schema = schema.regex(new RegExp(component.validationRules[key]));
                         break;
                     default:
                         break;
@@ -39,5 +34,5 @@ export default function validationSchema(predicate) {
             }
         }
     }
-    return schema.label(predicate.label);
+    return schema.label(component.property.label);
 }

@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react';
-import { ListGroup } from 'reactstrap';
+import { ListGroup, ListGroupItem, Badge } from 'reactstrap';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItemContainer';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddPropertyContainer';
 import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/BreadcrumbsContainer';
 import ContributionTemplate from 'components/StatementBrowser/ContributionTemplate/ContributionTemplateContainer';
+import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import NoData from 'components/StatementBrowser/NoData/NoData';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
 import { Cookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { uniq } from 'lodash';
 import PropTypes from 'prop-types';
 
 export default function Statements(props) {
@@ -29,6 +31,38 @@ export default function Statements(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // run only once : https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects
 
+    const getComponents = () => {
+        const resource = props.resources.byId[props.selectedResource];
+        // get template components
+        // get all template ids
+        let templateIds = resource.templateId ? [resource.templateId] : [];
+        for (const c of resource.classes) {
+            if (props.classes[c]) {
+                templateIds = templateIds.concat(props.classes[c].templateIds);
+            }
+        }
+        templateIds = uniq(templateIds);
+
+        let components = [];
+        // get components of this statement predicate
+        for (const templateId of templateIds) {
+            const template = props.templates[templateId];
+            if (template && template.components) {
+                components = components.concat(template.components);
+            }
+        }
+        return components;
+    };
+
+    const suggestedProperties = () => {
+        let propertyIds = props.resources.byId[props.selectedResource].propertyIds;
+        propertyIds = propertyIds.map(propertyId => {
+            const property = props.properties.byId[propertyId];
+            return property.existingPredicateId;
+        });
+        return getComponents().filter(x => !propertyIds.includes(x.property.id));
+    };
+
     const statements = () => {
         let propertyIds = [];
         let shared = 1;
@@ -44,7 +78,7 @@ export default function Statements(props) {
 
         return (
             <ListGroup className={'listGroupEnlarge'}>
-                {!props.isFetchingStatements ? (
+                {props.selectedResource && !props.resources.byId[props.selectedResource].isFetching ? (
                     propertyIds.length > 0 ? (
                         propertyIds.map((propertyId, index) => {
                             const property = props.properties.byId[propertyId];
@@ -60,6 +94,7 @@ export default function Statements(props) {
                                         isLastItem={propertyIds.length === index + 1}
                                         openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                         showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
+                                        resourceComponents={getComponents()}
                                     />
                                 );
                             } else {
@@ -90,7 +125,37 @@ export default function Statements(props) {
                     </StyledStatementItem>
                 )}
 
-                {(shared <= 1) & props.enableEdit ? <AddProperty syncBackend={props.syncBackend} /> : ''}
+                {shared <= 1 && props.enableEdit ? <AddProperty syncBackend={props.syncBackend} /> : ''}
+                {shared <= 1 && props.enableEdit && suggestedProperties().length > 0 && (
+                    <>
+                        <p className="text-muted mt-4">Suggested properties</p>
+                        <ListGroup>
+                            {suggestedProperties().map(c => (
+                                <ListGroupItem>
+                                    <StatementOptionButton
+                                        className="mr-2"
+                                        title={'Add property'}
+                                        icon={faPlus}
+                                        action={() => {
+                                            console.log('add property');
+                                            props.createProperty({
+                                                resourceId: props.selectedResource,
+                                                existingPredicateId: c.property.id,
+                                                label: c.property.label,
+                                                isTemplate: false,
+                                                createAndSelect: true
+                                            });
+                                        }}
+                                    />
+                                    {c.property.label}
+                                    <Badge pill className="ml-2">
+                                        {c.value.label}
+                                    </Badge>
+                                </ListGroupItem>
+                            ))}
+                        </ListGroup>
+                    </>
+                )}
             </ListGroup>
         );
     };
@@ -133,6 +198,10 @@ Statements.propTypes = {
     cookies: PropTypes.instanceOf(Cookies).isRequired,
     initializeWithoutContribution: PropTypes.func.isRequired,
     initializeWithResource: PropTypes.func.isRequired,
+
+    classes: PropTypes.object.isRequired,
+    templates: PropTypes.object.isRequired,
+    createProperty: PropTypes.func.isRequired,
 
     enableEdit: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,

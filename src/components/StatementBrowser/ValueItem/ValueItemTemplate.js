@@ -22,10 +22,31 @@ export default function ValueItemTemplate(props) {
         disableHover: disableHover
     });
 
+    //const isLiteral = props.predicate.templateClass && defaultDatatypes.map(t => t.id).includes(props.predicate.templateClass.id) ? true : false;
+    const isTyped =
+        props.typeComponents && props.typeComponents.length > 0 && props.typeComponents[0].value && props.typeComponents[0].value.id ? true : false;
+    // get value type (valueClassType == templateClass)
+
+    const valueClassType =
+        props.typeComponents && props.typeComponents.length > 0 && props.typeComponents[0].value && props.typeComponents[0].value.id
+            ? props.typeComponents[0].value
+            : null;
+
+    let inputFormType = 'text';
+    if (isTyped) {
+        switch (valueClassType.id) {
+            case 'Date':
+                inputFormType = 'date';
+                break;
+            default:
+                inputFormType = 'text';
+                break;
+        }
+    }
+
     const validateValue = () => {
-        console.log(props.predicate.validationRules);
-        if (props.predicate.templateClass && ['Date', 'Number', 'String'].includes(props.predicate.templateClass.id)) {
-            const schema = validationSchema(props.predicate);
+        if (valueClassType && ['Date', 'Number', 'String'].includes(valueClassType.id)) {
+            const schema = validationSchema(props.typeComponents[0]);
             const { error, value } = schema.validate(draftLabel);
             if (error) {
                 setFormFeedback(error.message);
@@ -54,14 +75,14 @@ export default function ValueItemTemplate(props) {
         <ValueItemStyle>
             {!props.value.isEditing ? (
                 <div>
-                    {props.value.type === 'object' && (
+                    {props.resource && !props.resource.isFetching && props.value.type === 'object' && (
                         <Button className="p-0 text-left" color="link" onClick={props.handleOnClick}>
                             {props.showHelp && props.value.type === 'object' ? (
                                 <Pulse content={'Click on the resource to browse it'}>
                                     <ValuePlugins type={'resource'}>{props.value.label}</ValuePlugins>
                                 </Pulse>
                             ) : (
-                                <ValuePlugins type={'resource'}>{props.value.label}</ValuePlugins>
+                                <ValuePlugins type={'resource'}>{props.getLabel()}</ValuePlugins>
                             )}
 
                             {props.resource && props.resource.existingResourceId && props.openExistingResourcesInDialog ? (
@@ -74,7 +95,7 @@ export default function ValueItemTemplate(props) {
                             )}
                         </Button>
                     )}
-
+                    {props.resource && props.resource.isFetching && props.value.type === 'object' && 'Loading...'}
                     {props.value.type === 'literal' && (
                         <div className={'literalLabel'}>
                             <ValuePlugins type={'literal'}>{props.value.label}</ValuePlugins>
@@ -118,6 +139,7 @@ export default function ValueItemTemplate(props) {
                     <InputGroup size="sm">
                         <Input
                             bsSize="sm"
+                            type={inputFormType}
                             value={draftLabel}
                             invalid={!isValid}
                             onChange={e => setDraftLabel(e.target.value)}
@@ -148,7 +170,10 @@ ValueItemTemplate.propTypes = {
     showHelp: PropTypes.bool,
     enableEdit: PropTypes.bool.isRequired,
     loadOptions: PropTypes.func.isRequired,
+    getLabel: PropTypes.func.isRequired,
     predicate: PropTypes.object.isRequired,
+
+    typeComponents: PropTypes.array.isRequired,
 
     handleChangeResource: PropTypes.func.isRequired,
     toggleEditValue: PropTypes.func.isRequired,

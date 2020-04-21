@@ -476,44 +476,46 @@ export const getTemplateById = templateId => {
 
             const templateComponents = templateStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT);
 
-            const components = getStatementsBySubjects({ ids: templateComponents.map(property => property.object.id) }).then(componentsStatements => {
-                return componentsStatements.map(componentStatements => {
-                    const property = componentStatements.statements.find(
-                        statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY
-                    );
-                    const value = componentStatements.statements.find(
-                        statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALUE
-                    );
+            const components = getStatementsBySubjects({ ids: templateComponents.map(component => component.object.id) }).then(
+                componentsStatements => {
+                    return componentsStatements.map(componentStatements => {
+                        const property = componentStatements.statements.find(
+                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY
+                        );
+                        const value = componentStatements.statements.find(
+                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALUE
+                        );
 
-                    const validationRules = componentStatements.statements.filter(
-                        statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALIDATION_RULE
-                    );
+                        const validationRules = componentStatements.statements.filter(
+                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALIDATION_RULE
+                        );
 
-                    return {
-                        id: componentStatements.id,
-                        property: property
-                            ? {
-                                  id: property.object.id,
-                                  label: property.object.label
-                              }
-                            : {},
-                        value: value
-                            ? {
-                                  id: value.object.id,
-                                  label: value.object.label
-                              }
-                            : {},
-                        validationRules:
-                            validationRules && Object.keys(validationRules).length > 0
-                                ? validationRules.reduce((obj, item) => {
-                                      const rule = item.object.label.split(/#(.+)/)[0];
-                                      const value = item.object.label.split(/#(.+)/)[1];
-                                      return Object.assign(obj, { [rule]: value });
-                                  }, {})
-                                : {}
-                    };
-                });
-            });
+                        return {
+                            id: componentStatements.id,
+                            property: property
+                                ? {
+                                      id: property.object.id,
+                                      label: property.object.label
+                                  }
+                                : {},
+                            value: value
+                                ? {
+                                      id: value.object.id,
+                                      label: value.object.label
+                                  }
+                                : {},
+                            validationRules:
+                                validationRules && Object.keys(validationRules).length > 0
+                                    ? validationRules.reduce((obj, item) => {
+                                          const rule = item.object.label.split(/#(.+)/)[0];
+                                          const value = item.object.label.split(/#(.+)/)[1];
+                                          return Object.assign(obj, { [rule]: value });
+                                      }, {})
+                                    : {}
+                        };
+                    });
+                }
+            );
 
             return Promise.all([components]).then(templateComponents => {
                 const subTemplates = templateStatements
@@ -618,5 +620,5 @@ export const getTemplatesByClass = classID => {
     return getStatementsByObjectAndPredicate({
         objectId: classID,
         predicateId: process.env.REACT_APP_TEMPLATE_OF_CLASS
-    }).then(statements => Promise.all(statements.map(st => getTemplateById(st.subject.id))));
+    }).then(statements => Promise.all(statements.map(st => st.subject.id)));
 };

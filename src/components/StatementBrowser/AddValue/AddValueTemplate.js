@@ -16,12 +16,27 @@ export default function AddValueTemplate(props) {
     const literalInputRef = useRef(null);
     const resourceInputRef = useRef(null);
 
-    const isLiteral = props.predicate.templateClass && defaultDatatypes.map(t => t.id).includes(props.predicate.templateClass.id) ? true : false;
-    const isTyped = props.predicate.templateClass ? true : false;
+    // Get the typing
+    let isLiteral = false;
+    for (const typeId of props.typeComponents.map(tc => tc.value.id)) {
+        if (defaultDatatypes.map(t => t.id).includes(typeId)) {
+            isLiteral = true;
+            break;
+        }
+    }
+    //const isLiteral = props.predicate.templateClass && defaultDatatypes.map(t => t.id).includes(props.predicate.templateClass.id) ? true : false;
+    const isTyped =
+        props.typeComponents && props.typeComponents.length > 0 && props.typeComponents[0].value && props.typeComponents[0].value.id ? true : false;
+    // get value type (valueClassType == templateClass)
+
+    const valueClassType =
+        props.typeComponents && props.typeComponents.length > 0 && props.typeComponents[0].value && props.typeComponents[0].value.id
+            ? props.typeComponents[0].value
+            : null;
 
     let inputFormType = 'text';
     if (isTyped) {
-        switch (props.predicate.templateClass.id) {
+        switch (valueClassType.id) {
             case 'Date':
                 inputFormType = 'date';
                 break;
@@ -58,8 +73,8 @@ export default function AddValueTemplate(props) {
     };
 
     const validateValue = () => {
-        if (props.predicate.templateClass && ['Date', 'Number', 'String'].includes(props.predicate.templateClass.id)) {
-            const schema = validationSchema(props.predicate);
+        if (valueClassType && ['Date', 'Number', 'String'].includes(valueClassType.id)) {
+            const schema = validationSchema(props.typeComponents[0]);
             const { error, value } = schema.validate(inputValue);
             if (error) {
                 setFormFeedback(error.message);
@@ -115,7 +130,7 @@ export default function AddValueTemplate(props) {
                             <AutoComplete
                                 requestUrl={resourcesUrl}
                                 excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM},${process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE}`}
-                                optionsClass={props.predicate.templateClass ? props.predicate.templateClass.id : undefined}
+                                optionsClass={valueClassType ? valueClassType.id : undefined}
                                 placeholder="Enter a resource"
                                 onItemSelected={i => {
                                     props.handleValueSelect(valueType, i);
@@ -190,5 +205,7 @@ AddValueTemplate.propTypes = {
     predicate: PropTypes.object.isRequired,
     handleValueSelect: PropTypes.func.isRequired,
     newResources: PropTypes.array.isRequired,
-    handleAddValue: PropTypes.func.isRequired
+    handleAddValue: PropTypes.func.isRequired,
+
+    typeComponents: PropTypes.array.isRequired
 };

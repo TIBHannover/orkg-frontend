@@ -5,6 +5,7 @@ import TemplateHeader from 'components/StatementBrowser/TemplateHeader/TemplateH
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItemContainer';
 import { AddPropertWrapper, AnimationContainer } from './styled';
 import { Cookies } from 'react-cookie';
+import { uniq } from 'lodash';
 import PropTypes from 'prop-types';
 
 export default function ContributionTemplate(props) {
@@ -19,6 +20,29 @@ export default function ContributionTemplate(props) {
         const property = props.properties.byId[propertyId];
         return property.existingPredicateId !== process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE;
     });
+
+    const getComponents = () => {
+        const resource = props.resources.byId[props.value.resourceId];
+        // get template components
+        // get all template ids
+        let templateIds = resource.templateId ? [resource.templateId] : [];
+        for (const c of resource.classes) {
+            if (props.classes[c]) {
+                templateIds = templateIds.concat(props.classes[c].templateIds);
+            }
+        }
+        templateIds = uniq(templateIds);
+
+        let components = [];
+        // get components of this statement predicate
+        for (const templateId of templateIds) {
+            const template = props.templates[templateId];
+            if (template && template.components) {
+                components = components.concat(template.components);
+            }
+        }
+        return components;
+    };
 
     return (
         <AnimationContainer
@@ -57,6 +81,7 @@ export default function ContributionTemplate(props) {
                             inTemplate={true}
                             contextStyle={'Template'}
                             resourceId={props.value.resourceId}
+                            resourceComponents={getComponents()}
                         />
                     );
                 })}
@@ -81,6 +106,9 @@ ContributionTemplate.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
     isAnimated: PropTypes.bool,
+
+    classes: PropTypes.object.isRequired,
+    templates: PropTypes.object.isRequired,
 
     resources: PropTypes.object.isRequired,
     properties: PropTypes.object.isRequired,

@@ -8,11 +8,12 @@ import {
     resourcesUrl,
     updateStatement,
     createResource as createResourceAPICall,
-    updateResource,
-    getTemplatesByClass
+    updateResource
 } from 'network';
 import { toast } from 'react-toastify';
 import { guid } from 'utils';
+import { uniq } from 'lodash';
+import format from 'string-format';
 import ValueItemTemplate from './ValueItemTemplate';
 import PropTypes from 'prop-types';
 
@@ -115,29 +116,12 @@ export default function ValueItem(props) {
     const handleResourceClick = async e => {
         const resource = props.resources.byId[props.value.resourceId];
         const existingResourceId = resource.existingResourceId;
-        const templateId = resource.templateId;
 
         if (existingResourceId && !resource.isFechted) {
             props.fetchStatementsForResource({
                 resourceId: props.value.resourceId,
                 existingResourceId
             });
-        } else if (templateId && !resource.isFechted) {
-            props.fetchStructureForTemplate({
-                resourceId: props.value.resourceId,
-                templateId
-            });
-        } else if (props.value.classes && props.value.classes.length > 0) {
-            // load the template of this value
-            console.log(props.value.classes);
-            const template = await getTemplatesByClass(props.value.classes[0].id ? props.value.classes[0].id : props.value.classes[0]);
-
-            if (template && template.length > 0 && !resource.isFechted) {
-                props.fetchStructureForTemplate({
-                    resourceId: props.value.resourceId,
-                    templateId: template[0].id
-                });
-            }
         }
 
         props.selectResource({
@@ -145,7 +129,6 @@ export default function ValueItem(props) {
             resourceId: props.value.resourceId,
             label: props.value.label
         });
-        console.log(props.value);
     };
 
     const handleDatasetResourceClick = ressource => {
@@ -177,16 +160,6 @@ export default function ValueItem(props) {
                 resourceId: props.value.resourceId,
                 templateId
             });
-        } else if (props.value.classes && props.value.classes.length > 0) {
-            // load the template of this value
-            const template = await getTemplatesByClass(props.value.classes[0].id);
-
-            if (template && template.length > 0 && !resource.isFechted) {
-                props.fetchStructureForTemplate({
-                    resourceId: props.value.resourceId,
-                    templateId: template[0].id
-                });
-            }
         }
 
         // Load template of this class
@@ -285,6 +258,62 @@ export default function ValueItem(props) {
         handleOnClick = handleResourceClick;
     }
 
+    const generatdFormatedlabel = labelFormat => {
+        const resource = props.resources.byId[props.value.resourceId];
+        const valueObject = {};
+        for (const propertyId of resource.propertyIds) {
+            const property = props.properties.byId[propertyId];
+            valueObject[property.existingPredicateId] =
+                property.valueIds && property.valueIds.length > 0 ? props.values.byId[property.valueIds[0]].label : '';
+        }
+        if (Object.keys(valueObject).length > 0) {
+            return format(labelFormat, valueObject);
+        } else {
+            return props.value.label;
+        }
+    };
+
+    const getLabel = () => {
+        if (props.value.classes) {
+            // get all template ids
+            let templateIds = [];
+            for (const c of props.value.classes) {
+                if (props.classes[c]) {
+                    templateIds = templateIds.concat(props.classes[c].templateIds);
+                }
+            }
+            templateIds = uniq(templateIds);
+            // check if it formated label
+            let hasLabelFormat = false;
+            let labelFormat = '';
+            for (const templateId of templateIds) {
+                const template = props.templates[templateId];
+                if (template && template.hasLabelFormat) {
+                    hasLabelFormat = true;
+                    labelFormat = template.labelFormat;
+                }
+            }
+            if (!hasLabelFormat) {
+                return props.value.label;
+            }
+
+            if (existingResourceId && !resource.isFechted && !resource.isFetching) {
+                props
+                    .fetchStatementsForResource({
+                        resourceId: props.value.resourceId,
+                        existingResourceId
+                    })
+                    .then(() => {
+                        return generatdFormatedlabel(labelFormat);
+                    });
+            } else {
+                return generatdFormatedlabel(labelFormat);
+            }
+        } else {
+            return props.value.label;
+        }
+    };
+
     return (
         <>
             <ValueItemTemplate
@@ -306,6 +335,8 @@ export default function ValueItem(props) {
                 enableEdit={props.enableEdit}
                 handleDeleteValue={handleDeleteValue}
                 showHelp={props.showHelp}
+                getLabel={getLabel}
+                typeComponents={props.typeComponents}
             />
 
             {modal ? (
@@ -345,6 +376,8 @@ ValueItem.propTypes = {
     resources: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
     properties: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
+    templates: PropTypes.object.isRequired,
     value: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     selectedProperty: PropTypes.string.isRequired,
@@ -357,7 +390,9 @@ ValueItem.propTypes = {
     inline: PropTypes.bool,
     openExistingResourcesInDialog: PropTypes.bool,
     contextStyle: PropTypes.string.isRequired,
-    showHelp: PropTypes.bool
+    showHelp: PropTypes.bool,
+
+    typeComponents: PropTypes.array.isRequired
 };
 
 ValueItem.defaultProps = {
