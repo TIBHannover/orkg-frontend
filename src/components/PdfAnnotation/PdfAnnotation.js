@@ -58,7 +58,7 @@ class PdfAnnotation extends Component {
             loading: true
         });
         console.log(files[0]);
-        let form = new FormData();
+        const form = new FormData();
         form.append('pdf', files[0]);
 
         fetch('http://localhost:9000', {
