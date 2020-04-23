@@ -70,9 +70,9 @@ class DefaultLayout extends Component {
 
                 <Header />
                 <StyledAppContent>{this.props.children}</StyledAppContent>
-                <StyledFooter>
+                {/*<StyledFooter>
                     <Footer />
-                </StyledFooter>
+                </StyledFooter>*/}
             </StyledBody>
         );
     }

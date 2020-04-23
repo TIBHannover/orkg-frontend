@@ -26,6 +26,7 @@ import Stats from './components/Stats/Stats';
 import UserSettings from './components/UserSettings/UserSettings';
 import UserProfile from './components/UserProfile/UserProfile';
 import FeaturedComparisons from 'components/FeaturedComparisons/FeaturedComparisons';
+import PdfAnnotation from 'components/PdfAnnotation/PdfAnnotation';
 import { reverse } from 'named-urls';
 
 const routes = [
@@ -158,6 +159,10 @@ const routes = [
     {
         path: ROUTES.TPDL,
         component: () => <Redirect to={'/'} />
+    },
+    {
+        path: ROUTES.PDF_ANNOTATION,
+        component: PdfAnnotation
     },
     /* Don't add routes below this line */
     {
