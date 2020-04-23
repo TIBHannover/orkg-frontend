@@ -3,6 +3,7 @@ import { resourcesUrl } from 'network';
 import { Input, InputGroup, InputGroupAddon, DropdownMenu, InputGroupButtonDropdown, FormFeedback } from 'reactstrap';
 import { StyledDropdownItem, StyledButton, StyledDropdownToggle, ValueItemStyle } from 'components/StatementBrowser/styled';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
+import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars } from '@fortawesome/free-solid-svg-icons';
@@ -34,6 +35,30 @@ export default function AddValueTemplate(props) {
             ? props.typeComponents[0].value
             : null;
 
+    const [isInlineForm, setIsInlineForm] = useState(false);
+    const [tempateNodeLabel, setTempateNodeLabel] = useState([]);
+    if (valueClassType && !defaultDatatypes.map(t => t.id).includes(valueClassType.id)) {
+        props.fetchTemplatesofClassIfNeeded(valueClassType.id).then(() => {
+            if (props.classes[valueClassType.id] && props.classes[valueClassType.id].templateIds) {
+                console.log(props.classes[valueClassType.id].templateIds);
+                const templateIds = props.classes[valueClassType.id].templateIds;
+                console.log(templateIds);
+                //check if it's an inline resource
+                for (const templateId of templateIds) {
+                    const template = props.templates[templateId];
+                    console.log(template);
+                    if (template && template.hasLabelFormat) {
+                        console.log(isInlineForm);
+                        setTempateNodeLabel(template.label);
+                        setIsInlineForm(true);
+                    }
+                }
+            }
+
+            // get the list of components and check if it's an inline resource
+        });
+    }
+
     let inputFormType = 'text';
     if (isTyped) {
         switch (valueClassType.id) {
@@ -45,6 +70,10 @@ export default function AddValueTemplate(props) {
                 break;
         }
     }
+
+    const [modal, setModal] = useState(false);
+    const [dialogResourceId, setDialogResourceId] = useState(null);
+    const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
 
     const [valueType, setValueType] = useState(isLiteral ? 'literal' : 'object');
     const [inputValue, setInputValue] = useState('');
@@ -101,8 +130,44 @@ export default function AddValueTemplate(props) {
 
     return (
         <ValueItemStyle className={showAddValue ? 'editingLabel' : ''}>
+            {modal ? (
+                <StatementBrowserDialog
+                    show={modal}
+                    toggleModal={() => setModal(prev => !prev)}
+                    resourceId={dialogResourceId}
+                    resourceLabel={dialogResourceLabel}
+                    newStore={false}
+                    enableEdit={true}
+                />
+            ) : (
+                ''
+            )}
             {!showAddValue ? (
-                <StatementOptionButton title={'Add value'} icon={faPlus} action={() => setShowAddValue(true)} />
+                <StatementOptionButton
+                    title={'Add value'}
+                    icon={faPlus}
+                    action={() => {
+                        if (isInlineForm) {
+                            // 1 - create a resource
+                            props.handleAddValue(valueType, tempateNodeLabel).then(resourceId => {
+                                // 2 - open the dialog on that resource
+                                if (props.openExistingResourcesInDialog) {
+                                    setDialogResourceId(resourceId);
+                                    setDialogResourceLabel(tempateNodeLabel);
+                                    setModal(true);
+                                } else {
+                                    props.selectResource({
+                                        increaseLevel: true,
+                                        resourceId: resourceId,
+                                        label: tempateNodeLabel
+                                    });
+                                }
+                            });
+                        } else {
+                            setShowAddValue(true);
+                        }
+                    }}
+                />
             ) : (
                 <div>
                     <InputGroup size="sm">
@@ -206,6 +271,10 @@ AddValueTemplate.propTypes = {
     handleValueSelect: PropTypes.func.isRequired,
     newResources: PropTypes.array.isRequired,
     handleAddValue: PropTypes.func.isRequired,
-
-    typeComponents: PropTypes.array.isRequired
+    fetchTemplatesofClassIfNeeded: PropTypes.func.isRequired,
+    typeComponents: PropTypes.array.isRequired,
+    templates: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
+    selectResource: PropTypes.func.isRequired,
+    openExistingResourcesInDialog: PropTypes.bool
 };

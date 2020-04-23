@@ -63,8 +63,8 @@ export default (state = initialState, action) => {
         case type.IS_FETCHING_TEMPLATES_OF_CLASS: {
             const { classID } = action;
 
-            const newState = dotProp.set(state, `classes.${classID}.isFetching`, true);
-
+            let newState = dotProp.set(state, `classes.${classID}.isFetching`, true);
+            newState = dotProp.set(newState, `classes.${classID}.templateIds`, []); // in case there is no template for this class
             return {
                 ...newState
             };
@@ -73,8 +73,7 @@ export default (state = initialState, action) => {
         case type.DONE_FETCHING_TEMPLATES_OF_CLASS: {
             const { classID } = action;
 
-            let newState = dotProp.set(state, `classes.${classID}.isFetching`, false);
-            newState = dotProp.set(newState, `classes.${classID}.templateIds`, []); // in case there is no template for this class
+            const newState = dotProp.set(state, `classes.${classID}.isFetching`, false);
 
             return {
                 ...newState
@@ -111,21 +110,8 @@ export default (state = initialState, action) => {
         case type.SET_TEMPLATE_OF_RESOURCE: {
             const { payload } = action;
 
-            let newState = dotProp.set(state, `resources.byId.${payload.resourceId}.templateId`, payload.templateId);
+            const newState = dotProp.set(state, `resources.byId.${payload.resourceId}.templateId`, payload.templateId);
 
-            const propertyIds = dotProp.get(newState, `resources.byId.${payload.resourceId}.propertyIds`);
-
-            if (payload.template.components && payload.template.components.length > 0) {
-                for (const component of payload.template.components) {
-                    for (const propertyId of propertyIds) {
-                        const property = dotProp.get(newState, `properties.byId.${propertyId}`);
-                        if (property.existingPredicateId === component.property.id) {
-                            newState = dotProp.set(newState, `properties.byId.${propertyId}.templateClass`, component.value);
-                            newState = dotProp.set(newState, `properties.byId.${propertyId}.validationRules`, component.validationRules);
-                        }
-                    }
-                }
-            }
             return {
                 ...newState
             };
@@ -149,9 +135,6 @@ export default (state = initialState, action) => {
                         isEditing: false,
                         isSaving: false,
                         isTemplate: payload.isTemplate,
-                        templateId: payload.templateId ? payload.templateId : null,
-                        templateClass: payload.templateClass ? payload.templateClass : null,
-                        validationRules: payload.validationRules ? payload.validationRules : null,
                         isAnimated: payload.isAnimated !== undefined ? payload.isAnimated : false
                     }
                 }));
@@ -255,7 +238,7 @@ export default (state = initialState, action) => {
                     newState = dotProp.set(newState, 'resources.byId', ids => ({
                         ...ids,
                         [payload.resourceId]: {
-                            existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
+                            existingResourceId: payload.existingResourceId && payload.isExistingValue ? payload.existingResourceId : null,
                             id: payload.resourceId,
                             label: payload.label,
                             shared: payload.shared ? payload.shared : 1,

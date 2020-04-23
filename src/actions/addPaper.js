@@ -168,8 +168,6 @@ export const prefillStatements = ({ statements, resourceId }) => dispatch => {
                 resourceId: resourceId,
                 label: property.label,
                 isTemplate: property.isTemplate ? property.isTemplate : false,
-                templateId: property.templateId ? property.templateId : null,
-                templateClass: property.templateClass ? property.templateClass : null,
                 validationRules: property.validationRules ? property.validationRules : {},
                 isAnimated: property.isAnimated !== undefined ? property.isAnimated : false
             })

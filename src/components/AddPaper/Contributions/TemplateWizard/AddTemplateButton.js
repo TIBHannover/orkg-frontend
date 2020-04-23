@@ -55,7 +55,6 @@ class AddTemplateButton extends Component {
                         statements['properties'].push({
                             existingPredicateId: component.property.id,
                             label: component.property.label,
-                            templateClass: component.value,
                             validationRules: component.validationRules
                         });
                     }
@@ -98,7 +97,6 @@ class AddTemplateButton extends Component {
                         statements['properties'].push({
                             existingPredicateId: component.property.id,
                             label: component.property.label,
-                            templateClass: component.value,
                             validationRules: component.validationRules
                         });
                     }
@@ -132,9 +130,7 @@ class AddTemplateButton extends Component {
                         statementsSubTemplates['properties'].push({
                             propertyId: tpID,
                             existingPredicateId: subTemplate.predicate.id,
-                            label: subTemplate.predicate.label,
-                            templateId: subTemplate.id,
-                            templateClass: subTemplate.class
+                            label: subTemplate.predicate.label
                         });
                     }
                     this.props.prefillStatements({ statements: statementsSubTemplates, resourceId: rID });

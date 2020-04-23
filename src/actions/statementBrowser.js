@@ -240,10 +240,9 @@ export const setTemplateOfResource = data => {
     const templateId = data.templateId;
     return (dispatch, getState) => {
         return dispatch(fetchTemplateIfNeeded(templateId)).then(() => {
-            const template = getState().statementBrowser.templates[templateId];
             dispatch({
                 type: type.SET_TEMPLATE_OF_RESOURCE,
-                payload: { ...data, template }
+                payload: { ...data }
             });
         });
     };
@@ -327,7 +326,6 @@ export const fetchStructureForTemplate = data => {
                                 resourceId: resourceId,
                                 existingPredicateId: component.property.id,
                                 label: component.property.label,
-                                templateClass: component.value,
                                 validationRules: component.validationRules,
                                 isExistingProperty: true
                             })
@@ -368,8 +366,7 @@ export const fetchStructureForTemplate = data => {
                                 propertyId: tpID,
                                 label: subTemplate.predicate.label,
                                 isExistingProperty: true,
-                                templateId: subTemplate.id,
-                                templateClass: subTemplate.class
+                                templateId: subTemplate.id
                             })
                         );
                     }

@@ -101,6 +101,7 @@ export default function StatementItemTemplate(props) {
                         {props.enableEdit && (
                             <AddValue
                                 typeComponents={props.typeComponents}
+                                openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                 contextStyle="Template"
                                 propertyId={props.id}
                                 syncBackend={props.syncBackend}

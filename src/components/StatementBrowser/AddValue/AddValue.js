@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { createResourceStatement, createResource, createLiteral, createLiteralStatement, createPredicate } from 'network';
 import AddValueTemplate from './AddValueTemplate';
+import { guid } from 'utils';
 import PropTypes from 'prop-types';
 
 export default class AddValue extends Component {
@@ -40,10 +41,12 @@ export default class AddValue extends Component {
                 ? this.props.typeComponents[0].value
                 : null;
 
+        let newObject = null;
+        let newStatement = null;
+        const valueId = guid();
+        const existingResourceId = guid();
         if (this.props.syncBackend) {
             const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
-            let newObject = null;
-            let newStatement = null;
             switch (valueType) {
                 case 'object':
                     newObject = await createResource(inputValue, valueClassType ? [valueClassType.id] : []);
@@ -69,15 +72,20 @@ export default class AddValue extends Component {
             });
         } else {
             const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
+
             this.props.createValue({
+                valueId,
                 label: inputValue,
                 type: valueType,
                 propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
+                existingResourceId,
+                isExistingValue: false,
                 templateId: predicate.templateId ? predicate.templateId : null,
                 classes: valueClassType ? [valueClassType.id] : [],
                 shared: 1
             });
         }
+        return newObject ? newObject.id : existingResourceId;
     };
 
     render() {
@@ -94,7 +102,12 @@ export default class AddValue extends Component {
                     handleInputChange={this.handleInputChange}
                     newResources={this.props.newResources}
                     handleAddValue={this.handleAddValue}
+                    fetchTemplatesofClassIfNeeded={this.props.fetchTemplatesofClassIfNeeded}
                     typeComponents={this.props.typeComponents}
+                    classes={this.props.classes}
+                    templates={this.props.templates}
+                    selectResource={this.props.selectResource}
+                    openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                 />
             </>
         );
@@ -111,8 +124,12 @@ AddValue.propTypes = {
     properties: PropTypes.object.isRequired,
     contextStyle: PropTypes.string.isRequired,
     createProperty: PropTypes.func.isRequired,
-
-    typeComponents: PropTypes.array.isRequired
+    openExistingResourcesInDialog: PropTypes.bool,
+    selectResource: PropTypes.func.isRequired,
+    fetchTemplatesofClassIfNeeded: PropTypes.func.isRequired,
+    typeComponents: PropTypes.array.isRequired,
+    classes: PropTypes.object.isRequired,
+    templates: PropTypes.array.isRequired
 };
 
 AddValue.defaultProps = {
