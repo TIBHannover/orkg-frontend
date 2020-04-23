@@ -107,7 +107,6 @@ export const StyledDropdownToggle = styled(DropdownToggle)`
 
 export const ValueItemStyle = styled(ListGroupItem)`
     background-color: #fff;
-    margin-bottom: 10px;
     overflow-wrap: break-word;
     padding: 8px 0px !important;
 
