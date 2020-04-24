@@ -72,7 +72,7 @@ class RelatedResources extends Component {
                             const isLink = new RegExp(this.urlRegex).test(resource.url);
 
                             return (
-                                <Card>
+                                <Card key={`rr${index}`}>
                                     {resource.image && <CardImg top width="100%" src={resource.image ? resource.image : ''} alt="Card image cap" />}
                                     <CardBody>
                                         {resource.title && <CardTitle>{resource.title}</CardTitle>}
