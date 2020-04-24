@@ -52,7 +52,7 @@ class Comparison extends Component {
             fullWidth: false,
             errors: null,
             locationSearch: '',
-            relatedResources: []
+            resourcesStatements: []
         };
     }
 
@@ -200,13 +200,10 @@ class Comparison extends Component {
                             statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_REFERENCE
                         );
                         const urlStatement = comparisonStatement.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL);
+
                         const resourcesStatements = comparisonStatement.filter(
                             statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_RELATED_RESOURCES
                         );
-                        const relatedResources = [];
-                        for (const resource of resourcesStatements) {
-                            relatedResources.push(resource.object.label);
-                        }
 
                         if (urlStatement) {
                             this.getComparisonResult(urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')));
@@ -217,7 +214,7 @@ class Comparison extends Component {
                                 reference: referenceStatement ? referenceStatement.object.label : '',
                                 createdAt: descriptionStatement.object.created_at,
                                 createdBy: descriptionStatement.object.created_by,
-                                relatedResources
+                                resourcesStatements
                             });
                         } else {
                             throw new Error('The requested comparison has no contributions.');
@@ -515,7 +512,7 @@ class Comparison extends Component {
                         </>
                     )}
 
-                    <RelatedResources resources={this.state.relatedResources} />
+                    <RelatedResources resourcesStatements={this.state.resourcesStatements} />
                 </ContainerAnimated>
 
                 <SelectProperties
