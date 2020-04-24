@@ -42,7 +42,6 @@ class RelatedResources extends Component {
                     await getStatementsBySubject({ id: resource.object.id }).then(statements => {
                         const imageStatement = statements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_IMAGE);
                         const urlStatement = statements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL);
-                        const titleStatement = statements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_TITLE);
                         const descriptionStatement = statements.find(
                             statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_DESCRIPTION
                         );
@@ -50,7 +49,7 @@ class RelatedResources extends Component {
                         relatedResources.push({
                             url: urlStatement ? urlStatement.object.label : '',
                             image: imageStatement ? imageStatement.object.label : '',
-                            title: titleStatement ? titleStatement.object.label : '',
+                            title: resource.object.label,
                             description: descriptionStatement ? descriptionStatement.object.label : ''
                         });
                     });
