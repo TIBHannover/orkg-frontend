@@ -13,7 +13,7 @@ function TemplateComponentValue(props) {
     const onChange = event => {
         const templateComponents = props.components.map((item, j) => {
             if (j === props.id) {
-                item[event.target.name] = event.target.value;
+                item[event.target.name] = event.target.value.toString();
             }
             return item;
         });
@@ -64,7 +64,7 @@ function TemplateComponentValue(props) {
                                 disabled={!props.enableEdit}
                                 onChange={onChange}
                                 bsSize="sm"
-                                value={props.maxOccurs}
+                                value={props.maxOccurs !== null ? props.maxOccurs : ''}
                                 type="number"
                                 name="maxOccurs"
                                 id="maxOccursValueInput"
@@ -86,8 +86,8 @@ TemplateComponentValue.propTypes = {
     setComponents: PropTypes.func.isRequired,
     id: PropTypes.number.isRequired,
     value: PropTypes.object.isRequired,
-    minOccurs: PropTypes.number.isRequired,
-    maxOccurs: PropTypes.number.isRequired,
+    minOccurs: PropTypes.string.isRequired,
+    maxOccurs: PropTypes.string,
     enableEdit: PropTypes.bool.isRequired,
     validationRules: PropTypes.object.isRequired,
     handleClassOfPropertySelect: PropTypes.func.isRequired

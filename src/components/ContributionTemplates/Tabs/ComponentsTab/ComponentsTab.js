@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button, FormGroup, Label, FormText, InputGroup, InputGroupAddon, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
@@ -10,6 +10,7 @@ import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoCom
 import TemplateComponent from 'components/ContributionTemplates/TemplateComponent/TemplateComponent';
 import AddPropertyTemplate from 'components/StatementBrowser/AddProperty/AddPropertyTemplate';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
+import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 
 function ComponentsTab(props) {
@@ -90,7 +91,7 @@ function ComponentsTab(props) {
     const handleSelectNewProperty = ({ id, value: label }) => {
         const templateComponents = [
             ...props.components,
-            { property: { id, label: label }, value: {}, validationRules: {}, minOccurs: 0, maxOccurs: null, order: null }
+            { property: { id, label: label }, value: {}, validationRules: {}, minOccurs: '0', maxOccurs: null, order: null }
         ];
         props.setComponents(templateComponents);
         setShowAddProperty(false);
@@ -112,7 +113,7 @@ function ComponentsTab(props) {
                 property: { id: newPredicate.id, label: newPredicate.label },
                 value: {},
                 validationRules: {},
-                minOccurs: 0,
+                minOccurs: '0',
                 maxOccurs: null,
                 order: null
             }
@@ -147,6 +148,18 @@ function ComponentsTab(props) {
         props.setSubTemplates(templateSubTemplates);
     };
 
+    const moveCard = useCallback(
+        (dragIndex, hoverIndex) => {
+            const dragCard = props.components[dragIndex];
+            props.setComponents(
+                update(props.components, {
+                    $splice: [[dragIndex, 1], [hoverIndex, 0, dragCard]]
+                })
+            );
+        },
+        [props]
+    );
+
     return (
         <div className="p-4">
             <div className="pb-4">
@@ -165,6 +178,7 @@ function ComponentsTab(props) {
                                 enableEdit={props.editMode}
                                 handleDeleteTemplateComponent={handleDeleteTemplateComponent}
                                 id={index}
+                                moveCard={moveCard}
                                 property={templateProperty.property}
                                 value={templateProperty.value}
                                 minOccurs={templateProperty.minOccurs}

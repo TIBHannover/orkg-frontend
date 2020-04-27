@@ -1,5 +1,6 @@
 import { Cookies } from 'react-cookie';
 import queryString from 'query-string';
+import { sortMethod } from 'utils';
 export const url = `${process.env.REACT_APP_SERVER_URL}api/`;
 export const similaireServiceUrl = process.env.REACT_APP_SIMILARITY_SERVICE_URL;
 export const annotationServiceUrl = process.env.REACT_APP_ANNOTATION_SERVICE_URL;
@@ -576,7 +577,7 @@ export const getTemplateById = templateId => {
                     labelFormat: templateFormatLabel ? templateFormatLabel.object.label : '',
                     hasLabelFormat: templateFormatLabel ? true : false,
                     isStrict: templateIsStrict ? true : false,
-                    components: templateComponents[0],
+                    components: templateComponents[0].sort((c1, c2) => sortMethod(c1.order, c2.order)),
                     ...(templateClass
                         ? {
                               isClassDescription: true,

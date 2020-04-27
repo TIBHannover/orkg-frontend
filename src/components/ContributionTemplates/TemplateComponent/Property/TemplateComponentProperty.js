@@ -7,6 +7,15 @@ import PropTypes from 'prop-types';
 import TemplateEditorAutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
 import { predicatesUrl } from 'network';
 import classNames from 'classnames';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faArrowsAlt } from '@fortawesome/free-solid-svg-icons';
+import styled from 'styled-components';
+
+const DragHandler = styled.div`
+    width: 30px;
+    float: left;
+    padding: 10px;
+`;
 
 function TemplateComponentProperty(props) {
     const [disableHover, setDisableHover] = useState(false);
@@ -20,6 +29,9 @@ function TemplateComponentProperty(props) {
 
     return (
         <PropertyStyle className={`col-4`} tabIndex="0">
+            <DragHandler>
+                <Icon icon={faArrowsAlt} />
+            </DragHandler>
             {!isEditing ? (
                 <div className={'propertyLabel'}>
                     {props.property.label}

@@ -171,7 +171,7 @@ export const saveTemplate = data => {
 
         // save template properties
         if (data.components && data.components.length > 0) {
-            for (const property of data.components.filter(tp => tp.property.id).reverse()) {
+            for (const [index, property] of data.components.entries()) {
                 const component = await createResource(`Component for template ${templateResource}`);
                 promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_COMPONENT, component.id));
                 promises.push(createResourceStatement(component.id, process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY, property.property.id));
@@ -189,10 +189,8 @@ export const saveTemplate = data => {
                     promises.push(createResourceStatement(component.id, process.env.REACT_APP_TEMPLATE_COMPONENT_OCCURRENCE_MAX, maximumLiteral.id));
                 }
                 // save Order
-                if (property.order || property.order === 0) {
-                    const orderLiteral = await createLiteral(property.order);
-                    promises.push(createResourceStatement(component.id, process.env.REACT_APP_TEMPLATE_COMPONENT_ORDER, orderLiteral.id));
-                }
+                const orderLiteral = await createLiteral(index);
+                promises.push(createResourceStatement(component.id, process.env.REACT_APP_TEMPLATE_COMPONENT_ORDER, orderLiteral.id));
                 // save validation rules
                 if (property.value && ['Number', 'String'].includes(property.value.id) && property.validationRules) {
                     for (const key in property.validationRules) {
