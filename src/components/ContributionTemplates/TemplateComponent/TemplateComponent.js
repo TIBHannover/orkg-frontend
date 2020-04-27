@@ -18,6 +18,8 @@ function TemplateComponent(props) {
                 <TemplateComponentValue
                     id={props.id}
                     value={props.value}
+                    minOccurs={props.minOccurs}
+                    maxOccurs={props.maxOccurs}
                     enableEdit={props.enableEdit}
                     validationRules={props.validationRules}
                     handleClassOfPropertySelect={props.handleClassOfPropertySelect}
@@ -31,6 +33,8 @@ TemplateComponent.propTypes = {
     id: PropTypes.number.isRequired,
     property: PropTypes.object.isRequired,
     value: PropTypes.object.isRequired,
+    minOccurs: PropTypes.number.isRequired,
+    maxOccurs: PropTypes.number.isRequired,
     validationRules: PropTypes.object.isRequired,
     handleDeleteTemplateComponent: PropTypes.func.isRequired,
     enableEdit: PropTypes.bool.isRequired,

@@ -9,6 +9,7 @@ const initialState = {
     class: null,
     templateID: '',
     isClassDescription: false,
+    isStrict: false,
     hasLabelFormat: false,
     labelFormat: '',
     error: null,
@@ -45,6 +46,15 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 isClassDescription: payload
+            };
+        }
+
+        case type.TEMPLATE_SET_IS_STRICT: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                isStrict: payload
             };
         }
 
@@ -129,6 +139,7 @@ export default (state = initialState, action) => {
                 labelFormat: payload.labelFormat,
                 hasLabelFormat: payload.hasLabelFormat,
                 isClassDescription: payload.isClassDescription,
+                isStrict: payload.isStrict,
                 statements: payload.statements,
                 predicate: payload.predicate,
                 class: payload.class,

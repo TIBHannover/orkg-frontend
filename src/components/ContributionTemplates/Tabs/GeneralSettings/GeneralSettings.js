@@ -2,7 +2,15 @@ import React, { useRef } from 'react';
 import { FormGroup, Label, FormText, Input, CustomInput } from 'reactstrap';
 import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
-import { setLabel, setPredicate, setClass, setResearchFields, setResearchProblems, setIsClassDescription } from 'actions/addTemplate';
+import {
+    setLabel,
+    setPredicate,
+    setClass,
+    setResearchFields,
+    setResearchProblems,
+    setIsClassDescription,
+    setIsStrictTemplate
+} from 'actions/addTemplate';
 import { predicatesUrl, resourcesUrl, classesUrl, createPredicate, createClass } from 'network';
 import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
 import PropTypes from 'prop-types';
@@ -65,11 +73,28 @@ function GeneralSettings(props) {
         props.setIsClassDescription(event.target.checked);
     };
 
+    const handleSwitchIsStrictTemplate = event => {
+        props.setIsStrictTemplate(event.target.checked);
+    };
+
     return (
         <div className="p-4">
             <FormGroup className="mb-4">
                 <Label>Name of template</Label>
                 <Input innerRef={inputRef} value={props.label} onChange={handleChangeLabel} disabled={!props.editMode} />
+            </FormGroup>
+            <FormGroup>
+                <div>
+                    <CustomInput
+                        onChange={handleSwitchIsStrictTemplate}
+                        checked={props.isStrictTemplate}
+                        id="switchIsStrictTemplate"
+                        type="switch"
+                        name="customSwitch"
+                        label="This template is strict (it's not possible to add properties)"
+                        disabled={!props.editMode}
+                    />
+                </div>
             </FormGroup>
             <FormGroup>
                 <div>
@@ -167,8 +192,10 @@ GeneralSettings.propTypes = {
     setResearchProblems: PropTypes.func.isRequired,
     researchFields: PropTypes.array,
     isClassDescription: PropTypes.bool.isRequired,
+    isStrictTemplate: PropTypes.bool.isRequired,
     setResearchFields: PropTypes.func.isRequired,
-    setIsClassDescription: PropTypes.func.isRequired
+    setIsClassDescription: PropTypes.func.isRequired,
+    setIsStrictTemplate: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -179,7 +206,8 @@ const mapStateToProps = state => {
         editMode: state.addTemplate.editMode,
         researchProblems: state.addTemplate.researchProblems,
         researchFields: state.addTemplate.researchFields,
-        isClassDescription: state.addTemplate.isClassDescription
+        isClassDescription: state.addTemplate.isClassDescription,
+        isStrictTemplate: state.addTemplate.isStrict
     };
 };
 
@@ -189,7 +217,8 @@ const mapDispatchToProps = dispatch => ({
     setClass: data => dispatch(setClass(data)),
     setResearchProblems: data => dispatch(setResearchProblems(data)),
     setResearchFields: data => dispatch(setResearchFields(data)),
-    setIsClassDescription: data => dispatch(setIsClassDescription(data))
+    setIsClassDescription: data => dispatch(setIsClassDescription(data)),
+    setIsStrictTemplate: data => dispatch(setIsStrictTemplate(data))
 });
 
 export default connect(

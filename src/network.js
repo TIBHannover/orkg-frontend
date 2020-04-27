@@ -474,6 +474,8 @@ export const getTemplateById = templateId => {
 
             const templateFormatLabel = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_LABEL_FORMAT);
 
+            const templateIsStrict = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_STRICT);
+
             const templateComponents = templateStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT);
 
             const components = getStatementsBySubjects({ ids: templateComponents.map(component => component.object.id) }).then(
@@ -490,6 +492,18 @@ export const getTemplateById = templateId => {
                             statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALIDATION_RULE
                         );
 
+                        const minOccurs = componentStatements.statements.find(
+                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_OCCURRENCE_MIN
+                        );
+
+                        const maxOccurs = componentStatements.statements.find(
+                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_OCCURRENCE_MAX
+                        );
+
+                        const order = componentStatements.statements.find(
+                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_ORDER
+                        );
+
                         return {
                             id: componentStatements.id,
                             property: property
@@ -504,6 +518,9 @@ export const getTemplateById = templateId => {
                                       label: value.object.label
                                   }
                                 : {},
+                            minOccurs: minOccurs ? minOccurs.object.label : 0,
+                            maxOccurs: maxOccurs ? maxOccurs.object.label : null,
+                            order: order ? order.object.label : null,
                             validationRules:
                                 validationRules && Object.keys(validationRules).length > 0
                                     ? validationRules.reduce((obj, item) => {
@@ -558,6 +575,7 @@ export const getTemplateById = templateId => {
                         : {},
                     labelFormat: templateFormatLabel ? templateFormatLabel.object.label : '',
                     hasLabelFormat: templateFormatLabel ? true : false,
+                    isStrict: templateIsStrict ? true : false,
                     components: templateComponents[0],
                     ...(templateClass
                         ? {

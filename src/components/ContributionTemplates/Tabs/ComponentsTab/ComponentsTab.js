@@ -88,7 +88,10 @@ function ComponentsTab(props) {
     };
 
     const handleSelectNewProperty = ({ id, value: label }) => {
-        const templateComponents = [...props.components, { property: { id, label: label }, value: {}, validationRules: {} }];
+        const templateComponents = [
+            ...props.components,
+            { property: { id, label: label }, value: {}, validationRules: {}, minOccurs: 0, maxOccurs: null, order: null }
+        ];
         props.setComponents(templateComponents);
         setShowAddProperty(false);
     };
@@ -105,7 +108,14 @@ function ComponentsTab(props) {
         toggleConfirmNewProperty(); // hide dialog
         const templateComponents = [
             ...props.components,
-            { property: { id: newPredicate.id, label: newPredicate.label }, value: {}, validationRules: {} }
+            {
+                property: { id: newPredicate.id, label: newPredicate.label },
+                value: {},
+                validationRules: {},
+                minOccurs: 0,
+                maxOccurs: null,
+                order: null
+            }
         ];
         props.setComponents(templateComponents);
         setShowAddProperty(false);
@@ -157,6 +167,8 @@ function ComponentsTab(props) {
                                 id={index}
                                 property={templateProperty.property}
                                 value={templateProperty.value}
+                                minOccurs={templateProperty.minOccurs}
+                                maxOccurs={templateProperty.maxOccurs}
                                 validationRules={templateProperty.validationRules}
                                 handlePropertiesSelect={handlePropertiesSelect}
                                 handleClassOfPropertySelect={handleClassOfPropertySelect}

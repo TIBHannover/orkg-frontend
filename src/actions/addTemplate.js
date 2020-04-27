@@ -23,6 +23,13 @@ export const setIsClassDescription = data => dispatch => {
     });
 };
 
+export const setIsStrictTemplate = data => dispatch => {
+    dispatch({
+        type: type.TEMPLATE_SET_IS_STRICT,
+        payload: data
+    });
+};
+
 export const setHasLabelFormat = data => dispatch => {
     dispatch({
         type: type.TEMPLATE_SET_HAS_LABEL_FORMAT,
@@ -131,6 +138,11 @@ export const saveTemplate = data => {
                 await deleteStatementsByIds(data.statements);
             }
         }
+        if (data.isStrict) {
+            // set the statement that says this is strict template
+            const strictLiteral = await createLiteral('True');
+            promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_STRICT, strictLiteral.id));
+        }
         if (data.isClassDescription) {
             // save template class
             if (data.class && data.class.id) {
@@ -165,6 +177,21 @@ export const saveTemplate = data => {
                 promises.push(createResourceStatement(component.id, process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY, property.property.id));
                 if (property.value && property.value.id) {
                     promises.push(createResourceStatement(component.id, process.env.REACT_APP_TEMPLATE_COMPONENT_VALUE, property.value.id));
+                }
+                // save Minimum Occurence
+                if (property.minOccurs || property.minOccurs === 0) {
+                    const minimumLiteral = await createLiteral(property.minOccurs);
+                    promises.push(createResourceStatement(component.id, process.env.REACT_APP_TEMPLATE_COMPONENT_OCCURRENCE_MIN, minimumLiteral.id));
+                }
+                // save Maximum Occurence
+                if (property.maxOccurs || property.maxOccurs === 0) {
+                    const maximumLiteral = await createLiteral(property.maxOccurs);
+                    promises.push(createResourceStatement(component.id, process.env.REACT_APP_TEMPLATE_COMPONENT_OCCURRENCE_MAX, maximumLiteral.id));
+                }
+                // save Order
+                if (property.order || property.order === 0) {
+                    const orderLiteral = await createLiteral(property.order);
+                    promises.push(createResourceStatement(component.id, process.env.REACT_APP_TEMPLATE_COMPONENT_ORDER, orderLiteral.id));
                 }
                 // save validation rules
                 if (property.value && ['Number', 'String'].includes(property.value.id) && property.validationRules) {
