@@ -222,6 +222,7 @@ function ComponentsTab(props) {
                     </>
                 )}
             </div>
+            {/* TODO: Support Research problem target
             {!props.isClassDescription && (
                 <fieldset className="scheduler-border">
                     <legend className="scheduler-border">Sub-Templates</legend>
@@ -279,7 +280,7 @@ function ComponentsTab(props) {
                     </FormGroup>
                 </fieldset>
             )}
-
+            */}
             {modal && (
                 <StatementBrowserDialog
                     show={modal}

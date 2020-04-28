@@ -158,6 +158,7 @@ function GeneralSettings(props) {
                             />
                             {props.editMode && <FormText>Specify the research fields that uses this template.</FormText>}
                         </FormGroup>
+                        {/* TODO: Support Research problem target
                         <FormGroup className="mb-4">
                             <Label>Research problems</Label>
                             <AutoComplete
@@ -173,6 +174,7 @@ function GeneralSettings(props) {
                             />
                             {props.editMode && <FormText>Specify the research problems that uses this template.</FormText>}
                         </FormGroup>
+                        */}
                     </fieldset>
                 </>
             )}

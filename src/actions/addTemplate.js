@@ -209,7 +209,7 @@ export const saveTemplate = data => {
         }
 
         //save Label Format
-        if (data.hasLabelFormat) {
+        if (data.hasLabelFormat && data.labelFormat) {
             const labelFormatLiteral = await createLiteral(data.labelFormat);
             promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_LABEL_FORMAT, labelFormatLiteral.id));
         }
