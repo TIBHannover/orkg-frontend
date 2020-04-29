@@ -6,6 +6,8 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/StatementBrowser/AutoComplete';
 import defaultProperties from './helpers/defaultProperties';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
+import Tippy from '@tippy.js/react';
 import PropTypes from 'prop-types';
 
 export default function AddPropertyTemplate(props) {
@@ -16,15 +18,25 @@ export default function AddPropertyTemplate(props) {
                 className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'} ${props.showAddProperty ? 'col-12 large' : ''}`}
             >
                 {!props.showAddProperty ? (
-                    <Button
-                        //className={this.props.inTemplate ? 'p-0' : ''}
-                        color={props.inTemplate ? 'light' : 'darkblue'}
-                        onClick={() => (!props.inTemplate ? props.handleShowAddProperty() : undefined)}
-                        //style={this.props.inTemplate ? { color: 'inherit' } : undefined}
-                        size="sm"
+                    <ConditionalWrapper
+                        condition={props.isDisabled}
+                        wrapper={children => (
+                            <Tippy content={'This resource uses strict template'}>
+                                <span>{children}</span>
+                            </Tippy>
+                        )}
                     >
-                        <Icon className={'icon'} size="sm" icon={faPlus} /> Add property
-                    </Button>
+                        <Button
+                            //className={this.props.inTemplate ? 'p-0' : ''}
+                            color={props.inTemplate ? 'light' : 'darkblue'}
+                            disabled={props.isDisabled}
+                            onClick={() => (!props.inTemplate ? props.handleShowAddProperty() : undefined)}
+                            //style={this.props.inTemplate ? { color: 'inherit' } : undefined}
+                            size="sm"
+                        >
+                            <Icon className={'icon'} size="sm" icon={faPlus} /> Add property
+                        </Button>
+                    </ConditionalWrapper>
                 ) : (
                     <AddPropertyFormStyle>
                         <InputGroup size="sm">
@@ -71,5 +83,6 @@ AddPropertyTemplate.propTypes = {
     toggleConfirmNewProperty: PropTypes.func.isRequired,
     handleHideAddProperty: PropTypes.func.isRequired,
     newProperties: PropTypes.array.isRequired,
-    handleShowAddProperty: PropTypes.func.isRequired
+    handleShowAddProperty: PropTypes.func.isRequired,
+    isDisabled: PropTypes.bool.isRequired
 };

@@ -77,7 +77,8 @@ class AddTemplateButton extends Component {
                     existingPredicateId: template.predicate.id,
                     label: template.predicate.label,
                     isTemplate: true,
-                    isAnimated: false
+                    isAnimated: false,
+                    canDuplicate: true
                 });
 
                 statements['values'].push({

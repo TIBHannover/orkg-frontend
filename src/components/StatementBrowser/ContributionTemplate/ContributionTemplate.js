@@ -21,6 +21,29 @@ export default function ContributionTemplate(props) {
         return property.existingPredicateId !== process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE;
     });
 
+    const canAddProperty = () => {
+        const resource = props.resources.byId[props.value.resourceId];
+        // get template components
+        // get all template ids
+        let templateIds = resource.templateId ? [resource.templateId] : [];
+        for (const c of resource.classes) {
+            if (props.classes[c]) {
+                templateIds = templateIds.concat(props.classes[c].templateIds);
+            }
+        }
+        templateIds = uniq(templateIds);
+        // get components of this statement predicate
+        for (const templateId of templateIds) {
+            const template = props.templates[templateId];
+            if (template && template.isStrict) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return true;
+    };
+
     const getComponents = () => {
         const resource = props.resources.byId[props.value.resourceId];
         // get template components
@@ -89,7 +112,13 @@ export default function ContributionTemplate(props) {
                     <div className={'row no-gutters'}>
                         <div className={'col-4 propertyHolder'} />
                     </div>
-                    <AddProperty syncBackend={props.syncBackend} inTemplate={true} contextStyle="Template" resourceId={props.value.resourceId} />
+                    <AddProperty
+                        isDisabled={!canAddProperty()}
+                        syncBackend={props.syncBackend}
+                        inTemplate={true}
+                        contextStyle="Template"
+                        resourceId={props.value.resourceId}
+                    />
                 </AddPropertWrapper>
             </ListGroup>
         </AnimationContainer>

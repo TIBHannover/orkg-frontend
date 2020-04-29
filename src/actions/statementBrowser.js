@@ -73,15 +73,28 @@ export const togglePropertyCollapse = id => dispatch => {
     });
 };
 
-export const createProperty = data => dispatch => {
-    dispatch({
-        type: type.CREATE_PROPERTY,
-        payload: {
-            propertyId: data.propertyId ? data.propertyId : guid(),
-            ...data
+export function createProperty(data) {
+    return (dispatch, getState) => {
+        if (!data.canDuplicate && data.existingPredicateId) {
+            const resource = getState().statementBrowser.resources.byId[data.resourceId];
+
+            const isExstingProperty = resource.propertyIds.find(
+                p => getState().statementBrowser.properties.byId[p].existingPredicateId === data.existingPredicateId
+            );
+            if (isExstingProperty) {
+                // Property already exists
+                return null;
+            }
         }
-    });
-};
+        dispatch({
+            type: type.CREATE_PROPERTY,
+            payload: {
+                propertyId: data.propertyId ? data.propertyId : guid(),
+                ...data
+            }
+        });
+    };
+}
 
 export const deleteProperty = data => dispatch => {
     dispatch({

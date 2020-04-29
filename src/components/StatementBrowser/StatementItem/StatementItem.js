@@ -139,6 +139,10 @@ export default function StatementItem(props) {
 
     const getComponents = () => {
         // filter components of this predicate
+        if (!props.resourceComponents) {
+            return [];
+        }
+
         const components = props.resourceComponents.filter(c => c.property.id === props.property.existingPredicateId);
         /*
         console.log('COMPONENTS');
@@ -214,7 +218,7 @@ StatementItem.propTypes = {
     openExistingResourcesInDialog: PropTypes.bool,
     showValueHelp: PropTypes.bool,
 
-    resourceComponents: PropTypes.array.isRequired,
+    resourceComponents: PropTypes.array,
     templates: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
     resources: PropTypes.object.isRequired,

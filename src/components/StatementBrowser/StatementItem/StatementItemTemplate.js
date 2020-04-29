@@ -18,6 +18,29 @@ export default function StatementItemTemplate(props) {
         disableHover: disableHover
     });
 
+    const canAddValues = () => {
+        // compare the number of values with maxOccurs
+        if (props.typeComponents && props.typeComponents.length > 0 && props.typeComponents[0].maxOccurs) {
+            if (props.property.valueIds.length >= parseInt(props.typeComponents[0].maxOccurs)) {
+                console.log('reached maximum number of values for this component');
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    };
+
+    const canDeleteProperty = () => {
+        // compare the number of values with maxOccurs
+        if (props.typeComponents && props.typeComponents.length > 0 && props.typeComponents[0].minOccurs >= 1) {
+            return false;
+        } else {
+            return true;
+        }
+    };
+
     return (
         <StatementsGroupStyle className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'}`}>
             <div className={'row no-gutters'}>
@@ -33,14 +56,24 @@ export default function StatementItemTemplate(props) {
                             {props.enableEdit && (
                                 <div className={propertyOptionsClasses}>
                                     <StatementOptionButton
-                                        title={'Edit property'}
+                                        isDisabled={!canDeleteProperty()}
+                                        title={
+                                            canDeleteProperty()
+                                                ? 'Edit property'
+                                                : "This property can not be changes because it's required by the template"
+                                        }
                                         icon={faPen}
                                         action={() => props.toggleEditPropertyLabel({ id: props.id })}
                                     />
                                     <StatementOptionButton
+                                        isDisabled={!canDeleteProperty()}
+                                        title={
+                                            canDeleteProperty()
+                                                ? 'Delete property'
+                                                : "This property can not be deleted because it's required by the template"
+                                        }
                                         requireConfirmation={true}
                                         confirmationMessage={'Are you sure to delete?'}
-                                        title={'Delete property'}
                                         icon={faTrash}
                                         action={props.handleDeleteStatement}
                                         onVisibilityChange={disable => setDisableHover(disable)}
@@ -100,6 +133,7 @@ export default function StatementItemTemplate(props) {
                         })}
                         {props.enableEdit && (
                             <AddValue
+                                isDisabled={!canAddValues()}
                                 typeComponents={props.typeComponents}
                                 openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                 contextStyle="Template"

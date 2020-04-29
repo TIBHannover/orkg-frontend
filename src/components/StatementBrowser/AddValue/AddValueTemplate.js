@@ -40,15 +40,11 @@ export default function AddValueTemplate(props) {
     if (valueClassType && !defaultDatatypes.map(t => t.id).includes(valueClassType.id)) {
         props.fetchTemplatesofClassIfNeeded(valueClassType.id).then(() => {
             if (props.classes[valueClassType.id] && props.classes[valueClassType.id].templateIds) {
-                console.log(props.classes[valueClassType.id].templateIds);
                 const templateIds = props.classes[valueClassType.id].templateIds;
-                console.log(templateIds);
                 //check if it's an inline resource
                 for (const templateId of templateIds) {
                     const template = props.templates[templateId];
-                    console.log(template);
                     if (template && template.hasLabelFormat) {
-                        console.log(isInlineForm);
                         setTempateNodeLabel(template.label);
                         setIsInlineForm(true);
                     }
@@ -144,7 +140,8 @@ export default function AddValueTemplate(props) {
             )}
             {!showAddValue ? (
                 <StatementOptionButton
-                    title={'Add value'}
+                    isDisabled={props.isDisabled}
+                    title={!props.isDisabled ? 'Add value' : 'This property reached the maximum number of values set by template'}
                     icon={faPlus}
                     action={() => {
                         if (isInlineForm) {
@@ -276,5 +273,6 @@ AddValueTemplate.propTypes = {
     templates: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
     selectResource: PropTypes.func.isRequired,
-    openExistingResourcesInDialog: PropTypes.bool
+    openExistingResourcesInDialog: PropTypes.bool,
+    isDisabled: PropTypes.bool
 };

@@ -31,6 +31,29 @@ export default function Statements(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // run only once : https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects
 
+    const canAddProperty = () => {
+        const resource = props.resources.byId[props.selectedResource];
+        // get template components
+        // get all template ids
+        let templateIds = resource.templateId ? [resource.templateId] : [];
+        for (const c of resource.classes) {
+            if (props.classes[c]) {
+                templateIds = templateIds.concat(props.classes[c].templateIds);
+            }
+        }
+        templateIds = uniq(templateIds);
+        // get components of this statement predicate
+        for (const templateId of templateIds) {
+            const template = props.templates[templateId];
+            if (template && template.isStrict) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return true;
+    };
+
     const getComponents = () => {
         const resource = props.resources.byId[props.selectedResource];
         // get template components
@@ -51,6 +74,27 @@ export default function Statements(props) {
                 components = components.concat(template.components);
             }
         }
+
+        // add missing required properties (minOccurs >= 1)
+        let propertyIds = props.resources.byId[props.selectedResource].propertyIds;
+        propertyIds = propertyIds.map(propertyId => {
+            const property = props.properties.byId[propertyId];
+            return property.existingPredicateId;
+        });
+        components
+            .filter(x => !propertyIds.includes(x.property.id))
+            .map(mp => {
+                if (mp.minOccurs >= 1) {
+                    props.createProperty({
+                        resourceId: props.selectedResource,
+                        existingPredicateId: mp.property.id,
+                        label: mp.property.label,
+                        isTemplate: false,
+                        createAndSelect: true
+                    });
+                }
+            });
+
         return components;
     };
 
@@ -77,86 +121,90 @@ export default function Statements(props) {
         });
 
         return (
-            <ListGroup className={'listGroupEnlarge'}>
-                {props.selectedResource && !props.resources.byId[props.selectedResource].isFetching ? (
-                    propertyIds.length > 0 ? (
-                        propertyIds.map((propertyId, index) => {
-                            const property = props.properties.byId[propertyId];
-                            if (!property.isTemplate) {
-                                return (
-                                    <StatementItem
-                                        key={'statement-' + index}
-                                        id={propertyId}
-                                        property={property}
-                                        predicateLabel={property.label}
-                                        enableEdit={shared <= 1 ? props.enableEdit : false}
-                                        syncBackend={props.syncBackend}
-                                        isLastItem={propertyIds.length === index + 1}
-                                        openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                                        showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
-                                        resourceComponents={getComponents()}
-                                    />
-                                );
-                            } else {
-                                return property.valueIds.map((valueId, index) => {
-                                    const value = props.values.byId[valueId];
+            <div>
+                {props.selectedResource && props.resources.byId[props.selectedResource].classes.length > 0 && (
+                    <div className="text-muted mb-2">Classes: {props.resources.byId[props.selectedResource].classes.join(',')}</div>
+                )}
+                <ListGroup className={'listGroupEnlarge'}>
+                    {props.selectedResource && !props.resources.byId[props.selectedResource].isFetching ? (
+                        propertyIds.length > 0 ? (
+                            propertyIds.map((propertyId, index) => {
+                                const property = props.properties.byId[propertyId];
+                                if (!property.isTemplate) {
                                     return (
-                                        <ContributionTemplate
-                                            key={`template-${index}-${valueId}`}
-                                            id={valueId}
-                                            value={value}
-                                            propertyId={propertyId}
-                                            selectedResource={props.initialResourceId}
-                                            enableEdit={props.enableEdit}
+                                        <StatementItem
+                                            key={'statement-' + index}
+                                            id={propertyId}
+                                            property={property}
+                                            predicateLabel={property.label}
+                                            enableEdit={shared <= 1 ? props.enableEdit : false}
                                             syncBackend={props.syncBackend}
+                                            isLastItem={propertyIds.length === index + 1}
                                             openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                                            isAnimated={property.isAnimated}
+                                            showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
+                                            resourceComponents={getComponents()}
                                         />
                                     );
-                                });
-                            }
-                        })
+                                } else {
+                                    return property.valueIds.map((valueId, index) => {
+                                        const value = props.values.byId[valueId];
+                                        return (
+                                            <ContributionTemplate
+                                                key={`template-${index}-${valueId}`}
+                                                id={valueId}
+                                                value={value}
+                                                propertyId={propertyId}
+                                                selectedResource={props.initialResourceId}
+                                                enableEdit={props.enableEdit}
+                                                syncBackend={props.syncBackend}
+                                                openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+                                                isAnimated={property.isAnimated}
+                                            />
+                                        );
+                                    });
+                                }
+                            })
+                        ) : (
+                            <NoData enableEdit={props.enableEdit} templatesFound={props.templatesFound} />
+                        )
                     ) : (
-                        <NoData enableEdit={props.enableEdit} templatesFound={props.templatesFound} />
-                    )
-                ) : (
-                    <StyledStatementItem>
-                        <Icon icon={faSpinner} spin /> Loading
-                    </StyledStatementItem>
-                )}
+                        <StyledStatementItem>
+                            <Icon icon={faSpinner} spin /> Loading
+                        </StyledStatementItem>
+                    )}
 
-                {shared <= 1 && props.enableEdit ? <AddProperty syncBackend={props.syncBackend} /> : ''}
-                {shared <= 1 && props.enableEdit && suggestedProperties().length > 0 && (
-                    <>
-                        <p className="text-muted mt-4">Suggested properties</p>
-                        <ListGroup>
-                            {suggestedProperties().map(c => (
-                                <ListGroupItem>
-                                    <StatementOptionButton
-                                        className="mr-2"
-                                        title={'Add property'}
-                                        icon={faPlus}
-                                        action={() => {
-                                            console.log('add property');
-                                            props.createProperty({
-                                                resourceId: props.selectedResource,
-                                                existingPredicateId: c.property.id,
-                                                label: c.property.label,
-                                                isTemplate: false,
-                                                createAndSelect: true
-                                            });
-                                        }}
-                                    />
-                                    {c.property.label}
-                                    <Badge pill className="ml-2">
-                                        {c.value.label}
-                                    </Badge>
-                                </ListGroupItem>
-                            ))}
-                        </ListGroup>
-                    </>
-                )}
-            </ListGroup>
+                    {shared <= 1 && props.enableEdit ? <AddProperty isDisabled={!canAddProperty()} syncBackend={props.syncBackend} /> : ''}
+                    {shared <= 1 && props.enableEdit && suggestedProperties().length > 0 && (
+                        <>
+                            <p className="text-muted mt-4">Suggested properties</p>
+                            <ListGroup>
+                                {suggestedProperties().map((c, index) => (
+                                    <ListGroupItem key={`suggested-property-${index}`}>
+                                        <StatementOptionButton
+                                            className="mr-2"
+                                            title={'Add property'}
+                                            icon={faPlus}
+                                            action={() => {
+                                                props.createProperty({
+                                                    resourceId: props.selectedResource,
+                                                    existingPredicateId: c.property.id,
+                                                    label: c.property.label,
+                                                    isTemplate: false,
+                                                    createAndSelect: true
+                                                });
+                                            }}
+                                        />
+                                        {c.property.label}
+                                        <Badge pill className="ml-2">
+                                            {c.value.label}
+                                        </Badge>
+                                    </ListGroupItem>
+                                ))}
+                            </ListGroup>
+                        </>
+                    )}
+                </ListGroup>
+            </div>
         );
     };
 
