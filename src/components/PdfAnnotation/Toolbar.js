@@ -3,6 +3,8 @@ import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSearchMinus, faICursor, faVectorSquare, faSearchPlus, faExpandArrowsAlt, faSave } from '@fortawesome/free-solid-svg-icons';
+import { connect } from 'react-redux';
+import { selectTool } from '../../actions/pdfAnnotation';
 
 const ToolbarStyled = styled.div`
     background: ${props => props.theme.darkblue};
@@ -15,6 +17,13 @@ const ToolbarStyled = styled.div`
 `;
 
 class Toolbar extends Component {
+    selectTool = tool => {
+        if (tool === this.props.selectedTool) {
+            this.props.selectTool(null);
+        } else {
+            this.props.selectTool(tool);
+        }
+    };
     render() {
         return (
             <ToolbarStyled>
@@ -22,7 +31,13 @@ class Toolbar extends Component {
                     <Icon icon={faICursor} className="mr-2" />
                     Text select
                 </Button>
-                <Button color="darkblueDarker" size="sm" className="ml-2">
+                <Button
+                    active={this.props.selectedTool === 'tableSelect'}
+                    color="darkblueDarker"
+                    size="sm"
+                    className="ml-2"
+                    onClick={() => this.selectTool('tableSelect')}
+                >
                     <Icon icon={faVectorSquare} className="mr-2" />
                     Table select
                 </Button>
@@ -58,4 +73,17 @@ class Toolbar extends Component {
     }
 }
 
-export default Toolbar;
+//export default Toolbar;
+
+const mapStateToProps = state => ({
+    selectedTool: state.pdfAnnotation.selectedTool
+});
+
+const mapDispatchToProps = dispatch => ({
+    selectTool: tool => dispatch(selectTool(tool))
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Toolbar);

@@ -193,6 +193,13 @@ class Header extends Component {
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS}>
                                         Statistics
                                     </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.PDF_ANNOTATION}>
+                                        PDF annotation{' '}
+                                        <small>
+                                            <Badge color="info">Beta</Badge>
+                                        </small>
+                                    </DropdownItem>
+                                    <DropdownItem divider />
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>
                                         Resources{' '}
                                         <small>

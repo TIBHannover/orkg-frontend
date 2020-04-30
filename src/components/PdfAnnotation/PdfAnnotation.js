@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'reactstrap';
 import Toolbar from './Toolbar';
+import TableSelect from './TableSelect';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import Dropzone from 'react-dropzone';
 import { withTheme } from 'styled-components';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { parse } from 'node-html-parser';
+import { setPdf } from '../../actions/pdfAnnotation';
 
 const DragPdf = styled.div`
     margin: 200px auto;
@@ -43,10 +48,11 @@ class PdfAnnotation extends Component {
             loading: false,
             pdf: '',
             zoom: 1,
-            paddingLeft: 0
+            paddingLeft: 0,
+            pages: null,
+            styles: []
         };
 
-        this.pdfContainer = React.createRef();
         this.defaultPageWidth = 968;
     }
 
@@ -55,13 +61,16 @@ class PdfAnnotation extends Component {
         const self = this;
 
         this.setState({
-            loading: true
+            loading: true,
+            pdf: files[0]
         });
         console.log(files[0]);
+        this.props.setPdf(files[0]);
+
         const form = new FormData();
         form.append('pdf', files[0]);
 
-        fetch('http://localhost:9000', {
+        fetch('http://localhost:9000/convertPdf', {
             method: 'POST',
             body: form
         })
@@ -74,9 +83,18 @@ class PdfAnnotation extends Component {
             })
             .then(function(data) {
                 //console.log(data);
+
+                const parseData = parse(data, {
+                    style: true // retrieve content in <style> (hurt performance slightly)
+                });
+                const pages = parseData.querySelectorAll('.pf');
+                console.log(parseData);
+                const styles = parseData.querySelectorAll('style');
+                console.log(styles);
                 self.setState({
                     loading: false,
-                    pdf: data
+                    pages,
+                    styles
                 });
             })
             .catch(err => {
@@ -119,13 +137,26 @@ class PdfAnnotation extends Component {
         return (
             <div style={{ paddingTop: 20 }}>
                 <Toolbar changeZoom={this.handleZoomChange} fullWidth={this.fullWidth} zoom={this.state.zoom} />
-                {this.state.pdf && (
-                    <PdfContainer ref={this.pdfContainer} style={{ paddingLeft: this.state.paddingLeft }}>
-                        <ZoomContainer style={{ transform: 'scale(' + this.state.zoom + ')' }} dangerouslySetInnerHTML={{ __html: this.state.pdf }} />
+
+                {this.state.pages && (
+                    <PdfContainer style={{ paddingLeft: this.state.paddingLeft }}>
+                        <ZoomContainer style={{ transform: 'scale(' + this.state.zoom + ')' }} id="zoom-container">
+                            {this.state.pages.map((page, index) => (
+                                <div style={{ position: 'relative' }} key={index}>
+                                    <TableSelect pageNumber={index + 1} pdf={this.state.pdf}>
+                                        <div dangerouslySetInnerHTML={{ __html: page }} />
+                                    </TableSelect>
+                                </div>
+                            ))}
+                        </ZoomContainer>
+
+                        {this.state.styles.map((style, index) => (
+                            <div dangerouslySetInnerHTML={{ __html: style }} key={index} />
+                        ))}
                     </PdfContainer>
                 )}
 
-                {!this.state.pdf && !this.state.loading && (
+                {!this.state.pages && !this.state.loading && (
                     <Dropzone onDrop={this.handleUpload}>
                         {({ getRootProps, getInputProps, isDragActive }) => (
                             <section>
@@ -152,4 +183,18 @@ class PdfAnnotation extends Component {
     }
 }
 
-export default withTheme(PdfAnnotation);
+const mapStateToProps = state => ({
+    selectedTool: state.pdfAnnotation.selectedTool
+});
+
+const mapDispatchToProps = dispatch => ({
+    setPdf: pdf => dispatch(setPdf(pdf))
+});
+
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    ),
+    withTheme
+)(PdfAnnotation);
