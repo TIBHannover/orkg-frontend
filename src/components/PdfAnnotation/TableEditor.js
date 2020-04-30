@@ -21,7 +21,7 @@ class TableEditor extends Component {
             text: field
         }));
 
-        let data = [];
+        const data = [];
 
         for (const [index, row] of this.props.data.entries()) {
             if (index === 0) {
@@ -29,7 +29,7 @@ class TableEditor extends Component {
             }
 
             const cells = row.split(',');
-            let dataRow = {};
+            const dataRow = {};
 
             if (cells.length > 0) {
                 for (const [index, cell] of cells.entries()) {
