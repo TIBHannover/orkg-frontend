@@ -432,9 +432,10 @@ export default (state = initialState, action) => {
         }
 
         case type.SET_STATEMENT_IS_FECHTED: {
-            const { resourceId } = action;
+            const { resourceId, depth } = action;
 
             let newState = dotProp.set(state, `resources.byId.${resourceId}.isFechted`, true);
+            newState = dotProp.set(newState, `resources.byId.${resourceId}.fetshedDepth`, depth);
             newState = dotProp.set(newState, `resources.byId.${resourceId}.isFetching`, false);
 
             return {
@@ -447,6 +448,7 @@ export default (state = initialState, action) => {
             let newState = dotProp.set(state, `isFetchingStatements`, true);
             if (resourceId) {
                 newState = dotProp.set(newState, `resources.byId.${resourceId}.isFetching`, true);
+                newState = dotProp.set(newState, `resources.byId.${resourceId}.isFechted`, false);
             }
 
             return {

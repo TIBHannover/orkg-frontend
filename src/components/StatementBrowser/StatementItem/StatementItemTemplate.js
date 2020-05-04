@@ -22,7 +22,6 @@ export default function StatementItemTemplate(props) {
         // compare the number of values with maxOccurs
         if (props.typeComponents && props.typeComponents.length > 0 && props.typeComponents[0].maxOccurs) {
             if (props.property.valueIds.length >= parseInt(props.typeComponents[0].maxOccurs)) {
-                console.log('reached maximum number of values for this component');
                 return false;
             } else {
                 return true;
@@ -40,7 +39,10 @@ export default function StatementItemTemplate(props) {
             return true;
         }
     };
-
+    let types = '';
+    if (props.enableEdit && props.typeComponents && props.typeComponents.length > 0) {
+        types = props.typeComponents.map(c => c.value.label).join(',');
+    }
     return (
         <StatementsGroupStyle className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'}`}>
             <div className={'row no-gutters'}>
@@ -49,9 +51,7 @@ export default function StatementItemTemplate(props) {
                         <div>
                             <div className={'propertyLabel'}>
                                 {props.predicateLabel} {}
-                                {props.enableEdit && props.typeComponents && props.typeComponents.length > 0 && (
-                                    <small>[{props.typeComponents.map(c => c.value.label).join(',')}]</small>
-                                )}
+                                {types && <small>[{types}]</small>}
                             </div>
                             {props.enableEdit && (
                                 <div className={propertyOptionsClasses}>
@@ -114,23 +114,29 @@ export default function StatementItemTemplate(props) {
                 </PropertyStyle>
                 <ValuesStyle className={'col-8 valuesList'}>
                     <ListGroup flush className="px-3">
-                        {props.property.valueIds.map((valueId, index) => {
-                            const value = props.values.byId[valueId];
-                            return (
-                                <ValueItem
-                                    value={value}
-                                    key={index}
-                                    id={valueId}
-                                    enableEdit={props.enableEdit}
-                                    syncBackend={props.syncBackend}
-                                    propertyId={props.id}
-                                    openExistingResourcesInDialog={props.openExistingResourcesInDialog}
-                                    contextStyle="Template"
-                                    showHelp={props.showValueHelp && index === 0 ? true : false}
-                                    typeComponents={props.typeComponents}
-                                />
-                            );
-                        })}
+                        {props.property.valueIds.length > 0 &&
+                            props.property.valueIds.map((valueId, index) => {
+                                const value = props.values.byId[valueId];
+                                return (
+                                    <ValueItem
+                                        value={value}
+                                        key={index}
+                                        id={valueId}
+                                        enableEdit={props.enableEdit}
+                                        syncBackend={props.syncBackend}
+                                        propertyId={props.id}
+                                        openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+                                        contextStyle="Template"
+                                        showHelp={props.showValueHelp && index === 0 ? true : false}
+                                        typeComponents={props.typeComponents}
+                                    />
+                                );
+                            })}
+                        {!props.enableEdit && props.property.valueIds.length === 0 && (
+                            <div className={'pt-2'}>
+                                <small>No values</small>
+                            </div>
+                        )}
                         {props.enableEdit && (
                             <AddValue
                                 isDisabled={!canAddValues()}

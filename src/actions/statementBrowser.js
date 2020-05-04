@@ -2,6 +2,7 @@ import * as type from './types.js';
 import { guid } from '../utils';
 import * as network from '../network';
 import { orderBy } from 'lodash';
+import { uniq } from 'lodash';
 
 export const initializeWithoutContribution = data => dispatch => {
     // To initialise:
@@ -36,22 +37,49 @@ export const initializeWithoutContribution = data => dispatch => {
     );
 };
 
-export const initializeWithResource = data => dispatch => {
-    const label = data.label;
-    const resourceId = data.resourceId;
+export function initializeWithResource(data) {
+    return (dispatch, getState) => {
+        const label = data.label;
+        const resourceId = data.resourceId;
 
-    dispatch({
-        type: type.CLEAR_RESOURCE_HISTORY
-    });
+        dispatch({
+            type: type.CLEAR_RESOURCE_HISTORY
+        });
 
-    dispatch(
-        selectResource({
-            increaseLevel: false,
-            resourceId: resourceId,
-            label: label
-        })
-    );
-};
+        dispatch(
+            selectResource({
+                increaseLevel: false,
+                resourceId: resourceId,
+                label: label
+            })
+        );
+
+        const components = getComponents(getState(), resourceId);
+        // add required properties first (minOccurs >= 1)
+        let propertyIds = getState().statementBrowser.resources.byId[data.resourceId].propertyIds;
+        propertyIds = propertyIds.map(propertyId => {
+            const property = getState().statementBrowser.properties.byId[propertyId];
+            return property.existingPredicateId;
+        });
+        components
+            .filter(x => !propertyIds.includes(x.property.id))
+            .map(mp => {
+                if (mp.minOccurs >= 1) {
+                    const propertyId = guid();
+                    dispatch(
+                        createProperty({
+                            propertyId: propertyId,
+                            resourceId: resourceId,
+                            existingPredicateId: mp.property.id,
+                            label: mp.property.label,
+                            isExistingProperty: true,
+                            isTemplate: false
+                        })
+                    );
+                }
+            });
+    };
+}
 
 export const resetStatementBrowser = () => dispatch => {
     dispatch({
@@ -145,20 +173,24 @@ export const updatePropertyLabel = data => dispatch => {
     });
 };
 
-export const createValue = data => dispatch => {
-    const resourceId = data.existingResourceId ? data.existingResourceId : data.type === 'object' || data.type === 'template' ? guid() : null;
-    dispatch({
-        type: type.CREATE_VALUE,
-        payload: {
-            valueId: data.valueId ? data.valueId : guid(),
-            resourceId: resourceId,
-            ...data
-        }
-    });
+export function createValue(data) {
+    return (dispatch, getState) => {
+        const resourceId = data.existingResourceId ? data.existingResourceId : data.type === 'object' || data.type === 'template' ? guid() : null;
 
-    // dispatch loading classes
-    data.classes && data.classes.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
-};
+        dispatch({
+            type: type.CREATE_VALUE,
+            payload: {
+                valueId: data.valueId ? data.valueId : guid(),
+                resourceId: resourceId,
+                ...data
+            }
+        });
+
+        // dispatch loading classes
+        data.classes && data.classes.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
+        return Promise.resolve();
+    };
+}
 
 export const toggleEditValue = data => dispatch => {
     dispatch({
@@ -394,6 +426,7 @@ export const fetchStructureForTemplate = data => {
     };
 };
 
+/*
 // TODO: support literals (currently not working in backend)
 export const fetchStatementsForResource = data => {
     let { isContribution } = data;
@@ -502,10 +535,230 @@ export const fetchStatementsForResource = data => {
         );
     };
 };
+*/
 
 export const goToResourceHistory = data => dispatch => {
     dispatch({
         type: type.GOTO_RESOURCE_HISTORY,
         payload: data
     });
+};
+
+/*
+    Get components of a resource
+*/
+function getComponents(state, resourceID) {
+    const resource = state.statementBrowser.resources.byId[resourceID];
+    // get template components
+    // get all template ids
+    let templateIds = resource.templateId ? [resource.templateId] : [];
+    if (resource.classes) {
+        for (const c of resource.classes) {
+            if (state.statementBrowser.classes[c]) {
+                templateIds = templateIds.concat(state.statementBrowser.classes[c].templateIds);
+            }
+        }
+    }
+    templateIds = uniq(templateIds);
+
+    let components = [];
+    // get components of this statement predicate
+    for (const templateId of templateIds) {
+        const template = state.statementBrowser.templates[templateId];
+        if (template && template.components) {
+            components = components.concat(template.components);
+        }
+    }
+    return components;
+}
+
+/*
+    Check if it should fetch statements for resources
+*/
+function shouldFetchStatementsForResource(state, resourceId, depth) {
+    const resource = state.statementBrowser.resources.byId[resourceId];
+    if (!resource || !resource.isFechted || (resource.isFechted && resource.fetshedDepth < depth)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// TODO: support literals (currently not working in backend)
+export const fetchStatementsForResource = data => {
+    let { isContribution, depth } = data;
+    const { resourceId, existingResourceId } = data;
+    isContribution = isContribution ? isContribution : false;
+
+    if (typeof depth == 'number') {
+        depth = depth - 1;
+    } else {
+        depth = 0;
+    }
+
+    let resourceStatements = [];
+
+    // Get the resource classes
+    return (dispatch, getState) => {
+        if (shouldFetchStatementsForResource(getState(), existingResourceId, depth)) {
+            dispatch({
+                type: type.IS_FETCHING_STATEMENTS,
+                resourceId: resourceId
+            });
+            return network.getResource(existingResourceId).then(response => {
+                let resourceClasses = response.classes;
+                // get templates of classes
+                if (resourceClasses && resourceClasses.length > 0) {
+                    resourceClasses = resourceClasses.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
+                }
+                const instanceOfTemplate = network.getStatementsBySubject({ id: existingResourceId }).then(response => {
+                    resourceStatements = response;
+                    //Get template used to create this resource
+                    const templateID = response.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE);
+                    if (templateID) {
+                        return dispatch(
+                            setTemplateOfResource({
+                                resourceId: resourceId,
+                                templateId: templateID.object.id
+                            })
+                        );
+                    } else {
+                        return Promise.resolve();
+                    }
+                });
+
+                return Promise.all([instanceOfTemplate, ...resourceClasses]).then(() => {
+                    // all the template of classes are loaded
+                    // add the required proerty first
+                    const components = getComponents(getState(), resourceId);
+                    // add required properties first (minOccurs >= 1)
+                    let propertyIds = getState().statementBrowser.resources.byId[existingResourceId].propertyIds;
+                    propertyIds = propertyIds.map(propertyId => {
+                        const property = getState().statementBrowser.properties.byId[propertyId];
+                        return property.existingPredicateId;
+                    });
+
+                    const existingProperties = [];
+                    const researchProblems = [];
+
+                    components
+                        .filter(x => !propertyIds.includes(x.property.id))
+                        .map(mp => {
+                            if (mp.minOccurs >= 1) {
+                                const propertyId = guid();
+                                dispatch(
+                                    createProperty({
+                                        propertyId: propertyId,
+                                        resourceId: resourceId,
+                                        existingPredicateId: mp.property.id,
+                                        label: mp.property.label,
+                                        isExistingProperty: true,
+                                        isTemplate: false
+                                    })
+                                );
+                                existingProperties.push({
+                                    existingPredicateId: mp.property.id,
+                                    propertyId
+                                });
+                            }
+                        });
+
+                    // Sort predicates and values by label
+                    resourceStatements = orderBy(
+                        resourceStatements,
+                        [
+                            resourceStatements => resourceStatements.predicate.label.toLowerCase(),
+                            resourceStatements => resourceStatements.object.label.toLowerCase()
+                        ],
+                        ['asc']
+                    );
+
+                    // Finished the call
+                    dispatch({
+                        type: type.DONE_FETCHING_STATEMENTS
+                    });
+
+                    for (const statement of resourceStatements) {
+                        let propertyId = guid();
+                        const valueId = guid();
+                        // filter out research problem to show differently
+                        if (isContribution && statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM) {
+                            researchProblems.push({
+                                label: statement.object.label,
+                                id: statement.object.id,
+                                statementId: statement.id
+                            });
+                        } else {
+                            // check whether there already exist a property for this, then combine
+                            if (existingProperties.filter(e => e.existingPredicateId === statement.predicate.id).length === 0) {
+                                dispatch(
+                                    createProperty({
+                                        propertyId: propertyId,
+                                        resourceId: resourceId,
+                                        existingPredicateId: statement.predicate.id,
+                                        label: statement.predicate.label,
+                                        isExistingProperty: true,
+                                        isTemplate: false
+                                    })
+                                );
+
+                                existingProperties.push({
+                                    existingPredicateId: statement.predicate.id,
+                                    propertyId
+                                });
+                            } else {
+                                propertyId = existingProperties.filter(e => e.existingPredicateId === statement.predicate.id)[0].propertyId;
+                            }
+
+                            dispatch(
+                                createValue({
+                                    valueId: valueId,
+                                    existingResourceId: statement.object.id,
+                                    propertyId: propertyId,
+                                    label: statement.object.label,
+                                    type: statement.object._class === 'literal' ? 'literal' : 'object', // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
+                                    classes: statement.object.classes ? statement.object.classes : [],
+                                    isExistingValue: true,
+                                    existingStatement: true,
+                                    statementId: statement.id,
+                                    shared: statement.object.shared
+                                })
+                            ).then(() => {
+                                if (depth >= 1 && statement.object._class === 'resource') {
+                                    dispatch(
+                                        fetchStatementsForResource({
+                                            existingResourceId: statement.object.id,
+                                            resourceId: statement.object.id,
+                                            depth: depth
+                                        })
+                                    );
+                                }
+                            });
+
+                            //Load template of objects
+                            statement.object.classes && statement.object.classes.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
+                        }
+                    }
+
+                    if (isContribution) {
+                        dispatch({
+                            type: type.SET_RESEARCH_PROBLEMS,
+                            payload: {
+                                researchProblems,
+                                resourceId
+                            }
+                        });
+                    }
+
+                    dispatch({
+                        type: type.SET_STATEMENT_IS_FECHTED,
+                        resourceId: resourceId,
+                        depth: depth
+                    });
+                });
+            });
+        } else {
+            return Promise.resolve();
+        }
+    };
 };

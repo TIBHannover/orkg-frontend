@@ -26,7 +26,8 @@ export const selectContribution = ({ contributionId: id, contributionIsLoaded })
             fetchStatementsForResource({
                 resourceId: id,
                 existingResourceId: id,
-                isContribution: true
+                isContribution: true,
+                depth: 3 // load depth 3 the first time
             })
         );
     }

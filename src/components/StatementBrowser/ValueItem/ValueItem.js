@@ -117,10 +117,11 @@ export default function ValueItem(props) {
         const resource = props.resources.byId[props.value.resourceId];
         const existingResourceId = resource.existingResourceId;
 
-        if (existingResourceId && !resource.isFechted) {
+        if (existingResourceId) {
             props.fetchStatementsForResource({
                 resourceId: props.value.resourceId,
-                existingResourceId
+                existingResourceId,
+                depth: 3
             });
         }
 

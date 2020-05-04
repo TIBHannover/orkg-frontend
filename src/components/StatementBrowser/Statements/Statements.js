@@ -74,7 +74,7 @@ export default function Statements(props) {
                 components = components.concat(template.components);
             }
         }
-
+        /*
         // add missing required properties (minOccurs >= 1)
         let propertyIds = props.resources.byId[props.selectedResource].propertyIds;
         propertyIds = propertyIds.map(propertyId => {
@@ -94,7 +94,7 @@ export default function Statements(props) {
                     });
                 }
             });
-
+        */
         return components;
     };
 
