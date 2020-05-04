@@ -77,6 +77,7 @@ export function initializeWithResource(data) {
                         })
                     );
                 }
+                return null;
             });
     };
 }
@@ -661,6 +662,7 @@ export const fetchStatementsForResource = data => {
                                     propertyId
                                 });
                             }
+                            return null;
                         });
 
                     // Sort predicates and values by label

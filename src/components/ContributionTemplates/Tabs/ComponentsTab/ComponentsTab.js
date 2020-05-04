@@ -1,12 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import { Button, FormGroup, Label, FormText, InputGroup, InputGroupAddon, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
 import { setComponents, setSubTemplates } from 'actions/addTemplate';
-import { resourcesUrl, createPredicate, createClass } from 'network';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
+import { createPredicate, createClass } from 'network';
 import TemplateComponent from 'components/ContributionTemplates/TemplateComponent/TemplateComponent';
 import AddPropertyTemplate from 'components/StatementBrowser/AddProperty/AddPropertyTemplate';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
@@ -19,8 +16,9 @@ function ComponentsTab(props) {
     const [confirmNewPropertyModal, setConfirmNewPropertyModal] = useState(false);
 
     const [modal, setModal] = useState(false);
-    const [dialogResourceId, setDialogResourceId] = useState(null);
-    const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
+
+    const [dialogResourceId] = useState(null);
+    const [dialogResourceLabel] = useState(null);
 
     const handleDeleteTemplateComponent = index => {
         props.setComponents(props.components.filter((item, j) => index !== j));
@@ -121,7 +119,7 @@ function ComponentsTab(props) {
         props.setComponents(templateComponents);
         setShowAddProperty(false);
     };
-
+    /*
     const handleSubTemplatesSelect = (selected, index) => {
         const templateSubTemplates = props.subTemplates.map((item, j) => {
             if (j === index) {
@@ -147,7 +145,7 @@ function ComponentsTab(props) {
         const templateSubTemplates = [...props.subTemplates, {}];
         props.setSubTemplates(templateSubTemplates);
     };
-
+    */
     const moveCard = useCallback(
         (dragIndex, hoverIndex) => {
             const dragCard = props.components[dragIndex];

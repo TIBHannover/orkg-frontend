@@ -62,9 +62,11 @@ function GeneralSettings(props) {
         props.setResearchFields(!selected ? [] : selected);
     };
 
+    /*
     const handleResearchProblemSelect = selected => {
         props.setResearchProblems(!selected ? [] : selected);
     };
+    */
     if (inputRef.current) {
         inputRef.current.focus();
     }
