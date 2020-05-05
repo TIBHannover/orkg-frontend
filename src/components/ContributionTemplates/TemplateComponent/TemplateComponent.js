@@ -52,9 +52,11 @@ function TemplateComponent(props) {
         item: { type: ItemTypes.TEMPLATE_COMPONENT, index: props.id },
         collect: monitor => ({
             isDragging: monitor.isDragging()
-        })
+        }),
+        canDrag: () => props.enableEdit
     });
     const opacity = isDragging ? 0 : 1;
+
     drag(drop(ref));
 
     return (

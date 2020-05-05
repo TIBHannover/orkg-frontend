@@ -29,9 +29,11 @@ function TemplateComponentProperty(props) {
 
     return (
         <PropertyStyle className={`col-4`} tabIndex="0">
-            <DragHandler>
-                <Icon icon={faArrowsAlt} />
-            </DragHandler>
+            {props.enableEdit && (
+                <DragHandler>
+                    <Icon icon={faArrowsAlt} />
+                </DragHandler>
+            )}
             {!isEditing ? (
                 <div className={'propertyLabel'}>
                     {props.property.label}
