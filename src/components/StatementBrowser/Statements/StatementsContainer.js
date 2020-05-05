@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withCookies } from 'react-cookie';
-import { initializeWithoutContribution, initializeWithResource, createProperty } from 'actions/statementBrowser';
+import { getComponentsByResourceID, initializeWithoutContribution, initializeWithResource, createProperty } from 'actions/statementBrowser';
 import Statements from './Statements';
 
 const mapStateToProps = state => {
@@ -13,7 +13,8 @@ const mapStateToProps = state => {
         classes: state.statementBrowser.classes,
         templates: state.statementBrowser.templates,
         isFetchingStatements: state.statementBrowser.isFetchingStatements,
-        selectedResource: state.statementBrowser.selectedResource
+        selectedResource: state.statementBrowser.selectedResource,
+        components: getComponentsByResourceID(state, state.statementBrowser.selectedResource)
     };
 };
 

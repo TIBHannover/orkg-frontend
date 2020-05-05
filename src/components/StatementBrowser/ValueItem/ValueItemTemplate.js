@@ -82,7 +82,7 @@ export default function ValueItemTemplate(props) {
                                     <ValuePlugins type={'resource'}>{props.value.label}</ValuePlugins>
                                 </Pulse>
                             ) : (
-                                <ValuePlugins type={'resource'}>{props.getLabel() || 'Loading...'}</ValuePlugins>
+                                <ValuePlugins type={'resource'}>{props.getLabel() || ''}</ValuePlugins>
                             )}
 
                             {props.resource && props.resource.existingResourceId && props.openExistingResourcesInDialog ? (

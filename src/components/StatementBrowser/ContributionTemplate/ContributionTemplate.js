@@ -44,29 +44,6 @@ export default function ContributionTemplate(props) {
         return true;
     };
 
-    const getComponents = () => {
-        const resource = props.resources.byId[props.value.resourceId];
-        // get template components
-        // get all template ids
-        let templateIds = resource.templateId ? [resource.templateId] : [];
-        for (const c of resource.classes) {
-            if (props.classes[c]) {
-                templateIds = templateIds.concat(props.classes[c].templateIds);
-            }
-        }
-        templateIds = uniq(templateIds);
-
-        let components = [];
-        // get components of this statement predicate
-        for (const templateId of templateIds) {
-            const template = props.templates[templateId];
-            if (template && template.components) {
-                components = components.concat(template.components);
-            }
-        }
-        return components;
-    };
-
     return (
         <AnimationContainer
             classNames="fadeIn"
@@ -104,7 +81,7 @@ export default function ContributionTemplate(props) {
                             inTemplate={true}
                             contextStyle={'Template'}
                             resourceId={props.value.resourceId}
-                            resourceComponents={getComponents()}
+                            resourceComponents={props.components}
                         />
                     );
                 })}
@@ -138,6 +115,7 @@ ContributionTemplate.propTypes = {
 
     classes: PropTypes.object.isRequired,
     templates: PropTypes.object.isRequired,
+    components: PropTypes.array.isRequired,
 
     resources: PropTypes.object.isRequired,
     properties: PropTypes.object.isRequired,

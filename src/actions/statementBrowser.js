@@ -54,7 +54,7 @@ export function initializeWithResource(data) {
             })
         );
 
-        const components = getComponents(getState(), resourceId);
+        const components = getComponentsByResourceID(getState(), resourceId);
         // add required properties first (minOccurs >= 1)
         let propertyIds = getState().statementBrowser.resources.byId[data.resourceId].propertyIds;
         propertyIds = propertyIds.map(propertyId => {
@@ -548,7 +548,10 @@ export const goToResourceHistory = data => dispatch => {
 /*
     Get components of a resource
 */
-function getComponents(state, resourceID) {
+export function getComponentsByResourceID(state, resourceID) {
+    if (!resourceID) {
+        return [];
+    }
     const resource = state.statementBrowser.resources.byId[resourceID];
     // get template components
     // get all template ids
@@ -571,6 +574,17 @@ function getComponents(state, resourceID) {
         }
     }
     return components;
+}
+
+/*
+    Get components of a resource
+*/
+export function getComponentsByResourceIDAndPredicate(state, resourceID, predicateID) {
+    const resourceComponents = getComponentsByResourceID(state, resourceID);
+    if (resourceComponents.length === 0) {
+        return [];
+    }
+    return resourceComponents.filter(c => c.property.id === predicateID);
 }
 
 /*
@@ -631,7 +645,7 @@ export const fetchStatementsForResource = data => {
                 return Promise.all([instanceOfTemplate, ...resourceClasses]).then(() => {
                     // all the template of classes are loaded
                     // add the required proerty first
-                    const components = getComponents(getState(), resourceId);
+                    const components = getComponentsByResourceID(getState(), resourceId);
                     // add required properties first (minOccurs >= 1)
                     let propertyIds = getState().statementBrowser.resources.byId[existingResourceId].propertyIds;
                     propertyIds = propertyIds.map(propertyId => {

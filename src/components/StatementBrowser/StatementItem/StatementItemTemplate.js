@@ -39,10 +39,7 @@ export default function StatementItemTemplate(props) {
             return true;
         }
     };
-    let types = '';
-    if (props.enableEdit && props.typeComponents && props.typeComponents.length > 0) {
-        types = props.typeComponents.map(c => c.value.label).join(',');
-    }
+
     return (
         <StatementsGroupStyle className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'}`}>
             <div className={'row no-gutters'}>
@@ -51,7 +48,9 @@ export default function StatementItemTemplate(props) {
                         <div>
                             <div className={'propertyLabel'}>
                                 {props.predicateLabel} {}
-                                {types && <small>[{types}]</small>}
+                                {props.enableEdit && props.typeComponents && props.typeComponents.length > 0 && (
+                                    <small>[{props.typeComponents.map(c => c.value.label).join(',')}]</small>
+                                )}
                             </div>
                             {props.enableEdit && (
                                 <div className={propertyOptionsClasses}>

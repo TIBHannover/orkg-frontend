@@ -54,57 +54,13 @@ export default function Statements(props) {
         return true;
     };
 
-    const getComponents = () => {
-        const resource = props.resources.byId[props.selectedResource];
-        // get template components
-        // get all template ids
-        let templateIds = resource.templateId ? [resource.templateId] : [];
-        for (const c of resource.classes) {
-            if (props.classes[c]) {
-                templateIds = templateIds.concat(props.classes[c].templateIds);
-            }
-        }
-        templateIds = uniq(templateIds);
-
-        let components = [];
-        // get components of this statement predicate
-        for (const templateId of templateIds) {
-            const template = props.templates[templateId];
-            if (template && template.components) {
-                components = components.concat(template.components);
-            }
-        }
-        /*
-        // add missing required properties (minOccurs >= 1)
-        let propertyIds = props.resources.byId[props.selectedResource].propertyIds;
-        propertyIds = propertyIds.map(propertyId => {
-            const property = props.properties.byId[propertyId];
-            return property.existingPredicateId;
-        });
-        components
-            .filter(x => !propertyIds.includes(x.property.id))
-            .map(mp => {
-                if (mp.minOccurs >= 1) {
-                    props.createProperty({
-                        resourceId: props.selectedResource,
-                        existingPredicateId: mp.property.id,
-                        label: mp.property.label,
-                        isTemplate: false,
-                        createAndSelect: true
-                    });
-                }
-            });
-        */
-        return components;
-    };
-
     const suggestedProperties = () => {
         let propertyIds = props.resources.byId[props.selectedResource].propertyIds;
         propertyIds = propertyIds.map(propertyId => {
             const property = props.properties.byId[propertyId];
             return property.existingPredicateId;
         });
-        return getComponents().filter(x => !propertyIds.includes(x.property.id));
+        return props.components.filter(x => !propertyIds.includes(x.property.id));
     };
 
     const statements = () => {
@@ -142,7 +98,7 @@ export default function Statements(props) {
                                             isLastItem={propertyIds.length === index + 1}
                                             openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                             showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
-                                            resourceComponents={getComponents()}
+                                            resourceComponents={props.components}
                                         />
                                     );
                                 } else {
@@ -250,6 +206,7 @@ Statements.propTypes = {
     classes: PropTypes.object.isRequired,
     templates: PropTypes.object.isRequired,
     createProperty: PropTypes.func.isRequired,
+    components: PropTypes.array.isRequired,
 
     enableEdit: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,

@@ -1,15 +1,16 @@
-import { doneAnimation } from 'actions/statementBrowser';
+import { doneAnimation, getComponentsByResourceID } from 'actions/statementBrowser';
 import ContributionTemplate from './ContributionTemplate';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withCookies } from 'react-cookie';
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, props) => {
     return {
         properties: state.statementBrowser.properties,
         resources: state.statementBrowser.resources,
         classes: state.statementBrowser.classes,
-        templates: state.statementBrowser.templates
+        templates: state.statementBrowser.templates,
+        components: getComponentsByResourceID(state, props.value.resourceId)
     };
 };
 
