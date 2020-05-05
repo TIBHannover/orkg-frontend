@@ -149,9 +149,11 @@ export default function AddValueTemplate(props) {
                             props.handleAddValue(valueType, tempateNodeLabel).then(resourceId => {
                                 // 2 - open the dialog on that resource
                                 if (props.openExistingResourcesInDialog) {
-                                    setDialogResourceId(resourceId);
-                                    setDialogResourceLabel(tempateNodeLabel);
-                                    setModal(true);
+                                    props.createRequiredPropertiesInResource(resourceId).then(() => {
+                                        setDialogResourceId(resourceId);
+                                        setDialogResourceLabel(tempateNodeLabel);
+                                        setModal(true);
+                                    });
                                 } else {
                                     props.selectResource({
                                         increaseLevel: true,
@@ -274,5 +276,6 @@ AddValueTemplate.propTypes = {
     classes: PropTypes.object.isRequired,
     selectResource: PropTypes.func.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
+    createRequiredPropertiesInResource: PropTypes.func.isRequired,
     isDisabled: PropTypes.bool
 };

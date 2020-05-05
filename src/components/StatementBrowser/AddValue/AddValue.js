@@ -109,6 +109,7 @@ export default class AddValue extends Component {
                     selectResource={this.props.selectResource}
                     openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                     isDisabled={this.props.isDisabled}
+                    createRequiredPropertiesInResource={this.props.createRequiredPropertiesInResource}
                 />
             </>
         );
@@ -131,7 +132,8 @@ AddValue.propTypes = {
     typeComponents: PropTypes.array.isRequired,
     classes: PropTypes.object.isRequired,
     templates: PropTypes.object.isRequired,
-    isDisabled: PropTypes.bool.isRequired
+    isDisabled: PropTypes.bool.isRequired,
+    createRequiredPropertiesInResource: PropTypes.func.isRequired
 };
 
 AddValue.defaultProps = {

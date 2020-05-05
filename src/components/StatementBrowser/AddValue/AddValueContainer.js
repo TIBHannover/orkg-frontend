@@ -1,5 +1,11 @@
 import { connect } from 'react-redux';
-import { createProperty, createValue, fetchTemplatesofClassIfNeeded, selectResource } from 'actions/statementBrowser';
+import {
+    createProperty,
+    createValue,
+    fetchTemplatesofClassIfNeeded,
+    selectResource,
+    createRequiredPropertiesInResource
+} from 'actions/statementBrowser';
 import AddValue from './AddValue';
 
 const mapStateToProps = state => {
@@ -30,7 +36,8 @@ const mapDispatchToProps = dispatch => ({
     createValue: data => dispatch(createValue(data)),
     createProperty: data => dispatch(createProperty(data)),
     selectResource: data => dispatch(selectResource(data)),
-    fetchTemplatesofClassIfNeeded: data => dispatch(fetchTemplatesofClassIfNeeded(data))
+    fetchTemplatesofClassIfNeeded: data => dispatch(fetchTemplatesofClassIfNeeded(data)),
+    createRequiredPropertiesInResource: data => dispatch(createRequiredPropertiesInResource(data))
 });
 
 export default connect(

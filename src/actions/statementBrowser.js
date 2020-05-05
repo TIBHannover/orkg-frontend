@@ -52,9 +52,7 @@ export function initializeWithResource(data) {
                 resourceId: resourceId,
                 label: label
             })
-        );
-
-        createRequiredPropertiesInResource(resourceId);
+        ).then(() => createRequiredPropertiesInResource(resourceId));
     };
 }
 
@@ -64,8 +62,8 @@ export function createRequiredPropertiesInResource(resourceId) {
         const components = getComponentsByResourceID(getState(), resourceId);
         // add required properties (minOccurs >= 1)
         const resource = getState().statementBrowser.resources.byId[resourceId];
-        let propertyIds = [];
-        if (resource) {
+        let propertyIds = resource.propertyIds;
+        if (propertyIds) {
             propertyIds = resource.propertyIds ? resource.propertyIds : [];
             propertyIds = propertyIds.map(propertyId => {
                 const property = getState().statementBrowser.properties.byId[propertyId];
@@ -98,7 +96,7 @@ export function createRequiredPropertiesInResource(resourceId) {
                 return null;
             });
 
-        return createdProperties;
+        return Promise.resolve(createdProperties);
     };
 }
 
@@ -347,31 +345,34 @@ export function fetchTemplatesofClassIfNeeded(classID) {
     };
 }
 
-export const selectResource = data => dispatch => {
-    // use redux thunk for async action, for capturing the resource properties
-    dispatch({
-        type: type.SELECT_RESOURCE,
-        payload: {
-            increaseLevel: data.increaseLevel,
-            resourceId: data.resourceId,
-            label: data.label
-        }
-    });
-
-    dispatch({
-        type: type.ADD_RESOURCE_HISTORY,
-        payload: {
-            resourceId: data.resourceId,
-            label: data.label
-        }
-    });
-
-    if (data.resetLevel) {
+export function selectResource(data) {
+    return dispatch => {
+        // use redux thunk for async action, for capturing the resource properties
         dispatch({
-            type: type.RESET_LEVEL
+            type: type.SELECT_RESOURCE,
+            payload: {
+                increaseLevel: data.increaseLevel,
+                resourceId: data.resourceId,
+                label: data.label
+            }
         });
-    }
-};
+
+        dispatch({
+            type: type.ADD_RESOURCE_HISTORY,
+            payload: {
+                resourceId: data.resourceId,
+                label: data.label
+            }
+        });
+
+        if (data.resetLevel) {
+            dispatch({
+                type: type.RESET_LEVEL
+            });
+        }
+        return Promise.resolve().then(() => dispatch(createRequiredPropertiesInResource(data.resourceId)));
+    };
+}
 
 export const fetchStructureForTemplate = data => {
     const { resourceId, templateId } = data;
