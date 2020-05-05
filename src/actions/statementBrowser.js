@@ -54,13 +54,25 @@ export function initializeWithResource(data) {
             })
         );
 
+        createRequiredPropertiesInResource(resourceId);
+    };
+}
+
+export function createRequiredPropertiesInResource(resourceId) {
+    return (dispatch, getState) => {
+        const createdProperties = [];
         const components = getComponentsByResourceID(getState(), resourceId);
-        // add required properties first (minOccurs >= 1)
-        let propertyIds = getState().statementBrowser.resources.byId[data.resourceId].propertyIds;
-        propertyIds = propertyIds.map(propertyId => {
-            const property = getState().statementBrowser.properties.byId[propertyId];
-            return property.existingPredicateId;
-        });
+        // add required properties (minOccurs >= 1)
+        let propertyIds = getState().statementBrowser.resources.byId[resourceId].propertyIds;
+        if (propertyIds) {
+            propertyIds = propertyIds.map(propertyId => {
+                const property = getState().statementBrowser.properties.byId[propertyId];
+                return property.existingPredicateId;
+            });
+        } else {
+            propertyIds = [];
+        }
+
         components
             .filter(x => !propertyIds.includes(x.property.id))
             .map(mp => {
@@ -76,9 +88,15 @@ export function initializeWithResource(data) {
                             isTemplate: false
                         })
                     );
+                    createdProperties.push({
+                        existingPredicateId: mp.property.id,
+                        propertyId
+                    });
                 }
                 return null;
             });
+
+        return createdProperties;
     };
 }
 
@@ -427,117 +445,6 @@ export const fetchStructureForTemplate = data => {
     };
 };
 
-/*
-// TODO: support literals (currently not working in backend)
-export const fetchStatementsForResource = data => {
-    let { isContribution } = data;
-    const { resourceId, existingResourceId } = data;
-    isContribution = isContribution ? isContribution : false;
-
-    return dispatch => {
-        dispatch({
-            type: type.IS_FETCHING_STATEMENTS,
-            resourceId: resourceId
-        });
-        return network.getStatementsBySubject({ id: existingResourceId }).then(
-            response => {
-                dispatch({
-                    type: type.DONE_FETCHING_STATEMENTS
-                });
-
-                response = orderBy(
-                    response,
-                    [response => response.predicate.label.toLowerCase(), response => response.object.label.toLowerCase()],
-                    ['asc']
-                );
-
-                const existingProperties = [];
-                const researchProblems = [];
-
-                //Get template used to create this resource
-                const templateID = response.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE);
-                if (templateID) {
-                    dispatch(
-                        setTemplateOfResource({
-                            resourceId: resourceId,
-                            templateId: templateID.object.id
-                        })
-                    );
-                }
-
-                for (const statement of response) {
-                    let propertyId = guid();
-                    const valueId = guid();
-                    // filter out research problem to show differently
-                    if (isContribution && statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM) {
-                        researchProblems.push({
-                            label: statement.object.label,
-                            id: statement.object.id,
-                            statementId: statement.id
-                        });
-                    } else {
-                        // check whether there already exist a property for this, then combine
-                        if (existingProperties.filter(e => e.existingPredicateId === statement.predicate.id).length === 0) {
-                            dispatch(
-                                createProperty({
-                                    propertyId: propertyId,
-                                    resourceId: resourceId,
-                                    existingPredicateId: statement.predicate.id,
-                                    label: statement.predicate.label,
-                                    isExistingProperty: true,
-                                    isTemplate: false
-                                })
-                            );
-
-                            existingProperties.push({
-                                existingPredicateId: statement.predicate.id,
-                                propertyId
-                            });
-                        } else {
-                            propertyId = existingProperties.filter(e => e.existingPredicateId === statement.predicate.id)[0].propertyId;
-                        }
-
-                        dispatch(
-                            createValue({
-                                valueId: valueId,
-                                existingResourceId: statement.object.id,
-                                propertyId: propertyId,
-                                label: statement.object.label,
-                                type: statement.object._class === 'literal' ? 'literal' : 'object', // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
-                                classes: statement.object.classes ? statement.object.classes : [],
-                                isExistingValue: true,
-                                existingStatement: true,
-                                statementId: statement.id,
-                                shared: statement.object.shared
-                            })
-                        );
-
-                        //Load template of objects
-                        statement.object.classes && statement.object.classes.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
-                    }
-                }
-
-                if (isContribution) {
-                    dispatch({
-                        type: type.SET_RESEARCH_PROBLEMS,
-                        payload: {
-                            researchProblems,
-                            resourceId
-                        }
-                    });
-                }
-
-                dispatch({
-                    type: type.SET_STATEMENT_IS_FECHTED,
-                    resourceId: resourceId
-                });
-            },
-            error => console.log('An error occurred.', error)
-        );
-    };
-};
-*/
-
 export const goToResourceHistory = data => dispatch => {
     dispatch({
         type: type.GOTO_RESOURCE_HISTORY,
@@ -553,6 +460,10 @@ export function getComponentsByResourceID(state, resourceID) {
         return [];
     }
     const resource = state.statementBrowser.resources.byId[resourceID];
+
+    if (!resource) {
+        return [];
+    }
     // get template components
     // get all template ids
     let templateIds = resource.templateId ? [resource.templateId] : [];
@@ -642,136 +553,106 @@ export const fetchStatementsForResource = data => {
                     }
                 });
 
-                return Promise.all([instanceOfTemplate, ...resourceClasses]).then(() => {
-                    // all the template of classes are loaded
-                    // add the required proerty first
-                    const components = getComponentsByResourceID(getState(), resourceId);
-                    // add required properties first (minOccurs >= 1)
-                    let propertyIds = getState().statementBrowser.resources.byId[existingResourceId].propertyIds;
-                    propertyIds = propertyIds.map(propertyId => {
-                        const property = getState().statementBrowser.properties.byId[propertyId];
-                        return property.existingPredicateId;
-                    });
+                return Promise.all([instanceOfTemplate, ...resourceClasses])
+                    .then(() => dispatch(createRequiredPropertiesInResource(resourceId)))
+                    .then(existingProperties => {
+                        // all the template of classes are loaded
+                        // add the required proerty first
+                        const researchProblems = [];
 
-                    const existingProperties = [];
-                    const researchProblems = [];
+                        // Sort predicates and values by label
+                        resourceStatements = orderBy(
+                            resourceStatements,
+                            [
+                                resourceStatements => resourceStatements.predicate.label.toLowerCase(),
+                                resourceStatements => resourceStatements.object.label.toLowerCase()
+                            ],
+                            ['asc']
+                        );
 
-                    components
-                        .filter(x => !propertyIds.includes(x.property.id))
-                        .map(mp => {
-                            if (mp.minOccurs >= 1) {
-                                const propertyId = guid();
-                                dispatch(
-                                    createProperty({
-                                        propertyId: propertyId,
-                                        resourceId: resourceId,
-                                        existingPredicateId: mp.property.id,
-                                        label: mp.property.label,
-                                        isExistingProperty: true,
-                                        isTemplate: false
-                                    })
-                                );
-                                existingProperties.push({
-                                    existingPredicateId: mp.property.id,
-                                    propertyId
-                                });
-                            }
-                            return null;
+                        // Finished the call
+                        dispatch({
+                            type: type.DONE_FETCHING_STATEMENTS
                         });
 
-                    // Sort predicates and values by label
-                    resourceStatements = orderBy(
-                        resourceStatements,
-                        [
-                            resourceStatements => resourceStatements.predicate.label.toLowerCase(),
-                            resourceStatements => resourceStatements.object.label.toLowerCase()
-                        ],
-                        ['asc']
-                    );
-
-                    // Finished the call
-                    dispatch({
-                        type: type.DONE_FETCHING_STATEMENTS
-                    });
-
-                    for (const statement of resourceStatements) {
-                        let propertyId = guid();
-                        const valueId = guid();
-                        // filter out research problem to show differently
-                        if (isContribution && statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM) {
-                            researchProblems.push({
-                                label: statement.object.label,
-                                id: statement.object.id,
-                                statementId: statement.id
-                            });
-                        } else {
-                            // check whether there already exist a property for this, then combine
-                            if (existingProperties.filter(e => e.existingPredicateId === statement.predicate.id).length === 0) {
-                                dispatch(
-                                    createProperty({
-                                        propertyId: propertyId,
-                                        resourceId: resourceId,
-                                        existingPredicateId: statement.predicate.id,
-                                        label: statement.predicate.label,
-                                        isExistingProperty: true,
-                                        isTemplate: false
-                                    })
-                                );
-
-                                existingProperties.push({
-                                    existingPredicateId: statement.predicate.id,
-                                    propertyId
+                        for (const statement of resourceStatements) {
+                            let propertyId = guid();
+                            const valueId = guid();
+                            // filter out research problem to show differently
+                            if (isContribution && statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM) {
+                                researchProblems.push({
+                                    label: statement.object.label,
+                                    id: statement.object.id,
+                                    statementId: statement.id
                                 });
                             } else {
-                                propertyId = existingProperties.filter(e => e.existingPredicateId === statement.predicate.id)[0].propertyId;
-                            }
-
-                            dispatch(
-                                createValue({
-                                    valueId: valueId,
-                                    existingResourceId: statement.object.id,
-                                    propertyId: propertyId,
-                                    label: statement.object.label,
-                                    type: statement.object._class === 'literal' ? 'literal' : 'object', // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
-                                    classes: statement.object.classes ? statement.object.classes : [],
-                                    isExistingValue: true,
-                                    existingStatement: true,
-                                    statementId: statement.id,
-                                    shared: statement.object.shared
-                                })
-                            ).then(() => {
-                                if (depth >= 1 && statement.object._class === 'resource') {
+                                // check whether there already exist a property for this, then combine
+                                if (existingProperties.filter(e => e.existingPredicateId === statement.predicate.id).length === 0) {
                                     dispatch(
-                                        fetchStatementsForResource({
-                                            existingResourceId: statement.object.id,
-                                            resourceId: statement.object.id,
-                                            depth: depth
+                                        createProperty({
+                                            propertyId: propertyId,
+                                            resourceId: resourceId,
+                                            existingPredicateId: statement.predicate.id,
+                                            label: statement.predicate.label,
+                                            isExistingProperty: true,
+                                            isTemplate: false
                                         })
                                     );
+
+                                    existingProperties.push({
+                                        existingPredicateId: statement.predicate.id,
+                                        propertyId
+                                    });
+                                } else {
+                                    propertyId = existingProperties.filter(e => e.existingPredicateId === statement.predicate.id)[0].propertyId;
+                                }
+
+                                dispatch(
+                                    createValue({
+                                        valueId: valueId,
+                                        existingResourceId: statement.object.id,
+                                        propertyId: propertyId,
+                                        label: statement.object.label,
+                                        type: statement.object._class === 'literal' ? 'literal' : 'object', // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
+                                        classes: statement.object.classes ? statement.object.classes : [],
+                                        isExistingValue: true,
+                                        existingStatement: true,
+                                        statementId: statement.id,
+                                        shared: statement.object.shared
+                                    })
+                                ).then(() => {
+                                    if (depth >= 1 && statement.object._class === 'resource') {
+                                        dispatch(
+                                            fetchStatementsForResource({
+                                                existingResourceId: statement.object.id,
+                                                resourceId: statement.object.id,
+                                                depth: depth
+                                            })
+                                        );
+                                    }
+                                });
+
+                                //Load template of objects
+                                statement.object.classes && statement.object.classes.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
+                            }
+                        }
+
+                        if (isContribution) {
+                            dispatch({
+                                type: type.SET_RESEARCH_PROBLEMS,
+                                payload: {
+                                    researchProblems,
+                                    resourceId
                                 }
                             });
-
-                            //Load template of objects
-                            statement.object.classes && statement.object.classes.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
                         }
-                    }
 
-                    if (isContribution) {
                         dispatch({
-                            type: type.SET_RESEARCH_PROBLEMS,
-                            payload: {
-                                researchProblems,
-                                resourceId
-                            }
+                            type: type.SET_STATEMENT_IS_FECHTED,
+                            resourceId: resourceId,
+                            depth: depth
                         });
-                    }
-
-                    dispatch({
-                        type: type.SET_STATEMENT_IS_FECHTED,
-                        resourceId: resourceId,
-                        depth: depth
                     });
-                });
             });
         } else {
             return Promise.resolve();

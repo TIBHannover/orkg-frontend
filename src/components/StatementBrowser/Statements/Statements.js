@@ -32,6 +32,9 @@ export default function Statements(props) {
     }, []); // run only once : https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects
 
     const canAddProperty = () => {
+        if (!props.selectedResource) {
+            return true;
+        }
         const resource = props.resources.byId[props.selectedResource];
         // get template components
         // get all template ids
@@ -55,6 +58,9 @@ export default function Statements(props) {
     };
 
     const suggestedProperties = () => {
+        if (!props.selectedResource) {
+            return [];
+        }
         let propertyIds = props.resources.byId[props.selectedResource].propertyIds;
         propertyIds = propertyIds.map(propertyId => {
             const property = props.properties.byId[propertyId];
@@ -78,9 +84,9 @@ export default function Statements(props) {
 
         return (
             <div>
-                {props.selectedResource && props.resources.byId[props.selectedResource].classes.length > 0 && (
+                {/*props.selectedResource && props.resources.byId[props.selectedResource].classes.length > 0 && (
                     <div className="text-muted mb-2">Classes: {props.resources.byId[props.selectedResource].classes.join(',')}</div>
-                )}
+                )*/}
                 <ListGroup className={'listGroupEnlarge'}>
                     {props.selectedResource && !props.resources.byId[props.selectedResource].isFetching ? (
                         propertyIds.length > 0 ? (
