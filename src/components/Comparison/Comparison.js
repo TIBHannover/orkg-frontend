@@ -3,7 +3,7 @@ import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, Bu
 import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject } from 'network';
 import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResonseHashFromUrl, get_error_message } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPlus, faArrowsAltH, faLightbulb } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faPlus, faArrowsAltH, faLightbulb, faDiceD6 } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import ComparisonLoadingComponent from './ComparisonLoadingComponent';
 import ComparisonTable from './ComparisonTable.js';
@@ -493,13 +493,21 @@ class Comparison extends Component {
                             )}
                             {contributionAmount > 1 || this.props.match.params.comparisonId ? (
                                 !this.state.isLoading ? (
-                                    <ComparisonTable
-                                        data={this.state.data}
-                                        properties={this.state.properties}
-                                        contributions={this.state.contributions}
-                                        removeContribution={this.removeContribution}
-                                        transpose={this.state.transpose}
-                                    />
+                                    <>
+                                        <div>
+                                            <small>
+                                                Number of compared contributions: <Icon size={'sm'} icon={faDiceD6} className="mr-1" />{' '}
+                                                {contributionAmount}
+                                            </small>
+                                        </div>
+                                        <ComparisonTable
+                                            data={this.state.data}
+                                            properties={this.state.properties}
+                                            contributions={this.state.contributions}
+                                            removeContribution={this.removeContribution}
+                                            transpose={this.state.transpose}
+                                        />
+                                    </>
                                 ) : (
                                     <ComparisonLoadingComponent />
                                 )
