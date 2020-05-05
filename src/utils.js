@@ -196,6 +196,32 @@ export const getPaperData = (id, label, paperStatements) => {
 };
 
 /**
+ * Parse comparison statements and return a a comparison object
+ *
+ * @param {Array} comparisonStatements
+ */
+export const getComparisonData = (id, label, comparisonStatements) => {
+    // description
+    const description = comparisonStatements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_DESCRIPTION);
+
+    // reference
+    const reference = comparisonStatements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_REFERENCE);
+
+    // url
+    const url = comparisonStatements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL);
+
+    return {
+        id,
+        label,
+        created_at: url ? url.object.created_at : '',
+        nbContributions: url ? getContributionIdsFromUrl(url.object.label).length : 0,
+        url: url ? url.object.label : '',
+        reference: reference ? reference.object.label : '',
+        description: description ? description.object.label : ''
+    };
+};
+
+/**
  * Sort Methode
  *
  * @param {String} a
