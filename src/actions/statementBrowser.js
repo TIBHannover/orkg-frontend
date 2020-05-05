@@ -63,8 +63,10 @@ export function createRequiredPropertiesInResource(resourceId) {
         const createdProperties = [];
         const components = getComponentsByResourceID(getState(), resourceId);
         // add required properties (minOccurs >= 1)
-        let propertyIds = getState().statementBrowser.resources.byId[resourceId].propertyIds;
-        if (propertyIds) {
+        const resource = getState().statementBrowser.resources.byId[resourceId];
+        let propertyIds = [];
+        if (resource) {
+            propertyIds = resource.propertyIds ? resource.propertyIds : [];
             propertyIds = propertyIds.map(propertyId => {
                 const property = getState().statementBrowser.properties.byId[propertyId];
                 return property.existingPredicateId;
