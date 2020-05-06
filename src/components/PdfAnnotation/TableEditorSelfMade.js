@@ -51,13 +51,13 @@ class TableEditor extends Component {
             <Table size="sm" striped>
                 <thead>
                     <tr>
-                        <th></th>
+                        <th />
                         {columns.map(column => (
                             <th>{column.text}</th>
                         ))}
                     </tr>
                     <tr>
-                        <td></td>
+                        <td />
                         {columns.map(column => (
                             <th>
                                 <Input type="select" bsSize="sm" name="select" id="exampleSelect">
