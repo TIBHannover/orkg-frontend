@@ -5,8 +5,6 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import BootstrapTable, { TableHeaderColumn } from 'react-bootstrap-table-next';
 import cellEditFactory from 'react-bootstrap-table2-editor';
 import { Table, Input } from 'reactstrap';
-import 'handsontable/dist/handsontable.full.css';
-import { HotTable } from '@handsontable/react';
 
 class TableEditor extends Component {
     constructor(props) {
@@ -16,13 +14,14 @@ class TableEditor extends Component {
             extractedTable: null,
             loading: false
         };
-
-        this.data = [['', 'Ford', 'Volvo', 'Toyota', 'Honda'], ['2016', 10, 11, 12, 13], ['2017', 20, 11, 14, 13], ['2018', 30, 15, 12, 13]];
     }
 
     render() {
-        const columns = this.props.data[0].split(','); //.map(field => field);
-        console.log(columns);
+        const columns = this.props.data[0].split(',').map(field => ({
+            dataField: field,
+            text: field
+        }));
+
         const data = [];
 
         for (const [index, row] of this.props.data.entries()) {
@@ -35,7 +34,10 @@ class TableEditor extends Component {
 
             if (cells.length > 0) {
                 for (const [index, cell] of cells.entries()) {
-                    dataRow.push(cell);
+                    dataRow.push({
+                        value: cell,
+                        column: columns[index].dataField
+                    });
                 }
             }
             data.push(dataRow);
@@ -45,20 +47,40 @@ class TableEditor extends Component {
             return;
         }
 
-        const fullData = [...data];
-
         return (
-            <HotTable
-                data={fullData}
-                //dropdownMenu={true}
-                rowHeaders={true}
-                width="100%"
-                height="auto"
-                colHeaders={columns}
-                licenseKey="non-commercial-and-evaluation"
-                contextMenu={true}
-                stretchH={'all'}
-            />
+            <Table size="sm" striped>
+                <thead>
+                    <tr>
+                        <th></th>
+                        {columns.map(column => (
+                            <th>{column.text}</th>
+                        ))}
+                    </tr>
+                    <tr>
+                        <td></td>
+                        {columns.map(column => (
+                            <th>
+                                <Input type="select" bsSize="sm" name="select" id="exampleSelect">
+                                    <option>Resource</option>
+                                    <option>Literal</option>
+                                </Input>
+                            </th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody contentEditable="plaintext-only" style={{ outline: 0 }}>
+                    {data.map(row => (
+                        <tr>
+                            <td>
+                                <input type="checkbox" />
+                            </td>
+                            {row.map(cell => (
+                                <td>{cell.value}</td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
         );
 
         /*return (
