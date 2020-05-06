@@ -254,7 +254,8 @@ export const sortMethod = (a, b) => {
 };
 
 export const getContributionIdsFromUrl = locationSearch => {
-    let ids = queryString.parse(locationSearch, { arrayFormat: 'comma' }).contributions;
+    const l = locationSearch.substring(locationSearch.indexOf('?'));
+    let ids = queryString.parse(l, { arrayFormat: 'comma' }).contributions;
     if (!ids) {
         return [];
     }
