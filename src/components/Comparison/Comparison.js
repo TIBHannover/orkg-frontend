@@ -21,7 +21,7 @@ import arrayMove from 'array-move';
 import { connect } from 'react-redux';
 import dotProp from 'dot-prop-immutable';
 import { reverse } from 'named-urls';
-import { generateRdfDataVocabularyFile } from 'utils';
+import { generateRdfDataVocabularyFile, extendPropertyIds } from 'utils';
 import { ContainerAnimated } from './styled';
 import RelatedResources from './RelatedResources';
 
@@ -136,16 +136,20 @@ class Comparison extends Component {
 
                 // if there are properties in the query string
                 if (propertyIds.length > 0) {
+                    // Create an extended version of propertyIds (ADD the IDs of similar properties)
+                    const extendedPropertyIds = extendPropertyIds(propertyIds, comparisonData.data);
+
                     // sort properties based on query string (is not presented in query string, sort at the bottom)
                     // TODO: sort by label when is not active
                     comparisonData.properties.sort((a, b) => {
-                        const index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
-                        const index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
+                        const index1 = extendedPropertyIds.indexOf(a.id) !== -1 ? extendedPropertyIds.indexOf(a.id) : 1000;
+                        const index2 = extendedPropertyIds.indexOf(b.id) !== -1 ? extendedPropertyIds.indexOf(b.id) : 1000;
                         return index1 - index2;
                     });
+
                     // hide properties based on query string
                     comparisonData.properties.forEach((property, index) => {
-                        if (!propertyIds.includes(property.id)) {
+                        if (!extendedPropertyIds.includes(property.id)) {
                             comparisonData.properties[index].active = false;
                         } else {
                             comparisonData.properties[index].active = true;
