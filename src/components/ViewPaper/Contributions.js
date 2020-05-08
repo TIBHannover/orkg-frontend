@@ -29,7 +29,7 @@ import styled from 'styled-components';
 import { StyledHorizontalContributionsList, StyledHorizontalContribution } from '../AddPaper/Contributions/styled';
 import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPlus, faHandMiddleFinger } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 
