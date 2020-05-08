@@ -45,7 +45,7 @@ class TableEditor extends Component {
             return;
         }
 
-        const fullData = [...data];
+        const fullData = [columns, ...data];
 
         return (
             <HotTable
@@ -54,7 +54,9 @@ class TableEditor extends Component {
                 rowHeaders={true}
                 width="100%"
                 height="auto"
-                colHeaders={columns}
+                /*colHeaders={col => {
+                    return `<div contenteditable="true">${columns[col]}</div>`;
+                }}*/
                 licenseKey="non-commercial-and-evaluation"
                 contextMenu={true}
                 stretchH={'all'}
