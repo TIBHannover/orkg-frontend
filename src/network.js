@@ -4,7 +4,10 @@ export const url = `${process.env.REACT_APP_SERVER_URL}api/`;
 export const similaireServiceUrl = process.env.REACT_APP_SIMILARITY_SERVICE_URL;
 export const annotationServiceUrl = process.env.REACT_APP_ANNOTATION_SERVICE_URL;
 export const resourcesUrl = `${url}resources/`;
+export const organizationsUrl = `${url}organizations/`;
+export const observatoriesUrl = `${url}observatories/`;
 export const predicatesUrl = `${url}predicates/`;
+export const userUrl = `${url}user/`;
 export const statementsUrl = `${url}statements/`;
 export const literalsUrl = `${url}literals/`;
 export const classesUrl = `${url}classes/`;
@@ -460,6 +463,14 @@ export const updateUserPassword = ({ current_password, new_password, new_matchin
     return submitPutRequest(`${url}user/password/`, headers, data);
 };
 
+export const updateUserRole = () => {
+    const headers = { 'Content-Type': 'application/json' };
+    const data = {};
+    //alert(organizationLogo);
+    //debugger;
+    return submitPutRequest(`${url}user/role/`, headers, data);
+};
+
 /**
  * Load template by ID
  *
@@ -581,4 +592,45 @@ export const getTemplatesByClass = classID => {
         objectId: classID,
         predicateId: process.env.REACT_APP_TEMPLATE_OF_CLASS
     }).then(statements => Promise.all(statements.map(st => getTemplateById(st.subject.id))));
+};
+
+export const getAllOrganizations = () => {
+    return submitGetRequest(`${organizationsUrl}`);
+};
+
+export const getOrganization = id => {
+    //console.log('123');
+    return submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/`);
+};
+
+export const createOrganization = (organizationName, organizationLogo) => {
+    //alert(organizationLogo);
+    //debugger;
+    return submitPostRequest(organizationsUrl, { 'Content-Type': 'application/json' }, { organizationName, organizationLogo });
+};
+
+export const getAllObservatoriesbyOrganizationId = id => {
+    const v = 'search/';
+    return submitGetRequest(`${observatoriesUrl}${v}${encodeURIComponent(id)}/`);
+};
+
+export const getObservatorybyId = id => {
+    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/`);
+};
+
+export const getUsersByObservatoryId = id => {
+    return submitGetRequest(`${userUrl}listuser/${encodeURIComponent(id)}/`);
+};
+
+export const getResourcesByObservatoryId = id => {
+    return submitGetRequest(`${resourcesUrl}findByObservatory/${encodeURIComponent(id)}/`);
+};
+
+export const createObservatory = (observatoryName, organizationId) => {
+    //alert(organizationLogo);
+    //debugger;
+    return submitPostRequest(observatoriesUrl, { 'Content-Type': 'application/json' }, { observatoryName, organizationId });
+};
+export const getContributorsByResourceId = id => {
+    return submitGetRequest(`${resourcesUrl}findContributors/${encodeURIComponent(id)}/`);
 };
