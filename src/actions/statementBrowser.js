@@ -4,6 +4,13 @@ import * as network from '../network';
 import { orderBy } from 'lodash';
 import { uniq } from 'lodash';
 
+/**
+ * Initialise the statement browser without contibution
+ * (e.g : new store to show resource in dialog)
+ * @param {Object} data - Initial resource
+ * @param {string} data.label - The label of the resource.
+ * @param {string} data.resourceId - The resource id.
+ */
 export const initializeWithoutContribution = data => dispatch => {
     // To initialise:
     // 1. Create a resource (the one that is requested), so properties can be connected to this
@@ -37,8 +44,16 @@ export const initializeWithoutContribution = data => dispatch => {
     );
 };
 
+/**
+ * Initialise the statement browser with a resource then add the required properties
+ *
+ * @param {Object} data - Initial resource
+ * @param {string} data.label - The label of the resource.
+ * @param {string} data.resourceId - The resource id.
+ * @return {Promise} Promise object of creating the required properties
+ */
 export function initializeWithResource(data) {
-    return (dispatch, getState) => {
+    return dispatch => {
         const label = data.label;
         const resourceId = data.resourceId;
 
@@ -52,29 +67,53 @@ export function initializeWithResource(data) {
                 resourceId: resourceId,
                 label: label
             })
-        ).then(() => createRequiredPropertiesInResource(resourceId));
+        ).then(() => dispatch(createRequiredPropertiesInResource(resourceId)));
     };
 }
 
+/**
+ * Get the list of existing predicate ids of a resource
+ *
+ * @param {Object} state - Current state of the Store
+ * @param {String} resourceId - Resource ID
+ * @return {Array} - list of existing predicates
+ */
+export function getExistingPredicatesByResource(state, resourceId) {
+    if (!resourceId) {
+        return [];
+    }
+    const resource = state.statementBrowser.resources.byId[resourceId];
+    if (!resource) {
+        return [];
+    }
+    let propertyIds = resource.propertyIds;
+    if (propertyIds) {
+        propertyIds = resource.propertyIds ? resource.propertyIds : [];
+        propertyIds = propertyIds.map(propertyId => {
+            const property = state.statementBrowser.properties.byId[propertyId];
+            return property.existingPredicateId;
+        });
+        return propertyIds.filter(p => p); // return a list without null values (predicates that aren't in the database)
+    } else {
+        return [];
+    }
+}
+
+/**
+ * Create required properties based on the used template
+ *
+ * @param {String} resourceId Resource ID
+ * @return {{existingPredicateId: String, propertyId: String}[]} list of created properties
+ */
 export function createRequiredPropertiesInResource(resourceId) {
     return (dispatch, getState) => {
         const createdProperties = [];
         const components = getComponentsByResourceID(getState(), resourceId);
-        // add required properties (minOccurs >= 1)
-        const resource = getState().statementBrowser.resources.byId[resourceId];
-        let propertyIds = resource.propertyIds;
-        if (propertyIds) {
-            propertyIds = resource.propertyIds ? resource.propertyIds : [];
-            propertyIds = propertyIds.map(propertyId => {
-                const property = getState().statementBrowser.properties.byId[propertyId];
-                return property.existingPredicateId;
-            });
-        } else {
-            propertyIds = [];
-        }
+        const existingPropertyIds = getExistingPredicatesByResource(getState(), resourceId);
 
+        // Add required properties (minOccurs >= 1)
         components
-            .filter(x => !propertyIds.includes(x.property.id))
+            .filter(x => !existingPropertyIds.includes(x.property.id))
             .map(mp => {
                 if (mp.minOccurs >= 1) {
                     const propertyId = guid();
@@ -100,6 +139,44 @@ export function createRequiredPropertiesInResource(resourceId) {
     };
 }
 
+/**
+ * Get components by resource ID
+ *
+ * @param {Object} state Current state of the Store
+ * @param {String} resourceId Resource ID
+ * @return {{id: String, minOccurs: Number, minOccurs: Number, property: Object, value: Object|null, validationRules: Array}[]} list of components
+ */
+export function getComponentsByResourceID(state, resourceID) {
+    if (!resourceID) {
+        return [];
+    }
+    const resource = state.statementBrowser.resources.byId[resourceID];
+    if (!resource) {
+        return [];
+    }
+
+    // 1 - Get all template ids of this resource
+    let templateIds = resource.templateId ? [resource.templateId] : [];
+    if (resource.classes) {
+        for (const c of resource.classes) {
+            if (state.statementBrowser.classes[c]) {
+                templateIds = templateIds.concat(state.statementBrowser.classes[c].templateIds);
+            }
+        }
+    }
+    templateIds = uniq(templateIds);
+
+    // 2 - Collect the components
+    let components = [];
+    for (const templateId of templateIds) {
+        const template = state.statementBrowser.templates[templateId];
+        if (template && template.components) {
+            components = components.concat(template.components);
+        }
+    }
+    return components;
+}
+
 export const resetStatementBrowser = () => dispatch => {
     dispatch({
         type: type.RESET_STATEMENT_BROWSER
@@ -113,13 +190,15 @@ export const loadStatementBrowserData = data => dispatch => {
     });
 };
 
-export const togglePropertyCollapse = id => dispatch => {
-    dispatch({
-        type: type.TOGGLE_PROPERTY_COLLAPSE,
-        id
-    });
-};
-
+/**
+ * Create Property
+ *
+ * @param {Object} data - Property Object
+ * @param {String} data.resourceId - Resource ID
+ * @param {String=} data.propertyId - Property ID
+ * @param {String=} data.existingPredicateId - Existing PredicateId ID
+ * @param {Boolean} data.canDuplicate - Whether it's possible to duplicate the existing predicate
+ */
 export function createProperty(data) {
     return (dispatch, getState) => {
         if (!data.canDuplicate && data.existingPredicateId) {
@@ -192,8 +271,17 @@ export const updatePropertyLabel = data => dispatch => {
     });
 };
 
+/**
+ * Create Value then fetch templates
+ *
+ * @param {Object} data - Value Object
+ * @param {String=} data.valueId - value ID
+ * @param {String=} data.existingResourceId - Existing resource ID
+ * @param {String=} data.type - Type of value (object|template)
+ * @param {Array=} data.classes - Classes of value
+ */
 export function createValue(data) {
-    return (dispatch, getState) => {
+    return dispatch => {
         const resourceId = data.existingResourceId ? data.existingResourceId : data.type === 'object' || data.type === 'template' ? guid() : null;
 
         dispatch({
@@ -205,7 +293,7 @@ export function createValue(data) {
             }
         });
 
-        // dispatch loading classes
+        // Dispatch loading template of classes
         data.classes && data.classes.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
         return Promise.resolve();
     };
@@ -253,6 +341,15 @@ export const deleteValue = data => dispatch => {
     });
 };
 
+/**
+ * Create Resource
+ *
+ * @param {Object} data - Resource Object
+ * @param {String=} data.resourceId - Resource ID
+ * @param {String=} data.existingResourceId - Existing resource ID
+ * @param {String} data.label - Resource label
+ * @param {Number} data.shared - Indicator number of incoming links to this resource
+ */
 export const createResource = data => dispatch => {
     dispatch({
         type: type.CREATE_RESOURCE,
@@ -265,9 +362,13 @@ export const createResource = data => dispatch => {
     });
 };
 
-/*
-    Fetch template by ID
-*/
+/**
+ * Check if the template should be fetched
+ *
+ * @param {Object} state - Current state of the Store
+ * @param {String} templateID - Template ID
+ * @return {Boolean} if the template should be fetched or not
+ */
 function shouldFetchTemplate(state, templateID) {
     const template = state.statementBrowser.templates[templateID];
     if (!template) {
@@ -277,6 +378,12 @@ function shouldFetchTemplate(state, templateID) {
     }
 }
 
+/**
+ * Fetch template by ID
+ *
+ * @param {String} templateID - Template ID
+ * @return {Promise} Promise object represents the template
+ */
 export function fetchTemplateIfNeeded(templateID) {
     return (dispatch, getState) => {
         if (shouldFetchTemplate(getState(), templateID)) {
@@ -295,11 +402,19 @@ export function fetchTemplateIfNeeded(templateID) {
             });
         } else {
             // Let the calling code know there's nothing to wait for.
-            return Promise.resolve();
+            const template = getState().statementBrowser.templates[templateID];
+            return Promise.resolve(template);
         }
     };
 }
 
+/**
+ * Set the template of a resource
+ * When the used template is saved on the statements
+ * @param {Object} data
+ * @param {String} data.resourceId Resrouce ID
+ * @param {String} data.templateId Template ID
+ */
 export const setTemplateOfResource = data => {
     const templateId = data.templateId;
     return (dispatch, getState) => {
@@ -312,9 +427,13 @@ export const setTemplateOfResource = data => {
     };
 };
 
-/*
-    Fetch templates by class ID
-*/
+/**
+ * Check if the class template should be fetched
+ *
+ * @param {Object} state - Current state of the Store
+ * @param {String} classID - Class ID
+ * @return {Boolean} if the class template should be fetched or not
+ */
 function shouldFetchTemplatesofClass(state, classID) {
     const classObj = state.statementBrowser.classes[classID];
     if (!classObj) {
@@ -324,6 +443,11 @@ function shouldFetchTemplatesofClass(state, classID) {
     }
 }
 
+/**
+ * Fetch templates of class
+ *
+ * @param {String} classID - Class ID
+ */
 export function fetchTemplatesofClassIfNeeded(classID) {
     return (dispatch, getState) => {
         if (shouldFetchTemplatesofClass(getState(), classID)) {
@@ -345,6 +469,16 @@ export function fetchTemplatesofClassIfNeeded(classID) {
     };
 }
 
+/**
+ * Select resource
+ *
+ * @param {Object} data
+ * @param {Boolean} data.increaseLevel - Increase statement browser level
+ * @param {String} data.resourceId - Resource ID
+ * @param {String} data.label - Resource Label
+ * @param {Boolean} data.resetLevel - Reset statement browser level
+ * @return {Promise} Promise object of creating the required properties
+ */
 export function selectResource(data) {
     return dispatch => {
         // use redux thunk for async action, for capturing the resource properties
@@ -374,6 +508,7 @@ export function selectResource(data) {
     };
 }
 
+// TODO: Document or remove
 export const fetchStructureForTemplate = data => {
     const { resourceId, templateId } = data;
     return dispatch => {
@@ -458,41 +593,7 @@ export const goToResourceHistory = data => dispatch => {
 /*
     Get components of a resource
 */
-export function getComponentsByResourceID(state, resourceID) {
-    if (!resourceID) {
-        return [];
-    }
-    const resource = state.statementBrowser.resources.byId[resourceID];
-
-    if (!resource) {
-        return [];
-    }
-    // get template components
-    // get all template ids
-    let templateIds = resource.templateId ? [resource.templateId] : [];
-    if (resource.classes) {
-        for (const c of resource.classes) {
-            if (state.statementBrowser.classes[c]) {
-                templateIds = templateIds.concat(state.statementBrowser.classes[c].templateIds);
-            }
-        }
-    }
-    templateIds = uniq(templateIds);
-
-    let components = [];
-    // get components of this statement predicate
-    for (const templateId of templateIds) {
-        const template = state.statementBrowser.templates[templateId];
-        if (template && template.components) {
-            components = components.concat(template.components);
-        }
-    }
-    return components;
-}
-
-/*
-    Get components of a resource
-*/
+// TODO: Document or remove
 export function getComponentsByResourceIDAndPredicate(state, resourceID, predicateID) {
     const resourceComponents = getComponentsByResourceID(state, resourceID);
     if (resourceComponents.length === 0) {
@@ -501,9 +602,14 @@ export function getComponentsByResourceIDAndPredicate(state, resourceID, predica
     return resourceComponents.filter(c => c.property.id === predicateID);
 }
 
-/*
-    Check if it should fetch statements for resources
-*/
+/**
+ * Check if it should fetch statements for resources
+ *
+ * @param {Object} state - Current state of the Store
+ * @param {String} resourceId - Resource ID
+ * @param {Number} depth - The required depth
+ * @return {Boolean} if the resource statements should be fetched or not
+ */
 function shouldFetchStatementsForResource(state, resourceId, depth) {
     const resource = state.statementBrowser.resources.byId[resourceId];
     if (!resource || !resource.isFechted || (resource.isFechted && resource.fetshedDepth < depth)) {
@@ -514,6 +620,16 @@ function shouldFetchStatementsForResource(state, resourceId, depth) {
 }
 
 // TODO: support literals (currently not working in backend)
+/**
+ * Fetch statemments of a resource
+ *
+ * @param {Object} data
+ * @param {String} data.resourceId - Resource ID
+ * @param {String} data.existingResourceId - Existing resource ID
+ * @param {Boolean} data.isContribution - If the resource if a contribution
+ * @param {Number} data.depth - The required depth
+ * @return {Promise} Promise object
+ */
 export const fetchStatementsForResource = data => {
     let { isContribution, depth } = data;
     const { resourceId, existingResourceId } = data;
