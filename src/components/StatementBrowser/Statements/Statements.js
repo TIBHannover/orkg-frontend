@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
-import { ListGroup, ListGroupItem, Badge } from 'reactstrap';
+import { ListGroup } from 'reactstrap';
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItemContainer';
 import AddProperty from 'components/StatementBrowser/AddProperty/AddPropertyContainer';
 import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/BreadcrumbsContainer';
 import ContributionTemplate from 'components/StatementBrowser/ContributionTemplate/ContributionTemplateContainer';
-import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
+import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions/PropertySuggestions';
 import NoData from 'components/StatementBrowser/NoData/NoData';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
 import { Cookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 
 export default function Statements(props) {
@@ -97,35 +97,7 @@ export default function Statements(props) {
                     )}
 
                     {shared <= 1 && props.enableEdit ? <AddProperty isDisabled={!props.canAddProperty} syncBackend={props.syncBackend} /> : ''}
-                    {shared <= 1 && props.enableEdit && props.suggestedProperties.length > 0 && (
-                        <>
-                            <p className="text-muted mt-4">Suggested properties</p>
-                            <ListGroup>
-                                {props.suggestedProperties.map((c, index) => (
-                                    <ListGroupItem key={`suggested-property-${index}`}>
-                                        <StatementOptionButton
-                                            className="mr-2"
-                                            title={'Add property'}
-                                            icon={faPlus}
-                                            action={() => {
-                                                props.createProperty({
-                                                    resourceId: props.selectedResource,
-                                                    existingPredicateId: c.property.id,
-                                                    label: c.property.label,
-                                                    isTemplate: false,
-                                                    createAndSelect: true
-                                                });
-                                            }}
-                                        />
-                                        {c.property.label}
-                                        <Badge pill className="ml-2">
-                                            {c.value.label}
-                                        </Badge>
-                                    </ListGroupItem>
-                                ))}
-                            </ListGroup>
-                        </>
-                    )}
+                    {shared <= 1 && props.enableEdit && props.suggestedProperties.length > 0 && <PropertySuggestions />}
                 </ListGroup>
             </div>
         );
