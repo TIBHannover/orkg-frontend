@@ -10,7 +10,6 @@ import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser
 import { Cookies } from 'react-cookie';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { uniq } from 'lodash';
 import PropTypes from 'prop-types';
 
 export default function Statements(props) {
@@ -30,32 +29,6 @@ export default function Statements(props) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // run only once : https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects
-
-    const canAddProperty = () => {
-        if (!props.selectedResource) {
-            return true;
-        }
-        const resource = props.resources.byId[props.selectedResource];
-        // get template components
-        // get all template ids
-        let templateIds = resource.templateId ? [resource.templateId] : [];
-        for (const c of resource.classes) {
-            if (props.classes[c]) {
-                templateIds = templateIds.concat(props.classes[c].templateIds);
-            }
-        }
-        templateIds = uniq(templateIds);
-        // get components of this statement predicate
-        for (const templateId of templateIds) {
-            const template = props.templates[templateId];
-            if (template && template.isStrict) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        return true;
-    };
 
     const suggestedProperties = () => {
         if (!props.selectedResource) {
@@ -135,7 +108,7 @@ export default function Statements(props) {
                         </StyledStatementItem>
                     )}
 
-                    {shared <= 1 && props.enableEdit ? <AddProperty isDisabled={!canAddProperty()} syncBackend={props.syncBackend} /> : ''}
+                    {shared <= 1 && props.enableEdit ? <AddProperty isDisabled={!props.canAddProperty} syncBackend={props.syncBackend} /> : ''}
                     {shared <= 1 && props.enableEdit && suggestedProperties().length > 0 && (
                         <>
                             <p className="text-muted mt-4">Suggested properties</p>
@@ -213,6 +186,7 @@ Statements.propTypes = {
     templates: PropTypes.object.isRequired,
     createProperty: PropTypes.func.isRequired,
     components: PropTypes.array.isRequired,
+    canAddProperty: PropTypes.bool.isRequired,
 
     enableEdit: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,

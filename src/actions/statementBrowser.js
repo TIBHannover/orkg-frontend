@@ -140,22 +140,20 @@ export function createRequiredPropertiesInResource(resourceId) {
 }
 
 /**
- * Get components by resource ID
+ * Get tempalte IDs by resource ID
  *
  * @param {Object} state Current state of the Store
  * @param {String} resourceId Resource ID
- * @return {{id: String, minOccurs: Number, minOccurs: Number, property: Object, value: Object|null, validationRules: Array}[]} list of components
+ * @return {String[]} list of template IDs
  */
-export function getComponentsByResourceID(state, resourceID) {
-    if (!resourceID) {
+export function getTemplateIDsByResourceID(state, resourceId) {
+    if (!resourceId) {
         return [];
     }
-    const resource = state.statementBrowser.resources.byId[resourceID];
+    const resource = state.statementBrowser.resources.byId[resourceId];
     if (!resource) {
         return [];
     }
-
-    // 1 - Get all template ids of this resource
     let templateIds = resource.templateId ? [resource.templateId] : [];
     if (resource.classes) {
         for (const c of resource.classes) {
@@ -165,6 +163,27 @@ export function getComponentsByResourceID(state, resourceID) {
         }
     }
     templateIds = uniq(templateIds);
+    return templateIds;
+}
+
+/**
+ * Get components by resource ID
+ *
+ * @param {Object} state Current state of the Store
+ * @param {String} resourceId Resource ID
+ * @return {{id: String, minOccurs: Number, minOccurs: Number, property: Object, value: Object|null, validationRules: Array}[]} list of components
+ */
+export function getComponentsByResourceID(state, resourceId) {
+    if (!resourceId) {
+        return [];
+    }
+    const resource = state.statementBrowser.resources.byId[resourceId];
+    if (!resource) {
+        return [];
+    }
+
+    // 1 - Get all template ids of this resource
+    const templateIds = getTemplateIDsByResourceID(state, resourceId);
 
     // 2 - Collect the components
     let components = [];
@@ -204,12 +223,14 @@ export function createProperty(data) {
         if (!data.canDuplicate && data.existingPredicateId) {
             const resource = getState().statementBrowser.resources.byId[data.resourceId];
 
-            const isExstingProperty = resource.propertyIds.find(
-                p => getState().statementBrowser.properties.byId[p].existingPredicateId === data.existingPredicateId
-            );
-            if (isExstingProperty) {
-                // Property already exists
-                return null;
+            if (resource) {
+                const isExstingProperty = resource.propertyIds.find(
+                    p => getState().statementBrowser.properties.byId[p].existingPredicateId === data.existingPredicateId
+                );
+                if (isExstingProperty) {
+                    // Property already exists
+                    return null;
+                }
             }
         }
         dispatch({
@@ -220,6 +241,27 @@ export function createProperty(data) {
             }
         });
     };
+}
+
+/**
+ * Can add property in resource
+ *
+ * @param {Object} state Current state of the Store
+ * @param {String} resourceId Resource ID
+ * @return {Boolean} Whether it's possible to add a property
+ */
+export function canAddProperty(state, resourceId) {
+    // Get all template ids
+    const templateIds = getTemplateIDsByResourceID(state, resourceId);
+
+    // Check if one of the template is strict
+    for (const templateId of templateIds) {
+        const template = state.statementBrowser.templates[templateId];
+        if (template && template.isStrict) {
+            return false;
+        }
+    }
+    return true;
 }
 
 export const deleteProperty = data => dispatch => {

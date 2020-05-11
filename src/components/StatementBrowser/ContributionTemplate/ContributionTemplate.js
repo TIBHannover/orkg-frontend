@@ -5,7 +5,6 @@ import TemplateHeader from 'components/StatementBrowser/TemplateHeader/TemplateH
 import StatementItem from 'components/StatementBrowser/StatementItem/StatementItemContainer';
 import { AddPropertWrapper, AnimationContainer } from './styled';
 import { Cookies } from 'react-cookie';
-import { uniq } from 'lodash';
 import PropTypes from 'prop-types';
 
 export default function ContributionTemplate(props) {
@@ -20,29 +19,6 @@ export default function ContributionTemplate(props) {
         const property = props.properties.byId[propertyId];
         return property.existingPredicateId !== process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE;
     });
-
-    const canAddProperty = () => {
-        const resource = props.resources.byId[props.value.resourceId];
-        // get template components
-        // get all template ids
-        let templateIds = resource.templateId ? [resource.templateId] : [];
-        for (const c of resource.classes) {
-            if (props.classes[c]) {
-                templateIds = templateIds.concat(props.classes[c].templateIds);
-            }
-        }
-        templateIds = uniq(templateIds);
-        // get components of this statement predicate
-        for (const templateId of templateIds) {
-            const template = props.templates[templateId];
-            if (template && template.isStrict) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        return true;
-    };
 
     return (
         <AnimationContainer
@@ -90,7 +66,7 @@ export default function ContributionTemplate(props) {
                         <div className={'col-4 propertyHolder'} />
                     </div>
                     <AddProperty
-                        isDisabled={!canAddProperty()}
+                        isDisabled={!props.canAddProperty}
                         syncBackend={props.syncBackend}
                         inTemplate={true}
                         contextStyle="Template"
@@ -116,6 +92,7 @@ ContributionTemplate.propTypes = {
     classes: PropTypes.object.isRequired,
     templates: PropTypes.object.isRequired,
     components: PropTypes.array.isRequired,
+    canAddProperty: PropTypes.bool.isRequired,
 
     resources: PropTypes.object.isRequired,
     properties: PropTypes.object.isRequired,
