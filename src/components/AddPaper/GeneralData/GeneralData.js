@@ -16,7 +16,8 @@ import {
     Modal,
     ModalHeader,
     ModalBody,
-    ModalFooter
+    ModalFooter,
+    Alert
 } from 'reactstrap';
 import { compose } from 'redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -36,7 +37,10 @@ import Cite from 'citation-js';
 import Tour from 'reactour';
 import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
+import { getPaperData } from 'utils';
+import { getPaperByDOI, getStatementsBySubject } from 'network';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+import PaperCard from 'components/PaperCard/PaperCard';
 
 const Container = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -97,7 +101,8 @@ class GeneralData extends Component {
             publishedIn: this.props.publishedIn,
             validation: this.validator.valid(),
             errors: null,
-            url: this.props.url
+            url: this.props.url,
+            existingPaper: null
         };
 
         // Hide the tour if a cookie 'taketour' exist
@@ -164,6 +169,23 @@ class GeneralData extends Component {
             entry = this.state.entry.trim().substring(this.state.entry.trim().indexOf('10.'));
         } else {
             entry = this.state.entry.trim();
+        }
+
+        // If the entry is a DOI check if it exists in the database
+        if (entry.includes('10.') && entry.startsWith('10.')) {
+            getPaperByDOI(entry).then(result => {
+                getStatementsBySubject({ id: result.id })
+                    .then(paperStatements => {
+                        this.setState({
+                            existingPaper: { ...getPaperData(result.id, result.title, paperStatements), title: result.title }
+                        });
+                    })
+                    .catch(() => {
+                        this.setState({
+                            existingPaper: null
+                        });
+                    });
+            });
         }
 
         await Cite.async(entry)
@@ -463,56 +485,69 @@ class GeneralData extends Component {
                                             <TransitionGroup>
                                                 {this.state.showLookupTable ? (
                                                     <Container key={1} classNames="slideDown" timeout={{ enter: 500, exit: 300 }}>
-                                                        <div className="mt-5">
-                                                            <h3 className="h4 mb-3">
-                                                                Lookup result
-                                                                <Button
-                                                                    className={'pull-right ml-1'}
-                                                                    outline
-                                                                    size="sm"
-                                                                    onClick={() => this.handleDataEntryClick('manually')}
-                                                                >
-                                                                    Edit
-                                                                </Button>
-                                                            </h3>
-                                                            <Card body>
-                                                                <Table className="mb-0">
-                                                                    <tbody>
-                                                                        <tr className="table-borderless">
-                                                                            <td>
-                                                                                <strong>Paper title:</strong> {this.state.paperTitle}
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>
-                                                                                <strong>Authors:</strong>{' '}
-                                                                                {this.state.paperAuthors.map((author, index) => (
-                                                                                    <span key={index}>
-                                                                                        {this.state.paperAuthors.length > index + 1
-                                                                                            ? author.label + ', '
-                                                                                            : author.label}
-                                                                                    </span>
-                                                                                ))}
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>
-                                                                                <strong>Publication date:</strong>{' '}
-                                                                                {this.state.paperPublicationMonth
-                                                                                    ? moment(this.state.paperPublicationMonth, 'M').format('MMMM')
-                                                                                    : ''}{' '}
-                                                                                {this.state.paperPublicationYear}
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>
-                                                                                <strong>Published in:</strong> {this.state.publishedIn}
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </Table>
-                                                            </Card>
-                                                        </div>
+                                                        <>
+                                                            <div className="mt-5">
+                                                                <h3 className="h4 mb-3">
+                                                                    Lookup result
+                                                                    <Button
+                                                                        className={'pull-right ml-1'}
+                                                                        outline
+                                                                        size="sm"
+                                                                        onClick={() => this.handleDataEntryClick('manually')}
+                                                                    >
+                                                                        Edit
+                                                                    </Button>
+                                                                </h3>
+                                                                <Card body>
+                                                                    <Table className="mb-0">
+                                                                        <tbody>
+                                                                            <tr className="table-borderless">
+                                                                                <td>
+                                                                                    <strong>Paper title:</strong> {this.state.paperTitle}
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <strong>Authors:</strong>{' '}
+                                                                                    {this.state.paperAuthors.map((author, index) => (
+                                                                                        <span key={index}>
+                                                                                            {this.state.paperAuthors.length > index + 1
+                                                                                                ? author.label + ', '
+                                                                                                : author.label}
+                                                                                        </span>
+                                                                                    ))}
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <strong>Publication date:</strong>{' '}
+                                                                                    {this.state.paperPublicationMonth
+                                                                                        ? moment(this.state.paperPublicationMonth, 'M').format('MMMM')
+                                                                                        : ''}{' '}
+                                                                                    {this.state.paperPublicationYear}
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <strong>Published in:</strong> {this.state.publishedIn}
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </Table>
+                                                                </Card>
+                                                            </div>
+                                                            {this.state.existingPaper && (
+                                                                <div className="mt-3">
+                                                                    <Alert color="info">
+                                                                        The DOI:<i>`{this.state.existingPaper.doi}`</i> is already linked in ORKG with
+                                                                        the following paper, please view the paper and contribute to improve the
+                                                                        content or click on the 'next step' button to continue entering a different
+                                                                        new paper attached to this DOI.
+                                                                    </Alert>
+                                                                    <strong>Existing paper:</strong> <PaperCard paper={this.state.existingPaper} />
+                                                                </div>
+                                                            )}
+                                                        </>
                                                     </Container>
                                                 ) : (
                                                     ''
