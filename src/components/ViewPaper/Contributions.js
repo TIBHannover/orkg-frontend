@@ -31,10 +31,9 @@ import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
-//import 'react-vertical-timeline-component/style.min.css';
 import '../../pages/style.min.css';
 
-const FeaturedTabs = styled.div`
+const ProvenanceBoxTabs = styled.div`
     .tab {
         margin-bottom: 0;
         padding: 10px;
@@ -545,7 +544,7 @@ class Contributions extends Component {
                                     style={{ width: 230, minHeight: 430, backgroundColor: '#f8f9fb', marginLeft: 20 }}
                                     className="box rounded-lg"
                                 >
-                                    <FeaturedTabs className="clearfix d-flex">
+                                    <ProvenanceBoxTabs className="clearfix d-flex">
                                         <div
                                             id="div1"
                                             className={`h6 col-md-6 text-center tab ${this.state.activeTab === 1 ? 'active' : ''}`}
@@ -560,7 +559,7 @@ class Contributions extends Component {
                                         >
                                             Timeline
                                         </div>
-                                    </FeaturedTabs>
+                                    </ProvenanceBoxTabs>
                                     {this.props.observatoryInfo.automatic_extraction && (
                                         <ErrorMessage class="alert-server">The data has been partially imported automatically.</ErrorMessage>
                                     )}
