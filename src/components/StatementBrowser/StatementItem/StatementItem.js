@@ -156,6 +156,7 @@ export default function StatementItem(props) {
             handleDeleteStatement={handleDeleteStatement}
             typeComponents={props.components}
             canAddValue={props.canAddValue}
+            canDeleteProperty={props.canDeleteProperty}
         />
     );
 }
@@ -175,6 +176,7 @@ StatementItem.propTypes = {
     resources: PropTypes.object.isRequired,
     components: PropTypes.object.isRequired,
     canAddValue: PropTypes.bool.isRequired,
+    canDeleteProperty: PropTypes.bool.isRequired,
 
     contextStyle: PropTypes.string.isRequired,
     resourceId: PropTypes.string,

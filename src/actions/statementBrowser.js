@@ -212,7 +212,7 @@ export function getComponentsByResourceID(state, resourceId) {
  * id: String,
  * minOccurs: Number,
  * maxOccurs: Number,
- * roperty: Object,
+ * property: Object,
  * value: Object=,
  * validationRules: Array
  * }[]} list of components
@@ -310,6 +310,24 @@ export function canAddValue(state, resourceId, propertyId) {
         } else {
             return true;
         }
+    } else {
+        return true;
+    }
+}
+
+/**
+ * Can delete property in resource
+ * (check if minOccurs>=1)
+ * @param {Object} state Current state of the Store
+ * @param {String} resourceId Resource ID
+ * @param {String} propertyId Property ID
+ * @return {Boolean} Whether it's possible to delete the property
+ */
+export function canDeleteProperty(state, resourceId, propertyId) {
+    const property = state.statementBrowser.properties.byId[propertyId];
+    const typeComponents = getComponentsByResourceIDAndPredicateID(state, resourceId, property.existingPredicateId);
+    if (typeComponents && typeComponents.length > 0 && typeComponents[0].minOccurs >= 1) {
+        return false;
     } else {
         return true;
     }
