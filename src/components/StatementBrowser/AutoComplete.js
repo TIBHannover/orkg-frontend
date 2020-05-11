@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import styled, { withTheme } from 'styled-components';
+import { faUnderline } from '@fortawesome/free-solid-svg-icons';
 
 export const StyledAutoCompleteInputFormControl = styled.div`
     padding-top: 0 !important;
@@ -23,7 +24,7 @@ class AutoComplete extends Component {
         this.state = {
             selectedItemId: null,
             dropdownMenuJsx: null,
-            inputValue: '',
+            inputValue: typeof this.props.value !== 'object' ? this.props.value : '',
             defaultOptions: this.props.defaultOptions ? this.props.defaultOptions : [],
             value: this.props.value || ''
         };
@@ -155,9 +156,11 @@ class AutoComplete extends Component {
             if (this.props.onInput) {
                 this.props.onInput(null, inputValue);
             }
+            return inputValue;
         } else if (action.action === 'menu-close') {
             this.loadDefaultOptions(this.state.inputValue);
         }
+        return this.state.inputValue; //https://github.com/JedWatson/react-select/issues/3189#issuecomment-597973958
     };
 
     render() {

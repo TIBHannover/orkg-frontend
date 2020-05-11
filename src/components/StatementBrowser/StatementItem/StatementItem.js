@@ -174,7 +174,7 @@ StatementItem.propTypes = {
     templates: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
     resources: PropTypes.object.isRequired,
-    components: PropTypes.object.isRequired,
+    components: PropTypes.array.isRequired,
     canAddValue: PropTypes.bool.isRequired,
     canDeleteProperty: PropTypes.bool.isRequired,
 
