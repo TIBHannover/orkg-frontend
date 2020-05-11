@@ -137,16 +137,6 @@ export default function StatementItem(props) {
         }
     };
 
-    const getComponents = () => {
-        // filter components of this predicate
-        if (!props.resourceComponents) {
-            return [];
-        }
-
-        const components = props.resourceComponents.filter(c => c.property.id === props.property.existingPredicateId);
-        return components;
-    };
-
     return (
         <StatementItemTemplate
             property={props.property}
@@ -164,7 +154,7 @@ export default function StatementItem(props) {
             showValueHelp={props.showValueHelp}
             openExistingResourcesInDialog={props.openExistingResourcesInDialog}
             handleDeleteStatement={handleDeleteStatement}
-            typeComponents={getComponents()}
+            typeComponents={props.components}
         />
     );
 }
@@ -179,10 +169,10 @@ StatementItem.propTypes = {
     openExistingResourcesInDialog: PropTypes.bool,
     showValueHelp: PropTypes.bool,
 
-    resourceComponents: PropTypes.array,
     templates: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
     resources: PropTypes.object.isRequired,
+    components: PropTypes.object.isRequired,
 
     contextStyle: PropTypes.string.isRequired,
     resourceId: PropTypes.string,

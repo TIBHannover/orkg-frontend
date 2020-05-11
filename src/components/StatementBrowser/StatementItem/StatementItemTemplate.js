@@ -48,9 +48,12 @@ export default function StatementItemTemplate(props) {
                         <div>
                             <div className={'propertyLabel'}>
                                 {props.predicateLabel} {}
-                                {props.enableEdit && props.typeComponents && props.typeComponents.length > 0 && (
-                                    <small>[{props.typeComponents.map(c => c.value.label).join(',')}]</small>
-                                )}
+                                {props.enableEdit &&
+                                    props.typeComponents &&
+                                    props.typeComponents.length > 0 &&
+                                    props.typeComponents.filter(c => c.value.label).length > 0 && (
+                                        <small>[{props.typeComponents.map(c => c.value.label).join(',')}]</small>
+                                    )}
                             </div>
                             {props.enableEdit && (
                                 <div className={propertyOptionsClasses}>

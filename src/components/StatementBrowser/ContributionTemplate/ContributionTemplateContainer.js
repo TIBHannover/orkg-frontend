@@ -1,4 +1,4 @@
-import { canAddProperty, doneAnimation, getComponentsByResourceID } from 'actions/statementBrowser';
+import { canAddProperty, doneAnimation } from 'actions/statementBrowser';
 import ContributionTemplate from './ContributionTemplate';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -10,7 +10,6 @@ const mapStateToProps = (state, props) => {
         resources: state.statementBrowser.resources,
         classes: state.statementBrowser.classes,
         templates: state.statementBrowser.templates,
-        components: getComponentsByResourceID(state, props.value.resourceId),
         canAddProperty: canAddProperty(state, props.value.resourceId)
     };
 };

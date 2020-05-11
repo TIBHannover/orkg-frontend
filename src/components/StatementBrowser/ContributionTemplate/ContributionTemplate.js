@@ -57,7 +57,6 @@ export default function ContributionTemplate(props) {
                             inTemplate={true}
                             contextStyle={'Template'}
                             resourceId={props.value.resourceId}
-                            resourceComponents={props.components}
                         />
                     );
                 })}
@@ -91,7 +90,6 @@ ContributionTemplate.propTypes = {
 
     classes: PropTypes.object.isRequired,
     templates: PropTypes.object.isRequired,
-    components: PropTypes.array.isRequired,
     canAddProperty: PropTypes.bool.isRequired,
 
     resources: PropTypes.object.isRequired,

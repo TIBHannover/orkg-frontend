@@ -5,7 +5,7 @@ import {
     isSavingProperty,
     doneSavingProperty,
     deleteProperty,
-    getComponentsByResourceIDAndPredicate
+    getComponentsByResourceIDAndPredicateID
 } from 'actions/statementBrowser';
 import StatementItem from './StatementItem';
 
@@ -18,9 +18,9 @@ const mapStateToProps = (state, props) => {
         resources: state.statementBrowser.resources,
         templates: state.statementBrowser.templates,
         classes: state.statementBrowser.classes,
-        components: getComponentsByResourceIDAndPredicate(
+        components: getComponentsByResourceIDAndPredicateID(
             state,
-            props.resourceId ? props.resourceId : props.selectedResource,
+            props.resourceId ? props.resourceId : state.statementBrowser.selectedResource,
             props.property.existingPredicateId
         )
     };

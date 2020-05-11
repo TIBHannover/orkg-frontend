@@ -65,7 +65,6 @@ export default function Statements(props) {
                                             isLastItem={propertyIds.length === index + 1}
                                             openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                             showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
-                                            resourceComponents={props.components}
                                         />
                                     );
                                 } else {

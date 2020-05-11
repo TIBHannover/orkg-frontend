@@ -196,6 +196,21 @@ export function getComponentsByResourceID(state, resourceId) {
     return components;
 }
 
+/**
+ * Get components by resource ID and PredicateID
+ *
+ * @param {Object} state Current state of the Store
+ * @param {String} resourceId Resource ID
+ * @return {{id: String, minOccurs: Number, minOccurs: Number, property: Object, value: Object|null, validationRules: Array}[]} list of components
+ */
+export function getComponentsByResourceIDAndPredicateID(state, resourceId, predicateId) {
+    const resourceComponents = getComponentsByResourceID(state, resourceId);
+    if (resourceComponents.length === 0) {
+        return [];
+    }
+    return resourceComponents.filter(c => c.property.id === predicateId);
+}
+
 export const resetStatementBrowser = () => dispatch => {
     dispatch({
         type: type.RESET_STATEMENT_BROWSER
@@ -645,18 +660,6 @@ export const goToResourceHistory = data => dispatch => {
         payload: data
     });
 };
-
-/*
-    Get components of a resource
-*/
-// TODO: Document or remove
-export function getComponentsByResourceIDAndPredicate(state, resourceID, predicateID) {
-    const resourceComponents = getComponentsByResourceID(state, resourceID);
-    if (resourceComponents.length === 0) {
-        return [];
-    }
-    return resourceComponents.filter(c => c.property.id === predicateID);
-}
 
 /**
  * Check if it should fetch statements for resources
