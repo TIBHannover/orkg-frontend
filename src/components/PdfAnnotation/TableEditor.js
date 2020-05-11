@@ -16,8 +16,6 @@ class TableEditor extends Component {
             extractedTable: null,
             loading: false
         };
-
-        this.data = [['', 'Ford', 'Volvo', 'Toyota', 'Honda'], ['2016', 10, 11, 12, 13], ['2017', 20, 11, 14, 13], ['2018', 30, 15, 12, 13]];
     }
 
     render() {
@@ -60,29 +58,9 @@ class TableEditor extends Component {
                 licenseKey="non-commercial-and-evaluation"
                 contextMenu={true}
                 stretchH={'all'}
+                ref={this.props.setRef}
             />
         );
-
-        /*return (
-            <BootstrapTable
-                keyField={'id'}
-                data={data}
-                columns={columns}
-                cellEdit={cellEditFactory({ mode: 'dbclick' })}
-                striped
-                condensed
-                bootstrap4
-                selectRow={selectRowProp}
-            >
-                {columns.map(column => (
-                    <TableHeaderColumn dataField={column.dataField} headerAlign="right">
-                        {column.text}
-                    </TableHeaderColumn>
-                ))}
-            </BootstrapTable>
-        );*/
-
-        //return <CsvToHtmlTable tableClassName="table table-bordered table-sm" data={this.props.data} csvDelimiter="," />;
     }
 }
 
