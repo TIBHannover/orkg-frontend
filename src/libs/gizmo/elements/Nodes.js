@@ -50,11 +50,17 @@ export default class Node extends BaseElement {
 
         this.setAnimationDurationPercentage = this.setAnimationDurationPercentage.bind(this);
 
+        this.collapseThisNode = this.collapseThisNode.bind(this);
+
         // performance optimization stuff;
         this.redraw = this.redraw.bind(this);
 
         // some helper functions; [ensures that status values are correctly set!]
         this.setStatusLeafNode = this.setStatusLeafNode.bind(this);
+    }
+
+    collapseThisNode() {
+        this.graph.collapseThisNodeToParent(this);
     }
 
     setAnimationDurationPercentage(val) {
@@ -90,6 +96,20 @@ export default class Node extends BaseElement {
         });
     }
 
+    mouseHoverIn = () => {
+        super.mouseHoverIn();
+        if (this.singleCollapseGroup) {
+            this.singleCollapseGroup.classed('hidden', false);
+        }
+    };
+
+    mouseHoverOut = () => {
+        super.mouseHoverOut();
+        if (this.singleCollapseGroup) {
+            this.singleCollapseGroup.classed('hidden', true);
+        }
+    };
+
     collapseButton_mouseHoverIn() {
         this.mouseHoverIn();
         this.circ.classed('collapseExpandButtonHovered', true);
@@ -98,6 +118,58 @@ export default class Node extends BaseElement {
     collapseButton_mouseHoverOut() {
         this.mouseHoverOut();
         this.circ.classed('collapseExpandButtonHovered', false);
+    }
+
+    singleCollapseButton_mouseHoverIn = () => {
+        this.mouseHoverIn();
+        this.singleCirc.classed('collapseExpandButtonHovered', true);
+    };
+
+    singleCollapseButton_mouseHoverOut = () => {
+        this.mouseHoverOut();
+        this.singleCirc.classed('collapseExpandButtonHovered', false);
+    };
+
+    addSingleCollapseHoverButton() {
+        const that = this;
+        if (this.singleCollapseGroup) {
+            this.singleCollapseGroup.class('hidden', true);
+        } else {
+            // create the hover thing;
+            const offsetX = Math.sqrt(50 * 25);
+
+            this.singleCollapseGroup = this.svgRoot.append('g');
+            this.singleCirc = this.singleCollapseGroup.append('circle');
+            const radius = 15;
+            this.singleCirc.attr('r', radius);
+            this.singleCirc.attr('cx', -offsetX);
+            this.singleCirc.attr('cy', offsetX);
+            this.singleCirc.classed('collapseExpandButton', true);
+            this.singleCollapseGroup.on('mouseover', this.singleCollapseButton_mouseHoverIn);
+            this.singleCollapseGroup.on('mouseout', this.singleCollapseButton_mouseHoverOut);
+            this.singleCollapseGroup
+                .append('path')
+                .attr(
+                    'd',
+                    'M320 400c-75.85 0-137.25-58.71-142.9-133.11L72.2 185.82c-13.79 17.3-26.48 35.59-36.72 55.59a32.35 32.35 0 0 0 0 29.19C89.71 376.41 197.07 448 320 448c26.91 0 52.87-4 77.89-10.46L346 397.39a144.13 144.13 0 0 1-26 2.61zm313.82 58.1l-110.55-85.44a331.25 331.25 0 0 0 81.25-102.07 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64a308.15 308.15 0 0 0-147.32 37.7L45.46 3.37A16 16 0 0 0 23 6.18L3.37 31.45A16 16 0 0 0 6.18 53.9l588.36 454.73a16 16 0 0 0 22.46-2.81l19.64-25.27a16 16 0 0 0-2.82-22.45zm-183.72-142l-39.3-30.38A94.75 94.75 0 0 0 416 256a94.76 94.76 0 0 0-121.31-92.21A47.65 47.65 0 0 1 304 192a46.64 46.64 0 0 1-1.54 10l-73.61-56.89A142.31 142.31 0 0 1 320 112a143.92 143.92 0 0 1 144 144c0 21.63-5.29 41.79-13.9 60.11z'
+                )
+                .attr('transform', 'translate(-45,28), scale(0.03,0.03)');
+
+            this.singleCollapseGroup.classed('hidden', true);
+            if (this.type() === 'literal') {
+                const shape = this.getExpectedShapeSize(this.renderConfig);
+                let width = shape.w;
+                if (this.getRenderingShape()) {
+                    width = this.getRenderingShape().attr('width');
+                }
+                // push back to origin;
+                this.singleCollapseGroup.attr('cx', -Math.sqrt(50 * 25));
+                this.singleCollapseGroup.attr('transform', 'translate(' + (offsetX - 15 - 0.5 * width) + ',' + -offsetX + ')');
+            }
+            this.singleCollapseGroup.on('click', function() {
+                that.collapseThisNode();
+            });
+        }
     }
 
     addHoverCollapseExpandButton() {
@@ -341,6 +413,11 @@ export default class Node extends BaseElement {
             this.collapseExapandGroup = undefined;
         }
 
+        if (this.singleCollapseGroup) {
+            this.singleCollapseGroup.remove();
+            this.singleCollapseGroup = undefined;
+        }
+
         if (this.stackViewGroup) {
             this.stackViewGroup.remove();
             this.stackViewGroup = undefined;
@@ -370,6 +447,11 @@ export default class Node extends BaseElement {
             if (this.status !== 'leafNode') {
                 this.addHoverCollapseExpandButton();
             }
+        }
+
+        if (this.incommingLink.length > 0) {
+            // make sure the root not can not be single collapsed;
+            this.addSingleCollapseHoverButton();
         }
     }
 

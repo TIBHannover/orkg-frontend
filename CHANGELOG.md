@@ -3,6 +3,23 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [V0.9](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.8...V0.9) - 2020-04-24
+
+### Merged
+
+- feat: support thumbnails for related comparison resources [`#239`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/239)
+- Resolve "Fix double line edit mode" [`#234`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/234)
+- Single node collapse [`#230`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/230)
+- Resolve "Bug: publishing a comparison" [`#236`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/236)
+- Change position "Add contribution" for a comparison [`#233`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/233)
+
+### Fixed
+
+- Merge branch '179-add-a-thumbnail-for-the-resources-links-in-the-comparison' into 'master' [`#179`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/179)
+- Merge branch '167-fix-double-line-edit-mode' into 'master' [`#167`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/167)
+- Merge branch '177-bug-publishing-a-comparison' into 'master' [`#177`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/177)
+
+---
 ## [V0.8](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.7.1...V0.8) - 2020-04-15
 
 ### Merged

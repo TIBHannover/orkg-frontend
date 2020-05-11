@@ -84,6 +84,7 @@ export default class GraphVis {
         this.promisedGroupCollapse = this.promisedGroupCollapse.bind(this);
         this.singleGroupCollapse = this.singleGroupCollapse.bind(this);
         this.singleNodeCollapse = this.singleNodeCollapse.bind(this);
+        this.collapseThisNodeToParent = this.collapseThisNodeToParent.bind(this);
         // collapseTasks based on planned execution
         this.planCollapseOperations = this.planCollapseOperations.bind(this);
         this.collectRecursiveNodeCollapse = this.collectRecursiveNodeCollapse.bind(this);
@@ -1113,7 +1114,7 @@ export default class GraphVis {
         await this.layout.promisedLayoutAnimation(true, animationPercentageDuration);
     }
 
-    singleNodeCollapse(node) {
+    async singleNodeCollapse(node, redraw) {
         if (this.layout.layoutType() === 'force') {
             this.layout.stopForce();
         }
@@ -1126,12 +1127,38 @@ export default class GraphVis {
         children.forEach(child => {
             child.setToParentNodePosition();
         });
-        this.layout.makeSingleNodeCollapseAnimation(children);
+        // this.layout.makeSingleNodeCollapseAnimation(children);
+        await this.layout.promisedLayoutAnimation(true, 0.5);
+        if (redraw !== false) {
+            this.redrawGraphAfterCollapse();
+        }
+    }
+
+    async collapseThisNodeToParent(node) {
+        function _callback(node) {
+            if (node.incommingLink.length === 1) {
+                // we can make an animation to the parent;
+                const link = node.incommingLink[0];
+                const parent = node.incommingLink[0].domainNode();
+
+                link.linkElement().visible(false);
+                link.visible(false);
+                node.visible(false);
+                // function does not know "this" so we use the node as reference
+                // make an collapse animation ;
+                node.graph.layout.createTreeData();
+                node.graph.layout.initializeTreePositions();
+                node.x = parent.x;
+                node.y = parent.y;
+                node.graph.layout.makeSingleNodeCollapseAnimation([node]);
+            }
+        }
+        // make first the single node collapse;
+        await this.planCollapseOperationsForSingleNode(node, false, _callback);
     }
 
     // planned collapse for a single node action
-    async executeSortedCollapsePlan(executionArray) {
-        // iterative collapse operations;
+    async executeSortedCollapsePlan(executionArray, redraw) {
         if (this.layout.layoutType() === 'force') {
             this.layout.stopForce();
         }
@@ -1149,7 +1176,9 @@ export default class GraphVis {
         });
 
         await this.promisedGroupCollapse(inverseGroup);
-        this.redrawGraphAfterCollapse();
+        if (redraw !== false) {
+            this.redrawGraphAfterCollapse();
+        }
     }
 
     /** Expansion Tasks **/
@@ -1195,6 +1224,16 @@ export default class GraphVis {
     }
 
     collectChildrenAndSetVisibilityFlag(parent, visFlag, setToParentPos) {
+        /** extension for single node collapse **/
+        const vislinks = [];
+        const invislinks = [];
+        parent.outgoingLink.forEach(link => {
+            if (link.visible() === true) {
+                vislinks.push(link);
+            } else {
+                invislinks.push(link);
+            }
+        });
         const children = [];
         parent.outgoingLink.forEach(link => {
             const child = link.rangeNode();
@@ -1205,7 +1244,10 @@ export default class GraphVis {
                 child.parentNodeForPosition(parent);
                 children.push(child);
                 if (setToParentPos === true) {
-                    child.setToParentNodePosition();
+                    if (invislinks.indexOf(link) !== -1) {
+                        // sets only to parent pos when we have the invis item
+                        child.setToParentNodePosition();
+                    }
                 }
             }
         });
@@ -1477,6 +1519,26 @@ export default class GraphVis {
             // sort the nodes by highest depth;
             recursiveCollapsePlan.sort((a, b) => (a.depthValue > b.depthValue ? -1 : b.depthValue > a.depthValue ? 1 : 0));
             this.executeSortedCollapsePlan(recursiveCollapsePlan).then(function() {}); // ignoring then
+        }
+    }
+
+    async planCollapseOperationsForSingleNode(caller, redraw, callback) {
+        // check if recursive action plan or single action plan;
+
+        const recursiveCollapsePlan = []; // array of nodes;
+        const recursivePlan = this.checkForRecursivePlan(caller, recursiveCollapsePlan);
+        if (recursivePlan === false) {
+            await this.singleNodeCollapse(caller, redraw);
+            callback(caller);
+        } else {
+            // identify collapse action plan
+            this.collectRecursiveNodeCollapse(recursiveCollapsePlan);
+            recursiveCollapsePlan.push(caller);
+            // sort the nodes by highest depth;
+            recursiveCollapsePlan.sort((a, b) => (a.depthValue > b.depthValue ? -1 : b.depthValue > a.depthValue ? 1 : 0));
+            this.executeSortedCollapsePlan(recursiveCollapsePlan, redraw).then(function() {
+                callback(caller);
+            }); // ignoring then
         }
     }
 } // end of class definition

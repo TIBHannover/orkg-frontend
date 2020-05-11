@@ -204,6 +204,7 @@ function renderHalo(group, cfg, pNode) {
     const renderingShapeForHalo = group.append('rect');
     renderingShapeForHalo.classed('haloRenderingShape', true); // aux class for selection later
     renderBaseShape(cfg, pNode, renderingShapeForHalo, +5);
+
     // overwrite some colors;
     renderingShapeForHalo.style('fill', 'none');
     renderingShapeForHalo.style('stroke', 'red');

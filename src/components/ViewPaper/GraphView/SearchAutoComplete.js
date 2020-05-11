@@ -205,7 +205,7 @@ class SearchAutoComplete extends Component {
             this.searchResultIsEmpty = false;
             // create search items
             this.searchEntries = [
-                <DropdownItem header className={'d-flex'}>
+                <DropdownItem key={'searchDropdownItem' + searchString} header className={'d-flex'}>
                     <div className={'flex-shrink-0'}>Result</div>
                     <div className="flex-shrink-0" style={{ marginLeft: 'auto', fontSize: 'small' }}>
                         Visible/Total
