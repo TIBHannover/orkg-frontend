@@ -466,9 +466,7 @@ export const updateUserPassword = ({ current_password, new_password, new_matchin
 export const updateUserRole = () => {
     const headers = { 'Content-Type': 'application/json' };
     const data = {};
-    //alert(organizationLogo);
-    //debugger;
-    return submitPutRequest(`${url}user/role/`, headers, data);
+    return submitPutRequest(`${userUrl}role/`, headers, data);
 };
 
 /**
@@ -599,19 +597,15 @@ export const getAllOrganizations = () => {
 };
 
 export const getOrganization = id => {
-    //console.log('123');
     return submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/`);
 };
 
 export const createOrganization = (organizationName, organizationLogo) => {
-    //alert(organizationLogo);
-    //debugger;
     return submitPostRequest(organizationsUrl, { 'Content-Type': 'application/json' }, { organizationName, organizationLogo });
 };
 
 export const getAllObservatoriesbyOrganizationId = id => {
-    const v = 'search/';
-    return submitGetRequest(`${observatoriesUrl}${v}${encodeURIComponent(id)}/`);
+    return submitGetRequest(`${observatoriesUrl}search/${encodeURIComponent(id)}/`);
 };
 
 export const getObservatorybyId = id => {
@@ -627,8 +621,6 @@ export const getResourcesByObservatoryId = id => {
 };
 
 export const createObservatory = (observatoryName, organizationId) => {
-    //alert(organizationLogo);
-    //debugger;
     return submitPostRequest(observatoriesUrl, { 'Content-Type': 'application/json' }, { observatoryName, organizationId });
 };
 export const getContributorsByResourceId = id => {

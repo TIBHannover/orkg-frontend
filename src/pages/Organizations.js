@@ -44,14 +44,10 @@ class Organizations extends Component {
     userInformation = () => {
         const cookies = new Cookies();
         const token = cookies.get('token') ? cookies.get('token') : null;
-        //alert(token);
         if (token && !this.props.user) {
             getUserInformation()
                 .then(userData => {
-                    //alert(userData);
-                    //debugger;
                     this.props.updateAuth({ user: { displayName: userData.display_name, id: userData.id, token: token, email: userData.email } });
-                    //alert(this.props.user);
                 })
                 .catch(error => {
                     cookies.remove('token');
@@ -64,7 +60,6 @@ class Organizations extends Component {
         getAllOrganizations({
             page: this.state.page,
             items: this.pageSize,
-            sortBy: 'created_at',
             desc: true
         }).then(resources => {
             if (resources.length > 0) {
@@ -85,9 +80,6 @@ class Organizations extends Component {
     };
 
     render() {
-        //const email = this.props.user && this.props.user.email ? this.props.user.email : 'example@example.com';
-        //console.log(this.props.user);
-        //console.log(this.state.email);
         return (
             <>
                 <Container className="p-0">
@@ -102,8 +94,8 @@ class Organizations extends Component {
                         )}
 
                         {!this.props.user && (
-                            <Link className="float-right mb-2 mt-2 clearfix">
-                                <span className="fa fa-plus" /> Signin to create organization
+                            <Link style={{ color: '#111111' }} className="float-right mb-2 mt-2 clearfix">
+                                <span className="fa" /> Signin to create organization
                             </Link>
                         )}
                     </div>

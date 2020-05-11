@@ -29,8 +29,8 @@ class ObservatoryDetails extends Component {
     }
 
     componentDidMount() {
-        document.title = 'Organizations - ORKG';
-
+        document.title = 'Observatories - ORKG';
+        
         this.loadMoreResources();
     }
 
@@ -40,9 +40,9 @@ class ObservatoryDetails extends Component {
             if (resources.length > 0) {
                 this.setState({
                     resources: [...this.state.resources, ...resources],
-                    isNextPageLoading: false
-                    //hasNextPage: resources.length < this.pageSize ? false : true,
-                    //page: this.state.page + 1
+                    isNextPageLoading: false,
+                    hasNextPage: resources.length < this.pageSize ? false : true,
+                    page: this.state.page + 1
                 });
             } else {
                 this.setState({
@@ -62,7 +62,6 @@ class ObservatoryDetails extends Component {
                 </Container>
                 <Container className={'box pt-4 pb-4 pl-5 pr-5 clearfix'}>
                     <div className="clearfix">
-                        {/* {console.log(this.props.user)} */}
                         {this.props.user && (
                             <Link className="float-right mb-2 mt-2 clearfix" to={reverse(ROUTES.ADD_OBSERVATORY, { id: this.props.match.params.id })}>
                                 <span className="fa fa-plus" /> Create new observatory

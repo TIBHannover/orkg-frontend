@@ -46,9 +46,7 @@ class ViewPaper extends Component {
         dropdownOpen: false,
         showGraphModal: false,
         editMode: false,
-        //observatoryId:'',
         observatoryInfo: []
-        //obs:[{id:'', name:''}]
     };
 
     componentDidMount() {
@@ -73,19 +71,12 @@ class ViewPaper extends Component {
             .then(paperResource => {
                 if (paperResource.observatory_id) {
                     this.setState({
-                        observatoryInfo: [...this.state.observatoryInfo, paperResource.observatory_id]
-                    });
-
-                    this.setState({
-                        observatoryInfo: [...this.state.observatoryInfo, paperResource.created_at.substring(0, 10)]
-                    });
-
-                    this.setState({
-                        observatoryInfo: [...this.state.observatoryInfo, paperResource.created_by]
-                    });
-
-                    this.setState({
-                        observatoryInfo: [...this.state.observatoryInfo, paperResource.automatic_extraction]
+                        observatoryInfo: {
+                            observatory_id: paperResource.observatory_id,
+                            created_at: paperResource.created_at.substring(0, 10),
+                            created_by: paperResource.created_by,
+                            automatic_extraction: paperResource.automatic_extraction
+                        }
                     });
                 }
                 getStatementsBySubject({ id: resourceId })

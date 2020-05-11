@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { createLiteralStatement, createObservatory, crossrefUrl, submitGetRequest, createLiteral } from '../network';
+import { createObservatory, crossrefUrl, submitGetRequest } from '../network';
 import { Redirect } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { toast } from 'react-toastify';
-import { getAllClasses } from 'network';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import ROUTES from '../constants/routes';
@@ -12,29 +11,14 @@ export default class AddObservatory extends Component {
     constructor(props) {
         super(props);
 
-        this.doi = null;
         this.state = {
             redirect: false,
             value: '',
-            classes: [],
-            /* Possible values: 'edit', 'loading'. */
-            editorState: 'edit',
-            resourceId: '',
-            classesOptions: [],
-            previewSrc: ''
+            resourceId: ''
         };
     }
 
-    componentDidMount = () => {
-        console.log('test');
-        this.getClasses();
-    };
-
-    getClasses = () => {
-        getAllClasses().then(classes => {
-            this.setState({ classesOptions: classes });
-        });
-    };
+    componentDidMount = () => {};
 
     setEditorState = editorState => {
         this.setState({ editorState: editorState });
@@ -42,14 +26,7 @@ export default class AddObservatory extends Component {
 
     handleAdd = async () => {
         this.setEditorState('loading');
-        const doiRegex = /\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&'<>])\S)+)\b/g;
-        if (!doiRegex.test(this.state.value)) {
-            await this.createNewResource(false);
-        } //else {
-        //console.log('this is a DOI');
-        //this.doi = this.state.value;
-        //await this.createResourceUsingDoi();
-        //}
+        await this.createNewResource(false);
     };
 
     createResourceUsingDoi = async () => {
@@ -69,10 +46,6 @@ export default class AddObservatory extends Component {
         this.setState({ [event.target.name]: event.target.value.trim() });
     };
 
-    handleClassesChange = classesArray => {
-        this.setState({ classes: classesArray });
-    };
-
     handleKeyUp = async event => {
         event.preventDefault();
         if (event.keyCode === 13) {
@@ -85,21 +58,13 @@ export default class AddObservatory extends Component {
         toast.error(`Error creating literal statement ${error.message}`);
     };
 
-    createNewResource = async usingDoi => {
+    createNewResource = async () => {
         const value = this.state.value;
-        //const image = this.state.previewSrc;
-        //console.log("123"+image[0]);
         if (value && value.length !== 0) {
             try {
-                //alert(value+"-"+this.props.match.params.id);
                 const responseJson = await createObservatory(value, this.props.match.params.id);
                 const resourceId = responseJson.id;
-
-                if (usingDoi) {
-                    await this.createDoiStatement(resourceId, process.env.REACT_APP_PREDICATES_HAS_DOI);
-                } else {
-                    this.navigateToResource(resourceId);
-                }
+                this.navigateToResource(resourceId);
             } catch (error) {
                 this.setEditorState('edit');
                 console.error(error);
@@ -113,32 +78,6 @@ export default class AddObservatory extends Component {
         this.setState({ resourceId: resourceId }, () => {
             this.setState({ redirect: true });
         });
-    };
-
-    createDoiStatement = async (resourceId, predicateId) => {
-        const responseJson = await createLiteral(this.doi);
-        createLiteralStatement(resourceId, predicateId, responseJson.id).then(result => {
-            this.navigateToResource(resourceId);
-        });
-    };
-
-    handlePreview = async e => {
-        e.preventDefault();
-
-        const file = e.target.files[0];
-        const reader = new FileReader();
-
-        if (e.target.files.length === 0) {
-            return;
-        }
-
-        reader.onloadend = e => {
-            this.setState({
-                previewSrc: [reader.result]
-            });
-        };
-
-        reader.readAsDataURL(file);
     };
 
     render() {

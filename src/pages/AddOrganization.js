@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { createLiteralStatement, createOrganization, createLiteral } from '../network';
+import { createOrganization } from '../network';
 import { Redirect } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { toast } from 'react-toastify';
-import { getAllClasses } from 'network';
 import { updateUserRole, getUserInformation } from '../network';
 import { openAuthDialog, updateAuth, resetAuth } from '../actions/auth';
 import PropTypes from 'prop-types';
@@ -16,29 +15,16 @@ class AddOrganization extends Component {
     constructor(props) {
         super(props);
 
-        this.doi = null;
         this.state = {
             redirect: false,
             value: '',
-            classes: [],
-            /* Possible values: 'edit', 'loading'. */
-            editorState: 'edit',
             resourceId: '',
-            classesOptions: [],
             previewSrc: ''
         };
     }
 
     componentDidMount = () => {
-        console.log('test');
         this.userInformation();
-        this.getClasses();
-    };
-
-    getClasses = () => {
-        getAllClasses().then(classes => {
-            this.setState({ classesOptions: classes });
-        });
     };
 
     setEditorState = editorState => {
@@ -47,27 +33,17 @@ class AddOrganization extends Component {
 
     handleAdd = async () => {
         this.setEditorState('loading');
-        const doiRegex = /\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&'<>])\S)+)\b/g;
-        if (!doiRegex.test(this.state.value)) {
-            await this.createNewResource(false);
-        } //else {
-        //console.log('this is a DOI');
-        //this.doi = this.state.value;
-        //await this.createResourceUsingDoi();
-        //}
+        await this.createNewResource(false);
     };
 
     userInformation = () => {
         const cookies = new Cookies();
         const token = cookies.get('token') ? cookies.get('token') : null;
-        //alert(token);
+
         if (token && !this.props.user) {
             getUserInformation()
                 .then(userData => {
-                    //alert(userData);
-                    //debugger;
                     this.props.updateAuth({ user: { displayName: userData.display_name, id: userData.id, token: token, email: userData.email } });
-                    //alert(this.props.user);
                 })
                 .catch(error => {
                     cookies.remove('token');
@@ -79,10 +55,6 @@ class AddOrganization extends Component {
         this.setState({ [event.target.name]: event.target.value.trim() });
     };
 
-    handleClassesChange = classesArray => {
-        this.setState({ classes: classesArray });
-    };
-
     handleKeyUp = async event => {
         event.preventDefault();
         if (event.keyCode === 13) {
@@ -90,26 +62,15 @@ class AddOrganization extends Component {
         }
     };
 
-    handleLiteralStatementCreationError = error => {
-        console.error(error);
-        toast.error(`Error creating literal statement ${error.message}`);
-    };
-
-    createNewResource = async usingDoi => {
+    createNewResource = async () => {
         const value = this.state.value;
         const image = this.state.previewSrc;
-        //console.log('123' + image[0]);
         if (value && value.length !== 0) {
             try {
                 const responseJson = await createOrganization(value, image[0]);
                 const resourceId = responseJson.id;
                 await updateUserRole();
-
-                if (usingDoi) {
-                    await this.createDoiStatement(resourceId, process.env.REACT_APP_PREDICATES_HAS_DOI);
-                } else {
-                    this.navigateToResource(resourceId);
-                }
+                this.navigateToResource(resourceId);
             } catch (error) {
                 this.setEditorState('edit');
                 console.error(error);
@@ -122,13 +83,6 @@ class AddOrganization extends Component {
         this.setEditorState('edit');
         this.setState({ resourceId: resourceId }, () => {
             this.setState({ redirect: true });
-        });
-    };
-
-    createDoiStatement = async (resourceId, predicateId) => {
-        const responseJson = await createLiteral(this.doi);
-        createLiteralStatement(resourceId, predicateId, responseJson.id).then(result => {
-            this.navigateToResource(resourceId);
         });
     };
 
@@ -152,9 +106,6 @@ class AddOrganization extends Component {
     };
 
     render() {
-        //const email = this.props.user && this.props.user.email ? this.props.user.email : 'example@example.com';
-        //console.log(this.props.user);
-        //console.log(this.state.email);
         const loading = this.state.editorState === 'loading';
         if (this.state.redirect) {
             this.setState({

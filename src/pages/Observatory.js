@@ -79,9 +79,7 @@ class Observatory extends Component {
             isLoading: false,
             editMode: false,
             classes: [],
-            //image: '',
             resourceId: '',
-            //totalObservatories:'',
             url: '',
             users: [],
             activeTab: 1,
@@ -96,6 +94,8 @@ class Observatory extends Component {
 
     componentDidUpdate = prevProps => {
         if (this.props.match.params.id !== prevProps.match.params.id) {
+            this.getContributors();
+            this.getResources();
         }
     };
 

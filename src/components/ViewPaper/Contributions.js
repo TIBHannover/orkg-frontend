@@ -31,7 +31,8 @@ import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
-import 'react-vertical-timeline-component/style.min.css';
+//import 'react-vertical-timeline-component/style.min.css';
+import '../../pages/style.min.css';
 
 const FeaturedTabs = styled.div`
     .tab {
@@ -98,7 +99,6 @@ const buttonStyle = {
     paddingTop: 10,
     borderBottom: '1px solid #eeeff3',
     fontSize: 12
-    //border: solid,
 };
 
 const AnimationContainer = styled(CSSTransition)`
@@ -141,7 +141,7 @@ class Contributions extends Component {
             this.setState({ selectedContribution: this.props.selectedContribution }, () => {
                 this.handleSelectContribution(this.state.selectedContribution);
 
-                this.getObservatoryAndOrganizationInformation(this.props.observatoryInfo[0]);
+                this.getObservatoryAndOrganizationInformation(this.props.observatoryInfo.observatory_id);
                 this.getResourceContributors(this.props.paperId);
             });
         }
@@ -223,19 +223,12 @@ class Contributions extends Component {
     };
 
     getObservatoryAndOrganizationInformation = async id => {
-        //const temp = [];
         getObservatorybyId(id)
             .then(responseJson => {
-                //const orgInfo =
-                //console.log(responseJson);
                 getOrganization(responseJson.organizationId)
                     .then(orgResponse => {
-                        //console.log(orgResponse);
-
-                        getUserInformationById(this.props.observatoryInfo[2])
+                        getUserInformationById(this.props.observatoryInfo.created_by)
                             .then(userResponse => {
-                                //console.log(responseJson);
-
                                 this.setState({
                                     observatory: {
                                         name: responseJson.name.toUpperCase(),
@@ -259,13 +252,10 @@ class Contributions extends Component {
     };
 
     getResourceContributors = async id => {
-        //const temp = [];
         getContributorsByResourceId(id)
             .then(responseJson => {
-                //const orgInfo =
                 const a = {};
                 for (let i = 0; i < responseJson.length; i++) {
-                    //console.log(responseJson.length);
                     a[i] = {};
                     if (/^[0]{8}-[0]{4}-[0]{4}-[0]{4}-[0]{12}$/.test(responseJson[i].created_by)) {
                         a[i]['created_by'] = 'Unknown';
@@ -281,8 +271,6 @@ class Contributions extends Component {
                         userData: [...this.state.userData, a[i]]
                     });
                 }
-                //console.log(this.state.userData);
-                //console.log('--------');
             })
             .catch(error => {
                 this.setState({ label: null, isLoading: false });
@@ -316,7 +304,7 @@ class Contributions extends Component {
                                     <p>
                                         <b>DATE ADDED</b>
                                         <br />
-                                        {this.props.observatoryInfo[1]}
+                                        {this.props.observatoryInfo.created_at}
                                     </p>
                                 </li>
 
@@ -551,7 +539,7 @@ class Contributions extends Component {
                                 </StyledHorizontalContribution>
                             </AnimationContainer>
                         </TransitionGroup>
-                        {!/^[0]{8}-[0]{4}-[0]{4}-[0]{4}-[0]{12}$/.test(this.props.observatoryInfo[0]) && (
+                        {!/^[0]{8}-[0]{4}-[0]{4}-[0]{4}-[0]{12}$/.test(this.props.observatoryInfo.observatory_id) && (
                             <div>
                                 <SidebarStyledBox
                                     style={{ width: 230, minHeight: 430, backgroundColor: '#f8f9fb', marginLeft: 20 }}
@@ -573,7 +561,7 @@ class Contributions extends Component {
                                             Timeline
                                         </div>
                                     </FeaturedTabs>
-                                    {this.props.observatoryInfo[3] && (
+                                    {this.props.observatoryInfo.automatic_extraction && (
                                         <ErrorMessage class="alert-server">The data has been partially imported automatically.</ErrorMessage>
                                     )}
                                     <TransitionGroup exit={false}>{rightSidebar}</TransitionGroup>
