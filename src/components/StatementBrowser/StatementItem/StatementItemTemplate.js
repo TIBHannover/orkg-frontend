@@ -18,19 +18,6 @@ export default function StatementItemTemplate(props) {
         disableHover: disableHover
     });
 
-    const canAddValues = () => {
-        // compare the number of values with maxOccurs
-        if (props.typeComponents && props.typeComponents.length > 0 && props.typeComponents[0].maxOccurs) {
-            if (props.property.valueIds.length >= parseInt(props.typeComponents[0].maxOccurs)) {
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return true;
-        }
-    };
-
     const canDeleteProperty = () => {
         // compare the number of values with maxOccurs
         if (props.typeComponents && props.typeComponents.length > 0 && props.typeComponents[0].minOccurs >= 1) {
@@ -141,7 +128,7 @@ export default function StatementItemTemplate(props) {
                         )}
                         {props.enableEdit && (
                             <AddValue
-                                isDisabled={!canAddValues()}
+                                isDisabled={!props.canAddValue}
                                 typeComponents={props.typeComponents}
                                 openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                 contextStyle="Template"
@@ -172,5 +159,6 @@ StatementItemTemplate.propTypes = {
     showValueHelp: PropTypes.bool,
     openExistingResourcesInDialog: PropTypes.bool.isRequired,
     handleDeleteStatement: PropTypes.func.isRequired,
-    typeComponents: PropTypes.array.isRequired
+    typeComponents: PropTypes.array.isRequired,
+    canAddValue: PropTypes.bool.isRequired
 };

@@ -5,7 +5,8 @@ import {
     isSavingProperty,
     doneSavingProperty,
     deleteProperty,
-    getComponentsByResourceIDAndPredicateID
+    getComponentsByResourceIDAndPredicateID,
+    canAddValue
 } from 'actions/statementBrowser';
 import StatementItem from './StatementItem';
 
@@ -22,7 +23,8 @@ const mapStateToProps = (state, props) => {
             state,
             props.resourceId ? props.resourceId : state.statementBrowser.selectedResource,
             props.property.existingPredicateId
-        )
+        ),
+        canAddValue: canAddValue(state, props.resourceId ? props.resourceId : state.statementBrowser.selectedResource, props.id)
     };
 };
 

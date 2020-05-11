@@ -155,6 +155,7 @@ export default function StatementItem(props) {
             openExistingResourcesInDialog={props.openExistingResourcesInDialog}
             handleDeleteStatement={handleDeleteStatement}
             typeComponents={props.components}
+            canAddValue={props.canAddValue}
         />
     );
 }
@@ -173,6 +174,7 @@ StatementItem.propTypes = {
     classes: PropTypes.object.isRequired,
     resources: PropTypes.object.isRequired,
     components: PropTypes.object.isRequired,
+    canAddValue: PropTypes.bool.isRequired,
 
     contextStyle: PropTypes.string.isRequired,
     resourceId: PropTypes.string,

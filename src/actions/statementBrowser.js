@@ -170,7 +170,14 @@ export function getTemplateIDsByResourceID(state, resourceId) {
  *
  * @param {Object} state Current state of the Store
  * @param {String} resourceId Resource ID
- * @return {{id: String, minOccurs: Number, minOccurs: Number, property: Object, value: Object|null, validationRules: Array}[]} list of components
+ * @return {{
+ * id: String,
+ * minOccurs: Number,
+ * maxOccurs: Number,
+ * property: Object,
+ * value: Object=,
+ * validationRules: Array
+ * }[]} list of components
  */
 export function getComponentsByResourceID(state, resourceId) {
     if (!resourceId) {
@@ -200,7 +207,15 @@ export function getComponentsByResourceID(state, resourceId) {
  *
  * @param {Object} state Current state of the Store
  * @param {String} resourceId Resource ID
- * @return {{id: String, minOccurs: Number, minOccurs: Number, property: Object, value: Object|null, validationRules: Array}[]} list of components
+ * @param {String} predicateId Existing Predicate ID
+ * @return {{
+ * id: String,
+ * minOccurs: Number,
+ * maxOccurs: Number,
+ * roperty: Object,
+ * value: Object=,
+ * validationRules: Array
+ * }[]} list of components
  */
 export function getComponentsByResourceIDAndPredicateID(state, resourceId, predicateId) {
     const resourceComponents = getComponentsByResourceID(state, resourceId);
@@ -276,6 +291,28 @@ export function canAddProperty(state, resourceId) {
         }
     }
     return true;
+}
+
+/**
+ * Can add value in property resource
+ * (compare the number of values with maxOccurs)
+ * @param {Object} state Current state of the Store
+ * @param {String} resourceId Resource ID
+ * @param {String} propertyId Property ID
+ * @return {Boolean} Whether it's possible to add a value
+ */
+export function canAddValue(state, resourceId, propertyId) {
+    const property = state.statementBrowser.properties.byId[propertyId];
+    const typeComponents = getComponentsByResourceIDAndPredicateID(state, resourceId, property.existingPredicateId);
+    if (typeComponents && typeComponents.length > 0 && typeComponents[0].maxOccurs) {
+        if (property.valueIds.length >= parseInt(typeComponents[0].maxOccurs)) {
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        return true;
+    }
 }
 
 /**
