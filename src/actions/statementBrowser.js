@@ -1,8 +1,7 @@
 import * as type from './types.js';
-import { guid } from '../utils';
-import * as network from '../network';
-import { orderBy } from 'lodash';
-import { uniq } from 'lodash';
+import { guid } from 'utils';
+import * as network from 'network';
+import { orderBy, uniq } from 'lodash';
 
 /**
  * Initialise the statement browser without contibution
