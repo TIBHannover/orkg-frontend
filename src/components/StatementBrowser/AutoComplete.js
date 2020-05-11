@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import styled, { withTheme } from 'styled-components';
-import { faUnderline } from '@fortawesome/free-solid-svg-icons';
 
 export const StyledAutoCompleteInputFormControl = styled.div`
     padding-top: 0 !important;
