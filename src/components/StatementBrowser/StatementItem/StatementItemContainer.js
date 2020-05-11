@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import {
-    togglePropertyCollapse,
     toggleEditPropertyLabel,
     changeProperty,
     isSavingProperty,
@@ -29,7 +28,6 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = dispatch => ({
     deleteProperty: id => dispatch(deleteProperty(id)),
-    togglePropertyCollapse: id => dispatch(togglePropertyCollapse(id)),
     toggleEditPropertyLabel: data => dispatch(toggleEditPropertyLabel(data)),
     changeProperty: data => dispatch(changeProperty(data)),
     isSavingProperty: data => dispatch(isSavingProperty(data)),

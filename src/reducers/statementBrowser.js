@@ -100,13 +100,6 @@ export default (state = initialState, action) => {
             };
         }
 
-        case type.TOGGLE_PROPERTY_COLLAPSE: {
-            return {
-                ...state,
-                selectedProperty: action.id !== state.selectedProperty ? action.id : ''
-            };
-        }
-
         case type.SET_TEMPLATE_OF_RESOURCE: {
             const { payload } = action;
 

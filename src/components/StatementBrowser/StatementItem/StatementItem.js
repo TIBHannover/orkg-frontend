@@ -149,7 +149,6 @@ export default function StatementItem(props) {
 
     return (
         <StatementItemTemplate
-            togglePropertyCollapse={props.togglePropertyCollapse}
             property={props.property}
             id={props.id}
             selectedProperty={props.selectedProperty}
@@ -194,7 +193,6 @@ StatementItem.propTypes = {
     properties: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
     deleteProperty: PropTypes.func.isRequired,
-    togglePropertyCollapse: PropTypes.func.isRequired,
     toggleEditPropertyLabel: PropTypes.func.isRequired,
     changeProperty: PropTypes.func.isRequired,
     isSavingProperty: PropTypes.func.isRequired,

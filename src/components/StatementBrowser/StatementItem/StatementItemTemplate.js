@@ -154,7 +154,6 @@ export default function StatementItemTemplate(props) {
 }
 
 StatementItemTemplate.propTypes = {
-    togglePropertyCollapse: PropTypes.func.isRequired,
     property: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     selectedProperty: PropTypes.string,
