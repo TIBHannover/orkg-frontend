@@ -30,18 +30,6 @@ export default function Statements(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // run only once : https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects
 
-    const suggestedProperties = () => {
-        if (!props.selectedResource) {
-            return [];
-        }
-        let propertyIds = props.resources.byId[props.selectedResource].propertyIds;
-        propertyIds = propertyIds.map(propertyId => {
-            const property = props.properties.byId[propertyId];
-            return property.existingPredicateId;
-        });
-        return props.components.filter(x => !propertyIds.includes(x.property.id));
-    };
-
     const statements = () => {
         let propertyIds = [];
         let shared = 1;
@@ -109,11 +97,11 @@ export default function Statements(props) {
                     )}
 
                     {shared <= 1 && props.enableEdit ? <AddProperty isDisabled={!props.canAddProperty} syncBackend={props.syncBackend} /> : ''}
-                    {shared <= 1 && props.enableEdit && suggestedProperties().length > 0 && (
+                    {shared <= 1 && props.enableEdit && props.suggestedProperties.length > 0 && (
                         <>
                             <p className="text-muted mt-4">Suggested properties</p>
                             <ListGroup>
-                                {suggestedProperties().map((c, index) => (
+                                {props.suggestedProperties.map((c, index) => (
                                     <ListGroupItem key={`suggested-property-${index}`}>
                                         <StatementOptionButton
                                             className="mr-2"
@@ -187,6 +175,7 @@ Statements.propTypes = {
     createProperty: PropTypes.func.isRequired,
     components: PropTypes.array.isRequired,
     canAddProperty: PropTypes.bool.isRequired,
+    suggestedProperties: PropTypes.array.isRequired,
 
     enableEdit: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,

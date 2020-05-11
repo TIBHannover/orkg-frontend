@@ -3,6 +3,7 @@ import { compose } from 'redux';
 import { withCookies } from 'react-cookie';
 import {
     canAddProperty,
+    getSuggestedProperties,
     getComponentsByResourceID,
     initializeWithoutContribution,
     initializeWithResource,
@@ -21,7 +22,8 @@ const mapStateToProps = state => {
         isFetchingStatements: state.statementBrowser.isFetchingStatements,
         selectedResource: state.statementBrowser.selectedResource,
         components: getComponentsByResourceID(state, state.statementBrowser.selectedResource),
-        canAddProperty: canAddProperty(state, state.statementBrowser.selectedResource)
+        canAddProperty: canAddProperty(state, state.statementBrowser.selectedResource),
+        suggestedProperties: getSuggestedProperties(state, state.statementBrowser.selectedResource)
     };
 };
 

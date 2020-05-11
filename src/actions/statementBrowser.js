@@ -264,6 +264,20 @@ export function canAddProperty(state, resourceId) {
     return true;
 }
 
+/**
+ * Get suggested properties
+ *
+ * @param {Object} state Current state of the Store
+ * @param {String} resourceId Resource ID
+ * @return {Object[]} list of suggested components
+ */
+export function getSuggestedProperties(state, resourceId) {
+    const components = getComponentsByResourceID(state, resourceId);
+    const existingPropertyIds = getExistingPredicatesByResource(state, resourceId);
+
+    return components.filter(x => !existingPropertyIds.includes(x.property.id));
+}
+
 export const deleteProperty = data => dispatch => {
     dispatch({
         type: type.DELETE_PROPERTY,
