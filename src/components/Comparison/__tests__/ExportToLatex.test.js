@@ -1,6 +1,30 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import ExportToLatex from './../ExportToLatex.js';
+import moment from 'moment';
+
+const network = require('network');
+network.getComparison = jest.fn(() => {
+    return Promise.resolve({
+        json: () =>
+            Promise.resolve({
+                contributions: [],
+                data: {},
+                properties: [],
+                response_hash: '4e11df51bf9edd182ba8d363bb42d8b6'
+            })
+    });
+});
+
+network.createShortLink = jest.fn(() => {
+    return Promise.resolve({
+        json: () =>
+            Promise.resolve({
+                id: '66a9c347-2a2c-4076-a18f-3a7a79dfdf07',
+                short_code: 'cJinsp'
+            })
+    });
+});
 
 const props = {
     data: [['Title', 'Property 1'], ['Paper 1', 'Value 1'], ['Paper 2', 'Value 2']],
@@ -49,15 +73,18 @@ it('generate Latex without crashing', async () => {
     const wrapper = mount(<ExportToLatex {...props} />);
     expect(wrapper).toHaveLength(1);
     const latex =
-        '\\begin{table}\\centering \\caption{This comparison table is built using ORKG \\protect \\cite{Auer2018Towards}}\\begin{tabular}{|c|c|c|} Title & Paper 1 & Paper 2 \\\\ \\hline Property 1 & Value 1 & Value 2 \\\\ \\end{tabular} \\end{table}';
+        '\\begin{table}\\centering \\caption{This comparison table is built using ORKG \\protect \\cite{Auer2018Towards} \\protect \\footnotemark}\\begin{tabular}{|l|c|c|} \\textbf{Title} & \\textbf{\\cite{R50010}}  & \\textbf{\\cite{R50011}}  \\\\ \\hline \\textit{Property 1} & Value 1 & Value 2 \\\\ \\end{tabular} \\label{tab:ORKG}\\end{table}\\footnotetext{http://localhost//c/:shortCode [accessed ' +
+        moment().format('YYYY MMM DD') +
+        ']}';
     // manually call function
     await wrapper.instance().generateLatex();
     wrapper.update();
     expect(
         wrapper
             .find('textarea')
-            .text()
-            .replace(/(\r\n|\n|\r)/gm, '')
+            .first()
+            .props()
+            .value.replace(/(\r\n|\n|\r)/gm, '')
     ).toContain(latex);
 });
 
@@ -65,15 +92,15 @@ it('generate Bibtex without crashing', async () => {
     const wrapper = mount(<ExportToLatex {...props} />);
     expect(wrapper).toHaveLength(1);
     const bibtex =
-        '@misc{R50010,	title = {Paper 1},}@misc{R50011,	title = {Paper 2},}@article{Auer2018Towards,	journal = {Zenodo},	doi = {10.5281/zenodo.1157185},	language = {en},	publisher = {Zenodo},	title = {Towards An Open Research Knowledge Graph},	url = {https://zenodo.org/record/1157185},	author = {Auer, Sören},	date = {2018-01-22},	year = {2018},	month = {1},	day = {22},}';
-    // manually call function
+        "@misc{R50010,	title = {Paper 1},}@misc{R50011,	title = {Paper 2},}@inproceedings{Jaradeh2019Open,	journal = {Proceedings of the 10th International Conference on Knowledge Capture},	organization = {K-CAP '19: Knowledge Capture Conference},	doi = {10.1145/3360901.3364435},	isbn = {9781450370080},	publisher = {ACM},	title = {Open Research Knowledge Graph},	url = {http://dx.doi.org/10.1145/3360901.3364435},	author = {Jaradeh, Mohamad Yaser and Oelen, Allard and Farfar, Kheir Eddine and Prinz, Manuel and D'Souza, Jennifer and Kismihók, Gábor and Stocker, Markus and Auer, Sören},	date = {2019-09-23},	year = {2019},	month = {9},	day = {23},}"; // manually call function
     wrapper.setState({ selectedTab: 'references' });
     await wrapper.instance().generateBibTex();
     wrapper.update();
     expect(
         wrapper
             .find('textarea')
-            .text()
-            .replace(/(\r\n|\n|\r)/gm, '')
-    ).toContain(bibtex);
+            .first()
+            .props()
+            .value.replace(/(\r\n|\n|\r)/gm, '')
+    ).toBe(bibtex);
 });

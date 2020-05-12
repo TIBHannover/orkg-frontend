@@ -94,7 +94,7 @@ class ResourceDetails extends Component {
             <>
                 {this.state.isLoading && <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
                 {!this.state.isLoading && this.state.error && <>{this.state.error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
-                {!this.state.isLoading && !this.state.error && this.state.label && (
+                {!this.state.isLoading && !this.state.error && (
                     <Container className="mt-5 clearfix">
                         {this.state.editMode && (
                             <EditModeHeader className="box">
@@ -117,7 +117,11 @@ class ResourceDetails extends Component {
                                 {!this.state.editMode ? (
                                     <div className="pb-2 mb-3">
                                         <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                            {this.state.label}
+                                            {this.state.label || (
+                                                <i>
+                                                    <small>No label</small>
+                                                </i>
+                                            )}
                                             <Button className="float-right" color="darkblue" size="sm" onClick={() => this.toggle('editMode')}>
                                                 <Icon icon={faPen} /> Edit
                                             </Button>
