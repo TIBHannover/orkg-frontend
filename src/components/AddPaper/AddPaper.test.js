@@ -2,7 +2,10 @@ import React from 'react';
 import { mount } from 'enzyme';
 import AddPaper from './AddPaper';
 import { Provider } from 'react-redux';
-import configureStore from '../../store';
+import { theme } from 'App.test.js';
+import { ThemeProvider } from 'styled-components';
+import { BrowserRouter as Router } from 'react-router-dom';
+import configureStore from 'store';
 
 //TODO: this test is not finished, needs to be determined how componenets will be tested
 // E.g. the backend calls should not be tested, but many of the functionality relies on the backend
@@ -17,9 +20,13 @@ const mountComponent = () => {
     document.body.appendChild(div);
 
     return mount(
-        <Provider store={store}>
-            <AddPaper />
-        </Provider>,
+        <Router>
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
+                    <AddPaper />
+                </ThemeProvider>
+            </Provider>
+        </Router>,
         { attachTo: div }
     );
 };
@@ -31,7 +38,7 @@ it('renders without crashing', () => {
 it('lookup doi', () => {
     const wrap = mountComponent();
 
-    wrap.find('input[name="doi"]').simulate('click');
+    wrap.find('input[name="entry"]').simulate('click');
     wrap.find('[data-test="nextStep"]')
         .hostNodes()
         .simulate('click');
