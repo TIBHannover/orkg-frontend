@@ -252,7 +252,7 @@ export function createProperty(data) {
         if (!data.canDuplicate && data.existingPredicateId) {
             const resource = getState().statementBrowser.resources.byId[data.resourceId];
 
-            if (resource) {
+            if (resource && resource.propertyIds) {
                 const isExstingProperty = resource.propertyIds.find(
                     p => getState().statementBrowser.properties.byId[p].existingPredicateId === data.existingPredicateId
                 );
