@@ -21,6 +21,7 @@ import SimilarContributions from './SimilarContributions';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProblemInput';
 import ContributionItemList from 'components/AddPaper/Contributions/ContributionItemList';
+import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
 import { toast } from 'react-toastify';
@@ -30,53 +31,6 @@ import { StyledHorizontalContributionsList, StyledHorizontalContribution } from 
 import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
-import '../../pages/style.min.css';
-
-const ProvenanceBoxTabs = styled.div`
-    .tab {
-        margin-bottom: 0;
-        padding: 10px;
-        color: #666666;
-        cursor: pointer;
-        -webkit-transition: border 500ms ease-out;
-        -moz-transition: border 500ms ease-out;
-        -o-transition: border 500ms ease-out;
-        transition: border 500ms ease-out;
-        background-color: #d4d8e0;
-        font-size: 12px;
-        font-weight: bold;
-        &.active,
-        &:hover {
-            background-color: #f8f9fb;
-            color: #666666;
-        }
-    }
-`;
-
-const ErrorMessage = styled.div`
-    margin-bottom: 0;
-    padding: 10px;
-    color: #666666;
-    cursor: pointer;
-    height: 60px;
-    -webkit-transition: border 500ms ease-out;
-    -moz-transition: border 500ms ease-out;
-    -o-transition: border 500ms ease-out;
-    transition: border 500ms ease-out;
-    background-color: #e0f2fc;
-    border-color: #e0f2fc;
-    font-size: 12px;
-    font-weight: bold;
-`;
-
-const SidebarStyledBox = styled.div`
-    flex-grow: 1;
-    overflow: hidden;
-    @media (max-width: 768px) {
-        margin-top: 20px;
-    }
-`;
 
 const Title = styled.div`
     font-size: 18px;
@@ -91,14 +45,6 @@ const Title = styled.div`
         }
     }
 `;
-
-const buttonStyle = {
-    backgroundColor: '#f8f9fb',
-    paddingLeft: 15,
-    paddingTop: 10,
-    borderBottom: '1px solid #eeeff3',
-    fontSize: 12
-};
 
 const AnimationContainer = styled(CSSTransition)`
     transition: 0.3s background-color, 0.3s border-color;
@@ -125,9 +71,8 @@ class Contributions extends Component {
             similaireContributions: [],
             isSimilaireContributionsLoading: true,
             isSimilaireContributionsFailedLoading: false,
-            observatory: [],
+            observatory: {},
             label: '',
-            activeTab: 1,
             userData: []
         };
     }
@@ -143,12 +88,6 @@ class Contributions extends Component {
                 this.getObservatoryAndOrganizationInformation(this.props.observatoryInfo.observatory_id);
                 this.getResourceContributors(this.props.paperId);
             });
-        }
-    };
-
-    toggle = tab => {
-        if (this.state.activeTab !== tab) {
-            this.setState({ activeTab: tab });
         }
     };
 
@@ -279,89 +218,10 @@ class Contributions extends Component {
     render() {
         const selectedContributionId = this.state.selectedContribution;
 
-        let rightSidebar;
-
-        switch (this.state.activeTab) {
-            case 1:
-            default:
-                rightSidebar = (
-                    <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        <div>
-                            <ul class="list-group">
-                                <li style={buttonStyle}>
-                                    <p>
-                                        <b>{this.state.observatory.name}</b>
-                                        <br />
-                                        <center>
-                                            <img style={{ paddingTop: 8 }} height="70" src={this.state.observatory.organizationLogo} alt="" />
-                                        </center>
-                                        <p style={{ fontSize: 12 }}>{this.state.observatory.organizationName}</p>
-                                    </p>
-                                </li>
-
-                                <li style={buttonStyle}>
-                                    <p>
-                                        <b>DATE ADDED</b>
-                                        <br />
-                                        {this.props.observatoryInfo.created_at}
-                                    </p>
-                                </li>
-
-                                <li style={buttonStyle}>
-                                    <p>
-                                        <b>ADDED BY</b>
-                                        <br />
-                                        {this.state.observatory.userName}
-                                    </p>
-                                </li>
-                                <li style={buttonStyle}>
-                                    <b>CONTRIBUTORS</b>
-                                    {this.state.userData.map((key, user) => {
-                                        return <div>{key['created_by'] !== 'Unknown' && <span>{key['created_by']}</span>}</div>;
-                                    })}
-                                </li>
-                            </ul>
-                        </div>
-                    </AnimationContainer>
-                );
-                break;
-            case 2:
-                rightSidebar = (
-                    <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        <div>
-                            {this.state.userData.map((key, user) => {
-                                return (
-                                    <VerticalTimeline>
-                                        <VerticalTimelineElement
-                                            className="vertical-timeline-element--work"
-                                            date={key['created_at']}
-                                            iconStyle={{ background: 'rgb(212, 216, 224)', color: '#b8b8b9' }}
-                                        >
-                                            {key['created_by'] === this.state.observatory.userName && (
-                                                <p>
-                                                    Added by <b>{key['created_by']}</b>{' '}
-                                                </p>
-                                            )}
-
-                                            {key['created_by'] !== this.state.observatory.userName && (
-                                                <p>
-                                                    Updated by <b>{key['created_by']}</b>{' '}
-                                                </p>
-                                            )}
-                                        </VerticalTimelineElement>
-                                    </VerticalTimeline>
-                                );
-                            })}
-                        </div>
-                    </AnimationContainer>
-                );
-                break;
-        }
-
         return (
             <div>
                 <Container>
-                    <Row noGutters={true}>
+                    <Row>
                         <Col md="9">
                             {this.state.loading && (
                                 <div>
@@ -539,33 +399,11 @@ class Contributions extends Component {
                             </AnimationContainer>
                         </TransitionGroup>
                         {!/^[0]{8}-[0]{4}-[0]{4}-[0]{4}-[0]{12}$/.test(this.props.observatoryInfo.observatory_id) && (
-                            <div>
-                                <SidebarStyledBox
-                                    style={{ width: 230, minHeight: 430, backgroundColor: '#f8f9fb', marginLeft: 20 }}
-                                    className="box rounded-lg"
-                                >
-                                    <ProvenanceBoxTabs className="clearfix d-flex">
-                                        <div
-                                            id="div1"
-                                            className={`h6 col-md-6 text-center tab ${this.state.activeTab === 1 ? 'active' : ''}`}
-                                            onClick={() => this.toggle(1)}
-                                        >
-                                            Provenance
-                                        </div>
-                                        <div
-                                            id="div2"
-                                            className={`h6 col-md-6 text-center tab ${this.state.activeTab === 2 ? 'active' : ''}`}
-                                            onClick={() => this.toggle(2)}
-                                        >
-                                            Timeline
-                                        </div>
-                                    </ProvenanceBoxTabs>
-                                    {this.props.observatoryInfo.automatic_extraction && (
-                                        <ErrorMessage class="alert-server">The data has been partially imported automatically.</ErrorMessage>
-                                    )}
-                                    <TransitionGroup exit={false}>{rightSidebar}</TransitionGroup>
-                                </SidebarStyledBox>
-                            </div>
+                            <ProvenanceBox
+                                observatory={this.state.observatory}
+                                userData={this.state.userData}
+                                observatoryInfo={this.props.observatoryInfo}
+                            />
                         )}
                     </Row>
                 </Container>
@@ -587,7 +425,8 @@ Contributions.propTypes = {
     updateResearchProblems: PropTypes.func.isRequired,
     handleChangeContributionLabel: PropTypes.func.isRequired,
     handleCreateContribution: PropTypes.func.isRequired,
-    toggleDeleteContribution: PropTypes.func.isRequired
+    toggleDeleteContribution: PropTypes.func.isRequired,
+    observatoryInfo: PropTypes.object
 };
 
 const mapStateToProps = state => ({
@@ -599,10 +438,6 @@ const mapDispatchToProps = dispatch => ({
     selectContribution: data => dispatch(selectContribution(data)),
     updateResearchProblems: data => dispatch(updateResearchProblems(data))
 });
-
-Contributions.propTypes = {
-    observatoryInfo: PropTypes.object
-};
 
 export default connect(
     mapStateToProps,

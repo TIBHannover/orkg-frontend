@@ -46,7 +46,7 @@ class ViewPaper extends Component {
         dropdownOpen: false,
         showGraphModal: false,
         editMode: false,
-        observatoryInfo: []
+        observatoryInfo: {}
     };
 
     componentDidMount() {
