@@ -19,6 +19,7 @@ export default {
     COMPARISON_SHORTLINK: '/c/:shortCode',
     COMPARISON: '/comparison/:comparisonId?',
     PAPERS: '/papers',
+    COMPARISONS: '/comparisons',
     RESEARCH_PROBLEM: '/problem/:researchProblemId',
     RESEARCH_FIELD: '/field/:researchFieldId',
     VENUE_PAGE: '/venue/:venueId',
