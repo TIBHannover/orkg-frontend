@@ -113,7 +113,10 @@ export default (state = initialState, action) => {
         case type.CREATE_PROPERTY: {
             const { payload } = action;
             let newState;
-            if (dotProp.get(state, `resources.byId.${payload.resourceId}`)) {
+            if (
+                dotProp.get(state, `resources.byId.${payload.resourceId}`) &&
+                dotProp.get(state, `resources.byId.${payload.resourceId}.propertyIds`)
+            ) {
                 newState = dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, propertyIds => [
                     ...propertyIds,
                     payload.propertyId
