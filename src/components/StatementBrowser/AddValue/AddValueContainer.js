@@ -6,9 +6,10 @@ import {
     selectResource,
     createRequiredPropertiesInResource
 } from 'actions/statementBrowser';
+import { isLiteral, getValueClass, isInlineResource } from './helpers/utils';
 import AddValue from './AddValue';
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, props) => {
     const newResourcesList = [];
 
     for (const key in state.statementBrowser.resources.byId) {
@@ -21,14 +22,16 @@ const mapStateToProps = state => {
             });
         }
     }
-
     return {
         selectedProperty: state.statementBrowser.selectedProperty,
         selectedResource: state.statementBrowser.selectedResource,
         newResources: newResourcesList,
         properties: state.statementBrowser.properties,
         classes: state.statementBrowser.classes,
-        templates: state.statementBrowser.templates
+        templates: state.statementBrowser.templates,
+        isLiteral: isLiteral(props.components),
+        valueClass: getValueClass(props.components),
+        isInlineResource: isInlineResource(state, props.components)
     };
 };
 

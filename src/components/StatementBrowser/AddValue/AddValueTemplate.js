@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { resourcesUrl } from 'network';
-import { Input, InputGroup, InputGroupAddon, DropdownMenu, InputGroupButtonDropdown, FormFeedback } from 'reactstrap';
+import { InputGroup, InputGroupAddon, DropdownMenu, InputGroupButtonDropdown, FormFeedback } from 'reactstrap';
 import { StyledDropdownItem, StyledButton, StyledDropdownToggle, ValueItemStyle } from 'components/StatementBrowser/styled';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
@@ -8,70 +8,20 @@ import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/StatementBrowser/AutoComplete';
-import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDatatypes';
 import useTogggle from './helpers/useToggle';
 import validationSchema from './helpers/validationSchema';
+import InputField from 'components/StatementBrowser/InputField/InputField';
 import PropTypes from 'prop-types';
 
 export default function AddValueTemplate(props) {
     const literalInputRef = useRef(null);
     const resourceInputRef = useRef(null);
 
-    // Get the typing
-    let isLiteral = false;
-    for (const typeId of props.typeComponents.map(tc => tc.value.id)) {
-        if (defaultDatatypes.map(t => t.id).includes(typeId)) {
-            isLiteral = true;
-            break;
-        }
-    }
-    //const isLiteral = props.predicate.templateClass && defaultDatatypes.map(t => t.id).includes(props.predicate.templateClass.id) ? true : false;
-    const isTyped =
-        props.typeComponents && props.typeComponents.length > 0 && props.typeComponents[0].value && props.typeComponents[0].value.id ? true : false;
-    // get value type (valueClassType == templateClass)
-
-    const valueClassType =
-        props.typeComponents && props.typeComponents.length > 0 && props.typeComponents[0].value && props.typeComponents[0].value.id
-            ? props.typeComponents[0].value
-            : null;
-
-    const [isInlineForm, setIsInlineForm] = useState(false);
-    const [tempateNodeLabel, setTempateNodeLabel] = useState([]);
-    if (valueClassType && !defaultDatatypes.map(t => t.id).includes(valueClassType.id)) {
-        props.fetchTemplatesofClassIfNeeded(valueClassType.id).then(() => {
-            if (props.classes[valueClassType.id] && props.classes[valueClassType.id].templateIds) {
-                const templateIds = props.classes[valueClassType.id].templateIds;
-                //check if it's an inline resource
-                for (const templateId of templateIds) {
-                    const template = props.templates[templateId];
-                    if (template && template.hasLabelFormat) {
-                        setTempateNodeLabel(template.label);
-                        setIsInlineForm(true);
-                    }
-                }
-            }
-
-            // get the list of components and check if it's an inline resource
-        });
-    }
-
-    let inputFormType = 'text';
-    if (isTyped) {
-        switch (valueClassType.id) {
-            case 'Date':
-                inputFormType = 'date';
-                break;
-            default:
-                inputFormType = 'text';
-                break;
-        }
-    }
-
     const [modal, setModal] = useState(false);
     const [dialogResourceId, setDialogResourceId] = useState(null);
     const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
 
-    const [valueType, setValueType] = useState(isLiteral ? 'literal' : 'object');
+    const [valueType, setValueType] = useState(props.isLiteral ? 'literal' : 'object');
     const [inputValue, setInputValue] = useState('');
     const [dropdownValueTypeOpen, setDropdownValueTypeOpen] = useTogggle(false);
     const [showAddValue, setShowAddValue] = useTogggle(false);
@@ -98,8 +48,8 @@ export default function AddValueTemplate(props) {
     };
 
     const validateValue = () => {
-        if (valueClassType && ['Date', 'Number', 'String'].includes(valueClassType.id)) {
-            const schema = validationSchema(props.typeComponents[0]);
+        if (props.valueClass && ['Date', 'Number', 'String'].includes(props.valueClass.id)) {
+            const schema = validationSchema(props.components[0]);
             const { error, value } = schema.validate(inputValue);
             if (error) {
                 setFormFeedback(error.message);
@@ -144,21 +94,21 @@ export default function AddValueTemplate(props) {
                     title={!props.isDisabled ? 'Add value' : 'This property reached the maximum number of values set by template'}
                     icon={faPlus}
                     action={() => {
-                        if (isInlineForm) {
+                        if (props.isInlineResource) {
                             // 1 - create a resource
-                            props.handleAddValue(valueType, tempateNodeLabel).then(resourceId => {
+                            props.handleAddValue(valueType, props.isInlineResource).then(resourceId => {
                                 // 2 - open the dialog on that resource
                                 if (props.openExistingResourcesInDialog) {
                                     props.createRequiredPropertiesInResource(resourceId).then(() => {
                                         setDialogResourceId(resourceId);
-                                        setDialogResourceLabel(tempateNodeLabel);
+                                        setDialogResourceLabel(props.isInlineResource);
                                         setModal(true);
                                     });
                                 } else {
                                     props.selectResource({
                                         increaseLevel: true,
                                         resourceId: resourceId,
-                                        label: tempateNodeLabel
+                                        label: props.isInlineResource
                                     });
                                 }
                             });
@@ -170,7 +120,7 @@ export default function AddValueTemplate(props) {
             ) : (
                 <div>
                     <InputGroup size="sm">
-                        {!isTyped && (
+                        {!props.valueClass && (
                             <InputGroupButtonDropdown addonType="prepend" isOpen={dropdownValueTypeOpen} toggle={setDropdownValueTypeOpen}>
                                 <StyledDropdownToggle>
                                     <small>{valueType.charAt(0).toUpperCase() + valueType.slice(1) + ' '}</small>
@@ -194,7 +144,7 @@ export default function AddValueTemplate(props) {
                             <AutoComplete
                                 requestUrl={resourcesUrl}
                                 excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM},${process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE}`}
-                                optionsClass={valueClassType ? valueClassType.id : undefined}
+                                optionsClass={props.valueClass ? props.valueClass.id : undefined}
                                 placeholder="Enter a resource"
                                 onItemSelected={i => {
                                     props.handleValueSelect(valueType, i);
@@ -204,7 +154,7 @@ export default function AddValueTemplate(props) {
                                 value={inputValue}
                                 additionalData={props.newResources}
                                 disableBorderRadiusRight
-                                disableBorderRadiusLeft={!isTyped}
+                                disableBorderRadiusLeft={!props.valueClass}
                                 cssClasses={'form-control-sm'}
                                 onKeyDown={e => {
                                     if (e.keyCode === 27) {
@@ -218,15 +168,15 @@ export default function AddValueTemplate(props) {
                                 innerRef={ref => (resourceInputRef.current = ref)}
                             />
                         ) : (
-                            <Input
-                                placeholder="Enter a value"
-                                name="literalValue"
-                                type={inputFormType}
-                                bsSize="sm"
-                                value={inputValue}
-                                onChange={(e, value) => setInputValue(e ? e.target.value : value)}
-                                innerRef={literalInputRef}
-                                invalid={!isValid}
+                            <InputField
+                                components={props.components}
+                                valueClass={props.valueClass}
+                                inputValue={inputValue}
+                                setInputValue={setInputValue}
+                                setShowAddValue={setShowAddValue}
+                                onSubmit={onSubmit}
+                                isValid={isValid}
+                                literalInputRef={literalInputRef}
                                 onKeyDown={e => {
                                     if (e.keyCode === 27) {
                                         // escape
@@ -271,11 +221,14 @@ AddValueTemplate.propTypes = {
     newResources: PropTypes.array.isRequired,
     handleAddValue: PropTypes.func.isRequired,
     fetchTemplatesofClassIfNeeded: PropTypes.func.isRequired,
-    typeComponents: PropTypes.array.isRequired,
+    components: PropTypes.array.isRequired,
     templates: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
     selectResource: PropTypes.func.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
     createRequiredPropertiesInResource: PropTypes.func.isRequired,
-    isDisabled: PropTypes.bool
+    isDisabled: PropTypes.bool,
+    isLiteral: PropTypes.bool.isRequired,
+    valueClass: PropTypes.object,
+    isInlineResource: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 };

@@ -11,16 +11,19 @@ import {
     isSavingValue,
     changeValue
 } from 'actions/statementBrowser';
+import { getValueClass, isInlineResource } from 'components/StatementBrowser/AddValue/helpers/utils';
 import ValueItem from './ValueItem';
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, props) => {
     return {
         resources: state.statementBrowser.resources,
         values: state.statementBrowser.values,
         properties: state.statementBrowser.properties,
         classes: state.statementBrowser.classes,
         templates: state.statementBrowser.templates,
-        selectedProperty: state.statementBrowser.selectedProperty
+        selectedProperty: state.statementBrowser.selectedProperty,
+        valueClass: getValueClass(props.components),
+        isInlineResource: isInlineResource(state, props.components)
     };
 };
 

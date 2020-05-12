@@ -27,10 +27,10 @@ export default function StatementItemTemplate(props) {
                             <div className={'propertyLabel'}>
                                 {props.predicateLabel} {}
                                 {props.enableEdit &&
-                                    props.typeComponents &&
-                                    props.typeComponents.length > 0 &&
-                                    props.typeComponents.filter(c => c.value.label).length > 0 && (
-                                        <small>[{props.typeComponents.map(c => c.value.label).join(',')}]</small>
+                                    props.components &&
+                                    props.components.length > 0 &&
+                                    props.components.filter(c => c.value.label).length > 0 && (
+                                        <small>[{props.components.map(c => c.value.label).join(',')}]</small>
                                     )}
                             </div>
                             {props.enableEdit && (
@@ -108,7 +108,7 @@ export default function StatementItemTemplate(props) {
                                         openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                         contextStyle="Template"
                                         showHelp={props.showValueHelp && index === 0 ? true : false}
-                                        typeComponents={props.typeComponents}
+                                        components={props.components}
                                     />
                                 );
                             })}
@@ -120,7 +120,7 @@ export default function StatementItemTemplate(props) {
                         {props.enableEdit && (
                             <AddValue
                                 isDisabled={!props.canAddValue}
-                                typeComponents={props.typeComponents}
+                                components={props.components}
                                 openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                 contextStyle="Template"
                                 propertyId={props.id}
@@ -150,7 +150,7 @@ StatementItemTemplate.propTypes = {
     showValueHelp: PropTypes.bool,
     openExistingResourcesInDialog: PropTypes.bool.isRequired,
     handleDeleteStatement: PropTypes.func.isRequired,
-    typeComponents: PropTypes.array.isRequired,
+    components: PropTypes.array.isRequired,
     canAddValue: PropTypes.bool.isRequired,
     canDeleteProperty: PropTypes.bool.isRequired
 };

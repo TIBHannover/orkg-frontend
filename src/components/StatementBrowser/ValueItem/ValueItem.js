@@ -337,7 +337,9 @@ export default function ValueItem(props) {
                 handleDeleteValue={handleDeleteValue}
                 showHelp={props.showHelp}
                 getLabel={getLabel}
-                typeComponents={props.typeComponents}
+                components={props.components}
+                valueClass={props.valueClass}
+                isInlineResource={props.isInlineResource}
             />
 
             {modal ? (
@@ -393,7 +395,9 @@ ValueItem.propTypes = {
     contextStyle: PropTypes.string.isRequired,
     showHelp: PropTypes.bool,
 
-    typeComponents: PropTypes.array.isRequired
+    components: PropTypes.array.isRequired,
+    valueClass: PropTypes.object,
+    isInlineResource: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 };
 
 ValueItem.defaultProps = {

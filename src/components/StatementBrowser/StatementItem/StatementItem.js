@@ -154,7 +154,7 @@ export default function StatementItem(props) {
             showValueHelp={props.showValueHelp}
             openExistingResourcesInDialog={props.openExistingResourcesInDialog}
             handleDeleteStatement={handleDeleteStatement}
-            typeComponents={props.components}
+            components={props.components}
             canAddValue={props.canAddValue}
             canDeleteProperty={props.canDeleteProperty}
         />

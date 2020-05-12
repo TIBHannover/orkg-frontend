@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, InputGroup, InputGroupAddon, Button, FormFeedback } from 'reactstrap';
+import { InputGroup, InputGroupAddon, Button, FormFeedback } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faExternalLinkAlt, faTable } from '@fortawesome/free-solid-svg-icons';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
@@ -8,6 +8,7 @@ import Pulse from 'components/Utils/Pulse';
 import classNames from 'classnames';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import validationSchema from 'components/StatementBrowser/AddValue/helpers/validationSchema';
+import InputField from 'components/StatementBrowser/InputField/InputField';
 import PropTypes from 'prop-types';
 
 export default function ValueItemTemplate(props) {
@@ -22,31 +23,9 @@ export default function ValueItemTemplate(props) {
         disableHover: disableHover
     });
 
-    //const isLiteral = props.predicate.templateClass && defaultDatatypes.map(t => t.id).includes(props.predicate.templateClass.id) ? true : false;
-    const isTyped =
-        props.typeComponents && props.typeComponents.length > 0 && props.typeComponents[0].value && props.typeComponents[0].value.id ? true : false;
-    // get value type (valueClassType == templateClass)
-
-    const valueClassType =
-        props.typeComponents && props.typeComponents.length > 0 && props.typeComponents[0].value && props.typeComponents[0].value.id
-            ? props.typeComponents[0].value
-            : null;
-
-    let inputFormType = 'text';
-    if (isTyped) {
-        switch (valueClassType.id) {
-            case 'Date':
-                inputFormType = 'date';
-                break;
-            default:
-                inputFormType = 'text';
-                break;
-        }
-    }
-
     const validateValue = () => {
-        if (valueClassType && ['Date', 'Number', 'String'].includes(valueClassType.id)) {
-            const schema = validationSchema(props.typeComponents[0]);
+        if (props.valueClass && ['Date', 'Number', 'String'].includes(props.valueClass.id)) {
+            const schema = validationSchema(props.components[0]);
             const { error, value } = schema.validate(draftLabel);
             if (error) {
                 setFormFeedback(error.message);
@@ -137,15 +116,14 @@ export default function ValueItemTemplate(props) {
             ) : (
                 <div>
                     <InputGroup size="sm">
-                        <Input
-                            bsSize="sm"
-                            type={inputFormType}
-                            value={draftLabel}
-                            invalid={!isValid}
-                            onChange={e => setDraftLabel(e.target.value)}
+                        <InputField
+                            components={props.components}
+                            valueClass={props.valueClass}
+                            inputValue={draftLabel}
+                            setInputValue={setDraftLabel}
                             onKeyDown={e => (e.keyCode === 13 || e.keyCode === 27) && e.target.blur()} // stop editing on enter and escape
                             onBlur={() => onSubmit()}
-                            autoFocus
+                            isValid={isValid}
                         />
                         <InputGroupAddon addonType="append">
                             <StyledButton outline onClick={() => onSubmit()}>
@@ -173,7 +151,9 @@ ValueItemTemplate.propTypes = {
     getLabel: PropTypes.func.isRequired,
     predicate: PropTypes.object.isRequired,
 
-    typeComponents: PropTypes.array.isRequired,
+    components: PropTypes.array.isRequired,
+    valueClass: PropTypes.object,
+    isInlineResource: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
 
     handleChangeResource: PropTypes.func.isRequired,
     toggleEditValue: PropTypes.func.isRequired,

@@ -33,14 +33,6 @@ export default class AddValue extends Component {
     };
 
     handleAddValue = async (valueType, inputValue) => {
-        const valueClassType =
-            this.props.typeComponents &&
-            this.props.typeComponents.length > 0 &&
-            this.props.typeComponents[0].value &&
-            this.props.typeComponents[0].value.id
-                ? this.props.typeComponents[0].value
-                : null;
-
         let newObject = null;
         let newStatement = null;
         const valueId = guid();
@@ -49,7 +41,7 @@ export default class AddValue extends Component {
             const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
             switch (valueType) {
                 case 'object':
-                    newObject = await createResource(inputValue, valueClassType ? [valueClassType.id] : []);
+                    newObject = await createResource(inputValue, this.props.valueClass ? [this.props.valueClass.id] : []);
                     newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
                     break;
                 case 'property':
@@ -68,7 +60,7 @@ export default class AddValue extends Component {
                 isExistingValue: true,
                 statementId: newStatement.id,
                 shared: newObject.shared,
-                classes: valueClassType ? [valueClassType.id] : []
+                classes: this.props.valueClass ? [this.props.valueClass.id] : []
             });
         } else {
             const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
@@ -81,7 +73,7 @@ export default class AddValue extends Component {
                 existingResourceId,
                 isExistingValue: false,
                 templateId: predicate.templateId ? predicate.templateId : null,
-                classes: valueClassType ? [valueClassType.id] : [],
+                classes: this.props.valueClass ? [this.props.valueClass.id] : [],
                 shared: 1
             });
         }
@@ -103,13 +95,16 @@ export default class AddValue extends Component {
                     newResources={this.props.newResources}
                     handleAddValue={this.handleAddValue}
                     fetchTemplatesofClassIfNeeded={this.props.fetchTemplatesofClassIfNeeded}
-                    typeComponents={this.props.typeComponents}
+                    components={this.props.components}
                     classes={this.props.classes}
                     templates={this.props.templates}
                     selectResource={this.props.selectResource}
                     openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                     isDisabled={this.props.isDisabled}
                     createRequiredPropertiesInResource={this.props.createRequiredPropertiesInResource}
+                    isLiteral={this.props.isLiteral}
+                    valueClass={this.props.valueClass}
+                    isInlineResource={this.props.isInlineResource}
                 />
             </>
         );
@@ -129,11 +124,14 @@ AddValue.propTypes = {
     openExistingResourcesInDialog: PropTypes.bool,
     selectResource: PropTypes.func.isRequired,
     fetchTemplatesofClassIfNeeded: PropTypes.func.isRequired,
-    typeComponents: PropTypes.array.isRequired,
+    components: PropTypes.array.isRequired,
     classes: PropTypes.object.isRequired,
     templates: PropTypes.object.isRequired,
     isDisabled: PropTypes.bool.isRequired,
-    createRequiredPropertiesInResource: PropTypes.func.isRequired
+    createRequiredPropertiesInResource: PropTypes.func.isRequired,
+    isLiteral: PropTypes.bool.isRequired,
+    valueClass: PropTypes.object,
+    isInlineResource: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 };
 
 AddValue.defaultProps = {
