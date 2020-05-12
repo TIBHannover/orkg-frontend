@@ -89,7 +89,11 @@ export default function ValueItemTemplate(props) {
                         {props.enableEdit && (
                             <>
                                 {((props.resource && !props.resource.existingResourceId) || props.value.shared <= 1) && (
-                                    <StatementOptionButton title={'Edit value'} icon={faPen} action={() => props.toggleEditValue({ id: props.id })} />
+                                    <StatementOptionButton
+                                        title={'Edit value'}
+                                        icon={faPen}
+                                        action={props.isInlineResource ? props.handleOnClick : () => props.toggleEditValue({ id: props.id })}
+                                    />
                                 )}
 
                                 {props.resource && props.resource.existingResourceId && props.value.shared > 1 && (
