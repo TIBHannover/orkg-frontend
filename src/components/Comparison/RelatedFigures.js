@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { getStatementsBySubject } from 'network';
+import { getStatementsBySubjects } from 'network';
 import { Card, CardImg, CardColumns } from 'reactstrap';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css'; // This only needs to be imported once in your app
+import { find } from 'lodash';
 import styled from 'styled-components';
 
 const CardStyled = styled(Card)`
@@ -21,28 +22,35 @@ const RelatedFigures = props => {
     };
 
     useEffect(() => {
-        const loadResources = async () => {
+        const loadResources = () => {
             if (props.figureStatements.length === 0) {
                 return;
             }
-            const _figures = [];
-
-            for (const resource of props.figureStatements) {
-                await getStatementsBySubject({ id: resource.object.id }).then(statements => {
-                    const imageStatement = statements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_IMAGE);
-                    const descriptionStatement = statements.find(
-                        statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_DESCRIPTION
-                    );
-
-                    _figures.push({
-                        src: imageStatement ? imageStatement.object.label : '',
-                        title: resource.object.label,
-                        description: descriptionStatement ? descriptionStatement.object.label : ''
+            // Fetch the data of each figure
+            getStatementsBySubjects({
+                ids: props.figureStatements.map(resource => resource.object.id)
+            })
+                .then(figuresStatements => {
+                    const _figures = figuresStatements.map(figureStatements => {
+                        const figureTitle = find(props.figureStatements.map(p => p.object), { id: figureStatements.id });
+                        const imageStatement = figureStatements.statements.find(
+                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_IMAGE
+                        );
+                        const descriptionStatement = figureStatements.statements.find(
+                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_DESCRIPTION
+                        );
+                        return {
+                            src: imageStatement ? imageStatement.object.label : '',
+                            title: figureTitle.label,
+                            description: descriptionStatement ? descriptionStatement.object.label : ''
+                        };
                     });
+                    setFigures(_figures);
+                })
+                .catch(err => {
+                    console.log(err);
+                    setFigures([]);
                 });
-            }
-
-            setFigures(_figures);
         };
 
         loadResources();
