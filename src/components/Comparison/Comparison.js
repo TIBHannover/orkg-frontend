@@ -3,7 +3,7 @@ import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, Bu
 import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject } from 'network';
 import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResonseHashFromUrl, get_error_message } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPlus, faArrowsAltH, faLightbulb } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faPlus, faArrowsAltH, faLightbulb, faDiceD6 } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import ComparisonLoadingComponent from './ComparisonLoadingComponent';
 import ComparisonTable from './ComparisonTable.js';
@@ -21,7 +21,7 @@ import arrayMove from 'array-move';
 import { connect } from 'react-redux';
 import dotProp from 'dot-prop-immutable';
 import { reverse } from 'named-urls';
-import { generateRdfDataVocabularyFile } from 'utils';
+import { generateRdfDataVocabularyFile, extendPropertyIds } from 'utils';
 import { ContainerAnimated } from './styled';
 import RelatedResources from './RelatedResources';
 
@@ -136,16 +136,20 @@ class Comparison extends Component {
 
                 // if there are properties in the query string
                 if (propertyIds.length > 0) {
+                    // Create an extended version of propertyIds (ADD the IDs of similar properties)
+                    const extendedPropertyIds = extendPropertyIds(propertyIds, comparisonData.data);
+
                     // sort properties based on query string (is not presented in query string, sort at the bottom)
                     // TODO: sort by label when is not active
                     comparisonData.properties.sort((a, b) => {
-                        const index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
-                        const index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
+                        const index1 = extendedPropertyIds.indexOf(a.id) !== -1 ? extendedPropertyIds.indexOf(a.id) : 1000;
+                        const index2 = extendedPropertyIds.indexOf(b.id) !== -1 ? extendedPropertyIds.indexOf(b.id) : 1000;
                         return index1 - index2;
                     });
+
                     // hide properties based on query string
                     comparisonData.properties.forEach((property, index) => {
-                        if (!propertyIds.includes(property.id)) {
+                        if (!extendedPropertyIds.includes(property.id)) {
                             comparisonData.properties[index].active = false;
                         } else {
                             comparisonData.properties[index].active = true;
@@ -493,13 +497,21 @@ class Comparison extends Component {
                             )}
                             {contributionAmount > 1 || this.props.match.params.comparisonId ? (
                                 !this.state.isLoading ? (
-                                    <ComparisonTable
-                                        data={this.state.data}
-                                        properties={this.state.properties}
-                                        contributions={this.state.contributions}
-                                        removeContribution={this.removeContribution}
-                                        transpose={this.state.transpose}
-                                    />
+                                    <>
+                                        <div>
+                                            <small>
+                                                Number of compared contributions: <Icon size={'sm'} icon={faDiceD6} className="mr-1" />{' '}
+                                                {contributionAmount}
+                                            </small>
+                                        </div>
+                                        <ComparisonTable
+                                            data={this.state.data}
+                                            properties={this.state.properties}
+                                            contributions={this.state.contributions}
+                                            removeContribution={this.removeContribution}
+                                            transpose={this.state.transpose}
+                                        />
+                                    </>
                                 ) : (
                                     <ComparisonLoadingComponent />
                                 )

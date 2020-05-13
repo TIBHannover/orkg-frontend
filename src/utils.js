@@ -1,5 +1,6 @@
 import capitalize from 'capitalize';
 import queryString from 'query-string';
+import { flattenDepth } from 'lodash';
 import rdf from 'rdf';
 
 export const popupDelay = process.env.REACT_APP_POPUP_DELAY;
@@ -196,6 +197,32 @@ export const getPaperData = (id, label, paperStatements) => {
 };
 
 /**
+ * Parse comparison statements and return a a comparison object
+ *
+ * @param {Array} comparisonStatements
+ */
+export const getComparisonData = (id, label, comparisonStatements) => {
+    // description
+    const description = comparisonStatements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_DESCRIPTION);
+
+    // reference
+    const reference = comparisonStatements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_REFERENCE);
+
+    // url
+    const url = comparisonStatements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL);
+
+    return {
+        id,
+        label,
+        created_at: url ? url.object.created_at : '',
+        nbContributions: url ? getContributionIdsFromUrl(url.object.label).length : 0,
+        url: url ? url.object.label : '',
+        reference: reference ? reference.object.label : '',
+        description: description ? description.object.label : ''
+    };
+};
+
+/**
  * Sort Methode
  *
  * @param {String} a
@@ -228,7 +255,8 @@ export const sortMethod = (a, b) => {
 };
 
 export const getContributionIdsFromUrl = locationSearch => {
-    let ids = queryString.parse(locationSearch, { arrayFormat: 'comma' }).contributions;
+    const l = locationSearch.substring(locationSearch.indexOf('?'));
+    let ids = queryString.parse(l, { arrayFormat: 'comma' }).contributions;
     if (!ids) {
         return [];
     }
@@ -413,4 +441,29 @@ export const asyncLocalStorage = {
             return localStorage.removeItem(key);
         });
     }
+};
+
+/**
+ * Create an extended version of propertyIds
+ * (ADD the IDs of similar properties)
+ * it's important to keep the order so the result table get a correct order
+ * @param {Array} propertyIds properties ids from the query string
+ * @param {String} data Comparison data
+ */
+export const extendPropertyIds = (propertyIds, data) => {
+    const result = [];
+    propertyIds.forEach(function(pID, index) {
+        result.push(pID);
+        // loop on the predicates of comparison result
+        for (const [pr, values] of Object.entries(data)) {
+            // flat the all contribution values for the current predicate and
+            // check if there similar predicate.
+            // (the target similar predicate is supposed to be the last in the path of value)
+            const allV = flattenDepth(values, 2).filter(value => value.path[value.path.length - 1] === pID && pr !== pID);
+            if (allV.length > 0) {
+                result.push(pr);
+            }
+        }
+    });
+    return result;
 };
