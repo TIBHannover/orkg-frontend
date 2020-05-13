@@ -92,7 +92,7 @@ class StatementOptionButton extends Component {
     render() {
         const tippyTarget = (
             <span>
-                <OptionButton color="link" className="p-0" onClick={this.handleClick}>
+                <OptionButton disabled={this.props.isDisabled} color="link" className="p-0" onClick={this.handleClick}>
                     <span
                         className={'icon-wrapper'}
                         style={{
@@ -112,7 +112,7 @@ class StatementOptionButton extends Component {
             </span>
         );
 
-        return this.props.requireConfirmation ? (
+        return this.props.requireConfirmation && !this.props.isDisabled ? (
             <Tippy trigger={'mouseenter'} content={this.props.title} zIndex={999}>
                 <Tippy
                     onShow={this.onShow}
@@ -172,7 +172,8 @@ StatementOptionButton.propTypes = {
     action: PropTypes.func.isRequired,
     requireConfirmation: PropTypes.bool,
     confirmationMessage: PropTypes.string,
-    onVisibilityChange: PropTypes.func
+    onVisibilityChange: PropTypes.func,
+    isDisabled: PropTypes.bool
 };
 
 StatementOptionButton.defaultProps = {
