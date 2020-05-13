@@ -168,9 +168,9 @@ export const prefillStatements = ({ statements, resourceId }) => dispatch => {
                 resourceId: resourceId,
                 label: property.label,
                 isTemplate: property.isTemplate ? property.isTemplate : false,
-                templateId: property.templateId ? property.templateId : null,
-                templateClass: property.templateClass ? property.templateClass : null,
-                isAnimated: property.isAnimated !== undefined ? property.isAnimated : false
+                validationRules: property.validationRules ? property.validationRules : {},
+                isAnimated: property.isAnimated !== undefined ? property.isAnimated : false,
+                canDuplicate: property.canDuplicate ? true : false
             })
         );
     }
@@ -185,6 +185,7 @@ export const prefillStatements = ({ statements, resourceId }) => dispatch => {
                 templateId: value.templateId ? value.templateId : null,
                 propertyId: value.propertyId,
                 existingResourceId: value.existingResourceId ? value.existingResourceId : null,
+                isExistingValue: value.isExistingValue ? value.isExistingValue : false,
                 classes: value.classes ? value.classes : []
             })
         );
@@ -287,7 +288,7 @@ export const getResourceObject = (data, resourceId, newProperties) => {
                             return {
                                 '@temp': `_${value.resourceId}`,
                                 label: value.label,
-                                class: value.classes && value.classes.length > 0 ? value.classes[0].id : null,
+                                class: value.classes && value.classes.length > 0 ? value.classes[0] : null,
                                 values: Object.assign({}, getResourceObject(data, value.resourceId, newProperties))
                             };
                         } else {
