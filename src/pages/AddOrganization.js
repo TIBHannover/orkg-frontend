@@ -18,7 +18,7 @@ class AddOrganization extends Component {
         this.state = {
             redirect: false,
             value: '',
-            resourceId: '',
+            organizationId: '',
             previewSrc: ''
         };
     }
@@ -33,7 +33,7 @@ class AddOrganization extends Component {
 
     handleAdd = async () => {
         this.setEditorState('loading');
-        await this.createNewResource(false);
+        await this.createNewOrganization(false);
     };
 
     userInformation = () => {
@@ -62,15 +62,15 @@ class AddOrganization extends Component {
         }
     };
 
-    createNewResource = async () => {
+    createNewOrganization = async () => {
         const value = this.state.value;
         const image = this.state.previewSrc;
         if (value && value.length !== 0) {
             try {
                 const responseJson = await createOrganization(value, image[0]);
-                const resourceId = responseJson.id;
+                const organizationId = responseJson.id;
                 await updateUserRole();
-                this.navigateToResource(resourceId);
+                this.navigateToOrganization(organizationId);
             } catch (error) {
                 this.setEditorState('edit');
                 console.error(error);
@@ -79,9 +79,9 @@ class AddOrganization extends Component {
         }
     };
 
-    navigateToResource = resourceId => {
+    navigateToOrganization = organizationId => {
         this.setEditorState('edit');
-        this.setState({ resourceId: resourceId }, () => {
+        this.setState({ organizationId: organizationId }, () => {
             this.setState({ redirect: true });
         });
     };
@@ -111,10 +111,10 @@ class AddOrganization extends Component {
             this.setState({
                 redirect: false,
                 value: '',
-                resourceId: ''
+                organizationId: ''
             });
 
-            return <Redirect to={reverse(ROUTES.ORGANIZATION, { id: this.state.resourceId })} />;
+            return <Redirect to={reverse(ROUTES.ORGANIZATION, { id: this.state.organizationId })} />;
         }
 
         return (
@@ -172,10 +172,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 AddOrganization.propTypes = {
-    openAuthDialog: PropTypes.func.isRequired,
     updateAuth: PropTypes.func.isRequired,
-    user: PropTypes.object,
-    resetAuth: PropTypes.func.isRequired
+    user: PropTypes.object
 };
 
 export default connect(

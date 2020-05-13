@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createObservatory, crossrefUrl, submitGetRequest } from '../network';
+import { createObservatory } from '../network';
 import { Redirect } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { toast } from 'react-toastify';
@@ -14,7 +14,7 @@ export default class AddObservatory extends Component {
         this.state = {
             redirect: false,
             value: '',
-            resourceId: ''
+            ObservatoryId: ''
         };
     }
 
@@ -26,20 +26,7 @@ export default class AddObservatory extends Component {
 
     handleAdd = async () => {
         this.setEditorState('loading');
-        await this.createNewResource(false);
-    };
-
-    createResourceUsingDoi = async () => {
-        try {
-            const responseJson = await submitGetRequest(crossrefUrl + this.state.value);
-            console.log(responseJson);
-            this.setState({ value: responseJson.message.title[0] });
-            await this.createNewResource(true);
-        } catch (error) {
-            console.error(error);
-            toast.error(`Error finding DOI ${error.message}`);
-            this.setEditorState('edit');
-        }
+        await this.createNewObservatory(false);
     };
 
     handleChange = event => {
@@ -58,13 +45,13 @@ export default class AddObservatory extends Component {
         toast.error(`Error creating literal statement ${error.message}`);
     };
 
-    createNewResource = async () => {
+    createNewObservatory = async () => {
         const value = this.state.value;
         if (value && value.length !== 0) {
             try {
                 const responseJson = await createObservatory(value, this.props.match.params.id);
-                const resourceId = responseJson.id;
-                this.navigateToResource(resourceId);
+                const observatoryId = responseJson.id;
+                this.navigateToObservatory(observatoryId);
             } catch (error) {
                 this.setEditorState('edit');
                 console.error(error);
@@ -73,9 +60,9 @@ export default class AddObservatory extends Component {
         }
     };
 
-    navigateToResource = resourceId => {
+    navigateToObservatory = observatoryId => {
         this.setEditorState('edit');
-        this.setState({ resourceId: resourceId }, () => {
+        this.setState({ observatoryId: observatoryId }, () => {
             this.setState({ redirect: true });
         });
     };
@@ -86,10 +73,10 @@ export default class AddObservatory extends Component {
             this.setState({
                 redirect: false,
                 value: '',
-                resourceId: ''
+                observatoryId: ''
             });
 
-            return <Redirect to={reverse(ROUTES.OBSERVATORY, { id: this.state.resourceId })} />;
+            return <Redirect to={reverse(ROUTES.OBSERVATORY, { id: this.state.observatoryId })} />;
         }
 
         return (

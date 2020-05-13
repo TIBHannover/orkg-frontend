@@ -464,9 +464,7 @@ export const updateUserPassword = ({ current_password, new_password, new_matchin
 };
 
 export const updateUserRole = () => {
-    const headers = { 'Content-Type': 'application/json' };
-    const data = {};
-    return submitPutRequest(`${userUrl}role/`, headers, data);
+    return submitPutRequest(`${userUrl}role/`);
 };
 
 /**

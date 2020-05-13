@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Container, Button } from 'reactstrap';
+import { Container } from 'reactstrap';
 import { getUsersByObservatoryId, getResourcesByObservatoryId, getObservatorybyId } from '../network';
 import EditableHeader from '../components/EditableHeader';
 import InternalServerError from '../components/StaticPages/InternalServerError';
 import NotFound from '../components/StaticPages/NotFound';
-import { EditModeHeader, Title } from 'components/ViewPaper/ViewPaper';
 import PropTypes from 'prop-types';
 import SameAsStatements from './SameAsStatements';
 import ROUTES from '../constants/routes';
@@ -33,7 +32,7 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
-const FeaturedTabs = styled.div`
+const ObservatoryDetailTabs = styled.div`
     .tab {
         margin-bottom: 0;
         padding: 15px;
@@ -77,9 +76,7 @@ class Observatory extends Component {
             label: '',
             redirect: false,
             isLoading: false,
-            editMode: false,
-            classes: [],
-            resourceId: '',
+            observatoryId: '',
             url: '',
             users: [],
             activeTab: 1,
@@ -130,7 +127,7 @@ class Observatory extends Component {
             .then(ObsresponseJson => {
                 document.title = `${ObsresponseJson.name} - Org - ORKG`;
                 this.setState({ label: ObsresponseJson.name, isLoading: false });
-                this.setState({ resourceId: this.props.match.params.id });
+                this.setState({ observatoryId: this.props.match.params.id });
             })
             .catch(error => {
                 this.setState({ label: null, isLoading: false });
@@ -147,8 +144,8 @@ class Observatory extends Component {
         this.setState({ label: event.value });
     };
 
-    navigateToResource = resourceId => {
-        this.setState({ resourceId: resourceId }, () => {
+    navigateToResource = observatoryId => {
+        this.setState({ observatoryId: observatoryId }, () => {
             this.setState({ redirect: true });
         });
     };
@@ -244,10 +241,10 @@ class Observatory extends Component {
             this.setState({
                 redirect: false,
                 value: '',
-                resourceId: ''
+                observatoryId: ''
             });
 
-            return <Redirect to={reverse(this.state.url, { id: this.state.resourceId })} />;
+            return <Redirect to={reverse(this.state.url, { id: this.state.observatoryId })} />;
         }
 
         return (
@@ -256,32 +253,15 @@ class Observatory extends Component {
                 {!this.state.isLoading && this.state.error && <>{this.state.error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
                 {!this.state.isLoading && !this.state.error && this.state.label && (
                     <Container className="mt-5 clearfix">
-                        {this.state.editMode && (
-                            <EditModeHeader className="box">
-                                <Title>
-                                    Edit mode <span className="pl-2">Every change you make is automatically saved</span>
-                                </Title>
-                                <Button
-                                    className="float-left"
-                                    style={{ marginLeft: 1 }}
-                                    color="light"
-                                    size="sm"
-                                    onClick={() => this.toggle('editMode')}
-                                >
-                                    Stop editing
-                                </Button>
-                            </EditModeHeader>
-                        )}
                         <div className={'box clearfix pt-4 pb-4 pl-5 pr-5'}>
                             <div className={'mb-2'}>
-                                {!this.state.editMode ? (
                                     <div className="pb-2 mb-3">
                                         <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                             {this.state.label}
                                             <br />
                                             <br />
                                             <SidebarStyledBox>
-                                                <FeaturedTabs className="clearfix d-flex">
+                                                <ObservatoryDetailTabs className="clearfix d-flex">
                                                     <div
                                                         className={`h6 col-md-6 text-center tab ${this.state.activeTab === 1 ? 'active' : ''}`}
                                                         onClick={() => this.barToggle(1)}
@@ -294,29 +274,11 @@ class Observatory extends Component {
                                                     >
                                                         Resources
                                                     </div>
-                                                </FeaturedTabs>
+                                                </ObservatoryDetailTabs>
                                                 <TransitionGroup exit={false}>{rightSidebar}</TransitionGroup>
                                             </SidebarStyledBox>
                                         </h3>
-                                        {this.state.classes.length > 0 && (
-                                            <span style={{ fontSize: '90%' }}>
-                                                Classes:{' '}
-                                                {this.state.classes.map((className, index) => {
-                                                    const separator = index < this.state.classes.length - 1 ? ', ' : '';
-
-                                                    return (
-                                                        <i key={index}>
-                                                            {className}
-                                                            {separator}
-                                                        </i>
-                                                    );
-                                                })}
-                                            </span>
-                                        )}
                                     </div>
-                                ) : (
-                                    <EditableHeader id={id} value={this.state.label} onChange={this.handleHeaderChange} />
-                                )}
                             </div>
                             <div className={'clearfix'}>
                                 <SameAsStatements />

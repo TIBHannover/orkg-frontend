@@ -30,7 +30,7 @@ class ObservatoryDetails extends Component {
 
     componentDidMount() {
         document.title = 'Observatories - ORKG';
-        
+
         this.loadMoreResources();
     }
 

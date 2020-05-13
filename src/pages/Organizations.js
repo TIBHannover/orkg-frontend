@@ -94,9 +94,9 @@ class Organizations extends Component {
                         )}
 
                         {!this.props.user && (
-                            <Link style={{ color: '#111111' }} className="float-right mb-2 mt-2 clearfix">
-                                <span className="fa" /> Signin to create organization
-                            </Link>
+                            
+                                <p className="fa" style={{float:"right"}}>Signin to create organization </p>
+                            
                         )}
                     </div>
 

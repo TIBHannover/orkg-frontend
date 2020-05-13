@@ -19,10 +19,8 @@ class OrganizationDetails extends Component {
             label: '',
             redirect: false,
             isLoading: false,
-            editMode: false,
-            classes: [],
             image: '',
-            resourceId: '',
+            organizationId: '',
             totalObservatories: '',
             url: ''
         };
@@ -47,7 +45,7 @@ class OrganizationDetails extends Component {
                 document.title = `${responseJson.organizationName} - Organization - ORKG`;
                 this.setState({ label: responseJson.organizationName, isLoading: false });
                 this.setState({ image: responseJson.organizationLogo, isLoading: false });
-                this.setState({ resourceId: this.props.match.params.id });
+                this.setState({ organizationId: this.props.match.params.id });
             })
             .catch(error => {
                 this.setState({ label: null, isLoading: false });
@@ -71,11 +69,11 @@ class OrganizationDetails extends Component {
             this.setState({ url: ROUTES.ADD_OBSERVATORY });
         }
 
-        this.navigateToResource(this.state.resourceId);
+        this.navigateToResource(this.state.organizationId);
     };
 
-    navigateToResource = resourceId => {
-        this.setState({ resourceId: resourceId }, () => {
+    navigateToResource = organizationId => {
+        this.setState({ organizationId: organizationId }, () => {
             this.setState({ redirect: true });
         });
     };
@@ -96,10 +94,10 @@ class OrganizationDetails extends Component {
             this.setState({
                 redirect: false,
                 value: '',
-                resourceId: ''
+                organizationId: ''
             });
 
-            return <Redirect to={reverse(this.state.url, { id: this.state.resourceId })} />;
+            return <Redirect to={reverse(this.state.url, { id: this.state.organizationId })} />;
         }
 
         return (

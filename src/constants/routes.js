@@ -14,10 +14,10 @@ export default {
     CONTRIBUTION_TEMPLATE: '/template/:id?',
     ORGANIZATIONS: '/organizations',
     ORGANIZATION: '/organizations/:id',
-    ADD_ORGANIZATION: '/addorganization',
-    ADD_OBSERVATORY: '/addobsevatory/:id',
+    ADD_ORGANIZATION: '/addOrganization',
+    ADD_OBSERVATORY: '/organizations/:id/addObsevatory',
     OBSERVATORY: '/obsevatory/:id',
-    OBSERVATORIES: '/obsevatories/:id',
+    OBSERVATORIES: '/organizations/:id/observatories',
     ADD_PAPER: {
         GENERAL_DATA: '/add-paper'
     },
