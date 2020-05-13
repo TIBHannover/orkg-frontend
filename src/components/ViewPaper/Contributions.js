@@ -199,9 +199,9 @@ class Contributions extends Component {
                                             paperId={this.props.paperId}
                                             paperTitle={this.props.paperTitle}
                                             contributionTitle={
-                                                this.props.contributions.find(function(c) {
-                                                    return c.id === selectedContributionId;
-                                                }).label
+                                                this.props.contributions.find(c => c.id === selectedContributionId)
+                                                    ? this.props.contributions.find(c => c.id === selectedContributionId).label
+                                                    : 'Contribution'
                                             }
                                         />
                                     )}

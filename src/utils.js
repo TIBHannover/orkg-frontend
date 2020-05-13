@@ -424,6 +424,25 @@ export const filterObjectOfStatementsByPredicate = (statementsArray, predicateID
     }
 };
 
+// https://stackoverflow.com/questions/42921220/is-any-solution-to-do-localstorage-setitem-in-asynchronous-way-in-javascript
+export const asyncLocalStorage = {
+    setItem: function(key, value) {
+        return Promise.resolve().then(function() {
+            localStorage.setItem(key, value);
+        });
+    },
+    getItem: function(key) {
+        return Promise.resolve().then(function() {
+            return localStorage.getItem(key);
+        });
+    },
+    removeItem: function(key) {
+        return Promise.resolve().then(function() {
+            return localStorage.removeItem(key);
+        });
+    }
+};
+
 /**
  * Create an extended version of propertyIds
  * (ADD the IDs of similar properties)
