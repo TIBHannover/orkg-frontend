@@ -53,11 +53,9 @@ export const ErrorMessage = styled.div`
     padding: 10px;
     color: #666666;
     cursor: pointer;
-    height: 60px;
     background-color: #e0f2fc;
     border-color: #e0f2fc;
     font-size: 12px;
-    font-weight: bold;
 `;
 
 export const SidebarStyledBox = styled.div`

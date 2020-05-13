@@ -1,22 +1,13 @@
 import React, { Component } from 'react';
 import { Alert, Col, Container, Form, FormGroup, Row, Button } from 'reactstrap';
-import {
-    getResource,
-    getSimilaireContribution,
-    deleteStatementById,
-    createResource,
-    createResourceStatement,
-    getObservatorybyId,
-    getOrganization,
-    getUserInformationById,
-    getContributorsByResourceId
-} from '../../network';
+import { getResource, getSimilaireContribution, deleteStatementById, createResource, createResourceStatement } from 'network';
 import AddToComparison from './AddToComparison';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ContentLoader from 'react-content-loader';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import ROUTES from '../../constants/routes';
+import { isEmpty } from 'lodash';
+import ROUTES from 'constants/routes';
 import SimilarContributions from './SimilarContributions';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProblemInput';
@@ -25,7 +16,7 @@ import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
 import { toast } from 'react-toastify';
-import { selectContribution, updateResearchProblems } from '../../actions/viewPaper';
+import { selectContribution, updateResearchProblems } from 'actions/viewPaper';
 import styled from 'styled-components';
 import { StyledHorizontalContributionsList, StyledHorizontalContribution } from '../AddPaper/Contributions/styled';
 import Tippy from '@tippy.js/react';
@@ -84,9 +75,6 @@ class Contributions extends Component {
         if (this.props.selectedContribution !== '' && this.props.selectedContribution !== this.state.selectedContribution) {
             this.setState({ selectedContribution: this.props.selectedContribution }, () => {
                 this.handleSelectContribution(this.state.selectedContribution);
-
-                this.getObservatoryAndOrganizationInformation(this.props.observatoryInfo.observatory_id);
-                this.getResourceContributors(this.props.paperId);
             });
         }
     };
@@ -158,61 +146,6 @@ class Contributions extends Component {
             problemsArray,
             contributionId: this.state.selectedContribution
         });
-    };
-
-    getObservatoryAndOrganizationInformation = async id => {
-        getObservatorybyId(id)
-            .then(responseJson => {
-                getOrganization(responseJson.organizationId)
-                    .then(orgResponse => {
-                        getUserInformationById(this.props.observatoryInfo.created_by)
-                            .then(userResponse => {
-                                this.setState({
-                                    observatory: {
-                                        name: responseJson.name.toUpperCase(),
-                                        organizationName: orgResponse.organizationName,
-                                        organizationLogo: orgResponse.organizationLogo,
-                                        userName: userResponse.display_name
-                                    }
-                                });
-                            })
-                            .catch(error => {
-                                this.setState({ label: null, isLoading: false });
-                            });
-                    })
-                    .catch(error => {
-                        this.setState({ label: null, isLoading: false });
-                    });
-            })
-            .catch(error => {
-                this.setState({ label: null, isLoading: false });
-            });
-    };
-
-    getResourceContributors = async id => {
-        getContributorsByResourceId(id)
-            .then(responseJson => {
-                const a = {};
-                for (let i = 0; i < responseJson.length; i++) {
-                    a[i] = {};
-                    if (/^[0]{8}-[0]{4}-[0]{4}-[0]{4}-[0]{12}$/.test(responseJson[i].created_by)) {
-                        a[i]['created_by'] = 'Unknown';
-                    } else {
-                        getUserInformationById(responseJson[i].created_by).then(userResponse => {
-                            if (userResponse !== '') {
-                                a[i]['created_by'] = userResponse.display_name;
-                            }
-                        });
-                    }
-                    a[i]['created_at'] = responseJson[i].created_at.substring(0, 10);
-                    this.setState({
-                        userData: [...this.state.userData, a[i]]
-                    });
-                }
-            })
-            .catch(error => {
-                this.setState({ label: null, isLoading: false });
-            });
     };
 
     render() {
@@ -398,12 +331,8 @@ class Contributions extends Component {
                                 </StyledHorizontalContribution>
                             </AnimationContainer>
                         </TransitionGroup>
-                        {!/^[0]{8}-[0]{4}-[0]{4}-[0]{4}-[0]{12}$/.test(this.props.observatoryInfo.observatory_id) && (
-                            <ProvenanceBox
-                                observatory={this.state.observatory}
-                                userData={this.state.userData}
-                                observatoryInfo={this.props.observatoryInfo}
-                            />
+                        {!isEmpty(this.props.observatoryInfo) && (
+                            <ProvenanceBox contributors={this.props.contributors} observatoryInfo={this.props.observatoryInfo} />
                         )}
                     </Row>
                 </Container>
@@ -426,7 +355,8 @@ Contributions.propTypes = {
     handleChangeContributionLabel: PropTypes.func.isRequired,
     handleCreateContribution: PropTypes.func.isRequired,
     toggleDeleteContribution: PropTypes.func.isRequired,
-    observatoryInfo: PropTypes.object
+    observatoryInfo: PropTypes.object,
+    contributors: PropTypes.array
 };
 
 const mapStateToProps = state => ({

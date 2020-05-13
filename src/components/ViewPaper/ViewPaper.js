@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 import { Container, Alert, UncontrolledAlert } from 'reactstrap';
-import { getStatementsBySubject, getResource, updateResource, createResource, createResourceStatement, deleteStatementById } from '../../network';
+import {
+    getObservatoryAndOrganizationInformation,
+    getContributorsByResourceId,
+    getUserInformationById,
+    getStatementsBySubject,
+    getResource,
+    updateResource,
+    createResource,
+    createResourceStatement,
+    deleteStatementById
+} from 'network';
 import { connect } from 'react-redux';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader';
@@ -48,6 +58,7 @@ class ViewPaper extends Component {
         showGraphModal: false,
         editMode: false,
         observatoryInfo: {},
+        contributors: [],
         showHeaderBar: false
     };
 
@@ -78,15 +89,26 @@ class ViewPaper extends Component {
         getResource(resourceId)
             .then(paperResource => {
                 if (paperResource.observatory_id) {
-                    this.setState({
-                        observatoryInfo: {
-                            observatory_id: paperResource.observatory_id,
-                            created_at: paperResource.created_at.substring(0, 10),
-                            created_by: paperResource.created_by,
-                            automatic_extraction: paperResource.automatic_extraction
-                        }
+                    const observatory = getObservatoryAndOrganizationInformation(paperResource.observatory_id);
+                    const creator = getUserInformationById(paperResource.created_by);
+                    Promise.all([observatory, creator]).then(data => {
+                        this.setState({
+                            observatoryInfo: {
+                                ...data[0],
+                                created_at: paperResource.created_at,
+                                created_by: data[1],
+                                automatic_extraction: paperResource.automatic_extraction
+                            }
+                        });
                     });
+
+                    getContributorsByResourceId(resourceId).then(contributors =>
+                        Promise.all(contributors).then(data => {
+                            this.setState({ contributors: data });
+                        })
+                    );
                 }
+
                 getStatementsBySubject({ id: resourceId })
                     .then(paperStatements => {
                         // check if type is paper
@@ -427,6 +449,7 @@ class ViewPaper extends Component {
                                         handleCreateContribution={this.handleCreateContribution}
                                         toggleDeleteContribution={this.toggleDeleteContribution}
                                         observatoryInfo={this.state.observatoryInfo}
+                                        contributors={this.state.contributors}
                                     />
 
                                     <ComparisonPopup />

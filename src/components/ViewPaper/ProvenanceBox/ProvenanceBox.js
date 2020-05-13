@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TransitionGroup } from 'react-transition-group';
 import { StyledItemProvenanceBox, AnimationContainer, StyledActivity, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 
 export default function ProvenanceBox(props) {
@@ -17,12 +18,12 @@ export default function ProvenanceBox(props) {
                         <ul className="list-group">
                             <StyledItemProvenanceBox>
                                 <div>
-                                    <b>{props.observatory.name}</b>
+                                    <b>{props.observatoryInfo.name}</b>
                                     <br />
                                     <center>
-                                        <img style={{ paddingTop: 8 }} height="70" src={props.observatory.organizationLogo} alt="" />
+                                        <img style={{ paddingTop: 8 }} height="70" src={props.observatoryInfo.organization.logo} alt="" />
                                     </center>
-                                    <p style={{ fontSize: 12 }}>{props.observatory.organizationName}</p>
+                                    <p style={{ fontSize: 12 }}>{props.observatoryInfo.organization.name}</p>
                                 </div>
                             </StyledItemProvenanceBox>
 
@@ -30,7 +31,7 @@ export default function ProvenanceBox(props) {
                                 <p>
                                     <b>DATE ADDED</b>
                                     <br />
-                                    {props.observatoryInfo.created_at}
+                                    {moment(props.observatoryInfo.created_at).format('DD MMM YYYY')}
                                 </p>
                             </StyledItemProvenanceBox>
 
@@ -38,14 +39,21 @@ export default function ProvenanceBox(props) {
                                 <p>
                                     <b>ADDED BY</b>
                                     <br />
-                                    {props.observatory.userName}
+                                    {props.observatoryInfo.created_by.display_name}
                                 </p>
                             </StyledItemProvenanceBox>
                             <StyledItemProvenanceBox>
                                 <b>CONTRIBUTORS</b>
-                                {props.userData.map((key, index) => {
-                                    return <div key={`cntbrs-${index}`}>{key['created_by'] !== 'Unknown' && <span>{key['created_by']}</span>}</div>;
-                                })}
+                                {props.contributors &&
+                                    props.contributors.map((contributor, index) => {
+                                        return (
+                                            <div key={`cntbrs-${index}`}>
+                                                {contributor.created_by.display_name !== 'Unknown' && (
+                                                    <span>{contributor.created_by.display_name}</span>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
                             </StyledItemProvenanceBox>
                         </ul>
                     </div>
@@ -57,26 +65,27 @@ export default function ProvenanceBox(props) {
                 <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
                     <div>
                         <div className="pt-3 pb-3 pl-3 pr-3">
-                            {props.userData.map((key, index) => {
-                                return (
-                                    <StyledActivity key={`prov-${index}`} className="pl-3 pb-3">
-                                        <div className={'time'}>{key['created_at']}</div>
-                                        <div>
-                                            {key['created_by'] === props.observatory.userName && (
-                                                <>
-                                                    Added by <b>{key['created_by']}</b>{' '}
-                                                </>
-                                            )}
+                            {props.contributors &&
+                                props.contributors.map((contributor, index) => {
+                                    return (
+                                        <StyledActivity key={`prov-${index}`} className="pl-3 pb-3">
+                                            <div className={'time'}>{moment(contributor.created_at).format('DD MMM YYYY')}</div>
+                                            <div>
+                                                {contributor.created_by.display_name === props.observatoryInfo.created_by.display_name && (
+                                                    <>
+                                                        Added by <b>{contributor.created_by.display_name}</b>{' '}
+                                                    </>
+                                                )}
 
-                                            {key['created_by'] !== props.observatory.userName && (
-                                                <>
-                                                    Updated by <b>{key['created_by']}</b>{' '}
-                                                </>
-                                            )}
-                                        </div>
-                                    </StyledActivity>
-                                );
-                            })}
+                                                {contributor.created_by.display_name !== props.observatoryInfo.created_by.display_name && (
+                                                    <>
+                                                        Updated by <b>{contributor.created_by.display_name}</b>{' '}
+                                                    </>
+                                                )}
+                                            </div>
+                                        </StyledActivity>
+                                    );
+                                })}
                         </div>
                     </div>
                 </AnimationContainer>
@@ -105,7 +114,6 @@ export default function ProvenanceBox(props) {
 }
 
 ProvenanceBox.propTypes = {
-    observatory: PropTypes.object.isRequired,
-    userData: PropTypes.array.isRequired,
+    contributors: PropTypes.array.isRequired,
     observatoryInfo: PropTypes.object.isRequired
 };

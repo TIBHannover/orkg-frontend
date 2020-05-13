@@ -627,6 +627,30 @@ export const getResourcesByObservatoryId = id => {
 export const createObservatory = (observatoryName, organizationId) => {
     return submitPostRequest(observatoriesUrl, { 'Content-Type': 'application/json' }, { observatoryName, organizationId });
 };
+
 export const getContributorsByResourceId = id => {
-    return submitGetRequest(`${resourcesUrl}findContributors/${encodeURIComponent(id)}/`);
+    return submitGetRequest(`${resourcesUrl}findContributors/${encodeURIComponent(id)}/`).then(contributors => {
+        return contributors.map(contributor => {
+            if (contributor.created_by === '00000000-0000-0000-0000-000000000000') {
+                return { ...contributor, created_by: { display_name: 'Unknown' } };
+            } else {
+                return getUserInformationById(contributor.created_by).then(user => ({ ...contributor, created_by: user }));
+            }
+        });
+    });
+};
+
+export const getObservatoryAndOrganizationInformation = observatoryId => {
+    return getObservatorybyId(observatoryId).then(obsResponse => {
+        return getOrganization(obsResponse.organizationId).then(orgResponse => {
+            return {
+                id: observatoryId,
+                name: obsResponse.name.toUpperCase(),
+                organization: {
+                    name: orgResponse.organizationName,
+                    logo: orgResponse.organizationLogo
+                }
+            };
+        });
+    });
 };
