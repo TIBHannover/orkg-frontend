@@ -1,5 +1,6 @@
 import capitalize from 'capitalize';
 import queryString from 'query-string';
+import { flattenDepth } from 'lodash';
 import rdf from 'rdf';
 
 export const popupDelay = process.env.REACT_APP_POPUP_DELAY;
@@ -421,4 +422,29 @@ export const filterObjectOfStatementsByPredicate = (statementsArray, predicateID
     } else {
         return null;
     }
+};
+
+/**
+ * Create an extended version of propertyIds
+ * (ADD the IDs of similar properties)
+ * it's important to keep the order so the result table get a correct order
+ * @param {Array} propertyIds properties ids from the query string
+ * @param {String} data Comparison data
+ */
+export const extendPropertyIds = (propertyIds, data) => {
+    const result = [];
+    propertyIds.forEach(function(pID, index) {
+        result.push(pID);
+        // loop on the predicates of comparison result
+        for (const [pr, values] of Object.entries(data)) {
+            // flat the all contribution values for the current predicate and
+            // check if there similar predicate.
+            // (the target similar predicate is supposed to be the last in the path of value)
+            const allV = flattenDepth(values, 2).filter(value => value.path[value.path.length - 1] === pID && pr !== pID);
+            if (allV.length > 0) {
+                result.push(pr);
+            }
+        }
+    });
+    return result;
 };
