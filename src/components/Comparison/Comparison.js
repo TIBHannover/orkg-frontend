@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, UncontrolledAlert } from 'reactstrap';
+import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, UncontrolledAlert, Badge } from 'reactstrap';
 import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject } from 'network';
 import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResonseHashFromUrl, get_error_message } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPlus, faArrowsAltH, faLightbulb, faDiceD6 } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faPlus, faArrowsAltH, faLightbulb } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import ComparisonLoadingComponent from './ComparisonLoadingComponent';
 import ComparisonTable from './ComparisonTable.js';
@@ -24,6 +24,7 @@ import { reverse } from 'named-urls';
 import { generateRdfDataVocabularyFile, extendPropertyIds } from 'utils';
 import { ContainerAnimated } from './styled';
 import RelatedResources from './RelatedResources';
+import Tippy from '@tippy.js/react';
 
 class Comparison extends Component {
     constructor(props) {
@@ -347,7 +348,16 @@ class Comparison extends Component {
         return (
             <div>
                 <ContainerAnimated className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">Contribution comparison</h1>
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">
+                        Contribution comparison{' '}
+                        <Tippy content="The amount of compared contributions">
+                            <span>
+                                <Badge color="darkblue" pill style={{ fontSize: '65%' }}>
+                                    {contributionAmount}
+                                </Badge>
+                            </span>
+                        </Tippy>
+                    </h1>
 
                     {contributionAmount > 1 && !this.state.isLoading && !this.state.loadingFailed && (
                         <div style={{ marginLeft: 'auto' }} className="flex-shrink-0 mt-4">
@@ -497,21 +507,13 @@ class Comparison extends Component {
                             )}
                             {contributionAmount > 1 || this.props.match.params.comparisonId ? (
                                 !this.state.isLoading ? (
-                                    <>
-                                        <div>
-                                            <small>
-                                                Number of compared contributions: <Icon size={'sm'} icon={faDiceD6} className="mr-1" />{' '}
-                                                {contributionAmount}
-                                            </small>
-                                        </div>
-                                        <ComparisonTable
-                                            data={this.state.data}
-                                            properties={this.state.properties}
-                                            contributions={this.state.contributions}
-                                            removeContribution={this.removeContribution}
-                                            transpose={this.state.transpose}
-                                        />
-                                    </>
+                                    <ComparisonTable
+                                        data={this.state.data}
+                                        properties={this.state.properties}
+                                        contributions={this.state.contributions}
+                                        removeContribution={this.removeContribution}
+                                        transpose={this.state.transpose}
+                                    />
                                 ) : (
                                     <ComparisonLoadingComponent />
                                 )
