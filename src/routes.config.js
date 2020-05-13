@@ -11,6 +11,7 @@ import License from './components/StaticPages/License';
 import Changelog from './components/StaticPages/Changelog';
 import NotFound from './components/StaticPages/NotFound';
 import Papers from './pages/Papers';
+import Comparisons from './pages/Comparisons';
 import PredicateDetails from './pages/PredicateDetails';
 import Predicates from './pages/Predicates';
 import ContributionTemplates from './components/ContributionTemplates/ContributionTemplates';
@@ -109,6 +110,11 @@ const routes = [
         path: ROUTES.PAPERS,
         exact: true,
         component: Papers
+    },
+    {
+        path: ROUTES.COMPARISONS,
+        exact: true,
+        component: Comparisons
     },
     {
         path: ROUTES.RESEARCH_PROBLEM,
