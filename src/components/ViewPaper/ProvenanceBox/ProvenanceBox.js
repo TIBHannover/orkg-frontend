@@ -17,30 +17,27 @@ export default function ProvenanceBox(props) {
                     <div>
                         <ul className="list-group">
                             <StyledItemProvenanceBox>
-                                <div>
-                                    <b>{props.observatoryInfo.name}</b>
-                                    <br />
-                                    <center>
-                                        <img style={{ paddingTop: 8 }} height="70" src={props.observatoryInfo.organization.logo} alt="" />
-                                    </center>
-                                    <p style={{ fontSize: 12 }}>{props.observatoryInfo.organization.name}</p>
-                                </div>
+                                <b>{props.observatoryInfo.name}</b>
+                                <br />
+                                <img
+                                    style={{ marginTop: 8, marginBottom: 8, maxWidth: '100%', height: 'auto' }}
+                                    class="mx-auto d-block"
+                                    src={'http://localhost:3000/static/media/infAI.fdcd9755.png'}
+                                    alt=""
+                                />
+                                <p style={{ fontSize: 12 }}>{props.observatoryInfo.organization.name}</p>
                             </StyledItemProvenanceBox>
 
                             <StyledItemProvenanceBox>
-                                <p>
-                                    <b>DATE ADDED</b>
-                                    <br />
-                                    {moment(props.observatoryInfo.created_at).format('DD MMM YYYY')}
-                                </p>
+                                <b>DATE ADDED</b>
+                                <br />
+                                {moment(props.observatoryInfo.created_at).format('DD MMM YYYY')}
                             </StyledItemProvenanceBox>
 
                             <StyledItemProvenanceBox>
-                                <p>
-                                    <b>ADDED BY</b>
-                                    <br />
-                                    {props.observatoryInfo.created_by.display_name}
-                                </p>
+                                <b>ADDED BY</b>
+                                <br />
+                                {props.observatoryInfo.created_by.display_name}
                             </StyledItemProvenanceBox>
                             <StyledItemProvenanceBox>
                                 <b>CONTRIBUTORS</b>
