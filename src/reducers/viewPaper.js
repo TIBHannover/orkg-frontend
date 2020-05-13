@@ -1,7 +1,7 @@
 import * as type from '../actions/types';
 import dotProp from 'dot-prop-immutable';
 import assign from 'lodash/assign';
-import { Cookies } from 'react-cookie';
+import { asyncLocalStorage } from 'utils';
 
 const initialState = {
     researchProblems: {},
@@ -23,7 +23,7 @@ const initialState = {
     url: '',
     urlResourceId: 0
 };
-const cookies = new Cookies();
+//const cookies = new Cookies();
 
 export default (state = initialState, action) => {
     switch (action.type) {
@@ -75,7 +75,7 @@ export default (state = initialState, action) => {
             return dotProp.set(state, `researchProblems.${payload.contributionId}`, payload.problemsArray);
         }
 
-        case type.LOAD_COMPARISON_FROM_COOKIE: {
+        case type.LOAD_COMPARISON_FROM_LOCAL_STORAGE: {
             const { payload } = action;
             const newComparison = payload;
             return {
@@ -98,7 +98,8 @@ export default (state = initialState, action) => {
                 allIds: [...state.comparison.allIds, payload.contributionId],
                 byId: comparisonContributions
             };
-            cookies.set('comparison', newComparison, { path: process.env.PUBLIC_URL, maxAge: 604800 });
+            asyncLocalStorage.setItem('comparison', JSON.stringify(newComparison));
+            //cookies.set('comparison', newComparison, { path: process.env.PUBLIC_URL, maxAge: 604800 });
             return {
                 ...state,
                 comparison: newComparison
@@ -114,7 +115,8 @@ export default (state = initialState, action) => {
                 allIds: newState.comparison.allIds,
                 byId: dotProp.delete(state.comparison.byId, payload.id)
             };
-            cookies.set('comparison', newComparison, { path: process.env.PUBLIC_URL, maxAge: 604800 });
+            asyncLocalStorage.setItem('comparison', JSON.stringify(newComparison));
+            //cookies.set('comparison', newComparison, { path: process.env.PUBLIC_URL, maxAge: 604800 });
             return {
                 ...newState,
                 comparison: newComparison

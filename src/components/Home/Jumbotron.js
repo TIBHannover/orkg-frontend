@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { Container } from 'reactstrap';
 import HomeBannerBg from 'assets/img/graph-background.svg';
 import styled from 'styled-components';
-import Typist from 'react-typist';
-import 'react-typist/dist/Typist.css';
+import Typed from 'typed.js';
 import Video from './Video';
 
 const JumbotronStyled = styled.div`
@@ -48,21 +47,24 @@ const HeaderStyled = styled.h1`
 `;
 
 export default class Jumbotron extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            motto: ['Structured.', 'FAIR.', 'Comparable.'],
-            currentMotto: 0
-        };
-    }
-
     componentDidMount() {
-        this.mounted = true;
+        const motto = ['Structured.', 'FAIR.', 'Comparable.'];
+        const options = {
+            strings: motto,
+            typeSpeed: 70,
+            backSpeed: 50,
+            backDelay: 1500,
+            loop: true,
+            loopCount: Infinity
+        };
+        // this.el refers to the <span> in the render() method
+        this.typed = new Typed(this.el, options);
     }
 
     componentWillUnmount() {
-        this.mounted = false;
+        // Make sure to destroy Typed instance on unmounting
+        // to prevent memory leaks
+        this.typed.destroy();
     }
 
     render() {
@@ -74,22 +76,12 @@ export default class Jumbotron extends Component {
                             <div className="row">
                                 <div className="col-md-7 definition">Scholarly Knowledge.</div>
                                 <div className="col-md-5 motto pl-0">
-                                    <Typist
-                                        key={this.state.currentMotto}
-                                        onTypingDone={() => {
-                                            if (!this.mounted) {
-                                                return;
-                                            }
-                                            this.setState(state => ({ currentMotto: state.currentMotto + 1 }));
+                                    <span
+                                        style={{ whiteSpace: 'pre' }}
+                                        ref={el => {
+                                            this.el = el;
                                         }}
-                                    >
-                                        {this.state.motto.map((word, i) => (
-                                            <span key={word}>
-                                                {word}
-                                                <Typist.Backspace count={word.length} delay={(i + 1) * 1500} />
-                                            </span>
-                                        ))}
-                                    </Typist>
+                                    />
                                 </div>
                             </div>
                         </HeaderStyled>

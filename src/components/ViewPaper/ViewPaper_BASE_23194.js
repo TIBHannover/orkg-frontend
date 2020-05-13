@@ -1,17 +1,9 @@
 import React, { Component } from 'react';
-import { Container, Alert, UncontrolledAlert } from 'reactstrap';
-import {
-    getObservatoryAndOrganizationInformation,
-    getContributorsByResourceId,
-    getUserInformationById,
-    getStatementsBySubject,
-    getResource,
-    updateResource,
-    createResource,
-    createResourceStatement,
-    deleteStatementById
-} from 'network';
+import { Container, Button, Alert, UncontrolledAlert, ButtonGroup } from 'reactstrap';
+import { getStatementsBySubject, getResource, updateResource, createResource, createResourceStatement, deleteStatementById } from '../../network';
 import { connect } from 'react-redux';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faProjectDiagram, faPen, faTimes, faFile } from '@fortawesome/free-solid-svg-icons';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader';
 import Contributions from './Contributions';
@@ -24,9 +16,6 @@ import GizmoGraphViewModal from './GraphView/GizmoGraphViewModal';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
 import Confirm from 'reactstrap-confirm';
-import VisibilitySensor from 'react-visibility-sensor';
-import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
-import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
 import SharePaper from './SharePaper';
 
@@ -57,13 +46,7 @@ class ViewPaper extends Component {
         dropdownOpen: false,
         showGraphModal: false,
         editMode: false,
-<<<<<<< HEAD
-        observatoryInfo: ''
-=======
-        observatoryInfo: {},
-        contributors: [],
-        showHeaderBar: false
->>>>>>> dbd6f1b878b55ac1b0f6187e93bccb79ceb14b59
+        observatoryInfo: []
     };
 
     componentDidMount() {
@@ -78,12 +61,6 @@ class ViewPaper extends Component {
         }
     };
 
-    handleShowHeaderBar = isVisible => {
-        this.setState({
-            showHeaderBar: !isVisible
-        });
-    };
-
     loadPaperData = () => {
         this.setState({ loading: true });
         const resourceId = this.props.match.params.resourceId;
@@ -93,26 +70,15 @@ class ViewPaper extends Component {
         getResource(resourceId)
             .then(paperResource => {
                 if (paperResource.observatory_id) {
-                    const observatory = getObservatoryAndOrganizationInformation(paperResource.observatory_id);
-                    const creator = getUserInformationById(paperResource.created_by);
-                    Promise.all([observatory, creator]).then(data => {
-                        this.setState({
-                            observatoryInfo: {
-                                ...data[0],
-                                created_at: paperResource.created_at,
-                                created_by: data[1],
-                                automatic_extraction: paperResource.automatic_extraction
-                            }
-                        });
+                    this.setState({
+                        observatoryInfo: {
+                            observatory_id: paperResource.observatory_id,
+                            created_at: paperResource.created_at.substring(0, 10),
+                            created_by: paperResource.created_by,
+                            automatic_extraction: paperResource.automatic_extraction
+                        }
                     });
-
-                    getContributorsByResourceId(resourceId).then(contributors =>
-                        Promise.all(contributors).then(data => {
-                            this.setState({ contributors: data });
-                        })
-                    );
                 }
-
                 getStatementsBySubject({ id: resourceId })
                     .then(paperStatements => {
                         // check if type is paper
@@ -391,20 +357,47 @@ class ViewPaper extends Component {
                 {!this.state.loading && this.state.loading_failed && <NotFound />}
                 {!this.state.loading_failed && (
                     <>
-                        {this.state.showHeaderBar && (
-                            <PaperHeaderBar
-                                paperLink={paperLink}
-                                editMode={this.state.editMode}
-                                toggle={this.toggle}
-                                paperTitle={this.props.viewPaper.title}
-                            />
-                        )}
-                        <VisibilitySensor onChange={this.handleShowHeaderBar}>
-                            <Container className="d-flex align-items-center">
-                                <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
-                                <PaperMenuBar editMode={this.state.editMode} paperLink={paperLink} toggle={this.toggle} />
-                            </Container>
-                        </VisibilitySensor>
+                        <Container className="d-flex align-items-center">
+                            <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
+                            <ButtonGroup className="flex-shrink-0">
+                                {paperLink && (
+                                    <a href={paperLink} className="btn btn-darkblue flex-shrink-0 btn-sm" target="_blank" rel="noopener noreferrer">
+                                        <Icon icon={faFile} style={{ margin: '2px 4px 0 0' }} /> View paper
+                                    </a>
+                                )}
+                                <Button
+                                    className="flex-shrink-0"
+                                    color="darkblue"
+                                    size="sm"
+                                    style={{ marginLeft: 1 }}
+                                    onClick={() => this.toggle('showGraphModal')}
+                                >
+                                    <Icon icon={faProjectDiagram} style={{ margin: '2px 4px 0 0' }} /> Graph view
+                                </Button>
+
+                                {!this.state.editMode ? (
+                                    <Button
+                                        className="flex-shrink-0"
+                                        style={{ marginLeft: 1 }}
+                                        color="darkblue"
+                                        size="sm"
+                                        onClick={() => this.toggle('editMode')}
+                                    >
+                                        <Icon icon={faPen} /> Edit
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        className="flex-shrink-0"
+                                        style={{ marginLeft: 1 }}
+                                        color="darkblueDarker"
+                                        size="sm"
+                                        onClick={() => this.toggle('editMode')}
+                                    >
+                                        <Icon icon={faTimes} /> Stop editing
+                                    </Button>
+                                )}
+                            </ButtonGroup>
+                        </Container>
 
                         {this.state.editMode && (
                             <EditModeHeader className="box">
@@ -453,7 +446,6 @@ class ViewPaper extends Component {
                                         handleCreateContribution={this.handleCreateContribution}
                                         toggleDeleteContribution={this.toggleDeleteContribution}
                                         observatoryInfo={this.state.observatoryInfo}
-                                        contributors={this.state.contributors}
                                     />
 
                                     <ComparisonPopup />

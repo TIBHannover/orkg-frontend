@@ -85,9 +85,9 @@ export const removeFromComparison = id => dispatch => {
     });
 };
 
-export const loadComparisonFromCookie = cookie => dispatch => {
+export const loadComparisonFromLocalStorage = cookie => dispatch => {
     dispatch({
-        type: type.LOAD_COMPARISON_FROM_COOKIE,
+        type: type.LOAD_COMPARISON_FROM_LOCAL_STORAGE,
         payload: {
             allIds: cookie.allIds,
             byId: cookie.byId

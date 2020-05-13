@@ -57,13 +57,9 @@ class ViewPaper extends Component {
         dropdownOpen: false,
         showGraphModal: false,
         editMode: false,
-<<<<<<< HEAD
-        observatoryInfo: ''
-=======
         observatoryInfo: {},
         contributors: [],
         showHeaderBar: false
->>>>>>> dbd6f1b878b55ac1b0f6187e93bccb79ceb14b59
     };
 
     componentDidMount() {
