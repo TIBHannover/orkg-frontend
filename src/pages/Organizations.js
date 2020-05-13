@@ -94,9 +94,9 @@ class Organizations extends Component {
                         )}
 
                         {!this.props.user && (
-                            
-                                <p className="fa" style={{float:"right"}}>Signin to create organization </p>
-                            
+                            <p className="fa" style={{ float: 'right' }}>
+                                Signin to create organization{' '}
+                            </p>
                         )}
                     </div>
 

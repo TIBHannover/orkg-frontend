@@ -255,30 +255,30 @@ class Observatory extends Component {
                     <Container className="mt-5 clearfix">
                         <div className={'box clearfix pt-4 pb-4 pl-5 pr-5'}>
                             <div className={'mb-2'}>
-                                    <div className="pb-2 mb-3">
-                                        <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                            {this.state.label}
-                                            <br />
-                                            <br />
-                                            <SidebarStyledBox>
-                                                <ObservatoryDetailTabs className="clearfix d-flex">
-                                                    <div
-                                                        className={`h6 col-md-6 text-center tab ${this.state.activeTab === 1 ? 'active' : ''}`}
-                                                        onClick={() => this.barToggle(1)}
-                                                    >
-                                                        Contributors
-                                                    </div>
-                                                    <div
-                                                        className={`h6 col-md-6 text-center tab ${this.state.activeTab === 2 ? 'active' : ''}`}
-                                                        onClick={() => this.barToggle(2)}
-                                                    >
-                                                        Resources
-                                                    </div>
-                                                </ObservatoryDetailTabs>
-                                                <TransitionGroup exit={false}>{rightSidebar}</TransitionGroup>
-                                            </SidebarStyledBox>
-                                        </h3>
-                                    </div>
+                                <div className="pb-2 mb-3">
+                                    <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                        {this.state.label}
+                                        <br />
+                                        <br />
+                                        <SidebarStyledBox>
+                                            <ObservatoryDetailTabs className="clearfix d-flex">
+                                                <div
+                                                    className={`h6 col-md-6 text-center tab ${this.state.activeTab === 1 ? 'active' : ''}`}
+                                                    onClick={() => this.barToggle(1)}
+                                                >
+                                                    Contributors
+                                                </div>
+                                                <div
+                                                    className={`h6 col-md-6 text-center tab ${this.state.activeTab === 2 ? 'active' : ''}`}
+                                                    onClick={() => this.barToggle(2)}
+                                                >
+                                                    Resources
+                                                </div>
+                                            </ObservatoryDetailTabs>
+                                            <TransitionGroup exit={false}>{rightSidebar}</TransitionGroup>
+                                        </SidebarStyledBox>
+                                    </h3>
+                                </div>
                             </div>
                             <div className={'clearfix'}>
                                 <SameAsStatements />
