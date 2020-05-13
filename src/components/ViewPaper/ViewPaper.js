@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { Container, Button, Alert, UncontrolledAlert, ButtonGroup } from 'reactstrap';
+import { Container, Alert, UncontrolledAlert } from 'reactstrap';
 import { getStatementsBySubject, getResource, updateResource, createResource, createResourceStatement, deleteStatementById } from '../../network';
 import { connect } from 'react-redux';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faProjectDiagram, faPen, faTimes, faFile } from '@fortawesome/free-solid-svg-icons';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader';
 import Contributions from './Contributions';
@@ -16,6 +14,9 @@ import GizmoGraphViewModal from './GraphView/GizmoGraphViewModal';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
 import Confirm from 'reactstrap-confirm';
+import VisibilitySensor from 'react-visibility-sensor';
+import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
+import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
 import SharePaper from './SharePaper';
 
@@ -45,7 +46,8 @@ class ViewPaper extends Component {
         selectedContribution: '',
         dropdownOpen: false,
         showGraphModal: false,
-        editMode: false
+        editMode: false,
+        showHeaderBar: false
     };
 
     componentDidMount() {
@@ -58,6 +60,12 @@ class ViewPaper extends Component {
         } else if (this.props.match.params.contributionId !== prevProps.match.params.contributionId) {
             this.setState({ selectedContribution: this.props.match.params.contributionId });
         }
+    };
+
+    handleShowHeaderBar = isVisible => {
+        this.setState({
+            showHeaderBar: !isVisible
+        });
     };
 
     loadPaperData = () => {
@@ -346,47 +354,20 @@ class ViewPaper extends Component {
                 {!this.state.loading && this.state.loading_failed && <NotFound />}
                 {!this.state.loading_failed && (
                     <>
-                        <Container className="d-flex align-items-center">
-                            <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
-                            <ButtonGroup className="flex-shrink-0">
-                                {paperLink && (
-                                    <a href={paperLink} className="btn btn-darkblue flex-shrink-0 btn-sm" target="_blank" rel="noopener noreferrer">
-                                        <Icon icon={faFile} style={{ margin: '2px 4px 0 0' }} /> View paper
-                                    </a>
-                                )}
-                                <Button
-                                    className="flex-shrink-0"
-                                    color="darkblue"
-                                    size="sm"
-                                    style={{ marginLeft: 1 }}
-                                    onClick={() => this.toggle('showGraphModal')}
-                                >
-                                    <Icon icon={faProjectDiagram} style={{ margin: '2px 4px 0 0' }} /> Graph view
-                                </Button>
-
-                                {!this.state.editMode ? (
-                                    <Button
-                                        className="flex-shrink-0"
-                                        style={{ marginLeft: 1 }}
-                                        color="darkblue"
-                                        size="sm"
-                                        onClick={() => this.toggle('editMode')}
-                                    >
-                                        <Icon icon={faPen} /> Edit
-                                    </Button>
-                                ) : (
-                                    <Button
-                                        className="flex-shrink-0"
-                                        style={{ marginLeft: 1 }}
-                                        color="darkblueDarker"
-                                        size="sm"
-                                        onClick={() => this.toggle('editMode')}
-                                    >
-                                        <Icon icon={faTimes} /> Stop editing
-                                    </Button>
-                                )}
-                            </ButtonGroup>
-                        </Container>
+                        {this.state.showHeaderBar && (
+                            <PaperHeaderBar
+                                paperLink={paperLink}
+                                editMode={this.state.editMode}
+                                toggle={this.toggle}
+                                paperTitle={this.props.viewPaper.title}
+                            />
+                        )}
+                        <VisibilitySensor onChange={this.handleShowHeaderBar}>
+                            <Container className="d-flex align-items-center">
+                                <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
+                                <PaperMenuBar editMode={this.state.editMode} paperLink={paperLink} toggle={this.toggle} />
+                            </Container>
+                        </VisibilitySensor>
 
                         {this.state.editMode && (
                             <EditModeHeader className="box">
