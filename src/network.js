@@ -1,6 +1,7 @@
 import { Cookies } from 'react-cookie';
 import queryString from 'query-string';
 import { orderBy } from 'lodash';
+import { sortMethod } from 'utils';
 export const url = `${process.env.REACT_APP_SERVER_URL}api/`;
 export const similaireServiceUrl = process.env.REACT_APP_SIMILARITY_SERVICE_URL;
 export const annotationServiceUrl = process.env.REACT_APP_ANNOTATION_SERVICE_URL;
@@ -478,89 +479,147 @@ export const updateUserRole = () => {
  * @param {String} templateId Template Id
  */
 export const getTemplateById = templateId => {
-    return getStatementsBySubject({ id: templateId }).then(templateStatements => {
-        const templatePredicate = templateStatements
-            .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE)
-            .map(statement => ({
-                id: statement.object.id,
-                label: statement.object.label
-            }));
+    return getResource(templateId).then(template =>
+        getStatementsBySubject({ id: templateId }).then(templateStatements => {
+            const templatePredicate = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE);
 
-        const templateClass = templateStatements
-            .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS)
-            .map(statement => ({
-                id: statement.object.id,
-                label: statement.object.label
-            }));
+            const templateClass = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS);
 
-        const templateComponents = templateStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT);
+            const templateFormatLabel = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_LABEL_FORMAT);
 
-        const components = getStatementsBySubjects({ ids: templateComponents.map(property => property.object.id) }).then(componentsStatements => {
-            return componentsStatements.map(componentStatements => {
-                const property = componentStatements.statements.find(
-                    statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY
-                );
-                const value = componentStatements.statements.find(
-                    statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALUE
-                );
+            const templateIsStrict = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_STRICT);
 
-                return {
-                    id: componentStatements.id,
-                    property: property
+            const templateComponents = templateStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT);
+
+            const components = getStatementsBySubjects({ ids: templateComponents.map(component => component.object.id) }).then(
+                componentsStatements => {
+                    return componentsStatements.map(componentStatements => {
+                        const property = componentStatements.statements.find(
+                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY
+                        );
+                        const value = componentStatements.statements.find(
+                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALUE
+                        );
+
+                        const validationRules = componentStatements.statements.filter(
+                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALIDATION_RULE
+                        );
+
+                        const minOccurs = componentStatements.statements.find(
+                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_OCCURRENCE_MIN
+                        );
+
+                        const maxOccurs = componentStatements.statements.find(
+                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_OCCURRENCE_MAX
+                        );
+
+                        const order = componentStatements.statements.find(
+                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_ORDER
+                        );
+
+                        return {
+                            id: componentStatements.id,
+                            property: property
+                                ? {
+                                      id: property.object.id,
+                                      label: property.object.label
+                                  }
+                                : {},
+                            value: value
+                                ? {
+                                      id: value.object.id,
+                                      label: value.object.label
+                                  }
+                                : {},
+                            minOccurs: minOccurs ? minOccurs.object.label : 0,
+                            maxOccurs: maxOccurs ? maxOccurs.object.label : null,
+                            order: order ? order.object.label : null,
+                            validationRules:
+                                validationRules && Object.keys(validationRules).length > 0
+                                    ? validationRules.reduce((obj, item) => {
+                                          const rule = item.object.label.split(/#(.+)/)[0];
+                                          const value = item.object.label.split(/#(.+)/)[1];
+                                          return Object.assign(obj, { [rule]: value });
+                                      }, {})
+                                    : {}
+                        };
+                    });
+                }
+            );
+
+            return Promise.all([components]).then(templateComponents => {
+                const subTemplates = templateStatements
+                    .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_SUB_TEMPLATE)
+                    .map(statement => ({
+                        id: statement.object.id,
+                        label: statement.object.label
+                    }));
+                return Promise.all(
+                    subTemplates.map(template =>
+                        getStatementsBySubject({ id: template.id }).then(subTemplateStatements => {
+                            const subTemplatePredicate = subTemplateStatements
+                                .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE)
+                                .map(statement => ({
+                                    id: statement.object.id,
+                                    label: statement.object.label
+                                }));
+                            const subTemplateClass = subTemplateStatements
+                                .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS)
+                                .map(statement => ({
+                                    id: statement.object.id,
+                                    label: statement.object.label
+                                }));
+                            return {
+                                ...template,
+                                predicate: subTemplatePredicate[0],
+                                class: subTemplateClass && subTemplateClass.length > 0 ? subTemplateClass[0] : null
+                            };
+                        })
+                    )
+                ).then(subs => ({
+                    id: templateId,
+                    label: template.label,
+                    statements: templateStatements.map(s => s.id),
+                    predicate: templatePredicate
                         ? {
-                              id: property.object.id,
-                              label: property.object.label
+                              id: templatePredicate.object.id,
+                              label: templatePredicate.object.label
                           }
                         : {},
-                    value: value
+                    labelFormat: templateFormatLabel ? templateFormatLabel.object.label : '',
+                    hasLabelFormat: templateFormatLabel ? true : false,
+                    isStrict: templateIsStrict ? true : false,
+                    components: templateComponents[0].sort((c1, c2) => sortMethod(c1.order, c2.order)),
+                    ...(templateClass
                         ? {
-                              id: value.object.id,
-                              label: value.object.label
+                              isClassDescription: true,
+                              class: templateClass
+                                  ? {
+                                        id: templateClass.object.id,
+                                        label: templateClass.object.label
+                                    }
+                                  : {}
                           }
-                        : {}
-                };
-            });
-        });
-
-        return Promise.all([components]).then(templateComponents => {
-            const subTemplates = templateStatements
-                .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_SUB_TEMPLATE)
-                .map(statement => ({
-                    id: statement.object.id,
-                    label: statement.object.label
+                        : {
+                              isClassDescription: false,
+                              researchFields: templateStatements
+                                  .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD)
+                                  .map(statement => ({
+                                      id: statement.object.id,
+                                      label: statement.object.label
+                                  })),
+                              researchProblems: templateStatements
+                                  .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM)
+                                  .map(statement => ({
+                                      id: statement.object.id,
+                                      label: statement.object.label
+                                  })),
+                              subTemplates: subs
+                          })
                 }));
-            return Promise.all(
-                subTemplates.map(template =>
-                    getStatementsBySubject({ id: template.id }).then(subTemplateStatements => {
-                        const subTemplatePredicate = subTemplateStatements
-                            .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE)
-                            .map(statement => ({
-                                id: statement.object.id,
-                                label: statement.object.label
-                            }));
-                        const subTemplateClass = subTemplateStatements
-                            .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS)
-                            .map(statement => ({
-                                id: statement.object.id,
-                                label: statement.object.label
-                            }));
-                        return {
-                            ...template,
-                            predicate: subTemplatePredicate[0],
-                            class: subTemplateClass && subTemplateClass.length > 0 ? subTemplateClass[0] : null
-                        };
-                    })
-                )
-            ).then(subs => ({
-                id: templateId,
-                label: templateStatements.length > 0 ? templateStatements[0].subject.label : '',
-                predicate: templatePredicate[0],
-                class: templateClass && templateClass.length > 0 ? templateClass[0] : null,
-                components: templateComponents[0],
-                subTemplates: subs
-            }));
-        });
-    });
+            });
+        })
+    );
 };
 
 /**
@@ -592,7 +651,7 @@ export const getTemplatesByClass = classID => {
     return getStatementsByObjectAndPredicate({
         objectId: classID,
         predicateId: process.env.REACT_APP_TEMPLATE_OF_CLASS
-    }).then(statements => Promise.all(statements.map(st => getTemplateById(st.subject.id))));
+    }).then(statements => Promise.all(statements.map(st => st.subject.id)));
 };
 
 export const getAllOrganizations = () => {

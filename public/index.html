@@ -37,5 +37,24 @@
             To begin the development, run `npm start` or `yarn start`.
             To create a production bundle, use `npm run build` or `yarn build`.
         -->
+
+        <script>
+            const woochat_token = '%REACT_APP_WOOCHAT_WEBSITE_TOKEN%';
+            if (woochat_token && !woochat_token.includes('REACT_APP_WOOCHAT_WEBSITE_TOKEN')) {
+                (function(d, t) {
+                    var BASE_URL = 'https://app.chatwoot.com';
+                    var g = d.createElement(t),
+                        s = d.getElementsByTagName(t)[0];
+                    g.src = BASE_URL + '/packs/js/sdk.js';
+                    s.parentNode.insertBefore(g, s);
+                    g.onload = function() {
+                        window.chatwootSDK.run({
+                            websiteToken: woochat_token,
+                            baseUrl: BASE_URL
+                        });
+                    };
+                })(document, 'script');
+            }
+        </script>
     </body>
 </html>

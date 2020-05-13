@@ -117,6 +117,9 @@ class TemplateEditorAutoComplete extends Component {
                 cursor: 'text',
                 minHeight: 'initial',
                 borderRadius: 'inherit',
+                '&>div:first-of-type': {
+                    ...(this.props.cssClasses && this.props.cssClasses.includes('form-control-sm') ? { padding: '0 8px !important' } : {})
+                },
                 whiteSpace: 'nowrap' /* ensure the placeholder is not wrapped when animating the width */
             }),
             container: provided => ({
@@ -131,7 +134,10 @@ class TemplateEditorAutoComplete extends Component {
             }),
             indicatorsContainer: provided => ({
                 ...provided,
-                cursor: 'pointer'
+                cursor: 'pointer',
+                '&>div': {
+                    ...(this.props.cssClasses && this.props.cssClasses.includes('form-control-sm') ? { padding: '4px !important' } : {})
+                }
             }),
             menu: provided => ({
                 ...provided,
@@ -147,7 +153,7 @@ class TemplateEditorAutoComplete extends Component {
         const Select = this.props.allowCreate ? AsyncCreatableSelect : AsyncSelect;
 
         return (
-            <StyledAutoCompleteInputFormControl className={`form-control default`}>
+            <StyledAutoCompleteInputFormControl className={`form-control ${this.props.cssClasses ? this.props.cssClasses : 'default'}`}>
                 <Select
                     loadOptions={this.loadOptions}
                     noOptionsMessage={this.noResults}
@@ -163,6 +169,7 @@ class TemplateEditorAutoComplete extends Component {
                     isMulti={this.props.isMulti ? true : false}
                     isDisabled={this.props.isDisabled}
                     isClearable={this.props.isClearable}
+                    defaultOptions={this.props.defaultOptions}
                 />
             </StyledAutoCompleteInputFormControl>
         );
@@ -180,7 +187,9 @@ TemplateEditorAutoComplete.propTypes = {
     isMulti: PropTypes.bool,
     isDisabled: PropTypes.bool,
     isClearable: PropTypes.bool,
-    noOptionsMessage: PropTypes.string
+    noOptionsMessage: PropTypes.string,
+    defaultOptions: PropTypes.array,
+    cssClasses: PropTypes.string
 };
 
 export default withTheme(TemplateEditorAutoComplete);
