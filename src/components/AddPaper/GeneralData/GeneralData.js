@@ -16,8 +16,7 @@ import {
     Modal,
     ModalHeader,
     ModalBody,
-    ModalFooter,
-    Alert
+    ModalFooter
 } from 'reactstrap';
 import { compose } from 'redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -40,7 +39,7 @@ import queryString from 'query-string';
 import { getPaperData } from 'utils';
 import { getPaperByDOI, getStatementsBySubject } from 'network';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
-import PaperCard from 'components/PaperCard/PaperCard';
+import ExistingDoiModal from './ExistingDoiModal';
 
 const Container = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -537,15 +536,7 @@ class GeneralData extends Component {
                                                                 </Card>
                                                             </div>
                                                             {this.state.existingPaper && (
-                                                                <div className="mt-3">
-                                                                    <Alert color="info">
-                                                                        The DOI:<i>`{this.state.existingPaper.doi}`</i> is already linked in ORKG with
-                                                                        the following paper, please view the paper and contribute to improve the
-                                                                        content or click on the 'next step' button to continue entering a different
-                                                                        new paper attached to this DOI.
-                                                                    </Alert>
-                                                                    <strong>Existing paper:</strong> <PaperCard paper={this.state.existingPaper} />
-                                                                </div>
+                                                                <ExistingDoiModal existingPaper={this.state.existingPaper} />
                                                             )}
                                                         </>
                                                     </Container>
