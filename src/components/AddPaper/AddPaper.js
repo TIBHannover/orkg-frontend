@@ -27,8 +27,8 @@ const Help = styled.div`
     padding-left: 0;
     list-style: none;
     padding: 0;
-    bottom: 24px;
-    right: 24px;
+    bottom: 74px;
+    right: 4px;
     color: #80869b;
 
     .text {
@@ -247,7 +247,6 @@ class AddPaper extends Component {
                     id="helpIcon"
                 >
                     <HelpIcon icon={faQuestion} />
-                    <div className={'text ' + (this.props.addPaper.showAbstractDialog ? 'white' : '')}>Help</div>
                 </Help>
             </div>
         );
