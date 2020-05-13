@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 function PaperMenuBar(props) {
     return (
-        <div>
+        <>
             <ButtonGroup className="flex-shrink-0">
                 {props.paperLink && (
                     <a href={props.paperLink} className="btn btn-darkblue flex-shrink-0 btn-sm" target="_blank" rel="noopener noreferrer">
@@ -33,7 +33,7 @@ function PaperMenuBar(props) {
                     </Button>
                 )}
             </ButtonGroup>
-        </div>
+        </>
     );
 }
 

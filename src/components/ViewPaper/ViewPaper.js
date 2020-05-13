@@ -354,7 +354,14 @@ class ViewPaper extends Component {
                 {!this.state.loading && this.state.loading_failed && <NotFound />}
                 {!this.state.loading_failed && (
                     <>
-                        {this.state.showHeaderBar && <PaperHeaderBar paperLink={paperLink} editMode={this.state.editMode} toggle={this.toggle} />}
+                        {this.state.showHeaderBar && (
+                            <PaperHeaderBar
+                                paperLink={paperLink}
+                                editMode={this.state.editMode}
+                                toggle={this.toggle}
+                                paperTitle={this.props.viewPaper.title}
+                            />
+                        )}
                         <VisibilitySensor onChange={this.handleShowHeaderBar}>
                             <Container className="d-flex align-items-center">
                                 <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
