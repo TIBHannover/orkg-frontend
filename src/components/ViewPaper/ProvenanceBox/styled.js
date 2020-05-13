@@ -82,7 +82,9 @@ export const AnimationContainer = styled(CSSTransition)`
 export const StyledItemProvenanceBox = styled.li`
     background-color: #f8f9fb;
     padding-left: 15px;
+    padding-right: 15px;
     padding-top: 10px;
+    padding-bottom: 1rem;
     border-bottom: 1px solid #eeeff3;
     font-size: 12px;
 `;
