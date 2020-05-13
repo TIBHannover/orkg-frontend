@@ -374,6 +374,10 @@ export const saveFullPaper = data => {
     return submitPostRequest(`${url}papers/`, { 'Content-Type': 'application/json' }, data);
 };
 
+export const getPaperByDOI = doi => {
+    return submitGetRequest(`${url}widgets/?doi=${doi}`);
+};
+
 export const signInWithEmailAndPassword = async (email, password) => {
     // because of the spring oauth implementation, these calls don't send json
     const headers = {

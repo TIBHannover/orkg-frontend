@@ -48,9 +48,10 @@ class Publish extends Component {
                     const referenceResponse = await createLiteral(this.state.reference);
                     await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_REFERENCE, referenceResponse.id);
                 }
-                const link = queryString.parse(this.props.url).response_hash
+                let link = queryString.parse(this.props.url).response_hash
                     ? this.props.url
                     : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${comparison.response_hash}`;
+                link = link.substring(link.indexOf('?'));
                 const urlResponse = await createLiteral(link);
                 await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_URL, urlResponse.id);
                 toast.success('Comparison saved successfully');
