@@ -24,6 +24,7 @@ import { reverse } from 'named-urls';
 import { generateRdfDataVocabularyFile, extendPropertyIds } from 'utils';
 import { ContainerAnimated } from './styled';
 import RelatedResources from './RelatedResources';
+import RelatedFigures from './RelatedFigures';
 import Tippy from '@tippy.js/react';
 
 class Comparison extends Component {
@@ -210,6 +211,10 @@ class Comparison extends Component {
                             statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_RELATED_RESOURCES
                         );
 
+                        const figureStatements = comparisonStatement.filter(
+                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_RELATED_FIGURE
+                        );
+
                         if (urlStatement) {
                             this.getComparisonResult(urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')));
                             this.setState({
@@ -219,7 +224,8 @@ class Comparison extends Component {
                                 reference: referenceStatement ? referenceStatement.object.label : '',
                                 createdAt: descriptionStatement.object.created_at,
                                 createdBy: descriptionStatement.object.created_by,
-                                resourcesStatements
+                                resourcesStatements,
+                                figureStatements
                             });
                         } else {
                             throw new Error('The requested comparison has no contributions.');
@@ -527,6 +533,7 @@ class Comparison extends Component {
                     )}
 
                     <RelatedResources resourcesStatements={this.state.resourcesStatements} />
+                    <RelatedFigures figureStatements={this.state.figureStatements} />
                 </ContainerAnimated>
 
                 <SelectProperties

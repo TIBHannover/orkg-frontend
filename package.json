@@ -53,6 +53,7 @@
         "react-graph-vis": "^1.0.5",
         "react-gravatar": "^2.6.3",
         "react-hot-loader": "^4.12.13",
+        "react-image-lightbox": "^5.1.1",
         "react-input-autosize": "^2.2.1",
         "react-loading-overlay": "^1.0.1",
         "react-mathjax-preview": "^0.1.16",
