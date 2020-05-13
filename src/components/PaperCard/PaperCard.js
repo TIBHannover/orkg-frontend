@@ -51,7 +51,7 @@ class PaperCard extends Component {
                         )}
                         <br />
                         <small>
-                            {this.props.paper.authorNames.length > 0 && (
+                            {this.props.paper.authorNames && this.props.paper.authorNames.length > 0 && (
                                 <>
                                     <Icon size={'sm'} icon={faUser} /> {this.props.paper.authorNames.map(a => a.label).join(', ')}
                                 </>
