@@ -1,5 +1,6 @@
 import { Cookies } from 'react-cookie';
 import queryString from 'query-string';
+import { orderBy } from 'lodash';
 export const url = `${process.env.REACT_APP_SERVER_URL}api/`;
 export const similaireServiceUrl = process.env.REACT_APP_SIMILARITY_SERVICE_URL;
 export const annotationServiceUrl = process.env.REACT_APP_ANNOTATION_SERVICE_URL;
@@ -628,13 +629,15 @@ export const createObservatory = (observatoryName, organizationId) => {
 
 export const getContributorsByResourceId = id => {
     return submitGetRequest(`${resourcesUrl}findContributors/${encodeURIComponent(id)}/`).then(contributors => {
-        return contributors.map(contributor => {
+        const c = contributors.map(contributor => {
             if (contributor.created_by === '00000000-0000-0000-0000-000000000000') {
                 return { ...contributor, created_by: { display_name: 'Unknown' } };
             } else {
                 return getUserInformationById(contributor.created_by).then(user => ({ ...contributor, created_by: user }));
             }
         });
+        // Order the contribution timeline because it's not ordered in the result
+        return Promise.all(c).then(rc => orderBy(rc, ['created_at'], ['desc']));
     });
 };
 
