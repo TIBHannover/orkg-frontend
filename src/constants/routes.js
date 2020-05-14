@@ -13,11 +13,11 @@ export default {
     CONTRIBUTION_TEMPLATES: '/templates',
     CONTRIBUTION_TEMPLATE: '/template/:id?',
     ORGANIZATIONS: '/organizations',
-    ORGANIZATION: '/organizations/:id',
     ADD_ORGANIZATION: '/addOrganization',
+    ORGANIZATION: '/organizations/:id',
     ADD_OBSERVATORY: '/organizations/:id/addObsevatory',
-    OBSERVATORY: '/obsevatory/:id',
     OBSERVATORIES: '/organizations/:id/observatories',
+    OBSERVATORY: '/obsevatory/:id',
     ADD_PAPER: {
         GENERAL_DATA: '/add-paper'
     },

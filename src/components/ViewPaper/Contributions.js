@@ -62,9 +62,7 @@ class Contributions extends Component {
             similaireContributions: [],
             isSimilaireContributionsLoading: true,
             isSimilaireContributionsFailedLoading: false,
-            observatory: {},
-            label: '',
-            userData: []
+            label: ''
         };
     }
 

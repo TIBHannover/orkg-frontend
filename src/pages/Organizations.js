@@ -1,79 +1,42 @@
 import React, { Component } from 'react';
-import ShortRecord from '../components/ShortRecord/ShortRecord';
+import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { getAllOrganizations, getUserInformation } from '../network';
-import { openAuthDialog, updateAuth, resetAuth } from '../actions/auth';
+import { faSpinner, faUser } from '@fortawesome/free-solid-svg-icons';
+import { getAllOrganizations } from 'network';
+import { openAuthDialog } from 'actions/auth';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Cookies } from 'react-cookie';
-import { Container } from 'reactstrap';
-import ROUTES from '../constants/routes';
+import { Container, Button } from 'reactstrap';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 
 class Organizations extends Component {
     constructor(props) {
         super(props);
 
-        this.pageSize = 25;
         this.state = {
-            resources: [],
-            results: null,
-            isNextPageLoading: false,
-            hasNextPage: false,
-            page: 1,
-            isLastPageReached: false
+            organizations: [],
+            isNextPageLoading: false
         };
     }
 
     componentDidMount() {
         document.title = 'Organizations - ORKG';
-        this.userInformation();
-        this.loadMoreResources();
+        this.loadOrganizations();
     }
 
-    componentDidUpdate() {
-        if (this.state.redirectLogout) {
-            this.setState({
-                redirectLogout: false
-            });
-        }
-    }
-
-    userInformation = () => {
-        const cookies = new Cookies();
-        const token = cookies.get('token') ? cookies.get('token') : null;
-        if (token && !this.props.user) {
-            getUserInformation()
-                .then(userData => {
-                    this.props.updateAuth({ user: { displayName: userData.display_name, id: userData.id, token: token, email: userData.email } });
-                })
-                .catch(error => {
-                    cookies.remove('token');
-                });
-        }
-    };
-
-    loadMoreResources = () => {
+    loadOrganizations = () => {
         this.setState({ isNextPageLoading: true });
-        getAllOrganizations({
-            page: this.state.page,
-            items: this.pageSize,
-            desc: true
-        }).then(resources => {
-            if (resources.length > 0) {
+        getAllOrganizations().then(organizations => {
+            if (organizations.length > 0) {
                 this.setState({
-                    resources: [...this.state.resources, ...resources],
-                    isNextPageLoading: false,
-                    hasNextPage: resources.length < this.pageSize ? false : true,
-                    page: this.state.page + 1
+                    organizations: organizations,
+                    isNextPageLoading: false
                 });
             } else {
                 this.setState({
-                    isNextPageLoading: false,
-                    hasNextPage: false,
-                    isLastPageReached: true
+                    isNextPageLoading: false
                 });
             }
         });
@@ -94,38 +57,32 @@ class Organizations extends Component {
                         )}
 
                         {!this.props.user && (
-                            <p className="fa" style={{ float: 'right' }}>
-                                Signin to create organization{' '}
-                            </p>
+                            <Button color="link" className="p-0 float-right mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog('signin')}>
+                                <Icon className="mr-1" icon={faUser} /> Signin to create organization
+                            </Button>
                         )}
                     </div>
 
-                    {this.state.resources.length > 0 && (
+                    {this.state.organizations.length > 0 && (
                         <div>
-                            {this.state.resources.map(resource => {
+                            {this.state.organizations.map(organization => {
                                 return (
-                                    <ShortRecord key={resource.id} header={resource.name} href={reverse(ROUTES.ORGANIZATION, { id: resource.id })} />
+                                    <ShortRecord
+                                        key={organization.id}
+                                        header={organization.name}
+                                        href={reverse(ROUTES.ORGANIZATION, { id: organization.id })}
+                                    />
                                 );
                             })}
                         </div>
                     )}
-                    {this.state.resources.length === 0 && !this.state.isNextPageLoading && <div className="text-center mt-4 mb-4">No Resources</div>}
+                    {this.state.organizations.length === 0 && !this.state.isNextPageLoading && (
+                        <div className="text-center mt-4 mb-4">No organizations yet!</div>
+                    )}
                     {this.state.isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">
                             <Icon icon={faSpinner} spin /> Loading
                         </div>
-                    )}
-                    {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                        <div
-                            style={{ cursor: 'pointer' }}
-                            className="list-group-item list-group-item-action text-center mt-2"
-                            onClick={!this.state.isNextPageLoading ? this.loadMoreResources : undefined}
-                        >
-                            Load more resources
-                        </div>
-                    )}
-                    {!this.state.hasNextPage && this.state.isLastPageReached && (
-                        <div className="text-center mt-3">You have reached the last page.</div>
                     )}
                 </Container>
             </>
@@ -134,21 +91,16 @@ class Organizations extends Component {
 }
 
 const mapStateToProps = state => ({
-    dialogIsOpen: state.auth.dialogIsOpen,
     user: state.auth.user
 });
 
 const mapDispatchToProps = dispatch => ({
-    resetAuth: () => dispatch(resetAuth()),
-    openAuthDialog: action => dispatch(openAuthDialog(action)),
-    updateAuth: data => dispatch(updateAuth(data))
+    openAuthDialog: action => dispatch(openAuthDialog(action))
 });
 
 Organizations.propTypes = {
     openAuthDialog: PropTypes.func.isRequired,
-    updateAuth: PropTypes.func.isRequired,
-    user: PropTypes.object,
-    resetAuth: PropTypes.func.isRequired
+    user: PropTypes.object
 };
 
 export default connect(

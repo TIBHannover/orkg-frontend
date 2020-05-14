@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Container, Button } from 'reactstrap';
-import { getOrganization, getAllObservatoriesbyOrganizationId } from '../network';
-import InternalServerError from '../components/StaticPages/InternalServerError';
-import NotFound from '../components/StaticPages/NotFound';
+import { getOrganization, getAllObservatoriesbyOrganizationId } from 'network';
+import InternalServerError from 'components/StaticPages/InternalServerError';
+import { Link } from 'react-router-dom';
+import NotFound from 'components/StaticPages/NotFound';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import SameAsStatements from './SameAsStatements';
-import ROUTES from '../constants/routes';
-import { Redirect } from 'react-router-dom';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 
 class OrganizationDetails extends Component {
@@ -17,12 +17,10 @@ class OrganizationDetails extends Component {
         this.state = {
             error: null,
             label: '',
-            redirect: false,
             isLoading: false,
+            isLoadingTotal: false,
             image: '',
-            organizationId: '',
-            totalObservatories: '',
-            url: ''
+            totalObservatories: 0
         };
     }
 
@@ -43,63 +41,29 @@ class OrganizationDetails extends Component {
         getOrganization(this.props.match.params.id)
             .then(responseJson => {
                 document.title = `${responseJson.organizationName} - Organization - ORKG`;
-                this.setState({ label: responseJson.organizationName, isLoading: false });
-                this.setState({ image: responseJson.organizationLogo, isLoading: false });
-                this.setState({ organizationId: this.props.match.params.id });
+                this.setState({
+                    label: responseJson.organizationName,
+                    isLoading: false,
+                    image: responseJson.organizationLogo
+                });
             })
             .catch(error => {
-                this.setState({ label: null, isLoading: false });
+                this.setState({ error: error, isLoading: false });
             });
     };
 
-    toggle = type => {
-        this.setState(prevState => ({
-            [type]: !prevState[type]
-        }));
-    };
-
-    handleHeaderChange = event => {
-        this.setState({ label: event.value });
-    };
-
-    handleAdd = event => {
-        if (event.target.value === 'listObservatories') {
-            this.setState({ url: ROUTES.OBSERVATORIES });
-        } else if ((event.target.value = 'addObservatory')) {
-            this.setState({ url: ROUTES.ADD_OBSERVATORY });
-        }
-
-        this.navigateToResource(this.state.organizationId);
-    };
-
-    navigateToResource = organizationId => {
-        this.setState({ organizationId: organizationId }, () => {
-            this.setState({ redirect: true });
-        });
-    };
-
     getTotalObservatories = id => {
-        this.setState({ isLoading: true });
+        this.setState({ isLoadingTotal: true });
         getAllObservatoriesbyOrganizationId(this.props.match.params.id)
             .then(responseJson => {
-                this.setState({ totalObservatories: responseJson.length, isLoading: false });
+                this.setState({ totalObservatories: responseJson.length, isLoadingTotal: false });
             })
             .catch(error => {
-                this.setState({ label: null, isLoading: false });
+                this.setState({ totalObservatories: 0, isLoadingTotal: false });
             });
     };
 
     render() {
-        if (this.state.redirect) {
-            this.setState({
-                redirect: false,
-                value: '',
-                organizationId: ''
-            });
-
-            return <Redirect to={reverse(this.state.url, { id: this.state.organizationId })} />;
-        }
-
         return (
             <>
                 {this.state.isLoading && <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
@@ -117,20 +81,34 @@ class OrganizationDetails extends Component {
                                 </div>
                             </div>
                             <div className={'clearfix'}>
-                                {this.state.totalObservatories ? (
+                                {!this.state.isLoadingTotal && this.state.totalObservatories ? (
                                     <div>
                                         <i>Total Observatories: {this.state.totalObservatories}</i>
                                     </div>
                                 ) : (
-                                    <div>No observatories yet </div>
+                                    <div>No observatories yet.</div>
                                 )}
                                 <br />
-                                <Button outline size="sm" className={'mb-3'} value="listObservatories" onClick={this.handleAdd}>
+                                <Button
+                                    outline
+                                    size="sm"
+                                    color="primary"
+                                    className="mb-3"
+                                    tag={Link}
+                                    to={reverse(ROUTES.OBSERVATORIES, { id: this.props.match.params.id })}
+                                >
                                     List Observatories
                                 </Button>
                                 &nbsp; &nbsp;
                                 {this.props.user && (
-                                    <Button outline size="sm" className={'mb-3'} value="addObservatory" onClick={this.handleAdd}>
+                                    <Button
+                                        outline
+                                        size="sm"
+                                        color="primary"
+                                        className="mb-3"
+                                        tag={Link}
+                                        to={reverse(ROUTES.ADD_OBSERVATORY, { id: this.props.match.params.id })}
+                                    >
                                         Create new observatoy
                                     </Button>
                                 )}
@@ -161,5 +139,3 @@ export default connect(
     mapStateToProps,
     null
 )(OrganizationDetails);
-
-//export default OrganizationDetails;
