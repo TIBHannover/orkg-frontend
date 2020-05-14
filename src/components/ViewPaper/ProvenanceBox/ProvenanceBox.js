@@ -22,7 +22,7 @@ export default function ProvenanceBox(props) {
                                 <img
                                     style={{ marginTop: 8, marginBottom: 8, maxWidth: '100%', height: 'auto' }}
                                     class="mx-auto d-block"
-                                    src={'http://localhost:3000/static/media/infAI.fdcd9755.png'}
+                                    src={props.observatoryInfo.organization.logo}
                                     alt=""
                                 />
                                 <p style={{ fontSize: 12 }}>{props.observatoryInfo.organization.name}</p>
