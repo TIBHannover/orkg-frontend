@@ -7,8 +7,9 @@ import ValueItem from 'components/StatementBrowser/ValueItem/ValueItemContainer'
 import AddValue from 'components/StatementBrowser/AddValue/AddValueContainer';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
-import { customStyles } from './style';
-import AsyncCreatableSelect from 'react-select/async-creatable';
+import { predicatesUrl } from 'network';
+import defaultProperties from 'components/StatementBrowser/AddProperty/helpers/defaultProperties';
+import AutoComplete from 'components/StatementBrowser/AutoComplete';
 
 export default function StatementItemTemplate(props) {
     const [disableHover, setDisableHover] = useState(false);
@@ -64,29 +65,21 @@ export default function StatementItemTemplate(props) {
                     ) : (
                         <div>
                             <InputGroup size="sm">
-                                <AsyncCreatableSelect
-                                    className="form-control"
-                                    loadOptions={props.loadOptions}
-                                    styles={customStyles}
-                                    autoFocus
-                                    getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
-                                    getOptionValue={({ id }) => id}
-                                    defaultOptions={[
-                                        {
-                                            label: props.predicateLabel,
-                                            id: props.property.existingPredicateId
-                                        }
-                                    ]}
+                                <AutoComplete
+                                    cssClasses={'form-control-sm'}
+                                    requestUrl={predicatesUrl}
                                     placeholder={props.predicateLabel}
-                                    cacheOptions
                                     onChange={(selectedOption, a) => {
                                         props.handleChange(selectedOption, a);
                                         props.toggleEditPropertyLabel({ id: props.id });
                                     }}
+                                    onKeyDown={e => e.keyCode === 27 && e.target.blur()}
+                                    disableBorderRadiusRight
+                                    allowCreate
+                                    defaultOptions={defaultProperties}
                                     onBlur={e => {
                                         props.toggleEditPropertyLabel({ id: props.id });
                                     }}
-                                    onKeyDown={e => e.keyCode === 27 && e.target.blur()}
                                 />
                             </InputGroup>
                         </div>

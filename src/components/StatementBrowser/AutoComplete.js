@@ -244,7 +244,7 @@ class AutoComplete extends Component {
                 <Select
                     loadOptions={this.loadOptions}
                     noOptionsMessage={this.noResults}
-                    onChange={this.handleChange}
+                    onChange={this.props.onChange ? this.props.onChange : this.handleChange}
                     onInputChange={this.handleInputChange}
                     inputValue={this.state.inputValue}
                     styles={this.customStyles}
@@ -267,7 +267,8 @@ AutoComplete.propTypes = {
     excludeClasses: PropTypes.string,
     optionsClass: PropTypes.string,
     placeholder: PropTypes.string.isRequired,
-    onItemSelected: PropTypes.func.isRequired,
+    onItemSelected: PropTypes.func,
+    onChange: PropTypes.func,
     allowCreate: PropTypes.bool,
     defaultOptions: PropTypes.array,
     additionalData: PropTypes.array,
