@@ -14,41 +14,29 @@ class ObservatoryDetails extends Component {
     constructor(props) {
         super(props);
 
-        this.pageSize = 25;
-
         this.state = {
-            resources: [],
-            results: null,
-            isNextPageLoading: false,
-            hasNextPage: false,
-            page: 1,
-            isLastPageReached: false,
-            resourceId: '',
-            label: ''
+            observatories: [],
+            isNextPageLoading: false
         };
     }
 
     componentDidMount() {
         document.title = 'Observatories - ORKG';
 
-        this.loadMoreResources();
+        this.loadObservatories();
     }
 
-    loadMoreResources = () => {
+    loadObservatories = () => {
         this.setState({ isNextPageLoading: true });
-        getAllObservatoriesbyOrganizationId(this.props.match.params.id).then(resources => {
-            if (resources.length > 0) {
+        getAllObservatoriesbyOrganizationId(this.props.match.params.id).then(observatories => {
+            if (observatories.length > 0) {
                 this.setState({
-                    resources: [...this.state.resources, ...resources],
-                    isNextPageLoading: false,
-                    hasNextPage: resources.length < this.pageSize ? false : true,
-                    page: this.state.page + 1
+                    observatories: observatories,
+                    isNextPageLoading: false
                 });
             } else {
                 this.setState({
-                    isNextPageLoading: false,
-                    hasNextPage: false,
-                    isLastPageReached: true
+                    isNextPageLoading: false
                 });
             }
         });
@@ -62,40 +50,32 @@ class ObservatoryDetails extends Component {
                 </Container>
                 <Container className={'box pt-4 pb-4 pl-5 pr-5 clearfix'}>
                     <div className="clearfix">
-                        {this.props.user && (
+                        {this.props.user !== null && (
                             <Link className="float-right mb-2 mt-2 clearfix" to={reverse(ROUTES.ADD_OBSERVATORY, { id: this.props.match.params.id })}>
                                 <span className="fa fa-plus" /> Create new observatory
                             </Link>
                         )}
                     </div>
-                    {this.state.resources.length > 0 && (
+                    {this.state.observatories.length > 0 && (
                         <div>
-                            {this.state.resources.map(resource => {
+                            {this.state.observatories.map(observatory => {
                                 return (
-                                    <ShortRecord key={resource.id} header={resource.name} href={reverse(ROUTES.OBSERVATORY, { id: resource.id })} />
+                                    <ShortRecord
+                                        key={observatory.id}
+                                        header={observatory.name}
+                                        href={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}
+                                    />
                                 );
                             })}
                         </div>
                     )}
-                    {this.state.resources.length === 0 && !this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">No Observatories</div>
+                    {this.state.observatories.length === 0 && !this.state.isNextPageLoading && (
+                        <div className="text-center mt-4 mb-4">No Observatories yet!</div>
                     )}
                     {this.state.isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">
                             <Icon icon={faSpinner} spin /> Loading
                         </div>
-                    )}
-                    {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                        <div
-                            style={{ cursor: 'pointer' }}
-                            className="list-group-item list-group-item-action text-center mt-2"
-                            onClick={!this.state.isNextPageLoading ? this.loadMoreResources : undefined}
-                        >
-                            Load more resources
-                        </div>
-                    )}
-                    {!this.state.hasNextPage && this.state.isLastPageReached && (
-                        <div className="text-center mt-3">You have reached the last page.</div>
                     )}
                 </Container>
             </>
