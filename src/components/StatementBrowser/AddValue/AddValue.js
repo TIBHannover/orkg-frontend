@@ -104,7 +104,6 @@ export default class AddValue extends Component {
                     createRequiredPropertiesInResource={this.props.createRequiredPropertiesInResource}
                     isLiteral={this.props.isLiteral}
                     valueClass={this.props.valueClass}
-                    isInlineResource={this.props.isInlineResource}
                 />
             </>
         );
@@ -130,8 +129,7 @@ AddValue.propTypes = {
     isDisabled: PropTypes.bool.isRequired,
     createRequiredPropertiesInResource: PropTypes.func.isRequired,
     isLiteral: PropTypes.bool.isRequired,
-    valueClass: PropTypes.object,
-    isInlineResource: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
+    valueClass: PropTypes.object
 };
 
 AddValue.defaultProps = {

@@ -4,6 +4,7 @@ import { InputGroup, InputGroupAddon, DropdownMenu, InputGroupButtonDropdown, Fo
 import { StyledDropdownItem, StyledButton, StyledDropdownToggle, ValueItemStyle } from 'components/StatementBrowser/styled';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
+import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDatatypes';
 import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars } from '@fortawesome/free-solid-svg-icons';
@@ -74,6 +75,22 @@ export default function AddValueTemplate(props) {
         }
     };
 
+    const [isInlineResource, setIsInlineResource] = useState(false);
+    if (props.valueClass && !defaultDatatypes.map(t => t.id).includes(props.valueClass.id)) {
+        props.fetchTemplatesofClassIfNeeded(props.valueClass.id).then(() => {
+            if (props.classes[props.valueClass.id] && props.classes[props.valueClass.id].templateIds) {
+                const templateIds = props.classes[props.valueClass.id].templateIds;
+                //check if it's an inline resource
+                for (const templateId of templateIds) {
+                    const template = props.templates[templateId];
+                    if (template && template.hasLabelFormat) {
+                        setIsInlineResource(template.label);
+                    }
+                }
+            }
+        });
+    }
+
     return (
         <ValueItemStyle className={showAddValue ? 'editingLabel' : ''}>
             {modal ? (
@@ -94,21 +111,21 @@ export default function AddValueTemplate(props) {
                     title={!props.isDisabled ? 'Add value' : 'This property reached the maximum number of values set by template'}
                     icon={faPlus}
                     action={() => {
-                        if (props.isInlineResource) {
+                        if (isInlineResource) {
                             // 1 - create a resource
-                            props.handleAddValue(valueType, props.isInlineResource).then(resourceId => {
+                            props.handleAddValue(valueType, isInlineResource).then(resourceId => {
                                 // 2 - open the dialog on that resource
                                 if (props.openExistingResourcesInDialog) {
                                     props.createRequiredPropertiesInResource(resourceId).then(() => {
                                         setDialogResourceId(resourceId);
-                                        setDialogResourceLabel(props.isInlineResource);
+                                        setDialogResourceLabel(isInlineResource);
                                         setModal(true);
                                     });
                                 } else {
                                     props.selectResource({
                                         increaseLevel: true,
                                         resourceId: resourceId,
-                                        label: props.isInlineResource
+                                        label: isInlineResource
                                     });
                                 }
                             });
@@ -229,6 +246,5 @@ AddValueTemplate.propTypes = {
     createRequiredPropertiesInResource: PropTypes.func.isRequired,
     isDisabled: PropTypes.bool,
     isLiteral: PropTypes.bool.isRequired,
-    valueClass: PropTypes.object,
-    isInlineResource: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
+    valueClass: PropTypes.object
 };
