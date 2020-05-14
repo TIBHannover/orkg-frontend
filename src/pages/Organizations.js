@@ -15,14 +15,9 @@ class Organizations extends Component {
     constructor(props) {
         super(props);
 
-        this.pageSize = 25;
         this.state = {
             organizations: [],
-            results: null,
-            isNextPageLoading: false,
-            hasNextPage: false,
-            page: 1,
-            isLastPageReached: false
+            isNextPageLoading: false
         };
     }
 
