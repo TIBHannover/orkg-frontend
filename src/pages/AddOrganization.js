@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { createOrganization } from '../network';
 import { Redirect } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { toast } from 'react-toastify';
-import { updateUserRole, getUserInformation } from '../network';
-import { openAuthDialog, updateAuth, resetAuth } from '../actions/auth';
+import { updateUserRole, createOrganization } from '../network';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { openAuthDialog } from '../actions/auth';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Cookies } from 'react-cookie';
 import { reverse } from 'named-urls';
 import ROUTES from '../constants/routes';
 
@@ -19,35 +19,29 @@ class AddOrganization extends Component {
             redirect: false,
             value: '',
             organizationId: '',
-            previewSrc: ''
+            previewSrc: '',
+            editorState: 'edit'
         };
     }
 
-    componentDidMount = () => {
-        this.userInformation();
-    };
-
-    setEditorState = editorState => {
-        this.setState({ editorState: editorState });
-    };
-
-    handleAdd = async () => {
-        this.setEditorState('loading');
-        await this.createNewOrganization(false);
-    };
-
-    userInformation = () => {
-        const cookies = new Cookies();
-        const token = cookies.get('token') ? cookies.get('token') : null;
-
-        if (token && !this.props.user) {
-            getUserInformation()
-                .then(userData => {
-                    this.props.updateAuth({ user: { displayName: userData.display_name, id: userData.id, token: token, email: userData.email } });
-                })
-                .catch(error => {
-                    cookies.remove('token');
-                });
+    createNewOrganization = async () => {
+        this.setState({ editorState: 'loading' });
+        const value = this.state.value;
+        const image = this.state.previewSrc;
+        if (value && value.length !== 0) {
+            try {
+                const responseJson = await createOrganization(value, image[0]);
+                const organizationId = responseJson.id;
+                await updateUserRole();
+                this.navigateToOrganization(organizationId);
+            } catch (error) {
+                this.setState({ editorState: 'edit' });
+                console.error(error);
+                toast.error(`Error creating resource ${error.message}`);
+            }
+        } else {
+            toast.error(`Please enter an organization name`);
+            this.setState({ editorState: 'edit' });
         }
     };
 
@@ -58,30 +52,12 @@ class AddOrganization extends Component {
     handleKeyUp = async event => {
         event.preventDefault();
         if (event.keyCode === 13) {
-            await this.handleAdd();
-        }
-    };
-
-    createNewOrganization = async () => {
-        const value = this.state.value;
-        const image = this.state.previewSrc;
-        if (value && value.length !== 0) {
-            try {
-                const responseJson = await createOrganization(value, image[0]);
-                const organizationId = responseJson.id;
-                await updateUserRole();
-                this.navigateToOrganization(organizationId);
-            } catch (error) {
-                this.setEditorState('edit');
-                console.error(error);
-                toast.error(`Error creating resource ${error.message}`);
-            }
+            await this.createNewOrganization();
         }
     };
 
     navigateToOrganization = organizationId => {
-        this.setEditorState('edit');
-        this.setState({ organizationId: organizationId }, () => {
+        this.setState({ editorState: 'edit', organizationId: organizationId }, () => {
             this.setState({ redirect: true });
         });
     };
@@ -119,60 +95,56 @@ class AddOrganization extends Component {
 
         return (
             <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5">
-                <Form className="pl-3 pr-3 pt-2">
-                    {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
-                    <FormGroup>
-                        <Label for="ResourceLabel">Add Organization</Label>
-                        <Input
-                            onChange={this.handleChange}
-                            onKeyUp={this.handleKeyUp}
-                            type="text"
-                            name="value"
-                            id="ResourceLabel"
-                            disabled={loading}
-                            placeholder="Add Organiztion"
-                        />
-                    </FormGroup>
-                    <div>
-                        <img src={this.state.previewSrc} style={{ width: '20%', height: '20%' }} className="Avatar" alt="" />
-                    </div>
-                    <FormGroup>
-                        <Label>Logo</Label>
-                        <br />
-                        <input type="file" onChange={this.handlePreview} />
-                    </FormGroup>
+                {this.props.user ? (
+                    <Form className="pl-3 pr-3 pt-2">
+                        {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
+                        <FormGroup>
+                            <Label for="ResourceLabel">Organization Name</Label>
+                            <Input
+                                onChange={this.handleChange}
+                                onKeyUp={this.handleKeyUp}
+                                type="text"
+                                name="value"
+                                id="ResourceLabel"
+                                disabled={loading}
+                                placeholder="Organization Name"
+                            />
+                        </FormGroup>
+                        <div>
+                            <img src={this.state.previewSrc} style={{ width: '20%', height: '20%' }} className="Avatar" alt="" />
+                        </div>
+                        <FormGroup>
+                            <Label>Logo</Label>
+                            <br />
+                            <input type="file" onChange={this.handlePreview} />
+                        </FormGroup>
 
-                    <Button
-                        color="primary"
-                        onClick={() => {
-                            this.handleAdd();
-                        }}
-                        outline
-                        className="mt-4 mb-2"
-                        block
-                        disabled={loading}
-                    >
-                        {!loading ? 'Create Organization' : <span>Loading</span>}
-                    </Button>
-                </Form>
+                        <Button color="primary" onClick={this.createNewOrganization} outline className="mt-4 mb-2" block disabled={loading}>
+                            {!loading ? 'Create Organization' : <span>Loading</span>}
+                        </Button>
+                    </Form>
+                ) : (
+                    <>
+                        <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog('signin')}>
+                            <Icon className="mr-1" icon={faUser} /> Signin to create organization
+                        </Button>
+                    </>
+                )}
             </Container>
         );
     }
 }
 
 const mapStateToProps = state => ({
-    dialogIsOpen: state.auth.dialogIsOpen,
     user: state.auth.user
 });
 
 const mapDispatchToProps = dispatch => ({
-    resetAuth: () => dispatch(resetAuth()),
-    openAuthDialog: action => dispatch(openAuthDialog(action)),
-    updateAuth: data => dispatch(updateAuth(data))
+    openAuthDialog: action => dispatch(openAuthDialog(action))
 });
 
 AddOrganization.propTypes = {
-    updateAuth: PropTypes.func.isRequired,
+    openAuthDialog: PropTypes.func.isRequired,
     user: PropTypes.object
 };
 
