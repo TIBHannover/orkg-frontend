@@ -107,6 +107,12 @@ class ViewPaper extends Component {
                             this.setState({ contributors: data });
                         })
                     );
+                } else {
+                    // Initialise the state in case the user switch to another paper that is not linked with observatory
+                    this.setState({
+                        observatoryInfo: {},
+                        contributors: []
+                    });
                 }
 
                 getStatementsBySubject({ id: resourceId })
