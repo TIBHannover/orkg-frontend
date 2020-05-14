@@ -106,7 +106,7 @@ function GeneralSettings(props) {
                         id="switchIsClassDescription"
                         type="switch"
                         name="customSwitch"
-                        label="This template is a classs description"
+                        label="This template is a class description"
                         disabled={!props.editMode}
                     />
                 </div>

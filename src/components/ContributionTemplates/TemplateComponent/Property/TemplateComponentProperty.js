@@ -66,6 +66,9 @@ function TemplateComponentProperty(props) {
                             autoFocus
                             value={props.property}
                             cssClasses={'form-control-sm'}
+                            onBlur={() => {
+                                setIsEditing(false);
+                            }}
                         />
                     </InputGroup>
                 </div>
