@@ -667,7 +667,7 @@ export const createOrganization = (organizationName, organizationLogo) => {
 };
 
 export const getAllObservatoriesbyOrganizationId = id => {
-    return submitGetRequest(`${observatoriesUrl}search/${encodeURIComponent(id)}/`);
+    return submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/observatories`);
 };
 
 export const getObservatorybyId = id => {
@@ -675,11 +675,11 @@ export const getObservatorybyId = id => {
 };
 
 export const getUsersByObservatoryId = id => {
-    return submitGetRequest(`${userUrl}listuser/${encodeURIComponent(id)}/`);
+    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/users`);
 };
 
 export const getResourcesByObservatoryId = id => {
-    return submitGetRequest(`${resourcesUrl}findByObservatory/${encodeURIComponent(id)}/`);
+    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/resources`);
 };
 
 export const createObservatory = (observatoryName, organizationId) => {
@@ -687,12 +687,12 @@ export const createObservatory = (observatoryName, organizationId) => {
 };
 
 export const getContributorsByResourceId = id => {
-    return submitGetRequest(`${resourcesUrl}findContributors/${encodeURIComponent(id)}/`).then(contributors => {
+    return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/contributors`).then(contributors => {
         const c = contributors.map(contributor => {
-            if (contributor.created_by === '00000000-0000-0000-0000-000000000000') {
+            if (contributor.createdBy === '00000000-0000-0000-0000-000000000000') {
                 return { ...contributor, created_by: { display_name: 'Unknown' } };
             } else {
-                return getUserInformationById(contributor.created_by).then(user => ({ ...contributor, created_by: user }));
+                return getUserInformationById(contributor.createdBy).then(user => ({ ...contributor, created_by: user }));
             }
         });
         // Order the contribution timeline because it's not ordered in the result

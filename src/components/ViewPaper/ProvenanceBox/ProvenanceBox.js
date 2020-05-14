@@ -66,7 +66,7 @@ export default function ProvenanceBox(props) {
                                 props.contributors.map((contributor, index) => {
                                     return (
                                         <StyledActivity key={`prov-${index}`} className="pl-3 pb-3">
-                                            <div className={'time'}>{moment(contributor.created_at).format('DD MMM YYYY')}</div>
+                                            <div className={'time'}>{moment(contributor.createdAt).format('DD MMM YYYY')}</div>
                                             <div>
                                                 {contributor.created_by.display_name === props.observatoryInfo.created_by.display_name && (
                                                     <>
@@ -101,7 +101,7 @@ export default function ProvenanceBox(props) {
                         Timeline
                     </div>
                 </ProvenanceBoxTabs>
-                {props.observatoryInfo.automatic_extraction && (
+                {props.observatoryInfo.automatic_extraction==='AUTOMATIC' && (
                     <ErrorMessage className="alert-server">The data has been partially imported automatically.</ErrorMessage>
                 )}
                 <TransitionGroup exit={false}>{rightSidebar}</TransitionGroup>
