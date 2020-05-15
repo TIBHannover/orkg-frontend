@@ -37,7 +37,7 @@ class AddOrganization extends Component {
             } catch (error) {
                 this.setState({ editorState: 'edit' });
                 console.error(error);
-                toast.error(`Error creating resource ${error.message}`);
+                toast.error(`Error creating organization ${error.message}`);
             }
         } else {
             toast.error(`Please enter an organization name`);
