@@ -690,7 +690,7 @@ export const getContributorsByResourceId = id => {
     return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/contributors`).then(contributors => {
         const c = contributors.map(contributor => {
             if (contributor.createdBy === '00000000-0000-0000-0000-000000000000') {
-                return { ...contributor, created_by: { display_name: 'Unknown' } };
+                return { ...contributor, created_by: { id: '00000000-0000-0000-0000-000000000000', display_name: 'Unknown' } };
             } else {
                 return getUserInformationById(contributor.createdBy).then(user => ({ ...contributor, created_by: user }));
             }
@@ -707,6 +707,7 @@ export const getObservatoryAndOrganizationInformation = observatoryId => {
                 id: observatoryId,
                 name: obsResponse.name.toUpperCase(),
                 organization: {
+                    id: obsResponse.organizationId,
                     name: orgResponse.organizationName,
                     logo: orgResponse.organizationLogo
                 }

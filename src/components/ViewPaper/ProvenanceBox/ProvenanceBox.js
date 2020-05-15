@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { TransitionGroup } from 'react-transition-group';
 import { StyledItemProvenanceBox, AnimationContainer, StyledActivity, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 
 export default function ProvenanceBox(props) {
@@ -19,13 +22,19 @@ export default function ProvenanceBox(props) {
                             <StyledItemProvenanceBox>
                                 <b>{props.observatoryInfo.name}</b>
                                 <br />
-                                <img
-                                    style={{ marginTop: 8, marginBottom: 8, maxWidth: '100%', height: 'auto' }}
-                                    class="mx-auto d-block"
-                                    src={props.observatoryInfo.organization.logo}
-                                    alt=""
-                                />
-                                <p style={{ fontSize: 12 }}>{props.observatoryInfo.organization.name}</p>
+                                <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.id })}>
+                                    <img
+                                        style={{ marginTop: 8, marginBottom: 8, maxWidth: '100%', height: 'auto' }}
+                                        class="mx-auto d-block"
+                                        src={props.observatoryInfo.organization.logo}
+                                        alt=""
+                                    />
+                                </Link>
+                                <p>
+                                    <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.id })}>
+                                        {props.observatoryInfo.organization.name}
+                                    </Link>
+                                </p>
                             </StyledItemProvenanceBox>
 
                             <StyledItemProvenanceBox>
@@ -37,7 +46,9 @@ export default function ProvenanceBox(props) {
                             <StyledItemProvenanceBox>
                                 <b>ADDED BY</b>
                                 <br />
-                                {props.observatoryInfo.created_by.display_name}
+                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: props.observatoryInfo.created_by.id })}>
+                                    {props.observatoryInfo.created_by.display_name}
+                                </Link>
                             </StyledItemProvenanceBox>
                             <StyledItemProvenanceBox>
                                 <b>CONTRIBUTORS</b>
@@ -46,7 +57,11 @@ export default function ProvenanceBox(props) {
                                         return (
                                             <div key={`cntbrs-${index}`}>
                                                 {contributor.created_by.display_name !== 'Unknown' && (
-                                                    <span>{contributor.created_by.display_name}</span>
+                                                    <span>
+                                                        <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.created_by.id })}>
+                                                            {contributor.created_by.display_name}
+                                                        </Link>
+                                                    </span>
                                                 )}
                                             </div>
                                         );
@@ -70,13 +85,23 @@ export default function ProvenanceBox(props) {
                                             <div>
                                                 {contributor.created_by.display_name === props.observatoryInfo.created_by.display_name && (
                                                     <>
-                                                        Added by <b>{contributor.created_by.display_name}</b>{' '}
+                                                        Added by{' '}
+                                                        <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.created_by.id })}>
+                                                            <b>{contributor.created_by.display_name}</b>
+                                                        </Link>
                                                     </>
                                                 )}
 
                                                 {contributor.created_by.display_name !== props.observatoryInfo.created_by.display_name && (
                                                     <>
-                                                        Updated by <b>{contributor.created_by.display_name}</b>{' '}
+                                                        Updated by{' '}
+                                                        {contributor.created_by.id !== '00000000-0000-0000-0000-000000000000' ? (
+                                                            <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.created_by.id })}>
+                                                                <b>{contributor.created_by.display_name}</b>
+                                                            </Link>
+                                                        ) : (
+                                                            <b>{contributor.created_by.display_name}</b>
+                                                        )}
                                                     </>
                                                 )}
                                             </div>

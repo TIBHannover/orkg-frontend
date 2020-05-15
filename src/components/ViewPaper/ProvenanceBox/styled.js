@@ -22,9 +22,14 @@ export const StyledActivity = styled.div`
         display: inline-block;
     }
     a {
-        color: ${props => props.theme.ORKGPrimaryColor};
+        color: ${props => props.theme.bodyColor};
     }
-
+    a:active,
+    a:focus {
+        outline: 0;
+        border: none;
+        -moz-outline-style: none;
+    }
     &:last-child {
         border-left: none;
         padding-left: 1.2rem !important;
@@ -87,4 +92,13 @@ export const StyledItemProvenanceBox = styled.li`
     padding-bottom: 1rem;
     border-bottom: 1px solid #eeeff3;
     font-size: 12px;
+    a {
+        color: ${props => props.theme.bodyColor};
+    }
+    a:active,
+    a:focus {
+        outline: 0;
+        border: none;
+        -moz-outline-style: none;
+    }
 `;
