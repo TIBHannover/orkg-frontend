@@ -42,20 +42,19 @@ export default class AddObservatory extends Component {
 
     handleLiteralStatementCreationError = error => {
         console.error(error);
-        toast.error(`Error creating literal statement ${error.message}`);
+        toast.error(`Error creating observatory ${error.message}`);
     };
 
     createNewObservatory = async () => {
         const value = this.state.value;
         if (value && value.length !== 0) {
             try {
-                const responseJson = await createObservatory(value, this.props.match.params.id);
-                const observatoryId = responseJson.id;
-                this.navigateToObservatory(observatoryId);
+                const observatory = await createObservatory(value, this.props.match.params.id);
+                this.navigateToObservatory(observatory.id);
             } catch (error) {
                 this.setEditorState('edit');
                 console.error(error);
-                toast.error(`Error creating resource ${error.message}`);
+                toast.error(`Error creating observatory ${error.message}`);
             }
         }
     };
