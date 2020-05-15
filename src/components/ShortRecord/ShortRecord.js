@@ -1,32 +1,35 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { Row, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const StyledShortRecord = styled.div`
-    border: 1px solid #c8ccd1;
-    margin-bottom: 2em;
-    position: relative;
-    width: 100%;
-    .shortRecord-header {
-        background-color: #eaecf0;
-        position: relative;
-        width: 100%;
+    & .options {
+        display: none;
     }
-    .shortRecord-content {
-        width: 100%;
-        overflow-wrap: break-word;
+
+    &.selected {
+        background: ${props => props.theme.bodyBg};
+    }
+
+    &:hover .options,
+    &.selected .options {
+        display: block;
     }
 `;
 
 class ShortRecord extends Component {
     render() {
         return (
-            <StyledShortRecord>
-                <div className="shortRecord-header">
-                    <Link to={this.props.href}>{this.props.header}</Link>
-                </div>
-                <div className="shortRecord-content">{this.props.children}</div>
+            <StyledShortRecord className={'list-group-item list-group-item-action'}>
+                <Row>
+                    <Col sm={12}>
+                        <Link to={this.props.href}>{this.props.header}</Link>
+                        <br />
+                        <small>{this.props.children}</small>
+                    </Col>
+                </Row>
             </StyledShortRecord>
         );
     }

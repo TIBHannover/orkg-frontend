@@ -71,8 +71,8 @@ export default class Resources extends Component {
                         <div>
                             {this.state.resources.map(resource => {
                                 return (
-                                    <ShortRecord key={resource.id} header={resource.id} href={reverse(ROUTES.RESOURCE, { id: resource.id })}>
-                                        {resource.label}
+                                    <ShortRecord key={resource.id} header={resource.label} href={reverse(ROUTES.RESOURCE, { id: resource.id })}>
+                                        {resource.id}
                                     </ShortRecord>
                                 );
                             })}
