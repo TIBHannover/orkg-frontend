@@ -708,8 +708,8 @@ export const getObservatoryAndOrganizationInformation = observatoryId => {
                 name: obsResponse.name.toUpperCase(),
                 organization: {
                     id: obsResponse.organizationId,
-                    name: orgResponse.organizationName,
-                    logo: orgResponse.organizationLogo
+                    name: orgResponse.organization_name,
+                    logo: orgResponse.organization_logo
                 }
             };
         });

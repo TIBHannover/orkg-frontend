@@ -47,7 +47,7 @@ class ObservatoryDetails extends Component {
     getOrganization = id => {
         getOrganization(id).then(organization => {
                 this.setState({
-                    createdBy: organization.createdBy
+                    createdBy: organization.created_by
                 });
         });
     };
