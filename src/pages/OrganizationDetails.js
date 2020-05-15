@@ -41,7 +41,6 @@ class OrganizationDetails extends Component {
         this.setState({ isLoading: true });
         getOrganization(this.props.match.params.id)
             .then(responseJson => {
-                //console.log(responseJson);
                 document.title = `${responseJson.organization_name} - Organization - ORKG`;
                 this.setState({
                     label: responseJson.organization_name,
