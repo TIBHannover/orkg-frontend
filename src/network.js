@@ -662,8 +662,8 @@ export const getOrganization = id => {
     return submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/`);
 };
 
-export const createOrganization = (organizationName, organizationLogo) => {
-    return submitPostRequest(organizationsUrl, { 'Content-Type': 'application/json' }, { organizationName, organizationLogo });
+export const createOrganization = (organizationName, organizationLogo, createdBy) => {
+    return submitPostRequest(organizationsUrl, { 'Content-Type': 'application/json' }, { organizationName, organizationLogo, createdBy });
 };
 
 export const getAllObservatoriesbyOrganizationId = id => {

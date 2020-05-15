@@ -30,7 +30,7 @@ class AddOrganization extends Component {
         const image = this.state.previewSrc;
         if (value && value.length !== 0) {
             try {
-                const responseJson = await createOrganization(value, image[0]);
+                const responseJson = await createOrganization(value, image[0], this.props.user.id);
                 const organizationId = responseJson.id;
                 await updateUserRole();
                 this.navigateToOrganization(organizationId);

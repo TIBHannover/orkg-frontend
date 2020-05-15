@@ -20,7 +20,8 @@ class OrganizationDetails extends Component {
             isLoading: false,
             isLoadingTotal: false,
             image: '',
-            totalObservatories: 0
+            totalObservatories: 0,
+            createdBy: ''
         };
     }
 
@@ -44,7 +45,8 @@ class OrganizationDetails extends Component {
                 this.setState({
                     label: responseJson.organizationName,
                     isLoading: false,
-                    image: responseJson.organizationLogo
+                    image: responseJson.organizationLogo,
+                    createdBy: responseJson.createdBy
                 });
             })
             .catch(error => {
@@ -100,7 +102,7 @@ class OrganizationDetails extends Component {
                                     List Observatories
                                 </Button>
                                 &nbsp; &nbsp;
-                                {this.props.user && (
+                                {this.props.user && this.props.user.id === this.state.createdBy && (
                                     <Button
                                         outline
                                         size="sm"
