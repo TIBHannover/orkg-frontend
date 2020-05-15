@@ -36,7 +36,6 @@ class TemplateWizard extends Component {
                                     showValueHelp={this.props.cookies && !this.props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                                     resourceId={this.props.initialResourceId}
                                     contextStyle={'Template'}
-                                    templateId={property.templateId}
                                 />
                             );
                         } else {

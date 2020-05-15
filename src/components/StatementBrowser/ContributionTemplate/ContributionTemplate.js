@@ -63,7 +63,13 @@ export default function ContributionTemplate(props) {
                     <div className={'row no-gutters'}>
                         <div className={'col-4 propertyHolder'} />
                     </div>
-                    <AddProperty syncBackend={props.syncBackend} inTemplate={true} contextStyle="Template" resourceId={props.value.resourceId} />
+                    <AddProperty
+                        isDisabled={!props.canAddProperty}
+                        syncBackend={props.syncBackend}
+                        inTemplate={true}
+                        contextStyle="Template"
+                        resourceId={props.value.resourceId}
+                    />
                 </AddPropertWrapper>
             </ListGroup>
         </AnimationContainer>
@@ -79,6 +85,10 @@ ContributionTemplate.propTypes = {
     syncBackend: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
     isAnimated: PropTypes.bool,
+
+    classes: PropTypes.object.isRequired,
+    templates: PropTypes.object.isRequired,
+    canAddProperty: PropTypes.bool.isRequired,
 
     resources: PropTypes.object.isRequired,
     properties: PropTypes.object.isRequired,

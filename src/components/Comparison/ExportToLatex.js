@@ -1,6 +1,6 @@
 import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, Tooltip as ReactstrapTooltip } from 'reactstrap';
 import React, { Component } from 'react';
-import { createShortLink, getStatementsBySubject, getComparison } from '../../network';
+import { createShortLink, getStatementsBySubject, getComparison } from 'network';
 
 import Cite from 'citation-js';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -153,7 +153,7 @@ class ExportToLatex extends Component {
                           `${this.props.location.href.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${
                               this.props.response_hash ? this.props.response_hash : comparison.response_hash
                           }`;
-                    createShortLink({
+                    return createShortLink({
                         long_url: link,
                         response_hash: this.props.response_hash ? this.props.response_hash : comparison.response_hash,
                         contributions: this.props.contributions.map(c => c.id),

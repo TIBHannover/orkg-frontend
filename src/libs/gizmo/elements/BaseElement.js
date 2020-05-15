@@ -82,11 +82,13 @@ export default class BaseElement {
         }
     };
 
-    updateCircleHalo = (pulseItem, newRadius) => {
+    updateCircleHalo = (pulseItem, newRadius, animate) => {
         if (pulseItem && pulseItem.node()) {
-            this.haloGroupElement.classed('searchResultA', false);
-            this.haloGroupElement.classed('searchResultB', true);
-            this.haloGroupElement.attr('animationRunning', false);
+            if (!animate) {
+                this.haloGroupElement.classed('searchResultA', false);
+                this.haloGroupElement.classed('searchResultB', true);
+                this.haloGroupElement.attr('animationRunning', false);
+            }
             DrawTools().setCircleAttribute(pulseItem, newRadius);
         }
     };
@@ -100,18 +102,18 @@ export default class BaseElement {
     };
     setInViewportRadius = () => {
         // basically gets the rendering shape attributes and propagates them
-        const shapeSize = this.getExpectedShapeSize(this.renderConfig);
+        const shapeSize = this.getRenderingElementSize();
         if (!this.haloGroupElement) {
             return;
         }
         const pulseItem = this.haloGroupElement.select('.haloRenderingShape');
-
+        const animate = this.haloGroupElement.attr('animationRunning');
         if (this.renderConfig.renderingType === 'circle') {
-            const haloRadius = shapeSize.r + 5;
-            this.updateCircleHalo(pulseItem, haloRadius);
+            const haloRadius = 0.5 * parseInt(shapeSize.w) + 5;
+            this.updateCircleHalo(pulseItem, haloRadius, animate);
         } else {
-            const haloWidth = shapeSize.w + 5;
-            const haloHeight = shapeSize.h + 5;
+            const haloWidth = parseInt(shapeSize.w) + 5;
+            const haloHeight = parseInt(shapeSize.h) + 5;
             const pulseItem = this.haloGroupElement.select('.haloRenderingShape');
             if (pulseItem && pulseItem.node()) {
                 pulseItem.attr('x', -0.5 * haloWidth);
@@ -173,6 +175,13 @@ export default class BaseElement {
         const selectedNode = this.svgRoot.node();
         const nodeContainer = selectedNode.parentNode;
         nodeContainer.appendChild(selectedNode);
+
+        // remove pulse animation if it is still running (comparing vs string value of true (since attribute) ...
+        if (this.haloGroupElement && this.haloGroupElement.attr('animationRunning') === 'true') {
+            this.haloGroupElement.classed('searchResultA', false);
+            this.haloGroupElement.classed('searchResultB', true);
+            this.haloGroupElement.attr('animationRunning', false);
+        }
 
         this.svgRoot.style('cursor', this.configObject.hoverInCursor);
         this.renderingElement.style('fill', this.configObject.hoverInColor);
@@ -265,8 +274,13 @@ export default class BaseElement {
 
     getExpectedShapeSize(cfg) {
         let retValue;
+        let textValue = this.label;
+        if (this.renderingText) {
+            textValue = this.renderingText.text();
+        }
         if (cfg.fontSizeOverWritesShapeSize === 'true') {
-            const tempRTE = this.svgRoot.append('text').text(this.label);
+            const tempRTE = this.svgRoot.append('text').text(textValue);
+
             tempRTE.style('font-family', cfg.fontFamily);
             tempRTE.style('font-size', cfg.fontSize);
             tempRTE.style('fill', cfg.fontColor);
@@ -274,7 +288,7 @@ export default class BaseElement {
             const fontSizeProperty = window.getComputedStyle(tempRTE.node()).getPropertyValue('font-size');
             const fontFamily = window.getComputedStyle(tempRTE.node()).getPropertyValue('font-family');
             const fontSize = parseFloat(fontSizeProperty);
-            const textWidth = DrawTools().measureTextWidth(this.label, fontFamily, fontSize + 'px');
+            const textWidth = DrawTools().measureTextWidth(textValue, fontFamily, fontSize + 'px');
 
             let height = fontSize + 2 * parseInt(cfg.overWriteOffset);
             let width = textWidth + 2 * parseInt(cfg.overWriteOffset);

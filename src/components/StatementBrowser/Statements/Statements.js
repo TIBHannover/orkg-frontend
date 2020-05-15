@@ -4,6 +4,7 @@ import StatementItem from 'components/StatementBrowser/StatementItem/StatementIt
 import AddProperty from 'components/StatementBrowser/AddProperty/AddPropertyContainer';
 import Breadcrumbs from 'components/StatementBrowser/Breadcrumbs/BreadcrumbsContainer';
 import ContributionTemplate from 'components/StatementBrowser/ContributionTemplate/ContributionTemplateContainer';
+import PropertySuggestions from 'components/StatementBrowser/PropertySuggestions/PropertySuggestions';
 import NoData from 'components/StatementBrowser/NoData/NoData';
 import { StyledLevelBox, StyledStatementItem } from 'components/StatementBrowser/styled';
 import { Cookies } from 'react-cookie';
@@ -48,53 +49,61 @@ export default function Statements(props) {
         });
 
         return (
-            <ListGroup className={'listGroupEnlarge'}>
-                {!props.isFetchingStatements ? (
-                    propertyIds.length > 0 ? (
-                        propertyIds.map((propertyId, index) => {
-                            const property = props.properties.byId[propertyId];
-                            if (!property.isTemplate) {
-                                return (
-                                    <StatementItem
-                                        key={'statement-' + index}
-                                        id={propertyId}
-                                        property={property}
-                                        predicateLabel={property.label}
-                                        enableEdit={shared <= 1 ? props.enableEdit : false}
-                                        syncBackend={props.syncBackend}
-                                        isLastItem={propertyIds.length === index + 1}
-                                        showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
-                                    />
-                                );
-                            } else {
-                                return property.valueIds.map((valueId, index) => {
-                                    const value = props.values.byId[valueId];
+            <div>
+                {/*props.selectedResource && props.resources.byId[props.selectedResource].classes.length > 0 && (
+                    <div className="text-muted mb-2">Classes: {props.resources.byId[props.selectedResource].classes.join(',')}</div>
+                )*/}
+                <ListGroup className={'listGroupEnlarge'}>
+                    {props.selectedResource && !props.resources.byId[props.selectedResource].isFetching ? (
+                        propertyIds.length > 0 ? (
+                            propertyIds.map((propertyId, index) => {
+                                const property = props.properties.byId[propertyId];
+                                if (!property.isTemplate) {
                                     return (
-                                        <ContributionTemplate
-                                            key={`template-${index}-${valueId}`}
-                                            id={valueId}
-                                            value={value}
-                                            propertyId={propertyId}
-                                            selectedResource={props.initialResourceId}
-                                            enableEdit={props.enableEdit}
+                                        <StatementItem
+                                            key={'statement-' + index}
+                                            id={propertyId}
+                                            property={property}
+                                            predicateLabel={property.label}
+                                            enableEdit={shared <= 1 ? props.enableEdit : false}
                                             syncBackend={props.syncBackend}
                                             isAnimated={property.isAnimated}
+                                            isLastItem={propertyIds.length === index + 1}
+                                            showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                                         />
                                     );
-                                });
-                            }
-                        })
+                                } else {
+                                    return property.valueIds.map((valueId, index) => {
+                                        const value = props.values.byId[valueId];
+                                        return (
+                                            <ContributionTemplate
+                                                key={`template-${index}-${valueId}`}
+                                                id={valueId}
+                                                value={value}
+                                                propertyId={propertyId}
+                                                selectedResource={props.initialResourceId}
+                                                enableEdit={props.enableEdit}
+                                                syncBackend={props.syncBackend}
+                                                openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+                                                isAnimated={property.isAnimated}
+                                            />
+                                        );
+                                    });
+                                }
+                            })
+                        ) : (
+                            <NoData enableEdit={props.enableEdit} templatesFound={props.templatesFound} />
+                        )
                     ) : (
-                        <NoData enableEdit={props.enableEdit} templatesFound={props.templatesFound} />
-                    )
-                ) : (
-                    <StyledStatementItem>
-                        <Icon icon={faSpinner} spin /> Loading
-                    </StyledStatementItem>
-                )}
+                        <StyledStatementItem>
+                            <Icon icon={faSpinner} spin /> Loading
+                        </StyledStatementItem>
+                    )}
 
-                {(shared <= 1) & props.enableEdit ? <AddProperty syncBackend={props.syncBackend} /> : ''}
-            </ListGroup>
+                    {shared <= 1 && props.enableEdit ? <AddProperty isDisabled={!props.canAddProperty} syncBackend={props.syncBackend} /> : ''}
+                    {shared <= 1 && props.enableEdit && props.suggestedProperties.length > 0 && <PropertySuggestions />}
+                </ListGroup>
+            </div>
         );
     };
 
@@ -137,6 +146,14 @@ Statements.propTypes = {
     initializeWithoutContribution: PropTypes.func.isRequired,
     initializeWithResource: PropTypes.func.isRequired,
     updateSettings: PropTypes.func.isRequired,
+
+    classes: PropTypes.object.isRequired,
+    templates: PropTypes.object.isRequired,
+    createProperty: PropTypes.func.isRequired,
+    components: PropTypes.array.isRequired,
+    canAddProperty: PropTypes.bool.isRequired,
+    suggestedProperties: PropTypes.array.isRequired,
+
     enableEdit: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
     initialResourceId: PropTypes.string,

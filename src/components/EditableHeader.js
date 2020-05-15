@@ -51,7 +51,11 @@ class EditableHeader extends Component {
                 {this.state.editorState === 'view' && (
                     <div>
                         <h3>
-                            {this.state.value}
+                            {this.state.value || (
+                                <i>
+                                    <small>No label</small>
+                                </i>
+                            )}
                             <Button className="float-right" color="link" onClick={this.handleEditClick}>
                                 <Icon icon={faPen} /> edit
                             </Button>

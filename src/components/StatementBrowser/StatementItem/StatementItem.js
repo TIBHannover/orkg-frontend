@@ -139,7 +139,6 @@ export default function StatementItem(props) {
 
     return (
         <StatementItemTemplate
-            togglePropertyCollapse={props.togglePropertyCollapse}
             property={props.property}
             id={props.id}
             selectedProperty={props.selectedProperty}
@@ -155,6 +154,9 @@ export default function StatementItem(props) {
             showValueHelp={props.showValueHelp}
             handleDeleteStatement={handleDeleteStatement}
             propertiesAsLinks={props.propertiesAsLinks}
+            components={props.components}
+            canAddValue={props.canAddValue}
+            canDeleteProperty={props.canDeleteProperty}
         />
     );
 }
@@ -168,6 +170,13 @@ StatementItem.propTypes = {
     isLastItem: PropTypes.bool.isRequired,
     showValueHelp: PropTypes.bool,
 
+    templates: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
+    resources: PropTypes.object.isRequired,
+    components: PropTypes.array.isRequired,
+    canAddValue: PropTypes.bool.isRequired,
+    canDeleteProperty: PropTypes.bool.isRequired,
+
     contextStyle: PropTypes.string.isRequired,
     resourceId: PropTypes.string,
     inTemplate: PropTypes.bool,
@@ -177,7 +186,6 @@ StatementItem.propTypes = {
     properties: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
     deleteProperty: PropTypes.func.isRequired,
-    togglePropertyCollapse: PropTypes.func.isRequired,
     toggleEditPropertyLabel: PropTypes.func.isRequired,
     changeProperty: PropTypes.func.isRequired,
     isSavingProperty: PropTypes.func.isRequired,

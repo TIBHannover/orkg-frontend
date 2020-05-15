@@ -10,6 +10,8 @@ import { AppContainer } from 'react-hot-loader';
 import rootReducer from './reducers/rootReducer';
 import { CookiesProvider } from 'react-cookie';
 import { ThemeProvider } from 'styled-components';
+import { DndProvider } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 // Extract Sass variables into a JS object
 // eslint-disable-next-line import/no-webpack-loader-syntax
@@ -19,13 +21,15 @@ const store = configureStore();
 const render = () => {
     ReactDOM.render(
         <AppContainer>
-            <CookiesProvider>
-                <Provider store={store}>
-                    <ThemeProvider theme={theme}>
-                        <App history={history} />
-                    </ThemeProvider>
-                </Provider>
-            </CookiesProvider>
+            <DndProvider backend={HTML5Backend}>
+                <CookiesProvider>
+                    <Provider store={store}>
+                        <ThemeProvider theme={theme}>
+                            <App history={history} />
+                        </ThemeProvider>
+                    </Provider>
+                </CookiesProvider>
+            </DndProvider>
         </AppContainer>,
         document.getElementById('root')
     );

@@ -2,18 +2,16 @@ import React, { Component } from 'react';
 import { Badge, Container, Navbar } from 'reactstrap';
 import { ComparisonBoxButton, ComparisonBox, Header, List, ContributionItem, Title, Number, Remove, StartComparison } from './styled';
 import { faChevronDown, faChevronUp, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { loadComparisonFromCookie, removeFromComparison } from 'actions/viewPaper';
+import { loadComparisonFromLocalStorage, removeFromComparison } from 'actions/viewPaper';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes.js';
 import Tooltip from '../Utils/Tooltip';
 import Confirm from 'reactstrap-confirm';
-import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { reverse } from 'named-urls';
-import { withCookies } from 'react-cookie';
 
 class ComparisonPopup extends Component {
     constructor(props) {
@@ -27,22 +25,22 @@ class ComparisonPopup extends Component {
     }
 
     componentDidMount() {
-        this.loadComparisonFromCookie();
-        this.intervalComparisonFromCookie = setInterval(this.loadComparisonFromCookie, 1000);
+        this.loadComparisonFromLocalStorage();
+        this.intervalComparisonFromLocalStorage = setInterval(this.loadComparisonFromLocalStorage, 1000);
         document.addEventListener('mousedown', this.handleClickOutside);
     }
 
     componentWillUnmount() {
-        clearInterval(this.intervalComparisonFromCookie);
+        clearInterval(this.intervalComparisonFromLocalStorage);
         document.removeEventListener('mousedown', this.handleClickOutside);
     }
 
-    loadComparisonFromCookie = () => {
+    loadComparisonFromLocalStorage = () => {
         if (
-            this.props.cookies.get('comparison') &&
-            JSON.stringify(this.props.comparison.allIds) !== JSON.stringify(this.props.cookies.get('comparison').allIds)
+            localStorage.getItem('comparison') &&
+            JSON.stringify(this.props.comparison.allIds) !== JSON.stringify(JSON.parse(localStorage.getItem('comparison')).allIds)
         ) {
-            this.props.loadComparisonFromCookie(this.props.cookies.get('comparison'));
+            this.props.loadComparisonFromLocalStorage(JSON.parse(localStorage.getItem('comparison')));
         }
     };
 
@@ -161,8 +159,7 @@ class ComparisonPopup extends Component {
 ComparisonPopup.propTypes = {
     comparison: PropTypes.object.isRequired,
     removeFromComparison: PropTypes.func.isRequired,
-    loadComparisonFromCookie: PropTypes.func.isRequired,
-    cookies: PropTypes.object
+    loadComparisonFromLocalStorage: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -171,13 +168,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     removeFromComparison: data => dispatch(removeFromComparison(data)),
-    loadComparisonFromCookie: data => dispatch(loadComparisonFromCookie(data))
+    loadComparisonFromLocalStorage: data => dispatch(loadComparisonFromLocalStorage(data))
 });
 
-export default compose(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    ),
-    withCookies
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
 )(ComparisonPopup);

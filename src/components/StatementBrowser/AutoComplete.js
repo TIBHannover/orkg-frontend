@@ -3,6 +3,7 @@ import { submitGetRequest, getResourcesByClass } from '../../network';
 import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';
+import { components } from 'react-select';
 import styled, { withTheme } from 'styled-components';
 
 export const StyledAutoCompleteInputFormControl = styled.div`
@@ -16,6 +17,24 @@ export const StyledAutoCompleteInputFormControl = styled.div`
     padding: 0 !important;
 `;
 
+const StyledSelectOption = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .badge {
+        background-color: #ebecf0;
+        border-radius: 2em;
+        color: #172b4d;
+        display: inline-block;
+        font-size: 12;
+        font-weight: normal;
+        line-height: '1';
+        min-width: 1;
+        padding: 0.16666666666667em 0.5em;
+        text-align: center;
+    }
+`;
+
 class AutoComplete extends Component {
     constructor(props) {
         super(props);
@@ -23,7 +42,7 @@ class AutoComplete extends Component {
         this.state = {
             selectedItemId: null,
             dropdownMenuJsx: null,
-            inputValue: '',
+            inputValue: typeof this.props.value !== 'object' ? this.props.value : '',
             defaultOptions: this.props.defaultOptions ? this.props.defaultOptions : [],
             value: this.props.value || ''
         };
@@ -155,9 +174,11 @@ class AutoComplete extends Component {
             if (this.props.onInput) {
                 this.props.onInput(null, inputValue);
             }
+            return inputValue;
         } else if (action.action === 'menu-close') {
             this.loadDefaultOptions(this.state.inputValue);
         }
+        return this.state.inputValue; //https://github.com/JedWatson/react-select/issues/3189#issuecomment-597973958
     };
 
     render() {
@@ -205,6 +226,17 @@ class AutoComplete extends Component {
             })
         };
 
+        const Option = ({ children, ...props }) => {
+            return (
+                <components.Option {...props}>
+                    <StyledSelectOption>
+                        <span>{children}</span>
+                        <span className={'badge'}>{props.data.id}</span>
+                    </StyledSelectOption>
+                </components.Option>
+            );
+        };
+
         const Select = this.props.allowCreate ? AsyncCreatableSelect : AsyncSelect;
 
         return (
@@ -223,6 +255,7 @@ class AutoComplete extends Component {
                     onBlur={this.props.onBlur}
                     onKeyDown={this.props.onKeyDown}
                     ref={this.props.innerRef}
+                    components={{ Option }}
                 />
             </StyledAutoCompleteInputFormControl>
         );

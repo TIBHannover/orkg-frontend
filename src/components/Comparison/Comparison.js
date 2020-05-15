@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, UncontrolledAlert } from 'reactstrap';
+import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, UncontrolledAlert, Badge } from 'reactstrap';
 import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject } from 'network';
 import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResonseHashFromUrl, get_error_message } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -21,9 +21,11 @@ import arrayMove from 'array-move';
 import { connect } from 'react-redux';
 import dotProp from 'dot-prop-immutable';
 import { reverse } from 'named-urls';
-import { generateRdfDataVocabularyFile } from 'utils';
+import { generateRdfDataVocabularyFile, extendPropertyIds } from 'utils';
 import { ContainerAnimated } from './styled';
 import RelatedResources from './RelatedResources';
+import RelatedFigures from './RelatedFigures';
+import Tippy from '@tippy.js/react';
 
 class Comparison extends Component {
     constructor(props) {
@@ -52,7 +54,7 @@ class Comparison extends Component {
             fullWidth: false,
             errors: null,
             locationSearch: '',
-            relatedResources: []
+            resourcesStatements: []
         };
     }
 
@@ -136,16 +138,20 @@ class Comparison extends Component {
 
                 // if there are properties in the query string
                 if (propertyIds.length > 0) {
+                    // Create an extended version of propertyIds (ADD the IDs of similar properties)
+                    const extendedPropertyIds = extendPropertyIds(propertyIds, comparisonData.data);
+
                     // sort properties based on query string (is not presented in query string, sort at the bottom)
                     // TODO: sort by label when is not active
                     comparisonData.properties.sort((a, b) => {
-                        const index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
-                        const index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
+                        const index1 = extendedPropertyIds.indexOf(a.id) !== -1 ? extendedPropertyIds.indexOf(a.id) : 1000;
+                        const index2 = extendedPropertyIds.indexOf(b.id) !== -1 ? extendedPropertyIds.indexOf(b.id) : 1000;
                         return index1 - index2;
                     });
+
                     // hide properties based on query string
                     comparisonData.properties.forEach((property, index) => {
-                        if (!propertyIds.includes(property.id)) {
+                        if (!extendedPropertyIds.includes(property.id)) {
                             comparisonData.properties[index].active = false;
                         } else {
                             comparisonData.properties[index].active = true;
@@ -200,13 +206,14 @@ class Comparison extends Component {
                             statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_REFERENCE
                         );
                         const urlStatement = comparisonStatement.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL);
+
                         const resourcesStatements = comparisonStatement.filter(
                             statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_RELATED_RESOURCES
                         );
-                        const relatedResources = [];
-                        for (const resource of resourcesStatements) {
-                            relatedResources.push(resource.object.label);
-                        }
+
+                        const figureStatements = comparisonStatement.filter(
+                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_RELATED_FIGURE
+                        );
 
                         if (urlStatement) {
                             this.getComparisonResult(urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')));
@@ -217,7 +224,8 @@ class Comparison extends Component {
                                 reference: referenceStatement ? referenceStatement.object.label : '',
                                 createdAt: descriptionStatement.object.created_at,
                                 createdBy: descriptionStatement.object.created_by,
-                                relatedResources
+                                resourcesStatements,
+                                figureStatements
                             });
                         } else {
                             throw new Error('The requested comparison has no contributions.');
@@ -346,7 +354,16 @@ class Comparison extends Component {
         return (
             <div>
                 <ContainerAnimated className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">Contribution comparison</h1>
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">
+                        Contribution comparison{' '}
+                        <Tippy content="The amount of compared contributions">
+                            <span>
+                                <Badge color="darkblue" pill style={{ fontSize: '65%' }}>
+                                    {contributionAmount}
+                                </Badge>
+                            </span>
+                        </Tippy>
+                    </h1>
 
                     {contributionAmount > 1 && !this.state.isLoading && !this.state.loadingFailed && (
                         <div style={{ marginLeft: 'auto' }} className="flex-shrink-0 mt-4">
@@ -515,7 +532,8 @@ class Comparison extends Component {
                         </>
                     )}
 
-                    <RelatedResources resources={this.state.relatedResources} />
+                    <RelatedResources resourcesStatements={this.state.resourcesStatements} />
+                    <RelatedFigures figureStatements={this.state.figureStatements} />
                 </ContainerAnimated>
 
                 <SelectProperties

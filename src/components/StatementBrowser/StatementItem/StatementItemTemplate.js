@@ -31,19 +31,36 @@ export default function StatementItemTemplate(props) {
                                     <Link to={reverse(ROUTES.PREDICATE, { id: props.property.existingPredicateId })}>{props.predicateLabel}</Link>
                                 ) : (
                                     props.predicateLabel
-                                )}
+                                )}{' '}
+                                {}
+                                {props.enableEdit &&
+                                    props.components &&
+                                    props.components.length > 0 &&
+                                    props.components.filter(c => c.value.label).length > 0 && (
+                                        <small>[{props.components.map(c => c.value.label).join(',')}]</small>
+                                    )}
                             </div>
                             {props.enableEdit && (
                                 <div className={propertyOptionsClasses}>
                                     <StatementOptionButton
-                                        title={'Edit property'}
+                                        isDisabled={!props.canDeleteProperty}
+                                        title={
+                                            props.canDeleteProperty
+                                                ? 'Edit property'
+                                                : "This property can not be changes because it's required by the template"
+                                        }
                                         icon={faPen}
                                         action={() => props.toggleEditPropertyLabel({ id: props.id })}
                                     />
                                     <StatementOptionButton
+                                        isDisabled={!props.canDeleteProperty}
+                                        title={
+                                            props.canDeleteProperty
+                                                ? 'Delete property'
+                                                : "This property can not be deleted because it's required by the template"
+                                        }
                                         requireConfirmation={true}
                                         confirmationMessage={'Are you sure to delete?'}
-                                        title={'Delete property'}
                                         icon={faTrash}
                                         action={props.handleDeleteStatement}
                                         onVisibilityChange={disable => setDisableHover(disable)}
@@ -84,22 +101,37 @@ export default function StatementItemTemplate(props) {
                 </PropertyStyle>
                 <ValuesStyle className={'col-8 valuesList'}>
                     <ListGroup flush className="px-3">
-                        {props.property.valueIds.map((valueId, index) => {
-                            const value = props.values.byId[valueId];
-                            return (
-                                <ValueItem
-                                    value={value}
-                                    key={index}
-                                    id={valueId}
-                                    enableEdit={props.enableEdit}
-                                    syncBackend={props.syncBackend}
-                                    propertyId={props.id}
-                                    contextStyle="Template"
-                                    showHelp={props.showValueHelp && index === 0 ? true : false}
-                                />
-                            );
-                        })}
-                        {props.enableEdit && <AddValue contextStyle="Template" propertyId={props.id} syncBackend={props.syncBackend} />}
+                        {props.property.valueIds.length > 0 &&
+                            props.property.valueIds.map((valueId, index) => {
+                                const value = props.values.byId[valueId];
+                                return (
+                                    <ValueItem
+                                        value={value}
+                                        key={index}
+                                        id={valueId}
+                                        enableEdit={props.enableEdit}
+                                        syncBackend={props.syncBackend}
+                                        propertyId={props.id}
+                                        contextStyle="Template"
+                                        showHelp={props.showValueHelp && index === 0 ? true : false}
+                                        components={props.components}
+                                    />
+                                );
+                            })}
+                        {!props.enableEdit && props.property.valueIds.length === 0 && (
+                            <div className={'pt-2'}>
+                                <small>No values</small>
+                            </div>
+                        )}
+                        {props.enableEdit && (
+                            <AddValue
+                                isDisabled={!props.canAddValue}
+                                components={props.components}
+                                contextStyle="Template"
+                                propertyId={props.id}
+                                syncBackend={props.syncBackend}
+                            />
+                        )}
                     </ListGroup>
                 </ValuesStyle>
             </div>
@@ -108,7 +140,6 @@ export default function StatementItemTemplate(props) {
 }
 
 StatementItemTemplate.propTypes = {
-    togglePropertyCollapse: PropTypes.func.isRequired,
     property: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     selectedProperty: PropTypes.string,
@@ -123,5 +154,8 @@ StatementItemTemplate.propTypes = {
     inTemplate: PropTypes.bool,
     showValueHelp: PropTypes.bool,
     handleDeleteStatement: PropTypes.func.isRequired,
-    propertiesAsLinks: PropTypes.bool.isRequired
+    propertiesAsLinks: PropTypes.bool.isRequired,
+    components: PropTypes.array.isRequired,
+    canAddValue: PropTypes.bool.isRequired,
+    canDeleteProperty: PropTypes.bool.isRequired
 };

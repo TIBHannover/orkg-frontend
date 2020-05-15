@@ -88,6 +88,7 @@ export default class AddProperty extends Component {
             <>
                 <AddPropertyTemplate
                     inTemplate={this.props.inTemplate}
+                    isDisabled={this.props.isDisabled}
                     showAddProperty={this.state.showAddProperty}
                     handlePropertySelect={this.handlePropertySelect}
                     toggleConfirmNewProperty={this.toggleConfirmNewProperty}
@@ -122,10 +123,12 @@ AddProperty.propTypes = {
     newProperties: PropTypes.array.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     contextStyle: PropTypes.string.isRequired,
-    inTemplate: PropTypes.bool.isRequired
+    inTemplate: PropTypes.bool.isRequired,
+    isDisabled: PropTypes.bool.isRequired
 };
 
 AddProperty.defaultProps = {
     contextStyle: 'StatementBrowser',
-    inTemplate: false
+    inTemplate: false,
+    isDisabled: false
 };
