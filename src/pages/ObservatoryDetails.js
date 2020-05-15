@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
-import { getAllObservatoriesbyOrganizationId } from '../network';
+import { getAllObservatoriesbyOrganizationId, getOrganization } from '../network';
 import { Container } from 'reactstrap';
 import PropTypes from 'prop-types';
 import ROUTES from '../constants/routes';
@@ -16,6 +16,7 @@ class ObservatoryDetails extends Component {
 
         this.state = {
             observatories: [],
+            createdBy: '',
             isNextPageLoading: false
         };
     }
@@ -24,6 +25,7 @@ class ObservatoryDetails extends Component {
         document.title = 'Observatories - ORKG';
 
         this.loadObservatories();
+        this.getOrganization(this.props.match.params.id);
     }
 
     loadObservatories = () => {
@@ -42,6 +44,14 @@ class ObservatoryDetails extends Component {
         });
     };
 
+    getOrganization = id => {
+        getOrganization(id).then(organization => {
+                this.setState({
+                    createdBy: organization.createdBy
+                });
+        });
+    };
+
     render() {
         return (
             <>
@@ -50,7 +60,7 @@ class ObservatoryDetails extends Component {
                 </Container>
                 <Container className={'box pt-4 pb-4 pl-5 pr-5 clearfix'}>
                     <div className="clearfix">
-                        {this.props.user !== null && (
+                        {this.props.user !== null && this.props.user.id === this.state.createdBy && (
                             <Link className="float-right mb-2 mt-2 clearfix" to={reverse(ROUTES.ADD_OBSERVATORY, { id: this.props.match.params.id })}>
                                 <span className="fa fa-plus" /> Create new observatory
                             </Link>
