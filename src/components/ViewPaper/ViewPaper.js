@@ -97,7 +97,7 @@ class ViewPaper extends Component {
                                 ...data[0],
                                 created_at: paperResource.created_at,
                                 created_by: data[1],
-                                automatic_extraction: paperResource.extraction_method
+                                extraction_method: paperResource.extraction_method
                             }
                         });
                     });

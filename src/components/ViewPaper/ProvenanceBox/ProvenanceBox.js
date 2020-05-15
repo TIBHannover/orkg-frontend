@@ -101,7 +101,7 @@ export default function ProvenanceBox(props) {
                         Timeline
                     </div>
                 </ProvenanceBoxTabs>
-                {props.observatoryInfo.automatic_extraction==='AUTOMATIC' && (
+                {props.observatoryInfo.extraction_method === 'AUTOMATIC' && (
                     <ErrorMessage className="alert-server">The data has been partially imported automatically.</ErrorMessage>
                 )}
                 <TransitionGroup exit={false}>{rightSidebar}</TransitionGroup>
