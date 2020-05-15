@@ -7,7 +7,6 @@ import NotFound from '../components/StaticPages/NotFound';
 import PropTypes from 'prop-types';
 import SameAsStatements from './SameAsStatements';
 import ROUTES from '../constants/routes';
-import { Redirect } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
@@ -74,10 +73,8 @@ class Observatory extends Component {
         this.state = {
             error: null,
             label: '',
-            redirect: false,
             isLoading: false,
             observatoryId: '',
-            url: '',
             users: [],
             activeTab: 1,
             resourcesList: []
@@ -99,55 +96,45 @@ class Observatory extends Component {
     getResources = () => {
         this.setState({ isLoading: true });
         getResourcesByObservatoryId(this.props.match.params.id)
-            .then(responseJson => {
-                const allres = [...this.state.resourcesList, responseJson];
+            .then(resources => {
                 this.setState({
-                    resourcesList: allres[0]
+                    resourcesList: resources
                 });
             })
             .catch(error => {
-                this.setState({ label: null, isLoading: false });
+                this.setState({ error: error, isLoading: false });
             });
     };
 
     getContributors = () => {
         this.setState({ isLoading: true });
         getUsersByObservatoryId(this.props.match.params.id)
-            .then(responseJson => {
-                const allUsers = [...this.state.users, responseJson];
+            .then(users => {
                 this.setState({
-                    users: allUsers[0]
+                    users: users
                 });
             })
             .catch(error => {
-                this.setState({ label: null, isLoading: false });
+                this.setState({ error: error, isLoading: false });
             });
 
         getObservatorybyId(this.props.match.params.id)
-            .then(ObsresponseJson => {
-                document.title = `${ObsresponseJson.name} - Org - ORKG`;
-                this.setState({ label: ObsresponseJson.name, isLoading: false });
-                this.setState({ observatoryId: this.props.match.params.id });
+            .then(observatory => {
+                document.title = `${observatory.name} - Details`;
+                this.setState({
+                    label: observatory.name,
+                    isLoading: false,
+                    observatoryId: this.props.match.params.id
+                    
+                });
             })
             .catch(error => {
-                this.setState({ label: null, isLoading: false });
+                this.setState({ error: error, isLoading: false });
             });
-    };
-
-    toggle = type => {
-        this.setState(prevState => ({
-            [type]: !prevState[type]
-        }));
     };
 
     handleHeaderChange = event => {
         this.setState({ label: event.value });
-    };
-
-    navigateToResource = observatoryId => {
-        this.setState({ observatoryId: observatoryId }, () => {
-            this.setState({ redirect: true });
-        });
     };
 
     barToggle = tab => {
@@ -170,7 +157,7 @@ class Observatory extends Component {
                                 {!this.state.editMode ? (
                                     <div className="pb-2 mb-6">
                                         <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                            {this.state.users.length > 0 && (
+                                            {this.state.users.length > 0 ? (
                                                 <div style={{ paddingLeft: 20, paddingTop: 10 }}>
                                                     {this.state.users.map(user => {
                                                         return (
@@ -184,6 +171,10 @@ class Observatory extends Component {
                                                             </StyledShortRecord>
                                                         );
                                                     })}
+                                                </div>
+                                            ) : (
+                                                <div style={{ paddingLeft: '18%' }} className="mt-4">
+                                                    <h5>No Contributors</h5>
                                                 </div>
                                             )}
                                         </h3>
@@ -235,16 +226,6 @@ class Observatory extends Component {
                     </AnimationContainer>
                 );
                 break;
-        }
-
-        if (this.state.redirect) {
-            this.setState({
-                redirect: false,
-                value: '',
-                observatoryId: ''
-            });
-
-            return <Redirect to={reverse(this.state.url, { id: this.state.observatoryId })} />;
         }
 
         return (
