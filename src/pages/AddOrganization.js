@@ -29,15 +29,20 @@ class AddOrganization extends Component {
         const value = this.state.value;
         const image = this.state.previewSrc;
         if (value && value.length !== 0) {
-            try {
-                const responseJson = await createOrganization(value, image[0], this.props.user.id);
-                const organizationId = responseJson.id;
-                await updateUserRole();
-                this.navigateToOrganization(organizationId);
-            } catch (error) {
+            if (image.length !== 0) {
+                try {
+                    const responseJson = await createOrganization(value, image[0], this.props.user.id);
+                    const organizationId = responseJson.id;
+                    await updateUserRole();
+                    this.navigateToOrganization(organizationId);
+                } catch (error) {
+                    this.setState({ editorState: 'edit' });
+                    console.error(error);
+                    toast.error(`Error creating organization ${error.message}`);
+                }
+            } else {
+                toast.error(`Please upload an organization logo`);
                 this.setState({ editorState: 'edit' });
-                console.error(error);
-                toast.error(`Error creating organization ${error.message}`);
             }
         } else {
             toast.error(`Please enter an organization name`);
