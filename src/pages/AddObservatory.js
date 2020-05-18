@@ -18,7 +18,7 @@ class AddObservatory extends Component {
         this.state = {
             redirect: false,
             value: '',
-            ObservatoryId: ''
+            observatoryId: ''
         };
     }
 
