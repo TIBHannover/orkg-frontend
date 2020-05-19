@@ -404,11 +404,12 @@ export default (state = initialState, action) => {
 
             return {
                 ...state,
-                openExistingResourcesInDialog: payload.openExistingResourcesInDialog
-                    ? payload.openExistingResourcesInDialog
-                    : state.openExistingResourcesInDialog,
-                propertiesAsLinks: payload.propertiesAsLinks ? payload.propertiesAsLinks : state.propertiesAsLinks,
-                resourcesAsLinks: payload.resourcesAsLinks ? payload.resourcesAsLinks : state.resourcesAsLinks
+                openExistingResourcesInDialog:
+                    typeof payload.openExistingResourcesInDialog === 'boolean'
+                        ? payload.openExistingResourcesInDialog
+                        : state.openExistingResourcesInDialog,
+                propertiesAsLinks: typeof payload.propertiesAsLinks === 'boolean' ? payload.propertiesAsLinks : state.propertiesAsLinks,
+                resourcesAsLinks: typeof payload.resourcesAsLinks === 'boolean' ? payload.resourcesAsLinks : state.resourcesAsLinks
             };
         }
 
