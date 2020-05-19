@@ -152,8 +152,8 @@ export default function StatementItem(props) {
             toggleEditPropertyLabel={props.toggleEditPropertyLabel}
             inTemplate={props.inTemplate}
             showValueHelp={props.showValueHelp}
-            openExistingResourcesInDialog={props.openExistingResourcesInDialog}
             handleDeleteStatement={handleDeleteStatement}
+            propertiesAsLinks={props.propertiesAsLinks}
             components={props.components}
             canAddValue={props.canAddValue}
             canDeleteProperty={props.canDeleteProperty}
@@ -168,7 +168,6 @@ StatementItem.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     isLastItem: PropTypes.bool.isRequired,
-    openExistingResourcesInDialog: PropTypes.bool,
     showValueHelp: PropTypes.bool,
 
     templates: PropTypes.object.isRequired,
@@ -190,7 +189,8 @@ StatementItem.propTypes = {
     toggleEditPropertyLabel: PropTypes.func.isRequired,
     changeProperty: PropTypes.func.isRequired,
     isSavingProperty: PropTypes.func.isRequired,
-    doneSavingProperty: PropTypes.func.isRequired
+    doneSavingProperty: PropTypes.func.isRequired,
+    propertiesAsLinks: PropTypes.bool.isRequired
 };
 
 StatementItem.defaultProps = {

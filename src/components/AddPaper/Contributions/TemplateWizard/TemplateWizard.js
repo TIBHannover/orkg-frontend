@@ -33,7 +33,6 @@ class TemplateWizard extends Component {
                                     enableEdit={shared <= 1 ? this.props.enableEdit : false}
                                     syncBackend={this.props.syncBackend}
                                     isLastItem={propertyIds.length === index + 1}
-                                    openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                                     showValueHelp={this.props.cookies && !this.props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                                     resourceId={this.props.initialResourceId}
                                     contextStyle={'Template'}
@@ -53,7 +52,6 @@ class TemplateWizard extends Component {
                                         selectedResource={this.props.initialResourceId}
                                         enableEdit={this.props.enableEdit}
                                         syncBackend={this.props.syncBackend}
-                                        openExistingResourcesInDialog={this.props.openExistingResourcesInDialog}
                                         isAnimated={property.isAnimated}
                                     />
                                 );
@@ -77,7 +75,6 @@ TemplateWizard.propTypes = {
     initialResourceId: PropTypes.string,
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
-    openExistingResourcesInDialog: PropTypes.bool,
     templatesFound: PropTypes.bool,
     cookies: PropTypes.instanceOf(Cookies).isRequired
 };

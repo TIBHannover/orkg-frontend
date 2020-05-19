@@ -19,9 +19,11 @@ const mapStateToProps = (state, props) => {
         resources: state.statementBrowser.resources,
         values: state.statementBrowser.values,
         properties: state.statementBrowser.properties,
+        selectedProperty: state.statementBrowser.selectedProperty,
+        openExistingResourcesInDialog: state.statementBrowser.openExistingResourcesInDialog,
+        resourcesAsLinks: state.statementBrowser.resourcesAsLinks,
         classes: state.statementBrowser.classes,
         templates: state.statementBrowser.templates,
-        selectedProperty: state.statementBrowser.selectedProperty,
         valueClass: getValueClass(props.components),
         isInlineResource: isInlineResource(state, props.components)
     };

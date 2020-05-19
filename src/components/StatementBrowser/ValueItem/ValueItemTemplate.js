@@ -10,6 +10,9 @@ import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import validationSchema from 'components/StatementBrowser/AddValue/helpers/validationSchema';
 import InputField from 'components/StatementBrowser/InputField/InputField';
 import PropTypes from 'prop-types';
+import { reverse } from 'named-urls';
+import { Link } from 'react-router-dom';
+import ROUTES from 'constants/routes.js';
 
 export default function ValueItemTemplate(props) {
     const [disableHover, setDisableHover] = useState(false);
@@ -54,7 +57,7 @@ export default function ValueItemTemplate(props) {
         <ValueItemStyle>
             {!props.value.isEditing ? (
                 <div>
-                    {props.resource && !props.resource.isFetching && props.value.type === 'object' && (
+                    {props.resource && !props.resource.isFetching && props.value.type === 'object' && !props.resourcesAsLinks && (
                         <Button className="p-0 text-left" color="link" onClick={props.handleOnClick}>
                             {props.showHelp && props.value.type === 'object' ? (
                                 <Pulse content={'Click on the resource to browse it'}>
@@ -74,7 +77,13 @@ export default function ValueItemTemplate(props) {
                             )}
                         </Button>
                     )}
+
+                    {props.resource && props.value.type === 'object' && !props.resource.isFetching && props.resourcesAsLinks && (
+                        <Link to={reverse(ROUTES.RESOURCE, { id: props.value.resourceId })}>{props.value.label}</Link>
+                    )}
+
                     {props.resource && props.resource.isFetching && props.value.type === 'object' && 'Loading...'}
+
                     {props.value.type === 'literal' && (
                         <div className={'literalLabel'}>
                             <ValuePlugins type={'literal'}>{props.value.label}</ValuePlugins>
@@ -164,5 +173,6 @@ ValueItemTemplate.propTypes = {
     commitChangeLabel: PropTypes.func.isRequired,
     openExistingResourcesInDialog: PropTypes.bool,
     handleDatasetClick: PropTypes.func.isRequired,
-    handleDeleteValue: PropTypes.func.isRequired
+    handleDeleteValue: PropTypes.func.isRequired,
+    resourcesAsLinks: PropTypes.bool.isRequired
 };

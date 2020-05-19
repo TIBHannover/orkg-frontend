@@ -3,6 +3,13 @@ import { guid } from 'utils';
 import * as network from 'network';
 import { orderBy, uniq } from 'lodash';
 
+export const updateSettings = data => dispatch => {
+    dispatch({
+        type: type.STATEMENT_BROWSER_UPDATE_SETTINGS,
+        payload: data
+    });
+};
+
 /**
  * Initialise the statement browser without contibution
  * (e.g : new store to show resource in dialog)
