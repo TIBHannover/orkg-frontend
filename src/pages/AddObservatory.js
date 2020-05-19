@@ -93,7 +93,7 @@ class AddObservatory extends Component {
                 ) : (
                     <>
                         <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog('signin')}>
-                            <Icon className="mr-1" icon={faUser} /> Signin to create an observatory
+                            <Icon className="mr-1" icon={faUser} /> Sign in to create an observatory
                         </Button>
                     </>
                 )}

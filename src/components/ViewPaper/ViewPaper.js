@@ -88,7 +88,12 @@ class ViewPaper extends Component {
 
         getResource(resourceId)
             .then(paperResource => {
-                if (paperResource.observatory_id) {
+                if (
+                    paperResource.observatory_id &&
+                    paperResource.observatory_id !== '00000000-0000-0000-0000-000000000000' &&
+                    paperResource.created_by &&
+                    paperResource.created_by !== '00000000-0000-0000-0000-000000000000'
+                ) {
                     const observatory = getObservatoryAndOrganizationInformation(paperResource.observatory_id);
                     const creator = getUserInformationById(paperResource.created_by);
                     Promise.all([observatory, creator]).then(data => {

@@ -28,18 +28,24 @@ class Organizations extends Component {
 
     loadOrganizations = () => {
         this.setState({ isNextPageLoading: true });
-        getAllOrganizations().then(organizations => {
-            if (organizations.length > 0) {
+        getAllOrganizations()
+            .then(organizations => {
+                if (organizations.length > 0) {
+                    this.setState({
+                        organizations: organizations,
+                        isNextPageLoading: false
+                    });
+                } else {
+                    this.setState({
+                        isNextPageLoading: false
+                    });
+                }
+            })
+            .catch(error => {
                 this.setState({
-                    organizations: organizations,
                     isNextPageLoading: false
                 });
-            } else {
-                this.setState({
-                    isNextPageLoading: false
-                });
-            }
-        });
+            });
     };
 
     render() {
@@ -58,7 +64,7 @@ class Organizations extends Component {
 
                         {!this.props.user && (
                             <Button color="link" className="p-0 float-right mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog('signin')}>
-                                <Icon className="mr-1" icon={faUser} /> Signin to create organization
+                                <Icon className="mr-1" icon={faUser} /> Sign in to create an organization
                             </Button>
                         )}
                     </div>
