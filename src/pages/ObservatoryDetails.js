@@ -30,18 +30,24 @@ class ObservatoryDetails extends Component {
 
     loadObservatories = () => {
         this.setState({ isNextPageLoading: true });
-        getAllObservatoriesbyOrganizationId(this.props.match.params.id).then(observatories => {
-            if (observatories.length > 0) {
+        getAllObservatoriesbyOrganizationId(this.props.match.params.id)
+            .then(observatories => {
+                if (observatories.length > 0) {
+                    this.setState({
+                        observatories: observatories,
+                        isNextPageLoading: false
+                    });
+                } else {
+                    this.setState({
+                        isNextPageLoading: false
+                    });
+                }
+            })
+            .catch(error => {
                 this.setState({
-                    observatories: observatories,
                     isNextPageLoading: false
                 });
-            } else {
-                this.setState({
-                    isNextPageLoading: false
-                });
-            }
-        });
+            });
     };
 
     getOrganization = id => {
