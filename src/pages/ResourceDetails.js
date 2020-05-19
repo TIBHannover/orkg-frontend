@@ -26,7 +26,7 @@ class ResourceDetails extends Component {
         this.state = {
             error: null,
             label: '',
-            isLoading: false,
+            isLoading: true,
             editMode: false,
             classes: [],
             objectStatements: [],
