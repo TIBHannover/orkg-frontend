@@ -28,6 +28,7 @@ const mapStateToProps = (state, props) => {
         newResources: newResourcesList,
         properties: state.statementBrowser.properties,
         classes: state.statementBrowser.classes,
+        openExistingResourcesInDialog: state.statementBrowser.openExistingResourcesInDialog,
         templates: state.statementBrowser.templates,
         isLiteral: isLiteral(props.components),
         valueClass: getValueClass(props.components),
