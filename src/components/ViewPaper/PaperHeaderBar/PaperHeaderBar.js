@@ -11,7 +11,7 @@ const PaperHeaderBarContainer = styled.div`
     right: 0;
     left: 0;
     background: #e0e2ea;
-    z-index: 1040;
+    z-index: 1000;
     border-bottom: 1px #d1d3d9 solid;
     box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.13);
     & .title {
