@@ -459,7 +459,13 @@ export const extendPropertyIds = (propertyIds, data) => {
             // flat the all contribution values for the current predicate and
             // check if there similar predicate.
             // (the target similar predicate is supposed to be the last in the path of value)
-            const allV = flattenDepth(values, 2).filter(value => value.path[value.path.length - 1] === pID && pr !== pID);
+            const allV = flattenDepth(values, 2).filter(value => {
+                if (value.path && value.path.length > 0 && value.path[value.path.length - 1] === pID && pr !== pID) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
             if (allV.length > 0) {
                 result.push(pr);
             }
