@@ -211,6 +211,12 @@ class Header extends Component {
                                             <Badge color="info">Beta</Badge>
                                         </small>
                                     </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.ORGANIZATIONS}>
+                                        Organizations{' '}
+                                        <small>
+                                            <Badge color="info">Beta</Badge>
+                                        </small>
+                                    </DropdownItem>
                                 </DropdownMenu>
                             </ButtonDropdown>
 

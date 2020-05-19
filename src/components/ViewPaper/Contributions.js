@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
 import { Alert, Col, Container, Form, FormGroup, Row, Button } from 'reactstrap';
-import { getResource, getSimilaireContribution, deleteStatementById, createResource, createResourceStatement } from '../../network';
+import { getResource, getSimilaireContribution, deleteStatementById, createResource, createResourceStatement } from 'network';
 import AddToComparison from './AddToComparison';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ContentLoader from 'react-content-loader';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import ROUTES from '../../constants/routes';
+import { isEmpty } from 'lodash';
+import ROUTES from 'constants/routes';
 import SimilarContributions from './SimilarContributions';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProblemInput';
 import ContributionItemList from 'components/AddPaper/Contributions/ContributionItemList';
+import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
 import { toast } from 'react-toastify';
-import { selectContribution, updateResearchProblems } from '../../actions/viewPaper';
+import { selectContribution, updateResearchProblems } from 'actions/viewPaper';
 import styled from 'styled-components';
 import { StyledHorizontalContributionsList, StyledHorizontalContribution } from '../AddPaper/Contributions/styled';
 import Tippy from '@tippy.js/react';
@@ -59,7 +61,8 @@ class Contributions extends Component {
             loading: true,
             similaireContributions: [],
             isSimilaireContributionsLoading: true,
-            isSimilaireContributionsFailedLoading: false
+            isSimilaireContributionsFailedLoading: false,
+            label: ''
         };
     }
 
@@ -149,7 +152,7 @@ class Contributions extends Component {
         return (
             <div>
                 <Container>
-                    <Row noGutters={true}>
+                    <Row>
                         <Col md="9">
                             {this.state.loading && (
                                 <div>
@@ -326,6 +329,9 @@ class Contributions extends Component {
                                 </StyledHorizontalContribution>
                             </AnimationContainer>
                         </TransitionGroup>
+                        {!isEmpty(this.props.observatoryInfo) && (
+                            <ProvenanceBox contributors={this.props.contributors} observatoryInfo={this.props.observatoryInfo} />
+                        )}
                     </Row>
                 </Container>
             </div>
@@ -346,7 +352,9 @@ Contributions.propTypes = {
     updateResearchProblems: PropTypes.func.isRequired,
     handleChangeContributionLabel: PropTypes.func.isRequired,
     handleCreateContribution: PropTypes.func.isRequired,
-    toggleDeleteContribution: PropTypes.func.isRequired
+    toggleDeleteContribution: PropTypes.func.isRequired,
+    observatoryInfo: PropTypes.object,
+    contributors: PropTypes.array
 };
 
 const mapStateToProps = state => ({

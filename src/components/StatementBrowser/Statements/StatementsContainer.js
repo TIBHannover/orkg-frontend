@@ -7,7 +7,8 @@ import {
     getComponentsByResourceID,
     initializeWithoutContribution,
     initializeWithResource,
-    createProperty
+    createProperty,
+    updateSettings
 } from 'actions/statementBrowser';
 import Statements from './Statements';
 
@@ -30,6 +31,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     initializeWithoutContribution: data => dispatch(initializeWithoutContribution(data)),
     initializeWithResource: data => dispatch(initializeWithResource(data)),
+    updateSettings: data => dispatch(updateSettings(data)),
     createProperty: data => dispatch(createProperty(data))
 });
 

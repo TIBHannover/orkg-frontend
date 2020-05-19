@@ -10,6 +10,9 @@ import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/Sta
 import { predicatesUrl } from 'network';
 import defaultProperties from 'components/StatementBrowser/AddProperty/helpers/defaultProperties';
 import AutoComplete from 'components/StatementBrowser/AutoComplete';
+import { reverse } from 'named-urls';
+import { Link } from 'react-router-dom';
+import ROUTES from 'constants/routes.js';
 
 export default function StatementItemTemplate(props) {
     const [disableHover, setDisableHover] = useState(false);
@@ -18,7 +21,6 @@ export default function StatementItemTemplate(props) {
         propertyOptions: true,
         disableHover: disableHover
     });
-
     return (
         <StatementsGroupStyle className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'}`}>
             <div className={'row no-gutters'}>
@@ -26,7 +28,12 @@ export default function StatementItemTemplate(props) {
                     {!props.property.isEditing ? (
                         <div>
                             <div className={'propertyLabel'}>
-                                {props.predicateLabel} {}
+                                {props.propertiesAsLinks ? (
+                                    <Link to={reverse(ROUTES.PREDICATE, { id: props.property.existingPredicateId })}>{props.predicateLabel}</Link>
+                                ) : (
+                                    props.predicateLabel
+                                )}{' '}
+                                {}
                                 {props.enableEdit &&
                                     props.components &&
                                     props.components.length > 0 &&
@@ -98,7 +105,6 @@ export default function StatementItemTemplate(props) {
                                         enableEdit={props.enableEdit}
                                         syncBackend={props.syncBackend}
                                         propertyId={props.id}
-                                        openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                         contextStyle="Template"
                                         showHelp={props.showValueHelp && index === 0 ? true : false}
                                         components={props.components}
@@ -114,7 +120,6 @@ export default function StatementItemTemplate(props) {
                             <AddValue
                                 isDisabled={!props.canAddValue}
                                 components={props.components}
-                                openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                 contextStyle="Template"
                                 propertyId={props.id}
                                 syncBackend={props.syncBackend}
@@ -141,8 +146,8 @@ StatementItemTemplate.propTypes = {
     toggleEditPropertyLabel: PropTypes.func.isRequired,
     inTemplate: PropTypes.bool,
     showValueHelp: PropTypes.bool,
-    openExistingResourcesInDialog: PropTypes.bool.isRequired,
     handleDeleteStatement: PropTypes.func.isRequired,
+    propertiesAsLinks: PropTypes.bool.isRequired,
     components: PropTypes.array.isRequired,
     canAddValue: PropTypes.bool.isRequired,
     canDeleteProperty: PropTypes.bool.isRequired

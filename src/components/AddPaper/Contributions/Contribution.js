@@ -171,7 +171,6 @@ class Contribution extends Component {
                             <FormGroup>
                                 <TemplateWizard
                                     enableEdit={true}
-                                    openExistingResourcesInDialog={true}
                                     syncBackend={false}
                                     initialResourceId={this.props.resourceId}
                                     templatesFound={uniqueTemplates.length > 0 ? true : false}

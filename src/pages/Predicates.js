@@ -64,8 +64,8 @@ export default class Predicates extends Component {
                         <div>
                             {this.state.predicates.map(predicate => {
                                 return (
-                                    <ShortRecord key={predicate.id} header={predicate.id} href={reverse(ROUTES.PREDICATE, { id: predicate.id })}>
-                                        {predicate.label}
+                                    <ShortRecord key={predicate.id} header={predicate.label} href={reverse(ROUTES.PREDICATE, { id: predicate.id })}>
+                                        {predicate.id}
                                     </ShortRecord>
                                 );
                             })}

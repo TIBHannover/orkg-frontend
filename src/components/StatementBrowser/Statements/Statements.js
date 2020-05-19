@@ -26,6 +26,11 @@ export default function Statements(props) {
                     label: props.initialResourceLabel
                 });
             }
+            props.updateSettings({
+                openExistingResourcesInDialog: props.openExistingResourcesInDialog,
+                propertiesAsLinks: props.propertiesAsLinks,
+                resourcesAsLinks: props.resourcesAsLinks
+            });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // run only once : https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects
@@ -62,8 +67,8 @@ export default function Statements(props) {
                                             predicateLabel={property.label}
                                             enableEdit={shared <= 1 ? props.enableEdit : false}
                                             syncBackend={props.syncBackend}
+                                            isAnimated={property.isAnimated}
                                             isLastItem={propertyIds.length === index + 1}
-                                            openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                                             showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                                         />
                                     );
@@ -119,7 +124,7 @@ export default function Statements(props) {
         <>
             {props.level !== 0 ? (
                 <>
-                    <Breadcrumbs openExistingResourcesInDialog={props.openExistingResourcesInDialog} />
+                    <Breadcrumbs />
                 </>
             ) : (
                 ''
@@ -140,6 +145,7 @@ Statements.propTypes = {
     cookies: PropTypes.instanceOf(Cookies).isRequired,
     initializeWithoutContribution: PropTypes.func.isRequired,
     initializeWithResource: PropTypes.func.isRequired,
+    updateSettings: PropTypes.func.isRequired,
 
     classes: PropTypes.object.isRequired,
     templates: PropTypes.object.isRequired,
@@ -154,7 +160,9 @@ Statements.propTypes = {
     initialResourceLabel: PropTypes.string,
     syncBackend: PropTypes.bool.isRequired,
     newStore: PropTypes.bool,
-    templatesFound: PropTypes.bool
+    templatesFound: PropTypes.bool,
+    propertiesAsLinks: PropTypes.bool,
+    resourcesAsLinks: PropTypes.bool
 };
 
 Statements.defaultProps = {
@@ -163,5 +171,7 @@ Statements.defaultProps = {
     initialResourceLabel: null,
     syncBackend: false,
     newStore: false,
-    templatesFound: false
+    templatesFound: false,
+    propertiesAsLinks: false,
+    resourcesAsLinks: false
 };

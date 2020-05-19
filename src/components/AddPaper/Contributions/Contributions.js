@@ -25,6 +25,7 @@ import { faMagic, faPlus } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import Tippy from '@tippy.js/react';
 import PropTypes from 'prop-types';
+import { updateSettings } from 'actions/statementBrowser';
 
 const AnimationContainer = styled(CSSTransition)`
     transition: 0.3s background-color, 0.3s border-color;
@@ -55,6 +56,9 @@ class Contributions extends Component {
                 selectAfterCreation: true,
                 prefillStatements: true,
                 researchField: this.props.selectedResearchField
+            });
+            this.props.updateSettings({
+                openExistingResourcesInDialog: true
             });
         }
     }
@@ -230,6 +234,7 @@ Contributions.propTypes = {
     createContribution: PropTypes.func.isRequired,
     deleteContribution: PropTypes.func.isRequired,
     selectContribution: PropTypes.func.isRequired,
+    updateSettings: PropTypes.func.isRequired,
     updateContributionLabel: PropTypes.func.isRequired,
     saveAddPaper: PropTypes.func.isRequired,
     openTour: PropTypes.func.isRequired,
@@ -263,7 +268,8 @@ const mapDispatchToProps = dispatch => ({
     updateContributionLabel: data => dispatch(updateContributionLabel(data)),
     saveAddPaper: data => dispatch(saveAddPaper(data)),
     openTour: data => dispatch(openTour(data)),
-    toggleAbstractDialog: () => dispatch(toggleAbstractDialog())
+    toggleAbstractDialog: () => dispatch(toggleAbstractDialog()),
+    updateSettings: data => dispatch(updateSettings(data))
 });
 
 export default connect(

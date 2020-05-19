@@ -331,11 +331,12 @@ export default function ValueItem(props) {
                 handleChangeResource={handleChangeResource}
                 toggleEditValue={props.toggleEditValue}
                 commitChangeLabel={commitChangeLabel}
-                openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                 handleDatasetClick={handleDatasetClick}
                 enableEdit={props.enableEdit}
                 handleDeleteValue={handleDeleteValue}
                 showHelp={props.showHelp}
+                openExistingResourcesInDialog={props.openExistingResourcesInDialog}
+                resourcesAsLinks={props.resourcesAsLinks}
                 getLabel={getLabel}
                 components={props.components}
                 valueClass={props.valueClass}
@@ -394,6 +395,7 @@ ValueItem.propTypes = {
     openExistingResourcesInDialog: PropTypes.bool,
     contextStyle: PropTypes.string.isRequired,
     showHelp: PropTypes.bool,
+    resourcesAsLinks: PropTypes.bool.isRequired,
 
     components: PropTypes.array.isRequired,
     valueClass: PropTypes.object,

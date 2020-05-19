@@ -17,6 +17,7 @@ const mapStateToProps = (state, props) => {
         selectedResource: state.statementBrowser.selectedResource,
         properties: state.statementBrowser.properties,
         values: state.statementBrowser.values,
+        propertiesAsLinks: state.statementBrowser.propertiesAsLinks,
         resources: state.statementBrowser.resources,
         templates: state.statementBrowser.templates,
         classes: state.statementBrowser.classes,
