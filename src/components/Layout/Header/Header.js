@@ -18,24 +18,26 @@ import {
     Badge
 } from 'reactstrap';
 import { Link, NavLink as RouterNavLink } from 'react-router-dom';
-import { ReactComponent as Logo } from '../../../assets/img/logo.svg';
+import { ReactComponent as Logo } from 'assets/img/logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faUser } from '@fortawesome/free-solid-svg-icons';
-import ROUTES from '../../../constants/routes.js';
+import ROUTES from 'constants/routes.js';
 import { Cookies } from 'react-cookie';
 import Gravatar from 'react-gravatar';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Authentication from '../../Authentication/Authentication';
+import Authentication from 'components/Authentication/Authentication';
 import SearchForm from './SearchForm';
-import { openAuthDialog, updateAuth, resetAuth } from '../../../actions/auth';
+import { openAuthDialog, updateAuth, resetAuth } from 'actions/auth';
 import { Redirect } from 'react-router-dom';
-import { getUserInformation } from '../../../network';
+import { getUserInformation } from 'network';
 import greetingTime from 'greeting-time';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
+import { toast } from 'react-toastify';
+const cookies = new Cookies();
 
 const StyledLink = styled(Link)`
     :focus {
@@ -91,6 +93,8 @@ class Header extends Component {
         };
 
         this.userPopup = React.createRef();
+
+        this.logoutTimeoutId = null; // timeout for autologout
     }
 
     componentDidMount() {
@@ -104,10 +108,21 @@ class Header extends Component {
                 redirectLogout: false
             });
         }
+        if (!this.logoutTimeoutId && this.props.user) {
+            const token_expires_in = cookies.get('token_expires_in') ? cookies.get('token_expires_in') : null;
+            // Get the diffrence between token expiration time and now
+            const diff = new Date(token_expires_in) - Date.now();
+            // set timeout to autologout
+            this.logoutTimeoutId = setTimeout(this.tokenExpired, diff);
+        }
     }
 
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.handleClickOutside);
+        if (this.logoutTimeoutId) {
+            clearTimeout(this.logoutTimeoutId); // clear timeout
+            this.logoutTimeoutId = null;
+        }
     }
 
     handleClickOutside = event => {
@@ -116,16 +131,36 @@ class Header extends Component {
         }
     };
 
+    tokenExpired = () => {
+        toast.warn('User session expired, please sign in again!');
+        cookies.remove('token');
+        cookies.remove('token_expires_in');
+        this.props.resetAuth();
+        this.props.openAuthDialog('signin');
+        this.logoutTimeoutId = null;
+    };
+
     userInformation = () => {
         const cookies = new Cookies();
         const token = cookies.get('token') ? cookies.get('token') : null;
+        const token_expires_in = cookies.get('token_expires_in') ? cookies.get('token_expires_in') : null;
         if (token && !this.props.user) {
             getUserInformation()
                 .then(userData => {
-                    this.props.updateAuth({ user: { displayName: userData.display_name, id: userData.id, token: token, email: userData.email } });
+                    this.props.updateAuth({
+                        user: {
+                            displayName: userData.display_name,
+                            id: userData.id,
+                            token: token,
+                            tokenExpire: token_expires_in,
+                            email: userData.email
+                        }
+                    });
                 })
                 .catch(error => {
                     cookies.remove('token');
+                    cookies.remove('token_expires_in');
+                    this.props.resetAuth();
                 });
         }
     };

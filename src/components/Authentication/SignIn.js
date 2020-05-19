@@ -2,8 +2,8 @@ import { Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { openAuthDialog, toggleAuthDialog, updateAuth } from '../../actions/auth';
-import { signInWithEmailAndPassword } from '../../network';
+import { openAuthDialog, toggleAuthDialog, updateAuth } from 'actions/auth';
+import { signInWithEmailAndPassword, getUserInformation } from 'network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Cookies } from 'react-cookie';
@@ -32,17 +32,34 @@ class SignIn extends Component {
         this.setState({
             loading: true
         });
-
+        let userToken;
+        let token_expires_in;
         signInWithEmailAndPassword(this.state.email, this.state.password)
             .then(token => {
+                userToken = token.access_token;
                 cookies.set('token', token.access_token, { path: process.env.PUBLIC_URL, maxAge: token.expires_in });
+                token_expires_in = new Date(Date.now() + token.expires_in * 1000);
+                cookies.set('token_expires_in', token_expires_in.toUTCString(), { path: process.env.PUBLIC_URL, maxAge: token.expires_in });
+                //window.location.reload();
+                return getUserInformation();
+            })
+            .then(userData => {
+                this.props.updateAuth({
+                    user: {
+                        displayName: userData.display_name,
+                        id: userData.id,
+                        token: userToken,
+                        email: userData.email,
+                        tokenExpire: token_expires_in
+                    }
+                });
                 this.props.toggleAuthDialog();
                 this.setState({ loading: false });
-                window.location.reload();
             })
             .catch(e => {
                 let error = 'Something went wrong, please try again';
-
+                cookies.remove('token');
+                cookies.remove('token_expires_in');
                 if (e.error === 'invalid_grant') {
                     error = 'Wrong email address or password';
                 } else if (e.error_description) {
