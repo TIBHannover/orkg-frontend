@@ -1,11 +1,15 @@
 import { Cookies } from 'react-cookie';
 import queryString from 'query-string';
+import { orderBy } from 'lodash';
 import { sortMethod } from 'utils';
 export const url = `${process.env.REACT_APP_SERVER_URL}api/`;
 export const similaireServiceUrl = process.env.REACT_APP_SIMILARITY_SERVICE_URL;
 export const annotationServiceUrl = process.env.REACT_APP_ANNOTATION_SERVICE_URL;
 export const resourcesUrl = `${url}resources/`;
+export const organizationsUrl = `${url}organizations/`;
+export const observatoriesUrl = `${url}observatories/`;
 export const predicatesUrl = `${url}predicates/`;
+export const userUrl = `${url}user/`;
 export const statementsUrl = `${url}statements/`;
 export const literalsUrl = `${url}literals/`;
 export const classesUrl = `${url}classes/`;
@@ -465,6 +469,10 @@ export const updateUserPassword = ({ current_password, new_password, new_matchin
     return submitPutRequest(`${url}user/password/`, headers, data);
 };
 
+export const updateUserRole = () => {
+    return submitPutRequest(`${userUrl}role/`);
+};
+
 /**
  * Load template by ID
  *
@@ -644,4 +652,66 @@ export const getTemplatesByClass = classID => {
         objectId: classID,
         predicateId: process.env.REACT_APP_TEMPLATE_OF_CLASS
     }).then(statements => Promise.all(statements.map(st => st.subject.id)));
+};
+
+export const getAllOrganizations = () => {
+    return submitGetRequest(`${organizationsUrl}`);
+};
+
+export const getOrganization = id => {
+    return submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/`);
+};
+
+export const createOrganization = (organizationName, organizationLogo, createdBy) => {
+    return submitPostRequest(organizationsUrl, { 'Content-Type': 'application/json' }, { organizationName, organizationLogo, createdBy });
+};
+
+export const getAllObservatoriesbyOrganizationId = id => {
+    return submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/observatories`);
+};
+
+export const getObservatorybyId = id => {
+    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/`);
+};
+
+export const getUsersByObservatoryId = id => {
+    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/users`);
+};
+
+export const getResourcesByObservatoryId = id => {
+    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/resources`);
+};
+
+export const createObservatory = (observatoryName, organizationId) => {
+    return submitPostRequest(observatoriesUrl, { 'Content-Type': 'application/json' }, { observatoryName, organizationId });
+};
+
+export const getContributorsByResourceId = id => {
+    return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/contributors`).then(contributors => {
+        const c = contributors.map(contributor => {
+            if (contributor.createdBy === '00000000-0000-0000-0000-000000000000') {
+                return { ...contributor, created_by: { id: '00000000-0000-0000-0000-000000000000', display_name: 'Unknown' } };
+            } else {
+                return getUserInformationById(contributor.createdBy).then(user => ({ ...contributor, created_by: user }));
+            }
+        });
+        // Order the contribution timeline because it's not ordered in the result
+        return Promise.all(c).then(rc => orderBy(rc, ['created_at'], ['desc']));
+    });
+};
+
+export const getObservatoryAndOrganizationInformation = observatoryId => {
+    return getObservatorybyId(observatoryId).then(obsResponse => {
+        return getOrganization(obsResponse.organizationId).then(orgResponse => {
+            return {
+                id: observatoryId,
+                name: obsResponse.name.toUpperCase(),
+                organization: {
+                    id: obsResponse.organizationId,
+                    name: orgResponse.organization_name,
+                    logo: orgResponse.organization_logo
+                }
+            };
+        });
+    });
 };
