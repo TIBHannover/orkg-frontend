@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { toggleAuthDialog, updateAuth } from '../../actions/auth';
-import { registerWithEmailAndPassword, signInWithEmailAndPassword } from '../../network';
+import { toggleAuthDialog, updateAuth } from 'actions/auth';
+import { registerWithEmailAndPassword, signInWithEmailAndPassword, getUserInformation } from 'network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { get_error_message } from 'utils';
@@ -40,16 +40,35 @@ class SignUp extends Component {
             errors: null
         });
 
+        let userToken;
+        let token_expires_in;
         registerWithEmailAndPassword(email, password, matching_password, name)
             .then(() => {
                 signInWithEmailAndPassword(email, password)
                     .then(token => {
+                        userToken = token.access_token;
                         cookies.set('token', token.access_token, { path: process.env.PUBLIC_URL, maxAge: token.expires_in });
+                        token_expires_in = new Date(Date.now() + token.expires_in * 1000);
+                        cookies.set('token_expires_in', token_expires_in.toUTCString(), { path: process.env.PUBLIC_URL, maxAge: token.expires_in });
+                        return getUserInformation();
+                        //window.location.reload();
+                    })
+                    .then(userData => {
+                        this.props.updateAuth({
+                            user: {
+                                displayName: userData.display_name,
+                                id: userData.id,
+                                token: userToken,
+                                email: userData.email,
+                                tokenExpire: token_expires_in
+                            }
+                        });
                         this.props.toggleAuthDialog();
                         this.setState({ loading: false, errors: null });
-                        window.location.reload();
                     })
                     .catch(e => {
+                        cookies.remove('token');
+                        cookies.remove('token_expires_in');
                         this.setState({ loading: false, errors: 'Something went wrong, please try again' });
                     });
             })
