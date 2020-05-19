@@ -407,6 +407,13 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - New ui design [`#30`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/30)
 
 ---
+## [V0.10.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.10...V0.10.1) - 2020-05-19
+
+### Merged
+
+- Fix the issue if the paper is not part of an observatory [`#259`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/259)
+
+---
 ## [V0.10](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.9...V0.10) - 2020-05-19
 
 ### Merged
