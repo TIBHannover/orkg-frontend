@@ -6,7 +6,7 @@ import {
     selectResource,
     createRequiredPropertiesInResource
 } from 'actions/statementBrowser';
-import { isLiteral, getValueClass, isInlineResource } from './helpers/utils';
+import { isLiteral, getValueClass } from './helpers/utils';
 import AddValue from './AddValue';
 
 const mapStateToProps = (state, props) => {
@@ -31,8 +31,7 @@ const mapStateToProps = (state, props) => {
         openExistingResourcesInDialog: state.statementBrowser.openExistingResourcesInDialog,
         templates: state.statementBrowser.templates,
         isLiteral: isLiteral(props.components),
-        valueClass: getValueClass(props.components),
-        isInlineResource: isInlineResource(state, props.components)
+        valueClass: getValueClass(props.components)
     };
 };
 

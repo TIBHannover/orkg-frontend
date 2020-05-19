@@ -166,6 +166,7 @@ class TemplateEditorAutoComplete extends Component {
                     value={this.props.value}
                     getOptionLabel={({ label }) => label}
                     getOptionValue={({ id }) => id}
+                    onBlur={this.props.onBlur}
                     isMulti={this.props.isMulti ? true : false}
                     isDisabled={this.props.isDisabled}
                     isClearable={this.props.isClearable}
@@ -185,6 +186,7 @@ TemplateEditorAutoComplete.propTypes = {
     theme: PropTypes.object.isRequired,
     optionsClass: PropTypes.string,
     isMulti: PropTypes.bool,
+    onBlur: PropTypes.func,
     isDisabled: PropTypes.bool,
     isClearable: PropTypes.bool,
     noOptionsMessage: PropTypes.string,
