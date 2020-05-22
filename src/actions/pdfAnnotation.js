@@ -9,11 +9,40 @@ export const selectTool = tool => dispatch => {
     });
 };
 
-export const setPdf = pdf => dispatch => {
+export const setFile = ({ pages, pdf, styles }) => dispatch => {
     dispatch({
-        type: type.PDF_ANNOTATION_SET_PDF,
+        type: type.PDF_ANNOTATION_SET_FILE,
         payload: {
-            pdf
+            pages,
+            pdf,
+            styles
+        }
+    });
+};
+
+export const setTableData = tableData => dispatch => {
+    dispatch({
+        type: type.PDF_ANNOTATION_SET_TABLE_DATA,
+        payload: {
+            tableData
+        }
+    });
+};
+
+export const updateTableData = dataChanges => dispatch => {
+    dispatch({
+        type: type.PDF_ANNOTATION_UPDATE_TABLE_DATA,
+        payload: {
+            dataChanges
+        }
+    });
+};
+
+export const setParsedPdfData = parsedPdfData => dispatch => {
+    dispatch({
+        type: type.PDF_ANNOTATION_SET_PARSED_PDF_DATA,
+        payload: {
+            parsedPdfData
         }
     });
 };

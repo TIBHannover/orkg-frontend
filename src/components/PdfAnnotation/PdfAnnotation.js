@@ -11,7 +11,7 @@ import { withTheme } from 'styled-components';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { parse } from 'node-html-parser';
-import { setPdf } from '../../actions/pdfAnnotation';
+import { setFile, setParsedPdfData } from '../../actions/pdfAnnotation';
 
 const DragPdf = styled.div`
     margin: 200px auto;
@@ -46,29 +46,29 @@ class PdfAnnotation extends Component {
 
         this.state = {
             loading: false,
-            pdf: '',
-            zoom: 1,
-            paddingLeft: 0,
-            pages: null,
-            styles: []
+            zoom: 1
         };
 
         this.defaultPageWidth = 968;
     }
 
     handleUpload = files => {
-        console.log(files);
         const self = this;
 
         this.setState({
-            loading: true,
-            pdf: files[0]
+            loading: true
         });
-        console.log(files[0]);
-        this.props.setPdf(files[0]);
+
+        if (files.length === 0) {
+            return;
+        }
+
+        const pdf = files[0];
+
+        //this.props.setPdf(files[0]);
 
         const form = new FormData();
-        form.append('pdf', files[0]);
+        form.append('pdf', pdf);
 
         fetch('http://localhost:9000/convertPdf', {
             method: 'POST',
@@ -82,20 +82,50 @@ class PdfAnnotation extends Component {
                 }
             })
             .then(function(data) {
-                //console.log(data);
-
                 const parseData = parse(data, {
                     style: true // retrieve content in <style> (hurt performance slightly)
                 });
                 const pages = parseData.querySelectorAll('.pf');
-                console.log(parseData);
                 const styles = parseData.querySelectorAll('style');
-                console.log(styles);
-                self.setState({
-                    loading: false,
+
+                self.props.setFile({
+                    pdf,
                     pages,
                     styles
                 });
+
+                self.parsePdf(pdf);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
+
+    parsePdf = pdf => {
+        const form = new FormData();
+        form.append('input', pdf);
+        const self = this;
+
+        fetch('http://localhost:8070/api/processFulltextDocument', {
+            method: 'POST',
+            body: form
+        })
+            .then(response => {
+                if (!response.ok) {
+                    console.log('err');
+                } else {
+                    return response.text();
+                }
+            })
+            .then(str => new window.DOMParser().parseFromString(str, 'text/xml')) // parse the xml
+            .then(function(data) {
+                self.props.setParsedPdfData(data);
+
+                self.setState({
+                    loading: false
+                });
+                //console.log('data', data);
+                //console.log('data', data.querySelectorAll('ref[type="bibr"]'));
             })
             .catch(err => {
                 console.log(err);
@@ -138,25 +168,25 @@ class PdfAnnotation extends Component {
             <div style={{ paddingTop: 20 }}>
                 <Toolbar changeZoom={this.handleZoomChange} fullWidth={this.fullWidth} zoom={this.state.zoom} />
 
-                {this.state.pages && (
-                    <PdfContainer style={{ paddingLeft: this.state.paddingLeft }}>
+                {this.props.pages && (
+                    <PdfContainer>
                         <ZoomContainer style={{ transform: 'scale(' + this.state.zoom + ')' }} id="zoom-container">
-                            {this.state.pages.map((page, index) => (
+                            {this.props.pages.map((page, index) => (
                                 <div style={{ position: 'relative' }} key={index}>
-                                    <TableSelect pageNumber={index + 1} pdf={this.state.pdf}>
+                                    <TableSelect pageNumber={index + 1} pdf={this.props.pdf}>
                                         <div dangerouslySetInnerHTML={{ __html: page }} />
                                     </TableSelect>
                                 </div>
                             ))}
                         </ZoomContainer>
 
-                        {this.state.styles.map((style, index) => (
+                        {this.props.styles.map((style, index) => (
                             <div dangerouslySetInnerHTML={{ __html: style }} key={index} />
                         ))}
                     </PdfContainer>
                 )}
 
-                {!this.state.pages && !this.state.loading && (
+                {!this.props.pages && !this.state.loading && (
                     <Dropzone onDrop={this.handleUpload}>
                         {({ getRootProps, getInputProps, isDragActive }) => (
                             <section>
@@ -184,11 +214,15 @@ class PdfAnnotation extends Component {
 }
 
 const mapStateToProps = state => ({
-    selectedTool: state.pdfAnnotation.selectedTool
+    selectedTool: state.pdfAnnotation.selectedTool,
+    pdf: state.pdfAnnotation.pdf,
+    pages: state.pdfAnnotation.pages,
+    styles: state.pdfAnnotation.styles
 });
 
 const mapDispatchToProps = dispatch => ({
-    setPdf: pdf => dispatch(setPdf(pdf))
+    setFile: payload => dispatch(setFile(payload)),
+    setParsedPdfData: payload => dispatch(setParsedPdfData(payload))
 });
 
 export default compose(

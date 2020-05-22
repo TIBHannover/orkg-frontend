@@ -7,6 +7,7 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 import { Table, Input } from 'reactstrap';
 import 'handsontable/dist/handsontable.full.css';
 import { HotTable } from '@handsontable/react';
+import { setTableData, updateTableData } from '../../actions/pdfAnnotation';
 
 class TableEditor extends Component {
     constructor(props) {
@@ -18,36 +19,19 @@ class TableEditor extends Component {
         };
     }
 
+    /*componentDidUpdate(prevProps) {
+        if (this.props.tableData !== prevProps.tableData) {
+            console.log('this.props.tableData', this.props.tableData);
+            //this.props.setRef.current.hotInstance.loadData(this.props.tableData);
+        }
+    }*/
+
     render() {
-        const columns = this.props.data[0].split(','); //.map(field => field);
-        console.log(columns);
-        const data = [];
-
-        for (const [index, row] of this.props.data.entries()) {
-            if (index === 0) {
-                continue;
-            }
-
-            const cells = row.split(',');
-            const dataRow = [];
-
-            if (cells.length > 0) {
-                for (const [index, cell] of cells.entries()) {
-                    dataRow.push(cell);
-                }
-            }
-            data.push(dataRow);
-        }
-
-        if (columns.length === 0) {
-            return;
-        }
-
-        const fullData = [columns, ...data];
+        console.log('this.props.tableData1', this.props.tableData);
 
         return (
             <HotTable
-                data={fullData}
+                data={this.props.tableData}
                 //dropdownMenu={true}
                 rowHeaders={true}
                 width="100%"
@@ -59,24 +43,21 @@ class TableEditor extends Component {
                 contextMenu={true}
                 stretchH={'all'}
                 ref={this.props.setRef}
+                beforeChange={this.props.updateTableData}
             />
         );
     }
 }
 
-TableEditor.propTypes = {
-    data: PropTypes.array
-};
-
-TableEditor.defaultProps = {
-    data: []
-};
-
 const mapStateToProps = state => ({
-    pdf: state.pdfAnnotation.pdf
+    pdf: state.pdfAnnotation.pdf,
+    tableData: state.pdfAnnotation.tableData
 });
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+    setTableData: payload => dispatch(setTableData(payload)),
+    updateTableData: payload => dispatch(updateTableData(payload))
+});
 
 export default connect(
     mapStateToProps,

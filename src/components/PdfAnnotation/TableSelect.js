@@ -134,7 +134,7 @@ class TableSelect extends Component {
 
 TableSelect.propTypes = {
     children: PropTypes.node.isRequired,
-    selectedTool: PropTypes.string.isRequired,
+    selectedTool: PropTypes.string,
     pageNumber: PropTypes.number.isRequired
 };
 
