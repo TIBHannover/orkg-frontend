@@ -111,7 +111,7 @@ class OrganizationDetails extends Component {
                                         tag={Link}
                                         to={reverse(ROUTES.ADD_OBSERVATORY, { id: this.props.match.params.id })}
                                     >
-                                        Create new observatoy
+                                        Create new observatory
                                     </Button>
                                 )}
                                 <SameAsStatements />
