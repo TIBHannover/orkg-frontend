@@ -172,19 +172,19 @@ class GeneralData extends Component {
 
         // If the entry is a DOI check if it exists in the database
         if (entry.includes('10.') && entry.startsWith('10.')) {
-            getPaperByDOI(entry).then(result => {
-                getStatementsBySubject({ id: result.id })
-                    .then(paperStatements => {
+            getPaperByDOI(entry)
+                .then(result => {
+                    getStatementsBySubject({ id: result.id }).then(paperStatements => {
                         this.setState({
                             existingPaper: { ...getPaperData(result.id, result.title, paperStatements), title: result.title }
                         });
-                    })
-                    .catch(() => {
-                        this.setState({
-                            existingPaper: null
-                        });
                     });
-            });
+                })
+                .catch(() => {
+                    this.setState({
+                        existingPaper: null
+                    });
+                });
         }
 
         await Cite.async(entry)
@@ -253,7 +253,10 @@ class GeneralData extends Component {
                             paperPublicationYear = paper.data[0].issued['date-parts'][0][0];
                         }
                         doi = paper.data[0].DOI ? paper.data[0].DOI : '';
-                        if (paper.data[0]['container-title']) {
+                        if (
+                            paper.data[0]['container-title'] &&
+                            Object.prototype.toString.call(paper.data[0]['container-title']) === '[object String]'
+                        ) {
                             publishedIn = paper.data[0]['container-title'];
                         }
                     } catch (e) {
