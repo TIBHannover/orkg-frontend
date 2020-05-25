@@ -9,6 +9,7 @@ import ExtractReferencesModal from './ExtractReferencesModal';
 import Confirm from 'reactstrap-confirm';
 import { setTableData } from '../../actions/pdfAnnotation';
 import { toast } from 'react-toastify';
+import { readString } from 'react-papaparse';
 
 class ExtractionModal extends Component {
     constructor(props) {
@@ -60,33 +61,7 @@ class ExtractionModal extends Component {
     }
 
     csvTableToObject = csv => {
-        const columns = csv[0].split(','); //.map(field => field);
-        const data = [];
-
-        for (const [index, row] of csv.entries()) {
-            if (index === 0) {
-                continue;
-            }
-
-            const cells = row.split(',');
-            const dataRow = [];
-
-            if (cells.length > 0) {
-                for (const [index, cell] of cells.entries()) {
-                    dataRow.push(cell);
-                }
-            }
-            data.push(dataRow);
-        }
-
-        if (columns.length === 0) {
-            return;
-        }
-
-        console.log('fullData', fullData);
-
-        const fullData = [columns, ...data];
-
+        const fullData = readString(csv.join('\n'), {})['data'];
         this.props.setTableData(fullData);
     };
 
