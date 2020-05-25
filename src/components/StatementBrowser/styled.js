@@ -181,6 +181,7 @@ export const AddPropertyContentStyle = styled.span`
 
     &.noTemplate {
         &.large {
+            max-width: 100%;
             width: 100%;
             padding: 0;
             border: 0 !important;
@@ -198,6 +199,7 @@ export const AddPropertyContentStyle = styled.span`
 
         &.large {
             width: 100%;
+            max-width: 100%;
             padding: 0;
             border: 0 !important;
             .icon {
