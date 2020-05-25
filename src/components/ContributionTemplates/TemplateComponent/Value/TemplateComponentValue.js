@@ -49,6 +49,8 @@ function TemplateComponentValue(props) {
                                 bsSize="sm"
                                 value={props.minOccurs}
                                 type="number"
+                                min="0"
+                                step="1"
                                 name="minOccurs"
                                 id="minOccursValueInput"
                                 placeholder="Minimum number of occurrences in the resource"
@@ -66,6 +68,8 @@ function TemplateComponentValue(props) {
                                 bsSize="sm"
                                 value={props.maxOccurs !== null ? props.maxOccurs : ''}
                                 type="number"
+                                min="0"
+                                step="1"
                                 name="maxOccurs"
                                 id="maxOccursValueInput"
                                 placeholder="Maximum number of occurrences in the resource"
