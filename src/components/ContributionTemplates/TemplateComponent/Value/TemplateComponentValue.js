@@ -51,7 +51,7 @@ function TemplateComponentValue(props) {
                                 type="number"
                                 name="minOccurs"
                                 id="minOccursValueInput"
-                                placeholder="Specify the minimum number of times this component can occur in the resource"
+                                placeholder="Minimum number of occurrences in the resource"
                             />
                         </Col>
                     </FormGroup>
@@ -68,7 +68,7 @@ function TemplateComponentValue(props) {
                                 type="number"
                                 name="maxOccurs"
                                 id="maxOccursValueInput"
-                                placeholder="Specify the maximum number of times this component can occur in the resource"
+                                placeholder="Maximum number of occurrences in the resource"
                             />
                         </Col>
                     </FormGroup>
