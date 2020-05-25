@@ -192,6 +192,7 @@ function ComponentsTab(props) {
                     <>
                         <AddPropertyTemplate
                             inTemplate={false}
+                            isDisabled={false}
                             showAddProperty={showAddProperty}
                             handlePropertySelect={handleSelectNewProperty}
                             toggleConfirmNewProperty={toggleConfirmNewProperty}

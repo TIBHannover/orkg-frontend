@@ -53,23 +53,23 @@ class TemplateEditorAutoComplete extends Component {
 
     loadOptions = async value => {
         try {
-            if (value === '' || value.trim() === '') {
+            if (!value || value === '' || value.trim() === '') {
                 return [];
             }
 
             let queryParams = '';
 
             if (value.startsWith('"') && value.endsWith('"') && value.length > 2) {
-                value = value.substring(1, value.length - 1);
+                value = value.substring(1, value.length - 1).trim();
                 queryParams = '&exact=true';
             }
             let responseJson;
             if (this.props.optionsClass) {
-                responseJson = await getResourcesByClass({ id: this.props.optionsClass, q: value });
+                responseJson = await getResourcesByClass({ id: this.props.optionsClass, q: value.trim() });
             } else {
-                responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value) + queryParams);
+                responseJson = await submitGetRequest(this.props.requestUrl + '?q=' + encodeURIComponent(value.trim()) + queryParams);
             }
-            responseJson = await this.IdMatch(value, responseJson);
+            responseJson = await this.IdMatch(value.trim(), responseJson);
 
             if (responseJson.length > this.maxResults) {
                 responseJson = responseJson.slice(0, this.maxResults);
