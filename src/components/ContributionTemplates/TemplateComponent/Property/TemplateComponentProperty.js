@@ -30,7 +30,7 @@ function TemplateComponentProperty(props) {
     return (
         <PropertyStyle className={`col-4`} tabIndex="0">
             {props.enableEdit && (
-                <DragHandler>
+                <DragHandler ref={props.dragRef}>
                     <Icon icon={faArrowsAlt} />
                 </DragHandler>
             )}
@@ -82,7 +82,8 @@ TemplateComponentProperty.propTypes = {
     property: PropTypes.object.isRequired,
     handleDeleteTemplateComponent: PropTypes.func.isRequired,
     enableEdit: PropTypes.bool.isRequired,
-    handlePropertiesSelect: PropTypes.func.isRequired
+    handlePropertiesSelect: PropTypes.func.isRequired,
+    dragRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })])
 };
 
 export default TemplateComponentProperty;

@@ -48,7 +48,7 @@ function TemplateComponent(props) {
             item.index = hoverIndex;
         }
     });
-    const [{ isDragging }, drag] = useDrag({
+    const [{ isDragging }, drag, preview] = useDrag({
         item: { type: ItemTypes.TEMPLATE_COMPONENT, index: props.id },
         collect: monitor => ({
             isDragging: monitor.isDragging()
@@ -57,7 +57,7 @@ function TemplateComponent(props) {
     });
     const opacity = isDragging ? 0 : 1;
 
-    drag(drop(ref));
+    preview(drop(ref));
 
     return (
         <StatementsGroupStyle className={`noTemplate`} style={{ opacity }}>
@@ -68,6 +68,7 @@ function TemplateComponent(props) {
                     property={props.property}
                     enableEdit={props.enableEdit}
                     handlePropertiesSelect={props.handlePropertiesSelect}
+                    dragRef={drag}
                 />
                 <TemplateComponentValue
                     id={props.id}
