@@ -852,7 +852,7 @@ export const fetchStatementsForResource = data => {
                                         existingResourceId: statement.object.id,
                                         propertyId: propertyId,
                                         label: statement.object.label,
-                                        type: statement.object._class === 'literal' ? 'literal' : 'object', // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
+                                        type: statement.object._class === 'resource' ? 'object' : statement.object._class, // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
                                         classes: statement.object.classes ? statement.object.classes : [],
                                         isExistingValue: true,
                                         existingStatement: true,

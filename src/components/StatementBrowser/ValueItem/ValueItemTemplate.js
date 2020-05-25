@@ -82,6 +82,14 @@ export default function ValueItemTemplate(props) {
                         <Link to={reverse(ROUTES.RESOURCE, { id: props.value.resourceId })}>{props.value.label}</Link>
                     )}
 
+                    {!props.resource && props.value.type === 'class' && props.resourcesAsLinks && (
+                        <Link to={reverse(ROUTES.CLASS, { id: props.value.resourceId })}>{props.value.label}</Link>
+                    )}
+
+                    {!props.resource && props.value.type === 'predicate' && props.resourcesAsLinks && (
+                        <Link to={reverse(ROUTES.PREDICATE, { id: props.value.resourceId })}>{props.value.label}</Link>
+                    )}
+
                     {props.resource && props.resource.isFetching && props.value.type === 'object' && 'Loading...'}
 
                     {props.value.type === 'literal' && (

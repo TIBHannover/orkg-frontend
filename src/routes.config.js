@@ -13,6 +13,7 @@ import NotFound from './components/StaticPages/NotFound';
 import Papers from './pages/Papers';
 import Comparisons from './pages/Comparisons';
 import PredicateDetails from './pages/PredicateDetails';
+import ClassDetails from './pages/ClassDetails';
 import Predicates from './pages/Predicates';
 import ContributionTemplates from './components/ContributionTemplates/ContributionTemplates';
 import ContributionTemplate from './components/ContributionTemplates/ContributionTemplate';
@@ -167,6 +168,10 @@ const routes = [
     {
         path: ROUTES.PREDICATE,
         component: PredicateDetails
+    },
+    {
+        path: ROUTES.CLASS,
+        component: ClassDetails
     },
     {
         path: ROUTES.FEATURED_COMPARISONS,
