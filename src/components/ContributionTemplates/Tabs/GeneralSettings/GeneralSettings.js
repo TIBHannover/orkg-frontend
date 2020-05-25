@@ -124,6 +124,7 @@ function GeneralSettings(props) {
                         cacheOptions
                         value={props.class}
                         isDisabled={!props.editMode}
+                        copyValueButton={true}
                     />
                     {props.editMode && <FormText>Specify the class of this template.</FormText>}
                 </FormGroup>

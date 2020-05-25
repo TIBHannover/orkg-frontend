@@ -35,6 +35,7 @@ function TemplateComponentValue(props) {
                         isClearable={true}
                         defaultOptions={defaultDatatypes}
                         cssClasses={'form-control-sm'}
+                        copyValueButton={true}
                     />
                 </InputGroup>
                 <div className="mt-2">

@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import { submitGetRequest, getResourcesByClass } from 'network';
+import { InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';
+import { toast } from 'react-toastify';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faClipboard } from '@fortawesome/free-solid-svg-icons';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import styled, { withTheme } from 'styled-components';
 
 export const StyledAutoCompleteInputFormControl = styled.div`
@@ -150,29 +155,50 @@ class TemplateEditorAutoComplete extends Component {
             })
         };
 
+        const onCopyClick = () => {
+            if (navigator.clipboard && this.props.value && this.props.value.label) {
+                navigator.clipboard.writeText(this.props.value.label);
+                toast.success('Value copied');
+            }
+        };
+
         const Select = this.props.allowCreate ? AsyncCreatableSelect : AsyncSelect;
 
         return (
-            <StyledAutoCompleteInputFormControl className={`form-control ${this.props.cssClasses ? this.props.cssClasses : 'default'}`}>
-                <Select
-                    loadOptions={this.loadOptions}
-                    noOptionsMessage={this.noResults}
-                    onChange={this.props.onItemSelected}
-                    onInputChange={this.handleInputChange}
-                    styles={this.customStyles}
-                    placeholder={this.props.placeholder}
-                    autoFocus
-                    cacheOptions
-                    value={this.props.value}
-                    getOptionLabel={({ label }) => label}
-                    getOptionValue={({ id }) => id}
-                    onBlur={this.props.onBlur}
-                    isMulti={this.props.isMulti ? true : false}
-                    isDisabled={this.props.isDisabled}
-                    isClearable={this.props.isClearable}
-                    defaultOptions={this.props.defaultOptions}
-                />
-            </StyledAutoCompleteInputFormControl>
+            <ConditionalWrapper
+                condition={this.props.copyValueButton}
+                wrapper={children => (
+                    <InputGroup size="sm">
+                        {children}
+                        <InputGroupAddon addonType="append">
+                            <Button disabled={!this.props.value || !this.props.value.label} onClick={onCopyClick} outline>
+                                <Icon icon={faClipboard} size="sm" />
+                            </Button>
+                        </InputGroupAddon>
+                    </InputGroup>
+                )}
+            >
+                <StyledAutoCompleteInputFormControl className={`form-control ${this.props.cssClasses ? this.props.cssClasses : 'default'}`}>
+                    <Select
+                        loadOptions={this.loadOptions}
+                        noOptionsMessage={this.noResults}
+                        onChange={this.props.onItemSelected}
+                        onInputChange={this.handleInputChange}
+                        styles={this.customStyles}
+                        placeholder={this.props.placeholder}
+                        autoFocus
+                        cacheOptions
+                        value={this.props.value}
+                        getOptionLabel={({ label }) => label}
+                        getOptionValue={({ id }) => id}
+                        onBlur={this.props.onBlur}
+                        isMulti={this.props.isMulti ? true : false}
+                        isDisabled={this.props.isDisabled}
+                        isClearable={this.props.isClearable}
+                        defaultOptions={this.props.defaultOptions}
+                    />
+                </StyledAutoCompleteInputFormControl>
+            </ConditionalWrapper>
         );
     }
 }
@@ -191,7 +217,8 @@ TemplateEditorAutoComplete.propTypes = {
     isClearable: PropTypes.bool,
     noOptionsMessage: PropTypes.string,
     defaultOptions: PropTypes.array,
-    cssClasses: PropTypes.string
+    cssClasses: PropTypes.string,
+    copyValueButton: PropTypes.bool
 };
 
 export default withTheme(TemplateEditorAutoComplete);
