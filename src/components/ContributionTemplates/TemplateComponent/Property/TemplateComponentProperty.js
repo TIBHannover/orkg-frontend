@@ -36,7 +36,7 @@ function TemplateComponentProperty(props) {
             )}
             {!isEditing ? (
                 <div className={'propertyLabel'}>
-                    {props.property.label}
+                    {props.property.label.charAt(0).toUpperCase() + props.property.label.slice(1)}
                     {props.enableEdit && (
                         <div className={propertyOptionsClasses}>
                             <StatementOptionButton title={'Edit property'} icon={faPen} action={() => setIsEditing(true)} />
