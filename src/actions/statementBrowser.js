@@ -541,25 +541,6 @@ export function fetchTemplateIfNeeded(templateID) {
 }
 
 /**
- * Set the template of a resource
- * When the used template is saved on the statements
- * @param {Object} data
- * @param {String} data.resourceId Resrouce ID
- * @param {String} data.templateId Template ID
- */
-export const setTemplateOfResource = data => {
-    const templateId = data.templateId;
-    return (dispatch, getState) => {
-        return dispatch(fetchTemplateIfNeeded(templateId)).then(() => {
-            dispatch({
-                type: type.SET_TEMPLATE_OF_RESOURCE,
-                payload: { ...data }
-            });
-        });
-    };
-};
-
-/**
  * Check if the class template should be fetched
  *
  * @param {Object} state - Current state of the Store

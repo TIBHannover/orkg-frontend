@@ -101,16 +101,6 @@ export default (state = initialState, action) => {
             };
         }
 
-        case type.SET_TEMPLATE_OF_RESOURCE: {
-            const { payload } = action;
-
-            const newState = dotProp.set(state, `resources.byId.${payload.resourceId}.templateId`, payload.templateId);
-
-            return {
-                ...newState
-            };
-        }
-
         case type.CREATE_PROPERTY: {
             const { payload } = action;
             let newState;
