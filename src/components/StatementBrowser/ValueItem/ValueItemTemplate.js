@@ -58,7 +58,7 @@ export default function ValueItemTemplate(props) {
             {!props.value.isEditing ? (
                 <div>
                     {props.resource && !props.resource.isFetching && props.value.type === 'object' && !props.resourcesAsLinks && (
-                        <Button className="p-0 text-left" color="link" onClick={props.handleOnClick}>
+                        <Button className="p-0 text-left" color="link" onClick={props.handleOnClick} style={{ userSelect: 'text' }}>
                             {props.showHelp && props.value.type === 'object' ? (
                                 <Pulse content={'Click on the resource to browse it'}>
                                     <ValuePlugins type={'resource'}>{props.value.label}</ValuePlugins>
