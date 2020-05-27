@@ -154,14 +154,6 @@ export default function ValueItem(props) {
     const handleExistingResourceClick = async () => {
         const resource = props.resources.byId[props.value.resourceId];
         const existingResourceId = resource.existingResourceId ? resource.existingResourceId : props.value.resourceId;
-        const templateId = resource.templateId;
-
-        if (templateId && !resource.isFechted) {
-            props.fetchStructureForTemplate({
-                resourceId: props.value.resourceId,
-                templateId
-            });
-        }
 
         // Load template of this class
         //show the statement browser
@@ -376,7 +368,6 @@ ValueItem.propTypes = {
     selectResource: PropTypes.func.isRequired,
     createResource: PropTypes.func.isRequired,
     fetchStatementsForResource: PropTypes.func.isRequired,
-    fetchStructureForTemplate: PropTypes.func.isRequired,
     resources: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
     properties: PropTypes.object.isRequired,

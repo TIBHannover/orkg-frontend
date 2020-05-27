@@ -230,7 +230,6 @@ export default (state = initialState, action) => {
                             label: payload.label,
                             shared: payload.shared ? payload.shared : 1,
                             propertyIds: [],
-                            templateId: payload.templateId ? payload.templateId : null,
                             classes: payload.classes ? payload.classes : []
                         }
                     }));

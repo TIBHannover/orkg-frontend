@@ -160,7 +160,7 @@ export function getTemplateIDsByResourceID(state, resourceId) {
     if (!resource) {
         return [];
     }
-    let templateIds = resource.templateId ? [resource.templateId] : [];
+    let templateIds = [];
     if (resource.classes) {
         for (const c of resource.classes) {
             if (state.statementBrowser.classes[c]) {
@@ -620,60 +620,6 @@ export function selectResource(data) {
         return Promise.resolve().then(() => dispatch(createRequiredPropertiesInResource(data.resourceId)));
     };
 }
-
-// TODO: Document or remove
-export const fetchStructureForTemplate = data => {
-    const { resourceId, templateId } = data;
-    return dispatch => {
-        dispatch({
-            type: type.IS_FETCHING_STATEMENTS
-        });
-        return network.getTemplateById(templateId).then(
-            template => {
-                dispatch({
-                    type: type.DONE_FETCHING_STATEMENTS
-                });
-                // Add properties
-                if (template.components && template.components.length > 0) {
-                    for (const component of template.components) {
-                        dispatch(
-                            createProperty({
-                                resourceId: resourceId,
-                                existingPredicateId: component.property.id,
-                                label: component.property.label,
-                                validationRules: component.validationRules,
-                                isExistingProperty: true
-                            })
-                        );
-                    }
-                }
-
-                // Add templates
-                if (template.subTemplates && template.subTemplates.length > 0) {
-                    for (const subTemplate of template.subTemplates) {
-                        const tpID = guid();
-                        //const tvID = guid();
-                        dispatch(
-                            createProperty({
-                                resourceId: resourceId,
-                                existingPredicateId: subTemplate.predicate.id,
-                                propertyId: tpID,
-                                label: subTemplate.predicate.label,
-                                isExistingProperty: true,
-                                templateId: subTemplate.id
-                            })
-                        );
-                    }
-                }
-                dispatch({
-                    type: type.SET_STATEMENT_IS_FECHTED,
-                    resourceId: resourceId
-                });
-            },
-            error => console.log('An error occurred.', error)
-        );
-    };
-};
 
 export const goToResourceHistory = data => dispatch => {
     dispatch({

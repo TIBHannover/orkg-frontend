@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 import {
     selectResource,
     fetchStatementsForResource,
-    fetchStructureForTemplate,
     deleteValue,
     toggleEditValue,
     updateValueLabel,
@@ -33,7 +32,6 @@ const mapDispatchToProps = dispatch => ({
     createResource: data => dispatch(createResource(data)),
     selectResource: data => dispatch(selectResource(data)),
     fetchStatementsForResource: data => dispatch(fetchStatementsForResource(data)),
-    fetchStructureForTemplate: data => dispatch(fetchStructureForTemplate(data)),
     deleteValue: data => dispatch(deleteValue(data)),
     toggleEditValue: data => dispatch(toggleEditValue(data)),
     updateValueLabel: data => dispatch(updateValueLabel(data)),

@@ -87,8 +87,7 @@ class AddTemplateButton extends Component {
                     existingResourceId: rID,
                     type: 'object',
                     propertyId: pID,
-                    classes: template.class ? [template.class.id] : [],
-                    templateId: template.id
+                    classes: template.class ? [template.class.id] : []
                 });
                 this.props.prefillStatements({ statements, resourceId: this.props.selectedResource });
                 // Add properties
