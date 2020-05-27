@@ -50,6 +50,12 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
+const ResearchProblemButton = styled.span`
+    white-space: normal;
+    text-align: left;
+    user-select: text !important;
+`;
+
 // TODO: right now, the reducer from addPaper is being used, since the setup of this page is very similar.
 // Dependent on the future look/functionalitiy of this page, the reducers should split and renamed so viewing
 // a paper is not needing a reducer that is called: addPaper (e.g. make a reducer for the statement browser?)
@@ -226,12 +232,9 @@ class Contributions extends Component {
                                                         this.props.researchProblems[selectedContributionId].map((problem, index) => (
                                                             <span key={index}>
                                                                 <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>
-                                                                    <span
-                                                                        style={{ whiteSpace: 'normal', textAlign: 'left' }}
-                                                                        className="btn btn-link p-0 border-0 align-baseline"
-                                                                    >
+                                                                    <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
                                                                         {problem.label}
-                                                                    </span>
+                                                                    </ResearchProblemButton>
                                                                 </Link>
                                                                 <br />
                                                             </span>
