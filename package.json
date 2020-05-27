@@ -117,7 +117,8 @@
         "template": "./keepachangelog.hbs",
         "unreleased": false,
         "commitLimit": 0,
-        "tagPattern": ".+"
+        "tagPattern": ".+",
+        "tagPrefix": "V"
     },
     "lint-staged": {
         "src/**/*.{js,jsx}": [
