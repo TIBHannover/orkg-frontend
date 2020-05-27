@@ -667,27 +667,6 @@ export const fetchStructureForTemplate = data => {
                     }
                 }
 
-                // Tag resource with used template
-                const ipID = guid();
-                dispatch(
-                    createProperty({
-                        propertyId: ipID,
-                        resourceId: resourceId,
-                        existingPredicateId: process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE,
-                        label: 'Instance Of Template',
-                        isExistingProperty: true
-                    })
-                );
-                dispatch(
-                    createValue({
-                        existingResourceId: templateId,
-                        propertyId: ipID,
-                        label: template.label,
-                        type: 'object',
-                        isExistingValue: true
-                    })
-                );
-
                 // Add templates
                 if (template.subTemplates && template.subTemplates.length > 0) {
                     for (const subTemplate of template.subTemplates) {
@@ -776,23 +755,11 @@ export const fetchStatementsForResource = data => {
                 if (resourceClasses && resourceClasses.length > 0) {
                     resourceClasses = resourceClasses.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
                 }
-                const instanceOfTemplate = network.getStatementsBySubject({ id: existingResourceId }).then(response => {
+                const resourceStatementsPromise = network.getStatementsBySubject({ id: existingResourceId }).then(response => {
                     resourceStatements = response;
-                    //Get template used to create this resource
-                    const templateID = response.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE);
-                    if (templateID) {
-                        return dispatch(
-                            setTemplateOfResource({
-                                resourceId: resourceId,
-                                templateId: templateID.object.id
-                            })
-                        );
-                    } else {
-                        return Promise.resolve();
-                    }
+                    return Promise.resolve();
                 });
-
-                return Promise.all([instanceOfTemplate, ...resourceClasses])
+                return Promise.all([resourceStatementsPromise, ...resourceClasses])
                     .then(() => dispatch(createRequiredPropertiesInResource(resourceId)))
                     .then(existingProperties => {
                         // all the template of classes are loaded

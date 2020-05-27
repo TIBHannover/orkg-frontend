@@ -1,5 +1,14 @@
 import * as type from './types.js';
-import { createResource, updateResource, deleteStatementsByIds, createResourceStatement, getTemplateById, createLiteral } from 'network';
+import {
+    getClassOfTemplate,
+    createResource,
+    updateResource,
+    deleteStatementsByIds,
+    createResourceStatement,
+    getTemplateById,
+    createLiteral,
+    createClass
+} from 'network';
 import { toast } from 'react-toastify';
 
 export const setEditMode = data => dispatch => {
@@ -12,13 +21,6 @@ export const setEditMode = data => dispatch => {
 export const setLabel = data => dispatch => {
     dispatch({
         type: type.TEMPLATE_SET_LABEL,
-        payload: data
-    });
-};
-
-export const setIsClassDescription = data => dispatch => {
-    dispatch({
-        type: type.TEMPLATE_SET_IS_CLASS_DESCRIPTION,
         payload: data
     });
 };
@@ -143,29 +145,37 @@ export const saveTemplate = data => {
             const strictLiteral = await createLiteral('True');
             promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_STRICT, strictLiteral.id));
         }
-        if (data.isClassDescription) {
-            // save template class
-            if (data.class && data.class.id) {
-                promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_CLASS, data.class.id));
-            }
-        } else {
-            // We use reverse() to create statements to keep the order of elements inside the input field
-            // save template predicate
-            if (data.predicate && data.predicate.id) {
-                promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_PREDICATE, data.predicate.id));
-            }
 
-            // save template research fields
-            if (data.researchFields && data.researchFields.length > 0) {
-                for (const researchField of data.researchFields.reverse()) {
-                    promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD, researchField.id));
-                }
+        // save template class
+        if (data.class && data.class.id) {
+            promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_CLASS, data.class.id));
+        } else {
+            // Generate class for the template
+            let templateClass = await getClassOfTemplate(templateResource);
+            if (templateClass && templateClass.length === 1) {
+                promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_CLASS, templateClass[0].id));
+            } else {
+                templateClass = await createClass(templateResource);
+                promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_CLASS, templateClass.id));
             }
-            // save template research problems
-            if (data.researchProblems && data.researchProblems.length > 0) {
-                for (const researchProblem of data.researchProblems.reverse()) {
-                    promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM, researchProblem.id));
-                }
+        }
+
+        // We use reverse() to create statements to keep the order of elements inside the input field
+        // save template predicate
+        if (data.predicate && data.predicate.id) {
+            promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_PREDICATE, data.predicate.id));
+        }
+
+        // save template research fields
+        if (data.researchFields && data.researchFields.length > 0) {
+            for (const researchField of data.researchFields.reverse()) {
+                promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD, researchField.id));
+            }
+        }
+        // save template research problems
+        if (data.researchProblems && data.researchProblems.length > 0) {
+            for (const researchProblem of data.researchProblems.reverse()) {
+                promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM, researchProblem.id));
             }
         }
 

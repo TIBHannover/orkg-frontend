@@ -298,16 +298,14 @@ ComponentsTab.propTypes = {
     subTemplates: PropTypes.array,
     editMode: PropTypes.bool.isRequired,
     setComponents: PropTypes.func.isRequired,
-    setSubTemplates: PropTypes.func.isRequired,
-    isClassDescription: PropTypes.bool.isRequired
+    setSubTemplates: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
     return {
         components: state.addTemplate.components,
         subTemplates: state.addTemplate.subTemplates,
-        editMode: state.addTemplate.editMode,
-        isClassDescription: state.addTemplate.isClassDescription
+        editMode: state.addTemplate.editMode
     };
 };
 

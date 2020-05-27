@@ -53,12 +53,10 @@ export default (state = initialState, action) => {
         case type.CREATE_TEMPLATE: {
             const { payload } = action;
             let newState = dotProp.set(state, `templates.${payload.id}`, payload);
-            if (payload.isClassDescription) {
-                if (dotProp.get(state, `classes.${payload.class.id}`) && dotProp.get(state, `classes.${payload.class.id}.templateIds`)) {
-                    newState = dotProp.set(newState, `classes.${payload.class.id}.templateIds`, ids => [...ids, payload.id]);
-                } else {
-                    newState = dotProp.set(newState, `classes.${payload.class.id}`, { ...payload.class, templateIds: [payload.id] });
-                }
+            if (dotProp.get(state, `classes.${payload.class.id}`) && dotProp.get(state, `classes.${payload.class.id}.templateIds`)) {
+                newState = dotProp.set(newState, `classes.${payload.class.id}.templateIds`, ids => [...ids, payload.id]);
+            } else {
+                newState = dotProp.set(newState, `classes.${payload.class.id}`, { ...payload.class, templateIds: [payload.id] });
             }
             return newState;
         }

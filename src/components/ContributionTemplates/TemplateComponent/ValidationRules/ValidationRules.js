@@ -85,9 +85,8 @@ function ValidationRules(props) {
 ValidationRules.propTypes = {
     id: PropTypes.number.isRequired,
     value: PropTypes.object.isRequired,
-    validationRules: PropTypes.object.isRequired,
+    validationRules: PropTypes.object,
     enableEdit: PropTypes.bool.isRequired,
-    updateValidationRules: PropTypes.func.isRequired,
     components: PropTypes.array.isRequired,
     setComponents: PropTypes.func.isRequired
 };
@@ -96,8 +95,7 @@ const mapStateToProps = state => {
     return {
         components: state.addTemplate.components,
         subTemplates: state.addTemplate.subTemplates,
-        editMode: state.addTemplate.editMode,
-        isClassDescription: state.addTemplate.isClassDescription
+        editMode: state.addTemplate.editMode
     };
 };
 

@@ -42,11 +42,6 @@ export default function Statements(props) {
             propertyIds = props.resources.byId[props.selectedResource].propertyIds;
             shared = props.resources.byId[props.selectedResource].shared;
         }
-        // filter public properties
-        propertyIds = propertyIds.filter(propertyId => {
-            const property = props.properties.byId[propertyId];
-            return property.existingPredicateId !== process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE;
-        });
 
         return (
             <div>

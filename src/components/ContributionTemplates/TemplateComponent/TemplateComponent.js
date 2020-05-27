@@ -90,7 +90,7 @@ TemplateComponent.propTypes = {
     value: PropTypes.object.isRequired,
     minOccurs: PropTypes.string.isRequired,
     maxOccurs: PropTypes.string,
-    validationRules: PropTypes.object.isRequired,
+    validationRules: PropTypes.object,
     moveCard: PropTypes.func.isRequired,
     handleDeleteTemplateComponent: PropTypes.func.isRequired,
     enableEdit: PropTypes.bool.isRequired,
