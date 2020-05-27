@@ -227,37 +227,37 @@ class GeneralData extends Component {
                         doi = '',
                         publishedIn = '';
                     try {
-                        paperTitle = paper.data[0].title;
-                        if (paper.data[0].subtitle && paper.data[0].subtitle.length > 0) {
+                        const { title, subtitle, author, issued, DOI, 'container-title': containerTitle } = paper.data[0];
+
+                        paperTitle = title;
+                        if (subtitle && subtitle.length > 0) {
                             // include the subtitle
-                            paperTitle = `${paperTitle}: ${paper.data[0].subtitle[0]}`;
+                            paperTitle = `${paperTitle}: ${subtitle[0]}`;
                         }
-                        if (paper.data[0].author) {
-                            paperAuthors = paper.data[0].author.map((author, index) => {
+                        if (author) {
+                            paperAuthors = author.map(author => {
                                 let fullname = [author.given, author.family].join(' ').trim();
                                 if (!fullname) {
                                     fullname = author.literal ? author.literal : '';
                                 }
-                                const newAuthor = {
+                                return {
                                     label: fullname,
                                     id: fullname,
                                     orcid: author.ORCID ? author.ORCID : ''
                                 };
-                                return newAuthor;
                             });
                         }
-                        if (paper.data[0].issued['date-parts'][0][1]) {
-                            paperPublicationMonth = paper.data[0].issued['date-parts'][0][1];
+                        const [year, month] = issued['date-parts'][0];
+
+                        if (month) {
+                            paperPublicationMonth = month;
                         }
-                        if (paper.data[0].issued['date-parts'][0][0]) {
-                            paperPublicationYear = paper.data[0].issued['date-parts'][0][0];
+                        if (year) {
+                            paperPublicationYear = year;
                         }
-                        doi = paper.data[0].DOI ? paper.data[0].DOI : '';
-                        if (
-                            paper.data[0]['container-title'] &&
-                            Object.prototype.toString.call(paper.data[0]['container-title']) === '[object String]'
-                        ) {
-                            publishedIn = paper.data[0]['container-title'];
+                        doi = DOI ? DOI : '';
+                        if (containerTitle && containerTitle.length) {
+                            publishedIn = containerTitle;
                         }
                     } catch (e) {
                         console.log('Error setting paper data: ', e);
@@ -271,7 +271,7 @@ class GeneralData extends Component {
                             paperAuthors,
                             paperPublicationMonth,
                             paperPublicationYear,
-                            doi: doi,
+                            doi,
                             publishedIn,
                             errors: null
                         },
