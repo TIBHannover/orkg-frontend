@@ -99,7 +99,7 @@ class OrganizationDetails extends Component {
                                     tag={Link}
                                     to={reverse(ROUTES.OBSERVATORIES, { id: this.props.match.params.id })}
                                 >
-                                    List Observatories
+                                    List observatories
                                 </Button>
                                 &nbsp; &nbsp;
                                 {this.props.user && this.props.user.id === this.state.createdBy && (
