@@ -1,15 +1,14 @@
 import * as type from '../actions/types';
 import dotProp from 'dot-prop-immutable';
-import assign from 'lodash/assign';
-import { Cookies } from 'react-cookie';
 
 const initialState = {
-    selectedTool: null, // possible values: 'tableSelect'
+    selectedTool: 'tableSelect', // possible values: 'tableSelect'
     pdf: null, // contains the raw uploaded file,
     pages: null, // contains the HTML content per page => array
     styles: null, // the styles needed to display the PDF,
-    tableData: null, // contains the table data when a table is being extracted
-    parsedPdfData: null // contains the parsed PDF data (from GROBID)
+    tableData: {}, // contains the table data when a table is being extracted
+    parsedPdfData: null, // contains the parsed PDF data (from GROBID)
+    tableRegions: {}
 };
 
 export default (state = initialState, action) => {
@@ -39,30 +38,60 @@ export default (state = initialState, action) => {
 
             return {
                 ...state,
-                tableData: payload.tableData
+                tableData: {
+                    ...state.tableData,
+                    [payload.id]: payload.tableData
+                }
             };
         }
 
         case type.PDF_ANNOTATION_UPDATE_TABLE_DATA: {
-            const { payload } = action;
+            const { dataChanges, id } = action.payload;
 
-            const newData = state.tableData.slice(0);
-            console.log('payload.dataChanges', payload.dataChanges);
-            for (const [row, column, oldValue, newValue] of payload.dataChanges) {
+            const newData = state.tableData[id].slice(0);
+
+            for (const [row, column, , newValue] of dataChanges) {
                 newData[row][column] = newValue;
             }
 
-            return Object.assign({}, state, {
-                tableData: newData
-            });
+            return {
+                ...state,
+                tableData: {
+                    ...state.tableData,
+                    [id]: newData
+                }
+            };
         }
 
         case type.PDF_ANNOTATION_SET_PARSED_PDF_DATA: {
             const { payload } = action;
-            console.log('payload', payload.parsedPdfData);
+
             return {
                 ...state,
                 parsedPdfData: payload.parsedPdfData
+            };
+        }
+
+        case type.PDF_ANNOTATION_SET_TABLE_REGION: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                tableRegions: {
+                    ...state.tableRegions,
+                    [payload.id]: {
+                        region: payload.region,
+                        page: payload.page
+                    }
+                }
+            };
+        }
+
+        case type.PDF_ANNOTATION_DELETE_TABLE_REGION: {
+            const { payload } = action;
+
+            return {
+                ...dotProp.delete(state, `tableRegions.${[payload.id]}`)
             };
         }
 

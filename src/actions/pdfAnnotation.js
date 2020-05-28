@@ -1,4 +1,5 @@
 import * as type from './types.js';
+import { guid } from '../utils';
 
 export const selectTool = tool => dispatch => {
     dispatch({
@@ -20,20 +21,22 @@ export const setFile = ({ pages, pdf, styles }) => dispatch => {
     });
 };
 
-export const setTableData = tableData => dispatch => {
+export const setTableData = (id, tableData) => dispatch => {
     dispatch({
         type: type.PDF_ANNOTATION_SET_TABLE_DATA,
         payload: {
-            tableData
+            tableData,
+            id
         }
     });
 };
 
-export const updateTableData = dataChanges => dispatch => {
+export const updateTableData = (id, dataChanges) => dispatch => {
     dispatch({
         type: type.PDF_ANNOTATION_UPDATE_TABLE_DATA,
         payload: {
-            dataChanges
+            dataChanges,
+            id
         }
     });
 };
@@ -43,6 +46,28 @@ export const setParsedPdfData = parsedPdfData => dispatch => {
         type: type.PDF_ANNOTATION_SET_PARSED_PDF_DATA,
         payload: {
             parsedPdfData
+        }
+    });
+};
+
+export const addTableRegion = ({ region, page }) => dispatch => {
+    const id = guid();
+
+    dispatch({
+        type: type.PDF_ANNOTATION_SET_TABLE_REGION,
+        payload: {
+            region,
+            page,
+            id
+        }
+    });
+};
+
+export const deleteTableRegion = id => dispatch => {
+    dispatch({
+        type: type.PDF_ANNOTATION_DELETE_TABLE_REGION,
+        payload: {
+            id
         }
     });
 };

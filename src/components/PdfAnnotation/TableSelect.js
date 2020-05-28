@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import { withTheme } from 'styled-components';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import ExtractionModal from './ExtractionModal';
+import { useSelector, useDispatch } from 'react-redux';
+import { addTableRegion, deleteTableRegion } from 'actions/pdfAnnotation';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const Container = styled.div`
     &.enable-table-select {
@@ -31,106 +32,146 @@ const SelectHelper = styled.div`
     align-items: center;
 `;
 
-class TableSelect extends Component {
-    constructor(props) {
-        super(props);
+const RemoveButton = styled(Button)`
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    pointer-events: all;
+    border-radius: 100% !important;
+    width: 25px;
+    height: 25px;
+`;
 
-        this.state = {
-            isDragging: false,
-            startX: -1,
-            startY: -1,
-            rect: null,
-            showExtractionModal: false
-        };
-    }
+const TableSelect = props => {
+    const [isDragging, setIsDragging] = useState(false);
+    const [coordinates, setCoordinates] = useState({
+        startX: -1,
+        startY: -1
+    });
+    const [rect, setRect] = useState({
+        x: null,
+        y: null,
+        w: null,
+        h: null
+    });
+    const selectedTool = useSelector(state => state.pdfAnnotation.selectedTool);
+    const tableRegions = useSelector(state => state.pdfAnnotation.tableRegions);
+    const dispatch = useDispatch();
+    const [extractionModal, setExtractionModal] = useState({
+        show: false,
+        id: null,
+        region: {}
+    });
 
-    onMouseDown = e => {
-        //this.isDragging = true;
-        //this.curX = this.startX = e.offsetX;
-        //this.curY = this.startY = e.offsetY;
-        // replace offsetX with pageX, minus the position of the page
-        this.setState({
-            isDragging: true,
+    const onMouseDown = e => {
+        setCoordinates({
             startX: e.nativeEvent.offsetX,
             startY: e.nativeEvent.offsetY
         });
+        setIsDragging(true);
     };
 
-    onMouseMove = e => {
-        if (!this.state.isDragging || this.props.selectedTool !== 'tableSelect') {
+    const onMouseMove = e => {
+        if (!isDragging || selectedTool !== 'tableSelect') {
             return;
         }
 
         const event = e.nativeEvent;
 
-        this.setState(prevState => ({
-            rect: {
-                x: Math.min(prevState.startX, event.offsetX),
-                y: Math.min(prevState.startY, event.offsetY),
-                w: Math.abs(event.offsetX - prevState.startX),
-                h: Math.abs(event.offsetY - prevState.startY)
-            }
-        }));
-    };
-
-    onMouseUp = e => {
-        this.setState({
-            isDragging: false
+        setRect({
+            x: Math.min(coordinates.startX, event.offsetX),
+            y: Math.min(coordinates.startY, event.offsetY),
+            w: Math.abs(event.offsetX - coordinates.startX),
+            h: Math.abs(event.offsetY - coordinates.startY)
         });
     };
 
-    handleExtract = e => {
+    const onMouseUp = e => {
+        setIsDragging(false);
+
+        dispatch(addTableRegion({ region: rect, page: props.pageNumber }));
+
+        setRect({
+            x: null,
+            y: null,
+            w: null,
+            h: null
+        });
+    };
+
+    const handleExtract = (e, id, region) => {
         e.stopPropagation(); // don't propagate to mouse down for dragging
-        this.setState({
-            showExtractionModal: true
+        //setShowExtractionModal(true);
+        setExtractionModal({
+            show: true,
+            id,
+            region
         });
     };
 
-    toggleModel = () => {
-        this.setState(prevState => ({
-            showExtractionModal: !prevState.showExtractionModal
-        }));
+    const toggleModel = () => {
+        setExtractionModal({
+            ...extractionModal,
+            show: false
+        });
     };
 
-    render() {
-        const { rect } = this.state;
-        // disable pointer events to ensure offsetX and offsetY on drag are from the page parent (and not other child elements)
-        const pointerStyles = { pointerEvents: this.props.selectedTool === 'tableSelect' ? 'none' : 'auto' };
+    // disable pointer events to ensure offsetX and offsetY on drag are from the page parent (and not other child elements)
+    const pointerStyles = { pointerEvents: selectedTool === 'tableSelect' ? 'none' : 'auto' };
 
-        return (
-            <>
-                <Container
-                    className={this.props.selectedTool === 'tableSelect' && 'enable-table-select'}
-                    onMouseDown={this.onMouseDown}
-                    onMouseUp={this.onMouseUp}
-                    onMouseMove={this.onMouseMove}
-                >
-                    <div style={pointerStyles}>
-                        {this.props.children}
-                        {rect && (
-                            <SelectHelper style={{ top: rect.y, left: rect.x, width: rect.w, height: rect.h }}>
-                                {!this.state.isDragging && (
-                                    <Button style={{ pointerEvents: 'all' }} color="primary" size="sm" onMouseDown={this.handleExtract}>
+    const deleteRegion = (e, id) => {
+        e.stopPropagation();
+        dispatch(deleteTableRegion(id));
+    };
+
+    return (
+        <>
+            <Container
+                className={selectedTool === 'tableSelect' && 'enable-table-select'}
+                onMouseDown={onMouseDown}
+                onMouseUp={onMouseUp}
+                onMouseMove={onMouseMove}
+            >
+                <div style={pointerStyles}>
+                    {props.children}
+
+                    {rect && <SelectHelper style={{ top: rect.y, left: rect.x, width: rect.w, height: rect.h }} />}
+
+                    {Object.keys(tableRegions)
+                        .filter(key => tableRegions[key].page === props.pageNumber)
+                        .map(key => {
+                            const { region } = tableRegions[key];
+                            return (
+                                <SelectHelper style={{ top: region.y, left: region.x, width: region.w, height: region.h }} key={key}>
+                                    <RemoveButton color="darkblueDarker" size="sm" className="p-0" onMouseDown={e => deleteRegion(e, key)}>
+                                        <Icon icon={faTimes} />
+                                    </RemoveButton>
+                                    <Button
+                                        style={{ pointerEvents: 'all' }}
+                                        color="primary"
+                                        size="sm"
+                                        onMouseDown={e => handleExtract(e, key, region)}
+                                    >
                                         Extract table
                                     </Button>
-                                )}
-                            </SelectHelper>
-                        )}
-                    </div>
-                </Container>
+                                </SelectHelper>
+                            );
+                        })}
+                </div>
+            </Container>
 
-                {this.state.showExtractionModal && ( // prevent unneeded rerenders, only render when required
-                    <ExtractionModal
-                        isOpen={this.state.showExtractionModal}
-                        toggle={this.toggleModel}
-                        region={this.state.rect}
-                        pageNumber={this.props.pageNumber}
-                    />
-                )}
-            </>
-        );
-    }
-}
+            {extractionModal.show && (
+                <ExtractionModal
+                    isOpen={true}
+                    toggle={toggleModel}
+                    region={extractionModal.region}
+                    id={extractionModal.id}
+                    pageNumber={props.pageNumber}
+                />
+            )}
+        </>
+    );
+};
 
 TableSelect.propTypes = {
     children: PropTypes.node.isRequired,
@@ -138,16 +179,4 @@ TableSelect.propTypes = {
     pageNumber: PropTypes.number.isRequired
 };
 
-const mapStateToProps = state => ({
-    selectedTool: state.pdfAnnotation.selectedTool
-});
-
-const mapDispatchToProps = dispatch => ({});
-
-export default compose(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    ),
-    withTheme
-)(TableSelect);
+export default TableSelect;
