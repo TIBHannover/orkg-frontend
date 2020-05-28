@@ -30,11 +30,11 @@ export default function ProvenanceBox(props) {
                                         alt=""
                                     />
                                 </Link>
-                                <p>
-                                    <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.id })}>
-                                        {props.observatoryInfo.organization.name}
-                                    </Link>
-                                </p>
+                                {/* <p> */}
+                                    {/* <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.id })}> */}
+                                        {/* {props.observatoryInfo.organization.name} */}
+                                    {/* </Link> */}
+                                {/* </p> */}
                             </StyledItemProvenanceBox>
 
                             <StyledItemProvenanceBox>
