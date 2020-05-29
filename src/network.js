@@ -702,7 +702,7 @@ export const getContributorsByResourceId = id => {
 
 export const getObservatoryAndOrganizationInformation = (observatoryId, organizationId) => {
     return getObservatorybyId(observatoryId).then(obsResponse => {
-            return getOrganization(organizationId).then(orgResponse => {
+        return getOrganization(organizationId).then(orgResponse => {
             return {
                 id: observatoryId,
                 name: obsResponse.name.toUpperCase(),
