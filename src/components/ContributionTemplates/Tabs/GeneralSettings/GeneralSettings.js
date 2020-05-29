@@ -85,7 +85,7 @@ function GeneralSettings(props) {
                         id="switchIsStrictTemplate"
                         type="switch"
                         name="customSwitch"
-                        label="This template is strict (it's not possible to add properties)"
+                        label="This template is strict (users cannot add additional properties themselves)"
                         disabled={!props.editMode}
                     />
                 </div>
