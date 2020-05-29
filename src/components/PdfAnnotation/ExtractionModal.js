@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -19,6 +19,7 @@ const ExtractionModal = props => {
     const dispatch = useDispatch();
     const pdf = useSelector(state => state.pdfAnnotation.pdf);
     const tableData = useSelector(state => state.pdfAnnotation.tableData[props.id]);
+    const extractionSuccessful = tableData && tableData.length > 0;
 
     useEffect(() => {
         // only extract the table if it hasn't been extracted yet
@@ -169,22 +170,34 @@ const ExtractionModal = props => {
                 {!loading && !importData && (
                     <>
                         <ModalBody>
-                            {tableData && <TableEditor setRef={editorRef} id={props.id} />}
-                            <div className="mt-3">
-                                <Button size="sm" color="darkblue" onClick={toggleExtractReferencesModal}>
-                                    Extract references
-                                </Button>{' '}
-                                <Button size="sm" color="darkblue" onClick={handleCsvDownload}>
-                                    Download CSV
-                                </Button>
-                            </div>
+                            {extractionSuccessful && (
+                                <>
+                                    <TableEditor setRef={editorRef} id={props.id} />
+                                    <div className="mt-3">
+                                        <Button size="sm" color="darkblue" onClick={toggleExtractReferencesModal}>
+                                            Extract references
+                                        </Button>{' '}
+                                        <Button size="sm" color="darkblue" onClick={handleCsvDownload}>
+                                            Download CSV
+                                        </Button>
+                                    </div>
+                                </>
+                            )}
+
+                            {!extractionSuccessful && (
+                                <Alert color="danger" fade={false}>
+                                    No table found in the specified region. Please select a different region
+                                </Alert>
+                            )}
                         </ModalBody>
 
-                        <ModalFooter>
-                            <Button color="primary" onClick={handleImportData}>
-                                Import data
-                            </Button>
-                        </ModalFooter>
+                        {extractionSuccessful && (
+                            <ModalFooter>
+                                <Button color="primary" onClick={handleImportData}>
+                                    Import data
+                                </Button>
+                            </ModalFooter>
+                        )}
                     </>
                 )}
 
