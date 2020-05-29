@@ -40,6 +40,7 @@ import { getPaperData } from 'utils';
 import { getPaperByDOI, getStatementsBySubject } from 'network';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import ExistingDoiModal from './ExistingDoiModal';
+import { isString } from 'lodash';
 
 const Container = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -256,7 +257,7 @@ class GeneralData extends Component {
                             paperPublicationYear = year;
                         }
                         doi = DOI ? DOI : '';
-                        if (containerTitle && containerTitle.length) {
+                        if (containerTitle && isString(containerTitle)) {
                             publishedIn = containerTitle;
                         }
                     } catch (e) {
