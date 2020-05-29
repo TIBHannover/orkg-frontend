@@ -82,34 +82,34 @@ class AutoComplete extends Component {
 
     loadOptions = async value => {
         try {
-            if (value === '' || value.trim() === '') {
+            if (!value || value === '' || value.trim() === '') {
                 return this.props.defaultOptions ? this.props.defaultOptions : [];
             }
 
             let queryParams = '';
 
             if (value.startsWith('"') && value.endsWith('"') && value.length > 2) {
-                value = value.substring(1, value.length - 1);
+                value = value.substring(1, value.length - 1).trim();
                 queryParams = '&exact=true';
             }
             let responseJson;
             if (this.props.optionsClass) {
-                responseJson = await getResourcesByClass({ id: this.props.optionsClass, q: value });
+                responseJson = await getResourcesByClass({ id: this.props.optionsClass, q: value.trim() });
             } else {
                 responseJson = await submitGetRequest(
                     this.props.requestUrl +
                         '?q=' +
-                        encodeURIComponent(value) +
+                        encodeURIComponent(value.trim()) +
                         queryParams +
                         (this.props.excludeClasses ? '&exclude=' + encodeURIComponent(this.props.excludeClasses) : '')
                 );
             }
 
-            responseJson = await this.IdMatch(value, responseJson);
+            responseJson = await this.IdMatch(value.trim(), responseJson);
 
             if (this.props.additionalData && this.props.additionalData.length > 0) {
                 let newProperties = this.props.additionalData;
-                newProperties = newProperties.filter(({ label }) => label.toLowerCase().includes(value.toLowerCase())); // ensure the label of the new property contains the search value
+                newProperties = newProperties.filter(({ label }) => label.toLowerCase().includes(value.trim().toLowerCase())); // ensure the label of the new property contains the search value
 
                 responseJson.unshift(...newProperties);
             }

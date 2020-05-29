@@ -14,11 +14,6 @@ export default function ContributionTemplate(props) {
         propertyIds = props.resources.byId[props.value.resourceId].propertyIds;
         shared = props.resources.byId[props.value.resourceId].shared;
     }
-    // filter public properties
-    propertyIds = propertyIds.filter(propertyId => {
-        const property = props.properties.byId[propertyId];
-        return property.existingPredicateId !== process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE;
-    });
 
     return (
         <AnimationContainer

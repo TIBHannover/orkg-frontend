@@ -182,7 +182,6 @@ export const prefillStatements = ({ statements, resourceId }) => dispatch => {
                 valueId: value.valueId ? value.valueId : guid(),
                 label: value.label,
                 type: value.type ? value.type : 'object',
-                templateId: value.templateId ? value.templateId : null,
                 propertyId: value.propertyId,
                 existingResourceId: value.existingResourceId ? value.existingResourceId : null,
                 isExistingValue: value.isExistingValue ? value.isExistingValue : false,

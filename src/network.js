@@ -473,6 +473,10 @@ export const updateUserRole = () => {
     return submitPutRequest(`${userUrl}role/`);
 };
 
+export const getClassOfTemplate = templateId => {
+    return submitGetRequest(`${classesUrl}?q=${templateId}&exact=true`);
+};
+
 /**
  * Load template by ID
  *
@@ -590,32 +594,25 @@ export const getTemplateById = templateId => {
                     hasLabelFormat: templateFormatLabel ? true : false,
                     isStrict: templateIsStrict ? true : false,
                     components: templateComponents[0].sort((c1, c2) => sortMethod(c1.order, c2.order)),
-                    ...(templateClass
+                    class: templateClass
                         ? {
-                              isClassDescription: true,
-                              class: templateClass
-                                  ? {
-                                        id: templateClass.object.id,
-                                        label: templateClass.object.label
-                                    }
-                                  : {}
+                              id: templateClass.object.id,
+                              label: templateClass.object.label
                           }
-                        : {
-                              isClassDescription: false,
-                              researchFields: templateStatements
-                                  .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD)
-                                  .map(statement => ({
-                                      id: statement.object.id,
-                                      label: statement.object.label
-                                  })),
-                              researchProblems: templateStatements
-                                  .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM)
-                                  .map(statement => ({
-                                      id: statement.object.id,
-                                      label: statement.object.label
-                                  })),
-                              subTemplates: subs
-                          })
+                        : {},
+                    researchFields: templateStatements
+                        .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD)
+                        .map(statement => ({
+                            id: statement.object.id,
+                            label: statement.object.label
+                        })),
+                    researchProblems: templateStatements
+                        .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM)
+                        .map(statement => ({
+                            id: statement.object.id,
+                            label: statement.object.label
+                        })),
+                    subTemplates: subs
                 }));
             });
         })

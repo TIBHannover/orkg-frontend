@@ -32,14 +32,7 @@ export default function StatementItemTemplate(props) {
                                     <Link to={reverse(ROUTES.PREDICATE, { id: props.property.existingPredicateId })}>{props.predicateLabel}</Link>
                                 ) : (
                                     props.predicateLabel
-                                )}{' '}
-                                {}
-                                {props.enableEdit &&
-                                    props.components &&
-                                    props.components.length > 0 &&
-                                    props.components.filter(c => c.value.label).length > 0 && (
-                                        <small>[{props.components.map(c => c.value.label).join(',')}]</small>
-                                    )}
+                                )}
                             </div>
                             {props.enableEdit && (
                                 <div className={propertyOptionsClasses}>

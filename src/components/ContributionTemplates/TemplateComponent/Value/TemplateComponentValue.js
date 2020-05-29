@@ -35,6 +35,7 @@ function TemplateComponentValue(props) {
                         isClearable={true}
                         defaultOptions={defaultDatatypes}
                         cssClasses={'form-control-sm'}
+                        copyValueButton={true}
                     />
                 </InputGroup>
                 <div className="mt-2">
@@ -49,9 +50,11 @@ function TemplateComponentValue(props) {
                                 bsSize="sm"
                                 value={props.minOccurs}
                                 type="number"
+                                min="0"
+                                step="1"
                                 name="minOccurs"
                                 id="minOccursValueInput"
-                                placeholder="Specify the minimum number of times this component can occur in the resource"
+                                placeholder="Minimum number of occurrences in the resource"
                             />
                         </Col>
                     </FormGroup>
@@ -66,9 +69,11 @@ function TemplateComponentValue(props) {
                                 bsSize="sm"
                                 value={props.maxOccurs !== null ? props.maxOccurs : ''}
                                 type="number"
+                                min="0"
+                                step="1"
                                 name="maxOccurs"
                                 id="maxOccursValueInput"
-                                placeholder="Specify the maximum number of times this component can occur in the resource"
+                                placeholder="Maximum number of occurrences in the resource"
                             />
                         </Col>
                     </FormGroup>

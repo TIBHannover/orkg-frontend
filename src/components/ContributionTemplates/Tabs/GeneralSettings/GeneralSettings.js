@@ -2,15 +2,7 @@ import React, { useRef } from 'react';
 import { FormGroup, Label, FormText, Input, CustomInput } from 'reactstrap';
 import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
-import {
-    setLabel,
-    setPredicate,
-    setClass,
-    setResearchFields,
-    setResearchProblems,
-    setIsClassDescription,
-    setIsStrictTemplate
-} from 'actions/addTemplate';
+import { setLabel, setPredicate, setClass, setResearchFields, setResearchProblems, setIsStrictTemplate } from 'actions/addTemplate';
 import { predicatesUrl, resourcesUrl, classesUrl, createPredicate, createClass } from 'network';
 import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
 import PropTypes from 'prop-types';
@@ -70,11 +62,11 @@ function GeneralSettings(props) {
     if (inputRef.current) {
         inputRef.current.focus();
     }
-
+    /*
     const handleSwitchIsDescription = event => {
         props.setIsClassDescription(event.target.checked);
     };
-
+    */
     const handleSwitchIsStrictTemplate = event => {
         props.setIsStrictTemplate(event.target.checked);
     };
@@ -93,11 +85,12 @@ function GeneralSettings(props) {
                         id="switchIsStrictTemplate"
                         type="switch"
                         name="customSwitch"
-                        label="This template is strict (it's not possible to add properties)"
+                        label="This template is strict (users cannot add additional properties themselves)"
                         disabled={!props.editMode}
                     />
                 </div>
             </FormGroup>
+            {/*
             <FormGroup>
                 <div>
                     <CustomInput
@@ -111,56 +104,62 @@ function GeneralSettings(props) {
                     />
                 </div>
             </FormGroup>
-            {props.isClassDescription ? (
+             */}
+
+            <FormGroup className="mb-4">
+                <Label>Class</Label>
+                <AutoComplete
+                    allowCreate
+                    requestUrl={classesUrl}
+                    onItemSelected={handleClassSelect}
+                    placeholder={props.editMode ? 'Select or type to enter a class' : 'No Classes'}
+                    autoFocus
+                    isClearable
+                    cacheOptions
+                    value={props.class}
+                    isDisabled={!props.editMode || (Boolean(props.templateID) && Boolean(props.class))}
+                    copyValueButton={true}
+                />
+                {props.editMode && <FormText>Specify the class of this template. If not specified, a class is generated automatically.</FormText>}
+            </FormGroup>
+
+            <>
                 <FormGroup className="mb-4">
-                    <Label>Class</Label>
+                    <Label>Property</Label>
                     <AutoComplete
                         allowCreate
-                        requestUrl={classesUrl}
-                        onItemSelected={handleClassSelect}
-                        placeholder={props.editMode ? 'Select or type to enter a class' : 'No Classes'}
+                        requestUrl={predicatesUrl}
+                        onItemSelected={handlePropertySelect}
+                        placeholder={props.editMode ? 'Select or type to enter a property' : 'No Properties'}
                         autoFocus
-                        isClearable
                         cacheOptions
-                        value={props.class}
+                        value={props.predicate}
                         isDisabled={!props.editMode}
                     />
-                    {props.editMode && <FormText>Specify the class of this template.</FormText>}
+                    {props.editMode && (
+                        <FormText>
+                            Specify the property of this template. This property is used to link the contribution to the template instance.
+                        </FormText>
+                    )}
                 </FormGroup>
-            ) : (
-                <>
+                <fieldset className="scheduler-border">
+                    <legend className="scheduler-border">Template use cases</legend>
                     <FormGroup className="mb-4">
-                        <Label>Property</Label>
+                        <Label>Research fields</Label>
                         <AutoComplete
-                            allowCreate
-                            requestUrl={predicatesUrl}
-                            onItemSelected={handlePropertySelect}
-                            placeholder={props.editMode ? 'Select or type to enter a property' : 'No Properties'}
+                            requestUrl={resourcesUrl}
+                            optionsClass={process.env.REACT_APP_CLASSES_RESEARCH_FIELD}
+                            onItemSelected={handleResearchFieldSelect}
+                            placeholder={props.editMode ? 'Select or type to enter a research field' : 'No research fields'}
                             autoFocus
                             cacheOptions
-                            value={props.predicate}
+                            isMulti
+                            value={props.researchFields}
                             isDisabled={!props.editMode}
                         />
-                        {props.editMode && <FormText>Specify the property of this template.</FormText>}
+                        {props.editMode && <FormText>Specify the research fields that uses this template.</FormText>}
                     </FormGroup>
-                    <fieldset className="scheduler-border">
-                        <legend className="scheduler-border">Template use cases</legend>
-                        <FormGroup className="mb-4">
-                            <Label>Research fields</Label>
-                            <AutoComplete
-                                requestUrl={resourcesUrl}
-                                optionsClass={process.env.REACT_APP_CLASSES_RESEARCH_FIELD}
-                                onItemSelected={handleResearchFieldSelect}
-                                placeholder={props.editMode ? 'Select or type to enter a research field' : 'No research fields'}
-                                autoFocus
-                                cacheOptions
-                                isMulti
-                                value={props.researchFields}
-                                isDisabled={!props.editMode}
-                            />
-                            {props.editMode && <FormText>Specify the research fields that uses this template.</FormText>}
-                        </FormGroup>
-                        {/* TODO: Support Research problem target
+                    {/* TODO: Support Research problem target
                         <FormGroup className="mb-4">
                             <Label>Research problems</Label>
                             <AutoComplete
@@ -177,14 +176,14 @@ function GeneralSettings(props) {
                             {props.editMode && <FormText>Specify the research problems that uses this template.</FormText>}
                         </FormGroup>
                         */}
-                    </fieldset>
-                </>
-            )}
+                </fieldset>
+            </>
         </div>
     );
 }
 
 GeneralSettings.propTypes = {
+    templateID: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     setLabel: PropTypes.func.isRequired,
     editMode: PropTypes.bool.isRequired,
@@ -195,22 +194,20 @@ GeneralSettings.propTypes = {
     researchProblems: PropTypes.array,
     setResearchProblems: PropTypes.func.isRequired,
     researchFields: PropTypes.array,
-    isClassDescription: PropTypes.bool.isRequired,
     isStrictTemplate: PropTypes.bool.isRequired,
     setResearchFields: PropTypes.func.isRequired,
-    setIsClassDescription: PropTypes.func.isRequired,
     setIsStrictTemplate: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
     return {
+        templateID: state.addTemplate.templateID,
         label: state.addTemplate.label,
         predicate: state.addTemplate.predicate,
         class: state.addTemplate.class,
         editMode: state.addTemplate.editMode,
         researchProblems: state.addTemplate.researchProblems,
         researchFields: state.addTemplate.researchFields,
-        isClassDescription: state.addTemplate.isClassDescription,
         isStrictTemplate: state.addTemplate.isStrict
     };
 };
@@ -221,7 +218,6 @@ const mapDispatchToProps = dispatch => ({
     setClass: data => dispatch(setClass(data)),
     setResearchProblems: data => dispatch(setResearchProblems(data)),
     setResearchFields: data => dispatch(setResearchFields(data)),
-    setIsClassDescription: data => dispatch(setIsClassDescription(data)),
     setIsStrictTemplate: data => dispatch(setIsStrictTemplate(data))
 });
 

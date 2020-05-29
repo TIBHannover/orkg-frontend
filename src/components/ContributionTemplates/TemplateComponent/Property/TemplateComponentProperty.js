@@ -30,13 +30,13 @@ function TemplateComponentProperty(props) {
     return (
         <PropertyStyle className={`col-4`} tabIndex="0">
             {props.enableEdit && (
-                <DragHandler>
+                <DragHandler ref={props.dragRef}>
                     <Icon icon={faArrowsAlt} />
                 </DragHandler>
             )}
             {!isEditing ? (
                 <div className={'propertyLabel'}>
-                    {props.property.label}
+                    {props.property.label.charAt(0).toUpperCase() + props.property.label.slice(1)}
                     {props.enableEdit && (
                         <div className={propertyOptionsClasses}>
                             <StatementOptionButton title={'Edit property'} icon={faPen} action={() => setIsEditing(true)} />
@@ -82,7 +82,8 @@ TemplateComponentProperty.propTypes = {
     property: PropTypes.object.isRequired,
     handleDeleteTemplateComponent: PropTypes.func.isRequired,
     enableEdit: PropTypes.bool.isRequired,
-    handlePropertiesSelect: PropTypes.func.isRequired
+    handlePropertiesSelect: PropTypes.func.isRequired,
+    dragRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })])
 };
 
 export default TemplateComponentProperty;

@@ -160,7 +160,7 @@ export function getTemplateIDsByResourceID(state, resourceId) {
     if (!resource) {
         return [];
     }
-    let templateIds = resource.templateId ? [resource.templateId] : [];
+    let templateIds = [];
     if (resource.classes) {
         for (const c of resource.classes) {
             if (state.statementBrowser.classes[c]) {
@@ -404,6 +404,21 @@ export const updatePropertyLabel = data => dispatch => {
 };
 
 /**
+ * Update resource classes
+ *
+ * @param {Object} data - Resource Object
+ * @param {String=} data.resourceId - resource ID
+ * @param {Array=} data.classes - Classes of value
+ */
+export const updateResourceClasses = data => dispatch => {
+    dispatch({
+        type: type.UPDATE_RESOURCE_CLASSES,
+        payload: data
+    });
+    return Promise.resolve();
+};
+
+/**
  * Create Value then fetch templates
  *
  * @param {Object} data - Value Object
@@ -541,25 +556,6 @@ export function fetchTemplateIfNeeded(templateID) {
 }
 
 /**
- * Set the template of a resource
- * When the used template is saved on the statements
- * @param {Object} data
- * @param {String} data.resourceId Resrouce ID
- * @param {String} data.templateId Template ID
- */
-export const setTemplateOfResource = data => {
-    const templateId = data.templateId;
-    return (dispatch, getState) => {
-        return dispatch(fetchTemplateIfNeeded(templateId)).then(() => {
-            dispatch({
-                type: type.SET_TEMPLATE_OF_RESOURCE,
-                payload: { ...data }
-            });
-        });
-    };
-};
-
-/**
  * Check if the class template should be fetched
  *
  * @param {Object} state - Current state of the Store
@@ -587,12 +583,13 @@ export function fetchTemplatesofClassIfNeeded(classID) {
                 type: type.IS_FETCHING_TEMPLATES_OF_CLASS,
                 classID
             });
-            return network.getTemplatesByClass(classID).then(templateIds => {
+            return network.getTemplatesByClass(classID).then(async templateIds => {
                 dispatch({
                     type: type.DONE_FETCHING_TEMPLATES_OF_CLASS,
                     classID
                 });
-                return templateIds.map(tempalteId => dispatch(fetchTemplateIfNeeded(tempalteId)));
+
+                return await Promise.all(templateIds.map(tempalteId => dispatch(fetchTemplateIfNeeded(tempalteId))));
             });
         } else {
             // Let the calling code know there's nothing to wait for.
@@ -639,81 +636,6 @@ export function selectResource(data) {
         return Promise.resolve().then(() => dispatch(createRequiredPropertiesInResource(data.resourceId)));
     };
 }
-
-// TODO: Document or remove
-export const fetchStructureForTemplate = data => {
-    const { resourceId, templateId } = data;
-    return dispatch => {
-        dispatch({
-            type: type.IS_FETCHING_STATEMENTS
-        });
-        return network.getTemplateById(templateId).then(
-            template => {
-                dispatch({
-                    type: type.DONE_FETCHING_STATEMENTS
-                });
-                // Add properties
-                if (template.components && template.components.length > 0) {
-                    for (const component of template.components) {
-                        dispatch(
-                            createProperty({
-                                resourceId: resourceId,
-                                existingPredicateId: component.property.id,
-                                label: component.property.label,
-                                validationRules: component.validationRules,
-                                isExistingProperty: true
-                            })
-                        );
-                    }
-                }
-
-                // Tag resource with used template
-                const ipID = guid();
-                dispatch(
-                    createProperty({
-                        propertyId: ipID,
-                        resourceId: resourceId,
-                        existingPredicateId: process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE,
-                        label: 'Instance Of Template',
-                        isExistingProperty: true
-                    })
-                );
-                dispatch(
-                    createValue({
-                        existingResourceId: templateId,
-                        propertyId: ipID,
-                        label: template.label,
-                        type: 'object',
-                        isExistingValue: true
-                    })
-                );
-
-                // Add templates
-                if (template.subTemplates && template.subTemplates.length > 0) {
-                    for (const subTemplate of template.subTemplates) {
-                        const tpID = guid();
-                        //const tvID = guid();
-                        dispatch(
-                            createProperty({
-                                resourceId: resourceId,
-                                existingPredicateId: subTemplate.predicate.id,
-                                propertyId: tpID,
-                                label: subTemplate.predicate.label,
-                                isExistingProperty: true,
-                                templateId: subTemplate.id
-                            })
-                        );
-                    }
-                }
-                dispatch({
-                    type: type.SET_STATEMENT_IS_FECHTED,
-                    resourceId: resourceId
-                });
-            },
-            error => console.log('An error occurred.', error)
-        );
-    };
-};
 
 export const goToResourceHistory = data => dispatch => {
     dispatch({
@@ -776,23 +698,14 @@ export const fetchStatementsForResource = data => {
                 if (resourceClasses && resourceClasses.length > 0) {
                     resourceClasses = resourceClasses.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
                 }
-                const instanceOfTemplate = network.getStatementsBySubject({ id: existingResourceId }).then(response => {
+                // set the resource classes (initialize doesn't set the classes)
+                const resourceUpdateClasses = dispatch(updateResourceClasses({ resourceId, classes: response.classes }));
+                // fetch the statements
+                const resourceStatementsPromise = network.getStatementsBySubject({ id: existingResourceId }).then(response => {
                     resourceStatements = response;
-                    //Get template used to create this resource
-                    const templateID = response.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE);
-                    if (templateID) {
-                        return dispatch(
-                            setTemplateOfResource({
-                                resourceId: resourceId,
-                                templateId: templateID.object.id
-                            })
-                        );
-                    } else {
-                        return Promise.resolve();
-                    }
+                    return Promise.resolve();
                 });
-
-                return Promise.all([instanceOfTemplate, ...resourceClasses])
+                return Promise.all([resourceUpdateClasses, resourceStatementsPromise, ...resourceClasses])
                     .then(() => dispatch(createRequiredPropertiesInResource(resourceId)))
                     .then(existingProperties => {
                         // all the template of classes are loaded
@@ -852,7 +765,7 @@ export const fetchStatementsForResource = data => {
                                         existingResourceId: statement.object.id,
                                         propertyId: propertyId,
                                         label: statement.object.label,
-                                        type: statement.object._class === 'literal' ? 'literal' : 'object', // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
+                                        type: statement.object._class === 'resource' ? 'object' : statement.object._class, // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
                                         classes: statement.object.classes ? statement.object.classes : [],
                                         isExistingValue: true,
                                         existingStatement: true,

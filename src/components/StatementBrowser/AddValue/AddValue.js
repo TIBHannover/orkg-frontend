@@ -63,8 +63,6 @@ export default class AddValue extends Component {
                 classes: this.props.valueClass ? [this.props.valueClass.id] : []
             });
         } else {
-            const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
-
             this.props.createValue({
                 valueId,
                 label: inputValue,
@@ -72,7 +70,6 @@ export default class AddValue extends Component {
                 propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
                 existingResourceId,
                 isExistingValue: false,
-                templateId: predicate.templateId ? predicate.templateId : null,
                 classes: this.props.valueClass ? [this.props.valueClass.id] : [],
                 shared: 1
             });
