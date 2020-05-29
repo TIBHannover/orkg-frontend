@@ -40,6 +40,7 @@ import { getPaperData } from 'utils';
 import { getPaperByDOI, getStatementsBySubject } from 'network';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import ExistingDoiModal from './ExistingDoiModal';
+import { isString } from 'lodash';
 
 const Container = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -172,19 +173,19 @@ class GeneralData extends Component {
 
         // If the entry is a DOI check if it exists in the database
         if (entry.includes('10.') && entry.startsWith('10.')) {
-            getPaperByDOI(entry).then(result => {
-                getStatementsBySubject({ id: result.id })
-                    .then(paperStatements => {
+            getPaperByDOI(entry)
+                .then(result => {
+                    getStatementsBySubject({ id: result.id }).then(paperStatements => {
                         this.setState({
                             existingPaper: { ...getPaperData(result.id, result.title, paperStatements), title: result.title }
                         });
-                    })
-                    .catch(() => {
-                        this.setState({
-                            existingPaper: null
-                        });
                     });
-            });
+                })
+                .catch(() => {
+                    this.setState({
+                        existingPaper: null
+                    });
+                });
         }
 
         await Cite.async(entry)
@@ -227,34 +228,37 @@ class GeneralData extends Component {
                         doi = '',
                         publishedIn = '';
                     try {
-                        paperTitle = paper.data[0].title;
-                        if (paper.data[0].subtitle && paper.data[0].subtitle.length > 0) {
+                        const { title, subtitle, author, issued, DOI, 'container-title': containerTitle } = paper.data[0];
+
+                        paperTitle = title;
+                        if (subtitle && subtitle.length > 0) {
                             // include the subtitle
-                            paperTitle = `${paperTitle}: ${paper.data[0].subtitle[0]}`;
+                            paperTitle = `${paperTitle}: ${subtitle[0]}`;
                         }
-                        if (paper.data[0].author) {
-                            paperAuthors = paper.data[0].author.map((author, index) => {
+                        if (author) {
+                            paperAuthors = author.map(author => {
                                 let fullname = [author.given, author.family].join(' ').trim();
                                 if (!fullname) {
                                     fullname = author.literal ? author.literal : '';
                                 }
-                                const newAuthor = {
+                                return {
                                     label: fullname,
                                     id: fullname,
                                     orcid: author.ORCID ? author.ORCID : ''
                                 };
-                                return newAuthor;
                             });
                         }
-                        if (paper.data[0].issued['date-parts'][0][1]) {
-                            paperPublicationMonth = paper.data[0].issued['date-parts'][0][1];
+                        const [year, month] = issued['date-parts'][0];
+
+                        if (month) {
+                            paperPublicationMonth = month;
                         }
-                        if (paper.data[0].issued['date-parts'][0][0]) {
-                            paperPublicationYear = paper.data[0].issued['date-parts'][0][0];
+                        if (year) {
+                            paperPublicationYear = year;
                         }
-                        doi = paper.data[0].DOI ? paper.data[0].DOI : '';
-                        if (paper.data[0]['container-title']) {
-                            publishedIn = paper.data[0]['container-title'];
+                        doi = DOI ? DOI : '';
+                        if (containerTitle && isString(containerTitle)) {
+                            publishedIn = containerTitle;
                         }
                     } catch (e) {
                         console.log('Error setting paper data: ', e);
@@ -268,7 +272,7 @@ class GeneralData extends Component {
                             paperAuthors,
                             paperPublicationMonth,
                             paperPublicationYear,
-                            doi: doi,
+                            doi,
                             publishedIn,
                             errors: null
                         },
