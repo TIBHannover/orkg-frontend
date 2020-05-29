@@ -206,7 +206,7 @@ class TemplateEditorAutoComplete extends Component {
 TemplateEditorAutoComplete.propTypes = {
     requestUrl: PropTypes.string.isRequired,
     onItemSelected: PropTypes.func.isRequired,
-    placeholder: PropTypes.string.isRequired,
+    placeholder: PropTypes.string,
     allowCreate: PropTypes.bool,
     value: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     theme: PropTypes.object.isRequired,

@@ -404,6 +404,21 @@ export const updatePropertyLabel = data => dispatch => {
 };
 
 /**
+ * Update resource classes
+ *
+ * @param {Object} data - Resource Object
+ * @param {String=} data.resourceId - resource ID
+ * @param {Array=} data.classes - Classes of value
+ */
+export const updateResourceClasses = data => dispatch => {
+    dispatch({
+        type: type.UPDATE_RESOURCE_CLASSES,
+        payload: data
+    });
+    return Promise.resolve();
+};
+
+/**
  * Create Value then fetch templates
  *
  * @param {Object} data - Value Object
@@ -568,12 +583,13 @@ export function fetchTemplatesofClassIfNeeded(classID) {
                 type: type.IS_FETCHING_TEMPLATES_OF_CLASS,
                 classID
             });
-            return network.getTemplatesByClass(classID).then(templateIds => {
+            return network.getTemplatesByClass(classID).then(async templateIds => {
                 dispatch({
                     type: type.DONE_FETCHING_TEMPLATES_OF_CLASS,
                     classID
                 });
-                return templateIds.map(tempalteId => dispatch(fetchTemplateIfNeeded(tempalteId)));
+
+                return await Promise.all(templateIds.map(tempalteId => dispatch(fetchTemplateIfNeeded(tempalteId))));
             });
         } else {
             // Let the calling code know there's nothing to wait for.
@@ -682,11 +698,14 @@ export const fetchStatementsForResource = data => {
                 if (resourceClasses && resourceClasses.length > 0) {
                     resourceClasses = resourceClasses.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
                 }
+                // set the resource classes (initialize doesn't set the classes)
+                const resourceUpdateClasses = dispatch(updateResourceClasses({ resourceId, classes: response.classes }));
+                // fetch the statements
                 const resourceStatementsPromise = network.getStatementsBySubject({ id: existingResourceId }).then(response => {
                     resourceStatements = response;
                     return Promise.resolve();
                 });
-                return Promise.all([resourceStatementsPromise, ...resourceClasses])
+                return Promise.all([resourceUpdateClasses, resourceStatementsPromise, ...resourceClasses])
                     .then(() => dispatch(createRequiredPropertiesInResource(resourceId)))
                     .then(existingProperties => {
                         // all the template of classes are loaded

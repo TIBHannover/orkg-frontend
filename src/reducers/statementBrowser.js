@@ -306,6 +306,12 @@ export default (state = initialState, action) => {
             return newState;
         }
 
+        case type.UPDATE_RESOURCE_CLASSES: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `resources.byId.${payload.resourceId}.classes`, payload.classes);
+            return newState;
+        }
+
         case type.UPDATE_VALUE_LABEL: {
             const { payload } = action;
             let newState = dotProp.set(state, `values.byId.${payload.valueId}.label`, payload.label);
