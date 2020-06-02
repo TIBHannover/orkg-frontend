@@ -473,3 +473,20 @@ export const extendPropertyIds = (propertyIds, data) => {
     });
     return result;
 };
+
+/**
+ * Get Similar properties labels by Label
+ * (similar properties)
+ * @param {String} propertyLabel property label
+ * @param {Array} propertyData property comparison data
+ */
+export const similarPropertiesByLabel = (propertyLabel, propertyData) => {
+    const result = [];
+    // flat property values and add similar but not equal labels
+    flattenDepth(propertyData, 2).forEach(function(value, index) {
+        if (value.pathLabels && value.pathLabels.length > 0 && value.pathLabels[value.pathLabels.length - 1] !== propertyLabel) {
+            result.push(value.pathLabels[value.pathLabels.length - 1]);
+        }
+    });
+    return result;
+};

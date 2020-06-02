@@ -21,7 +21,7 @@ import arrayMove from 'array-move';
 import { connect } from 'react-redux';
 import dotProp from 'dot-prop-immutable';
 import { reverse } from 'named-urls';
-import { generateRdfDataVocabularyFile, extendPropertyIds } from 'utils';
+import { generateRdfDataVocabularyFile, extendPropertyIds, similarPropertiesByLabel } from 'utils';
 import { ContainerAnimated } from './styled';
 import RelatedResources from './RelatedResources';
 import RelatedFigures from './RelatedFigures';
@@ -167,6 +167,13 @@ class Comparison extends Component {
                         }
                     });
                 }
+
+                // Get Similar properties by Label
+                comparisonData.properties.forEach((property, index) => {
+                    if (property.active) {
+                        comparisonData.properties[index].similar = similarPropertiesByLabel(property.label, comparisonData.data[property.id]);
+                    }
+                });
 
                 this.setState({
                     contributions: contributions,

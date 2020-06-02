@@ -11,6 +11,8 @@ import TableCell from './TableCell';
 import ReactTable from 'react-table';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import Tippy from '@tippy.js/react';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import withFixedColumnsScrollEvent from 'react-table-hoc-fixed-columns';
 import 'react-table-hoc-fixed-columns/lib/styles.css'; // important: this line must be placed after react-table css import
 
@@ -122,7 +124,7 @@ class ComparisonTable extends Component {
                                       .filter(property => property.active && this.props.data[property.id])
                                       .map((property, index) => {
                                           return {
-                                              property: capitalize(property.label),
+                                              property: property,
                                               values: this.props.contributions.map((contribution, index2) => {
                                                   const data = this.props.data[property.id][index2];
                                                   return data;
@@ -155,7 +157,21 @@ class ComparisonTable extends Component {
                                 Cell: props =>
                                     !this.props.transpose ? (
                                         <Properties>
-                                            <PropertiesInner>{capitalize(props.value)}</PropertiesInner>
+                                            <PropertiesInner>
+                                                <ConditionalWrapper
+                                                    condition={props.value.similar && props.value.similar.length > 0}
+                                                    wrapper={children => (
+                                                        <Tippy
+                                                            content={`This property is merged with : ${props.value.similar.join(', ')}`}
+                                                            arrow={true}
+                                                        >
+                                                            <span>{children}*</span>
+                                                        </Tippy>
+                                                    )}
+                                                >
+                                                    {capitalize(props.value.label)}
+                                                </ConditionalWrapper>
+                                            </PropertiesInner>
                                         </Properties>
                                     ) : (
                                         <Properties>
@@ -227,9 +243,19 @@ class ComparisonTable extends Component {
                                               Header: props => (
                                                   <ItemHeader key={`property${index}`}>
                                                       <ItemHeaderInner transpose={this.props.transpose}>
-                                                          {/*For when the path is available: <Tooltip message={property.path} colorIcon={'#606679'}>*/}
-                                                          {capitalize(property.label)}
-                                                          {/*</Tooltip>*/}
+                                                          <ConditionalWrapper
+                                                              condition={property.similar && property.similar.length > 0}
+                                                              wrapper={children => (
+                                                                  <Tippy
+                                                                      content={`This property is merged with : ${property.similar.join(', ')}`}
+                                                                      arrow={true}
+                                                                  >
+                                                                      <span>{children}*</span>
+                                                                  </Tippy>
+                                                              )}
+                                                          >
+                                                              {capitalize(property.label)}
+                                                          </ConditionalWrapper>
                                                       </ItemHeaderInner>
                                                   </ItemHeader>
                                               ),
