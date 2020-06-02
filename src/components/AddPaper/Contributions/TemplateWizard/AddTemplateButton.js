@@ -55,6 +55,7 @@ class AddTemplateButton extends Component {
                         statements['properties'].push({
                             existingPredicateId: component.property.id,
                             label: component.property.label,
+                            range: component.value ? component.value : null,
                             validationRules: component.validationRules
                         });
                     }

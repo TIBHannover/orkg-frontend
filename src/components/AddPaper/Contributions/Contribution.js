@@ -9,6 +9,8 @@ import { StyledHorizontalContribution } from './styled';
 import { connect } from 'react-redux';
 import { getStatementsByObjectAndPredicate, getParentResearchFields } from 'network';
 import { updateResearchProblems, openTour } from 'actions/addPaper';
+import { getReseachProblemsOfContribution } from 'actions/statementBrowser';
+import { isEqual, difference, flattenDepth } from 'lodash';
 import PropTypes from 'prop-types';
 import ContentLoader from 'react-content-loader';
 
@@ -22,13 +24,36 @@ class Contribution extends Component {
             isTemplatesFailesLoading: false
         };
         this._isMounted = false;
-        // rest of your code
     }
 
     componentDidMount() {
         this._isMounted = true;
         this._isMounted && this.loadContirbutionTemplates();
     }
+
+    componentDidUpdate = prevProps => {
+        if (!isEqual(prevProps.researchProblems, this.props.researchProblems)) {
+            this.setState({ isTemplatesLoading: true, isTemplatesFailesLoading: false });
+            const toRemove = difference(prevProps.researchProblems, this.props.researchProblems);
+            const toAdd = difference(this.props.researchProblems, prevProps.researchProblems);
+            let newTemplates = this.state.templates;
+            if (toRemove.length > 0) {
+                newTemplates = newTemplates.filter(template => {
+                    return !toRemove.includes(template.source.id);
+                });
+            }
+            const fetchTemplatesPromise = toAdd.map(problemId => {
+                return this.getTemplatesOfResourceId(problemId, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM);
+            });
+            Promise.all(fetchTemplatesPromise).then(addtemplates => {
+                this.setState({
+                    templates: [...newTemplates, ...flattenDepth(addtemplates, 2)],
+                    isTemplatesLoading: false,
+                    isTemplatesFailesLoading: false
+                });
+            });
+        }
+    };
 
     componentWillUnmount() {
         this._isMounted = false;
@@ -50,6 +75,7 @@ class Contribution extends Component {
         });
     };
 
+    /*
     handleResearchProblemsChange = (problemsArray, a) => {
         problemsArray = problemsArray ? problemsArray : [];
         this.props.updateResearchProblems({
@@ -74,6 +100,7 @@ class Contribution extends Component {
             }));
         }
     };
+    */
 
     handleLearnMore = step => {
         this.props.openTour(step);
@@ -210,7 +237,10 @@ Contribution.propTypes = {
 const mapStateToProps = (state, ownProps) => {
     return {
         resourceId: state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].resourceId : null,
-        researchProblems: state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].researchProblems : [],
+        researchProblems: getReseachProblemsOfContribution(
+            state,
+            state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].resourceId : null
+        ),
         selectedResearchField: state.addPaper.selectedResearchField
     };
 };

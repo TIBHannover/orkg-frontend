@@ -122,7 +122,8 @@ export default (state = initialState, action) => {
                         isEditing: false,
                         isSaving: false,
                         isTemplate: payload.isTemplate,
-                        isAnimated: payload.isAnimated !== undefined ? payload.isAnimated : false
+                        isAnimated: payload.isAnimated !== undefined ? payload.isAnimated : false,
+                        range: payload.range ? payload.range : null
                     }
                 }));
                 newState = dotProp.set(newState, 'properties.allIds', ids => [...ids, payload.propertyId]);
