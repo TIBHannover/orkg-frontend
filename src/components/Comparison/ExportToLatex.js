@@ -43,15 +43,9 @@ class ExportToLatex extends Component {
     componentDidUpdate = (prevProps, prevState) => {
         if (this.props.location.href !== prevProps.location.href) {
             this.setState({ shortLink: null });
-            this.generateLatex();
         }
         if (this.props.contributions !== prevProps.contributions) {
             this.setState({ shortLink: null });
-            this.generateBibTex();
-        }
-        if (this.props.showDialog === true && this.props.showDialog !== prevProps.showDialog) {
-            this.setState({ shortLink: null });
-            this.generateLatex();
         }
     };
 
@@ -324,7 +318,17 @@ class ExportToLatex extends Component {
 
     render() {
         return (
-            <Modal isOpen={this.props.showDialog} toggle={this.props.toggle} size="lg">
+            <Modal
+                isOpen={this.props.showDialog}
+                toggle={this.props.toggle}
+                size="lg"
+                onOpened={() => {
+                    if (!this.state.shortLink) {
+                        this.generateLatex();
+                        this.generateBibTex();
+                    }
+                }}
+            >
                 <ModalHeader toggle={this.props.toggle}>LaTeX export</ModalHeader>
                 <ModalBody>
                     <Nav tabs className="mb-4">
