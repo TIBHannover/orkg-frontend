@@ -167,6 +167,7 @@ export const prefillStatements = ({ statements, resourceId }) => dispatch => {
                 existingPredicateId: property.existingPredicateId,
                 resourceId: resourceId,
                 label: property.label,
+                range: property.range ? property.range : null,
                 isTemplate: property.isTemplate ? property.isTemplate : false,
                 validationRules: property.validationRules ? property.validationRules : {},
                 isAnimated: property.isAnimated !== undefined ? property.isAnimated : false,

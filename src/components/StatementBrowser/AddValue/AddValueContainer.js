@@ -22,6 +22,10 @@ const mapStateToProps = (state, props) => {
             });
         }
     }
+
+    const predicate = state.statementBrowser.properties.byId[props.propertyId ? props.propertyId : props.selectedProperty];
+    const valueClass = getValueClass(props.components);
+
     return {
         selectedProperty: state.statementBrowser.selectedProperty,
         selectedResource: state.statementBrowser.selectedResource,
@@ -31,7 +35,7 @@ const mapStateToProps = (state, props) => {
         openExistingResourcesInDialog: state.statementBrowser.openExistingResourcesInDialog,
         templates: state.statementBrowser.templates,
         isLiteral: isLiteral(props.components),
-        valueClass: getValueClass(props.components)
+        valueClass: valueClass ? valueClass : predicate.range ? predicate.range : null
     };
 };
 

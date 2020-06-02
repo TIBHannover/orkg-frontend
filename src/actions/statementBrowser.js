@@ -146,6 +146,35 @@ export function createRequiredPropertiesInResource(resourceId) {
 }
 
 /**
+ * Get research problems of contribution resource
+ *
+ * @param {Object} state Current state of the Store
+ * @param {String} resourceId Resource ID
+ * @return {String[]} list of template IDs
+ */
+export function getReseachProblemsOfContribution(state, resourceId) {
+    if (!resourceId) {
+        return [];
+    }
+    const resource = state.statementBrowser.resources.byId[resourceId];
+    if (!resource) {
+        return [];
+    }
+    if (resource && resource.propertyIds) {
+        const researchProblemProperty = resource.propertyIds.find(
+            p => state.statementBrowser.properties.byId[p].existingPredicateId === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM
+        );
+        if (researchProblemProperty) {
+            const resourcesId = state.statementBrowser.properties.byId[researchProblemProperty].valueIds
+                .filter(v => state.statementBrowser.values.byId[v].isExistingValue)
+                .map(v => state.statementBrowser.values.byId[v].resourceId);
+            return uniq(resourcesId);
+        }
+    }
+    return [];
+}
+
+/**
  * Get tempalte IDs by resource ID
  *
  * @param {Object} state Current state of the Store

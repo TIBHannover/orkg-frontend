@@ -54,11 +54,10 @@ function GeneralSettings(props) {
         props.setResearchFields(!selected ? [] : selected);
     };
 
-    /*
     const handleResearchProblemSelect = selected => {
         props.setResearchProblems(!selected ? [] : selected);
     };
-    */
+
     if (inputRef.current) {
         inputRef.current.focus();
     }
@@ -122,28 +121,33 @@ function GeneralSettings(props) {
                 />
                 {props.editMode && <FormText>Specify the class of this template. If not specified, a class is generated automatically.</FormText>}
             </FormGroup>
-
             <>
-                <FormGroup className="mb-4">
-                    <Label>Property</Label>
-                    <AutoComplete
-                        allowCreate
-                        requestUrl={predicatesUrl}
-                        onItemSelected={handlePropertySelect}
-                        placeholder={props.editMode ? 'Select or type to enter a property' : 'No Properties'}
-                        autoFocus
-                        cacheOptions
-                        value={props.predicate}
-                        isDisabled={!props.editMode}
-                    />
-                    {props.editMode && (
-                        <FormText>
-                            Specify the property of this template. This property is used to link the contribution to the template instance.
-                        </FormText>
-                    )}
-                </FormGroup>
                 <fieldset className="scheduler-border">
                     <legend className="scheduler-border">Template use cases</legend>
+                    <p>
+                        <small class="text-muted">
+                            These fields are optional, the property is used to link the contribution resource to the template instance. The research
+                            fields/problems are used to suggest this template in the relevant papers.
+                        </small>
+                    </p>
+                    <FormGroup className="mb-4">
+                        <Label>Property</Label>
+                        <AutoComplete
+                            allowCreate
+                            requestUrl={predicatesUrl}
+                            onItemSelected={handlePropertySelect}
+                            placeholder={props.editMode ? 'Select or type to enter a property' : 'No Properties'}
+                            autoFocus
+                            cacheOptions
+                            value={props.predicate}
+                            isDisabled={!props.editMode}
+                        />
+                        {props.editMode && (
+                            <FormText>
+                                Specify the property of this template. This property is used to link the contribution to the template instance.
+                            </FormText>
+                        )}
+                    </FormGroup>
                     <FormGroup className="mb-4">
                         <Label>Research fields</Label>
                         <AutoComplete
@@ -159,7 +163,7 @@ function GeneralSettings(props) {
                         />
                         {props.editMode && <FormText>Specify the research fields that uses this template.</FormText>}
                     </FormGroup>
-                    {/* TODO: Support Research problem target
+                    {
                         <FormGroup className="mb-4">
                             <Label>Research problems</Label>
                             <AutoComplete
@@ -175,7 +179,7 @@ function GeneralSettings(props) {
                             />
                             {props.editMode && <FormText>Specify the research problems that uses this template.</FormText>}
                         </FormGroup>
-                        */}
+                    }
                 </fieldset>
             </>
         </div>
