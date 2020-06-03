@@ -3,6 +3,29 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.11](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.10.1...V0.11) - 2020-06-03
+
+### Merged
+
+- feat: Many to many relationship between Organization and Observatory entities [`#260`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/260)
+- Generete latex export only when the model is open [`#268`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/268)
+- Support suggestion of templates based on research problems [`#267`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/267)
+- feat: Indicate mapped comparison properties [`#265`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/265)
+- Fix: Paper venue [`#261`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/261)
+- fix: Template editor issues [`#262`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/262)
+- feat: make resources and research problem selectable [`#264`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/264)
+- fix(Changelog): issue with wrong tag order [`#263`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/263)
+
+### Fixed
+
+- Merge branch '205-generete-latex-export-only-when-the-model-is-open' into 'master' [`#205`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/205)
+- Merge branch '198-indicate-mapped-comparison-properties' into 'master' [`#198`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/198)
+- Merge branch '197-paper-published-in' into 'master' [`#197`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/197)
+- Merge branch '195-template-editor-issues' into 'master' [`#195`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/195)
+- Merge branch '200-not-possible-to-select-text-for-research-problems-and-resources' into 'master' [`#200`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/200)
+- Merge branch '194-bug-in-auto-generated-changelog' into 'master' [`#194`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/194)
+
+---
 ## [0.10.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.10...V0.10.1) - 2020-05-19
 
 ### Merged
