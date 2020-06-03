@@ -697,14 +697,14 @@ export const getContributorsByResourceId = id => {
     });
 };
 
-export const getObservatoryAndOrganizationInformation = observatoryId => {
+export const getObservatoryAndOrganizationInformation = (observatoryId, organizationId) => {
     return getObservatorybyId(observatoryId).then(obsResponse => {
-        return getOrganization(obsResponse.organizationId).then(orgResponse => {
+        return getOrganization(organizationId).then(orgResponse => {
             return {
                 id: observatoryId,
                 name: obsResponse.name.toUpperCase(),
                 organization: {
-                    id: obsResponse.organizationId,
+                    id: organizationId,
                     name: orgResponse.organization_name,
                     logo: orgResponse.organization_logo
                 }

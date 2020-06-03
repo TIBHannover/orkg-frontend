@@ -85,7 +85,6 @@ class ViewPaper extends Component {
         const resourceId = this.props.match.params.resourceId;
 
         this.props.resetStatementBrowser();
-
         getResource(resourceId)
             .then(paperResource => {
                 if (
@@ -94,7 +93,7 @@ class ViewPaper extends Component {
                     paperResource.created_by &&
                     paperResource.created_by !== '00000000-0000-0000-0000-000000000000'
                 ) {
-                    const observatory = getObservatoryAndOrganizationInformation(paperResource.observatory_id);
+                    const observatory = getObservatoryAndOrganizationInformation(paperResource.observatory_id, paperResource.organization_id);
                     const creator = getUserInformationById(paperResource.created_by);
                     Promise.all([observatory, creator]).then(data => {
                         this.setState({
