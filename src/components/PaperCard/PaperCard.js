@@ -1,11 +1,9 @@
-import React, { Component } from 'react';
-import { Row, Col } from 'reactstrap';
+import React from 'react';
+import { Row, Col, CustomInput } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
-import { withCookies } from 'react-cookie';
-import { compose } from 'redux';
+import { useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from '../../constants/routes.js';
@@ -15,7 +13,7 @@ import moment from 'moment';
 
 const PaperCardStyled = styled.div`
     & .options {
-        display: none;
+        visibility: hidden;
     }
 
     &.selected {
@@ -24,64 +22,67 @@ const PaperCardStyled = styled.div`
 
     &:hover .options,
     &.selected .options {
-        display: block;
+        visibility: visible;
     }
 `;
 
-class PaperCard extends Component {
-    render() {
-        return (
-            <PaperCardStyled
-                className={
-                    'list-group-item list-group-item-action ' +
-                    (this.props.contribution && this.props.comparison.allIds.includes(this.props.contribution.id) ? 'selected' : '')
-                }
-            >
-                <Row>
-                    <Col sm={this.props.contribution ? 9 : 12}>
-                        {this.props.contribution && (
-                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paper.id, contributionId: this.props.contribution.id })}>
-                                {this.props.paper.title ? this.props.paper.title : <em>No title</em>}
-                            </Link>
-                        )}
-                        {!this.props.contribution && (
-                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paper.id })}>
-                                {this.props.paper.title ? this.props.paper.title : <em>No title</em>}
-                            </Link>
-                        )}
-                        <br />
-                        <small>
-                            {this.props.paper.authorNames && this.props.paper.authorNames.length > 0 && (
-                                <>
-                                    <Icon size={'sm'} icon={faUser} /> {this.props.paper.authorNames.map(a => a.label).join(', ')}
-                                </>
-                            )}
-                            {(this.props.paper.publicationMonth || this.props.paper.publicationYear) && (
-                                <Icon size={'sm'} icon={faCalendar} className="ml-2 mr-1" />
-                            )}
-                            {this.props.paper.publicationMonth &&
-                                this.props.paper.publicationMonth.length > 0 &&
-                                moment(this.props.paper.publicationMonth, 'M').format('MMMM') + ' '}
-                            {this.props.paper.publicationYear}
-                        </small>
-                    </Col>
-                    {this.props.contribution && (
-                        <Col sm="3">
-                            <div className="options">
-                                <AddToComparison
-                                    contributionId={this.props.contribution.id}
-                                    paperId={this.props.paper.id}
-                                    paperTitle={this.props.paper.title}
-                                    contributionTitle={this.props.contribution.title}
-                                />
-                            </div>
-                        </Col>
+const PaperCard = props => {
+    const comparison = useSelector(state => state.viewPaper.comparison);
+
+    return (
+        <PaperCardStyled
+            className={
+                'list-group-item list-group-item-action ' +
+                (props.contribution && comparison.allIds.includes(props.contribution.id) ? 'selected' : '')
+            }
+        >
+            <Row>
+                {props.selectable && (
+                    <div style={{ marginRight: -10 }} className="pl-2">
+                        <CustomInput type="checkbox" onChange={props.onChange} checked={props.selected} id={props.paper.id + 'input'} />
+                    </div>
+                )}
+                <Col>
+                    {props.contribution && (
+                        <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution.id })}>
+                            {props.paper.title ? props.paper.title : <em>No title</em>}
+                        </Link>
                     )}
-                </Row>
-            </PaperCardStyled>
-        );
-    }
-}
+                    {!props.contribution && (
+                        <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id })}>
+                            {props.paper.title ? props.paper.title : <em>No title</em>}
+                        </Link>
+                    )}
+                    <br />
+                    <small>
+                        {props.paper.authorNames && props.paper.authorNames.length > 0 && (
+                            <>
+                                <Icon size={'sm'} icon={faUser} /> {props.paper.authorNames.map(a => a.label).join(', ')}
+                            </>
+                        )}
+                        {(props.paper.publicationMonth || props.paper.publicationYear) && (
+                            <Icon size={'sm'} icon={faCalendar} className="ml-2 mr-1" />
+                        )}
+                        {props.paper.publicationMonth &&
+                            props.paper.publicationMonth.length > 0 &&
+                            moment(props.paper.publicationMonth, 'M').format('MMMM') + ' '}
+                        {props.paper.publicationYear}
+                    </small>
+                </Col>
+                {props.contribution && (
+                    <div className="options mr-2">
+                        <AddToComparison
+                            contributionId={props.contribution.id}
+                            paperId={props.paper.id}
+                            paperTitle={props.paper.title}
+                            contributionTitle={props.contribution.title}
+                        />
+                    </div>
+                )}
+            </Row>
+        </PaperCardStyled>
+    );
+};
 
 PaperCard.propTypes = {
     paper: PropTypes.shape({
@@ -95,14 +96,15 @@ PaperCard.propTypes = {
         id: PropTypes.string.isRequired,
         title: PropTypes.string
     }),
-    comparison: PropTypes.object.isRequired
+    selectable: PropTypes.bool,
+    selected: PropTypes.bool,
+    onChange: PropTypes.func
 };
 
-const mapStateToProps = state => ({
-    comparison: state.viewPaper.comparison
-});
+PaperCard.defaultProps = {
+    selectable: false,
+    selected: false,
+    onChange: () => {}
+};
 
-export default compose(
-    connect(mapStateToProps),
-    withCookies
-)(PaperCard);
+export default PaperCard;
