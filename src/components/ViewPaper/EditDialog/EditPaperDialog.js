@@ -68,7 +68,12 @@ class EditPaperDialog extends Component {
     };
 
     handleChange = (event, name) => {
-        this.setState({ [name]: event.target.value });
+        // fixing publication month and year as int number edit;
+        if (name === 'publicationMonth' || name === 'publicationYear') {
+            this.setState({ [name]: parseInt(event.target.value) });
+        } else {
+            this.setState({ [name]: event.target.value });
+        }
     };
 
     handleSave = async () => {
