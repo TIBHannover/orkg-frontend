@@ -131,7 +131,7 @@ class FeaturedComparisons extends Component {
                                 <Row>
                                     {this.state.comparisons.map(comparison => {
                                         if (comparison.type !== category.id) {
-                                            return <React.Fragment key={comparison.id}></React.Fragment>;
+                                            return <React.Fragment key={comparison.id} />;
                                         }
 
                                         return (
