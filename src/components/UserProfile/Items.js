@@ -82,7 +82,7 @@ const Items = props => {
         setResources([]);
     }, [props.userId]);
 
-    const handleChange = paperId => {
+    const handleSelect = paperId => {
         if (selectedItems.includes(paperId)) {
             setSelectedItems(selectedItems.filter(id => id !== paperId));
         } else {
@@ -141,7 +141,7 @@ const Items = props => {
                                 <PaperCard
                                     selectable={props.showDelete}
                                     selected={selected}
-                                    onChange={() => handleChange(paperId)}
+                                    onSelect={() => handleSelect(paperId)}
                                     paper={{ title: resource.label, ...resource }}
                                     key={`pc${resource.id}`}
                                 />

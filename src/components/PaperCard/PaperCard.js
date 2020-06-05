@@ -39,7 +39,7 @@ const PaperCard = props => {
             <Row>
                 {props.selectable && (
                     <div style={{ marginRight: -10 }} className="pl-2">
-                        <CustomInput type="checkbox" onChange={props.onChange} checked={props.selected} id={props.paper.id + 'input'} />
+                        <CustomInput type="checkbox" onChange={props.onSelect} checked={props.selected} id={props.paper.id + 'input'} />
                     </div>
                 )}
                 <Col>
@@ -98,7 +98,7 @@ PaperCard.propTypes = {
     }),
     selectable: PropTypes.bool,
     selected: PropTypes.bool,
-    onChange: PropTypes.func
+    onSelect: PropTypes.func
 };
 
 PaperCard.defaultProps = {
