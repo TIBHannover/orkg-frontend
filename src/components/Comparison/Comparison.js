@@ -56,7 +56,7 @@ class Comparison extends Component {
             errors: null,
             locationSearch: '',
             resourcesStatements: [],
-            showScrollHint: cookies.get('seenShiftMouseWheelScroll') ? cookies.get('seenShiftMouseWheelScroll') : false
+            hideScrollHint: cookies.get('seenShiftMouseWheelScroll') ? cookies.get('seenShiftMouseWheelScroll') : false
         };
     }
 
@@ -360,7 +360,7 @@ class Comparison extends Component {
         // dismiss function for the alert thingy!;
         cookies.set('seenShiftMouseWheelScroll', true, { path: process.env.PUBLIC_URL, maxAge: 315360000 }); // << TEN YEARS
         const token = cookies.get('seenShiftMouseWheelScroll');
-        this.setState({ showScrollHint: token });
+        this.setState({ hideScrollHint: token });
     };
 
     render() {
@@ -515,7 +515,7 @@ class Comparison extends Component {
                                 )}
                             </div>
                             {contributionAmount > 3 && (
-                                <Alert color="info" isOpen={!this.state.showScrollHint} toggle={this.onDismiss}>
+                                <Alert color="info" isOpen={!this.state.hideScrollHint} toggle={this.onDismiss}>
                                     <Icon icon={faLightbulb} /> Use{' '}
                                     <b>
                                         <i>Shift</i>
