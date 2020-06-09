@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, UncontrolledAlert, Badge } from 'reactstrap';
+import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject } from 'network';
 import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResonseHashFromUrl, get_error_message } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -26,7 +26,8 @@ import { ContainerAnimated } from './styled';
 import RelatedResources from './RelatedResources';
 import RelatedFigures from './RelatedFigures';
 import Tippy from '@tippy.js/react';
-
+import { Cookies } from 'react-cookie';
+const cookies = new Cookies();
 class Comparison extends Component {
     constructor(props) {
         super(props);
@@ -54,7 +55,8 @@ class Comparison extends Component {
             fullWidth: false,
             errors: null,
             locationSearch: '',
-            resourcesStatements: []
+            resourcesStatements: [],
+            hideScrollHint: cookies.get('seenShiftMouseWheelScroll') ? cookies.get('seenShiftMouseWheelScroll') : false
         };
     }
 
@@ -354,6 +356,13 @@ class Comparison extends Component {
         }));
     };
 
+    onDismiss = () => {
+        // dismiss function for the alert thingy!;
+        cookies.set('seenShiftMouseWheelScroll', true, { path: process.env.PUBLIC_URL, maxAge: 315360000 }); // << TEN YEARS
+        const token = cookies.get('seenShiftMouseWheelScroll');
+        this.setState({ hideScrollHint: token });
+    };
+
     render() {
         const contributionAmount = getContributionIdsFromUrl(this.state.locationSearch || this.props.location.search).length;
         const containerStyle = this.state.fullWidth ? { maxWidth: 'calc(100% - 20px)' } : {};
@@ -506,7 +515,7 @@ class Comparison extends Component {
                                 )}
                             </div>
                             {contributionAmount > 3 && (
-                                <UncontrolledAlert color="info">
+                                <Alert color="info" isOpen={!this.state.hideScrollHint} toggle={this.onDismiss}>
                                     <Icon icon={faLightbulb} /> Use{' '}
                                     <b>
                                         <i>Shift</i>
@@ -516,7 +525,7 @@ class Comparison extends Component {
                                         <i>Mouse Wheel</i>
                                     </b>{' '}
                                     for horizontal scrolling in the table.
-                                </UncontrolledAlert>
+                                </Alert>
                             )}
                             {contributionAmount > 1 || this.props.match.params.comparisonId ? (
                                 !this.state.isLoading ? (
