@@ -2,13 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'handsontable/dist/handsontable.full.css';
-import { HotTable } from '@handsontable/react';
+import { HotTable, HotColumn } from '@handsontable/react';
 import { updateTableData } from '../../actions/pdfAnnotation';
 import { useSelector, useDispatch } from 'react-redux';
+import { RendererComponent } from './RendererComponent';
+import { EditorComponent } from './EditorComponent';
 
 const TableEditor = props => {
     const dispatch = useDispatch();
     const tableData = useSelector(state => state.pdfAnnotation.tableData[props.id]);
+    const columns = tableData.length > 0 ? tableData[0] : [];
 
     const removeEmptyRows = () => {
         const tableInstance = props.setRef.current.hotInstance;
@@ -82,7 +85,14 @@ const TableEditor = props => {
             stretchH={'all'}
             ref={props.setRef}
             beforeChange={changes => dispatch(updateTableData(props.id, changes))}
-        />
+        >
+            {columns.map(column => (
+                <HotColumn>
+                    <RendererComponent hot-renderer />
+                    <EditorComponent hot-editor />
+                </HotColumn>
+            ))}
+        </HotTable>
     );
 };
 

@@ -61,6 +61,7 @@
         "react-input-autosize": "^2.2.1",
         "react-loading-overlay": "^1.0.1",
         "react-mathjax-preview": "^0.1.16",
+        "react-native-listener": "^1.1.0",
         "react-number-format": "^4.3.0",
         "react-papaparse": "^3.2.1",
         "react-range": "^1.3.0",

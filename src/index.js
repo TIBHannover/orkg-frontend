@@ -6,7 +6,6 @@ import App from './App';
 import { unregister } from './registerServiceWorker';
 import { Provider } from 'react-redux';
 import configureStore, { history } from './store';
-import { AppContainer } from 'react-hot-loader';
 import rootReducer from './reducers/rootReducer';
 import { CookiesProvider } from 'react-cookie';
 import { ThemeProvider } from 'styled-components';
@@ -18,15 +17,13 @@ const theme = require('sass-extract-loader?{plugins: ["sass-extract-js"]}!./asse
 const store = configureStore();
 const render = () => {
     ReactDOM.render(
-        <AppContainer>
-            <CookiesProvider>
-                <Provider store={store}>
-                    <ThemeProvider theme={theme}>
-                        <App history={history} />
-                    </ThemeProvider>
-                </Provider>
-            </CookiesProvider>
-        </AppContainer>,
+        <CookiesProvider>
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
+                    <App history={history} />
+                </ThemeProvider>
+            </Provider>
+        </CookiesProvider>,
         document.getElementById('root')
     );
 };
