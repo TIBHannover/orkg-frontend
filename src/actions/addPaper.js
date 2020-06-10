@@ -184,6 +184,7 @@ export const prefillStatements = ({ statements, resourceId }) => dispatch => {
                 label: value.label,
                 type: value.type ? value.type : 'object',
                 propertyId: value.propertyId,
+                ...(value.type === 'literal' && { datatype: value.datatype ?? process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE }),
                 existingResourceId: value.existingResourceId ? value.existingResourceId : null,
                 isExistingValue: value.isExistingValue ? value.isExistingValue : false,
                 classes: value.classes ? value.classes : []
@@ -279,7 +280,8 @@ export const getResourceObject = (data, resourceId, newProperties) => {
                     const value = data.values.byId[valueId];
                     if (value.type === 'literal' && !value.isExistingValue) {
                         return {
-                            text: value.label
+                            text: value.label,
+                            datatype: value.datatype
                         };
                     } else {
                         if (!value.isExistingValue) {

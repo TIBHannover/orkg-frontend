@@ -32,7 +32,7 @@ export default class AddValue extends Component {
         }
     };
 
-    handleAddValue = async (valueType, inputValue) => {
+    handleAddValue = async (valueType, inputValue, datatype = process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE) => {
         let newObject = null;
         let newStatement = null;
         const valueId = guid();
@@ -49,12 +49,13 @@ export default class AddValue extends Component {
                     newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
                     break;
                 default:
-                    newObject = await createLiteral(inputValue);
+                    newObject = await createLiteral(inputValue, datatype);
                     newStatement = await createLiteralStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
             }
             this.props.createValue({
                 label: inputValue,
                 type: valueType,
+                ...(valueType === 'literal' && { datatype: datatype }),
                 propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
                 existingResourceId: newObject.id,
                 isExistingValue: true,
@@ -67,6 +68,7 @@ export default class AddValue extends Component {
                 valueId,
                 label: inputValue,
                 type: valueType,
+                ...(valueType === 'literal' && { datatype: datatype }),
                 propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
                 existingResourceId,
                 isExistingValue: false,

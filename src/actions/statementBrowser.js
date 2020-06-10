@@ -796,6 +796,9 @@ export const fetchStatementsForResource = data => {
                                         label: statement.object.label,
                                         type: statement.object._class === 'resource' ? 'object' : statement.object._class, // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
                                         classes: statement.object.classes ? statement.object.classes : [],
+                                        ...(statement.object._class === 'literal' && {
+                                            datatype: statement.object.datatype ?? process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE
+                                        }),
                                         isExistingValue: true,
                                         existingStatement: true,
                                         statementId: statement.id,
