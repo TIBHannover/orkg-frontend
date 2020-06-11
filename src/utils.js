@@ -1,6 +1,6 @@
 import capitalize from 'capitalize';
 import queryString from 'query-string';
-import { flattenDepth } from 'lodash';
+import { flattenDepth, uniq } from 'lodash';
 import rdf from 'rdf';
 
 export const popupDelay = process.env.REACT_APP_POPUP_DELAY;
@@ -488,5 +488,5 @@ export const similarPropertiesByLabel = (propertyLabel, propertyData) => {
             result.push(value.pathLabels[value.pathLabels.length - 1]);
         }
     });
-    return result;
+    return uniq(result);
 };
