@@ -85,7 +85,7 @@ class ResearchProblem extends Component {
         }).then(result => {
             // Papers
             if (result.length > 0) {
-                // Get the papers of each contribution
+                // Get the papers of each contribution, ensure all papers have the 'Paper' class
                 const papers = result
                     .filter(contribution => contribution.subject.classes.includes(process.env.REACT_APP_CLASSES_CONTRIBUTION))
                     .map(contribution => {
@@ -94,14 +94,14 @@ class ResearchProblem extends Component {
                             order: 'desc'
                         }).then(papers => {
                             // Fetch the data of each paper
-                            const papers_data = papers
+                            const papersData = papers
                                 .filter(paper => paper.subject.classes.includes(process.env.REACT_APP_CLASSES_PAPER))
                                 .map(paper => {
                                     return getStatementsBySubject({ id: paper.subject.id }).then(paperStatements => {
                                         return { ...paper, data: getPaperData(paper.subject.id, paper.subject.label, paperStatements) };
                                     });
                                 });
-                            return Promise.all(papers_data).then(results => {
+                            return Promise.all(papersData).then(results => {
                                 contribution.papers = results;
                                 return contribution.papers.length > 0 ? contribution : null;
                             });
