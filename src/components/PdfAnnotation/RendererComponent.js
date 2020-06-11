@@ -1,15 +1,37 @@
 import React from 'react';
-import AutoComplete from 'components/StatementBrowser/AutoComplete';
-
+import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 export function RendererComponent(props) {
-    // The avaiable renderer-related props are:
-    // - row (row index)
-    // - col (column index)
-    // - prop (column property name)
-    // - TD (the HTML cell element)
-    // - cellProperties (the cellProperties object for the edited cell)
+    const cachedLabels = useSelector(state => state.pdfAnnotation.cachedLabels);
+    let { value } = props;
+
+    // properties
     if (props.row === 0) {
-        return <div style={{ color: 'grey', fontStyle: 'italic' }}>{props.value}</div>;
+        if (value && value.startsWith('orkg:')) {
+            value = value.replace(/^(orkg:)/, '');
+            const label = cachedLabels[value];
+            return <strong>{label}</strong>;
+        }
+        return (
+            <div style={{ color: 'grey', fontStyle: 'italic', background: '#e6e6e6' }}>
+                <Icon icon={faExclamationTriangle} /> {value}
+            </div>
+        );
     }
-    return <>{props.value}</>;
+
+    // resources
+    if (value && value.startsWith('orkg:')) {
+        value = value.replace(/^(orkg:)/, '');
+        const label = cachedLabels[value];
+        return <span className="text-primary">{label}</span>;
+    }
+
+    return <>{value}</>;
 }
+
+RendererComponent.propTypes = {
+    value: PropTypes.string.isRequired,
+    row: PropTypes.number.isRequired
+};

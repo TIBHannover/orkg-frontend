@@ -6,7 +6,7 @@ import { HotTable, HotColumn } from '@handsontable/react';
 import { updateTableData } from '../../actions/pdfAnnotation';
 import { useSelector, useDispatch } from 'react-redux';
 import { RendererComponent } from './RendererComponent';
-import { EditorComponent } from './EditorComponent';
+import EditorComponent from './EditorComponent';
 
 const TableEditor = props => {
     const dispatch = useDispatch();
@@ -49,9 +49,12 @@ const TableEditor = props => {
         }
     };
 
+    const instance = props.setRef?.current?.hotInstance;
+    //console.log(instance);
     return (
         <HotTable
             data={tableData}
+            cells={(row, col) => {}}
             rowHeaders={true}
             width="100%"
             height="auto"
@@ -59,6 +62,7 @@ const TableEditor = props => {
                 return `<div contenteditable="true">${columns[col]}</div>`;
             }}*/
             licenseKey="non-commercial-and-evaluation"
+            //outsideClickDeselects={false}
             contextMenu={{
                 items: [
                     'row_above',
@@ -83,13 +87,14 @@ const TableEditor = props => {
                 ]
             }}
             stretchH={'all'}
+            //disableVisualSelection={true}
             ref={props.setRef}
             beforeChange={changes => dispatch(updateTableData(props.id, changes))}
         >
             {columns.map(column => (
                 <HotColumn>
-                    <RendererComponent hot-renderer />
-                    <EditorComponent hot-editor />
+                    <RendererComponent hot-renderer instance={instance} />
+                    <EditorComponent hot-editor id={props.id} />
                 </HotColumn>
             ))}
         </HotTable>

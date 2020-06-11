@@ -8,7 +8,8 @@ const initialState = {
     styles: null, // the styles needed to display the PDF,
     tableData: {}, // contains the table data when a table is being extracted
     parsedPdfData: null, // contains the parsed PDF data (from GROBID)
-    tableRegions: {}
+    tableRegions: {},
+    cachedLabels: {} // needed to convert IDs in the table to labels (e.g., P6000 > Machine)
 };
 
 export default (state = initialState, action) => {
@@ -92,6 +93,18 @@ export default (state = initialState, action) => {
 
             return {
                 ...dotProp.delete(state, `tableRegions.${[payload.id]}`)
+            };
+        }
+
+        case type.PDF_ANNOTATION_SET_LABEL_CACHE: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                cachedLabels: {
+                    ...state.cachedLabels,
+                    [payload.id]: payload.label
+                }
             };
         }
 

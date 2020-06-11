@@ -71,3 +71,13 @@ export const deleteTableRegion = id => dispatch => {
         }
     });
 };
+
+export const setLabelCache = ({ id, label }) => dispatch => {
+    dispatch({
+        type: type.PDF_ANNOTATION_SET_LABEL_CACHE,
+        payload: {
+            id,
+            label
+        }
+    });
+};
