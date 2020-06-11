@@ -9,7 +9,7 @@ import ComparisonLoadingComponent from './ComparisonLoadingComponent';
 import ComparisonTable from './ComparisonTable.js';
 import ExportToLatex from './ExportToLatex.js';
 import GeneratePdf from './GeneratePdf.js';
-import SelectProperties from './SelectProperties.js';
+import SelectProperties from 'components/Comparison/SelectProperties';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
 import Share from './Share.js';

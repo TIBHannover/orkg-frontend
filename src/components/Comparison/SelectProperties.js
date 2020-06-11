@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Modal, ModalHeader, ModalBody, ListGroup, ListGroupItem, Badge, CustomInput } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -7,7 +7,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSort } from '@fortawesome/free-solid-svg-icons';
 import { SortableContainer, SortableElement, sortableHandle } from 'react-sortable-hoc';
 import capitalize from 'capitalize';
-import Tooltip from '../Utils/Tooltip';
+import Tooltip from 'components/Utils/Tooltip';
 
 const DragHandle = styled.span`
     cursor: move;
@@ -25,23 +25,22 @@ const ListGroupItemStyled = styled(ListGroupItem)`
     display: flex !important;
 `;
 
-class SelectProperties extends Component {
-    // TODO: place this outside the component class
-    SortableHandle = sortableHandle(() => (
+function SelectProperties(props) {
+    const SortableHandle = sortableHandle(() => (
         <DragHandle>
             <Icon icon={faSort} />
         </DragHandle>
     ));
 
-    SortableItem = SortableElement(({ value: property }) => (
+    const SortableItem = SortableElement(({ value: property }) => (
         <ListGroupItemStyled>
-            {property.active ? <this.SortableHandle /> : <DragHandlePlaceholder />}
+            {property.active ? <SortableHandle /> : <DragHandlePlaceholder />}
             <CustomInput
                 type="checkbox"
                 id={`checkbox-${property.id}`}
                 label={capitalize(property.label)}
                 className="flex-grow-1"
-                onChange={() => this.props.toggleProperty(property.id)}
+                onChange={() => props.toggleProperty(property.id)}
                 checked={property.active}
             />
             <Tooltip message="Amount of contributions" hideDefaultIcon>
@@ -50,32 +49,24 @@ class SelectProperties extends Component {
         </ListGroupItemStyled>
     ));
 
-    SortableList = SortableContainer(({ items }) => {
+    const SortableList = SortableContainer(({ items }) => {
         return (
             <ListGroup>
                 {items.map((value, index) => (
-                    <this.SortableItem key={`item-${index}`} index={index} value={value} />
+                    <SortableItem key={`item-${index}`} index={index} value={value} />
                 ))}
             </ListGroup>
         );
     });
 
-    render() {
-        return (
-            <Modal isOpen={this.props.showPropertiesDialog} toggle={this.props.togglePropertiesDialog}>
-                <ModalHeader toggle={this.props.togglePropertiesDialog}>Select properties</ModalHeader>
-                <ModalBody>
-                    <this.SortableList
-                        items={this.props.properties}
-                        onSortEnd={this.props.onSortEnd}
-                        lockAxis="y"
-                        helperClass="sortableHelper"
-                        useDragHandle
-                    />
-                </ModalBody>
-            </Modal>
-        );
-    }
+    return (
+        <Modal isOpen={props.showPropertiesDialog} toggle={props.togglePropertiesDialog}>
+            <ModalHeader toggle={props.togglePropertiesDialog}>Select properties</ModalHeader>
+            <ModalBody>
+                <SortableList items={props.properties} onSortEnd={props.onSortEnd} lockAxis="y" helperClass="sortableHelper" useDragHandle />
+            </ModalBody>
+        </Modal>
+    );
 }
 
 SelectProperties.propTypes = {
