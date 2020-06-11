@@ -1,6 +1,5 @@
 import React from 'react';
 import { Modal, ModalHeader, ModalBody, ListGroup, ListGroupItem, Badge, CustomInput } from 'reactstrap';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -77,8 +76,4 @@ SelectProperties.propTypes = {
     toggleProperty: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({
-    viewPaper: state.viewPaper
-});
-
-export default connect(mapStateToProps)(SelectProperties);
+export default SelectProperties;
