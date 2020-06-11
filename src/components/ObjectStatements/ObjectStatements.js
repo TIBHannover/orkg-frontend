@@ -9,7 +9,7 @@ import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 
 const ObjectStatements = props => {
-    const pageSize = 1;
+    const pageSize = 10;
     const [showObjectStatements, setShowObjectStatements] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
@@ -63,7 +63,7 @@ const ObjectStatements = props => {
     return (
         <div>
             <Button color="darkblue" size="sm" className="mt-5" onClick={() => setShowObjectStatements(!showObjectStatements)}>
-                {!showObjectStatements ? 'Show' : 'Hide'} object statements ({isLoading ? 'loading...' : statements.length})
+                {!showObjectStatements ? 'Show' : 'Hide'} object statements
             </Button>
 
             <Collapse isOpen={showObjectStatements}>
