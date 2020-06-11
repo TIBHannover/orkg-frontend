@@ -76,6 +76,7 @@ class ResearchField extends Component {
                 // Fetch the data of each paper
                 getStatementsBySubjects({
                     ids: result
+                        .filter(paper => paper.subject.classes.includes(process.env.REACT_APP_CLASSES_PAPER))
                         .filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD)
                         .map(p => p.subject.id)
                 })
