@@ -9,7 +9,7 @@ import { Button } from 'reactstrap';
 import Confirm from 'reactstrap-confirm';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { updateResourceClasses } from 'network';
+import { updateResourceClasses, getStatementsBySubjectAndPredicate } from 'network';
 import { toast } from 'react-toastify';
 
 const Items = props => {
@@ -108,7 +108,23 @@ const Items = props => {
             setResources([]);
             setSelectedItems([]);
 
-            const promises = selectedItems.map(id => updateResourceClasses(id, [process.env.REACT_APP_CLASSES_PAPER_DELETED]));
+            const promises = selectedItems.map(id => {
+                // set the class of paper to DeletedPapers
+                const promisePaper = updateResourceClasses(id, [process.env.REACT_APP_CLASSES_PAPER_DELETED]);
+                // set the class of paper of contributions to DeletedContribution
+                const promisesContributions = getStatementsBySubjectAndPredicate({
+                    subjectId: id,
+                    predicateId: process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION
+                }).then(contributions =>
+                    Promise.all(
+                        contributions.map(contribution =>
+                            updateResourceClasses(contribution.object.id, [process.env.REACT_APP_CLASSES_CONTRIBUTION_DELETED])
+                        )
+                    )
+                );
+                return Promise.all([promisePaper, promisesContributions]);
+            });
+
             await Promise.all(promises);
 
             toast.success(`Successfully deleted ${selectedItems.length} paper${selectedItems.length !== 1 ? 's' : ''}`);
