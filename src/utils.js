@@ -197,6 +197,50 @@ export const getPaperData = (id, label, paperStatements) => {
 };
 
 /**
+ * Parse paper statements and return an OPTIMIZED paper object for View all papers
+ *
+ * @param {Array} paperStatements
+ */
+export const getPaperDataForViewAllPapers = paperStatements => {
+    // research field
+    // publication year
+    // we dont show research field here
+    let publicationYear = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
+    if (publicationYear.length > 0) {
+        publicationYear = publicationYear[0].object.label;
+    } else {
+        publicationYear = '';
+    }
+    // publication month
+    let publicationMonth = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
+    if (publicationMonth.length > 0) {
+        publicationMonth = publicationMonth[0].object.label;
+    } else {
+        publicationMonth = '';
+    }
+    // authors
+    const authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
+    const authorNamesArray = [];
+    if (authors.length > 0) {
+        for (const author of authors) {
+            authorNamesArray.push({
+                id: author.object.id,
+                statementId: author.id,
+                class: author.object._class,
+                label: author.object.label,
+                classes: author.object.classes,
+                created_at: author.created_at
+            });
+        }
+    }
+    return {
+        publicationYear,
+        publicationMonth,
+        authorNames: authorNamesArray.sort((a, b) => a.created_at.localeCompare(b.created_at))
+    };
+};
+
+/**
  * Parse comparison statements and return a a comparison object
  *
  * @param {Array} comparisonStatements
