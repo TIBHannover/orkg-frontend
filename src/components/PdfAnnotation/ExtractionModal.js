@@ -10,6 +10,7 @@ import { setTableData } from '../../actions/pdfAnnotation';
 import { toast } from 'react-toastify';
 import { readString } from 'react-papaparse';
 import { useSelector, useDispatch } from 'react-redux';
+import { zip } from 'lodash';
 
 const ExtractionModal = props => {
     const [loading, setLoading] = useState(false);
@@ -154,6 +155,11 @@ const ExtractionModal = props => {
         }
     };
 
+    const transposeTable = () => {
+        const transposed = zip(...tableData);
+        dispatch(setTableData(props.id, transposed));
+    };
+
     return (
         <>
             <Modal isOpen={props.isOpen} toggle={props.toggle} style={{ maxWidth: '95%' }}>
@@ -176,6 +182,9 @@ const ExtractionModal = props => {
                                     <div className="mt-3">
                                         <Button size="sm" color="darkblue" onClick={toggleExtractReferencesModal}>
                                             Extract references
+                                        </Button>{' '}
+                                        <Button size="sm" color="darkblue" onClick={transposeTable}>
+                                            Transpose
                                         </Button>{' '}
                                         <Button size="sm" color="darkblue" onClick={handleCsvDownload}>
                                             Download CSV
