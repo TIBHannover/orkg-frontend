@@ -51,7 +51,7 @@ class PaperCardDynamic extends Component {
         }
     }
 
-    componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
+    componentDidUpdate = () => {
         if (this.props.paper.paperData && this.props.paper.paperData.statements) {
             if (this.state.optimizePaperObject === null && this.state.isLoading) {
                 const optimizedPaperObject = getPaperDataForViewAllPapers(this.props.paper.paperData.statements);
@@ -63,7 +63,7 @@ class PaperCardDynamic extends Component {
                 this.setState({ optimizedPaperObject: null, isLoading: true });
             }
         }
-    }
+    };
 
     render() {
         return (
