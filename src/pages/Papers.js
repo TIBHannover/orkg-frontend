@@ -3,18 +3,18 @@ import { getResourcesByClass, getStatementsBySubjects } from '../network';
 import { Container } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { getPaperData } from 'utils';
-import { find } from 'lodash';
-import PaperCard from './../components/PaperCard/PaperCard';
+import PaperCardDynamic from './../components/PaperCard/PaperCardDynamic';
 
 export default class Papers extends Component {
     constructor(props) {
         super(props);
 
         this.pageSize = 25;
+        this.componentIsMounted = false;
 
         this.state = {
             statements: [],
+            paperResources: [],
             isNextPageLoading: false,
             hasNextPage: false,
             page: 1,
@@ -24,8 +24,12 @@ export default class Papers extends Component {
 
     componentDidMount() {
         document.title = 'Papers - ORKG';
+        this.componentIsMounted = true;
 
         this.loadMorePapers();
+    }
+    componentWillUnmount() {
+        this.componentIsMounted = false;
     }
 
     loadMorePapers = () => {
@@ -38,35 +42,59 @@ export default class Papers extends Component {
             desc: true
         }).then(papers => {
             if (papers.length > 0) {
-                // Fetch the data of each paper
-                getStatementsBySubjects({ ids: papers.map(p => p.id) })
-                    .then(papersStatements => {
-                        const statements = papersStatements.map(paperStatements => {
-                            return getPaperData(paperStatements.id, find(papers, { id: paperStatements.id }).label, paperStatements.statements);
-                        });
-                        this.setState({
-                            statements: [...this.state.statements, ...statements],
-                            isNextPageLoading: false,
-                            hasNextPage: statements.length < this.pageSize ? false : true,
-                            page: this.state.page + 1
-                        });
-                    })
-                    .catch(error => {
-                        this.setState({
-                            isNextPageLoading: false,
-                            hasNextPage: false,
-                            isLastPageReached: true
-                        });
-                        console.log(error);
-                    });
-            } else {
+                // update paper resources for paperCards preview
                 this.setState({
+                    paperResources: [...this.state.paperResources, ...papers],
                     isNextPageLoading: false,
-                    hasNextPage: false,
-                    isLastPageReached: true
+                    page: this.state.page + 1,
+                    hasNextPage: papers.length < this.pageSize ? false : true
                 });
+
+                // Fetch the data of each paper
+                this.fetchDataForPapers(papers);
             }
         });
+    };
+
+    fetchDataForPapers = papers => {
+        if (papers.length > 0) {
+            // Fetch the data of each paper
+            getStatementsBySubjects({ ids: papers.map(p => p.id) })
+                .then(papersStatements => {
+                    if (this.componentIsMounted) {
+                        // prevents to update the state when component is not mounted!
+                        this.setState({
+                            statements: [...this.state.statements, ...papersStatements],
+                            isNextPageLoading: false
+                        });
+                    }
+                })
+                .catch(error => {
+                    this.setState({
+                        isNextPageLoading: false,
+                        hasNextPage: false,
+                        isLastPageReached: true
+                    });
+                    console.log(error);
+                });
+        } else {
+            this.setState({
+                isNextPageLoading: false,
+                hasNextPage: false,
+                isLastPageReached: true
+            });
+        }
+    };
+
+    renderPaperCards = () => {
+        return this.state.paperResources.map((paper, index) => {
+            const paperCardData = this.state.statements.find(({ id }) => id === paper.id);
+            return this.getPaperCard(paper, paperCardData);
+        });
+    };
+
+    getPaperCard = (paper, paperData) => {
+        return <PaperCardDynamic paper={{ title: paper.label, id: paper.id, paperData: paperData }} key={`pc${paper.id}`} />;
     };
 
     render() {
@@ -76,14 +104,10 @@ export default class Papers extends Component {
                     <h1 className="h4 mt-4 mb-4">View all papers</h1>
                 </Container>
                 <Container className={'p-0'}>
-                    {this.state.statements.length > 0 && (
-                        <div>
-                            {this.state.statements.map(resource => {
-                                return <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />;
-                            })}
-                        </div>
+                    {this.state.paperResources.length > 0 && <div>{this.renderPaperCards()}</div>}
+                    {this.state.paperResources.length === 0 && !this.state.isNextPageLoading && (
+                        <div className="text-center mt-4 mb-4">No Papers</div>
                     )}
-                    {this.state.statements.length === 0 && !this.state.isNextPageLoading && <div className="text-center mt-4 mb-4">No Papers</div>}
                     {this.state.isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">
                             <Icon icon={faSpinner} spin /> Loading
