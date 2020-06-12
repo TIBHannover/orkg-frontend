@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
     Button,
     ButtonDropdown,
+    UncontrolledButtonDropdown,
     Collapse,
     Container,
     DropdownItem,
@@ -246,6 +247,26 @@ class Header extends Component {
                                             <Badge color="info">Beta</Badge>
                                         </small>
                                     </DropdownItem>
+                                </DropdownMenu>
+                            </ButtonDropdown>
+
+                            <UncontrolledButtonDropdown nav inNavbar>
+                                <DropdownToggle nav className="ml-2">
+                                    About <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                    <DropdownItem
+                                        tag={'a'}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        exact
+                                        href={'https://projects.tib.eu/orkg/project/documentation/'}
+                                    >
+                                        Features
+                                    </DropdownItem>
+                                    <DropdownItem tag={'a'} target="_blank" rel="noopener noreferrer" exact href={'https://projects.tib.eu/orkg/'}>
+                                        Project
+                                    </DropdownItem>
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.ORGANIZATIONS}>
                                         Organizations{' '}
                                         <small>
@@ -253,13 +274,7 @@ class Header extends Component {
                                         </small>
                                     </DropdownItem>
                                 </DropdownMenu>
-                            </ButtonDropdown>
-
-                            <NavItem className="ml-2 ">
-                                <NavLink href="https://projects.tib.eu/orkg/" target="_blank" rel="noopener noreferrer">
-                                    About <Icon size="sm" icon={faExternalLinkAlt} />
-                                </NavLink>
-                            </NavItem>
+                            </UncontrolledButtonDropdown>
                         </Nav>
 
                         <SearchForm placeholder="Search..." />
