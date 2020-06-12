@@ -3,17 +3,12 @@ import { Row, Col } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
-import { withCookies } from 'react-cookie';
-import { compose } from 'redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar } from '@fortawesome/free-solid-svg-icons';
-import ROUTES from '../../constants/routes.js';
-import AddToComparison from './../ViewPaper/AddToComparison';
+import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import ContentLoader from 'react-content-loader';
-import { getPaperDataForViewAllPapers } from '../../utils';
 
 const PaperCardStyled = styled.div`
     & .options {
@@ -45,7 +40,7 @@ class PaperCardDynamic extends Component {
 
         if (this.props.paper.paperData && this.props.paper.paperData.statements) {
             if (this.state.optimizePaperObject === null && this.state.isLoading) {
-                const optimizedPaperObject = getPaperDataForViewAllPapers(this.props.paper.paperData.statements);
+                const optimizedPaperObject = this.getPaperDataForViewAllPapers(this.props.paper.paperData.statements);
                 this.setState({ optimizedPaperObject: optimizedPaperObject, isLoading: false });
             }
         }
@@ -54,7 +49,7 @@ class PaperCardDynamic extends Component {
     componentDidUpdate = () => {
         if (this.props.paper.paperData && this.props.paper.paperData.statements) {
             if (this.state.optimizePaperObject === null && this.state.isLoading) {
-                const optimizedPaperObject = getPaperDataForViewAllPapers(this.props.paper.paperData.statements);
+                const optimizedPaperObject = this.getPaperDataForViewAllPapers(this.props.paper.paperData.statements);
                 this.setState({ optimizedPaperObject: optimizedPaperObject, isLoading: false });
             }
         } else {
@@ -65,26 +60,58 @@ class PaperCardDynamic extends Component {
         }
     };
 
+    /**
+     * Parse paper statements and return an OPTIMIZED paper object for View all papers
+     *
+     * @param {Array} paperStatements
+     */
+    getPaperDataForViewAllPapers = paperStatements => {
+        // research field
+        // publication year
+        // we dont show research field here
+        let publicationYear = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
+        if (publicationYear.length > 0) {
+            publicationYear = publicationYear[0].object.label;
+        } else {
+            publicationYear = '';
+        }
+        // publication month
+        let publicationMonth = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
+        if (publicationMonth.length > 0) {
+            publicationMonth = publicationMonth[0].object.label;
+        } else {
+            publicationMonth = '';
+        }
+        // authors
+        const authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
+        const authorNamesArray = [];
+        if (authors.length > 0) {
+            for (const author of authors) {
+                authorNamesArray.push({
+                    id: author.object.id,
+                    statementId: author.id,
+                    class: author.object._class,
+                    label: author.object.label,
+                    classes: author.object.classes,
+                    created_at: author.created_at
+                });
+            }
+        }
+        return {
+            publicationYear,
+            publicationMonth,
+            authorNames: authorNamesArray.sort((a, b) => a.created_at.localeCompare(b.created_at))
+        };
+    };
+
     render() {
         return (
-            <PaperCardStyled
-                className={
-                    'list-group-item list-group-item-action ' +
-                    (this.props.contribution && this.props.comparison.allIds.includes(this.props.contribution.id) ? 'selected' : '')
-                }
-            >
+            <PaperCardStyled className={'list-group-item list-group-item-action'}>
                 <Row>
-                    <Col sm={this.props.contribution ? 9 : 12}>
-                        {this.props.contribution && (
-                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paper.id, contributionId: this.props.contribution.id })}>
-                                {this.props.paper.title ? this.props.paper.title : <em>No title</em>}
-                            </Link>
-                        )}
-                        {!this.props.contribution && (
-                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paper.id })}>
-                                {this.props.paper.title ? this.props.paper.title : <em>No title</em>}
-                            </Link>
-                        )}
+                    <Col sm={12}>
+                        <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paper.id })}>
+                            {this.props.paper.title ? this.props.paper.title : <em>No title</em>}
+                        </Link>
                         <br />
                         {!this.state.isLoading && (
                             <small>
@@ -121,18 +148,6 @@ class PaperCardDynamic extends Component {
                             </div>
                         )}
                     </Col>
-                    {this.props.contribution && (
-                        <Col sm="3">
-                            <div className="options">
-                                <AddToComparison
-                                    contributionId={this.props.contribution.id}
-                                    paperId={this.props.paper.id}
-                                    paperTitle={this.props.paper.title}
-                                    contributionTitle={this.props.contribution.title}
-                                />
-                            </div>
-                        </Col>
-                    )}
                 </Row>
             </PaperCardStyled>
         );
@@ -147,19 +162,7 @@ PaperCardDynamic.propTypes = {
         publicationMonth: PropTypes.string,
         publicationYear: PropTypes.string,
         paperData: PropTypes.object
-    }).isRequired,
-    contribution: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        title: PropTypes.string
-    }),
-    comparison: PropTypes.object.isRequired
+    }).isRequired
 };
 
-const mapStateToProps = state => ({
-    comparison: state.viewPaper.comparison
-});
-
-export default compose(
-    connect(mapStateToProps),
-    withCookies
-)(PaperCardDynamic);
+export default PaperCardDynamic;
