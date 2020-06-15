@@ -18,7 +18,9 @@ const mapStateToProps = (state, props) => {
         if (!resource.existingResourceId) {
             newResourcesList.push({
                 id: resource.id,
-                label: resource.label
+                label: resource.label,
+                ...(resource.shared ? { shared: resource.shared } : {}),
+                ...(resource.classes ? { classes: resource.classes } : {})
             });
         }
     }
