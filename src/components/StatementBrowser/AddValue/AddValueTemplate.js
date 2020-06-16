@@ -38,6 +38,10 @@ export default function AddValueTemplate(props) {
     }, [valueType]);
 
     useEffect(() => {
+        setValueType(props.isLiteral ? 'literal' : 'object');
+    }, [props.isLiteral]);
+
+    useEffect(() => {
         if (!showAddValue) {
             setInputValue('');
         }
