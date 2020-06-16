@@ -1,5 +1,5 @@
-import React from 'react';
-import { InputGroup, FormGroup, Label, Col, Input } from 'reactstrap';
+import React, { useState } from 'react';
+import { InputGroup, FormGroup, Label, Col, Input, FormText } from 'reactstrap';
 import { ValuesStyle } from 'components/StatementBrowser/styled';
 import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDatatypes';
 import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
@@ -10,6 +10,8 @@ import PropTypes from 'prop-types';
 import ValidationRules from '../ValidationRules/ValidationRules';
 
 function TemplateComponentValue(props) {
+    const [cardinality, setCaridinality] = useState(!props.minOccurs && !props.maxOccurs ? '0,*' : 'range');
+
     const onChange = event => {
         const templateComponents = props.components.map((item, j) => {
             if (j === props.id) {
@@ -18,6 +20,22 @@ function TemplateComponentValue(props) {
             return item;
         });
         props.setComponents(templateComponents);
+    };
+
+    const onChangeCardinality = event => {
+        setCaridinality(event.target.value);
+
+        if (event.target.value !== 'range') {
+            const [minOccurs, maxOccurs] = event.target.value.split(',');
+            const templateComponents = props.components.map((item, j) => {
+                if (j === props.id) {
+                    item['minOccurs'] = minOccurs;
+                    item['maxOccurs'] = maxOccurs !== '*' ? maxOccurs : '';
+                }
+                return item;
+            });
+            props.setComponents(templateComponents);
+        }
     };
 
     return (
@@ -40,44 +58,68 @@ function TemplateComponentValue(props) {
                 </InputGroup>
                 <div className="mt-2">
                     <FormGroup row>
-                        <Label className={'text-right text-muted'} for="minOccursValueInput" sm={3}>
-                            <small>Minimum Occurence</small>
+                        <Label className={'text-right text-muted'} for="cardinalityValueInput" sm={3}>
+                            <small>Cardinality</small>
                         </Label>
                         <Col sm={9}>
-                            <Input
-                                disabled={!props.enableEdit}
-                                onChange={onChange}
-                                bsSize="sm"
-                                value={props.minOccurs}
-                                type="number"
-                                min="0"
-                                step="1"
-                                name="minOccurs"
-                                id="minOccursValueInput"
-                                placeholder="Minimum number of occurrences in the resource"
-                            />
-                        </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                        <Label className={'text-right text-muted'} for="maxOccursValueInput" sm={3}>
-                            <small>Maximum Occurence</small>
-                        </Label>
-                        <Col sm={9}>
-                            <Input
-                                disabled={!props.enableEdit}
-                                onChange={onChange}
-                                bsSize="sm"
-                                value={props.maxOccurs !== null ? props.maxOccurs : ''}
-                                type="number"
-                                min="0"
-                                step="1"
-                                name="maxOccurs"
-                                id="maxOccursValueInput"
-                                placeholder="Maximum number of occurrences in the resource"
-                            />
+                            <Input disabled={!props.enableEdit} onChange={onChangeCardinality} value={cardinality} type="select" bsSize="sm">
+                                <option value="0,*">Zero or more [0,*]</option>
+                                <option value="0,1">Optional [0,1]</option>
+                                <option value="1,1">Exactly one [1,1]</option>
+                                <option value="1,*">One or more [1,*]</option>
+                                <option value="range">Range</option>
+                            </Input>
                         </Col>
                     </FormGroup>
                 </div>
+                {cardinality === 'range' && (
+                    <>
+                        <div className="mt-2">
+                            <FormGroup row>
+                                <Label className={'text-right text-muted'} for="minOccursValueInput" sm={3}>
+                                    <small>Minimum Occurence</small>
+                                </Label>
+                                <Col sm={9}>
+                                    <Input
+                                        disabled={!props.enableEdit}
+                                        onChange={onChange}
+                                        bsSize="sm"
+                                        value={props.minOccurs}
+                                        type="number"
+                                        min="0"
+                                        step="1"
+                                        name="minOccurs"
+                                        id="minOccursValueInput"
+                                        placeholder="Minimum number of occurrences in the resource"
+                                    />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Label className={'text-right text-muted'} for="maxOccursValueInput" sm={3}>
+                                    <small>Maximum Occurence</small>
+                                </Label>
+                                <Col sm={9}>
+                                    <Input
+                                        disabled={!props.enableEdit}
+                                        onChange={onChange}
+                                        bsSize="sm"
+                                        value={props.maxOccurs !== null ? props.maxOccurs : ''}
+                                        type="number"
+                                        min="0"
+                                        step="1"
+                                        name="maxOccurs"
+                                        id="maxOccursValueInput"
+                                        placeholder="Maximum number of occurrences in the resource"
+                                    />
+                                    {props.enableEdit && (
+                                        <FormText className={'d-block'}>Clear the input field if there is no restriction (unbounded)</FormText>
+                                    )}
+                                </Col>
+                            </FormGroup>
+                        </div>
+                    </>
+                )}
+
                 {props.value && ['Number', 'String'].includes(props.value.id) && (
                     <ValidationRules validationRules={props.validationRules} id={props.id} value={props.value} enableEdit={props.enableEdit} />
                 )}
