@@ -413,13 +413,13 @@ class ViewPaper extends Component {
                         </VisibilitySensor>
 
                         {this.state.editMode && (
-                            <EditModeHeader className="box">
+                            <EditModeHeader className="box rounded-top">
                                 <Title>
                                     Edit mode <span className="pl-2">Every change you make is automatically saved</span>
                                 </Title>
                             </EditModeHeader>
                         )}
-                        <Container className="box pt-md-4 pb-md-4 pl-md-5 pr-md-5 pt-sm-2 pb-sm-2 pl-sm-2 pr-sm-2 clearfix">
+                        <Container className="box rounded pt-md-4 pb-md-4 pl-md-5 pr-md-5 pt-sm-2 pb-sm-2 pl-sm-2 pr-sm-2 clearfix">
                             {this.state.loading && (
                                 <ContentLoader height={38} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
                                     <rect x="0" y="10" width="350" height="12" />

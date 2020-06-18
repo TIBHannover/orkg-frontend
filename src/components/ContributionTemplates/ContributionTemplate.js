@@ -63,11 +63,11 @@ class ContributionTemplate extends Component {
             <StyledContainer className="clearfix">
                 <h1 className="h4 mt-4 mb-4 flex-grow-1">{!this.props.match.params.id ? 'Create new template' : 'Template'}</h1>
                 {this.props.match.params.id && this.props.editMode && (
-                    <EditModeHeader className="box">
+                    <EditModeHeader className="box rounded-top">
                         <Title>Edit mode</Title>
                     </EditModeHeader>
                 )}
-                <div className={'box clearfix pt-4 pb-4 pl-5 pr-5'}>
+                <div className={'box rounded clearfix pt-4 pb-4 pl-5 pr-5'}>
                     <div className={'mb-2'}>
                         {!this.props.editMode ? (
                             <h3 className={'pb-2 mb-3'} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>

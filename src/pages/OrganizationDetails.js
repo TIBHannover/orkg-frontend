@@ -68,11 +68,11 @@ class OrganizationDetails extends Component {
     render() {
         return (
             <>
-                {this.state.isLoading && <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
+                {this.state.isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
                 {!this.state.isLoading && this.state.error && <>{this.state.error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
                 {!this.state.isLoading && !this.state.error && this.state.label && (
                     <Container className="mt-5 clearfix">
-                        <div className={'box clearfix pt-4 pb-4 pl-5 pr-5'}>
+                        <div className={'box rounded clearfix pt-4 pb-4 pl-5 pr-5'}>
                             <div className={'mb-2'}>
                                 <div className="pb-2 mb-3">
                                     <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>

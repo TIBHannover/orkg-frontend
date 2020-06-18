@@ -16,7 +16,7 @@ class NotFound extends Component {
                 <Container className="p-0">
                     <h1 className="h4 mt-4 mb-4">An error has occurred</h1>
                 </Container>
-                <Container className="box pt-4 pb-4 pl-5 pr-5">
+                <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                     <div className="container">
                         <div className="row justify-content-center">
                             <div className="col-md-12 text-center">

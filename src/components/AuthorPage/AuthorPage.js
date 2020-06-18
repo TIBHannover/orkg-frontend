@@ -141,7 +141,7 @@ class AuthorPage extends Component {
                         <Container className="p-0">
                             <Row>
                                 <Col className="col-4">
-                                    <div className={'box p-4 mb-3'}>
+                                    <div className={'box rounded p-4 mb-3'}>
                                         <AuthorMetaInfo>
                                             <div className={'key'}>Full name</div>
                                             <div className={'value'}>{this.state.author.label}</div>
@@ -163,7 +163,7 @@ class AuthorPage extends Component {
                                     </div>
 
                                     {this.state.orcid && (
-                                        <div className={'box p-4'}>
+                                        <div className={'box rounded p-4'}>
                                             <h5>Identifiers</h5>
                                             <AuthorIdentifier>
                                                 <div className={'key'}>
@@ -190,7 +190,7 @@ class AuthorPage extends Component {
                                 </Col>
 
                                 <Col className="col-8">
-                                    <div className={'box p-4'}>
+                                    <div className={'box rounded p-4'}>
                                         <h5>Papers</h5>
                                         {this.state.papers.length > 0 && (
                                             <div>
