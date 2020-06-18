@@ -104,6 +104,11 @@ const Footer = () => (
                             <li>
                                 <Link to={ROUTES.CHANGELOG}>Changelog</Link>
                             </li>
+                            <li>
+                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home" target="_blank" rel="noopener noreferrer">
+                                    Documentation
+                                </a>
+                            </li>
                             {/*<li>Contributors</li>*/}
                             <li>
                                 <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/" target="_blank" rel="noopener noreferrer">
