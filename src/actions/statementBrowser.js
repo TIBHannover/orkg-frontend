@@ -25,12 +25,14 @@ export const initializeWithoutContribution = data => dispatch => {
 
     const label = data.label;
     const resourceId = data.resourceId;
+    const rootNodeType = data.rootNodeType;
 
     dispatch(
         createResource({
             label: label,
             existingResourceId: resourceId,
-            resourceId: resourceId
+            resourceId: resourceId,
+            ...(rootNodeType === 'predicate' ? { classes: ['Predicate'] } : {})
         })
     );
 
@@ -45,7 +47,8 @@ export const initializeWithoutContribution = data => dispatch => {
     dispatch(
         fetchStatementsForResource({
             existingResourceId: resourceId,
-            resourceId: resourceId
+            resourceId: resourceId,
+            rootNodeType: rootNodeType
         })
     );
 };
@@ -525,6 +528,7 @@ export const deleteValue = data => dispatch => {
  * @param {String=} data.existingResourceId - Existing resource ID
  * @param {String} data.label - Resource label
  * @param {Number} data.shared - Indicator number of incoming links to this resource
+ * @param {Array} data.classes - Classes of the resource
  */
 export const createResource = data => dispatch => {
     dispatch({
@@ -533,7 +537,8 @@ export const createResource = data => dispatch => {
             resourceId: data.resourceId ? data.resourceId : guid(),
             label: data.label,
             existingResourceId: data.existingResourceId,
-            shared: data.shared ? data.shared : 1
+            shared: data.shared ? data.shared : 1,
+            classes: data.classes ? data.classes : []
         }
     });
 };
@@ -702,7 +707,7 @@ function shouldFetchStatementsForResource(state, resourceId, depth) {
  * @return {Promise} Promise object
  */
 export const fetchStatementsForResource = data => {
-    let { isContribution, depth } = data;
+    let { isContribution, depth, rootNodeType } = data;
     const { resourceId, existingResourceId } = data;
     isContribution = isContribution ? isContribution : false;
 
@@ -711,6 +716,8 @@ export const fetchStatementsForResource = data => {
     } else {
         depth = 0;
     }
+
+    rootNodeType = rootNodeType ?? 'resource';
 
     let resourceStatements = [];
 
@@ -721,20 +728,36 @@ export const fetchStatementsForResource = data => {
                 type: type.IS_FETCHING_STATEMENTS,
                 resourceId: resourceId
             });
-            return network.getResource(existingResourceId).then(response => {
-                let resourceClasses = response.classes;
-                // get templates of classes
-                if (resourceClasses && resourceClasses.length > 0) {
-                    resourceClasses = resourceClasses.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
-                }
-                // set the resource classes (initialize doesn't set the classes)
-                const resourceUpdateClasses = dispatch(updateResourceClasses({ resourceId, classes: response.classes }));
+            let subject;
+            if (rootNodeType === 'predicate') {
+                subject = network.getPredicate(existingResourceId);
+            } else {
+                subject = network.getResource(existingResourceId);
+            }
+
+            return subject.then(response => {
+                let promises;
                 // fetch the statements
                 const resourceStatementsPromise = network.getStatementsBySubject({ id: existingResourceId }).then(response => {
                     resourceStatements = response;
                     return Promise.resolve();
                 });
-                return Promise.all([resourceUpdateClasses, resourceStatementsPromise, ...resourceClasses])
+                if (rootNodeType === 'predicate') {
+                    // get templates of classes
+                    const predicateClass = dispatch(fetchTemplatesofClassIfNeeded(process.env.REACT_APP_CLASSES_PREDICATE));
+                    promises = Promise.all([predicateClass, resourceStatementsPromise]);
+                } else {
+                    let resourceClasses = response.classes ?? [];
+                    // get templates of classes
+                    if (resourceClasses && resourceClasses.length > 0) {
+                        resourceClasses = resourceClasses.map(classID => dispatch(fetchTemplatesofClassIfNeeded(classID)));
+                    }
+                    // set the resource classes (initialize doesn't set the classes)
+                    const resourceUpdateClasses = dispatch(updateResourceClasses({ resourceId, classes: response.classes }));
+                    promises = Promise.all([resourceUpdateClasses, resourceStatementsPromise, ...resourceClasses]);
+                }
+
+                return promises
                     .then(() => dispatch(createRequiredPropertiesInResource(resourceId)))
                     .then(existingProperties => {
                         // all the template of classes are loaded

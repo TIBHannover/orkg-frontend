@@ -642,13 +642,19 @@ export const getParentResearchFields = (researchFieldId, parents = []) => {
 /**
  * Get Template by Class
  *
- * @param {String} researchFieldId research field Id
+ * @param {String} classID class ID
  */
 export const getTemplatesByClass = classID => {
     return getStatementsByObjectAndPredicate({
         objectId: classID,
         predicateId: process.env.REACT_APP_TEMPLATE_OF_CLASS
-    }).then(statements => Promise.all(statements.map(st => st.subject.id)));
+    }).then(statements =>
+        Promise.all(
+            statements
+                .filter(statement => statement.subject.classes?.includes(process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE))
+                .map(st => st.subject.id)
+        )
+    );
 };
 
 export const getAllOrganizations = () => {

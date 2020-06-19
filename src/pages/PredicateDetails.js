@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
-import { predicatesUrl, submitGetRequest } from '../network';
+import { Container, Button } from 'reactstrap';
+import { getPredicate } from 'network';
+import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
+import InternalServerError from 'components/StaticPages/InternalServerError';
+import NotFound from 'components/StaticPages/NotFound';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { EditModeHeader, Title } from 'components/ViewPaper/ViewPaper';
 import PropTypes from 'prop-types';
-import { Container } from 'reactstrap';
 
 class PredicateDetails extends Component {
     constructor(props) {
@@ -9,59 +15,105 @@ class PredicateDetails extends Component {
 
         this.state = {
             error: null,
-            title: null
+            label: '',
+            isLoading: true,
+            editMode: false
         };
     }
 
-    async componentDidMount() {
-        await this.findPredicate();
+    componentDidMount() {
+        this.findPredicate();
     }
 
+    componentDidUpdate = prevProps => {
+        if (this.props.match.params.id !== prevProps.match.params.id) {
+            this.findPredicate();
+        }
+    };
+
     findPredicate = async () => {
+        this.setState({ isLoading: true });
         try {
-            const responseJson = await submitGetRequest(predicatesUrl + encodeURIComponent(this.props.match.params.id));
+            const responseJson = await getPredicate(this.props.match.params.id);
+            document.title = `${responseJson.label} - Predicate - ORKG`;
             this.setState({
-                title: responseJson.label
+                label: responseJson.label,
+                isLoading: false
             });
         } catch (err) {
             console.error(err);
             this.setState({
-                title: null,
-                error: err.message
+                label: null,
+                isLoading: false,
+                error: err
             });
         }
     };
 
+    toggle = type => {
+        this.setState(prevState => ({
+            [type]: !prevState[type]
+        }));
+    };
+
     render() {
-        const resultsPresent = this.state.error || this.state.title;
-
-        if (this.state.error) {
-            return (
-                <p>
-                    <strong>Error:</strong> {this.state.error}{' '}
-                </p>
-            );
-        }
-
-        if (resultsPresent) {
-            const titleText = this.state.title;
-            const titleJsx = titleText && (
-                <div
-                    style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}
-                    className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom"
-                >
-                    <h1 className="h2">{titleText}</h1>
-                </div>
-            );
-
-            return (
-                <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">
-                    <div className="entityView-main">{titleJsx}</div>
-                </Container>
-            );
-        } else {
-            return null;
-        }
+        return (
+            <>
+                {this.state.isLoading && <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
+                {!this.state.isLoading && this.state.error && <>{this.state.error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
+                {!this.state.isLoading && !this.state.error && (
+                    <Container className="mt-5 clearfix">
+                        {this.state.editMode && (
+                            <EditModeHeader className="box">
+                                <Title>
+                                    Edit mode <span className="pl-2">Every change you make is automatically saved</span>
+                                </Title>
+                                <Button
+                                    className="float-left"
+                                    style={{ marginLeft: 1 }}
+                                    color="light"
+                                    size="sm"
+                                    onClick={() => this.toggle('editMode')}
+                                >
+                                    Stop editing
+                                </Button>
+                            </EditModeHeader>
+                        )}
+                        <div className={'box clearfix pt-4 pb-4 pl-5 pr-5'}>
+                            <div className={'mb-2'}>
+                                <div className="pb-2 mb-3">
+                                    <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                        {this.state.label || (
+                                            <i>
+                                                <small>No label</small>
+                                            </i>
+                                        )}
+                                        <Button className="float-right" color="darkblue" size="sm" onClick={() => this.toggle('editMode')}>
+                                            <Icon icon={faPen} /> Edit
+                                        </Button>
+                                    </h3>
+                                </div>
+                            </div>
+                            <hr />
+                            <h3 className="h5">Statements</h3>
+                            <div className={'clearfix'}>
+                                <StatementBrowser
+                                    rootNodeType={'predicate'}
+                                    enableEdit={this.state.editMode}
+                                    syncBackend={this.state.editMode}
+                                    openExistingResourcesInDialog={false}
+                                    initialResourceId={this.props.match.params.id}
+                                    initialResourceLabel={this.state.label}
+                                    newStore={true}
+                                    propertiesAsLinks={true}
+                                    resourcesAsLinks={true}
+                                />
+                            </div>
+                        </div>
+                    </Container>
+                )}
+            </>
+        );
     }
 }
 
