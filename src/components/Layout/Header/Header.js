@@ -266,6 +266,12 @@ class Header extends Component {
                                     <DropdownItem tag={'a'} target="_blank" rel="noopener noreferrer" href={'https://projects.tib.eu/orkg/'}>
                                         Project <Icon size="sm" icon={faExternalLinkAlt} />
                                     </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES}>
+                                        Observatories{' '}
+                                        <small>
+                                            <Badge color="info">Beta</Badge>
+                                        </small>
+                                    </DropdownItem>
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.ORGANIZATIONS}>
                                         Organizations{' '}
                                         <small>

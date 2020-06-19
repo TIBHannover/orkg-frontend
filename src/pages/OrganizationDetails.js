@@ -97,7 +97,7 @@ class OrganizationDetails extends Component {
                                     color="primary"
                                     className="mb-3"
                                     tag={Link}
-                                    to={reverse(ROUTES.OBSERVATORIES, { id: this.props.match.params.id })}
+                                    to={reverse(ROUTES.ORGANIZATION_OBSERVATORIES, { id: this.props.match.params.id })}
                                 >
                                     List observatories
                                 </Button>
