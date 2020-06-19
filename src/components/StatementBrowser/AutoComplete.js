@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { submitGetRequest, getResourcesByClass } from '../../network';
+import { submitGetRequest, getResourcesByClass } from 'network';
 import PropTypes from 'prop-types';
-import AsyncSelect from 'react-select/async';
-import AsyncCreatableSelect from 'react-select/async-creatable';
+import Creatable from 'react-select/creatable';
+import { AsyncPaginate } from 'react-select-async-paginate';
 import { components } from 'react-select';
 import styled, { withTheme } from 'styled-components';
 
@@ -47,7 +47,10 @@ class AutoComplete extends Component {
             value: this.props.value || ''
         };
 
-        this.maxResults = 100;
+        this.pageSize = 10;
+        this.defaultAdditional = {
+            page: 1
+        };
     }
 
     componentDidMount() {
@@ -80,13 +83,20 @@ class AutoComplete extends Component {
         return responseJson;
     };
 
-    loadOptions = async value => {
+    loadOptions = async (value, prevOptions, { page }) => {
         try {
             if (!value || value === '' || value.trim() === '') {
-                return this.props.defaultOptions ? this.props.defaultOptions : [];
+                return {
+                    options: [],
+                    hasMore: false,
+                    additional: {
+                        page: 1
+                    }
+                };
             }
 
-            let queryParams = '';
+            // Add the parameters for pagination
+            let queryParams = '&page=' + page + '&items=' + this.pageSize;
 
             if (value.startsWith('"') && value.endsWith('"') && value.length > 2) {
                 value = value.substring(1, value.length - 1).trim();
@@ -94,7 +104,7 @@ class AutoComplete extends Component {
             }
             let responseJson;
             if (this.props.optionsClass) {
-                responseJson = await getResourcesByClass({ id: this.props.optionsClass, q: value.trim() });
+                responseJson = await getResourcesByClass({ id: this.props.optionsClass, q: value.trim(), page: page, items: this.pageSize });
             } else {
                 responseJson = await submitGetRequest(
                     this.props.requestUrl +
@@ -107,15 +117,9 @@ class AutoComplete extends Component {
 
             responseJson = await this.IdMatch(value.trim(), responseJson);
 
-            if (this.props.additionalData && this.props.additionalData.length > 0) {
-                let newProperties = this.props.additionalData;
-                newProperties = newProperties.filter(({ label }) => label.toLowerCase().includes(value.trim().toLowerCase())); // ensure the label of the new property contains the search value
-
-                responseJson.unshift(...newProperties);
-            }
-
-            if (responseJson.length > this.maxResults) {
-                responseJson = responseJson.slice(0, this.maxResults);
+            if (responseJson.length > this.pageSize) {
+                // in case the endpoint doesn't support pagination!
+                responseJson = responseJson.slice(0, this.pageSize);
             }
 
             const options = [];
@@ -128,11 +132,39 @@ class AutoComplete extends Component {
                     ...(item.classes ? { classes: item.classes } : {})
                 })
             );
-            return options;
+
+            const hasMore = options.length < this.pageSize ? false : true;
+
+            // Add the additionalData only when it's the first page
+            if (this.props.additionalData && this.props.additionalData.length > 0 && page === 1) {
+                let newProperties = this.props.additionalData;
+                newProperties = newProperties.filter(({ label, classes }) => {
+                    return (
+                        label.toLowerCase().includes(value.trim().toLowerCase()) &&
+                        (!this.props.optionsClass || (classes.length > 0 && classes.include?.(this.props.optionsClass)))
+                    );
+                }); // ensure the label of the new property contains the search value and from the same class
+
+                options.unshift(...newProperties);
+            }
+
+            return {
+                options,
+                hasMore,
+
+                additional: {
+                    page: page + 1
+                }
+            };
         } catch (err) {
             console.error(err);
-
-            return [];
+            return {
+                options: prevOptions,
+                hasMore: false,
+                additional: {
+                    page: 1
+                }
+            };
         }
     };
 
@@ -176,7 +208,8 @@ class AutoComplete extends Component {
             }
             return inputValue;
         } else if (action.action === 'menu-close') {
-            this.loadDefaultOptions(this.state.inputValue);
+            // Next line commented beceause it raises an error when using AsyncPaginate
+            //this.loadDefaultOptions(this.state.inputValue);
         }
         return this.state.inputValue; //https://github.com/JedWatson/react-select/issues/3189#issuecomment-597973958
     };
@@ -237,12 +270,16 @@ class AutoComplete extends Component {
             );
         };
 
-        const Select = this.props.allowCreate ? AsyncCreatableSelect : AsyncSelect;
+        // Creatable with adding new options : https://codesandbox.io/s/6pznz
+        const Select = this.props.allowCreate ? Creatable : undefined;
 
         return (
             <StyledAutoCompleteInputFormControl className={`form-control ${this.props.cssClasses ? this.props.cssClasses : 'default'}`}>
-                <Select
+                <AsyncPaginate
+                    SelectComponent={Select}
+                    value={this.state.inputValue}
                     loadOptions={this.loadOptions}
+                    additional={this.defaultAdditional}
                     noOptionsMessage={this.noResults}
                     onChange={this.props.onChange ? this.props.onChange : this.handleChange}
                     onInputChange={this.handleInputChange}
@@ -254,7 +291,7 @@ class AutoComplete extends Component {
                     defaultOptions={this.state.defaultOptions}
                     onBlur={this.props.onBlur}
                     onKeyDown={this.props.onKeyDown}
-                    ref={this.props.innerRef}
+                    selectRef={this.props.innerRef}
                     components={{ Option }}
                 />
             </StyledAutoCompleteInputFormControl>
