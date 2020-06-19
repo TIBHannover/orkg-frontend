@@ -97,19 +97,13 @@ const Footer = () => (
                         <hr className={'mr-5'} />
                         <ul className={'p-0'} style={{ listStyle: 'none' }}>
                             <li>
-                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues" target="_blank" rel="noopener noreferrer">
-                                    Report an issue
+                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home" target="_blank" rel="noopener noreferrer">
+                                    Documentation
                                 </a>
                             </li>
                             <li>
                                 <Link to={ROUTES.CHANGELOG}>Changelog</Link>
                             </li>
-                            <li>
-                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home" target="_blank" rel="noopener noreferrer">
-                                    Documentation
-                                </a>
-                            </li>
-                            {/*<li>Contributors</li>*/}
                             <li>
                                 <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/" target="_blank" rel="noopener noreferrer">
                                     Gitlab
@@ -133,6 +127,11 @@ const Footer = () => (
                             <li>
                                 <a href="https://projects.tib.eu/orkg/contact/" target="_blank" rel="noopener noreferrer">
                                     Contact us
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues" target="_blank" rel="noopener noreferrer">
+                                    Report an issue
                                 </a>
                             </li>
                             <li>
