@@ -7,7 +7,7 @@ import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowser
 import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDatatypes';
 import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPlus, faBars } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faBars, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/StatementBrowser/AutoComplete';
 import useTogggle from './helpers/useToggle';
 import validationSchema from './helpers/validationSchema';
@@ -28,6 +28,7 @@ export default function AddValueTemplate(props) {
     const [showAddValue, setShowAddValue] = useTogggle(false);
     const [isValid, setIsValid] = useState(true);
     const [formFeedback, setFormFeedback] = useState(null);
+    const [templateIsLoading, setTemplateIsLoading] = useState(false); // to show loading indicator of the template if the value class has a template
 
     useEffect(() => {
         if (valueType === 'literal' && literalInputRef.current) {
@@ -36,6 +37,10 @@ export default function AddValueTemplate(props) {
             resourceInputRef.current.focus();
         }
     }, [valueType]);
+
+    useEffect(() => {
+        setValueType(props.isLiteral ? 'literal' : 'object');
+    }, [props.isLiteral]);
 
     useEffect(() => {
         if (!showAddValue) {
@@ -67,29 +72,64 @@ export default function AddValueTemplate(props) {
         }
     };
 
+    /**
+     * Get the correct xsd datatype if it's literal
+     */
+    const getDataType = () => {
+        if (props.valueClass && valueType === 'literal') {
+            switch (props.valueClass.id) {
+                case 'String':
+                    return process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE;
+                case 'Number':
+                    return 'xsd:decimal';
+                case 'Date':
+                    return 'xsd:date';
+                default:
+                    return process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE;
+            }
+        } else {
+            return process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE;
+        }
+    };
+
     const onSubmit = () => {
         const validatedValue = validateValue();
         if (validatedValue !== false) {
-            props.handleAddValue(valueType, inputValue);
+            props.handleAddValue(valueType, inputValue, getDataType());
             setShowAddValue(false);
         }
     };
 
     const [isInlineResource, setIsInlineResource] = useState(false);
-    if (props.valueClass && !defaultDatatypes.map(t => t.id).includes(props.valueClass.id)) {
-        props.fetchTemplatesofClassIfNeeded(props.valueClass.id).then(() => {
-            if (props.classes[props.valueClass.id] && props.classes[props.valueClass.id].templateIds) {
-                const templateIds = props.classes[props.valueClass.id].templateIds;
-                //check if it's an inline resource
-                for (const templateId of templateIds) {
-                    const template = props.templates[templateId];
-                    if (template && template.hasLabelFormat) {
-                        setIsInlineResource(template.label);
+
+    useEffect(() => {
+        if (props.valueClass && !defaultDatatypes.map(t => t.id).includes(props.valueClass.id)) {
+            setTemplateIsLoading(true);
+            props.fetchTemplatesofClassIfNeeded(props.valueClass.id).then(() => {
+                if (props.classes[props.valueClass.id] && props.classes[props.valueClass.id].templateIds) {
+                    const templateIds = props.classes[props.valueClass.id].templateIds;
+                    //check if it's an inline resource
+                    for (const templateId of templateIds) {
+                        const template = props.templates[templateId];
+                        if (template && template.hasLabelFormat) {
+                            setTemplateIsLoading(false);
+                            setIsInlineResource(template.label);
+                        }
+                        if (template && !template.isFetching) {
+                            setTemplateIsLoading(false);
+                        }
+                    }
+                    if (!props.classes[props.valueClass.id].isFetching) {
+                        // in case there is no templates for the class
+                        setTemplateIsLoading(false);
                     }
                 }
-            }
-        });
-    }
+            });
+        } else {
+            setTemplateIsLoading(false);
+            setIsInlineResource(false);
+        }
+    }, [props]);
 
     return (
         <ValueItemStyle className={showAddValue ? 'editingLabel' : ''}>
@@ -106,34 +146,41 @@ export default function AddValueTemplate(props) {
                 ''
             )}
             {!showAddValue ? (
-                <StatementOptionButton
-                    isDisabled={props.isDisabled}
-                    title={!props.isDisabled ? 'Add value' : 'This property reached the maximum number of values set by template'}
-                    icon={faPlus}
-                    action={() => {
-                        if (isInlineResource) {
-                            // 1 - create a resource
-                            props.handleAddValue(valueType, isInlineResource).then(resourceId => {
-                                // 2 - open the dialog on that resource
-                                if (props.openExistingResourcesInDialog) {
-                                    props.createRequiredPropertiesInResource(resourceId).then(() => {
-                                        setDialogResourceId(resourceId);
-                                        setDialogResourceLabel(isInlineResource);
-                                        setModal(true);
-                                    });
-                                } else {
-                                    props.selectResource({
-                                        increaseLevel: true,
-                                        resourceId: resourceId,
-                                        label: isInlineResource
-                                    });
-                                }
-                            });
-                        } else {
-                            setShowAddValue(true);
-                        }
-                    }}
-                />
+                !templateIsLoading ? ( //Show loading indicator if the template is still loading
+                    <StatementOptionButton
+                        isDisabled={props.isDisabled}
+                        title={!props.isDisabled ? 'Add value' : 'This property reached the maximum number of values set by template'}
+                        icon={faPlus}
+                        action={() => {
+                            if (isInlineResource && valueType !== 'literal') {
+                                // is the valueType is literal, it's not possible to set it as an object of a statement
+                                // 1 - create a resource
+                                props.handleAddValue(valueType, isInlineResource).then(resourceId => {
+                                    // 2 - open the dialog on that resource
+                                    if (props.openExistingResourcesInDialog) {
+                                        props.createRequiredPropertiesInResource(resourceId).then(() => {
+                                            setDialogResourceId(resourceId);
+                                            setDialogResourceLabel(isInlineResource);
+                                            setModal(true);
+                                        });
+                                    } else {
+                                        props.selectResource({
+                                            increaseLevel: true,
+                                            resourceId: resourceId,
+                                            label: isInlineResource
+                                        });
+                                    }
+                                });
+                            } else {
+                                setShowAddValue(true);
+                            }
+                        }}
+                    />
+                ) : (
+                    <span>
+                        <Icon icon={faSpinner} spin />
+                    </span>
+                )
             ) : (
                 <div>
                     <InputGroup size="sm">

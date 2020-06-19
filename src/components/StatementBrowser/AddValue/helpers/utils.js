@@ -33,8 +33,7 @@ export const getValueClass = components => {
  * @param {Object[]} components Array of components
  * @return {String|Boolean} the template label or false
  */
-export function isInlineResource(state, components) {
-    const valueClass = getValueClass(components);
+export function isInlineResource(state, valueClass) {
     if (valueClass && !defaultDatatypes.map(t => t.id).includes(valueClass.id)) {
         if (state.statementBrowser.classes[valueClass.id] && state.statementBrowser.classes[valueClass.id].templateIds) {
             const templateIds = state.statementBrowser.classes[valueClass.id].templateIds;
