@@ -15,7 +15,9 @@ import ValueItem from './ValueItem';
 
 const mapStateToProps = (state, props) => {
     const predicate = state.statementBrowser.properties.byId[props.propertyId ? props.propertyId : props.selectedProperty];
-    const valueClass = getValueClass(props.components);
+    let valueClass = getValueClass(props.components);
+
+    valueClass = valueClass ? valueClass : predicate.range ? predicate.range : null;
 
     return {
         resources: state.statementBrowser.resources,
@@ -27,7 +29,7 @@ const mapStateToProps = (state, props) => {
         classes: state.statementBrowser.classes,
         templates: state.statementBrowser.templates,
         valueClass: valueClass ? valueClass : predicate.range ? predicate.range : null,
-        isInlineResource: isInlineResource(state, props.components)
+        isInlineResource: isInlineResource(state, valueClass)
     };
 };
 
