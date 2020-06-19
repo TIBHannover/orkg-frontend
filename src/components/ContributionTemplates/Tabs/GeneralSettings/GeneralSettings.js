@@ -125,7 +125,7 @@ function GeneralSettings(props) {
                 <fieldset className="scheduler-border">
                     <legend className="scheduler-border">Template use cases</legend>
                     <p>
-                        <small class="text-muted">
+                        <small className="text-muted">
                             These fields are optional, the property is used to link the contribution resource to the template instance. The research
                             fields/problems are used to suggest this template in the relevant papers.
                         </small>
