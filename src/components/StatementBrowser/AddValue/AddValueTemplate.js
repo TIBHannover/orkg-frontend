@@ -67,10 +67,30 @@ export default function AddValueTemplate(props) {
         }
     };
 
+    /**
+     * Get the correct xsd datatype if it's literal
+     */
+    const getDataType = () => {
+        if (props.valueClass && valueType === 'literal') {
+            switch (props.valueClass.id) {
+                case 'String':
+                    return process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE;
+                case 'Number':
+                    return 'xsd:decimal';
+                case 'Date':
+                    return 'xsd:date';
+                default:
+                    return process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE;
+            }
+        } else {
+            return process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE;
+        }
+    };
+
     const onSubmit = () => {
         const validatedValue = validateValue();
         if (validatedValue !== false) {
-            props.handleAddValue(valueType, inputValue);
+            props.handleAddValue(valueType, inputValue, getDataType());
             setShowAddValue(false);
         }
     };

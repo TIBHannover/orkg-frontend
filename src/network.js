@@ -179,8 +179,8 @@ export const createResource = (label, classes = []) => {
     return submitPostRequest(resourcesUrl, { 'Content-Type': 'application/json' }, { label, classes });
 };
 
-export const createLiteral = label => {
-    return submitPostRequest(literalsUrl, { 'Content-Type': 'application/json' }, { label: label });
+export const createLiteral = (label, datatype = process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE) => {
+    return submitPostRequest(literalsUrl, { 'Content-Type': 'application/json' }, { label: label, datatype: datatype });
 };
 
 export const createClass = label => {
