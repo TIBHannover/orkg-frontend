@@ -67,7 +67,7 @@ function TemplateComponentValue(props) {
                                 <option value="0,1">Optional [0,1]</option>
                                 <option value="1,1">Exactly one [1,1]</option>
                                 <option value="1,*">One or more [1,*]</option>
-                                <option value="range">Range</option>
+                                <option value="range">Custom...</option>
                             </Input>
                         </Col>
                     </FormGroup>
