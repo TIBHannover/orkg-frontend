@@ -18,7 +18,8 @@ export default function Statements(props) {
             if (props.newStore) {
                 props.initializeWithoutContribution({
                     resourceId: props.initialResourceId,
-                    label: props.initialResourceLabel
+                    label: props.initialResourceLabel,
+                    rootNodeType: props.rootNodeType
                 });
             } else {
                 props.initializeWithResource({
@@ -141,6 +142,7 @@ Statements.propTypes = {
     initializeWithoutContribution: PropTypes.func.isRequired,
     initializeWithResource: PropTypes.func.isRequired,
     updateSettings: PropTypes.func.isRequired,
+    rootNodeType: PropTypes.string.isRequired,
 
     classes: PropTypes.object.isRequired,
     templates: PropTypes.object.isRequired,
@@ -168,5 +170,6 @@ Statements.defaultProps = {
     newStore: false,
     templatesFound: false,
     propertiesAsLinks: false,
-    resourcesAsLinks: false
+    resourcesAsLinks: false,
+    rootNodeType: 'resource'
 };

@@ -41,7 +41,7 @@ export default (state = initialState, action) => {
                     existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
                     shared: payload.shared ? payload.shared : 1,
                     propertyIds: [],
-                    classes: []
+                    classes: payload.classes ? payload.classes : []
                 }
             }));
 
