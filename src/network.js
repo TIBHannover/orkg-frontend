@@ -651,7 +651,7 @@ export const getTemplatesByClass = classID => {
     }).then(statements =>
         Promise.all(
             statements
-                .filter(statement => statement.subject.classes.includes(process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE))
+                .filter(statement => statement.subject.classes?.includes(process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE))
                 .map(st => st.subject.id)
         )
     );
