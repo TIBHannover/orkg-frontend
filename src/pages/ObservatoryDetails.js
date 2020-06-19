@@ -64,7 +64,7 @@ class ObservatoryDetails extends Component {
                 <Container className="p-0">
                     <h1 className="h4 mt-4 mb-4">Observatories List</h1>
                 </Container>
-                <Container className={'box pt-4 pb-4 pl-5 pr-5 clearfix'}>
+                <Container className={'box rounded pt-4 pb-4 pl-5 pr-5 clearfix'}>
                     <div className="clearfix">
                         {this.props.user !== null && this.props.user.id === this.state.createdBy && (
                             <Link className="float-right mb-2 mt-2 clearfix" to={reverse(ROUTES.ADD_OBSERVATORY, { id: this.props.match.params.id })}>

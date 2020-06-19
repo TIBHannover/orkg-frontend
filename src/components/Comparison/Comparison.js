@@ -460,7 +460,7 @@ class Comparison extends Component {
                     }*/}
                 </ContainerAnimated>
 
-                <ContainerAnimated className="box pt-4 pb-4 pl-5 pr-5 clearfix" style={containerStyle}>
+                <ContainerAnimated className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix" style={containerStyle}>
                     {!this.state.isLoading && this.state.loadingFailed && (
                         <div>
                             <Alert color="danger">

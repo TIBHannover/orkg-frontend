@@ -112,7 +112,7 @@ class FeaturedComparisons extends Component {
                         </Link>
                     </ButtonGroup>
                 </Container>
-                <Container className="box pt-4 pb-4 pl-5 pr-5">
+                <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                     <Alert color="info">
                         With the paper data inside the ORKG, you can build powerful paper comparisons. On this page, we list the featured comparisons
                         that are created using the comparison functionality. The featured comparisons below are structured by category. They consist

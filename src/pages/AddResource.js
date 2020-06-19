@@ -130,7 +130,7 @@ export default class AddResource extends Component {
         }
 
         return (
-            <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5">
+            <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5">
                 <Form className="pl-3 pr-3 pt-2">
                     {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
                     <FormGroup>
