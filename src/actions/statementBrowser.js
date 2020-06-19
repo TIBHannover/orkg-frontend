@@ -744,7 +744,7 @@ export const fetchStatementsForResource = data => {
                 });
                 if (rootNodeType === 'predicate') {
                     // get templates of classes
-                    const predicateClass = dispatch(fetchTemplatesofClassIfNeeded('Predicate'));
+                    const predicateClass = dispatch(fetchTemplatesofClassIfNeeded(process.env.REACT_APP_CLASSES_PREDICATE));
                     promises = Promise.all([predicateClass, resourceStatementsPromise]);
                 } else {
                     let resourceClasses = response.classes ?? [];
