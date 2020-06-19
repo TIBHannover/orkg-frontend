@@ -106,7 +106,7 @@ class PaperCardDynamic extends Component {
 
     render() {
         return (
-            <PaperCardStyled className={'list-group-item list-group-item-action'}>
+            <PaperCardStyled className="list-group-item list-group-item-action">
                 <Row>
                     <Col sm={12}>
                         <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: this.props.paper.id })}>
@@ -117,11 +117,11 @@ class PaperCardDynamic extends Component {
                             <small>
                                 {this.state.optimizedPaperObject.authorNames && this.state.optimizedPaperObject.authorNames.length > 0 && (
                                     <>
-                                        <Icon size={'sm'} icon={faUser} /> {this.state.optimizedPaperObject.authorNames.map(a => a.label).join(', ')}
+                                        <Icon size="sm" icon={faUser} /> {this.state.optimizedPaperObject.authorNames.map(a => a.label).join(', ')}
                                     </>
                                 )}
                                 {(this.state.optimizedPaperObject.publicationMonth || this.state.optimizedPaperObject.publicationYear) && (
-                                    <Icon size={'sm'} icon={faCalendar} className="ml-2 mr-1" />
+                                    <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />
                                 )}
                                 {this.state.optimizedPaperObject.publicationMonth &&
                                     this.state.optimizedPaperObject.length > 0 &&

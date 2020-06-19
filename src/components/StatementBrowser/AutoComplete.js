@@ -264,7 +264,7 @@ class AutoComplete extends Component {
                 <components.Option {...props}>
                     <StyledSelectOption>
                         <span>{children}</span>
-                        <span className={'badge'}>{props.data.id}</span>
+                        <span className="badge">{props.data.id}</span>
                     </StyledSelectOption>
                 </components.Option>
             );

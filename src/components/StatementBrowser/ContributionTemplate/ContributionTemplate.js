@@ -49,14 +49,14 @@ export default function ContributionTemplate(props) {
                             isLastItem={propertyIds.length === index + 1}
                             showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                             inTemplate={true}
-                            contextStyle={'Template'}
+                            contextStyle="Template"
                             resourceId={props.value.resourceId}
                         />
                     );
                 })}
                 <AddPropertWrapper>
-                    <div className={'row no-gutters'}>
-                        <div className={'col-4 propertyHolder'} />
+                    <div className="row no-gutters">
+                        <div className="col-4 propertyHolder" />
                     </div>
                     <AddProperty
                         isDisabled={!props.canAddProperty}

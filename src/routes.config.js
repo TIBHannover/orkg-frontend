@@ -210,7 +210,7 @@ const routes = [
     },
     {
         path: ROUTES.TPDL,
-        component: () => <Redirect to={'/'} />
+        component: () => <Redirect to="/" />
     },
     /* Don't add routes below this line */
     {

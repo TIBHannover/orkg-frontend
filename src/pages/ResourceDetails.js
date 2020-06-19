@@ -114,10 +114,10 @@ class ResourceDetails extends Component {
                             </EditModeHeader>
                         )}
                         <div className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${this.state.editMode ? 'rounded-bottom' : 'rounded'}`}>
-                            <div className={'mb-2'}>
+                            <div className="mb-2">
                                 {!this.state.editMode ? (
                                     <div className="pb-2 mb-3">
-                                        <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                        <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                             {this.state.label || (
                                                 <i>
                                                     <small>No label</small>
@@ -163,7 +163,7 @@ class ResourceDetails extends Component {
                             </div>
                             <hr />
                             <h3 className="h5">Statements</h3>
-                            <div className={'clearfix'}>
+                            <div className="clearfix">
                                 <StatementBrowser
                                     enableEdit={this.state.editMode}
                                     syncBackend={this.state.editMode}

@@ -238,7 +238,7 @@ class UserSettings extends Component {
                                         />
                                     </FormGroup>
                                     <Row>
-                                        <div className={'col-6'}>
+                                        <div className="col-6">
                                             <FormGroup>
                                                 <Label for="newPassword">New password</Label>
                                                 <Input
@@ -251,7 +251,7 @@ class UserSettings extends Component {
                                                 />
                                             </FormGroup>
                                         </div>
-                                        <div className={'col-6'}>
+                                        <div className="col-6">
                                             <FormGroup>
                                                 <Label for="confirmNewPassword">Repeat new password</Label>
                                                 <Input

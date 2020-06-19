@@ -103,7 +103,7 @@ export default class Papers extends Component {
                 <Container className="p-0">
                     <h1 className="h4 mt-4 mb-4">View all papers</h1>
                 </Container>
-                <Container className={'p-0'}>
+                <Container className="p-0">
                     {this.state.paperResources.length > 0 && <div>{this.renderPaperCards()}</div>}
                     {this.state.paperResources.length === 0 && !this.state.isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">No Papers</div>

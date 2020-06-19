@@ -205,8 +205,8 @@ class SearchAutoComplete extends Component {
             this.searchResultIsEmpty = false;
             // create search items
             this.searchEntries = [
-                <DropdownItem key={'searchDropdownItem' + searchString} header className={'d-flex'}>
-                    <div className={'flex-shrink-0'}>Result</div>
+                <DropdownItem key={'searchDropdownItem' + searchString} header className="d-flex">
+                    <div className="flex-shrink-0">Result</div>
                     <div className="flex-shrink-0" style={{ marginLeft: 'auto', fontSize: 'small' }}>
                         Visible/Total
                     </div>
@@ -252,12 +252,12 @@ class SearchAutoComplete extends Component {
                             value={item.label}
                             nodelabel={item.label}
                             nodeid={item.nodeId}
-                            className={'dropdownDefault'}
+                            className="dropdownDefault"
                             style={{ backgroundColor: this.cursor === i ? '#e9e9e9' : '#ffffff' }}
                         >
                             <div style={{ display: 'flex' }}>
                                 <Icon
-                                    title={'View node in graph'}
+                                    title="View node in graph"
                                     disabled={item.visible === item.nodeId.length}
                                     className={expandIconClassNames}
                                     icon={faEye}
@@ -303,7 +303,7 @@ class SearchAutoComplete extends Component {
                     this.onEnterPressedIds = 'blackOpsSearch';
                 }
                 // add divider and the full search entry
-                this.searchEntries.push(<DropdownItem key={'notFoundResultDivider'} divider={true} />);
+                this.searchEntries.push(<DropdownItem key="notFoundResultDivider" divider={true} />);
                 this.searchEntries.push(this.createFullSearchDropdownItem(searchString));
             }
         } else {
@@ -315,7 +315,7 @@ class SearchAutoComplete extends Component {
             this.searchEntries.push(this.createNoResultFoundItem());
             // add the expand all and retry button;
             if (!this.props.graphVis.graphFullyExplored) {
-                this.searchEntries.push(<DropdownItem key={'notFoundResultDivider'} divider={true} />);
+                this.searchEntries.push(<DropdownItem key="notFoundResultDivider" divider={true} />);
                 // add load full graph data an try again
                 if (this.cursor === this.searchEntries.length - 2) {
                     this.onEnterPressedIds = 'blackOpsSearch';
@@ -366,7 +366,7 @@ class SearchAutoComplete extends Component {
         const itemId = this.searchEntries.length + offset;
         return (
             <DropdownItem
-                className={'dropdownDefault'}
+                className="dropdownDefault"
                 style={{ backgroundColor: this.cursor === itemId ? '#e9e9e9' : '#FFFFFF' }}
                 onClick={event => {
                     event.preventDefault();
@@ -381,7 +381,7 @@ class SearchAutoComplete extends Component {
                         this.ignoreToggle = false;
                     });
                 }}
-                key={'loadFullGraph'}
+                key="loadFullGraph"
             >
                 <Icon id="fullExploreSpinIcon" icon={faSpinner} className="mr-1 align-self-center hidden" spin />
                 Load full graph and try again
@@ -397,9 +397,9 @@ class SearchAutoComplete extends Component {
 
     render() {
         return (
-            <div className={'ml-2'} style={{ paddingTop: '5px', display: 'flex', position: 'relative', left: '-20px' }}>
+            <div className="ml-2" style={{ paddingTop: '5px', display: 'flex', position: 'relative', left: '-20px' }}>
                 <Input
-                    bsSize={'sm'}
+                    bsSize="sm"
                     type="text"
                     style={{ paddingRight: '30px' }}
                     placeholder={this.props.placeHolder}

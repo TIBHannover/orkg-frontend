@@ -80,7 +80,7 @@ export default class Comparisons extends Component {
                     <h1 className="h4 mt-4 mb-4">View all published comparisons</h1>
                 </Container>
 
-                <Container className={'p-0'}>
+                <Container className="p-0">
                     {this.state.statements.length > 0 && (
                         <div>
                             {this.state.statements.map(resource => {

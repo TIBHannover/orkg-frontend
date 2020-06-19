@@ -493,7 +493,7 @@ class GeneralData extends Component {
                                                                 <h3 className="h4 mb-3">
                                                                     Lookup result
                                                                     <Button
-                                                                        className={'pull-right ml-1'}
+                                                                        className="pull-right ml-1"
                                                                         outline
                                                                         size="sm"
                                                                         onClick={() => this.handleDataEntryClick('manually')}

@@ -199,6 +199,9 @@
             ],
             "prefer-const": [
                 1
+            ],
+            "react/jsx-curly-brace-presence": [
+                "error"
             ]
         }
     }

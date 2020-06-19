@@ -68,9 +68,9 @@ class ContributionTemplate extends Component {
                     </EditModeHeader>
                 )}
                 <div className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${this.props.editMode ? 'rounded-bottom' : 'rounded'}`}>
-                    <div className={'mb-2'}>
+                    <div className="mb-2">
                         {!this.props.editMode ? (
-                            <h3 className={'pb-2 mb-3'} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                            <h3 className="pb-2 mb-3" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                 {this.props.label}
                                 <Button className="float-right" color="darkblue" size="sm" onClick={() => this.props.setEditMode(true)}>
                                     <Icon icon={faPen} /> Edit
@@ -80,7 +80,7 @@ class ContributionTemplate extends Component {
                             ''
                         )}
                     </div>
-                    <div className={'mb-3'}>
+                    <div className="mb-3">
                         <Nav tabs>
                             <NavItemStyled>
                                 <NavLink

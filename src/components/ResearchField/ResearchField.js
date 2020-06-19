@@ -142,7 +142,7 @@ class ResearchField extends Component {
                                     <CardFooter>
                                         Parent research field:
                                         <Link
-                                            className={'ml-2'}
+                                            className="ml-2"
                                             to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.parentResearchField.subject.id })}
                                         >
                                             {this.state.parentResearchField.subject.label}

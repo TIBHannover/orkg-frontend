@@ -149,7 +149,7 @@ class ResearchProblem extends Component {
                                         {this.state.researchProblem && this.state.researchProblem.label}
                                         <Tippy content="Go to resource page">
                                             <Link
-                                                className={'h6 ml-2 text-secondary'}
+                                                className="h6 ml-2 text-secondary"
                                                 to={reverse(ROUTES.RESOURCE, { id: this.state.researchProblem.id })}
                                             >
                                                 <Icon icon={faLink} />
@@ -168,7 +168,7 @@ class ResearchProblem extends Component {
                         <Container className="p-0">
                             <h1 className="h4 mt-4 mb-4 flex-grow-1">Papers</h1>
                         </Container>
-                        <Container className={'p-0'}>
+                        <Container className="p-0">
                             {this.state.contributions.length > 0 && (
                                 <div>
                                     {this.state.contributions.map(contribution => {

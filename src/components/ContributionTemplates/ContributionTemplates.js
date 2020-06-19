@@ -117,14 +117,14 @@ export default class ContributionTemplates extends Component {
                 <Container className="p-0">
                     <h1 className="h4 mt-4 mb-4">View all contribution templates</h1>
                 </Container>
-                <Container className={'box rounded pt-4 pb-4 pl-5 pr-5 clearfix'}>
+                <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
                     <div className="clearfix">
                         <Link className="float-right mb-2 mt-2 clearfix" to={reverse(ROUTES.CONTRIBUTION_TEMPLATE)}>
                             <span className="fa fa-plus" /> Create new template
                         </Link>
                     </div>
 
-                    <Form className={'mb-3'}>
+                    <Form className="mb-3">
                         <Row form>
                             <Col md={6}>
                                 <FormGroup>
@@ -133,7 +133,7 @@ export default class ContributionTemplates extends Component {
                                         requestUrl={resourcesUrl}
                                         optionsClass={process.env.REACT_APP_CLASSES_RESEARCH_FIELD}
                                         onItemSelected={this.handleResearchFieldSelect}
-                                        placeholder={'Select or type to enter a research field'}
+                                        placeholder="Select or type to enter a research field"
                                         autoFocus
                                         isClearable
                                         cacheOptions
@@ -148,7 +148,7 @@ export default class ContributionTemplates extends Component {
                                         requestUrl={resourcesUrl}
                                         optionsClass={process.env.REACT_APP_CLASSES_PROBLEM}
                                         onItemSelected={this.handleResearchProblemSelect}
-                                        placeholder={'Select or type to enter a research problem'}
+                                        placeholder="Select or type to enter a research problem"
                                         autoFocus
                                         isClearable
                                         cacheOptions

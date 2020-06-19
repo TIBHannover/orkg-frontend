@@ -28,7 +28,7 @@ function Format(props) {
                     />
                 </div>
                 {props.hasLabelFormat && props.components && props.components.length > 0 && (
-                    <div className={'mt-3'}>
+                    <div className="mt-3">
                         <FormGroup className="mb-4">
                             <Label>Formatted label</Label>
                             <Input
@@ -68,7 +68,7 @@ function Format(props) {
                     </div>
                 )}
                 {props.hasLabelFormat && props.components && props.components.length === 0 && (
-                    <div className={'mt-3 text-primary'}>Please add some properties first to use this feature.</div>
+                    <div className="mt-3 text-primary">Please add some properties first to use this feature.</div>
                 )}
             </FormGroup>
         </div>

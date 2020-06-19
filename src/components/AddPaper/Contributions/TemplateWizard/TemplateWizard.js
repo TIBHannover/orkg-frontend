@@ -19,7 +19,7 @@ class TemplateWizard extends Component {
                 ? this.props.resources.byId[this.props.initialResourceId].shared
                 : 1;
         return (
-            <div className={'contributionData'}>
+            <div className="contributionData">
                 {propertyIds.length > 0 ? (
                     propertyIds.map((propertyId, index) => {
                         const property = this.props.properties.byId[propertyId];
@@ -35,7 +35,7 @@ class TemplateWizard extends Component {
                                     isLastItem={propertyIds.length === index + 1}
                                     showValueHelp={this.props.cookies && !this.props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                                     resourceId={this.props.initialResourceId}
-                                    contextStyle={'Template'}
+                                    contextStyle="Template"
                                 />
                             );
                         } else {

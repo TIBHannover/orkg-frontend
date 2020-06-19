@@ -24,7 +24,7 @@ const TemplateCardStyled = styled.div`
 class TemplateCard extends Component {
     render() {
         return (
-            <TemplateCardStyled className={'list-group-item list-group-item-action'}>
+            <TemplateCardStyled className="list-group-item list-group-item-action">
                 <Row>
                     <Col sm={12}>
                         {this.props.template && (

@@ -181,7 +181,7 @@ class ResearchField extends Component {
                                                 <ListGroupItemTransition key={field.id} classNames="fadeIn" timeout={{ enter: 500, exit: 0 }}>
                                                     <ListGroupItemStyled
                                                         style={{ display: 'flex' }}
-                                                        className={'align-items-start'}
+                                                        className="align-items-start"
                                                         active={field.active}
                                                         onClick={() => this.handleFieldClick(field.id, level)}
                                                     >
@@ -191,7 +191,7 @@ class ResearchField extends Component {
                                                             this.props.researchFields[level + 1] &&
                                                             this.props.researchFields[level + 1].length > 0 && (
                                                                 <Icon
-                                                                    size={'1x'}
+                                                                    size="1x"
                                                                     style={{ marginLeft: 'auto' }}
                                                                     className="flex-shrink-0  align-self-center"
                                                                     icon={faAngleDoubleRight}

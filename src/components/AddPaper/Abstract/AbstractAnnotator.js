@@ -217,7 +217,7 @@ class AbstractAnnotator extends Component {
         const annotatedText = this.getAnnotatedText();
         return (
             <div>
-                <div id="annotatedText" className={'mt-4'} style={{ lineHeight: '2.5em' }} ref={this.annotatorRef}>
+                <div id="annotatedText" className="mt-4" style={{ lineHeight: '2.5em' }} ref={this.annotatorRef}>
                     {annotatedText}
                 </div>
             </div>

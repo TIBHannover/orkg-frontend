@@ -219,7 +219,7 @@ export default function AddValueTemplate(props) {
                                 additionalData={props.newResources}
                                 disableBorderRadiusRight
                                 disableBorderRadiusLeft={!props.valueClass}
-                                cssClasses={'form-control-sm'}
+                                cssClasses="form-control-sm"
                                 onKeyDown={e => {
                                     if (e.keyCode === 27) {
                                         // escape
@@ -272,7 +272,7 @@ export default function AddValueTemplate(props) {
                             </StyledButton>
                         </InputGroupAddon>
                     </InputGroup>
-                    {!isValid && <FormFeedback className={'d-block'}>{formFeedback}</FormFeedback>}
+                    {!isValid && <FormFeedback className="d-block">{formFeedback}</FormFeedback>}
                 </div>
             )}
         </ValueItemStyle>

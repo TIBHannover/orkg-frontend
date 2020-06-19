@@ -410,7 +410,7 @@ class Comparison extends Component {
                                         {this.state.csvData ? (
                                             <CSVLink
                                                 data={this.state.csvData}
-                                                filename={'ORKG Contribution Comparison.csv'}
+                                                filename="ORKG Contribution Comparison.csv"
                                                 className="dropdown-item"
                                                 target="_blank"
                                                 onClick={() => this.toggle('dropdownOpen')}
@@ -504,7 +504,7 @@ class Comparison extends Component {
                                             <div style={{ marginBottom: '20px', lineHeight: 1.5 }}>
                                                 <small>
                                                     <i>
-                                                        Reference: <ValuePlugins type={'literal'}>{this.state.reference}</ValuePlugins>
+                                                        Reference: <ValuePlugins type="literal">{this.state.reference}</ValuePlugins>
                                                     </i>
                                                 </small>
                                             </div>
