@@ -41,11 +41,12 @@ class OrganizationDetails extends Component {
         this.setState({ isLoading: true });
         getOrganization(this.props.match.params.id)
             .then(responseJson => {
-                document.title = `${responseJson.organization_name} - Organization - ORKG`;
+                console.log(responseJson);
+                document.title = `${responseJson.name} - Organization - ORKG`;
                 this.setState({
-                    label: responseJson.organization_name,
+                    label: responseJson.name,
                     isLoading: false,
-                    image: responseJson.organization_logo,
+                    image: responseJson.logo,
                     createdBy: responseJson.created_by
                 });
             })
