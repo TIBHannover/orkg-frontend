@@ -27,7 +27,7 @@ const PaperCardStyled = styled.div`
 class ComparisonCard extends Component {
     render() {
         return (
-            <PaperCardStyled className={'list-group-item list-group-item-action '}>
+            <PaperCardStyled className="list-group-item list-group-item-action ">
                 <Row>
                     <Col sm={12}>
                         <Link to={reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparison.id })}>
@@ -37,8 +37,8 @@ class ComparisonCard extends Component {
                         {this.props.comparison.created_at && (
                             <div>
                                 <small>
-                                    <Icon size={'sm'} icon={faDiceD6} className="mr-1" /> {this.props.comparison.nbContributions} Contributions
-                                    <Icon size={'sm'} icon={faCalendar} className="ml-2 mr-1" /> Published :{' '}
+                                    <Icon size="sm" icon={faDiceD6} className="mr-1" /> {this.props.comparison.nbContributions} Contributions
+                                    <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" /> Published :{' '}
                                     {moment(this.props.comparison.created_at).format('DD-MM-YYYY')}
                                 </small>
                             </div>

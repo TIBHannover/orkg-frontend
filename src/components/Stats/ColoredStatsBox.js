@@ -71,7 +71,7 @@ const ColoredStatsBox = props => {
             <LabelWrapper>
                 {!props.isLoading ? (
                     <Number>
-                        <NumberFormat value={props.number} displayType={'text'} thousandSeparator={' '} />
+                        <NumberFormat value={props.number} displayType="text" thousandSeparator={' '} />
                     </Number>
                 ) : (
                     'Loading...'

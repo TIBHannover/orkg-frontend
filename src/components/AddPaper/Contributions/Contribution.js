@@ -169,7 +169,7 @@ class Contribution extends Component {
                                 {!this.state.isTemplatesLoading && uniqueTemplates.length > 0 && (
                                     <>
                                         <Label>
-                                            <Tooltip message={`Select a template to use it in your contribution data`}>Use template</Tooltip>
+                                            <Tooltip message="Select a template to use it in your contribution data">Use template</Tooltip>
                                         </Label>
                                         <div>
                                             {this.state.isTemplatesLoading && (

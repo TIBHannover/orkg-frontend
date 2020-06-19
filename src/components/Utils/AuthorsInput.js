@@ -81,21 +81,21 @@ const AuthorTag = styled.div`
 const SortableItem = sortableElement(({ author, index, authorIndex, editAuthor, removeAuthor }) => (
     <AuthorTag>
         <DragHandle />
-        <div className={'name'} onClick={e => editAuthor(authorIndex)}>
+        <div className="name" onClick={e => editAuthor(authorIndex)}>
             {author.label}
             {author.orcid && <Icon style={{ margin: '4px' }} icon={faOrcid} />}
         </div>
         <div style={{ padding: '8px' }} onClick={e => editAuthor(authorIndex)}>
             <Icon icon={faPen} />
         </div>
-        <div title={'Delete author'} className={'delete'} onClick={e => removeAuthor(author.id)}>
+        <div title="Delete author" className="delete" onClick={e => removeAuthor(author.id)}>
             <Icon icon={faTimes} />
         </div>
     </AuthorTag>
 ));
 
 const DragHandle = sortableHandle(() => (
-    <StyledDragHandle className={'ml-2 mr-2'}>
+    <StyledDragHandle className="ml-2 mr-2">
         <Icon icon={faSort} />
     </StyledDragHandle>
 ));
@@ -236,14 +236,14 @@ class AuthorsInput extends Component {
 
     render() {
         return (
-            <div className={' clearfix'}>
+            <div className=" clearfix">
                 <div>
                     {this.props.value.length > 0 && (
                         <SortableContainer
                             useDragHandle
                             helperClass="sortableHelperAuthors"
                             onSortEnd={this.onSortEnd}
-                            className={'clearfix'}
+                            className="clearfix"
                             onClick={this.props.value.length === 0 ? () => this.toggle('showAuthorForm') : undefined}
                             lockAxis="y"
                         >
@@ -272,7 +272,7 @@ class AuthorsInput extends Component {
                             this.toggle('showAuthorForm');
                         }}
                     >
-                        <Icon icon={faPlus} className={'mr-2'} /> Add author
+                        <Icon icon={faPlus} className="mr-2" /> Add author
                     </AddAuthor>
                 </div>
                 <Modal onOpened={() => this.inputRef.current.focus()} isOpen={this.state.showAuthorForm} toggle={() => this.toggle('showAuthorForm')}>
@@ -280,7 +280,7 @@ class AuthorsInput extends Component {
                     <ModalBody>
                         <FormGroup>
                             <Label for="authorInput">
-                                Enter author name <b>or</b> ORCID <Icon color={'#A6CE39'} icon={faOrcid} />
+                                Enter author name <b>or</b> ORCID <Icon color="#A6CE39" icon={faOrcid} />
                             </Label>
                             <Input
                                 onChange={this.handleChange}

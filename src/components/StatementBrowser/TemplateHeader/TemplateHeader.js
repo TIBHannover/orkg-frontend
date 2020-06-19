@@ -52,17 +52,17 @@ export default function TemplateHeader(props) {
 
     return (
         <div>
-            <TemplateHeaderStyle className={'d-flex'}>
+            <TemplateHeaderStyle className="d-flex">
                 <div className="flex-grow-1 mr-4">
                     {!props.value.isEditing ? (
                         <>
                             {props.value.label}{' '}
                             <div className={headerClasses}>
-                                <StatementOptionButton title={'Edit label'} icon={faPen} action={() => props.toggleEditValue({ id: props.id })} />
+                                <StatementOptionButton title="Edit label" icon={faPen} action={() => props.toggleEditValue({ id: props.id })} />
                                 <StatementOptionButton
                                     requireConfirmation={true}
-                                    confirmationMessage={'Are you sure to delete?'}
-                                    title={'Delete the template with its statements'}
+                                    confirmationMessage="Are you sure to delete?"
+                                    title="Delete the template with its statements"
                                     icon={faTrash}
                                     action={handleDeleteTemplate}
                                     onVisibilityChange={disable => setDisableHover(disable)}
@@ -84,15 +84,13 @@ export default function TemplateHeader(props) {
                         </>
                     )}
                 </div>
-                <div className={'type'}>
+                <div className="type">
                     Template{' '}
                     <StatementOptionButton
-                        title={
-                            'A template is a defined structure of a contribution, this stucture is mostly shared between papers in the same research field.'
-                        }
+                        title="A template is a defined structure of a contribution, this stucture is mostly shared between papers in the same research field."
                         icon={faQuestion}
-                        iconWrapperSize={'20px'}
-                        iconSize={'10px'}
+                        iconWrapperSize="20px"
+                        iconSize="10px"
                         action={() => null}
                     />
                 </div>

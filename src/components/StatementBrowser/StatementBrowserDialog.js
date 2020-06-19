@@ -47,8 +47,8 @@ class StatementBrowserDialog extends Component {
                     {this.props.newStore && (
                         <Link
                             style={{ right: 45, position: 'absolute', top: 12 }}
-                            title={'Go to resource page'}
-                            className={'ml-2'}
+                            title="Go to resource page"
+                            className="ml-2"
                             to={reverse(ROUTES.RESOURCE, { id: this.props.resourceId })}
                             target="_blank"
                             rel="noopener noreferrer"

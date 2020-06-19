@@ -152,7 +152,7 @@ class FeaturedComparisons extends Component {
                 <CarouselItemStyled
                     onExiting={() => this.setState({ animating: true })}
                     onExited={() => this.setState({ animating: false })}
-                    className={'pt-4 pb-1 pl-4 pr-4'}
+                    className="pt-4 pb-1 pl-4 pr-4"
                     key={`fp${comparison.id}`}
                 >
                     <div style={{ minHeight: '120px' }} className="d-flex">
@@ -193,7 +193,7 @@ class FeaturedComparisons extends Component {
                             <CarouselIndicators items={this.state.comparisons} activeIndex={this.state.activeIndex} onClickHandler={this.goToIndex} />
                         </Carousel>
                     ) : (
-                        <div style={{ height: '130px' }} className={'pt-4 pb-1 pl-4 pr-4'}>
+                        <div style={{ height: '130px' }} className="pt-4 pb-1 pl-4 pr-4">
                             <ContentLoader speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb" ariaLabel={false}>
                                 <rect x="1" y="0" rx="4" ry="4" width="300" height="20" />
                                 <rect x="1" y="25" rx="3" ry="3" width="250" height="20" />

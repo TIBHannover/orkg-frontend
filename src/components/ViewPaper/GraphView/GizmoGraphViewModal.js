@@ -400,7 +400,7 @@ class GraphView extends Component {
                 style={{ maxWidth: '90%', marginBottom: 0 }}
             >
                 <ModalHeader toggle={this.props.toggle}>
-                    <div className={'d-flex'} style={{ height: '40px' }}>
+                    <div className="d-flex" style={{ height: '40px' }}>
                         <div style={{ width: '300px', height: '40px', paddingTop: '5px' }}>Paper graph visualization</div>
                         <div style={{ width: '100%', display: 'flex' }}>
                             {' '}
@@ -519,7 +519,7 @@ class GraphView extends Component {
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </Dropdown>
-                                <SearchAutoComplete ref={this.searchComponent} placeHolder={'Search'} graphVis={this.graphVis} />
+                                <SearchAutoComplete ref={this.searchComponent} placeHolder="Search" graphVis={this.graphVis} />
                             </div>
                         </div>
                     </div>
@@ -536,7 +536,7 @@ class GraphView extends Component {
                             graph={{ nodes: this.state.nodes, edges: this.state.edges }}
                             initializeGraph={this.state.initializeGraph}
                             graphVis={this.graphVis}
-                            graphBgColor={'#ecf0f1'}
+                            graphBgColor="#ecf0f1"
                             addPaperVisualization={this.props.addPaperVisualization}
                         />
                     )}

@@ -15,7 +15,7 @@ function PropertySuggestions(props) {
                     <ListGroupItem key={`suggested-property-${index}`}>
                         <StatementOptionButton
                             className="mr-2"
-                            title={'Add property'}
+                            title="Add property"
                             icon={faPlus}
                             action={() => {
                                 props.createProperty({

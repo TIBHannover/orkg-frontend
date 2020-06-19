@@ -145,15 +145,15 @@ class AbstractRangesList extends Component {
                                                 <Badge pill style={{ color: '#333', background: this.props.getClassColor(range.class.label) }}>
                                                     {range.class.label}
                                                 </Badge>
-                                                <RangeItemOption className={'float-right'}>
-                                                    <span className={'rangeOption mr-3'} onClick={() => this.props.toggleEditAnnotation(range.id)}>
+                                                <RangeItemOption className="float-right">
+                                                    <span className="rangeOption mr-3" onClick={() => this.props.toggleEditAnnotation(range.id)}>
                                                         <Tippy content="Edit label">
                                                             <span>
                                                                 <Icon icon={faPen} /> Edit
                                                             </span>
                                                         </Tippy>
                                                     </span>
-                                                    <span className={'rangeOption mr-2'} onClick={() => this.props.removeAnnotation(range)}>
+                                                    <span className="rangeOption mr-2" onClick={() => this.props.removeAnnotation(range)}>
                                                         <Tippy content="Delete Annotation">
                                                             <span>
                                                                 <Icon icon={faTrash} /> Delete

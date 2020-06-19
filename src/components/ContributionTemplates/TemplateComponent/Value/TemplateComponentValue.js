@@ -39,7 +39,7 @@ function TemplateComponentValue(props) {
     };
 
     return (
-        <ValuesStyle className={'col-8 valuesList'}>
+        <ValuesStyle className="col-8 valuesList">
             <div>
                 <InputGroup size="sm">
                     <AutoComplete
@@ -52,13 +52,13 @@ function TemplateComponentValue(props) {
                         isDisabled={!props.enableEdit}
                         isClearable={true}
                         defaultOptions={defaultDatatypes}
-                        cssClasses={'form-control-sm'}
+                        cssClasses="form-control-sm"
                         copyValueButton={true}
                     />
                 </InputGroup>
                 <div className="mt-2">
                     <FormGroup row>
-                        <Label className={'text-right text-muted'} for="cardinalityValueInput" sm={3}>
+                        <Label className="text-right text-muted" for="cardinalityValueInput" sm={3}>
                             <small>Cardinality</small>
                         </Label>
                         <Col sm={9}>
@@ -76,7 +76,7 @@ function TemplateComponentValue(props) {
                     <>
                         <div className="mt-2">
                             <FormGroup row>
-                                <Label className={'text-right text-muted'} for="minOccursValueInput" sm={3}>
+                                <Label className="text-right text-muted" for="minOccursValueInput" sm={3}>
                                     <small>Minimum Occurence</small>
                                 </Label>
                                 <Col sm={9}>
@@ -95,7 +95,7 @@ function TemplateComponentValue(props) {
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
-                                <Label className={'text-right text-muted'} for="maxOccursValueInput" sm={3}>
+                                <Label className="text-right text-muted" for="maxOccursValueInput" sm={3}>
                                     <small>Maximum Occurence</small>
                                 </Label>
                                 <Col sm={9}>
@@ -112,7 +112,7 @@ function TemplateComponentValue(props) {
                                         placeholder="Maximum number of occurrences in the resource"
                                     />
                                     {props.enableEdit && (
-                                        <FormText className={'d-block'}>Clear the input field if there is no restriction (unbounded)</FormText>
+                                        <FormText className="d-block">Clear the input field if there is no restriction (unbounded)</FormText>
                                     )}
                                 </Col>
                             </FormGroup>

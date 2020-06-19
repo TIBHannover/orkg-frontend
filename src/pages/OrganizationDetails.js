@@ -72,17 +72,17 @@ class OrganizationDetails extends Component {
                 {!this.state.isLoading && this.state.error && <>{this.state.error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
                 {!this.state.isLoading && !this.state.error && this.state.label && (
                     <Container className="mt-5 clearfix">
-                        <div className={'box rounded clearfix pt-4 pb-4 pl-5 pr-5'}>
-                            <div className={'mb-2'}>
+                        <div className="box rounded clearfix pt-4 pb-4 pl-5 pr-5">
+                            <div className="mb-2">
                                 <div className="pb-2 mb-3">
-                                    <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                    <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                         {this.state.label}
 
                                         <img style={{ float: 'right', marginTop: 15 }} height="100" src={this.state.image} alt="" />
                                     </h3>
                                 </div>
                             </div>
-                            <div className={'clearfix'}>
+                            <div className="clearfix">
                                 {!this.state.isLoadingTotal && this.state.totalObservatories ? (
                                     <div>
                                         <i>Total Observatories: {this.state.totalObservatories}</i>

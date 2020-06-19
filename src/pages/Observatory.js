@@ -132,7 +132,7 @@ class Observatory extends Component {
                 currentTabContent = (
                     <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
                         {!this.state.isLoadingContributors ? (
-                            <div className={'mb-6'}>
+                            <div className="mb-6">
                                 <div className="pb-2 mb-6">
                                     {this.state.contributors.length > 0 ? (
                                         <div style={{ paddingTop: 10 }}>
@@ -204,9 +204,9 @@ class Observatory extends Component {
                 {!this.state.isLoading && this.state.error && <>{this.state.error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
                 {!this.state.isLoading && !this.state.error && this.state.label && (
                     <Container className="mt-5 clearfix">
-                        <div className={'box rounded clearfix pt-4 pb-4 pl-5 pr-5'}>
+                        <div className="box rounded clearfix pt-4 pb-4 pl-5 pr-5">
                             <div className="pb-2 mb-3">
-                                <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                     {this.state.label}
                                 </h3>
                                 <br />

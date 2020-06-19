@@ -52,7 +52,7 @@ class AnnotationTootip extends Component {
         return (
             <span>
                 <Tippy
-                    placement={'top'}
+                    placement="top"
                     followCursor={true}
                     plugins={[followCursor]}
                     arrow={true}

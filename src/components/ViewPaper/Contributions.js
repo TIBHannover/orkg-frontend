@@ -187,7 +187,7 @@ class Contributions extends Component {
                                         );
                                     })}
                                     {this.props.enableEdit && (
-                                        <li className={'addContribution'} onClick={() => this.props.handleCreateContribution()}>
+                                        <li className="addContribution" onClick={() => this.props.handleCreateContribution()}>
                                             <Tippy content="Add contribution">
                                                 <span>
                                                     <Icon size="xs" icon={faPlus} />
@@ -246,7 +246,7 @@ class Contributions extends Component {
                                                                 <Button
                                                                     color="link"
                                                                     style={{ verticalAlign: 'initial', fontStyle: 'italic' }}
-                                                                    className={'m-0 p-0'}
+                                                                    className="m-0 p-0"
                                                                     onClick={() => this.props.toggleEditMode()}
                                                                 >
                                                                     editing

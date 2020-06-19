@@ -162,7 +162,7 @@ function ComponentsTab(props) {
         <div className="p-4">
             <div className="pb-4">
                 {props.components && props.components.length > 0 && (
-                    <Row className={'text-center'}>
+                    <Row className="text-center">
                         <Col md={6}>Property</Col>
                         <Col md={5}>Type</Col>
                     </Row>

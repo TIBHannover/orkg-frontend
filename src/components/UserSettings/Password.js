@@ -90,7 +90,7 @@ class Password extends Component {
                     )}
                 </FormGroup>
                 <Row>
-                    <div className={'col-6'}>
+                    <div className="col-6">
                         <FormGroup>
                             <Label for="new_password">New password</Label>
                             <Input
@@ -107,7 +107,7 @@ class Password extends Component {
                             )}
                         </FormGroup>
                     </div>
-                    <div className={'col-6'}>
+                    <div className="col-6">
                         <FormGroup>
                             <Label for="matching_password">Repeat new password</Label>
                             <Input

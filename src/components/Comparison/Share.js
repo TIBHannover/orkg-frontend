@@ -91,7 +91,7 @@ class Share extends Component {
                             <ReactstrapTooltip
                                 placement="top"
                                 target="copyToClipboardLink"
-                                trigger={'hover'}
+                                trigger="hover"
                                 toggle={this.toggleTooltip}
                                 isOpen={this.state.showTooltipCopiedLink}
                             >

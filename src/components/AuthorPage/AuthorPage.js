@@ -141,10 +141,10 @@ class AuthorPage extends Component {
                         <Container className="p-0">
                             <Row>
                                 <Col className="col-4">
-                                    <div className={'box rounded p-4 mb-3'}>
+                                    <div className="box rounded p-4 mb-3">
                                         <AuthorMetaInfo>
-                                            <div className={'key'}>Full name</div>
-                                            <div className={'value'}>{this.state.author.label}</div>
+                                            <div className="key">Full name</div>
+                                            <div className="value">{this.state.author.label}</div>
                                         </AuthorMetaInfo>
                                         {/*
                                         <AuthorMetaInfo>
@@ -163,13 +163,13 @@ class AuthorPage extends Component {
                                     </div>
 
                                     {this.state.orcid && (
-                                        <div className={'box rounded p-4'}>
+                                        <div className="box rounded p-4">
                                             <h5>Identifiers</h5>
                                             <AuthorIdentifier>
-                                                <div className={'key'}>
-                                                    ORCID <Icon color={'#A6CE39'} icon={faOrcid} />
+                                                <div className="key">
+                                                    ORCID <Icon color="#A6CE39" icon={faOrcid} />
                                                 </div>
-                                                <div className={'value'}>
+                                                <div className="value">
                                                     <a href={`https://orcid.org/${this.state.orcid}`} target="_blank" rel="noopener noreferrer">
                                                         {this.state.orcid} <Icon icon={faExternalLinkAlt} />
                                                     </a>
@@ -190,7 +190,7 @@ class AuthorPage extends Component {
                                 </Col>
 
                                 <Col className="col-8">
-                                    <div className={'box rounded p-4'}>
+                                    <div className="box rounded p-4">
                                         <h5>Papers</h5>
                                         {this.state.papers.length > 0 && (
                                             <div>

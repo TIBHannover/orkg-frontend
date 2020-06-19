@@ -100,7 +100,7 @@ const UserProfile = props => {
                     <Col md={6} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
                         <h5 className="mb-4">Added papers</h5>
                         <Items
-                            filterLabel={'papers'}
+                            filterLabel="papers"
                             filterClass={process.env.REACT_APP_CLASSES_PAPER}
                             userId={userId}
                             showDelete={userId === currentUserId}
@@ -108,7 +108,7 @@ const UserProfile = props => {
                     </Col>
                     <Col md={6} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
                         <h5 className="mb-4">Published comparisons</h5>
-                        <Items filterLabel={'comparisons'} filterClass={process.env.REACT_APP_CLASSES_COMPARISON} userId={userId} />
+                        <Items filterLabel="comparisons" filterClass={process.env.REACT_APP_CLASSES_COMPARISON} userId={userId} />
                     </Col>
                 </Row>
             </Container>

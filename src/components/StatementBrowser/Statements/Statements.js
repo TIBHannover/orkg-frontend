@@ -49,7 +49,7 @@ export default function Statements(props) {
                 {/*props.selectedResource && props.resources.byId[props.selectedResource].classes.length > 0 && (
                     <div className="text-muted mb-2">Classes: {props.resources.byId[props.selectedResource].classes.join(',')}</div>
                 )*/}
-                <ListGroup className={'listGroupEnlarge'}>
+                <ListGroup className="listGroupEnlarge">
                     {props.selectedResource && !props.resources.byId[props.selectedResource].isFetching ? (
                         propertyIds.length > 0 ? (
                             propertyIds.map((propertyId, index) => {

@@ -256,14 +256,14 @@ class Header extends Component {
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     <DropdownItem
-                                        tag={'a'}
+                                        tag="a"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        href={'https://projects.tib.eu/orkg/project/documentation/'}
+                                        href="https://projects.tib.eu/orkg/project/documentation/"
                                     >
                                         Features <Icon size="sm" icon={faExternalLinkAlt} />
                                     </DropdownItem>
-                                    <DropdownItem tag={'a'} target="_blank" rel="noopener noreferrer" href={'https://projects.tib.eu/orkg/'}>
+                                    <DropdownItem tag="a" target="_blank" rel="noopener noreferrer" href="https://projects.tib.eu/orkg/">
                                         Project <Icon size="sm" icon={faExternalLinkAlt} />
                                     </DropdownItem>
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES}>

@@ -30,7 +30,7 @@ export default class TemplateDetailsTooltip extends Component {
                 {!this.state.isTemplateLoading && (
                     <>
                         {this.props.source && (
-                            <div className={'mb-1'}>
+                            <div className="mb-1">
                                 <b>Template for:</b>
                                 <br />
                                 <i>{this.props.source.label}</i>
