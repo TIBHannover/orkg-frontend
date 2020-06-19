@@ -79,7 +79,7 @@ class PredicateDetails extends Component {
                                 </Button>
                             </EditModeHeader>
                         )}
-                        <div className={'box rounded clearfix pt-4 pb-4 pl-5 pr-5'}>
+                        <div className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${this.state.editMode ? 'rounded-bottom' : 'rounded'}`}>
                             <div className={'mb-2'}>
                                 <div className="pb-2 mb-3">
                                     <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>

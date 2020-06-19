@@ -113,7 +113,7 @@ class ResourceDetails extends Component {
                                 </Button>
                             </EditModeHeader>
                         )}
-                        <div className={'box rounded clearfix pt-4 pb-4 pl-5 pr-5'}>
+                        <div className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${this.state.editMode ? 'rounded-bottom' : 'rounded'}`}>
                             <div className={'mb-2'}>
                                 {!this.state.editMode ? (
                                     <div className="pb-2 mb-3">
