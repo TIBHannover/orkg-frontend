@@ -39,6 +39,26 @@ const StyledGravatar = styled(Gravatar)`
     cursor: pointer;
 `;
 
+const StyledScrollBar = styled.div`
+    &::-webkit-scrollbar,
+    &::-webkit-scrollbar-thumb {
+        width: 24px;
+        border-radius: 13px;
+        background-clip: padding-box;
+        border: 10px solid transparent;
+        color: lightgray;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        box-shadow: inset 0 0 0 10px;
+    }
+
+    height: 225px;
+    overflow: auto;
+    
+    }
+`;
+
 const ObservatoryDetailTabs = styled.div`
     .tab {
         margin-bottom: 0;
@@ -284,7 +304,10 @@ class Observatory extends Component {
                         {/* <Container> */}
                         <Row>
                             <Col md={8} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
-                                <div className="box rounded-lg p-3" style={{ height: '500px', flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
+                                <div
+                                    className="box rounded-lg p-3"
+                                    style={{ height: '500px', flexDirection: 'column', display: 'flex', flexGrow: '1' }}
+                                >
                                     <h5 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                         Research Problems
                                     </h5>
@@ -333,12 +356,15 @@ class Observatory extends Component {
                                 </div>
                             </Col>
                             <Col md={4} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
-                                <div className="box rounded-lg p-3" style={{ height: 'auto', flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
+                                <div
+                                    className="box rounded-lg p-3"
+                                    style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}
+                                >
                                     <h5 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                         Organizations
                                     </h5>
                                     {!this.state.isLoadingOrganizations ? (
-                                        <div className="mb-6">
+                                        <StyledScrollBar className="mb-6">
                                             {this.state.organizationsList.length > 0 ? (
                                                 <div>
                                                     {/* {this.state.resourcesList.map((resource, index) => { */}
@@ -352,13 +378,15 @@ class Observatory extends Component {
                                                                 style={{
                                                                     border: 'solid lightgray thin',
                                                                     textAlign: 'center',
-                                                                    verticalAlign: 'middle'
+                                                                    verticalAlign: 'middle',
+                                                                    paddingBottom: '11px'
                                                                 }}
                                                             >
                                                                 <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.id })}>
-                                                                    <img style={{ marginTop: 12 }} height="50" src={organization.logo} alt="" />
+                                                                    <img style={{ marginTop: 12 }} height="70" src={organization.logo} alt="" />
                                                                     <br />
-                                                                    {organization.name}
+                                                                    {' '}
+                                                                    {/* {organization.name} */}
                                                                 </Link>
                                                             </div>
                                                         );
@@ -369,7 +397,7 @@ class Observatory extends Component {
                                                     <h5>No Resources</h5>
                                                 </div>
                                             )}
-                                        </div>
+                                        </StyledScrollBar>
                                     ) : (
                                         <div className="mt-4">
                                             <h5>Loading resources ...</h5>
@@ -382,43 +410,37 @@ class Observatory extends Component {
 
                                     {!this.state.isLoadingContributors ? (
                                         <div className={'mb-6'}>
-                                            <div className="pb-2 mb-6">
+                                            <StyledScrollBar className="pb-2 mb-6">
                                                 {this.state.contributors.length > 0 ? (
-                                                    <div style={{overflowY: 'scroll'}}>
+                                                    <div className={'scrollBarDiv'}>
                                                         {this.state.contributors.map((user, index) => {
                                                             return (
                                                                 <div>
                                                                     <div>
-                                                                    <StyledGravatar
+                                                                        <StyledGravatar
                                                                             className="rounded-circle"
                                                                             style={{ border: '3px solid #fff' }}
                                                                             email={user.email}
                                                                             size={45}
                                                                             id="TooltipExample"
                                                                         />
-                                                                        <p style={{marginLeft: '48px', marginTop: '-47px'}}>
-                                                                        <Link
-                                                                        onClick={this.toggleUserTooltip}
-                                                                        to={reverse(ROUTES.USER_PROFILE, { userId: user.id })}
-                                                                    >
-                                                                        {' '}
-                                                                        {user.display_name}
-                                                                    </Link>
-                                                                        <br/>
-                                                                        {this.state.organizationsList
-                                                                            .filter(o =>
-                                                                                o.id.includes(user.organization_id)
-                                                                            )
-                                                                            .map((o, index) => {
-                                                                                return (
-                                                                                    <div style={{color: 'gray'}}>
-                                                                                        {o.name}
-                                                                                    </div>
-                                                                                );
-                                                                            })}
+                                                                        <p style={{ marginLeft: '48px', marginTop: '-47px' }}>
+                                                                            <Link
+                                                                                onClick={this.toggleUserTooltip}
+                                                                                to={reverse(ROUTES.USER_PROFILE, { userId: user.id })}
+                                                                            >
+                                                                                {' '}
+                                                                                {user.display_name}
+                                                                            </Link>
+                                                                            <br />
+                                                                            {this.state.organizationsList
+                                                                                .filter(o => o.id.includes(user.organization_id))
+                                                                                .map((o, index) => {
+                                                                                    return <div style={{ color: 'gray' }}>{o.name}</div>;
+                                                                                })}
                                                                         </p>
                                                                     </div>
-                                                                    
+
                                                                     {/* <Row> */}
                                                                     {/* <div className="col-3"> */}
 
@@ -440,7 +462,7 @@ class Observatory extends Component {
                                                         <h5>No Contributors</h5>
                                                     </div>
                                                 )}
-                                            </div>
+                                            </StyledScrollBar>
                                         </div>
                                     ) : (
                                         <div className="mt-4">
