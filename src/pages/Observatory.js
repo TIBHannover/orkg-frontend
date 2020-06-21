@@ -200,85 +200,85 @@ class Observatory extends Component {
     render = () => {
         let currentTabContent;
 
-        switch (this.state.activeTab) {
-            case 1:
-            default:
-                currentTabContent = (
-                    <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        {!this.state.isLoadingContributors ? (
-                            <div className={'mb-6'}>
-                                <div className="pb-2 mb-6">
-                                    {this.state.contributors.length > 0 ? (
-                                        <div style={{ paddingTop: 10 }}>
-                                            {this.state.contributors.map((user, index) => {
-                                                return (
-                                                    <ShortRecord
-                                                        key={`user${index}`}
-                                                        header={user.display_name}
-                                                        href={reverse(ROUTES.USER_PROFILE, { userId: user.id })}
-                                                    />
-                                                );
-                                            })}
-                                        </div>
-                                    ) : (
-                                        <div className="mt-4">
-                                            <h5>No Contributors</h5>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="mt-4">
-                                <h5>Loading Contributors ...</h5>
-                            </div>
-                        )}
-                    </AnimationContainer>
-                );
-                break;
-            case 2:
-                currentTabContent = (
-                    <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        {!this.state.isLoadingResources ? (
-                            <div className="pb-2 mb-6">
-                                {this.state.resourcesList.length > 0 ? (
-                                    <div style={{ paddingTop: 10 }}>
-                                        {this.state.resourcesList
-                                            .filter(resource => resource.classes.includes('Paper'))
-                                            .map((resource, index) => {
-                                                {
-                                                    console.log(resource.classes);
-                                                }
-                                                {
-                                                    /* {this.state.resourcesList.filter().map((resource, index) => { */
-                                                }
-                                                return (
-                                                    <ShortRecord
-                                                        key={`resource${index}`}
-                                                        header={resource.label}
-                                                        href={
-                                                            resource.classes.includes(process.env.REACT_APP_CLASSES_PAPER)
-                                                                ? reverse(ROUTES.VIEW_PAPER, { resourceId: resource.id })
-                                                                : reverse(ROUTES.RESOURCE, { id: resource.id })
-                                                        }
-                                                    />
-                                                );
-                                            })}
-                                    </div>
-                                ) : (
-                                    <div className="mt-4">
-                                        <h5>No Resources</h5>
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            <div className="mt-4">
-                                <h5>Loading resources ...</h5>
-                            </div>
-                        )}
-                    </AnimationContainer>
-                );
-                break;
-        }
+        // switch (this.state.activeTab) {
+        //     case 1:
+        //     default:
+        //         currentTabContent = (
+        //             <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+        //                 {!this.state.isLoadingContributors ? (
+        //                     <div className={'mb-6'}>
+        //                         <div className="pb-2 mb-6">
+        //                             {this.state.contributors.length > 0 ? (
+        //                                 <div style={{ paddingTop: 10 }}>
+        //                                     {this.state.contributors.map((user, index) => {
+        //                                         return (
+        //                                             <ShortRecord
+        //                                                 key={`user${index}`}
+        //                                                 header={user.display_name}
+        //                                                 href={reverse(ROUTES.USER_PROFILE, { userId: user.id })}
+        //                                             />
+        //                                         );
+        //                                     })}
+        //                                 </div>
+        //                             ) : (
+        //                                 <div className="mt-4">
+        //                                     <h5>No Contributors</h5>
+        //                                 </div>
+        //                             )}
+        //                         </div>
+        //                     </div>
+        //                 ) : (
+        //                     <div className="mt-4">
+        //                         <h5>Loading Contributors ...</h5>
+        //                     </div>
+        //                 )}
+        //             </AnimationContainer>
+        //         );
+        //         break;
+        //     case 2:
+        //         currentTabContent = (
+        //             <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+        //                 {!this.state.isLoadingResources ? (
+        //                     <div className="pb-2 mb-6">
+        //                         {this.state.resourcesList.length > 0 ? (
+        //                             <div style={{ paddingTop: 10 }}>
+        //                                 {this.state.resourcesList
+        //                                     .filter(resource => resource.classes.includes('Paper'))
+        //                                     .map((resource, index) => {
+        //                                         {
+        //                                             console.log(resource.classes);
+        //                                         }
+        //                                         {
+        //                                             /* {this.state.resourcesList.filter().map((resource, index) => { */
+        //                                         }
+        //                                         return (
+        //                                             <ShortRecord
+        //                                                 key={`resource${index}`}
+        //                                                 header={resource.label}
+        //                                                 href={
+        //                                                     resource.classes.includes(process.env.REACT_APP_CLASSES_PAPER)
+        //                                                         ? reverse(ROUTES.VIEW_PAPER, { resourceId: resource.id })
+        //                                                         : reverse(ROUTES.RESOURCE, { id: resource.id })
+        //                                                 }
+        //                                             />
+        //                                         );
+        //                                     })}
+        //                             </div>
+        //                         ) : (
+        //                             <div className="mt-4">
+        //                                 <h5>No Resources</h5>
+        //                             </div>
+        //                         )}
+        //                     </div>
+        //                 ) : (
+        //                     <div className="mt-4">
+        //                         <h5>Loading resources ...</h5>
+        //                     </div>
+        //                 )}
+        //             </AnimationContainer>
+        //         );
+        //         break;
+        // }
 
         return (
             <>
@@ -320,15 +320,6 @@ class Observatory extends Component {
                                                         .filter(resource => resource.classes.includes(process.env.REACT_APP_CLASSES_PROBLEM))
                                                         .map((resource, index) => {
                                                             return (
-                                                                // <ShortRecord
-                                                                // key={`resource${index}`}
-                                                                // header={resource.label}
-                                                                // href={
-                                                                // resource.classes.includes(process.env.REACT_APP_CLASSES_PAPER)
-                                                                // ? reverse(ROUTES.VIEW_PAPER, { resourceId: resource.id })
-                                                                // : reverse(ROUTES.RESOURCE, { id: resource.id })
-                                                                // }
-                                                                // />
                                                                 <span key={index}>
                                                                     {index + 1}
                                                                     {'. '}
@@ -441,19 +432,9 @@ class Observatory extends Component {
                                                                         </p>
                                                                     </div>
 
-                                                                    {/* <Row> */}
-                                                                    {/* <div className="col-3"> */}
-
                                                                     <hr style={{ width: '275px', marginBottom: '10px', marginTop: '10px' }} />
 
-                                                                    {/* </div> */}
-                                                                    {/* </Row> */}
                                                                 </div>
-                                                                // <ShortRecord
-                                                                // key={`user${index}`}
-                                                                // header={user.display_name}
-                                                                // href={reverse(ROUTES.USER_PROFILE, { userId: user.id })}
-                                                                // />
                                                             );
                                                         })}
                                                     </div>
@@ -471,16 +452,6 @@ class Observatory extends Component {
                                     )}
                                 </div>
                             </Col>
-                            {/* <div className={'box clearfix pt-4 pb-4 pl-5 pr-5 col-sm-12 col-md-7'}> */}
-                            {/* <div> */}
-                            {/* 234 */}
-                            {/* </div> */}
-                            {/* Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. */}
-                            {/* </div> */}
-
-                            {/* <div className={'box clearfix pt-4 pb-4 pl-5 pr-5 col-sm-12 col-md-5'}> */}
-                            {/* Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. */}
-                            {/* </div> */}
                         </Row>
                         {/* </Container> */}
 
@@ -512,31 +483,6 @@ class Observatory extends Component {
                                         <h5>Loading comparisons ...</h5>
                                     </div>
                                 )}
-                                {/* <div className="pb-2 mb-3"> */}
-                                {/* <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}> */}
-                                {/* {this.state.label} */}
-                                {/* </h3> */}
-                                {/* <br /> */}
-                                {/* <br /> */}
-
-                                {/* <SidebarStyledBox> */}
-                                {/* <ObservatoryDetailTabs className="clearfix d-flex"> */}
-                                {/* <div */}
-                                {/* className={`h6 col-md-6 text-center tab ${this.state.activeTab === 1 ? 'active' : ''}`} */}
-                                {/* onClick={() => this.barToggle(1)} */}
-                                {/* > */}
-                                {/* Contributors */}
-                                {/* </div> */}
-                                {/* <div */}
-                                {/* className={`h6 col-md-6 text-center tab ${this.state.activeTab === 2 ? 'active' : ''}`} */}
-                                {/* onClick={() => this.barToggle(2)} */}
-                                {/* > */}
-                                {/* Resources */}
-                                {/* </div> */}
-                                {/* </ObservatoryDetailTabs> */}
-                                {/* <TransitionGroup exit={false}>{currentTabContent}</TransitionGroup> */}
-                                {/* </SidebarStyledBox> */}
-                                {/* </div> */}
                             </div>
                         </div>
 
@@ -579,31 +525,6 @@ class Observatory extends Component {
                                         <h5>Loading resources ...</h5>
                                     </div>
                                 )}
-                                {/* <div className="pb-2 mb-3"> */}
-                                {/* <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}> */}
-                                {/* {this.state.label} */}
-                                {/* </h3> */}
-                                {/* <br /> */}
-                                {/* <br /> */}
-
-                                {/* <SidebarStyledBox> */}
-                                {/* <ObservatoryDetailTabs className="clearfix d-flex"> */}
-                                {/* <div */}
-                                {/* className={`h6 col-md-6 text-center tab ${this.state.activeTab === 1 ? 'active' : ''}`} */}
-                                {/* onClick={() => this.barToggle(1)} */}
-                                {/* > */}
-                                {/* Contributors */}
-                                {/* </div> */}
-                                {/* <div */}
-                                {/* className={`h6 col-md-6 text-center tab ${this.state.activeTab === 2 ? 'active' : ''}`} */}
-                                {/* onClick={() => this.barToggle(2)} */}
-                                {/* > */}
-                                {/* Resources */}
-                                {/* </div> */}
-                                {/* </ObservatoryDetailTabs> */}
-                                {/* <TransitionGroup exit={false}>{currentTabContent}</TransitionGroup> */}
-                                {/* </SidebarStyledBox> */}
-                                {/* </div> */}
                             </div>
                         </div>
                     </Container>
