@@ -3,13 +3,15 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { isString } from 'lodash';
+
 export function RendererComponent(props) {
     const cachedLabels = useSelector(state => state.pdfAnnotation.cachedLabels);
     let { value } = props;
 
     // properties
     if (props.row === 0) {
-        if (value && value.startsWith('orkg:')) {
+        if (value && isString(value) && value.startsWith('orkg:')) {
             value = value.replace(/^(orkg:)/, '');
             const label = cachedLabels[value];
             return <strong>{label}</strong>;
@@ -22,7 +24,7 @@ export function RendererComponent(props) {
     }
 
     // resources
-    if (value && value.startsWith('orkg:')) {
+    if (value && isString(value) && value.startsWith('orkg:')) {
         value = value.replace(/^(orkg:)/, '');
         const label = cachedLabels[value];
         return <span className="text-primary">{label}</span>;
