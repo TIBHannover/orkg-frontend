@@ -9,8 +9,8 @@ import { Form, Input, Button, InputGroup, InputGroupAddon } from 'reactstrap';
 import { isString } from 'lodash';
 
 const SearchForm = props => {
-    const PROPERTY_PATTERN = /^#P+[0-9]+/;
-    const RESOURCE_PATTERN = /^#R+[0-9]+/;
+    const PROPERTY_PATTERN = /^#P([0-9])+$/;
+    const RESOURCE_PATTERN = /^#R([0-9])+$/;
     const MINIMUM_LENGTH_PATTERN = 3;
 
     const [value, setValue] = useState('');
