@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import { Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink, ButtonGroup } from 'reactstrap';
 import classnames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -13,6 +13,8 @@ import { StyledContainer } from './styled';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import GeneralSettings from './Tabs/GeneralSettings/GeneralSettings';
+import TemplateEditorHeaderBar from './TemplateEditorHeaderBar';
+import VisibilitySensor from 'react-visibility-sensor';
 import ComponentsTab from './Tabs/ComponentsTab/ComponentsTab';
 import Format from './Tabs/Format/Format';
 
@@ -31,7 +33,8 @@ class ContributionTemplate extends Component {
 
         this.state = {
             activeTab: '1',
-            error: null
+            error: null,
+            showHeaderBar: false
         };
     }
 
@@ -58,13 +61,32 @@ class ContributionTemplate extends Component {
         });
     };
 
+    handleShowHeaderBar = isVisible => {
+        this.setState({
+            showHeaderBar: !isVisible
+        });
+    };
+
     render() {
         return (
             <StyledContainer className="clearfix">
                 <h1 className="h4 mt-4 mb-4 flex-grow-1">{!this.props.match.params.id ? 'Create new template' : 'Template'}</h1>
-                {this.props.match.params.id && this.props.editMode && (
+                {this.state.showHeaderBar && <TemplateEditorHeaderBar id={this.props.match.params.id} />}
+                {(this.props.editMode || this.props.isSaving) && (
                     <EditModeHeader className="box rounded-top">
-                        <Title>Edit mode</Title>
+                        <Title>{this.props.match.params.id ? 'Edit mode' : 'Create template'}</Title>
+                        <ButtonGroup size="sm">
+                            <Button
+                                className="float-left"
+                                disabled={this.props.isSaving}
+                                style={{ marginLeft: 1 }}
+                                color="light"
+                                onClick={() => this.props.saveTemplate(this.props.template)}
+                            >
+                                {this.props.isSaving && <Icon icon={faSpinner} spin />}
+                                {!this.props.isSaving ? ' Save' : ' Saving'}
+                            </Button>
+                        </ButtonGroup>
                     </EditModeHeader>
                 )}
                 <div className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${this.props.editMode ? 'rounded-bottom' : 'rounded'}`}>
@@ -80,39 +102,42 @@ class ContributionTemplate extends Component {
                             ''
                         )}
                     </div>
+
                     <div className="mb-3">
-                        <Nav tabs>
-                            <NavItemStyled>
-                                <NavLink
-                                    className={classnames({ active: this.state.activeTab === '1' })}
-                                    onClick={() => {
-                                        this.toggleTab('1');
-                                    }}
-                                >
-                                    Description
-                                </NavLink>
-                            </NavItemStyled>
-                            <NavItemStyled>
-                                <NavLink
-                                    className={classnames({ active: this.state.activeTab === '2' })}
-                                    onClick={() => {
-                                        this.toggleTab('2');
-                                    }}
-                                >
-                                    Properties
-                                </NavLink>
-                            </NavItemStyled>
-                            <NavItemStyled>
-                                <NavLink
-                                    className={classnames({ active: this.state.activeTab === '3' })}
-                                    onClick={() => {
-                                        this.toggleTab('3');
-                                    }}
-                                >
-                                    Format
-                                </NavLink>
-                            </NavItemStyled>
-                        </Nav>
+                        <VisibilitySensor onChange={this.handleShowHeaderBar}>
+                            <Nav tabs>
+                                <NavItemStyled>
+                                    <NavLink
+                                        className={classnames({ active: this.state.activeTab === '1' })}
+                                        onClick={() => {
+                                            this.toggleTab('1');
+                                        }}
+                                    >
+                                        Description
+                                    </NavLink>
+                                </NavItemStyled>
+                                <NavItemStyled>
+                                    <NavLink
+                                        className={classnames({ active: this.state.activeTab === '2' })}
+                                        onClick={() => {
+                                            this.toggleTab('2');
+                                        }}
+                                    >
+                                        Properties
+                                    </NavLink>
+                                </NavItemStyled>
+                                <NavItemStyled>
+                                    <NavLink
+                                        className={classnames({ active: this.state.activeTab === '3' })}
+                                        onClick={() => {
+                                            this.toggleTab('3');
+                                        }}
+                                    >
+                                        Format
+                                    </NavLink>
+                                </NavItemStyled>
+                            </Nav>
+                        </VisibilitySensor>
                         <TabContent activeTab={this.state.activeTab}>
                             <TabPaneStyled tabId="1">
                                 <Row>
@@ -137,19 +162,6 @@ class ContributionTemplate extends Component {
                             </TabPaneStyled>
                         </TabContent>
                     </div>
-                    {(this.props.editMode || this.props.isSaving) && (
-                        <>
-                            <Button
-                                disabled={this.props.isSaving}
-                                color="primary"
-                                className="float-right mb-4"
-                                onClick={() => this.props.saveTemplate(this.props.template)}
-                            >
-                                {this.props.isSaving && <Icon icon={faSpinner} spin />}
-                                {!this.props.isSaving ? ' Save Template' : ' Saving'}
-                            </Button>
-                        </>
-                    )}
                 </div>
             </StyledContainer>
         );
