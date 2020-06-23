@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { submitGetRequest, getResourcesByClass } from 'network';
 import PropTypes from 'prop-types';
 import Creatable from 'react-select/creatable';
-import { AsyncPaginate } from 'react-select-async-paginate';
+import { AsyncPaginateBase } from 'react-select-async-paginate';
 import { components } from 'react-select';
 import styled, { withTheme } from 'styled-components';
 
@@ -44,7 +44,8 @@ class AutoComplete extends Component {
             dropdownMenuJsx: null,
             inputValue: typeof this.props.value !== 'object' ? this.props.value : '',
             defaultOptions: this.props.defaultOptions ? this.props.defaultOptions : [],
-            value: this.props.value || ''
+            value: this.props.value || '',
+            menuIsOpen: false
         };
 
         this.pageSize = 10;
@@ -60,6 +61,14 @@ class AutoComplete extends Component {
     componentWillUnmount() {
         this._isMounted = false;
     }
+
+    onMenuOpen = () => {
+        this.setState({ menuIsOpen: true });
+    };
+
+    onMenuClose = () => {
+        this.setState({ menuIsOpen: false });
+    };
 
     IdMatch = async (value, responseJson) => {
         if (value.startsWith('#')) {
@@ -275,7 +284,7 @@ class AutoComplete extends Component {
 
         return (
             <StyledAutoCompleteInputFormControl className={`form-control ${this.props.cssClasses ? this.props.cssClasses : 'default'}`}>
-                <AsyncPaginate
+                <AsyncPaginateBase
                     SelectComponent={Select}
                     value={this.state.inputValue}
                     loadOptions={this.loadOptions}
@@ -283,7 +292,7 @@ class AutoComplete extends Component {
                     noOptionsMessage={this.noResults}
                     onChange={this.props.onChange ? this.props.onChange : this.handleChange}
                     onInputChange={this.handleInputChange}
-                    inputValue={this.state.inputValue}
+                    inputValue={this.state.inputValue || ''}
                     styles={this.customStyles}
                     placeholder={this.props.placeholder}
                     autoFocus
@@ -293,6 +302,9 @@ class AutoComplete extends Component {
                     onKeyDown={this.props.onKeyDown}
                     selectRef={this.props.innerRef}
                     components={{ Option }}
+                    menuIsOpen={this.state.menuIsOpen}
+                    onMenuOpen={this.onMenuOpen}
+                    onMenuClose={this.onMenuClose}
                 />
             </StyledAutoCompleteInputFormControl>
         );
