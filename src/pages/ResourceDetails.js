@@ -1,67 +1,57 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Button, FormGroup, Label, FormText } from 'reactstrap';
-import { getResource, classesUrl, submitGetRequest, createClass, updateResourceClasses } from 'network';
+import { getResource, classesUrl, submitGetRequest, createClass, updateResourceClasses as updateResourceClassesNetwork } from 'network';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
-import EditableHeader from 'components/EditableHeader';
+import { EditModeHeader, Title } from 'components/ViewPaper/ViewPaper';
+import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
 import InternalServerError from 'components/StaticPages/InternalServerError';
+import SameAsStatements from './SameAsStatements';
+import EditableHeader from 'components/EditableHeader';
+import ObjectStatements from 'components/ObjectStatements/ObjectStatements';
 import NotFound from 'components/StaticPages/NotFound';
+import { useLocation } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { resetStatementBrowser } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { EditModeHeader, Title } from 'components/ViewPaper/ViewPaper';
 import Confirm from 'reactstrap-confirm';
-import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
-import SameAsStatements from './SameAsStatements';
-import ObjectStatements from 'components/ObjectStatements/ObjectStatements';
+import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
 
-class ResourceDetails extends Component {
-    constructor(props) {
-        super(props);
+function ResourceDetails(props) {
+    const location = useLocation();
+    const [error, setError] = useState(null);
+    const [label, setLabel] = useState('');
+    const [classes, setClasses] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [editMode, setEditMode] = useState(false);
 
-        this.state = {
-            error: null,
-            label: '',
-            isLoading: true,
-            editMode: false,
-            classes: []
-        };
-    }
-
-    componentDidMount() {
-        this.findResource();
-    }
-
-    componentDidUpdate = prevProps => {
-        if (this.props.match.params.id !== prevProps.match.params.id) {
-            this.findResource();
-        }
-    };
-
-    findResource = () => {
-        this.setState({ isLoading: true });
-        getResource(this.props.match.params.id)
-            .then(responseJson => {
-                document.title = `${responseJson.label} - Resource - ORKG`;
-                const classesCalls = responseJson.classes.map(classResource => submitGetRequest(`${classesUrl}${classResource}`));
-                Promise.all(classesCalls).then(classes => {
-                    classes = orderBy(classes, [classLabel => classLabel.label.toLowerCase()], ['asc']);
-                    this.setState({ label: responseJson.label, isLoading: false, classes: classes });
+    useEffect(() => {
+        const findResource = async () => {
+            setIsLoading(true);
+            getResource(props.match.params.id)
+                .then(responseJson => {
+                    document.title = `${responseJson.label} - Resource - ORKG`;
+                    const classesCalls = responseJson.classes.map(classResource => submitGetRequest(`${classesUrl}${classResource}`));
+                    Promise.all(classesCalls).then(classes => {
+                        classes = orderBy(classes, [classLabel => classLabel.label.toLowerCase()], ['asc']);
+                        setLabel(responseJson.label);
+                        setClasses(classes);
+                        setIsLoading(false);
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    setLabel(null);
+                    setError(err);
+                    setIsLoading(false);
                 });
-            })
-            .catch(error => {
-                this.setState({ label: null, isLoading: false, error: error });
-            });
-    };
+        };
+        findResource();
+    }, [location, props.match.params.id]);
 
-    toggle = type => {
-        this.setState(prevState => ({
-            [type]: !prevState[type]
-        }));
-    };
-
-    handleClassSelect = async (selected, action) => {
+    const handleClassSelect = async (selected, action) => {
         if (action.action === 'create-option') {
             const result = await Confirm({
                 title: 'Are you sure you need a new class?',
@@ -74,116 +64,106 @@ class ResourceDetails extends Component {
                 selected[foundIndex] = newClass;
             }
         }
-        this.setState(
-            {
-                classes: !selected ? [] : selected
-            },
-            async () => {
-                await updateResourceClasses(this.props.match.params.id, this.state.classes.map(c => c.id));
-                toast.success('Resource classes updated successfully');
-            }
-        );
+        const newClasses = !selected ? [] : selected;
+        // Reset the statement browser and rely on React attribute 'key' to reinilize the statmeent browser
+        // (When a key changes, React will create a new component instance rather than update the current one)
+        props.resetStatementBrowser();
+        setClasses(newClasses);
+        await updateResourceClassesNetwork(props.match.params.id, newClasses.map(c => c.id));
+        toast.success('Resource classes updated successfully');
     };
 
-    handleHeaderChange = event => {
-        this.setState({ label: event.value });
+    const handleHeaderChange = event => {
+        setLabel(event.value);
     };
 
-    render() {
-        const id = this.props.match.params.id;
-        return (
-            <>
-                {this.state.isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
-                {!this.state.isLoading && this.state.error && <>{this.state.error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
-                {!this.state.isLoading && !this.state.error && (
-                    <Container className="mt-5 clearfix">
-                        {this.state.editMode && (
-                            <EditModeHeader className="box rounded-top">
-                                <Title>
-                                    Edit mode <span className="pl-2">Every change you make is automatically saved</span>
-                                </Title>
-                                <Button
-                                    className="float-left"
-                                    style={{ marginLeft: 1 }}
-                                    color="light"
-                                    size="sm"
-                                    onClick={() => this.toggle('editMode')}
-                                >
-                                    Stop editing
-                                </Button>
-                            </EditModeHeader>
-                        )}
-                        <div className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${this.state.editMode ? 'rounded-bottom' : 'rounded'}`}>
-                            <div className="mb-2">
-                                {!this.state.editMode ? (
-                                    <div className="pb-2 mb-3">
-                                        <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                            {this.state.label || (
-                                                <i>
-                                                    <small>No label</small>
-                                                </i>
-                                            )}
-                                            <Button className="float-right" color="darkblue" size="sm" onClick={() => this.toggle('editMode')}>
-                                                <Icon icon={faPen} /> Edit
-                                            </Button>
-                                        </h3>
-                                        {this.state.classes.length > 0 && (
-                                            <span style={{ fontSize: '90%' }}>
-                                                Classes:{' '}
-                                                {this.state.classes.map((classObject, index) => {
-                                                    const separator = index < this.state.classes.length - 1 ? ', ' : '';
-
-                                                    return (
-                                                        <i key={index}>
-                                                            {classObject.label}
-                                                            {separator}
-                                                        </i>
-                                                    );
-                                                })}
-                                            </span>
+    return (
+        <>
+            {isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
+            {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
+            {!isLoading && !error && (
+                <Container className="mt-5 clearfix">
+                    {editMode && (
+                        <EditModeHeader className="box rounded-top">
+                            <Title>
+                                Edit mode <span className="pl-2">Every change you make is automatically saved</span>
+                            </Title>
+                            <Button className="float-left" style={{ marginLeft: 1 }} color="light" size="sm" onClick={() => setEditMode(v => !v)}>
+                                Stop editing
+                            </Button>
+                        </EditModeHeader>
+                    )}
+                    <div className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
+                        <div className="mb-2">
+                            {!editMode ? (
+                                <div className="pb-2 mb-3">
+                                    <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                        {label || (
+                                            <i>
+                                                <small>No label</small>
+                                            </i>
                                         )}
-                                    </div>
-                                ) : (
-                                    <>
-                                        <EditableHeader id={id} value={this.state.label} onChange={this.handleHeaderChange} />
-                                        <FormGroup className="mb-4">
-                                            <Label>Classes:</Label>
-                                            <AutoComplete
-                                                allowCreate
-                                                requestUrl={classesUrl}
-                                                onItemSelected={this.handleClassSelect}
-                                                cacheOptions
-                                                isMulti
-                                                value={this.state.classes}
-                                            />
-                                            {this.state.editMode && <FormText>Specify the classes of the resource.</FormText>}
-                                        </FormGroup>
-                                    </>
-                                )}
-                            </div>
-                            <hr />
-                            <h3 className="h5">Statements</h3>
-                            <div className="clearfix">
-                                <StatementBrowser
-                                    enableEdit={this.state.editMode}
-                                    syncBackend={this.state.editMode}
-                                    openExistingResourcesInDialog={false}
-                                    initialResourceId={this.props.match.params.id}
-                                    initialResourceLabel={this.state.label}
-                                    newStore={true}
-                                    propertiesAsLinks={true}
-                                    resourcesAsLinks={true}
-                                />
+                                        <Button className="float-right" color="darkblue" size="sm" onClick={() => setEditMode(v => !v)}>
+                                            <Icon icon={faPen} /> Edit
+                                        </Button>
+                                    </h3>
+                                    {classes.length > 0 && (
+                                        <span style={{ fontSize: '90%' }}>
+                                            Classes:{' '}
+                                            {classes.map((classObject, index) => {
+                                                const separator = index < classes.length - 1 ? ', ' : '';
 
-                                <SameAsStatements />
-                            </div>
-                            <ObjectStatements resourceId={this.props.match.params.id} />
+                                                return (
+                                                    <i key={index}>
+                                                        {classObject.label}
+                                                        {separator}
+                                                    </i>
+                                                );
+                                            })}
+                                        </span>
+                                    )}
+                                </div>
+                            ) : (
+                                <>
+                                    <EditableHeader id={props.match.params.id} value={label} onChange={handleHeaderChange} />
+                                    <FormGroup className="mb-4">
+                                        <Label>Classes:</Label>
+                                        <AutoComplete
+                                            allowCreate
+                                            requestUrl={classesUrl}
+                                            onItemSelected={handleClassSelect}
+                                            cacheOptions
+                                            isMulti
+                                            value={classes}
+                                        />
+                                        {editMode && <FormText>Specify the classes of the resource.</FormText>}
+                                    </FormGroup>
+                                </>
+                            )}
                         </div>
-                    </Container>
-                )}
-            </>
-        );
-    }
+                        <hr />
+                        <h3 className="h5">Statements</h3>
+                        <div className="clearfix">
+                            <StatementBrowser
+                                key={`SB${classes.map(c => c.id).join(',')}`}
+                                enableEdit={editMode}
+                                syncBackend={editMode}
+                                openExistingResourcesInDialog={false}
+                                initialResourceId={props.match.params.id}
+                                initialResourceLabel={label}
+                                newStore={true}
+                                propertiesAsLinks={true}
+                                resourcesAsLinks={true}
+                            />
+
+                            <SameAsStatements />
+                        </div>
+                        <ObjectStatements resourceId={props.match.params.id} />
+                    </div>
+                </Container>
+            )}
+        </>
+    );
 }
 
 ResourceDetails.propTypes = {
@@ -191,7 +171,15 @@ ResourceDetails.propTypes = {
         params: PropTypes.shape({
             id: PropTypes.string.isRequired
         }).isRequired
-    }).isRequired
+    }).isRequired,
+    resetStatementBrowser: PropTypes.func.isRequired
 };
 
-export default ResourceDetails;
+const mapDispatchToProps = dispatch => ({
+    resetStatementBrowser: data => dispatch(resetStatementBrowser())
+});
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(ResourceDetails);
