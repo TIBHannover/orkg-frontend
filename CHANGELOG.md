@@ -3,6 +3,29 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.13](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.12...V0.13) - 2020-06-24
+
+### Merged
+
+- enhancement: Loading templates after updating classes in Resource details page [`#304`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/304)
+- Fix: Visiting the same predicate [`#301`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/301)
+- fix: Bug in skipping the help tour [`#302`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/302)
+- ux: Save button for templates header [`#305`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/305)
+- fix: Creating new properties not working [`#306`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/306)
+- fix(Search): character encoding, refactoring search form [`#303`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/303)
+- chore(lint): disallow unnecessary curly braces in JSX props [`#300`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/300)
+
+### Fixed
+
+- Merge branch '247-loading-templates-after-updating-classes-in-resource-details-page' into 'master' [`#247`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/247)
+- Merge branch '253-infinite-loop-when-clicking-description-of-the-description-predicate' into 'master' [`#253`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/253)
+- Merge branch '254-bug-in-skiping-the-help-tour' into 'master' [`#254`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/254)
+- Merge branch '251-save-button-for-templates-header' into 'master' [`#251`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/251)
+- Merge branch '256-creating-new-properties-not-working' into 'master' [`#256`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/256)
+- Merge branch '255-search-form-character-encoding' into 'master' [`#255`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/255)
+- Merge branch '250-disallow-unnecessary-curly-braces-in-jsx-props' into 'master' [`#250`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/250)
+
+---
 ## [0.12](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.11...V0.12) - 2020-06-19
 
 ### Merged
