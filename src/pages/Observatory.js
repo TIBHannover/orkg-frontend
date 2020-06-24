@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Container, ButtonGroup } from 'reactstrap';
-import { Alert, Col, Form, FormGroup, Row, Button } from 'reactstrap';
+import { Container } from 'reactstrap';
+import { Col, Row } from 'reactstrap';
 import { getUsersByObservatoryId, getOrganization, getResourcesByObservatoryId, getObservatorybyId } from 'network';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import InternalServerError from 'components/StaticPages/InternalServerError';
@@ -11,28 +11,7 @@ import { reverse } from 'named-urls';
 import VisibilitySensor from 'react-visibility-sensor';
 import Gravatar from 'react-gravatar';
 import { Link } from 'react-router-dom';
-import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-
-const SidebarStyledBox = styled.div`
-    flex-grow: 1;
-    overflow: hidden;
-    @media (max-width: 768px) {
-        margin-top: 20px;
-    }
-`;
-
-const AnimationContainer = styled(CSSTransition)`
-    &.fadeIn-enter {
-        opacity: 0;
-    }
-
-    &.fadeIn-enter.fadeIn-enter-active {
-        opacity: 1;
-        transition: 1s opacity;
-    }
-`;
 
 const StyledGravatar = styled(Gravatar)`
     border: 3px solid ${props => props.theme.avatarBorderColor};
@@ -59,21 +38,6 @@ const StyledScrollBar = styled.div`
     }
 `;
 
-const ObservatoryDetailTabs = styled.div`
-    .tab {
-        margin-bottom: 0;
-        padding: 15px;
-        color: #bebbac;
-        cursor: pointer;
-        border-bottom: 2px solid #fff;
-        &.active,
-        &:hover {
-            border-bottom: 2px solid #e86161;
-            color: #646464;
-        }
-    }
-`;
-
 const ResearchProblemButton = styled.span`
     white-space: normal;
     text-align: left;
@@ -87,6 +51,7 @@ class Observatory extends Component {
         this.state = {
             error: null,
             label: '',
+            description: '',
             isLoading: false,
             isLoadingContributors: false,
             isLoadingResources: false,
@@ -118,11 +83,10 @@ class Observatory extends Component {
         this.setState({ isLoading: true });
         getObservatorybyId(this.props.match.params.id)
             .then(observatory => {
-                //this.loadOrganizations(observatory.organizations)
-                //console.log(observatory.organizations);
                 document.title = `${observatory.name} - Details`;
                 this.setState({
                     label: observatory.name,
+                    description: observatory.description,
                     isLoading: false
                 });
                 this.loadOrganizations(observatory.organizations);
@@ -136,7 +100,6 @@ class Observatory extends Component {
         this.setState({ isLoadingResources: true });
         getResourcesByObservatoryId(this.props.match.params.id)
             .then(resources => {
-                console.log(resources);
                 this.setState({
                     resourcesList: resources,
                     isLoadingResources: false
@@ -162,33 +125,18 @@ class Observatory extends Component {
     };
 
     loadOrganizations = organizationsData => {
-        //console.log(organizationsData);
-        //var organizationsDetails = [];
         this.setState({ isLoadingOrganizations: true });
-        let organizationsDetails = [];
-        for (var i = 0; i < organizationsData.length; i++) {
-            //console.log(organizationsData[i].id);
-            //organizations[i] =
+        for (let i = 0; i < organizationsData.length; i++) {
             getOrganization(organizationsData[i].id).then(organization => {
                 this.setState({
                     organizationsList: [...this.state.organizationsList, organization]
                 });
-                //organizationsDetails.push(organization);
             });
         }
 
-        //console.log([organizationsDetails]);
-
         this.setState({
-            //organizationsList: organizationsDetails,
             isLoadingOrganizations: false
         });
-        console.log(this.state.organizationsList);
-        //console.log(organizations);
-        //})
-        //.catch(error => {
-        //  this.setState({ error: error, isLoadingOrganizations: false });
-        //});
     };
 
     barToggle = tab => {
@@ -198,88 +146,6 @@ class Observatory extends Component {
     };
 
     render = () => {
-        let currentTabContent;
-
-        // switch (this.state.activeTab) {
-        //     case 1:
-        //     default:
-        //         currentTabContent = (
-        //             <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-        //                 {!this.state.isLoadingContributors ? (
-        //                     <div className={'mb-6'}>
-        //                         <div className="pb-2 mb-6">
-        //                             {this.state.contributors.length > 0 ? (
-        //                                 <div style={{ paddingTop: 10 }}>
-        //                                     {this.state.contributors.map((user, index) => {
-        //                                         return (
-        //                                             <ShortRecord
-        //                                                 key={`user${index}`}
-        //                                                 header={user.display_name}
-        //                                                 href={reverse(ROUTES.USER_PROFILE, { userId: user.id })}
-        //                                             />
-        //                                         );
-        //                                     })}
-        //                                 </div>
-        //                             ) : (
-        //                                 <div className="mt-4">
-        //                                     <h5>No Contributors</h5>
-        //                                 </div>
-        //                             )}
-        //                         </div>
-        //                     </div>
-        //                 ) : (
-        //                     <div className="mt-4">
-        //                         <h5>Loading Contributors ...</h5>
-        //                     </div>
-        //                 )}
-        //             </AnimationContainer>
-        //         );
-        //         break;
-        //     case 2:
-        //         currentTabContent = (
-        //             <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-        //                 {!this.state.isLoadingResources ? (
-        //                     <div className="pb-2 mb-6">
-        //                         {this.state.resourcesList.length > 0 ? (
-        //                             <div style={{ paddingTop: 10 }}>
-        //                                 {this.state.resourcesList
-        //                                     .filter(resource => resource.classes.includes('Paper'))
-        //                                     .map((resource, index) => {
-        //                                         {
-        //                                             console.log(resource.classes);
-        //                                         }
-        //                                         {
-        //                                             /* {this.state.resourcesList.filter().map((resource, index) => { */
-        //                                         }
-        //                                         return (
-        //                                             <ShortRecord
-        //                                                 key={`resource${index}`}
-        //                                                 header={resource.label}
-        //                                                 href={
-        //                                                     resource.classes.includes(process.env.REACT_APP_CLASSES_PAPER)
-        //                                                         ? reverse(ROUTES.VIEW_PAPER, { resourceId: resource.id })
-        //                                                         : reverse(ROUTES.RESOURCE, { id: resource.id })
-        //                                                 }
-        //                                             />
-        //                                         );
-        //                                     })}
-        //                             </div>
-        //                         ) : (
-        //                             <div className="mt-4">
-        //                                 <h5>No Resources</h5>
-        //                             </div>
-        //                         )}
-        //                     </div>
-        //                 ) : (
-        //                     <div className="mt-4">
-        //                         <h5>Loading resources ...</h5>
-        //                     </div>
-        //                 )}
-        //             </AnimationContainer>
-        //         );
-        //         break;
-        // }
-
         return (
             <>
                 {console.log(this.state.organizationsList.length)}
@@ -289,19 +155,16 @@ class Observatory extends Component {
                     <Container className="mt-5 clearfix">
                         <VisibilitySensor onChange={this.handleShowHeaderBar}>
                             <Container className="d-flex align-items-center">
-                                <h1 className="h4 mt-4 mb-4 flex-grow-1">Observatory</h1>
+                                <h3 className="h4 mt-4 mb-4 flex-grow-1">Observatory</h3>
                             </Container>
                         </VisibilitySensor>
 
                         <div className={'box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5'}>
                             <h3>{this.state.label}</h3>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
-                            dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
-                            book.
+                            {this.state.description}
                         </div>
                         <br />
 
-                        {/* <Container> */}
                         <Row>
                             <Col md={8} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
                                 <div
@@ -315,7 +178,6 @@ class Observatory extends Component {
                                         <div className="pb-2 mb-6">
                                             {this.state.resourcesList.length > 0 ? (
                                                 <div style={{ paddingTop: 10 }}>
-                                                    {/* {this.state.resourcesList.map((resource, index) => { */}
                                                     {this.state.resourcesList
                                                         .filter(resource => resource.classes.includes(process.env.REACT_APP_CLASSES_PROBLEM))
                                                         .map((resource, index) => {
@@ -347,10 +209,7 @@ class Observatory extends Component {
                                 </div>
                             </Col>
                             <Col md={4} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
-                                <div
-                                    className="box rounded-lg p-3"
-                                    style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}
-                                >
+                                <div className="box rounded-lg p-3" style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
                                     <h5 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                         Organizations
                                     </h5>
@@ -358,11 +217,7 @@ class Observatory extends Component {
                                         <StyledScrollBar className="mb-6">
                                             {this.state.organizationsList.length > 0 ? (
                                                 <div>
-                                                    {/* {this.state.resourcesList.map((resource, index) => { */}
                                                     {this.state.organizationsList.map((organization, index) => {
-                                                        //{
-                                                        //console.log(organization, index);
-                                                        //s}
                                                         return (
                                                             <div
                                                                 className="mb-3"
@@ -375,9 +230,7 @@ class Observatory extends Component {
                                                             >
                                                                 <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.id })}>
                                                                     <img style={{ marginTop: 12 }} height="70" src={organization.logo} alt="" />
-                                                                    <br />
-                                                                    {' '}
-                                                                    {/* {organization.name} */}
+                                                                    <br />{' '}
                                                                 </Link>
                                                             </div>
                                                         );
@@ -397,8 +250,6 @@ class Observatory extends Component {
                                 </div>
                                 <div className="box rounded-lg mt-4 p-3" style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
                                     <h2 className="h5">Contributors</h2>
-                                    {/* </div> */}
-
                                     {!this.state.isLoadingContributors ? (
                                         <div className={'mb-6'}>
                                             <StyledScrollBar className="pb-2 mb-6">
@@ -433,7 +284,6 @@ class Observatory extends Component {
                                                                     </div>
 
                                                                     <hr style={{ width: '275px', marginBottom: '10px', marginTop: '10px' }} />
-
                                                                 </div>
                                                             );
                                                         })}
@@ -453,7 +303,6 @@ class Observatory extends Component {
                                 </div>
                             </Col>
                         </Row>
-                        {/* </Container> */}
 
                         <VisibilitySensor onChange={this.handleShowHeaderBar}>
                             <Container className="d-flex align-items-center">
@@ -492,12 +341,10 @@ class Observatory extends Component {
                                 <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                     Papers
                                 </h3>
-                                {/* </div> */}
                                 {!this.state.isLoadingResources ? (
                                     <div className="pb-2 mb-6">
                                         {this.state.resourcesList.length > 0 ? (
                                             <div style={{ paddingTop: 10 }}>
-                                                {/* {this.state.resourcesList.map((resource, index) => { */}
                                                 {this.state.resourcesList
                                                     .filter(resource => resource.classes.includes('Paper'))
                                                     .map((resource, index) => {

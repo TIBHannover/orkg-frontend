@@ -659,8 +659,8 @@ export const getOrganization = id => {
     return submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/`);
 };
 
-export const createOrganization = (organizationName, organizationLogo, createdBy) => {
-    return submitPostRequest(organizationsUrl, { 'Content-Type': 'application/json' }, { organizationName, organizationLogo, createdBy });
+export const createOrganization = (organizationName, organizationLogo, createdBy, url) => {
+    return submitPostRequest(organizationsUrl, { 'Content-Type': 'application/json' }, { organizationName, organizationLogo, createdBy, url });
 };
 
 export const getAllObservatoriesbyOrganizationId = id => {
@@ -683,8 +683,8 @@ export const getResourcesByObservatoryId = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/resources`);
 };
 
-export const createObservatory = (observatoryName, organizationId) => {
-    return submitPostRequest(observatoriesUrl, { 'Content-Type': 'application/json' }, { observatoryName, organizationId });
+export const createObservatory = (observatoryName, organizationId, description) => {
+    return submitPostRequest(observatoriesUrl, { 'Content-Type': 'application/json' }, { observatoryName, organizationId, description });
 };
 
 export const getContributorsByResourceId = id => {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Button } from 'reactstrap';
+import { Container, Row, Col, NavLink, Button } from 'reactstrap';
 import { getOrganization, getUsersByOrganizationId, getResourcesByObservatoryId, getAllObservatoriesbyOrganizationId } from 'network';
 import InternalServerError from 'components/StaticPages/InternalServerError';
 import { Link } from 'react-router-dom';
@@ -9,6 +9,8 @@ import PropTypes from 'prop-types';
 import SameAsStatements from './SameAsStatements';
 import styled from 'styled-components';
 import Gravatar from 'react-gravatar';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 
@@ -50,6 +52,7 @@ class OrganizationDetails extends Component {
         this.state = {
             error: null,
             label: '',
+            url: '',
             isLoading: false,
             isLoadingTotal: false,
             isLoadingResources: false,
@@ -66,7 +69,6 @@ class OrganizationDetails extends Component {
 
     componentDidMount() {
         this.findOrg();
-        //this.getTotalObservatories(this.props.match.params.id);
         this.loadResources();
         this.loadObservatories();
         this.loadContributors();
@@ -75,7 +77,6 @@ class OrganizationDetails extends Component {
     componentDidUpdate = prevProps => {
         if (this.props.match.params.id !== prevProps.match.params.id) {
             this.findOrg();
-            //this.getTotalObservatories(this.props.match.params.id);
             this.loadResources();
             this.loadObservatories();
             this.loadContributors();
@@ -86,12 +87,12 @@ class OrganizationDetails extends Component {
         this.setState({ isLoading: true });
         getOrganization(this.props.match.params.id)
             .then(responseJson => {
-                console.log(responseJson);
                 document.title = `${responseJson.name} - Organization - ORKG`;
                 this.setState({
                     label: responseJson.name,
-                    isLoading: false,
+                    url: responseJson.url,
                     image: responseJson.logo,
+                    isLoading: false,
                     createdBy: responseJson.created_by
                 });
             })
@@ -104,7 +105,6 @@ class OrganizationDetails extends Component {
         this.setState({ isLoadingResources: true });
         getResourcesByObservatoryId(this.props.match.params.id)
             .then(resources => {
-                console.log(resources);
                 this.setState({
                     resourcesList: resources,
                     isLoadingResources: false
@@ -151,17 +151,6 @@ class OrganizationDetails extends Component {
             });
     };
 
-    // getTotalObservatories = id => {
-    //     this.setState({ isLoadingTotal: true });
-    //     getAllObservatoriesbyOrganizationId(this.props.match.params.id)
-    //         .then(responseJson => {
-    //             this.setState({ totalObservatories: responseJson.length, isLoadingTotal: false });
-    //         })
-    //         .catch(error => {
-    //             this.setState({ totalObservatories: 0, isLoadingTotal: false });
-    //         });
-    // };
-
     render() {
         return (
             <>
@@ -172,11 +161,12 @@ class OrganizationDetails extends Component {
                         <div className={'box clearfix pt-4 pb-4 pl-5 pr-5'}>
                             <div className={'mb-2'}>
                                 <div className="pb-2 mb-3">
-                                    <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                        {this.state.label}
-
-                                        <img style={{ float: 'right', marginTop: 15 }} height="100" src={this.state.image} alt="" />
-                                    </h3>
+                                    <NavLink href={this.state.url} target="_blank" rel="noopener noreferrer">
+                                        <h4 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                            {this.state.label} <Icon size="sm" icon={faExternalLinkAlt} />
+                                            <img style={{ float: 'right' }} height="100" src={this.state.image} alt="" />{' '}
+                                        </h4>
+                                    </NavLink>
                                 </div>
                             </div>
                             <div className={'clearfix'}>
@@ -210,23 +200,20 @@ class OrganizationDetails extends Component {
                                         <div className="pb-2 mb-6">
                                             {this.state.observatories.length > 0 ? (
                                                 <div style={{ paddingTop: 10 }}>
-                                                    {/* {this.state.resourcesList.map((resource, index) => { */}
-                                                    {this.state.observatories
-                                                        // .filter(resource => resource.classes.includes(process.env.REACT_APP_CLASSES_PROBLEM))
-                                                        .map((observatory, index) => {
-                                                            return (
-                                                                <span key={index}>
-                                                                    {index + 1}
-                                                                    {'. '}
-                                                                    <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}>
-                                                                        <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
-                                                                            {observatory.name}
-                                                                        </ResearchProblemButton>
-                                                                    </Link>
-                                                                    <br />
-                                                                </span>
-                                                            );
-                                                        })}
+                                                    {this.state.observatories.map((observatory, index) => {
+                                                        return (
+                                                            <span key={index}>
+                                                                {index + 1}
+                                                                {'. '}
+                                                                <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}>
+                                                                    <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
+                                                                        {observatory.name}
+                                                                    </ResearchProblemButton>
+                                                                </Link>
+                                                                <br />
+                                                            </span>
+                                                        );
+                                                    })}
                                                 </div>
                                             ) : (
                                                 <div className="mt-4">
@@ -244,7 +231,6 @@ class OrganizationDetails extends Component {
                             <Col md={6} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
                                 <div className="box rounded-lg p-3" style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
                                     <h2 className="h5">Contributors</h2>
-                                    {/* </div> */}
 
                                     {!this.state.isLoadingContributors ? (
                                         <div className={'mb-6'}>
@@ -271,11 +257,6 @@ class OrganizationDetails extends Component {
                                                                                 {user.display_name}
                                                                             </Link>
                                                                             <br />
-                                                                            {/* {this.state.organizationsList */}
-                                                                            {/* .filter(o => o.id.includes(user.organization_id)) */}
-                                                                            {/* .map((o, index) => { */}
-                                                                            {/* return <div style={{ color: 'gray' }}>{o.name}</div>; */}
-                                                                            {/* })} */}
                                                                         </p>
                                                                     </div>
 

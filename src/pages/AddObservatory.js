@@ -18,6 +18,7 @@ class AddObservatory extends Component {
         this.state = {
             redirect: false,
             value: '',
+            description: '',
             observatoryId: ''
         };
     }
@@ -25,9 +26,10 @@ class AddObservatory extends Component {
     createNewObservatory = async () => {
         this.setState({ editorState: 'loading' });
         const value = this.state.value;
+        const description = this.state.description;
         if (value && value.length !== 0) {
             try {
-                const observatory = await createObservatory(value, this.props.match.params.id);
+                const observatory = await createObservatory(value, this.props.match.params.id, description);
                 this.navigateToObservatory(observatory.id);
             } catch (error) {
                 this.setState({ editorState: 'edit' });
@@ -84,6 +86,17 @@ class AddObservatory extends Component {
                                 id="ObservatoryLabel"
                                 disabled={loading}
                                 placeholder="Observatory name"
+                            />
+                            <br />
+                            <Label for="ObservatoryDescription">Observatory description</Label>
+                            <Input
+                                onChange={this.handleChange}
+                                onKeyUp={this.handleKeyUp}
+                                type="text"
+                                name="description"
+                                id="ObservatoryDescription"
+                                disabled={loading}
+                                placeholder="Observatory description"
                             />
                         </FormGroup>
                         <Button color="primary" onClick={this.createNewObservatory} outline className="mt-4 mb-2" block disabled={loading}>
