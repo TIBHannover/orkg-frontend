@@ -2,16 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'handsontable/dist/handsontable.full.css';
-import { HotTable, HotColumn } from '@handsontable/react';
+import { HotTable } from '@handsontable/react';
 import { updateTableData } from '../../actions/pdfAnnotation';
 import { useSelector, useDispatch } from 'react-redux';
-import { RendererComponent } from './RendererComponent';
 import EditorComponent from './EditorComponent';
+import Handsontable from 'handsontable';
+import { isString } from 'lodash';
 
 const TableEditor = props => {
     const dispatch = useDispatch();
     const tableData = useSelector(state => state.pdfAnnotation.tableData[props.id]);
-    const columns = tableData.length > 0 ? tableData[0] : [];
+    const cachedLabels = useSelector(state => state.pdfAnnotation.cachedLabels);
 
     const removeEmptyRows = () => {
         const tableInstance = props.setRef.current.hotInstance;
@@ -49,12 +50,36 @@ const TableEditor = props => {
         }
     };
 
-    const instance = props.setRef?.current?.hotInstance;
-    //console.log(instance);
+    const renderer = function(instance, td, row, col, prop, value, cellProperties) {
+        // I tried it with a nice RendererComponent, but after a lot of trying this just isn't supported well in Hansontable
+        // (e.g., having auto resized column etc. will not work. Something that is crucial for tables with an unknown column amount)
+        // So in the end, just using vanilla JS seems to be the only possible solution
+
+        let label = '';
+
+        if (value && isString(value) && (value.startsWith('orkg:') || value.startsWith('paper:') || value.startsWith('contribution:'))) {
+            value = value.replace(/^(orkg:)/, '');
+            label = cachedLabels[value] ?? value;
+            if (row !== 0) {
+                td.classList.add('text-primary');
+            } else {
+                td.classList.add('font-weight-bold');
+            }
+        } else {
+            label = value;
+            if (row === 0 && td.classList) {
+                td.classList.add('font-italic', 'text-muted');
+            }
+        }
+
+        Handsontable.renderers.TextRenderer.apply(this, [instance, td, row, col, prop, label, cellProperties]);
+
+        return td;
+    };
+
     return (
         <HotTable
             data={tableData}
-            cells={(row, col) => {}}
             rowHeaders={true}
             width="100%"
             height="auto"
@@ -62,7 +87,7 @@ const TableEditor = props => {
                 return `<div contenteditable="true">${columns[col]}</div>`;
             }}*/
             licenseKey="non-commercial-and-evaluation"
-            //outsideClickDeselects={false}
+            renderer={renderer}
             contextMenu={{
                 items: [
                     'row_above',
@@ -87,16 +112,22 @@ const TableEditor = props => {
                 ]
             }}
             stretchH={'all'}
-            //disableVisualSelection={true}
             ref={props.setRef}
             beforeChange={changes => dispatch(updateTableData(props.id, changes))}
         >
-            {columns.map(column => (
+            <EditorComponent hot-editor id={props.id} />
+            {/*
+                Unfortunately, HotColumn isn't very well supported and it breaks quite a lot of default functionality (e.g., adding columns via the content menu)
+                Requires: 
+                const columns = tableData.length > 0 ? tableData[0] : [];
+                const instance = props.setRef?.current?.hotInstance;
+                
+                Then the mapping
+                columns.map(column => (
                 <HotColumn>
                     <RendererComponent hot-renderer instance={instance} />
-                    <EditorComponent hot-editor id={props.id} />
                 </HotColumn>
-            ))}
+            ))*/}
         </HotTable>
     );
 };

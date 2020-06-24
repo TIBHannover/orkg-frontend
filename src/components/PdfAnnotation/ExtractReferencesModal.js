@@ -4,12 +4,15 @@ import PropTypes from 'prop-types';
 import { updateTableData } from '../../actions/pdfAnnotation';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
+import { isString } from 'lodash';
 
 const ExtractReferencesModal = props => {
     const [columns, setColumns] = useState([]);
     const [selectedColumn, setSelectedColumn] = useState('');
+    const [formattingType, setFormattingType] = useState('numerical');
     const tableData = useSelector(state => state.pdfAnnotation.tableData[props.id]);
     const parsedPdfData = useSelector(state => state.pdfAnnotation.parsedPdfData);
+    const cachedLabels = useSelector(state => state.pdfAnnotation.cachedLabels);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -22,10 +25,6 @@ const ExtractReferencesModal = props => {
         setColumns(columns);
         setSelectedColumn(columns[0]); // select the first option
     }, [tableData, setColumns, setSelectedColumn]);
-
-    const handleSelectColumn = e => {
-        setSelectedColumn(e.target.value);
-    };
 
     // builds an object to convert citation keys used in the paper's text (e.g., [10]) and maps them to the internal IDs
     const citationKeyToInternalId = () => {
@@ -62,9 +61,9 @@ const ExtractReferencesModal = props => {
             'paper:authors',
             'paper:publication_month',
             'paper:publication_year',
-            //'paper:research_field',
-            //'contribution:research_problem',
-            'paper:doi'
+            'paper:doi',
+            'paper:research_field',
+            'contribution:research_problem'
         ];
         const paperColumnsIndex = {};
 
@@ -80,23 +79,30 @@ const ExtractReferencesModal = props => {
         const tableUpdates = [];
         let foundCount = 0;
         for (const [index, row] of tableBody.entries()) {
-            const value = row[columnIndex];
+            const value = formatReferenceValue(row[columnIndex]);
+
+            if (!value) {
+                continue;
+            }
+
             const rowNumber = index + 1;
 
             const internalId = idMapping[value];
 
             // only continue if the citation has been found
-            if (internalId) {
-                const reference = allReferences[internalId];
+            if (!internalId) {
+                continue;
+            }
 
-                if (reference) {
-                    foundCount++;
-                    tableUpdates.push([rowNumber, paperColumnsIndex['paper:title'], null, reference['title']]);
-                    tableUpdates.push([rowNumber, paperColumnsIndex['paper:publication_month'], null, reference['publicationMonth']]);
-                    tableUpdates.push([rowNumber, paperColumnsIndex['paper:publication_year'], null, reference['publicationYear']]);
-                    tableUpdates.push([rowNumber, paperColumnsIndex['paper:doi'], null, reference['doi']]);
-                    tableUpdates.push([rowNumber, paperColumnsIndex['paper:authors'], null, reference['authors'].join(';')]);
-                }
+            const reference = allReferences[internalId];
+
+            if (reference) {
+                foundCount++;
+                tableUpdates.push([rowNumber, paperColumnsIndex['paper:title'], null, reference['title']]);
+                tableUpdates.push([rowNumber, paperColumnsIndex['paper:publication_month'], null, reference['publicationMonth']]);
+                tableUpdates.push([rowNumber, paperColumnsIndex['paper:publication_year'], null, reference['publicationYear']]);
+                tableUpdates.push([rowNumber, paperColumnsIndex['paper:doi'], null, reference['doi']]);
+                tableUpdates.push([rowNumber, paperColumnsIndex['paper:authors'], null, reference['authors'].join(';')]);
             }
 
             dispatch(updateTableData(props.id, tableUpdates));
@@ -108,6 +114,19 @@ const ExtractReferencesModal = props => {
             toast.success(`Successfully extracted ${foundCount} out of ${tableBody.length} references`);
         } else {
             toast.error('No references could be extracted automatically, please add them manually');
+        }
+    };
+
+    const formatReferenceValue = value => {
+        if (formattingType === 'numerical') {
+            value = value.match(/\[\d+\]/i);
+
+            if (!value || value.length === 0) {
+                return;
+            }
+            value = value[0];
+            value = value.replace('[', '').replace(']', '');
+            return value;
         }
     };
 
@@ -195,6 +214,14 @@ const ExtractReferencesModal = props => {
         return authorsParsed;
     };
 
+    const getColumnLabel = column => {
+        if (column && isString(column) && column.startsWith('orkg:')) {
+            column = column.replace(/^(orkg:)/, '');
+        }
+
+        return cachedLabels[column] ?? column;
+    };
+
     return (
         <Modal isOpen={props.isOpen} toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>Reference extraction</ModalHeader>
@@ -202,11 +229,22 @@ const ExtractReferencesModal = props => {
                 <Alert color="info">References used within a table can be extracted. The extracted data will be added to the table</Alert>
                 <Form>
                     <FormGroup>
-                        <Label for="exampleSelectMulti">Select the column that contains the citation key</Label>
-                        <Input type="select" value={selectedColumn} onChange={handleSelectColumn}>
+                        <Label for="columnSelect">Select the column that contains the citation key</Label>
+                        <Input type="select" value={selectedColumn} onChange={e => setSelectedColumn(e.target.value)} id="columnSelect">
                             {columns.map(column => (
-                                <option>{column}</option>
+                                <option>{getColumnLabel(column)}</option>
                             ))}
+                        </Input>
+                    </FormGroup>
+
+                    <FormGroup>
+                        <Label for="columnFormatting">Select the reference formatting</Label>
+                        <Input type="select" value={formattingType} onChange={e => setFormattingType(e.target.value)} id="columnFormatting">
+                            <option value="numerical">Numerical ([1]; [2])</option>
+                            <option value="author-names">Author last name (Doe, 2020; Doe and Reed, 2020; Doe et al., 2020)</option>
+                            <option value="author-names2">
+                                Author last name (Doe, 2020; Doe and Reed, 2020; Doe and Reed and Li 2020; Doe et al. 2020)
+                            </option>
                         </Input>
                     </FormGroup>
                 </Form>

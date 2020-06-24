@@ -3,26 +3,17 @@ import NativeListener from 'react-native-listener';
 import { BaseEditorComponent } from '@handsontable/react';
 import { CustomInput } from 'reactstrap';
 import nextId from 'react-id-generator';
-import { submitGetRequest, resourcesUrl, predicatesUrl } from 'network';
+import { submitGetRequest, resourcesUrl, predicatesUrl, getResourcesByClass } from 'network';
 import { connect } from 'react-redux';
 import { setLabelCache } from '../../actions/pdfAnnotation';
+import { createPredicate, createResource } from 'network';
+import { isString } from 'lodash';
 
 class EditorComponent extends BaseEditorComponent {
     constructor(props) {
         super(props);
 
         this.mainElementRef = React.createRef();
-        this.containerStyle = {
-            display: 'none',
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            background: '#fff',
-            border: '1px solid #000',
-            padding: '3px',
-            zIndex: 9999,
-            width: 300
-        };
 
         this.state = {
             value: '',
@@ -31,7 +22,10 @@ class EditorComponent extends BaseEditorComponent {
             col: 0,
             inputSearch: '',
             options: [],
-            type: ''
+            type: '',
+            top: 0,
+            left: 0,
+            show: false
         };
     }
 
@@ -46,18 +40,30 @@ class EditorComponent extends BaseEditorComponent {
     }
 
     open = () => {
+        const isResearchField = this.cellProperties?.instance?.getSourceDataAtCell(0, this.col) === 'paper:research_field';
+
+        let type = '';
+
+        if (this.row === 0) {
+            type = 'property';
+        } else if (isResearchField) {
+            type = 'researchField';
+        } else {
+            type = 'resource';
+        }
+
         this.setState({
             row: this.row,
             col: this.col,
-            type: this.row === 0 ? 'property' : 'resource'
+            type,
+            show: true
         });
-        this.mainElementRef.current.style.display = 'block';
     };
 
     close() {
-        return false;
-        // TODO: replace this by "show" state
-        //this.mainElementRef.current.style.display = 'none';
+        this.setState({
+            show: false
+        });
     }
 
     prepare(row, col, prop, td, originalValue, cellProperties) {
@@ -72,13 +78,14 @@ class EditorComponent extends BaseEditorComponent {
         // As the `prepare` method is triggered after selecting
         // any cell, we're updating the styles for the editor element,
         // so it shows up in the correct position.
-        this.mainElementRef.current.style.left = tdPosition.left - 3 + 'px';
-        this.mainElementRef.current.style.top = tdPosition.top + window.scrollY - 8 + 'px';
-
-        const isResource = originalValue && originalValue.startsWith('orkg:');
+        const isResource =
+            isString(originalValue) &&
+            (originalValue.startsWith('orkg:') || originalValue.startsWith('paper:') || originalValue.startsWith('contribution:'));
 
         this.setState({
-            isResource: isResource
+            isResource: isResource,
+            left: tdPosition.left - 3 + 'px',
+            top: tdPosition.top + window.scrollY - 8 + 'px'
         });
     }
 
@@ -91,17 +98,36 @@ class EditorComponent extends BaseEditorComponent {
     };
 
     handleSearchChange = async e => {
-        const value = e.target.value;
+        let value = e.target.value;
 
         for (const option of this.state.options) {
             if (option.id === value) {
-                this.setState({ value: `orkg:${value}` }, () => {
-                    this.props.setLabelCache({
-                        id: option.id,
-                        label: option.label
-                    });
-                    this.finishEditing();
-                });
+                if (value === 'Create new property:') {
+                    value = await this.confirmCreatePredicate(option.label);
+
+                    if (!value) {
+                        return;
+                    }
+                } else if (value === 'Create new resource:') {
+                    value = await this.confirmCreateResource(option.label);
+                    if (!value) {
+                        return;
+                    }
+                }
+
+                this.setState(
+                    {
+                        value: `orkg:${value}`
+                    },
+                    () => {
+                        this.finishEditing();
+
+                        this.props.setLabelCache({
+                            id: value,
+                            label: option.label
+                        });
+                    }
+                );
                 return;
             }
         }
@@ -111,18 +137,61 @@ class EditorComponent extends BaseEditorComponent {
         });
     };
 
+    confirmCreatePredicate = async label => {
+        const result = window.confirm('Are you sure you want to create a new property?');
+
+        if (result) {
+            const newPredicate = await createPredicate(label);
+            return newPredicate.id;
+        }
+
+        return false;
+    };
+
+    confirmCreateResource = async label => {
+        const result = window.confirm('Are you sure you want to create a new resource?');
+
+        if (result) {
+            const newResource = await createResource(label);
+            return newResource.id;
+        }
+
+        return false;
+    };
+
     loadResults = async () => {
-        const url = this.state.type === 'resource' ? resourcesUrl : predicatesUrl;
-        const responseJson = await submitGetRequest(url + '?q=' + encodeURIComponent(this.state.value));
-
+        const { type, value } = this.state;
+        const url = type === 'resource' || type === 'researchField' ? resourcesUrl : predicatesUrl;
+        let responseJson = [];
+        if (type === 'researchField') {
+            responseJson = await getResourcesByClass({
+                id: process.env.REACT_APP_CLASSES_RESEARCH_FIELD,
+                q: encodeURIComponent(value),
+                items: 10
+            });
+        } else {
+            responseJson = await submitGetRequest(url + '?q=' + encodeURIComponent(value));
+        }
         const options = [];
+        let propertyExists = false;
 
-        responseJson.map(item =>
-            options.push({
+        responseJson.map(item => {
+            if (type === 'property' && value.toLowerCase() === item.label.toLowerCase()) {
+                propertyExists = true;
+            }
+            return options.push({
                 id: item.id,
                 label: item.label
-            })
-        );
+            });
+        });
+
+        // ensure "add options" is hidden when property already exists
+        if (type === 'resource' || (type === 'property' && !propertyExists)) {
+            options.push({
+                id: 'Create new ' + type + ':',
+                label: value
+            });
+        }
 
         this.setState({ options });
     };
@@ -149,21 +218,32 @@ class EditorComponent extends BaseEditorComponent {
             value = this.props.cachedLabels[valueClean];
         }
 
+        const containerStyle = {
+            display: this.state.show ? 'block' : 'none',
+            position: 'absolute',
+            left: this.state.left,
+            top: this.state.top,
+            background: '#fff',
+            border: '1px solid #000',
+            padding: '3px',
+            zIndex: 9999,
+            width: 300
+        };
+
         return (
             <NativeListener onMouseDown={this.stopMousedownPropagation}>
-                <div style={this.containerStyle} ref={this.mainElementRef} id="editorElement">
-                    {this.state.isResource || this.state.type === 'property' ? (
+                <div style={containerStyle} ref={this.mainElementRef} id="editorElement">
+                    {this.state.isResource || this.state.type === 'property' || this.state.type === 'researchField' ? (
                         <>
                             <input
-                                list="browsers"
-                                id="myBrowser"
-                                name="myBrowser"
+                                list="options"
                                 value={value}
                                 onChange={this.handleSearchChange}
+                                onClick={this.handleSearchChange}
                                 style={{ width: '100%' }}
                                 placeholder="Start searching now..."
                             />
-                            <datalist id="browsers">
+                            <datalist id="options">
                                 {this.state.options.map(({ id, label }) => (
                                     <option value={`${id}`}>{label}</option>
                                 ))}

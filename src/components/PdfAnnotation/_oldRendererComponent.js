@@ -30,7 +30,7 @@ export function RendererComponent(props) {
         return <span className="text-primary">{label}</span>;
     }
 
-    return <>{value}</>;
+    return <div>{value}</div>;
 }
 
 RendererComponent.propTypes = {
