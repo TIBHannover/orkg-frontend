@@ -329,7 +329,7 @@ class GeneralData extends Component {
             this.props.closeTour();
         } else {
             this.props.cookies.set('taketourClosed', true);
-            this.setState({ showHelpButton: true }, () => this.props.openTour());
+            this.setState({ showHelpButton: true });
         }
     };
 
@@ -716,7 +716,6 @@ class GeneralData extends Component {
                         rounded={10}
                         onRequestClose={() => {
                             this.enableBody();
-                            this.props.closeTour();
                             this.setState({ showHelpButton: false });
                         }}
                         isOpen={this.state.showHelpButton}
