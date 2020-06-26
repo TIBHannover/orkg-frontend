@@ -367,8 +367,8 @@ export const getAllClasses = () => {
     return submitGetRequest(`${classesUrl}`);
 };
 
-export const saveFullPaper = data => {
-    return submitPostRequest(`${url}papers/`, { 'Content-Type': 'application/json' }, data);
+export const saveFullPaper = (data, mergeIfExists = false) => {
+    return submitPostRequest(`${url}papers/?mergeIfExists=${mergeIfExists}`, { 'Content-Type': 'application/json' }, data);
 };
 
 export const signInWithEmailAndPassword = async (email, password) => {

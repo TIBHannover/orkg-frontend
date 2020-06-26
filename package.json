@@ -199,10 +199,6 @@
             ],
             "prefer-const": [
                 1
-            ],
-            "complexity": [
-                1,
-                11
             ]
         }
     }

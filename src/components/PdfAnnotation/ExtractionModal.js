@@ -10,7 +10,8 @@ import { setTableData } from '../../actions/pdfAnnotation';
 import { toast } from 'react-toastify';
 import { readString } from 'react-papaparse';
 import { useSelector, useDispatch } from 'react-redux';
-import { zip } from 'lodash';
+import { zip, omit, isString } from 'lodash';
+import { saveFullPaper, getStatementsBySubject } from 'network';
 
 const ExtractionModal = props => {
     const [loading, setLoading] = useState(false);
@@ -87,23 +88,6 @@ const ExtractionModal = props => {
         setExtractReferencesModalOpen(!extractReferencesModalOpen);
     };
 
-    /*const confirmClose = async () => {
-        // only show the warning if the papers aren't imported yet
-        if (!importData) {
-            const confirm = await Confirm({
-                title: 'Are you sure?',
-                message: 'The changes you made will be lost after closing this popup',
-                cancelColor: 'light'
-            });
-
-            if (confirm) {
-                props.toggle();
-            }
-        } else {
-            props.toggle();
-        }
-    };*/
-
     const handleImportData = async () => {
         const confirm = await Confirm({
             title: 'Are you sure?',
@@ -112,7 +96,8 @@ const ExtractionModal = props => {
         });
 
         if (confirm) {
-            if (!editorRef.current) {
+            importTableData();
+            /*if (!editorRef.current) {
                 return;
             }
 
@@ -151,8 +136,156 @@ const ExtractionModal = props => {
                 })
                 .catch(err => {
                     console.log(err);
-                });
+                });*/
         }
+    };
+
+    const importTableData = async () => {
+        console.log('tableData', tableData);
+
+        const researchProblemPredicate = process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM;
+        const header = tableData[0];
+        let createdContributions = [];
+
+        if (!header.includes('paper:title')) {
+            alert('Paper titles are missing. Make sure to add metadata for each paper (using the "Extract references" button)');
+            return;
+        }
+
+        setLoading(true);
+
+        for (const [index, row] of tableData.entries()) {
+            if (index === 0) {
+                continue;
+            }
+
+            // make use of an array for cells, in case multiple columns exist with the same label
+            let rowObject = {};
+            for (const [index, headerItem] of header.entries()) {
+                if (!(headerItem in rowObject)) {
+                    rowObject[headerItem] = [];
+                }
+                rowObject[headerItem].push(row[index]);
+            }
+
+            const title = getFirstValue(rowObject, 'paper:title');
+            const authors = getFirstValue(rowObject, 'paper:authors')
+                .split(';')
+                .map(name => ({ label: name }));
+            const publicationMonth = getFirstValue(rowObject, 'paper:publication_month');
+            const publicationYear = getFirstValue(rowObject, 'paper:publication_year');
+            const doi = getFirstValue(rowObject, 'paper:doi');
+            let researchField = getFirstValue(rowObject, 'paper:research_field', process.env.REACT_APP_RESEARCH_FIELD_MAIN);
+            let researchProblem = getFirstValue(rowObject, 'contribution:research_problem');
+
+            if (!title) {
+                continue;
+            }
+
+            rowObject = omit(rowObject, [
+                'paper:title',
+                'paper:authors',
+                'paper:publication_month',
+                'paper:publication_year',
+                'paper:doi',
+                'paper:research',
+                'contribution:research_problem'
+            ]);
+
+            let contributionStatements = {};
+
+            // replace :orkg prefix in research field
+            if (isString(researchField) && researchField.startsWith('orkg:')) {
+                researchField = researchField.replace(/^(orkg:)/, '');
+            }
+
+            // add research problem
+            if (researchProblem && isString(researchProblem)) {
+                let problemObject = {};
+                if (researchProblem.startsWith('orkg:')) {
+                    researchProblem = researchProblem.replace(/^(orkg:)/, '');
+                    problemObject = {
+                        '@id': researchProblem
+                    };
+                }
+
+                contributionStatements[researchProblemPredicate] = [problemObject];
+            }
+
+            for (const property in rowObject) {
+                for (let value of rowObject[property]) {
+                    // don't add empty values and don't add if a property is not mapped
+                    if (!value || !isString(property) || !property.startsWith('orkg:')) {
+                        continue;
+                    }
+
+                    const isResource = isString(value) && value.startsWith('orkg:');
+                    const propertyId = property.replace(/^(orkg:)/, '');
+                    value = isResource ? value.replace(/^(orkg:)/, '') : value;
+
+                    if (!(propertyId in contributionStatements)) {
+                        contributionStatements[propertyId] = [];
+                    }
+
+                    if (isResource) {
+                        contributionStatements[propertyId].push({
+                            '@id': value
+                        });
+                    } else {
+                        contributionStatements[propertyId].push({
+                            text: value
+                        });
+                    }
+                }
+            }
+
+            const paperObj = {
+                paper: {
+                    title,
+                    doi,
+                    authors,
+                    publicationMonth,
+                    publicationYear,
+                    researchField,
+                    url: '',
+                    publishedIn: '',
+                    contributions: [
+                        {
+                            name: 'Contribution',
+                            values: contributionStatements
+                        }
+                    ]
+                }
+            };
+
+            try {
+                const paper = await saveFullPaper(paperObj, true);
+                const paperStatements = await getStatementsBySubject({ id: paper.id });
+
+                for (const statement of paperStatements) {
+                    if (statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION) {
+                        createdContributions.push({
+                            paperId: paper.id,
+                            contributionId: statement.object.id
+                        });
+                        break;
+                    }
+                }
+            } catch (e) {
+                console.log(e);
+                toast.error('Something went wrong while adding the paper: ' + title);
+            }
+        }
+        const comparisonUrl = '/comparison?contributions=' + createdContributions.map(entry => entry.contributionId);
+        alert(comparisonUrl);
+        console.log(comparisonUrl);
+        setLoading(false);
+
+        toast.success(`Successfully imported papers into the ORKG`);
+    };
+
+    const getFirstValue = (object, key, defaultValue = '') => {
+        return key in object && object[key].length && object[key][0] ? object[key][0] : defaultValue;
     };
 
     const transposeTable = () => {

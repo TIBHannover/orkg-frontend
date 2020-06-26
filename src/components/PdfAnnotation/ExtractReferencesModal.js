@@ -118,7 +118,7 @@ const ExtractReferencesModal = props => {
     };
 
     const formatReferenceValue = value => {
-        if (formattingType === 'numerical') {
+        if (formattingType === 'numerical' && isString(value)) {
             value = value.match(/\[\d+\]/i);
 
             if (!value || value.length === 0) {
