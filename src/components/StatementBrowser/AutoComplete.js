@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Creatable from 'react-select/creatable';
 import { AsyncPaginateBase } from 'react-select-async-paginate';
 import { components } from 'react-select';
+import { compareOption } from 'utils';
 import styled, { withTheme } from 'styled-components';
 
 export const StyledAutoCompleteInputFormControl = styled.div`
@@ -277,15 +278,6 @@ class AutoComplete extends Component {
                     </StyledSelectOption>
                 </components.Option>
             );
-        };
-
-        // Creatable with adding new options : https://codesandbox.io/s/6pznz
-        // Builtins https://github.com/JedWatson/react-select/blob/d2a820efc70835adf864169eebc76947783a15e2/packages/react-select/src/Creatable.js
-        const compareOption = (inputValue = '', option) => {
-            const candidate = String(inputValue).toLowerCase();
-            const optionValue = String(option.value).toLowerCase();
-            const optionLabel = String(option.label).toLowerCase();
-            return optionValue === candidate || optionLabel === candidate;
         };
 
         return (

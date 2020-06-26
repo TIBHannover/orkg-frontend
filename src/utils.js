@@ -490,3 +490,16 @@ export const similarPropertiesByLabel = (propertyLabel, propertyData) => {
     });
     return uniq(result);
 };
+
+/**
+ * Compare input value to select options
+ * Builtins https://github.com/JedWatson/react-select/blob/d2a820efc70835adf864169eebc76947783a15e2/packages/react-select/src/Creatable.js
+ * @param {String} propertyLabel property label
+ * @param {Array} propertyData property comparison data
+ */
+export const compareOption = (inputValue = '', option) => {
+    const candidate = String(inputValue).toLowerCase();
+    const optionValue = String(option.value).toLowerCase();
+    const optionLabel = String(option.label).toLowerCase();
+    return optionValue === candidate || optionLabel === candidate;
+};
