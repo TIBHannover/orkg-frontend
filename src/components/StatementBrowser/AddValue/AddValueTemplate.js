@@ -36,7 +36,21 @@ export default function AddValueTemplate(props) {
 
     const handleCreateExistingLabel = (inputValue, selectOptions) => {
         //check if label exists
-        if (uniqueLabel && inputValue && selectOptions.map(s => s.label.toLowerCase()).includes(inputValue.toLowerCase())) {
+        if (
+            uniqueLabel &&
+            inputValue &&
+            selectOptions
+                .map(s =>
+                    String(s.label)
+                        .trim()
+                        .toLowerCase()
+                )
+                .includes(
+                    String(inputValue)
+                        .trim()
+                        .toLowerCase()
+                )
+        ) {
             setDisabledCreate(true);
         } else {
             setDisabledCreate(false);
@@ -282,7 +296,7 @@ export default function AddValueTemplate(props) {
                             </StyledButton>
                             <StyledButton
                                 outline
-                                disabled={disabledCreate}
+                                disabled={!inputValue || disabledCreate}
                                 onClick={() => {
                                     onSubmit();
                                 }}
