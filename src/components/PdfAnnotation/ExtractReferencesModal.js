@@ -28,9 +28,8 @@ const ExtractReferencesModal = props => {
 
     // builds an object to convert citation keys used in the paper's text (e.g., [10]) and maps them to the internal IDs
     const citationKeyToInternalId = () => {
-        const references = parsedPdfData.querySelectorAll('ref[type="bibr"]');
-
         const mapping = {};
+        const references = parsedPdfData.querySelectorAll('ref[type="bibr"]');
 
         for (const reference of references) {
             const internalId = reference.getAttribute('target');
@@ -38,6 +37,7 @@ const ExtractReferencesModal = props => {
             if (!internalId) {
                 continue;
             }
+
             const internalIdClean = internalId.replace('#', '');
             const citationKey = reference.innerHTML;
             const citationKeyClean = citationKey.replace('[', '').replace(']', '');
@@ -46,7 +46,6 @@ const ExtractReferencesModal = props => {
                 mapping[citationKeyClean] = internalIdClean;
             }
         }
-
         return mapping;
     };
 
@@ -87,7 +86,12 @@ const ExtractReferencesModal = props => {
 
             const rowNumber = index + 1;
 
-            const internalId = idMapping[value];
+            let internalId = '';
+            if (formattingType === 'numerical') {
+                internalId = idMapping[value];
+            } else {
+                internalId = value;
+            }
 
             // only continue if the citation has been found
             if (!internalId) {
@@ -127,6 +131,15 @@ const ExtractReferencesModal = props => {
             value = value[0];
             value = value.replace('[', '').replace(']', '');
             return value;
+        } else if (formattingType === 'author-names' && isString(value)) {
+            value = value.replace(/\s/g, ''); // remove spaces
+            value = value.replace('&amp;', '&');
+            value = value.replace('(', '');
+            value = value.replace(')', '');
+            value = value.replace('.', '');
+            value = value.replace(',', '');
+            value = value.toLowerCase();
+            return value;
         }
     };
 
@@ -135,8 +148,6 @@ const ExtractReferencesModal = props => {
         const referencesParsed = {};
 
         for (const reference of references) {
-            const id = reference.getAttribute('xml:id');
-
             let title = '';
             let doi = '';
             let publicationMonth = '';
@@ -171,6 +182,13 @@ const ExtractReferencesModal = props => {
             // authors
             authors = parseAuthors(reference);
 
+            let id = '';
+            if (formattingType === 'numerical') {
+                id = reference.getAttribute('xml:id');
+            } else {
+                id = generateCitationKeyFromAuthors(reference) + publicationYear;
+            }
+
             referencesParsed[id] = {
                 title,
                 doi,
@@ -181,6 +199,40 @@ const ExtractReferencesModal = props => {
         }
 
         return referencesParsed;
+    };
+
+    const generateCitationKeyFromAuthors = reference => {
+        const authors = reference.querySelectorAll('analytic author');
+
+        let key = '';
+
+        for (const [index, author] of authors.entries()) {
+            let lastName = '';
+
+            const _lastName = author.querySelector('surname');
+            if (_lastName) {
+                lastName = _lastName.innerHTML;
+            }
+
+            if (index === 0) {
+                key = lastName;
+
+                if (formattingType === 'author-names') {
+                    if (authors.length >= 2) {
+                        key = key + 'etal';
+                    }
+                    break;
+                }
+            } else if (index === 1 && authors.length === 2) {
+                key = key + 'and' + lastName;
+            } else if (index === 2) {
+                key = key + 'etal';
+                break;
+            }
+        }
+        key = isString(key) && key.toLowerCase();
+
+        return key;
     };
 
     const parseAuthors = reference => {
@@ -241,8 +293,9 @@ const ExtractReferencesModal = props => {
                         <Label for="columnFormatting">Select the reference formatting</Label>
                         <Input type="select" value={formattingType} onChange={e => setFormattingType(e.target.value)} id="columnFormatting">
                             <option value="numerical">Numerical ([1]; [2])</option>
-                            <option value="author-names">Author last name (Doe, 2020; Doe and Reed, 2020; Doe et al., 2020)</option>
-                            <option value="author-names2">
+                            <option value="author-names">Author last name (Doe, 2020; Doe et al., 2020)</option>
+                            <option value="author-names2">Author last name (Doe, 2020; Doe and Reed, 2020; Doe et al., 2020)</option>
+                            <option value="author-names3">
                                 Author last name (Doe, 2020; Doe and Reed, 2020; Doe and Reed and Li 2020; Doe et al. 2020)
                             </option>
                         </Input>
