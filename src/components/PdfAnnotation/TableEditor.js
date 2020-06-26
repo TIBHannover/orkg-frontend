@@ -32,19 +32,20 @@ const TableEditor = props => {
             const firstSelection = selection[0];
             const selectionStart = firstSelection.start;
             const selectionEnd = firstSelection.end;
+            const colAmount = selectionEnd.col - selectionStart.col + 1;
 
-            // only support merging in the same column for now
-            if (selectionStart.col === selectionEnd.col) {
+            for (let i = 0; i < colAmount; i++) {
+                const col = selectionStart.col + i;
                 const tableUpdates = [];
-                let newValue = tableData[selectionStart.row][selectionStart.col];
+                let newValue = tableData[selectionStart.row][col];
                 const rowAmount = selectionEnd.row - selectionStart.row;
 
                 for (let i = 1; i <= rowAmount; i++) {
-                    tableUpdates.push([selectionStart.row + i, selectionEnd.col, null, '']);
-                    newValue += ' ' + tableData[selectionStart.row + i][selectionStart.col];
+                    tableUpdates.push([selectionStart.row + i, col, null, '']);
+                    newValue += ' ' + tableData[selectionStart.row + i][col];
                 }
 
-                tableUpdates.push([selectionStart.row, selectionStart.col, null, newValue]);
+                tableUpdates.push([selectionStart.row, col, null, newValue]);
                 dispatch(updateTableData(props.id, tableUpdates));
             }
         }
