@@ -150,7 +150,7 @@ class AutoComplete extends Component {
                 newProperties = newProperties.filter(({ label, classes }) => {
                     return (
                         label.toLowerCase().includes(value.trim().toLowerCase()) &&
-                        (!this.props.optionsClass || (classes.length > 0 && classes.include?.(this.props.optionsClass)))
+                        (!this.props.optionsClass || (classes.length > 0 && classes.includes?.(this.props.optionsClass)))
                     );
                 }); // ensure the label of the new property contains the search value and from the same class
 
@@ -280,12 +280,18 @@ class AutoComplete extends Component {
         };
 
         // Creatable with adding new options : https://codesandbox.io/s/6pznz
-        const Select = this.props.allowCreate ? Creatable : undefined;
+        // Builtins https://github.com/JedWatson/react-select/blob/d2a820efc70835adf864169eebc76947783a15e2/packages/react-select/src/Creatable.js
+        const compareOption = (inputValue = '', option) => {
+            const candidate = String(inputValue).toLowerCase();
+            const optionValue = String(option.value).toLowerCase();
+            const optionLabel = String(option.label).toLowerCase();
+            return optionValue === candidate || optionLabel === candidate;
+        };
 
         return (
             <StyledAutoCompleteInputFormControl className={`form-control ${this.props.cssClasses ? this.props.cssClasses : 'default'}`}>
                 <AsyncPaginateBase
-                    SelectComponent={Select}
+                    SelectComponent={Creatable}
                     value={this.state.inputValue}
                     loadOptions={this.loadOptions}
                     additional={this.defaultAdditional}
@@ -305,6 +311,21 @@ class AutoComplete extends Component {
                     menuIsOpen={this.state.menuIsOpen}
                     onMenuOpen={this.onMenuOpen}
                     onMenuClose={this.onMenuClose}
+                    isValidNewOption={(inputValue, selectValue, selectOptions) => {
+                        if (this.props.handleCreateExistingLabel) {
+                            // to disable the create button
+                            this.props.handleCreateExistingLabel(inputValue, selectOptions);
+                        }
+                        if (!this.props.allowCreate) {
+                            return false;
+                        } else {
+                            return !(
+                                !inputValue ||
+                                selectValue.some(option => compareOption(inputValue, option)) ||
+                                selectOptions.some(option => compareOption(inputValue, option))
+                            );
+                        }
+                    }}
                 />
             </StyledAutoCompleteInputFormControl>
         );
@@ -331,7 +352,8 @@ AutoComplete.propTypes = {
     cssClasses: PropTypes.string,
     hideAfterSelection: PropTypes.bool,
     theme: PropTypes.object.isRequired,
-    innerRef: PropTypes.func
+    innerRef: PropTypes.func,
+    handleCreateExistingLabel: PropTypes.func
 };
 
 AutoComplete.defaultProps = {

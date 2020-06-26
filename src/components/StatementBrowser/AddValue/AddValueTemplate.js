@@ -30,6 +30,19 @@ export default function AddValueTemplate(props) {
     const [formFeedback, setFormFeedback] = useState(null);
     const [templateIsLoading, setTemplateIsLoading] = useState(false); // to show loading indicator of the template if the value class has a template
 
+    // uniqueLabel is set to true when it's a research problem
+    const [uniqueLabel, setuniqueLabel] = useState(props.valueClass && props.valueClass.id === process.env.REACT_APP_CLASSES_PROBLEM ? true : false);
+    const [disabledCreate, setDisabledCreate] = useState(false);
+
+    const handleCreateExistingLabel = (inputValue, selectOptions) => {
+        //check if label exists
+        if (uniqueLabel && inputValue && selectOptions.map(s => s.label.toLowerCase()).includes(inputValue.toLowerCase())) {
+            setDisabledCreate(true);
+        } else {
+            setDisabledCreate(false);
+        }
+    };
+
     useEffect(() => {
         if (valueType === 'literal' && literalInputRef.current) {
             literalInputRef.current.focus();
@@ -41,6 +54,10 @@ export default function AddValueTemplate(props) {
     useEffect(() => {
         setValueType(props.isLiteral ? 'literal' : 'object');
     }, [props.isLiteral]);
+
+    useEffect(() => {
+        setuniqueLabel(props.valueClass && props.valueClass.id === process.env.REACT_APP_CLASSES_PROBLEM ? true : false);
+    }, [props.valueClass]);
 
     useEffect(() => {
         if (!showAddValue) {
@@ -230,6 +247,7 @@ export default function AddValueTemplate(props) {
                                     }
                                 }}
                                 innerRef={ref => (resourceInputRef.current = ref)}
+                                handleCreateExistingLabel={handleCreateExistingLabel}
                             />
                         ) : (
                             <InputField
@@ -264,11 +282,18 @@ export default function AddValueTemplate(props) {
                             </StyledButton>
                             <StyledButton
                                 outline
+                                disabled={disabledCreate}
                                 onClick={() => {
                                     onSubmit();
                                 }}
                             >
-                                Create
+                                {disabledCreate ? (
+                                    <Tippy content="Please use existing research problem." arrow={true}>
+                                        <span>Create</span>
+                                    </Tippy>
+                                ) : (
+                                    'Create'
+                                )}
                             </StyledButton>
                         </InputGroupAddon>
                     </InputGroup>
