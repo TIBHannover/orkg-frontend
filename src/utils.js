@@ -118,69 +118,55 @@ export const get_error_message = (errors, field = null) => {
  *
  * @param {Array} paperStatements
  */
+export const getPaperData_ViewPaper = (id, label, paperStatements) => {
+    const researchField = getResearchFieldViewPaper(paperStatements);
+    const publishedIn = getPublishedIn(paperStatements);
+    const [publicationYear, publicationYearResourceId] = getPublicationYear(paperStatements);
+
+    const authors = getAuthors(paperStatements);
+    const contributions = getContributions(paperStatements);
+
+    // publication month
+    const [publicationMonth, publicationMonthResourceId] = getPublicationMonth(paperStatements);
+    // DOI
+    const [doi, doiResourceId] = getDOI(paperStatements);
+    //url
+    const [url, urlResourceId] = getURL(paperStatements);
+
+    return {
+        title: label,
+        paperResourceId: id,
+        contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
+        authors: authors.reverse(), // statements are ordered desc, so first author is last => thus reverse
+        publicationMonth: parseInt(publicationMonth),
+        publicationMonthResourceId,
+        publicationYear: parseInt(publicationYear),
+        publicationYearResourceId,
+        doi,
+        doiResourceId,
+        researchField,
+        publishedIn,
+        url,
+        urlResourceId
+    };
+};
+
+/**
+ * Parse paper statements and return a a paper object
+ * @param {String} id
+ * @param {String} label
+ * @param {Array} paperStatements
+ */
+
 export const getPaperData = (id, label, paperStatements) => {
     // research field
-    let researchField = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
-    if (researchField.length > 0) {
-        researchField = researchField[0];
-    }
-    // publication year
-    let publicationYear = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
-    if (publicationYear.length > 0) {
-        publicationYear = publicationYear[0].object.label;
-    } else {
-        publicationYear = '';
-    }
-    // publication month
-    let publicationMonth = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
-    if (publicationMonth.length > 0) {
-        publicationMonth = publicationMonth[0].object.label;
-    } else {
-        publicationMonth = '';
-    }
-    // authors
-    const authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
-    const authorNamesArray = [];
-    if (authors.length > 0) {
-        for (const author of authors) {
-            authorNamesArray.push({
-                id: author.object.id,
-                statementId: author.id,
-                class: author.object._class,
-                label: author.object.label,
-                classes: author.object.classes,
-                created_at: author.created_at
-            });
-        }
-    }
-    // DOI
-    let doi = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
-    let doiResourceId = 0;
-    if (doi.length > 0) {
-        doiResourceId = doi[0].object.id;
-        doi = doi[0].object.label;
-
-        if (doi.includes('10.') && !doi.startsWith('10.')) {
-            doi = doi.substring(doi.indexOf('10.'));
-        }
-    } else {
-        doi = null;
-    }
-    // contributions
-    const contributions = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION);
-    const contributionArray = [];
-    if (contributions.length > 0) {
-        for (const contribution of contributions) {
-            contributionArray.push({ ...contribution.object, statementId: contribution.id });
-        }
-    }
-    // order (used for the featured paper list)
-    let order = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_ORDER);
-    if (order.length > 0) {
-        order = order[0].object.label;
-    } else {
-        order = Infinity;
-    }
+    const researchField = getResearchField(paperStatements);
+    const publicationYear = getPublicationYear(paperStatements)[0]; // gets year[0] and resourceId[1]
+    const publicationMonth = getPublicationMonth(paperStatements)[0]; // gets year[0] and resourceId[1]
+    const [doi, doiResourceId] = getDOI(paperStatements); // more complex object, returns doi and doi resources as an array
+    const authors = getAuthors(paperStatements);
+    const contributions = getContributions(paperStatements);
+    const order = getOrder(paperStatements);
 
     return {
         id,
@@ -190,15 +176,16 @@ export const getPaperData = (id, label, paperStatements) => {
         researchField,
         doi,
         doiResourceId,
-        authorNames: authorNamesArray.sort((a, b) => a.created_at.localeCompare(b.created_at)),
-        contributions: contributionArray.sort((a, b) => a.label.localeCompare(b.label)),
+        authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at)),
+        contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)),
         order
     };
 };
 
 /**
  * Parse comparison statements and return a a comparison object
- *
+ * @param {String} id
+ * @param {String } label
  * @param {Array} comparisonStatements
  */
 export const getComparisonData = (id, label, comparisonStatements) => {
@@ -490,3 +477,132 @@ export const similarPropertiesByLabel = (propertyLabel, propertyData) => {
     });
     return uniq(result);
 };
+
+/** Helper Functions to increase structure, readability and reuse **/
+/** ------------------------------------------------------------- **/
+// HERE THE INPUT IS 'paperStatements'  and output is based on some filtering
+
+function getPublicationMonth(paperStatements) {
+    // publication month
+    const publicationMonthStatements = paperStatements.filter(
+        statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH
+    );
+    let publicationMonthResourceId = 0;
+    let publicationMonth = 0;
+
+    if (publicationMonthStatements.length > 0) {
+        publicationMonth = publicationMonthStatements[0].object.label;
+        publicationMonthResourceId = publicationMonthStatements[0].object.id;
+    }
+
+    return [publicationMonth, publicationMonthResourceId];
+}
+
+function getPublicationYear(paperStatements) {
+    let publicationYear = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
+    let publicationYearResourceId = 0;
+    if (publicationYear.length > 0) {
+        publicationYearResourceId = publicationYear[0].object.id;
+        publicationYear = publicationYear[0].object.label;
+    } else {
+        publicationYear = '';
+    }
+
+    return [publicationYear, publicationYearResourceId];
+}
+
+function getURL(paperStatements) {
+    let url = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL);
+    let urlResourceId = 0;
+
+    if (url.length > 0) {
+        urlResourceId = url[0].object.id;
+        url = url[0].object.label;
+    } else {
+        url = null;
+    }
+    return [url, urlResourceId];
+}
+
+function getResearchField(paperStatements) {
+    let researchField = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
+    if (researchField.length > 0) {
+        researchField = researchField[0];
+    }
+    return researchField;
+}
+
+function getPublishedIn(paperStatements) {
+    // venue
+    let publishedIn = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_VENUE);
+
+    if (publishedIn.length > 0) {
+        publishedIn = { ...publishedIn[0].object, statementId: publishedIn[0].id };
+    } else {
+        publishedIn = '';
+    }
+    return publishedIn;
+}
+
+function getResearchFieldViewPaper(paperStatements) {
+    let researchField = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
+    if (researchField.length > 0) {
+        researchField = { ...researchField[0].object, statementId: researchField[0].id };
+    }
+    return researchField;
+}
+
+function getAuthors(paperStatements) {
+    const authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
+    const authorNamesArray = [];
+    if (authors.length > 0) {
+        for (const author of authors) {
+            authorNamesArray.push({
+                id: author.object.id,
+                statementId: author.id,
+                class: author.object._class,
+                label: author.object.label,
+                classes: author.object.classes,
+                created_at: author.created_at
+            });
+        }
+    }
+    return authorNamesArray;
+}
+
+function getDOI(paperStatements) {
+    let doi = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
+    let doiResourceId = 0;
+    if (doi.length > 0) {
+        doiResourceId = doi[0].object.id;
+        doi = doi[0].object.label;
+
+        if (doi.includes('10.') && !doi.startsWith('10.')) {
+            doi = doi.substring(doi.indexOf('10.'));
+        }
+    } else {
+        doi = null;
+    }
+    return [doi, doiResourceId];
+}
+
+function getContributions(paperStatements) {
+    const contributions = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION);
+    const contributionArray = [];
+    if (contributions.length > 0) {
+        for (const contribution of contributions) {
+            contributionArray.push({ ...contribution.object, statementId: contribution.id });
+        }
+    }
+    return contributionArray;
+}
+
+function getOrder(paperStatements) {
+    let order = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_ORDER);
+    if (order.length > 0) {
+        order = order[0].object.label;
+    } else {
+        order = Infinity;
+    }
+    return order;
+}
