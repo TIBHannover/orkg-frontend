@@ -55,7 +55,6 @@ class ViewPaper extends Component {
         unfoundContribution: false,
         contributions: [],
         selectedContribution: '',
-        dropdownOpen: false,
         showGraphModal: false,
         editMode: false,
         observatoryInfo: {},
@@ -174,12 +173,6 @@ class ViewPaper extends Component {
             await deleteStatementById(statementId);
             toast.success('Contribution deleted successfully');
         }
-    };
-
-    toggleDropdown = () => {
-        this.setState(prevState => ({
-            dropdownOpen: !prevState.dropdownOpen
-        }));
     };
 
     /** PROCESSING HELPER :  Helper functions to increase code readability**/
