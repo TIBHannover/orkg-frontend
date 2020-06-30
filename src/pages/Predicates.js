@@ -59,7 +59,7 @@ export default class Predicates extends Component {
                 <Container className="p-0">
                     <h1 className="h4 mt-4 mb-4">View all predicates</h1>
                 </Container>
-                <Container className={'box pt-4 pb-4 pl-5 pr-5 clearfix'}>
+                <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
                     {this.state.predicates.length > 0 && (
                         <div>
                             {this.state.predicates.map(predicate => {

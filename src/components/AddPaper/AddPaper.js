@@ -225,7 +225,7 @@ class AddPaper extends Component {
 
                     <div className="clearfix" />
                 </Container>
-                <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
+                <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix ">
                     <ProgressBar currentStep={currentStep} />
 
                     <hr />

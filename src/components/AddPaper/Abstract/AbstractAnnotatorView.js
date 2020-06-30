@@ -45,10 +45,10 @@ class AbstractAnnotatorView extends Component {
                 {!this.props.isAbstractLoading && !this.props.isAnnotationLoading && (
                     <div>
                         <div id="annotationBadges">
-                            <Tooltip className={'mr-2'} message="Annotation labels are the properties that will be used in the contribution data.">
+                            <Tooltip className="mr-2" message="Annotation labels are the properties that will be used in the contribution data.">
                                 Annotation labels
                             </Tooltip>
-                            <span className={'mr-1 ml-1'} />
+                            <span className="mr-1 ml-1" />
                             {rangesClasses.length > 0 &&
                                 rangesClasses.map(c => {
                                     const aconcept = c
@@ -61,7 +61,7 @@ class AbstractAnnotatorView extends Component {
                                             <Tippy key={`c${c}`} content={aconcept[0].description}>
                                                 <span>
                                                     <Badge
-                                                        className={'mr-2'}
+                                                        className="mr-2"
                                                         style={{
                                                             cursor: 'pointer',
                                                             marginBottom: '4px',
@@ -80,7 +80,7 @@ class AbstractAnnotatorView extends Component {
                                     } else {
                                         return (
                                             <Badge
-                                                className={'mr-2'}
+                                                className="mr-2"
                                                 key={`c${c}`}
                                                 style={{ marginBottom: '4px', color: '#333', background: this.props.getClassColor(c) }}
                                             >
@@ -104,8 +104,8 @@ class AbstractAnnotatorView extends Component {
                     !this.props.isAnnotationLoading &&
                     !this.props.isAnnotationFailedLoading &&
                     toArray(this.props.ranges).length > 0 && (
-                        <div className={'col-3 float-right'}>
-                            <div className={'mt-4'}>
+                        <div className="col-3 float-right">
+                            <div className="mt-4">
                                 <Range
                                     step={0.025}
                                     min={0}
@@ -147,14 +147,14 @@ class AbstractAnnotatorView extends Component {
                                         />
                                     )}
                                 />
-                                <div className={'mt-2 text-center'}>
-                                    <span className={'mr-2'}>Certainty {this.props.certaintyThreshold[0].toFixed(2)}</span>
+                                <div className="mt-2 text-center">
+                                    <span className="mr-2">Certainty {this.props.certaintyThreshold[0].toFixed(2)}</span>
                                     <Tooltip
-                                        trigger={'click'}
+                                        trigger="click"
                                         hideDefaultIcon={true}
                                         message="Here you can adjust the certainty value, that means at which level you accept the confidence ratio of automatic annotations. Only the shown annotations will be used to create the contribution data in the next step."
                                     >
-                                        <Icon style={{ cursor: 'pointer' }} className={'text-primary'} icon={faQuestionCircle} />
+                                        <Icon style={{ cursor: 'pointer' }} className="text-primary" icon={faQuestionCircle} />
                                     </Tooltip>
                                 </div>
                             </div>

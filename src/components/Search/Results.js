@@ -12,12 +12,12 @@ const StyledLoadMoreButton = styled.div`
     padding-top: 0;
     & span {
         cursor: pointer;
-        border: 2px solid rgba(0, 0, 0, 0.125);
+        border: 1px solid rgba(0, 0, 0, 0.125);
         border-top: 0;
         border-top-right-radius: 0;
         border-top-left-radius: 0;
-        border-bottom-right-radius: 12px;
-        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 6px;
+        border-bottom-left-radius: 6px;
     }
     &.action:hover span {
         z-index: 1;

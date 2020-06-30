@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 
 const Filters = props => {
     const handleSubmit = e => {
-        props.history.push(reverse(ROUTES.SEARCH, { searchTerm: props.value }) + '?types=' + props.selectedFilters.join(','));
+        props.history.push(reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(props.value) }) + '?types=' + props.selectedFilters.join(','));
 
         e.preventDefault();
     };
@@ -19,7 +19,13 @@ const Filters = props => {
         <Form onSubmit={handleSubmit}>
             <Label for="searchQuery">Search query</Label>
             <InputGroup>
-                <Input value={props.value} onChange={props.handleInputChange} aria-label="Search ORKG" id="searchQuery" name="value" />
+                <Input
+                    value={decodeURIComponent(props.value)}
+                    onChange={props.handleInputChange}
+                    aria-label="Search ORKG"
+                    id="searchQuery"
+                    name="value"
+                />
 
                 <InputGroupAddon addonType="append">
                     <Button type="submit" color="secondary" className="pl-2 pr-2">

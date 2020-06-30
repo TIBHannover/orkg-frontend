@@ -241,7 +241,7 @@ class Search extends Component {
                 <Container className="mt-4">
                     <Row>
                         <Col className="col-sm-4 px-0">
-                            <div className="box mr-4 p-4 h-100">
+                            <div className="box rounded mr-4 p-4 h-100">
                                 <Filters
                                     loading={this.isLoading()}
                                     value={this.state.value || ''}
@@ -253,7 +253,7 @@ class Search extends Component {
                             </div>
                         </Col>
                         <Col className="col-sm-8 px-0">
-                            <div className="box p-4 h-100">
+                            <div className="box rounded p-4 h-100">
                                 {this.isLoading() &&
                                     Object.keys(this.state.results).every(v => this.state.results[v] && this.state.results[v].length === 0) && (
                                         <ContentLoader height={210} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">

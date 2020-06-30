@@ -21,7 +21,7 @@ export default function AddPropertyTemplate(props) {
                     <ConditionalWrapper
                         condition={props.isDisabled}
                         wrapper={children => (
-                            <Tippy content={'This resource uses strict template'}>
+                            <Tippy content="This resource uses strict template">
                                 <span>{children}</span>
                             </Tippy>
                         )}
@@ -34,17 +34,17 @@ export default function AddPropertyTemplate(props) {
                             style={props.inTemplate && props.isDisabled ? { opacity: '1', color: '#21252975' } : undefined}
                             size="sm"
                         >
-                            <Icon className={'icon'} size="sm" icon={faPlus} /> Add property
+                            <Icon className="icon" size="sm" icon={faPlus} /> Add property
                         </Button>
                     </ConditionalWrapper>
                 ) : (
                     <AddPropertyFormStyle>
                         <InputGroup size="sm">
                             <InputGroupAddon addonType="prepend">
-                                <Icon className={'icon'} icon={faPlus} />
+                                <Icon className="icon" icon={faPlus} />
                             </InputGroupAddon>
                             <AutoComplete
-                                cssClasses={'form-control-sm'}
+                                cssClasses="form-control-sm"
                                 requestUrl={predicatesUrl}
                                 placeholder="Select or type to enter a property"
                                 onItemSelected={props.handlePropertySelect}

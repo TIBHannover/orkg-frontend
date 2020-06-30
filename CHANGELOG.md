@@ -3,6 +3,76 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.13](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.12...V0.13) - 2020-06-24
+
+### Merged
+
+- enhancement: Loading templates after updating classes in Resource details page [`#304`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/304)
+- Fix: Visiting the same predicate [`#301`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/301)
+- fix: Bug in skipping the help tour [`#302`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/302)
+- ux: Save button for templates header [`#305`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/305)
+- fix: Creating new properties not working [`#306`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/306)
+- fix(Search): character encoding, refactoring search form [`#303`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/303)
+- chore(lint): disallow unnecessary curly braces in JSX props [`#300`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/300)
+
+### Fixed
+
+- Merge branch '247-loading-templates-after-updating-classes-in-resource-details-page' into 'master' [`#247`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/247)
+- Merge branch '253-infinite-loop-when-clicking-description-of-the-description-predicate' into 'master' [`#253`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/253)
+- Merge branch '254-bug-in-skiping-the-help-tour' into 'master' [`#254`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/254)
+- Merge branch '251-save-button-for-templates-header' into 'master' [`#251`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/251)
+- Merge branch '256-creating-new-properties-not-working' into 'master' [`#256`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/256)
+- Merge branch '255-search-form-character-encoding' into 'master' [`#255`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/255)
+- Merge branch '250-disallow-unnecessary-curly-braces-in-jsx-props' into 'master' [`#250`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/250)
+
+---
+## [0.12](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.11...V0.12) - 2020-06-19
+
+### Merged
+
+- feat: Add observatories page [`#298`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/298)
+- style: Use rounded css class where box class is used [`#297`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/297)
+- feat: Improve the predicate landing pages [`#296`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/296)
+- fix: Show loading indicator if the template of the object is still loading [`#295`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/295)
+- enhancement: Use a select input field to specify the cardinality [`#293`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/293)
+- feat: Support pagination in the autocomplete component [`#292`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/292)
+- style(menu): Add features link to top header menu [`#290`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/290)
+- fix: add polyfill for TextEncoder [`#289`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/289)
+- feat: save correct datatype of literals [`#281`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/281)
+- feat: cherry picking, PaperCardPreviews from #215 ( Caching ) [`#287`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/287)
+- chore(package): update Fontawesome [`#288`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/288)
+- fix: Editing paper meta data: doi and url [`#275`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/275)
+- enhancement: Support pagination in listing the statements where the resource is an object [`#279`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/279)
+- refactor: SelectProperties component [`#284`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/284)
+- fix: DeletedPaper doesn't take into account fetching papers of a research problem/field [`#286`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/286)
+- fix: Duplicated labels of mapped comparison properties [`#285`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/285)
+- style(UX): Close alert of horizontal scrolling comparison by cookie [`#278`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/278)
+- feat: support deleting papers, refactor code, upgrade packages [`#272`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/272)
+- Resolve "editing publication month does not provide expectedtype" [`#273`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/273)
+
+### Fixed
+
+- Merge branch '248-replace-organizations-page-by-observatories-page' into 'master' [`#248`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/248)
+- Merge branch '245-use-rounded-corners-in-wrappers-of-some-views' into 'master' [`#245`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/245)
+- Merge branch '203-improve-the-predicate-landing-pages-set-ranges-set-descriptions-support-sameas-links' into 'master' [`#203`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/203)
+- Merge branch '210-sometimes-the-literal-template-components-doesn-t-work-effectively' into 'master' [`#210`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/210)
+- Merge branch '231-improve-the-input-field-of-the-cardinality-in-template-editor' into 'master' [`#231`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/231)
+- Merge branch '233-support-pagination-in-the-autocomplete-fields' into 'master' [`#233`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/233)
+- Merge branch '236-make-top-level-about-menu-a-dropdown' into 'master' [`#246`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/246)
+- Merge branch '238-add-polyfill-to-support-textencoder' into 'master' [`#238`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/238)
+- Merge branch '221-save-correct-data-type-of-literals-that-comes-from-a-template' into 'master' [`#221`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/221)
+- Merge branch '232-feat-cherry-picking-papercardpreviews-from-215-caching' into 'master' [`#232`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/232)
+- Merge branch '234-covid-icons-fontawesome-not-working' into 'master' [`#234`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/234)
+- Merge branch '214-issue-on-editing-paper-meta-data-doi-and-url' into 'master' [`#214`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/214)
+- Merge branch '193-support-pagination-in-the-resource-page' into 'master' [`#193`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/193)
+- Merge branch '228-rewrite-selectproperties-component' into 'master' [`#228`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/228)
+- Merge branch '222-deletedpaper-doesn-t-take-into-account-fetching-papers-of-a-research-problem-field' into 'master' [`#222`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/222)
+- Merge branch '227-fix-the-tooltip-of-mapped-comparison-properties' into 'master' [`#227`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/227)
+- Merge branch '147-close-alert-of-horizontal-scrolling-comparison-by-cookie' into 'master' [`#147`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/147)
+- Merge branch '211-support-delete-paper-from-frontend' into 'master' [`#211`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/211)
+- Merge branch '209-editing-publication-month-does-not-provide-expectedtype' into 'master' [`#209`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/209)
+
+---
 ## [0.11](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.10.1...V0.11) - 2020-06-03
 
 ### Merged

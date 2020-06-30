@@ -125,7 +125,7 @@ function GeneralSettings(props) {
                 <fieldset className="scheduler-border">
                     <legend className="scheduler-border">Template use cases</legend>
                     <p>
-                        <small class="text-muted">
+                        <small className="text-muted">
                             These fields are optional, the property is used to link the contribution resource to the template instance. The research
                             fields/problems are used to suggest this template in the relevant papers.
                         </small>
@@ -163,23 +163,21 @@ function GeneralSettings(props) {
                         />
                         {props.editMode && <FormText>Specify the research fields that uses this template.</FormText>}
                     </FormGroup>
-                    {
-                        <FormGroup className="mb-4">
-                            <Label>Research problems</Label>
-                            <AutoComplete
-                                requestUrl={resourcesUrl}
-                                optionsClass={process.env.REACT_APP_CLASSES_PROBLEM}
-                                onItemSelected={handleResearchProblemSelect}
-                                placeholder={props.editMode ? 'Select or type to enter a research problem' : 'No research problem'}
-                                autoFocus
-                                cacheOptions
-                                isMulti
-                                value={props.researchProblems}
-                                isDisabled={!props.editMode}
-                            />
-                            {props.editMode && <FormText>Specify the research problems that uses this template.</FormText>}
-                        </FormGroup>
-                    }
+                    <FormGroup className="mb-4">
+                        <Label>Research problems</Label>
+                        <AutoComplete
+                            requestUrl={resourcesUrl}
+                            optionsClass={process.env.REACT_APP_CLASSES_PROBLEM}
+                            onItemSelected={handleResearchProblemSelect}
+                            placeholder={props.editMode ? 'Select or type to enter a research problem' : 'No research problem'}
+                            autoFocus
+                            cacheOptions
+                            isMulti
+                            value={props.researchProblems}
+                            isDisabled={!props.editMode}
+                        />
+                        {props.editMode && <FormText>Specify the research problems that uses this template.</FormText>}
+                    </FormGroup>
                 </fieldset>
             </>
         </div>

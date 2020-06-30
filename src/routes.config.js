@@ -23,11 +23,12 @@ import ResearchField from './components/ResearchField/ResearchField';
 import ResearchProblem from './components/ResearchProblem/ResearchProblem';
 import Resources from './pages/Resources';
 import Organizations from './pages/Organizations';
+import Observatories from './pages/Observatories';
 import OrganizationDetails from './pages/OrganizationDetails';
 import AddOrganization from './pages/AddOrganization';
 import AddObservatory from './pages/AddObservatory';
 import Observatory from './pages/Observatory';
-import Observatories from './pages/ObservatoryDetails';
+import OrganizationObservatories from './pages/OrganizationObservatories';
 import SearchResults from './components/Search/Search';
 import ViewPaper from './components/ViewPaper/ViewPaper';
 import Stats from './components/Stats/Stats';
@@ -102,6 +103,11 @@ const routes = [
         path: ROUTES.ORGANIZATIONS,
         exact: true,
         component: Organizations
+    },
+    {
+        path: ROUTES.OBSERVATORIES,
+        exact: true,
+        component: Observatories
     },
     {
         /* TODO: Remove this route (it's temporarily backward compatibility for moving contributions ids from view args to query string) */
@@ -198,13 +204,13 @@ const routes = [
         component: Observatory
     },
     {
-        path: ROUTES.OBSERVATORIES,
+        path: ROUTES.ORGANIZATION_OBSERVATORIES,
         exact: true,
-        component: Observatories
+        component: OrganizationObservatories
     },
     {
         path: ROUTES.TPDL,
-        component: () => <Redirect to={'/'} />
+        component: () => <Redirect to="/" />
     },
     /* Don't add routes below this line */
     {

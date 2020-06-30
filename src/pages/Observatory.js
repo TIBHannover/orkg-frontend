@@ -155,7 +155,7 @@ class Observatory extends Component {
                             <h3 className="h4 mb-4 flex-grow-1">Observatory</h3>
                         </Container>
 
-                        <div className={'box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5'}>
+                        <div className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
                             <h3>{this.state.label}</h3>
                             {this.state.description}
                         </div>
@@ -167,9 +167,7 @@ class Observatory extends Component {
                                     className="box rounded-lg p-3"
                                     style={{ minHeight: '500px', flexDirection: 'column', display: 'flex', flexGrow: '1' }}
                                 >
-                                    <h5 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                        Research Problems
-                                    </h5>
+                                    <h5 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Research Problems</h5>
                                     {!this.state.isLoadingResources ? (
                                         <div className="pb-2 mb-6">
                                             {this.state.resourcesList.length > 0 ? (
@@ -208,9 +206,7 @@ class Observatory extends Component {
                             </Col>
                             <Col md={4} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
                                 <div className="box rounded-lg p-3" style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
-                                    <h5 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                        Organizations
-                                    </h5>
+                                    <h5 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Organizations</h5>
                                     {!this.state.isLoadingOrganizations ? (
                                         <StyledScrollBar className="mb-6">
                                             {this.state.organizationsList.length > 0 ? (
@@ -249,10 +245,10 @@ class Observatory extends Component {
                                 <div className="box rounded-lg mt-4 p-3" style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
                                     <h2 className="h5">Contributors</h2>
                                     {!this.state.isLoadingContributors ? (
-                                        <div className={'mb-6'}>
+                                        <div className="mb-6">
                                             <StyledScrollBar className="pb-2 mb-6">
                                                 {this.state.contributors.length > 0 ? (
-                                                    <div className={'scrollBarDiv'}>
+                                                    <div className="scrollBarDiv">
                                                         {this.state.contributors.map((user, index) => {
                                                             return (
                                                                 <div>
@@ -305,11 +301,9 @@ class Observatory extends Component {
                             <h1 className="h4 mt-4 mb-4 flex-grow-1">Content</h1>
                         </Container>
 
-                        <div className={'box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5'}>
+                        <div className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
                             <div className="pb-2 mb-3">
-                                <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                    Comparisons
-                                </h3>
+                                <h3 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Comparisons</h3>
                                 {!this.state.isLoadingResources ? (
                                     <div className="pb-2 mb-6">
                                         {this.state.resourcesList.length > 0 ? (
@@ -343,11 +337,9 @@ class Observatory extends Component {
                         </div>
 
                         <br />
-                        <div className={'box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5'}>
+                        <div className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
                             <div className="pb-2 mb-3">
-                                <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                    Papers
-                                </h3>
+                                <h3 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Papers</h3>
                                 {!this.state.isLoadingResources ? (
                                     <div className="pb-2 mb-6">
                                         {this.state.resourcesList.length > 0 ? (

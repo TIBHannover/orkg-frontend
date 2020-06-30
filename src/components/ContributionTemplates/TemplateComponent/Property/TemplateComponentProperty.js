@@ -28,22 +28,22 @@ function TemplateComponentProperty(props) {
     });
 
     return (
-        <PropertyStyle className={`col-4`} tabIndex="0">
+        <PropertyStyle className="col-4" tabIndex="0">
             {props.enableEdit && (
                 <DragHandler ref={props.dragRef}>
                     <Icon icon={faArrowsAlt} />
                 </DragHandler>
             )}
             {!isEditing ? (
-                <div className={'propertyLabel'}>
+                <div className="propertyLabel">
                     {props.property.label.charAt(0).toUpperCase() + props.property.label.slice(1)}
                     {props.enableEdit && (
                         <div className={propertyOptionsClasses}>
-                            <StatementOptionButton title={'Edit property'} icon={faPen} action={() => setIsEditing(true)} />
+                            <StatementOptionButton title="Edit property" icon={faPen} action={() => setIsEditing(true)} />
                             <StatementOptionButton
                                 requireConfirmation={true}
-                                confirmationMessage={'Are you sure to delete?'}
-                                title={'Delete property'}
+                                confirmationMessage="Are you sure to delete?"
+                                title="Delete property"
                                 icon={faTrash}
                                 action={() => props.handleDeleteTemplateComponent(props.id)}
                                 onVisibilityChange={disable => setDisableHover(disable)}
@@ -65,7 +65,7 @@ function TemplateComponentProperty(props) {
                             allowCreate
                             autoFocus
                             value={props.property}
-                            cssClasses={'form-control-sm'}
+                            cssClasses="form-control-sm"
                             onBlur={() => {
                                 setIsEditing(false);
                             }}

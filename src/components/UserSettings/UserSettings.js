@@ -53,7 +53,7 @@ class UserSettings extends Component {
             <Container className="p-0">
                 <Row>
                     <div className="col-3 justify-content-center">
-                        <Container className="box p-3">
+                        <Container className="box rounded p-3">
                             <StyledSettingsMenu>
                                 <li
                                     onClick={() => {
@@ -77,7 +77,7 @@ class UserSettings extends Component {
                         </Container>
                     </div>
                     <div className="col-9 justify-content-center">
-                        <TabContent className="box pt-4 pb-3 pl-5 pr-5" activeTab={this.state.activeTab}>
+                        <TabContent className="box rounded pt-4 pb-3 pl-5 pr-5" activeTab={this.state.activeTab}>
                             <TabPane tabId="general">
                                 <GeneralSettings />
                             </TabPane>

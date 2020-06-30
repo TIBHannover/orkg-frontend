@@ -70,7 +70,7 @@ class TableCell extends Component {
                                                 onClick={() => this.openStatementBrowser(date.resourceId, date.label)}
                                                 style={{ cursor: 'pointer' }}
                                             >
-                                                <ValuePlugins type={'resource'}>{date.label}</ValuePlugins>
+                                                <ValuePlugins type="resource">{date.label}</ValuePlugins>
                                             </span>
                                         </Tippy>
                                     </span>
@@ -79,7 +79,7 @@ class TableCell extends Component {
                                         {index > 0 && <ItemInnerSeparator />}
                                         <Tippy content={`Path of this value : ${date.pathLabels.slice(1).join(' / ')}`} arrow={true}>
                                             <span>
-                                                <ValuePlugins type={'literal'} options={{ inModal: true }}>
+                                                <ValuePlugins type="literal" options={{ inModal: true }}>
                                                     {date.label}
                                                 </ValuePlugins>
                                             </span>

@@ -18,13 +18,19 @@ const mapStateToProps = (state, props) => {
         if (!resource.existingResourceId) {
             newResourcesList.push({
                 id: resource.id,
-                label: resource.label
+                label: resource.label,
+                ...(resource.shared ? { shared: resource.shared } : {}),
+                ...(resource.classes ? { classes: resource.classes } : {})
             });
         }
     }
 
     const predicate = state.statementBrowser.properties.byId[props.propertyId ? props.propertyId : props.selectedProperty];
     const valueClass = getValueClass(props.components);
+    let isLiteralField = isLiteral(props.components);
+    if (predicate.range) {
+        isLiteralField = ['Date', 'Number', 'String'].includes(predicate.range.id) ? true : false;
+    }
 
     return {
         selectedProperty: state.statementBrowser.selectedProperty,
@@ -34,7 +40,7 @@ const mapStateToProps = (state, props) => {
         classes: state.statementBrowser.classes,
         openExistingResourcesInDialog: state.statementBrowser.openExistingResourcesInDialog,
         templates: state.statementBrowser.templates,
-        isLiteral: isLiteral(props.components),
+        isLiteral: isLiteralField,
         valueClass: valueClass ? valueClass : predicate.range ? predicate.range : null
     };
 };

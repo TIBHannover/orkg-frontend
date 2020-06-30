@@ -23,11 +23,11 @@ export default function StatementItemTemplate(props) {
     });
     return (
         <StatementsGroupStyle className={`${props.inTemplate ? 'inTemplate' : 'noTemplate'}`}>
-            <div className={'row no-gutters'}>
+            <div className="row no-gutters">
                 <PropertyStyle className={`col-4 ${props.property.isEditing ? 'editingLabel' : ''}`} tabIndex="0">
                     {!props.property.isEditing ? (
                         <div>
-                            <div className={'propertyLabel'}>
+                            <div className="propertyLabel">
                                 {props.propertiesAsLinks ? (
                                     <Link to={reverse(ROUTES.PREDICATE, { id: props.property.existingPredicateId })}>{props.predicateLabel}</Link>
                                 ) : (
@@ -54,7 +54,7 @@ export default function StatementItemTemplate(props) {
                                                 : "This property can not be deleted because it's required by the template"
                                         }
                                         requireConfirmation={true}
-                                        confirmationMessage={'Are you sure to delete?'}
+                                        confirmationMessage="Are you sure to delete?"
                                         icon={faTrash}
                                         action={props.handleDeleteStatement}
                                         onVisibilityChange={disable => setDisableHover(disable)}
@@ -66,7 +66,7 @@ export default function StatementItemTemplate(props) {
                         <div>
                             <InputGroup size="sm">
                                 <AutoComplete
-                                    cssClasses={'form-control-sm'}
+                                    cssClasses="form-control-sm"
                                     requestUrl={predicatesUrl}
                                     placeholder={props.predicateLabel}
                                     onChange={(selectedOption, a) => {
@@ -85,7 +85,7 @@ export default function StatementItemTemplate(props) {
                         </div>
                     )}
                 </PropertyStyle>
-                <ValuesStyle className={'col-8 valuesList'}>
+                <ValuesStyle className="col-8 valuesList">
                     <ListGroup flush className="px-3">
                         {props.property.valueIds.length > 0 &&
                             props.property.valueIds.map((valueId, index) => {
@@ -105,7 +105,7 @@ export default function StatementItemTemplate(props) {
                                 );
                             })}
                         {!props.enableEdit && props.property.valueIds.length === 0 && (
-                            <div className={'pt-2'}>
+                            <div className="pt-2">
                                 <small>No values</small>
                             </div>
                         )}

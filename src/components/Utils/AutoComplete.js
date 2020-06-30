@@ -145,7 +145,7 @@ class AutoComplete extends Component {
         const Select = this.props.allowCreate ? AsyncCreatableSelect : AsyncSelect;
 
         return (
-            <StyledAutoCompleteInputFormControl className={`form-control default`}>
+            <StyledAutoCompleteInputFormControl className="form-control default">
                 <Select
                     loadOptions={this.loadOptions}
                     noOptionsMessage={this.noResults}

@@ -173,7 +173,7 @@ class ResearchProblemInput extends Component {
                 <components.Option {...props}>
                     <StyledSelectOption>
                         <span>{children}</span>
-                        {props.data.new && <span className={'badge'}>New</span>}
+                        {props.data.new && <span className="badge">New</span>}
                     </StyledSelectOption>
                 </components.Option>
             );
@@ -205,7 +205,7 @@ class ResearchProblemInput extends Component {
                 </StyledResearchFieldsInputFormControl>
                 {false && (
                     <StyledResearchFieldBrowser className="form-control">
-                        <button type="button" className={'close'} onClick={this.closeProblemBrowser}>
+                        <button type="button" className="close" onClick={this.closeProblemBrowser}>
                             <span>×</span>
                         </button>
                         <>Problem browser:</>

@@ -136,22 +136,22 @@ class OrganizationDetails extends Component {
     render() {
         return (
             <>
-                {this.state.isLoading && <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
+                {this.state.isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
                 {!this.state.isLoading && this.state.error && <>{this.state.error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
                 {!this.state.isLoading && !this.state.error && this.state.label && (
                     <Container className="mt-5 clearfix">
-                        <div className={'box clearfix pt-4 pb-4 pl-5 pr-5'}>
-                            <div className={'mb-2'}>
+                        <div className="box clearfix pt-4 pb-4 pl-5 pr-5">
+                            <div className="mb-2">
                                 <span>
                                     <NavLink style={{ width: 500 }} href={this.state.url} target="_blank" rel="noopener noreferrer">
-                                        <h4 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                        <h4 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                             {this.state.label} <Icon size="sm" icon={faExternalLinkAlt} />
                                         </h4>
                                     </NavLink>
                                 </span>
                                 <img style={{ float: 'right', marginTop: -35 }} height="100" src={this.state.image} alt="" />{' '}
                             </div>
-                            <div className={'clearfix'}>
+                            <div className="clearfix">
                                 &nbsp; &nbsp;
                                 {this.props.user && this.props.user.id === this.state.createdBy && (
                                     <Button
@@ -175,9 +175,7 @@ class OrganizationDetails extends Component {
                                     className="box rounded-lg p-3"
                                     style={{ minHeight: '500px', flexDirection: 'column', display: 'flex', flexGrow: '1' }}
                                 >
-                                    <h5 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                        Observatories
-                                    </h5>
+                                    <h5 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Observatories</h5>
                                     {!this.state.isLoadingObservatories ? (
                                         <div className="pb-2 mb-6">
                                             {this.state.observatories.length > 0 ? (
@@ -215,10 +213,10 @@ class OrganizationDetails extends Component {
                                     <h2 className="h5">Contributors</h2>
 
                                     {!this.state.isLoadingContributors ? (
-                                        <div className={'mb-6'}>
+                                        <div className="mb-6">
                                             <StyledScrollBar className="pb-2 mb-6">
                                                 {this.state.contributors.length > 0 ? (
-                                                    <div className={'scrollBarDiv'}>
+                                                    <div className="scrollBarDiv">
                                                         {this.state.contributors.map((user, index) => {
                                                             return (
                                                                 <div>

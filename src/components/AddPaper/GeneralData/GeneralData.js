@@ -329,7 +329,7 @@ class GeneralData extends Component {
             this.props.closeTour();
         } else {
             this.props.cookies.set('taketourClosed', true);
-            this.setState({ showHelpButton: true }, () => this.props.openTour());
+            this.setState({ showHelpButton: true });
         }
     };
 
@@ -493,7 +493,7 @@ class GeneralData extends Component {
                                                                 <h3 className="h4 mb-3">
                                                                     Lookup result
                                                                     <Button
-                                                                        className={'pull-right ml-1'}
+                                                                        className="pull-right ml-1"
                                                                         outline
                                                                         size="sm"
                                                                         onClick={() => this.handleDataEntryClick('manually')}
@@ -716,7 +716,6 @@ class GeneralData extends Component {
                         rounded={10}
                         onRequestClose={() => {
                             this.enableBody();
-                            this.props.closeTour();
                             this.setState({ showHelpButton: false });
                         }}
                         isOpen={this.state.showHelpButton}

@@ -360,7 +360,7 @@ class ExportToLatex extends Component {
                                     <CustomInput
                                         className="float-left"
                                         type="checkbox"
-                                        id={'replaceTitles'}
+                                        id="replaceTitles"
                                         label="Replace contribution titles by reference "
                                         onChange={() => this.toggleCheckbox('replaceTitles')}
                                         checked={this.state.replaceTitles}
@@ -371,7 +371,7 @@ class ExportToLatex extends Component {
                                 <CustomInput
                                     className="float-left"
                                     type="checkbox"
-                                    id={'includeFootnote'}
+                                    id="includeFootnote"
                                     label="Include a persistent link to this page as a footnote "
                                     onChange={() => this.toggleCheckbox('includeFootnote')}
                                     checked={this.state.includeFootnote}
@@ -393,7 +393,7 @@ class ExportToLatex extends Component {
                             <ReactstrapTooltip
                                 placement="top"
                                 target="copyToClipboardLatex"
-                                trigger={'hover'}
+                                trigger="hover"
                                 toggle={e => this.toggleTooltip(e, 'showTooltipCopiedLatex')}
                                 isOpen={this.state.showTooltipCopiedLatex}
                             >
@@ -426,7 +426,7 @@ class ExportToLatex extends Component {
                             <ReactstrapTooltip
                                 placement="top"
                                 target="copyToClipboardBibtex"
-                                trigger={'hover'}
+                                trigger="hover"
                                 toggle={e => this.toggleTooltip(e, 'showTooltipCopiedBibtex')}
                                 isOpen={this.state.showTooltipCopiedBibtex}
                             >

@@ -27,7 +27,7 @@ const InlineStatsBox = props => {
         <StatsBoxStyled className={props.className} style={props.hideBorder ? { border: 0 } : {}}>
             {!props.isLoading ? (
                 <Number>
-                    <NumberFormat value={props.number} displayType={'text'} thousandSeparator={' '} />
+                    <NumberFormat value={props.number} displayType="text" thousandSeparator={' '} />
                 </Number>
             ) : (
                 'Loading...'

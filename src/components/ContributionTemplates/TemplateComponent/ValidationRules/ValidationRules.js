@@ -21,7 +21,7 @@ function ValidationRules(props) {
             {props.value && props.value.id === 'String' && (
                 <>
                     <FormGroup row>
-                        <Label className={'text-right text-muted'} for="patternInput" sm={3}>
+                        <Label className="text-right text-muted" for="patternInput" sm={3}>
                             <small>Pattern</small>
                         </Label>
                         <Col sm={9}>
@@ -43,7 +43,7 @@ function ValidationRules(props) {
             {props.value && props.value.id === 'Number' && (
                 <>
                     <FormGroup row>
-                        <Label className={'text-right text-muted'} for="minimumValueInput" sm={3}>
+                        <Label className="text-right text-muted" for="minimumValueInput" sm={3}>
                             <small>Minimum value</small>
                         </Label>
                         <Col sm={9}>
@@ -60,7 +60,7 @@ function ValidationRules(props) {
                         </Col>
                     </FormGroup>
                     <FormGroup row>
-                        <Label className={'text-right text-muted'} for="maximumValueInput" sm={3}>
+                        <Label className="text-right text-muted" for="maximumValueInput" sm={3}>
                             <small>Maximum value</small>
                         </Label>
                         <Col sm={9}>

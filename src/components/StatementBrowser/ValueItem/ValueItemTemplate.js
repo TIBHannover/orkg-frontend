@@ -60,11 +60,11 @@ export default function ValueItemTemplate(props) {
                     {props.resource && !props.resource.isFetching && props.value.type === 'object' && !props.resourcesAsLinks && (
                         <Button className="p-0 text-left" color="link" onClick={props.handleOnClick} style={{ userSelect: 'text' }}>
                             {props.showHelp && props.value.type === 'object' ? (
-                                <Pulse content={'Click on the resource to browse it'}>
-                                    <ValuePlugins type={'resource'}>{props.value.label}</ValuePlugins>
+                                <Pulse content="Click on the resource to browse it">
+                                    <ValuePlugins type="resource">{props.value.label}</ValuePlugins>
                                 </Pulse>
                             ) : (
-                                <ValuePlugins type={'resource'}>{props.getLabel() || ''}</ValuePlugins>
+                                <ValuePlugins type="resource">{props.getLabel() || ''}</ValuePlugins>
                             )}
 
                             {props.resource && props.resource.existingResourceId && props.openExistingResourcesInDialog ? (
@@ -93,21 +93,21 @@ export default function ValueItemTemplate(props) {
                     {props.resource && props.resource.isFetching && props.value.type === 'object' && 'Loading...'}
 
                     {props.value.type === 'literal' && (
-                        <div className={'literalLabel'}>
-                            <ValuePlugins type={'literal'}>{props.value.label}</ValuePlugins>
+                        <div className="literalLabel">
+                            <ValuePlugins type="literal">{props.value.label}</ValuePlugins>
                         </div>
                     )}
 
                     <div className={valueOptionClasses}>
                         {!props.value.isEditing && props.value.classes && props.value.classes.includes(process.env.REACT_APP_QB_DATASET_CLASS) && (
-                            <StatementOptionButton title={'Visualize data in tabular form'} icon={faTable} action={props.handleDatasetClick} />
+                            <StatementOptionButton title="Visualize data in tabular form" icon={faTable} action={props.handleDatasetClick} />
                         )}
 
                         {props.enableEdit && (
                             <>
                                 {((props.resource && !props.resource.existingResourceId) || props.value.shared <= 1) && (
                                     <StatementOptionButton
-                                        title={'Edit value'}
+                                        title="Edit value"
                                         icon={faPen}
                                         action={props.isInlineResource ? props.handleOnClick : () => props.toggleEditValue({ id: props.id })}
                                     />
@@ -115,7 +115,7 @@ export default function ValueItemTemplate(props) {
 
                                 {props.resource && props.resource.existingResourceId && props.value.shared > 1 && (
                                     <StatementOptionButton
-                                        title={'A shared resource cannot be edited directly'}
+                                        title="A shared resource cannot be edited directly"
                                         icon={faPen}
                                         action={() => null}
                                         onVisibilityChange={disable => setDisableHover(disable)}
@@ -124,8 +124,8 @@ export default function ValueItemTemplate(props) {
 
                                 <StatementOptionButton
                                     requireConfirmation={true}
-                                    title={'Delete value'}
-                                    confirmationMessage={'Are you sure to delete?'}
+                                    title="Delete value"
+                                    confirmationMessage="Are you sure to delete?"
                                     icon={faTrash}
                                     action={props.handleDeleteValue}
                                     onVisibilityChange={disable => setDisableHover(disable)}
@@ -152,7 +152,7 @@ export default function ValueItemTemplate(props) {
                             </StyledButton>
                         </InputGroupAddon>
                     </InputGroup>
-                    {!isValid && <FormFeedback className={'d-block'}>{formFeedback}</FormFeedback>}
+                    {!isValid && <FormFeedback className="d-block">{formFeedback}</FormFeedback>}
                 </div>
             )}
         </ValueItemStyle>

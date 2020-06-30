@@ -138,7 +138,7 @@ class Contributions extends Component {
 
         return (
             <div>
-                <div className={'d-flex align-items-center mt-4 mb-5'}>
+                <div className="d-flex align-items-center mt-4 mb-5">
                     <h2 className="h4 flex-shrink-0">
                         <Tooltip
                             message={
@@ -154,7 +154,7 @@ class Contributions extends Component {
                             Specify research contributions
                         </Tooltip>
                     </h2>
-                    <Button onClick={this.props.toggleAbstractDialog} outline size={'sm'} className="flex-shrink-0 ml-auto" color="darkblue">
+                    <Button onClick={this.props.toggleAbstractDialog} outline size="sm" className="flex-shrink-0 ml-auto" color="darkblue">
                         <Icon icon={faMagic} /> Abstract annotator
                     </Button>
                 </div>
@@ -179,7 +179,7 @@ class Contributions extends Component {
                                 );
                             })}
 
-                            <li className={'addContribution'} onClick={this.props.createContribution}>
+                            <li className="addContribution" onClick={this.props.createContribution}>
                                 <Tippy content="Add contribution">
                                     <span>
                                         <Icon size="xs" icon={faPlus} />

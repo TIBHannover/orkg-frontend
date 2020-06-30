@@ -145,7 +145,7 @@ export default function AddContribution(props) {
                 <p>Use the form below to search for a paper and add its contribution to comparison table</p>
                 <FormGroup>
                     <Label for="title">
-                        <Tooltip message={'Enter the title of the paper'}>Paper title</Tooltip>
+                        <Tooltip message="Enter the title of the paper">Paper title</Tooltip>
                     </Label>
                     <InputGroup>
                         <Input value={searchPaper} type="text" name="title" id="title" onChange={e => setSearchPaper(e.target.value)} />

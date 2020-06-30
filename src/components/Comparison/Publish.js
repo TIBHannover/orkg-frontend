@@ -85,19 +85,19 @@ class Publish extends Component {
                             {' '}
                             <FormGroup>
                                 <Label for="title">
-                                    <Tooltip message={'Enter the title of the comparison'}>Title</Tooltip>
+                                    <Tooltip message="Enter the title of the comparison">Title</Tooltip>
                                 </Label>
                                 <Input type="text" name="title" id="title" onChange={this.handleChange} />
                             </FormGroup>
                             <FormGroup>
                                 <Label for="description">
-                                    <Tooltip message={'Describe the goal and what is being compared'}>Description</Tooltip>
+                                    <Tooltip message="Describe the goal and what is being compared">Description</Tooltip>
                                 </Label>
                                 <Input type="textarea" name="description" id="description" onChange={this.handleChange} />
                             </FormGroup>
                             <FormGroup>
                                 <Label for="reference">
-                                    <Tooltip message={'Enter a reference to the paper from which the comparison is generated'}>
+                                    <Tooltip message="Enter a reference to the paper from which the comparison is generated">
                                         Reference (optional)
                                     </Tooltip>
                                 </Label>

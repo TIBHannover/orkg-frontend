@@ -41,7 +41,7 @@ export default (state = initialState, action) => {
                     existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
                     shared: payload.shared ? payload.shared : 1,
                     propertyIds: [],
-                    classes: []
+                    classes: payload.classes ? payload.classes : []
                 }
             }));
 
@@ -208,6 +208,7 @@ export default (state = initialState, action) => {
                         isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
                         existingStatement: payload.existingStatement ? payload.existingStatement : false,
                         statementId: payload.statementId,
+                        ...(payload.type === 'literal' && { datatype: payload.datatype ?? process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE }),
                         isEditing: false,
                         isSaving: false,
                         shared: payload.shared ? payload.shared : 1
@@ -261,6 +262,7 @@ export default (state = initialState, action) => {
                     type: v.type,
                     classes: payload.classes ? payload.classes : [],
                     label: payload.label ? payload.label : '',
+                    ...(v.type === 'literal' && { datatype: payload.datatype ?? process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE }),
                     resourceId: payload.resourceId ? payload.resourceId : null,
                     isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
                     existingStatement: payload.existingStatement ? payload.existingStatement : false,

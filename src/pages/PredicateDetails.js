@@ -1,68 +1,92 @@
-import React, { Component } from 'react';
-import { predicatesUrl, submitGetRequest } from '../network';
+import React, { useState, useEffect } from 'react';
+import { Container, Button } from 'reactstrap';
+import { getPredicate } from 'network';
+import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
+import InternalServerError from 'components/StaticPages/InternalServerError';
+import NotFound from 'components/StaticPages/NotFound';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { EditModeHeader, Title } from 'components/ViewPaper/ViewPaper';
 import PropTypes from 'prop-types';
-import { Container } from 'reactstrap';
+import { useLocation } from 'react-router-dom';
 
-class PredicateDetails extends Component {
-    constructor(props) {
-        super(props);
+function PredicateDetails(props) {
+    const location = useLocation();
+    const [error, setError] = useState(null);
+    const [label, setLabel] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+    const [editMode, setEditMode] = useState(false);
 
-        this.state = {
-            error: null,
-            title: null
+    useEffect(() => {
+        const findPredicate = async () => {
+            setIsLoading(true);
+            try {
+                const responseJson = await getPredicate(props.match.params.id);
+                document.title = `${responseJson.label} - Predicate - ORKG`;
+
+                setLabel(responseJson.label);
+                setIsLoading(false);
+            } catch (err) {
+                console.error(err);
+                setLabel(null);
+                setError(err);
+                setIsLoading(false);
+            }
         };
-    }
+        findPredicate();
+    }, [location, props.match.params.id]);
 
-    async componentDidMount() {
-        await this.findPredicate();
-    }
-
-    findPredicate = async () => {
-        try {
-            const responseJson = await submitGetRequest(predicatesUrl + encodeURIComponent(this.props.match.params.id));
-            this.setState({
-                title: responseJson.label
-            });
-        } catch (err) {
-            console.error(err);
-            this.setState({
-                title: null,
-                error: err.message
-            });
-        }
-    };
-
-    render() {
-        const resultsPresent = this.state.error || this.state.title;
-
-        if (this.state.error) {
-            return (
-                <p>
-                    <strong>Error:</strong> {this.state.error}{' '}
-                </p>
-            );
-        }
-
-        if (resultsPresent) {
-            const titleText = this.state.title;
-            const titleJsx = titleText && (
-                <div
-                    style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}
-                    className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom"
-                >
-                    <h1 className="h2">{titleText}</h1>
-                </div>
-            );
-
-            return (
-                <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">
-                    <div className="entityView-main">{titleJsx}</div>
+    return (
+        <>
+            {isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
+            {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
+            {!isLoading && !error && (
+                <Container className="mt-5 clearfix">
+                    {editMode && (
+                        <EditModeHeader className="box rounded-top">
+                            <Title>
+                                Edit mode <span className="pl-2">Every change you make is automatically saved</span>
+                            </Title>
+                            <Button className="float-left" style={{ marginLeft: 1 }} color="light" size="sm" onClick={() => setEditMode(v => !v)}>
+                                Stop editing
+                            </Button>
+                        </EditModeHeader>
+                    )}
+                    <div className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
+                        <div className="mb-2">
+                            <div className="pb-2 mb-3">
+                                <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                    {label || (
+                                        <i>
+                                            <small>No label</small>
+                                        </i>
+                                    )}
+                                    <Button className="float-right" color="darkblue" size="sm" onClick={() => setEditMode(v => !v)}>
+                                        <Icon icon={faPen} /> Edit
+                                    </Button>
+                                </h3>
+                            </div>
+                        </div>
+                        <hr />
+                        <h3 className="h5">Statements</h3>
+                        <div className="clearfix">
+                            <StatementBrowser
+                                rootNodeType="predicate"
+                                enableEdit={editMode}
+                                syncBackend={editMode}
+                                openExistingResourcesInDialog={false}
+                                initialResourceId={props.match.params.id}
+                                initialResourceLabel={label}
+                                newStore={true}
+                                propertiesAsLinks={true}
+                                resourcesAsLinks={true}
+                            />
+                        </div>
+                    </div>
                 </Container>
-            );
-        } else {
-            return null;
-        }
-    }
+            )}
+        </>
+    );
 }
 
 PredicateDetails.propTypes = {

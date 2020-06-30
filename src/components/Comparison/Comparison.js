@@ -411,7 +411,7 @@ class Comparison extends Component {
                                         {this.state.csvData ? (
                                             <CSVLink
                                                 data={this.state.csvData}
-                                                filename={'ORKG Contribution Comparison.csv'}
+                                                filename="ORKG Contribution Comparison.csv"
                                                 className="dropdown-item"
                                                 target="_blank"
                                                 onClick={() => this.toggle('dropdownOpen')}
@@ -461,7 +461,7 @@ class Comparison extends Component {
                     }*/}
                 </ContainerAnimated>
 
-                <ContainerAnimated className="box pt-4 pb-4 pl-5 pr-5 clearfix" style={containerStyle}>
+                <ContainerAnimated className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix" style={containerStyle}>
                     {!this.state.isLoading && this.state.loadingFailed && (
                         <div>
                             <Alert color="danger">
@@ -505,7 +505,7 @@ class Comparison extends Component {
                                             <div style={{ marginBottom: '20px', lineHeight: 1.5 }}>
                                                 <small>
                                                     <i>
-                                                        Reference: <ValuePlugins type={'literal'}>{this.state.reference}</ValuePlugins>
+                                                        Reference: <ValuePlugins type="literal">{this.state.reference}</ValuePlugins>
                                                     </i>
                                                 </small>
                                             </div>
