@@ -64,6 +64,7 @@ export default function Statements(props) {
                                             enableEdit={shared <= 1 ? props.enableEdit : false}
                                             syncBackend={props.syncBackend}
                                             isAnimated={property.isAnimated}
+                                            resourceId={props.selectedResource}
                                             isLastItem={propertyIds.length === index + 1}
                                             showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                                         />
@@ -77,7 +78,7 @@ export default function Statements(props) {
                                                 id={valueId}
                                                 value={value}
                                                 propertyId={propertyId}
-                                                selectedResource={props.initialResourceId}
+                                                selectedResource={props.selectedResource}
                                                 enableEdit={props.enableEdit}
                                                 syncBackend={props.syncBackend}
                                                 openExistingResourcesInDialog={props.openExistingResourcesInDialog}
@@ -171,5 +172,6 @@ Statements.defaultProps = {
     templatesFound: false,
     propertiesAsLinks: false,
     resourcesAsLinks: false,
-    rootNodeType: 'resource'
+    rootNodeType: 'resource',
+    level: 1
 };

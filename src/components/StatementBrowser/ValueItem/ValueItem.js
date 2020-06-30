@@ -128,7 +128,8 @@ export default function ValueItem(props) {
         props.selectResource({
             increaseLevel: true,
             resourceId: props.value.resourceId,
-            label: props.value.label
+            label: props.value.label,
+            propertyLabel: props.properties.byId[props.propertyId].label
         });
     };
 
@@ -142,7 +143,8 @@ export default function ValueItem(props) {
         props.selectResource({
             increaseLevel: true,
             resourceId: ressource.id,
-            label: ressource.rlabel ? ressource.rlabel : ressource.label
+            label: ressource.rlabel ? ressource.rlabel : ressource.label,
+            propertyLabel: props.properties.byId[props.propertyId].label
         });
 
         props.fetchStatementsForResource({

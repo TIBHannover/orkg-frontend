@@ -81,13 +81,6 @@ export const setComponents = data => dispatch => {
     });
 };
 
-export const setSubTemplates = data => dispatch => {
-    dispatch({
-        type: type.TEMPLATE_SET_SUB_TEMPLATES,
-        payload: data
-    });
-};
-
 export const setIsLoading = () => dispatch => {
     dispatch({
         type: type.IS_FETCHING_TEMPLATE
@@ -222,13 +215,6 @@ export const saveTemplate = data => {
         if (data.hasLabelFormat && data.labelFormat) {
             const labelFormatLiteral = await createLiteral(data.labelFormat);
             promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_LABEL_FORMAT, labelFormatLiteral.id));
-        }
-
-        // save template sub templates
-        if (data.subTemplates && data.subTemplates.length > 0) {
-            for (const subtemplate of data.subTemplates.filter(st => st.id).reverse()) {
-                promises.push(createResourceStatement(templateResource, process.env.REACT_APP_TEMPLATE_SUB_TEMPLATE, subtemplate.id));
-            }
         }
 
         Promise.all(promises).then(() => {

@@ -1,148 +1,26 @@
 import React, { Component } from 'react';
-import { Form, FormGroup, Label } from 'reactstrap';
-import Tooltip from '../../Utils/Tooltip';
-import AddTemplateButton from './TemplateWizard/AddTemplateButton';
-import TemplateWizard from 'components/AddPaper/Contributions/TemplateWizard/TemplateWizard';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { StyledHorizontalContribution } from './styled';
+import { Form, FormGroup } from 'reactstrap';
 import { connect } from 'react-redux';
-import { getStatementsByObjectAndPredicate, getParentResearchFields } from 'network';
+import SuggestedTemplates from 'components/StatementBrowser/SuggestedTemplates/SuggestedTemplates';
+import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import { updateResearchProblems, openTour } from 'actions/addPaper';
 import { getReseachProblemsOfContribution } from 'actions/statementBrowser';
-import { isEqual, difference, flattenDepth } from 'lodash';
+import { StyledHorizontalContribution } from './styled';
 import PropTypes from 'prop-types';
-import ContentLoader from 'react-content-loader';
 
 class Contribution extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showVideoDialog: false,
-            templates: [],
-            isTemplatesLoading: false,
-            isTemplatesFailesLoading: false
+            showVideoDialog: false
         };
-        this._isMounted = false;
     }
-
-    componentDidMount() {
-        this._isMounted = true;
-        this._isMounted && this.loadContirbutionTemplates();
-    }
-
-    componentDidUpdate = prevProps => {
-        if (!isEqual(prevProps.researchProblems, this.props.researchProblems)) {
-            this.setState({ isTemplatesLoading: true, isTemplatesFailesLoading: false });
-            const toRemove = difference(prevProps.researchProblems, this.props.researchProblems);
-            const toAdd = difference(this.props.researchProblems, prevProps.researchProblems);
-            let newTemplates = this.state.templates;
-            if (toRemove.length > 0) {
-                newTemplates = newTemplates.filter(template => {
-                    return !toRemove.includes(template.source.id);
-                });
-            }
-            const fetchTemplatesPromise = toAdd.map(problemId => {
-                return this.getTemplatesOfResourceId(problemId, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM);
-            });
-            Promise.all(fetchTemplatesPromise).then(addtemplates => {
-                this.setState({
-                    templates: [...newTemplates, ...flattenDepth(addtemplates, 2)],
-                    isTemplatesLoading: false,
-                    isTemplatesFailesLoading: false
-                });
-            });
-        }
-    };
-
-    componentWillUnmount() {
-        this._isMounted = false;
-    }
-
-    /**
-     * Fetch the templates of a resource
-     *
-     * @param {String} resourceId Resource Id
-     * @param {String} predicateId Predicate Id
-     */
-    getTemplatesOfResourceId = (resourceId, predicateId) => {
-        return getStatementsByObjectAndPredicate({ objectId: resourceId, predicateId: predicateId }).then(statements => {
-            // Filter statement with subjects of type Contribution Template
-            const source = statements.length > 0 ? statements[0].object : '';
-            return statements
-                .filter(statement => statement.subject.classes.includes(process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE))
-                .map(st => ({ id: st.subject.id, label: st.subject.label, source })); // return the template Object
-        });
-    };
-
-    /*
-    handleResearchProblemsChange = (problemsArray, a) => {
-        problemsArray = problemsArray ? problemsArray : [];
-        this.props.updateResearchProblems({
-            problemsArray,
-            contributionId: this.props.id
-        });
-        if (a.action === 'select-option') {
-            this.setState({ isTemplatesLoading: true, isTemplatesFailesLoading: false });
-            this.getTemplatesOfResourceId(a.option.id, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM).then(templates => {
-                this.setState(prevState => ({
-                    templates: [...prevState.templates, ...templates],
-                    isTemplatesLoading: false,
-                    isTemplatesFailesLoading: false
-                }));
-            });
-        } else if (a.action === 'remove-value') {
-            this.setState({ isTemplatesLoading: true, isTemplatesFailesLoading: false });
-            this.setState(prevState => ({
-                isTemplatesLoading: false,
-                isTemplatesFailesLoading: false,
-                templates: prevState.templates.filter(template => template.source.id !== a.removedValue.id)
-            }));
-        }
-    };
-    */
 
     handleLearnMore = step => {
         this.props.openTour(step);
     };
 
-    loadContirbutionTemplates = () => {
-        this.setState({ isTemplatesLoading: true, isTemplatesFailesLoading: false });
-        // Load templates of the research field and parents and the research problems
-        getParentResearchFields(this.props.selectedResearchField).then(parents => {
-            Promise.all([
-                ...parents.map(rf => this.getTemplatesOfResourceId(rf.id, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD)),
-                ...this.props.researchProblems
-                    .filter(rp => rp.id !== rp.label)
-                    .map(rp => this.getTemplatesOfResourceId(rp.id, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM))
-            ])
-                .then(templates => {
-                    this._isMounted &&
-                        this.setState({
-                            templates: templates.flat(),
-                            isTemplatesLoading: false,
-                            isTemplatesFailesLoading: false
-                        });
-                })
-                .catch(e => {
-                    this._isMounted &&
-                        this.setState({
-                            templates: [],
-                            isTemplatesLoading: false,
-                            isTemplatesFailesLoading: false
-                        });
-                });
-        });
-    };
-
     render() {
-        const uniqueTemplates = [];
-        this.state.templates.forEach(obj => {
-            if (!uniqueTemplates.some(o => o.id === obj.id)) {
-                uniqueTemplates.push({ ...obj });
-            }
-        });
-
         return (
             <StyledHorizontalContribution>
                 <Form>
@@ -163,62 +41,27 @@ class Contribution extends Component {
                         </Label>
                         <ResearchProblemInput handler={this.handleResearchProblemsChange} value={this.props.researchProblems} />
                         </FormGroup>*/}
-                    {!this.state.isTemplatesLoading && (
-                        <>
-                            <FormGroup>
-                                {!this.state.isTemplatesLoading && uniqueTemplates.length > 0 && (
-                                    <>
-                                        <Label>
-                                            <Tooltip message="Select a template to use it in your contribution data">Use template</Tooltip>
-                                        </Label>
-                                        <div>
-                                            {this.state.isTemplatesLoading && (
-                                                <>
-                                                    <Icon icon={faSpinner} spin /> Loading contribution templates.
-                                                </>
-                                            )}
-                                            {!this.state.isTemplatesLoading && uniqueTemplates.length === 0 && <>No contribution template found.</>}
-                                            {!this.state.isTemplatesLoading && uniqueTemplates.length > 0 && (
-                                                <>
-                                                    {uniqueTemplates.map(t => (
-                                                        <AddTemplateButton
-                                                            key={`t${t.id}`}
-                                                            id={t.id}
-                                                            label={t.label}
-                                                            source={t.source}
-                                                            selectedResource={this.props.resourceId}
-                                                        />
-                                                    ))}
-                                                </>
-                                            )}
-                                        </div>
-                                    </>
-                                )}
-                            </FormGroup>
-                            <FormGroup>
-                                <TemplateWizard
-                                    enableEdit={true}
-                                    syncBackend={false}
-                                    initialResourceId={this.props.resourceId}
-                                    templatesFound={uniqueTemplates.length > 0 ? true : false}
-                                />
-                            </FormGroup>
-                        </>
-                    )}
 
-                    {this.state.isTemplatesLoading && (
-                        <>
-                            <ContentLoader height={120} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
-                                <rect x="0" y="0" width="90" height="12" />
-                                <rect x="0" y="18" rx="7" ry="7" width="55" height="15" />
-                                <rect x="60" y="18" rx="7" ry="7" width="55" height="15" />
-                                <rect x="120" y="18" rx="7" ry="7" width="55" height="15" />
-                                <rect x="180" y="18" rx="7" ry="7" width="55" height="15" />
-                                <rect x="0" y="40" width="100%" height="40" />
-                                <rect x="0" y="87" rx="5" ry="5" width="70" height="18" />
-                            </ContentLoader>
-                        </>
-                    )}
+                    <>
+                        {(this.props.selectedResource || this.props.resourceId) && (
+                            <SuggestedTemplates
+                                syncBackend={false}
+                                selectedResource={this.props.selectedResource ? this.props.selectedResource : this.props.resourceId}
+                                researchProblems={this.props.researchProblems}
+                                researchField={this.props.selectedResearchField}
+                            />
+                        )}
+
+                        <FormGroup>
+                            <StatementBrowser
+                                enableEdit={true}
+                                syncBackend={false}
+                                openExistingResourcesInDialog={false}
+                                initialResourceId={this.props.resourceId}
+                                templatesFound={false}
+                            />
+                        </FormGroup>
+                    </>
                 </Form>
             </StyledHorizontalContribution>
         );
@@ -230,6 +73,7 @@ Contribution.propTypes = {
     updateResearchProblems: PropTypes.func.isRequired,
     researchProblems: PropTypes.array.isRequired,
     selectedResearchField: PropTypes.string.isRequired,
+    selectedResource: PropTypes.string,
     openTour: PropTypes.func.isRequired,
     resourceId: PropTypes.string
 };
@@ -241,7 +85,8 @@ const mapStateToProps = (state, ownProps) => {
             state,
             state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].resourceId : null
         ),
-        selectedResearchField: state.addPaper.selectedResearchField
+        selectedResearchField: state.addPaper.selectedResearchField,
+        selectedResource: state.statementBrowser.selectedResource
     };
 };
 

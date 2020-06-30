@@ -34,7 +34,7 @@ const mapStateToProps = (state, props) => {
 
     return {
         selectedProperty: state.statementBrowser.selectedProperty,
-        selectedResource: state.statementBrowser.selectedResource,
+        selectedResource: props.resourceId ? props.resourceId : state.statementBrowser.selectedResource,
         newResources: newResourcesList,
         properties: state.statementBrowser.properties,
         classes: state.statementBrowser.classes,

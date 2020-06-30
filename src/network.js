@@ -551,70 +551,39 @@ export const getTemplateById = templateId => {
                 }
             );
 
-            return Promise.all([components]).then(templateComponents => {
-                const subTemplates = templateStatements
-                    .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_SUB_TEMPLATE)
+            return Promise.all([components]).then(templateComponents => ({
+                id: templateId,
+                label: template.label,
+                statements: templateStatements.map(s => s.id),
+                predicate: templatePredicate
+                    ? {
+                          id: templatePredicate.object.id,
+                          label: templatePredicate.object.label
+                      }
+                    : {},
+                labelFormat: templateFormatLabel ? templateFormatLabel.object.label : '',
+                hasLabelFormat: templateFormatLabel ? true : false,
+                isStrict: templateIsStrict ? true : false,
+                components: templateComponents[0].sort((c1, c2) => sortMethod(c1.order, c2.order)),
+                class: templateClass
+                    ? {
+                          id: templateClass.object.id,
+                          label: templateClass.object.label
+                      }
+                    : {},
+                researchFields: templateStatements
+                    .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD)
                     .map(statement => ({
                         id: statement.object.id,
                         label: statement.object.label
-                    }));
-                return Promise.all(
-                    subTemplates.map(template =>
-                        getStatementsBySubject({ id: template.id }).then(subTemplateStatements => {
-                            const subTemplatePredicate = subTemplateStatements
-                                .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE)
-                                .map(statement => ({
-                                    id: statement.object.id,
-                                    label: statement.object.label
-                                }));
-                            const subTemplateClass = subTemplateStatements
-                                .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS)
-                                .map(statement => ({
-                                    id: statement.object.id,
-                                    label: statement.object.label
-                                }));
-                            return {
-                                ...template,
-                                predicate: subTemplatePredicate[0],
-                                class: subTemplateClass && subTemplateClass.length > 0 ? subTemplateClass[0] : null
-                            };
-                        })
-                    )
-                ).then(subs => ({
-                    id: templateId,
-                    label: template.label,
-                    statements: templateStatements.map(s => s.id),
-                    predicate: templatePredicate
-                        ? {
-                              id: templatePredicate.object.id,
-                              label: templatePredicate.object.label
-                          }
-                        : {},
-                    labelFormat: templateFormatLabel ? templateFormatLabel.object.label : '',
-                    hasLabelFormat: templateFormatLabel ? true : false,
-                    isStrict: templateIsStrict ? true : false,
-                    components: templateComponents[0].sort((c1, c2) => sortMethod(c1.order, c2.order)),
-                    class: templateClass
-                        ? {
-                              id: templateClass.object.id,
-                              label: templateClass.object.label
-                          }
-                        : {},
-                    researchFields: templateStatements
-                        .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD)
-                        .map(statement => ({
-                            id: statement.object.id,
-                            label: statement.object.label
-                        })),
-                    researchProblems: templateStatements
-                        .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM)
-                        .map(statement => ({
-                            id: statement.object.id,
-                            label: statement.object.label
-                        })),
-                    subTemplates: subs
-                }));
-            });
+                    })),
+                researchProblems: templateStatements
+                    .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM)
+                    .map(statement => ({
+                        id: statement.object.id,
+                        label: statement.object.label
+                    }))
+            }));
         })
     );
 };

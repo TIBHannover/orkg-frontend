@@ -175,7 +175,8 @@ export default function AddValueTemplate(props) {
                                         props.selectResource({
                                             increaseLevel: true,
                                             resourceId: resourceId,
-                                            label: isInlineResource
+                                            label: isInlineResource,
+                                            propertyLabel: props.predicate.label
                                         });
                                     }
                                 });

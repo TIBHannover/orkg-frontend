@@ -1,7 +1,7 @@
 import * as type from './types.js';
 import { guid } from 'utils';
 import * as network from 'network';
-import { orderBy, uniq } from 'lodash';
+import { orderBy, uniq, isEqual } from 'lodash';
 
 export const updateSettings = data => dispatch => {
     dispatch({
@@ -292,9 +292,18 @@ export function createProperty(data) {
             const resource = getState().statementBrowser.resources.byId[data.resourceId];
 
             if (resource && resource.propertyIds) {
-                const isExstingProperty = resource.propertyIds.find(
-                    p => getState().statementBrowser.properties.byId[p].existingPredicateId === data.existingPredicateId
-                );
+                const isExstingProperty = resource.propertyIds.find(p => {
+                    if (getState().statementBrowser.properties.byId[p].existingPredicateId === data.existingPredicateId) {
+                        if (data.range) {
+                            // if the range is set check the equality also
+                            return isEqual(data.range, getState().statementBrowser.properties.byId[p].range) ? true : false;
+                        } else {
+                            return true;
+                        }
+                    } else {
+                        return false;
+                    }
+                });
                 if (isExstingProperty) {
                     // Property already exists
                     return null;
@@ -658,7 +667,8 @@ export function selectResource(data) {
             type: type.ADD_RESOURCE_HISTORY,
             payload: {
                 resourceId: data.resourceId,
-                label: data.label
+                label: data.label,
+                propertyLabel: data.propertyLabel
             }
         });
 

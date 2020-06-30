@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
+import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import PropTypes from 'prop-types';
+import TemplateDetailsTooltip from './TemplateDetailsTooltip';
 import { createProperty, fetchTemplateIfNeeded } from 'actions/statementBrowser';
 import { prefillStatements } from 'actions/addPaper';
-import TemplateDetailsTooltip from './TemplateDetailsTooltip';
-import { guid } from 'utils';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
-import { Button } from 'reactstrap';
+import { createResource } from 'network';
 import Tippy from '@tippy.js/react';
+import styled from 'styled-components';
+import { guid } from 'utils';
+import PropTypes from 'prop-types';
 
 const IconWrapper = styled.span`
     background-color: #d1d5e4;
@@ -42,9 +43,9 @@ class AddTemplateButton extends Component {
         };
     }
 
-    addTemplate = templateID => {
+    addTemplate = async templateID => {
         this.setState({ isTemplateLoading: true, isTemplateFailedLoading: false });
-        this.props.fetchTemplateIfNeeded(templateID).then(templateDate => {
+        this.props.fetchTemplateIfNeeded(templateID).then(async templateDate => {
             const template = this.props.templates[templateID];
             // Check if it's a contribution template
             if (template.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION) {
@@ -59,13 +60,7 @@ class AddTemplateButton extends Component {
                             validationRules: component.validationRules
                         });
                     }
-                    this.props.prefillStatements({ statements, resourceId: this.props.selectedResource });
-                }
-                // Add templates
-                if (template.subTemplates && template.subTemplates.length > 0) {
-                    for (const subTemplate of template.subTemplates) {
-                        this.addTemplate(subTemplate.id);
-                    }
+                    this.props.prefillStatements({ statements, resourceId: this.props.selectedResource, syncBackend: this.props.syncBackend });
                 }
             } else {
                 // Add template to the statement browser
@@ -73,6 +68,7 @@ class AddTemplateButton extends Component {
                 const pID = guid();
                 const vID = guid();
                 const rID = guid();
+                let newObject = null;
                 statements['properties'].push({
                     propertyId: pID,
                     existingPredicateId: template.predicate.id,
@@ -81,16 +77,18 @@ class AddTemplateButton extends Component {
                     isAnimated: false,
                     canDuplicate: true
                 });
-
+                if (this.props.syncBackend) {
+                    newObject = await createResource(template.label, template.class ? [template.class.id] : []);
+                }
                 statements['values'].push({
                     valueId: vID,
                     label: template.label,
-                    existingResourceId: rID,
+                    existingResourceId: newObject ? newObject.id : rID,
                     type: 'object',
                     propertyId: pID,
                     classes: template.class ? [template.class.id] : []
                 });
-                this.props.prefillStatements({ statements, resourceId: this.props.selectedResource });
+                await this.props.prefillStatements({ statements, resourceId: this.props.selectedResource, syncBackend: this.props.syncBackend });
                 // Add properties
                 if (template.components && template.components.length > 0) {
                     const statements = { properties: [], values: [] };
@@ -101,22 +99,11 @@ class AddTemplateButton extends Component {
                             validationRules: component.validationRules
                         });
                     }
-                    this.props.prefillStatements({ statements, resourceId: rID });
-                }
-
-                // Add templates
-                if (template.subTemplates && template.subTemplates.length > 0) {
-                    const statementsSubTemplates = { properties: [], values: [] };
-                    for (const subTemplate of template.subTemplates) {
-                        const tpID = guid();
-                        //const tvID = guid();
-                        statementsSubTemplates['properties'].push({
-                            propertyId: tpID,
-                            existingPredicateId: subTemplate.predicate.id,
-                            label: subTemplate.predicate.label
-                        });
-                    }
-                    this.props.prefillStatements({ statements: statementsSubTemplates, resourceId: rID });
+                    await this.props.prefillStatements({
+                        statements,
+                        resourceId: newObject ? newObject.id : rID,
+                        syncBackend: this.props.syncBackend
+                    });
                 }
             }
             this.setState({ isTemplateLoading: false, isTemplateFailedLoading: false });
@@ -150,24 +137,22 @@ class AddTemplateButton extends Component {
 AddTemplateButton.propTypes = {
     createProperty: PropTypes.func.isRequired,
     prefillStatements: PropTypes.func.isRequired,
-    selectedResource: PropTypes.string,
+    selectedResource: PropTypes.string, // The resource to prefill with the template
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     source: PropTypes.object.isRequired,
     fetchTemplateIfNeeded: PropTypes.func.isRequired,
     templates: PropTypes.object.isRequired,
-    classes: PropTypes.object.isRequired
+    syncBackend: PropTypes.bool.isRequired
 };
 
 AddTemplateButton.defaultProps = {
-    label: ''
+    label: '',
+    syncBackend: false
 };
 
 const mapStateToProps = state => ({
-    currentStep: state.addPaper.currentStep,
-    addPaper: state.addPaper,
-    templates: state.statementBrowser.templates,
-    classes: state.statementBrowser.classes
+    templates: state.statementBrowser.templates
 });
 
 const mapDispatchToProps = dispatch => ({
