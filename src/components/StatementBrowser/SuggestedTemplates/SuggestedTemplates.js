@@ -51,10 +51,8 @@ export default function SuggestedTemplates(props) {
         };
         if (prevTarget && !isEqual(prevTarget.researchProblems, props.researchProblems)) {
             // update the list of templates when the list research problem changes
-            setIsTemplatesLoading(true);
-            setIsTemplatesFailedLoading(false);
             const toRemove = difference(prevTarget.researchProblems, props.researchProblems);
-            const toAdd = difference(props.researchProblems, prevTarget.researchProblemss);
+            const toAdd = difference(props.researchProblems, prevTarget.researchProblems);
             let newTemplates = templates;
             if (toRemove.length > 0) {
                 newTemplates = newTemplates.filter(template => {
@@ -66,8 +64,6 @@ export default function SuggestedTemplates(props) {
             });
             Promise.all(fetchTemplatesPromise).then(addtemplates => {
                 setTemplates([...newTemplates, ...flattenDepth(addtemplates, 2)]);
-                setIsTemplatesLoading(false);
-                setIsTemplatesFailedLoading(false);
             });
         }
         if (!prevTarget || prevTarget.researchField !== props.researchField) {
