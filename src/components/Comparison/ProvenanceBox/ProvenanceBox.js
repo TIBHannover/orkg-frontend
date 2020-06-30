@@ -21,7 +21,7 @@ class ProvenanceBox extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.resourcesId !== prevProps.resourcesId) {
+        if (this.props.resourceId !== prevProps.resourceId) {
             this.loadObservatory();
         }
     }
@@ -77,7 +77,7 @@ class ProvenanceBox extends Component {
                             style={{ minHeight: 430, width: 240, backgroundColor: '#f8f9fb', float: 'right' }}
                         >
                             <ProvenanceBoxTabs className="clearfix d-flex">
-                                <div id="div1" className={'h6 tab'}>
+                                <div id="div1" className="h6 tab">
                                     <span style={{ textAlign: 'center', fontWeight: 'bold', marginLeft: 73 }}>Provenance</span>
                                     <br />
                                     <br />
