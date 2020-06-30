@@ -95,64 +95,70 @@ export default function SuggestedTemplates(props) {
         }
     });
 
-    return (
-        <div>
-            {isTemplatesLoading ? (
-                <>
-                    <ContentLoader height={90} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
-                        <rect x="0" y="0" width="90" height="12" />
-                        <rect x="0" y="18" rx="7" ry="7" width="55" height="15" />
-                        <rect x="60" y="18" rx="7" ry="7" width="55" height="15" />
-                        <rect x="120" y="18" rx="7" ry="7" width="55" height="15" />
-                        <rect x="180" y="18" rx="7" ry="7" width="55" height="15" />
-                    </ContentLoader>
-                </>
-            ) : !isTemplatesFailedLoading ? (
-                <FormGroup>
-                    {uniqueTemplates.length > 0 && (
-                        <>
-                            <Label>
-                                <Tooltip message="Select a template to use it in your data">Use template</Tooltip>
-                            </Label>
-                            <div>
-                                {isTemplatesLoading && (
-                                    <>
-                                        <Icon icon={faSpinner} spin /> Loading templates.
-                                    </>
-                                )}
-                                {!isTemplatesLoading && uniqueTemplates.length === 0 && <>No template found.</>}
-                                {!isTemplatesLoading && uniqueTemplates.length > 0 && (
-                                    <>
-                                        {uniqueTemplates.map(t => (
-                                            <AddTemplateButton
-                                                key={`t${t.id}`}
-                                                id={t.id}
-                                                label={t.label}
-                                                source={t.source}
-                                                selectedResource={props.selectedResource}
-                                                syncBackend={props.syncBackend}
-                                            />
-                                        ))}
-                                    </>
-                                )}
-                            </div>
-                        </>
-                    )}
-                </FormGroup>
-            ) : (
-                <UncontrolledAlert color="info">Failed to load templates!</UncontrolledAlert>
-            )}
-        </div>
-    );
+    if (!props.disabled) {
+        return (
+            <div>
+                {isTemplatesLoading ? (
+                    <>
+                        <ContentLoader height={90} speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
+                            <rect x="0" y="0" width="90" height="12" />
+                            <rect x="0" y="18" rx="7" ry="7" width="55" height="15" />
+                            <rect x="60" y="18" rx="7" ry="7" width="55" height="15" />
+                            <rect x="120" y="18" rx="7" ry="7" width="55" height="15" />
+                            <rect x="180" y="18" rx="7" ry="7" width="55" height="15" />
+                        </ContentLoader>
+                    </>
+                ) : !isTemplatesFailedLoading ? (
+                    <FormGroup>
+                        {uniqueTemplates.length > 0 && (
+                            <>
+                                <Label>
+                                    <Tooltip message="Select a template to use it in your data">Use template</Tooltip>
+                                </Label>
+                                <div>
+                                    {isTemplatesLoading && (
+                                        <>
+                                            <Icon icon={faSpinner} spin /> Loading templates.
+                                        </>
+                                    )}
+                                    {!isTemplatesLoading && uniqueTemplates.length === 0 && <>No template found.</>}
+                                    {!isTemplatesLoading && uniqueTemplates.length > 0 && (
+                                        <>
+                                            {uniqueTemplates.map(t => (
+                                                <AddTemplateButton
+                                                    key={`t${t.id}`}
+                                                    id={t.id}
+                                                    label={t.label}
+                                                    source={t.source}
+                                                    selectedResource={props.selectedResource}
+                                                    syncBackend={props.syncBackend}
+                                                />
+                                            ))}
+                                        </>
+                                    )}
+                                </div>
+                            </>
+                        )}
+                    </FormGroup>
+                ) : (
+                    <UncontrolledAlert color="info">Failed to load templates!</UncontrolledAlert>
+                )}
+            </div>
+        );
+    } else {
+        return <UncontrolledAlert color="info">A shared resource cannot be edited directly</UncontrolledAlert>;
+    }
 }
 
 SuggestedTemplates.propTypes = {
     syncBackend: PropTypes.bool.isRequired,
     researchProblems: PropTypes.array.isRequired,
     researchField: PropTypes.string.isRequired,
-    selectedResource: PropTypes.string.isRequired
+    selectedResource: PropTypes.string.isRequired,
+    disabled: PropTypes.bool.isRequired
 };
 
 SuggestedTemplates.defaultProps = {
-    syncBackend: false
+    syncBackend: false,
+    disabled: false
 };

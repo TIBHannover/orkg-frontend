@@ -157,6 +157,11 @@ class Contributions extends Component {
     render() {
         const selectedContributionId = this.state.selectedContribution;
 
+        let shared = 1;
+        if (Object.keys(this.props.resources.byId).length !== 0 && (this.props.selectedResource || selectedContributionId)) {
+            shared = this.props.resources.byId[this.props.selectedResource ? this.props.selectedResource : selectedContributionId].shared;
+        }
+
         return (
             <div>
                 <Container>
@@ -210,6 +215,7 @@ class Contributions extends Component {
                                             selectedResource={this.props.selectedResource ? this.props.selectedResource : selectedContributionId}
                                             researchField={this.props.researchField.id}
                                             researchProblems={this.props.researchProblemsIds}
+                                            disabled={shared > 1 ? true : false}
                                         />
                                     )}
                                     {!this.state.loading && (
