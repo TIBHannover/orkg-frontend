@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, NavLink, Button } from 'reactstrap';
-import { getOrganization, getUsersByOrganizationId, getResourcesByObservatoryId, getAllObservatoriesbyOrganizationId } from 'network';
+import { getOrganization, getUsersByOrganizationId, getAllObservatoriesbyOrganizationId } from 'network';
 import InternalServerError from 'components/StaticPages/InternalServerError';
 import { Link } from 'react-router-dom';
 import NotFound from 'components/StaticPages/NotFound';
@@ -55,10 +55,8 @@ class OrganizationDetails extends Component {
             url: '',
             isLoading: false,
             isLoadingTotal: false,
-            isLoadingResources: false,
             isLoadingObservatories: false,
             image: '',
-            resourcesList: [],
             contributors: [],
             observatories: [],
             totalObservatories: 0,
@@ -69,7 +67,6 @@ class OrganizationDetails extends Component {
 
     componentDidMount() {
         this.findOrg();
-        this.loadResources();
         this.loadObservatories();
         this.loadContributors();
     }
@@ -77,7 +74,6 @@ class OrganizationDetails extends Component {
     componentDidUpdate = prevProps => {
         if (this.props.match.params.id !== prevProps.match.params.id) {
             this.findOrg();
-            this.loadResources();
             this.loadObservatories();
             this.loadContributors();
         }
@@ -98,20 +94,6 @@ class OrganizationDetails extends Component {
             })
             .catch(error => {
                 this.setState({ error: error, isLoading: false });
-            });
-    };
-
-    loadResources = () => {
-        this.setState({ isLoadingResources: true });
-        getResourcesByObservatoryId(this.props.match.params.id)
-            .then(resources => {
-                this.setState({
-                    resourcesList: resources,
-                    isLoadingResources: false
-                });
-            })
-            .catch(error => {
-                this.setState({ error: error, isLoadingResources: false });
             });
     };
 
@@ -160,14 +142,14 @@ class OrganizationDetails extends Component {
                     <Container className="mt-5 clearfix">
                         <div className={'box clearfix pt-4 pb-4 pl-5 pr-5'}>
                             <div className={'mb-2'}>
-                                <div className="pb-2 mb-3">
-                                    <NavLink href={this.state.url} target="_blank" rel="noopener noreferrer">
+                                <span>
+                                    <NavLink style={{ width: 500 }} href={this.state.url} target="_blank" rel="noopener noreferrer">
                                         <h4 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                             {this.state.label} <Icon size="sm" icon={faExternalLinkAlt} />
-                                            <img style={{ float: 'right' }} height="100" src={this.state.image} alt="" />{' '}
                                         </h4>
                                     </NavLink>
-                                </div>
+                                </span>
+                                <img style={{ float: 'right', marginTop: -35 }} height="100" src={this.state.image} alt="" />{' '}
                             </div>
                             <div className={'clearfix'}>
                                 &nbsp; &nbsp;
@@ -176,7 +158,7 @@ class OrganizationDetails extends Component {
                                         outline
                                         size="sm"
                                         color="primary"
-                                        className="mb-3"
+                                        className="mt-4"
                                         tag={Link}
                                         to={reverse(ROUTES.ADD_OBSERVATORY, { id: this.props.match.params.id })}
                                     >
@@ -191,7 +173,7 @@ class OrganizationDetails extends Component {
                             <Col md={6} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
                                 <div
                                     className="box rounded-lg p-3"
-                                    style={{ height: '500px', flexDirection: 'column', display: 'flex', flexGrow: '1' }}
+                                    style={{ minHeight: '500px', flexDirection: 'column', display: 'flex', flexGrow: '1' }}
                                 >
                                     <h5 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                         Observatories
@@ -200,20 +182,20 @@ class OrganizationDetails extends Component {
                                         <div className="pb-2 mb-6">
                                             {this.state.observatories.length > 0 ? (
                                                 <div style={{ paddingTop: 10 }}>
-                                                    {this.state.observatories.map((observatory, index) => {
-                                                        return (
-                                                            <span key={index}>
-                                                                {index + 1}
-                                                                {'. '}
-                                                                <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}>
-                                                                    <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
-                                                                        {observatory.name}
-                                                                    </ResearchProblemButton>
-                                                                </Link>
-                                                                <br />
-                                                            </span>
-                                                        );
-                                                    })}
+                                                    <ul className="list-group" style={{ paddingLeft: 15 }}>
+                                                        {this.state.observatories.map((observatory, index) => {
+                                                            return (
+                                                                <li>
+                                                                    <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}>
+                                                                        <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
+                                                                            {observatory.name}
+                                                                        </ResearchProblemButton>
+                                                                    </Link>
+                                                                    <br />
+                                                                </li>
+                                                            );
+                                                        })}
+                                                    </ul>
                                                 </div>
                                             ) : (
                                                 <div className="mt-4">
@@ -246,7 +228,6 @@ class OrganizationDetails extends Component {
                                                                             style={{ border: '3px solid #fff' }}
                                                                             email={user.email}
                                                                             size={45}
-                                                                            id="TooltipExample"
                                                                         />
                                                                         <p style={{ marginLeft: '48px', marginTop: '-33px' }}>
                                                                             <Link

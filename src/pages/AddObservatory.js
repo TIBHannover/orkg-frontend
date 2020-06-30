@@ -92,7 +92,7 @@ class AddObservatory extends Component {
                             <Input
                                 onChange={this.handleChange}
                                 onKeyUp={this.handleKeyUp}
-                                type="text"
+                                type="textarea"
                                 name="description"
                                 id="ObservatoryDescription"
                                 disabled={loading}

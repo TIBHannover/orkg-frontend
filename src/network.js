@@ -704,13 +704,14 @@ export const getContributorsByResourceId = id => {
 export const getObservatoryAndOrganizationInformation = (observatoryId, organizationId) => {
     return getObservatorybyId(observatoryId).then(obsResponse => {
         return getOrganization(organizationId).then(orgResponse => {
+            console.log(orgResponse);
             return {
                 id: observatoryId,
                 name: obsResponse.name.toUpperCase(),
                 organization: {
                     id: organizationId,
-                    name: orgResponse.organization_name,
-                    logo: orgResponse.organization_logo
+                    name: orgResponse.name,
+                    logo: orgResponse.logo
                 }
             };
         });

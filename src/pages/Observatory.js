@@ -8,7 +8,6 @@ import NotFound from 'components/StaticPages/NotFound';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import VisibilitySensor from 'react-visibility-sensor';
 import Gravatar from 'react-gravatar';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -148,16 +147,13 @@ class Observatory extends Component {
     render = () => {
         return (
             <>
-                {console.log(this.state.organizationsList.length)}
                 {this.state.isLoading && <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
                 {!this.state.isLoading && this.state.error && <>{this.state.error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
                 {!this.state.isLoading && !this.state.error && this.state.label && (
                     <Container className="mt-5 clearfix">
-                        <VisibilitySensor onChange={this.handleShowHeaderBar}>
-                            <Container className="d-flex align-items-center">
-                                <h3 className="h4 mt-4 mb-4 flex-grow-1">Observatory</h3>
-                            </Container>
-                        </VisibilitySensor>
+                        <Container className="d-flex align-items-center">
+                            <h3 className="h4 mb-4 flex-grow-1">Observatory</h3>
+                        </Container>
 
                         <div className={'box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5'}>
                             <h3>{this.state.label}</h3>
@@ -169,7 +165,7 @@ class Observatory extends Component {
                             <Col md={8} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
                                 <div
                                     className="box rounded-lg p-3"
-                                    style={{ height: '500px', flexDirection: 'column', display: 'flex', flexGrow: '1' }}
+                                    style={{ minHeight: '500px', flexDirection: 'column', display: 'flex', flexGrow: '1' }}
                                 >
                                     <h5 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                         Research Problems
@@ -178,32 +174,34 @@ class Observatory extends Component {
                                         <div className="pb-2 mb-6">
                                             {this.state.resourcesList.length > 0 ? (
                                                 <div style={{ paddingTop: 10 }}>
-                                                    {this.state.resourcesList
-                                                        .filter(resource => resource.classes.includes(process.env.REACT_APP_CLASSES_PROBLEM))
-                                                        .map((resource, index) => {
-                                                            return (
-                                                                <span key={index}>
-                                                                    {index + 1}
-                                                                    {'. '}
-                                                                    <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: resource.id })}>
-                                                                        <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
-                                                                            {resource.label}
-                                                                        </ResearchProblemButton>
-                                                                    </Link>
-                                                                    <br />
-                                                                </span>
-                                                            );
-                                                        })}
+                                                    <ul className="list-group" style={{ paddingLeft: 15 }}>
+                                                        {this.state.resourcesList
+                                                            .filter(resource => resource.classes.includes(process.env.REACT_APP_CLASSES_PROBLEM))
+                                                            .map((resource, index) => {
+                                                                return (
+                                                                    <li>
+                                                                        <Link
+                                                                            to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: resource.id })}
+                                                                        >
+                                                                            <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
+                                                                                {resource.label}
+                                                                            </ResearchProblemButton>
+                                                                        </Link>
+                                                                        <br />
+                                                                    </li>
+                                                                );
+                                                            })}
+                                                    </ul>
                                                 </div>
                                             ) : (
                                                 <div className="mt-4">
-                                                    <h5>No Resources</h5>
+                                                    <h5>No Research Problems</h5>
                                                 </div>
                                             )}
                                         </div>
                                     ) : (
                                         <div className="mt-4">
-                                            <h5>Loading resources ...</h5>
+                                            <h5>Loading research problems ...</h5>
                                         </div>
                                     )}
                                 </div>
@@ -238,13 +236,13 @@ class Observatory extends Component {
                                                 </div>
                                             ) : (
                                                 <div className="mt-4">
-                                                    <h5>No Resources</h5>
+                                                    <h5>No Organizations</h5>
                                                 </div>
                                             )}
                                         </StyledScrollBar>
                                     ) : (
                                         <div className="mt-4">
-                                            <h5>Loading resources ...</h5>
+                                            <h5>Loading organizations ...</h5>
                                         </div>
                                     )}
                                 </div>
@@ -264,7 +262,6 @@ class Observatory extends Component {
                                                                             style={{ border: '3px solid #fff' }}
                                                                             email={user.email}
                                                                             size={45}
-                                                                            id="TooltipExample"
                                                                         />
                                                                         <p style={{ marginLeft: '48px', marginTop: '-47px' }}>
                                                                             <Link
@@ -278,7 +275,7 @@ class Observatory extends Component {
                                                                             {this.state.organizationsList
                                                                                 .filter(o => o.id.includes(user.organization_id))
                                                                                 .map((o, index) => {
-                                                                                    return <div style={{ color: 'gray' }}>{o.name}</div>;
+                                                                                    return <span style={{ color: 'gray' }}>{o.name}</span>;
                                                                                 })}
                                                                         </p>
                                                                     </div>
@@ -304,24 +301,34 @@ class Observatory extends Component {
                             </Col>
                         </Row>
 
-                        <VisibilitySensor onChange={this.handleShowHeaderBar}>
-                            <Container className="d-flex align-items-center">
-                                <h1 className="h4 mt-4 mb-4 flex-grow-1">Content</h1>
-                            </Container>
-                        </VisibilitySensor>
+                        <Container className="d-flex align-items-center">
+                            <h1 className="h4 mt-4 mb-4 flex-grow-1">Content</h1>
+                        </Container>
 
                         <div className={'box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5'}>
                             <div className="pb-2 mb-3">
                                 <h3 className={''} style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                     Comparisons
                                 </h3>
-                                {!this.state.isLoadingComparisons ? (
+                                {!this.state.isLoadingResources ? (
                                     <div className="pb-2 mb-6">
-                                        {this.state.commparisonsList.length > 0 ? (
+                                        {this.state.resourcesList.length > 0 ? (
                                             <div style={{ paddingTop: 10 }}>
-                                                {this.state.resourcesList.map((resource, index) => {
-                                                    return <ShortRecord />;
-                                                })}
+                                                {this.state.resourcesList
+                                                    .filter(resource => resource.classes.includes('Comparison'))
+                                                    .map((resource, index) => {
+                                                        return (
+                                                            <ShortRecord
+                                                                key={`resource${index}`}
+                                                                header={resource.label}
+                                                                href={
+                                                                    resource.classes.includes(process.env.REACT_APP_CLASSES_COMPARISON)
+                                                                        ? reverse(ROUTES.COMPARISON, { comparisonId: resource.id })
+                                                                        : reverse(ROUTES.RESOURCE, { id: resource.id })
+                                                                }
+                                                            />
+                                                        );
+                                                    })}
                                             </div>
                                         ) : (
                                             <div className="text-center mt-4 mb-4">No Comparisons</div>
@@ -363,13 +370,13 @@ class Observatory extends Component {
                                             </div>
                                         ) : (
                                             <div className="mt-4">
-                                                <h5>No Resources</h5>
+                                                <h5>No Papers</h5>
                                             </div>
                                         )}
                                     </div>
                                 ) : (
                                     <div className="mt-4">
-                                        <h5>Loading resources ...</h5>
+                                        <h5>Loading papers ...</h5>
                                     </div>
                                 )}
                             </div>

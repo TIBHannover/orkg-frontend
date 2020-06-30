@@ -21,6 +21,7 @@ import arrayMove from 'array-move';
 import { connect } from 'react-redux';
 import dotProp from 'dot-prop-immutable';
 import { reverse } from 'named-urls';
+import ProvenanceBox from 'components/Comparison/ProvenanceBox/ProvenanceBox';
 import { generateRdfDataVocabularyFile, extendPropertyIds, similarPropertiesByLabel } from 'utils';
 import { ContainerAnimated } from './styled';
 import RelatedResources from './RelatedResources';
@@ -550,6 +551,7 @@ class Comparison extends Component {
 
                     <RelatedResources resourcesStatements={this.state.resourcesStatements} />
                     <RelatedFigures figureStatements={this.state.figureStatements} />
+                    <ProvenanceBox resourceId={this.props.match.params.comparisonId} />
                 </ContainerAnimated>
 
                 <SelectProperties

@@ -133,7 +133,7 @@ class AddOrganization extends Component {
                                 name="url"
                                 id="OrganizationUrl"
                                 disabled={loading}
-                                placeholder="https://abc.com"
+                                placeholder="https://www.example.com"
                             />
                         </FormGroup>
                         <div>
