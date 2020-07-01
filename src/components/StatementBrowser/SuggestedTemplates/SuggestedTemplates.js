@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ContentLoader from 'react-content-loader';
 import { getStatementsByObjectAndPredicate, getParentResearchFields } from 'network';
 import Tooltip from 'components/Utils/Tooltip';
@@ -31,7 +31,7 @@ export default function SuggestedTemplates(props) {
                     setLoadingFieldTemplates({ isLoading: false, failed: true });
                 });
         });
-    }, [props.researchField]);
+    }, [getTemplatesOfResourceId, props.researchField]);
 
     /**
      * Fetch templates for research problems
@@ -61,7 +61,7 @@ export default function SuggestedTemplates(props) {
                 setProblemTemplates([]);
                 setLoadingProblemTemplates({ isLoading: false, failed: true });
             });
-    }, [props.researchProblems, loadedProblems]);
+    }, [props.researchProblems, loadedProblems, getTemplatesOfResourceId]);
 
     /**
      * Fetch the templates of a resource
@@ -69,7 +69,7 @@ export default function SuggestedTemplates(props) {
      * @param {String} resourceId Resource Id
      * @param {String} predicateId Predicate Id
      */
-    const getTemplatesOfResourceId = (resourceId, predicateId) => {
+    const getTemplatesOfResourceId = useCallback((resourceId, predicateId) => {
         return getStatementsByObjectAndPredicate({ objectId: resourceId, predicateId: predicateId }).then(statements => {
             // Filter statement with subjects of type Contribution Template
             const source = statements.length > 0 ? statements[0].object : '';
@@ -77,7 +77,7 @@ export default function SuggestedTemplates(props) {
                 .filter(statement => statement.subject.classes.includes(process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE))
                 .map(st => ({ id: st.subject.id, label: st.subject.label, source })); // return the template Object
         });
-    };
+    }, []);
 
     const templatesUnique = uniqBy([...problemTemplates, ...fieldTemplates], 'id');
     const isLoading = loadingFieldTemplates.isLoading || loadingProblemTemplates.isLoading;

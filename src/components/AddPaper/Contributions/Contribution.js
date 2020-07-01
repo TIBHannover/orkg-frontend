@@ -21,6 +21,11 @@ class Contribution extends Component {
     };
 
     render() {
+        let shared = 1;
+        if (Object.keys(this.props.resources.byId).length !== 0 && (this.props.selectedResource || this.props.resourceId)) {
+            shared = this.props.resources.byId[this.props.selectedResource ? this.props.selectedResource : this.props.resourceId].shared;
+        }
+
         return (
             <StyledHorizontalContribution>
                 <Form>
@@ -49,6 +54,7 @@ class Contribution extends Component {
                                 selectedResource={this.props.selectedResource ? this.props.selectedResource : this.props.resourceId}
                                 researchProblems={this.props.researchProblems}
                                 researchField={this.props.selectedResearchField}
+                                disabled={shared > 1 ? true : false}
                             />
                         )}
 
@@ -75,7 +81,8 @@ Contribution.propTypes = {
     selectedResearchField: PropTypes.string.isRequired,
     selectedResource: PropTypes.string,
     openTour: PropTypes.func.isRequired,
-    resourceId: PropTypes.string
+    resourceId: PropTypes.string,
+    resources: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -86,7 +93,8 @@ const mapStateToProps = (state, ownProps) => {
             state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].resourceId : null
         ),
         selectedResearchField: state.addPaper.selectedResearchField,
-        selectedResource: state.statementBrowser.selectedResource
+        selectedResource: state.statementBrowser.selectedResource,
+        resources: state.statementBrowser.resources
     };
 };
 
