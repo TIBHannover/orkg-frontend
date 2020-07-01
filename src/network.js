@@ -686,7 +686,15 @@ export const getUsersByOrganizationId = id => {
 };
 
 export const getResourcesByObservatoryId = id => {
-    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/resources`);
+    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/papers`);
+};
+
+export const getComparisonsByObservatoryId = id => {
+    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/comparisons`);
+};
+
+export const getProblemsByObservatoryId = id => {
+    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/problems`);
 };
 
 export const createObservatory = (observatoryName, organizationId, description) => {

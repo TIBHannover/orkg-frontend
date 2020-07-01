@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
 import { Col, Row } from 'reactstrap';
-import { getUsersByObservatoryId, getOrganization, getResourcesByObservatoryId, getObservatorybyId } from 'network';
+import {
+    getUsersByObservatoryId,
+    getOrganization,
+    getResourcesByObservatoryId,
+    getComparisonsByObservatoryId,
+    getProblemsByObservatoryId,
+    getObservatorybyId
+} from 'network';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import InternalServerError from 'components/StaticPages/InternalServerError';
 import NotFound from 'components/StaticPages/NotFound';
@@ -53,28 +60,34 @@ class Observatory extends Component {
             description: '',
             isLoading: false,
             isLoadingContributors: false,
-            isLoadingResources: false,
+            isLoadingPapers: false,
             isLoadingOrganizations: false,
+            isLoadingProblems: false,
             isLoadingComparisons: false,
             contributors: [],
+            problemsList: [],
             activeTab: 1,
-            resourcesList: [],
+            papersList: [],
             organizationsList: [],
-            commparisonsList: []
+            comparisonsList: []
         };
     }
 
     componentDidMount() {
         this.loadObservatory();
         this.loadContributors();
-        this.loadResources();
+        this.loadPapers();
+        this.loadComparisons();
+        this.loadProblems();
     }
 
     componentDidUpdate = prevProps => {
         if (this.props.match.params.id !== prevProps.match.params.id) {
             this.loadObservatory();
             this.loadContributors();
-            this.loadResources();
+            this.loadPapers();
+            this.loadComparisons();
+            this.loadProblems();
         }
     };
 
@@ -95,17 +108,45 @@ class Observatory extends Component {
             });
     };
 
-    loadResources = () => {
-        this.setState({ isLoadingResources: true });
+    loadPapers = () => {
+        this.setState({ isLoadingPapers: true });
         getResourcesByObservatoryId(this.props.match.params.id)
             .then(resources => {
                 this.setState({
-                    resourcesList: resources,
-                    isLoadingResources: false
+                    papersList: resources,
+                    isLoadingPapers: false
                 });
             })
             .catch(error => {
-                this.setState({ error: error, isLoadingResources: false });
+                this.setState({ error: error, isLoadingPapers: false });
+            });
+    };
+
+    loadComparisons = () => {
+        this.setState({ isLoadingComparisons: true });
+        getComparisonsByObservatoryId(this.props.match.params.id)
+            .then(comparisons => {
+                this.setState({
+                    comparisonsList: comparisons,
+                    isLoadingComparisons: false
+                });
+            })
+            .catch(error => {
+                this.setState({ error: error, isLoadingComparisons: false });
+            });
+    };
+
+    loadProblems = () => {
+        this.setState({ isLoadingProblems: true });
+        getProblemsByObservatoryId(this.props.match.params.id)
+            .then(problems => {
+                this.setState({
+                    problemsList: problems,
+                    isLoadingProblems: false
+                });
+            })
+            .catch(error => {
+                this.setState({ error: error, isLoadingProblems: false });
             });
     };
 
@@ -161,39 +202,31 @@ class Observatory extends Component {
                                     style={{ minHeight: '500px', flexDirection: 'column', display: 'flex', flexGrow: '1' }}
                                 >
                                     <h5 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Research Problems</h5>
-                                    {!this.state.isLoadingResources ? (
+                                    {!this.state.isLoadingProblems ? (
                                         <div className="pb-2 mb-6">
-                                            {this.state.resourcesList.length > 0 ? (
+                                            {this.state.problemsList.length > 0 ? (
                                                 <div style={{ paddingTop: 10 }}>
                                                     <ul className="list-group" style={{ paddingLeft: 15 }}>
-                                                        {this.state.resourcesList
-                                                            .filter(resource => resource.classes.includes(process.env.REACT_APP_CLASSES_PROBLEM))
-                                                            .map((resource, index) => {
-                                                                return (
-                                                                    <li>
-                                                                        <Link
-                                                                            to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: resource.id })}
-                                                                        >
-                                                                            <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
-                                                                                {resource.label}
-                                                                            </ResearchProblemButton>
-                                                                        </Link>
-                                                                        <br />
-                                                                    </li>
-                                                                );
-                                                            })}
+                                                        {this.state.problemsList.map((problem, index) => {
+                                                            return (
+                                                                <li>
+                                                                    <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>
+                                                                        <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
+                                                                            {problem.label}
+                                                                        </ResearchProblemButton>
+                                                                    </Link>
+                                                                    <br />
+                                                                </li>
+                                                            );
+                                                        })}
                                                     </ul>
                                                 </div>
                                             ) : (
-                                                <div className="mt-4">
-                                                    <h5>No Research Problems</h5>
-                                                </div>
+                                                <div className="text-center mt-4 mb-4">No Research Problems</div>
                                             )}
                                         </div>
                                     ) : (
-                                        <div className="mt-4">
-                                            <h5>Loading research problems ...</h5>
-                                        </div>
+                                        <div className="text-center mt-4 mb-4">Loading research problems ...</div>
                                     )}
                                 </div>
                             </Col>
@@ -224,15 +257,11 @@ class Observatory extends Component {
                                                     })}
                                                 </div>
                                             ) : (
-                                                <div className="mt-4">
-                                                    <h5>No Organizations</h5>
-                                                </div>
+                                                <div className="text-center mt-4 mb-4">No Organizations</div>
                                             )}
                                         </StyledScrollBar>
                                     ) : (
-                                        <div className="mt-4">
-                                            <h5>Loading organizations ...</h5>
-                                        </div>
+                                        <div className="text-center mt-4 mb-4">Loading organizations ...</div>
                                     )}
                                 </div>
                                 <div className="box rounded-lg mt-4 p-3" style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
@@ -261,11 +290,9 @@ class Observatory extends Component {
                                                                                 {user.display_name}
                                                                             </Link>
                                                                             <br />
-                                                                            {this.state.organizationsList
-                                                                                .filter(o => o.id.includes(user.organization_id))
-                                                                                .map((o, index) => {
-                                                                                    return <span style={{ color: 'gray' }}>{o.name}</span>;
-                                                                                })}
+                                                                            {this.state.organizationsList.map((o, index) => {
+                                                                                return <span style={{ color: 'gray' }}>{o.name}</span>;
+                                                                            })}
                                                                         </p>
                                                                     </div>
 
@@ -275,16 +302,12 @@ class Observatory extends Component {
                                                         })}
                                                     </div>
                                                 ) : (
-                                                    <div className="mt-4">
-                                                        <h5>No Contributors</h5>
-                                                    </div>
+                                                    <div className="text-center mt-4 mb-4">No Contributors</div>
                                                 )}
                                             </StyledScrollBar>
                                         </div>
                                     ) : (
-                                        <div className="mt-4">
-                                            <h5>Loading Contributors ...</h5>
-                                        </div>
+                                        <div className="text-center mt-4 mb-4">Loading Contributors ...</div>
                                     )}
                                 </div>
                             </Col>
@@ -297,34 +320,30 @@ class Observatory extends Component {
                         <div className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
                             <div className="pb-2 mb-3">
                                 <h3 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Comparisons</h3>
-                                {!this.state.isLoadingResources ? (
+                                {!this.state.isLoadingComparisons ? (
                                     <div className="pb-2 mb-6">
-                                        {this.state.resourcesList.length > 0 ? (
+                                        {this.state.comparisonsList.length > 0 ? (
                                             <div style={{ paddingTop: 10 }}>
-                                                {this.state.resourcesList
-                                                    .filter(resource => resource.classes.includes('Comparison'))
-                                                    .map((resource, index) => {
-                                                        return (
-                                                            <ShortRecord
-                                                                key={`resource${index}`}
-                                                                header={resource.label}
-                                                                href={
-                                                                    resource.classes.includes(process.env.REACT_APP_CLASSES_COMPARISON)
-                                                                        ? reverse(ROUTES.COMPARISON, { comparisonId: resource.id })
-                                                                        : reverse(ROUTES.RESOURCE, { id: resource.id })
-                                                                }
-                                                            />
-                                                        );
-                                                    })}
+                                                {this.state.comparisonsList.map((comparison, index) => {
+                                                    return (
+                                                        <ShortRecord
+                                                            key={`resource${index}`}
+                                                            header={comparison.label}
+                                                            href={
+                                                                comparison.classes.includes(process.env.REACT_APP_CLASSES_COMPARISON)
+                                                                    ? reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })
+                                                                    : reverse(ROUTES.RESOURCE, { id: comparison.id })
+                                                            }
+                                                        />
+                                                    );
+                                                })}
                                             </div>
                                         ) : (
                                             <div className="text-center mt-4 mb-4">No Comparisons</div>
                                         )}
                                     </div>
                                 ) : (
-                                    <div className="mt-4">
-                                        <h5>Loading comparisons ...</h5>
-                                    </div>
+                                    <div className="text-center mt-4 mb-4">Loading comparisons ...</div>
                                 )}
                             </div>
                         </div>
@@ -333,36 +352,30 @@ class Observatory extends Component {
                         <div className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
                             <div className="pb-2 mb-3">
                                 <h3 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Papers</h3>
-                                {!this.state.isLoadingResources ? (
+                                {!this.state.isLoadingPapers ? (
                                     <div className="pb-2 mb-6">
-                                        {this.state.resourcesList.length > 0 ? (
+                                        {this.state.papersList.length > 0 ? (
                                             <div style={{ paddingTop: 10 }}>
-                                                {this.state.resourcesList
-                                                    .filter(resource => resource.classes.includes('Paper'))
-                                                    .map((resource, index) => {
-                                                        return (
-                                                            <ShortRecord
-                                                                key={`resource${index}`}
-                                                                header={resource.label}
-                                                                href={
-                                                                    resource.classes.includes(process.env.REACT_APP_CLASSES_PAPER)
-                                                                        ? reverse(ROUTES.VIEW_PAPER, { resourceId: resource.id })
-                                                                        : reverse(ROUTES.RESOURCE, { id: resource.id })
-                                                                }
-                                                            />
-                                                        );
-                                                    })}
+                                                {this.state.papersList.map((resource, index) => {
+                                                    return (
+                                                        <ShortRecord
+                                                            key={`resource${index}`}
+                                                            header={resource.label}
+                                                            href={
+                                                                resource.classes.includes(process.env.REACT_APP_CLASSES_PAPER)
+                                                                    ? reverse(ROUTES.VIEW_PAPER, { resourceId: resource.id })
+                                                                    : reverse(ROUTES.RESOURCE, { id: resource.id })
+                                                            }
+                                                        />
+                                                    );
+                                                })}
                                             </div>
                                         ) : (
-                                            <div className="mt-4">
-                                                <h5>No Papers</h5>
-                                            </div>
+                                            <div className="text-center mt-4 mb-4">No Papers</div>
                                         )}
                                     </div>
                                 ) : (
-                                    <div className="mt-4">
-                                        <h5>Loading papers ...</h5>
-                                    </div>
+                                    <div className="mt-4">Loading papers ...</div>
                                 )}
                             </div>
                         </div>
