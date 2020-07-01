@@ -125,23 +125,17 @@ class Observatory extends Component {
 
     loadOrganizations = organizationsData => {
         this.setState({ isLoadingOrganizations: true });
+        let organizations = [];
         for (let i = 0; i < organizationsData.length; i++) {
-            getOrganization(organizationsData[i].id).then(organization => {
-                this.setState({
-                    organizationsList: [...this.state.organizationsList, organization]
-                });
+            organizations[i] = getOrganization(organizationsData[i].id);
+        }
+
+        Promise.all(organizations).then(data => {
+            this.setState({
+                organizationsList: data,
+                isLoadingOrganizations: false
             });
-        }
-
-        this.setState({
-            isLoadingOrganizations: false
         });
-    };
-
-    barToggle = tab => {
-        if (this.state.activeTab !== tab) {
-            this.setState({ activeTab: tab });
-        }
     };
 
     render = () => {
@@ -160,7 +154,6 @@ class Observatory extends Component {
                             {this.state.description}
                         </div>
                         <br />
-
                         <Row>
                             <Col md={8} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
                                 <div
@@ -251,7 +244,7 @@ class Observatory extends Component {
                                                     <div className="scrollBarDiv">
                                                         {this.state.contributors.map((user, index) => {
                                                             return (
-                                                                <div>
+                                                                <div key={`c${index}`}>
                                                                     <div>
                                                                         <StyledGravatar
                                                                             className="rounded-circle"
