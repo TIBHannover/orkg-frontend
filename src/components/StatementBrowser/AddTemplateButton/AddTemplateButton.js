@@ -46,7 +46,7 @@ class AddTemplateButton extends Component {
     addTemplate = async templateID => {
         this.setState({ isTemplateLoading: true, isTemplateFailedLoading: false });
         this.props.fetchTemplateIfNeeded(templateID).then(async templateDate => {
-            const template = this.props.templates[templateID];
+            const template = templateDate;
             // Check if it's a contribution template
             if (template.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION) {
                 // Add properties

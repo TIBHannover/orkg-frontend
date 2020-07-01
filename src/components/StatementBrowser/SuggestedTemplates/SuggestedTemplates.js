@@ -15,6 +15,22 @@ export default function SuggestedTemplates(props) {
     const [loadingProblemTemplates, setLoadingProblemTemplates] = useState({ isLoading: false, failed: false });
 
     /**
+     * Fetch the templates of a resource
+     *
+     * @param {String} resourceId Resource Id
+     * @param {String} predicateId Predicate Id
+     */
+    const getTemplatesOfResourceId = useCallback((resourceId, predicateId) => {
+        return getStatementsByObjectAndPredicate({ objectId: resourceId, predicateId: predicateId }).then(statements => {
+            // Filter statement with subjects of type Contribution Template
+            const source = statements.length > 0 ? statements[0].object : '';
+            return statements
+                .filter(statement => statement.subject.classes.includes(process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE))
+                .map(st => ({ id: st.subject.id, label: st.subject.label, source })); // return the template Object
+        });
+    }, []);
+
+    /**
      * Fetch templates for research fields
      */
     useEffect(() => {
@@ -31,7 +47,7 @@ export default function SuggestedTemplates(props) {
                     setLoadingFieldTemplates({ isLoading: false, failed: true });
                 });
         });
-    }, [getTemplatesOfResourceId, props.researchField]);
+    }, [props.researchField, getTemplatesOfResourceId]);
 
     /**
      * Fetch templates for research problems
@@ -62,22 +78,6 @@ export default function SuggestedTemplates(props) {
                 setLoadingProblemTemplates({ isLoading: false, failed: true });
             });
     }, [props.researchProblems, loadedProblems, getTemplatesOfResourceId]);
-
-    /**
-     * Fetch the templates of a resource
-     *
-     * @param {String} resourceId Resource Id
-     * @param {String} predicateId Predicate Id
-     */
-    const getTemplatesOfResourceId = useCallback((resourceId, predicateId) => {
-        return getStatementsByObjectAndPredicate({ objectId: resourceId, predicateId: predicateId }).then(statements => {
-            // Filter statement with subjects of type Contribution Template
-            const source = statements.length > 0 ? statements[0].object : '';
-            return statements
-                .filter(statement => statement.subject.classes.includes(process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE))
-                .map(st => ({ id: st.subject.id, label: st.subject.label, source })); // return the template Object
-        });
-    }, []);
 
     const templatesUnique = uniqBy([...problemTemplates, ...fieldTemplates], 'id');
     const isLoading = loadingFieldTemplates.isLoading || loadingProblemTemplates.isLoading;
@@ -111,7 +111,7 @@ export default function SuggestedTemplates(props) {
                             <AddTemplateButton
                                 key={`t${template.id}`}
                                 id={template.id}
-                                label={template.label + template.id}
+                                label={template.label}
                                 source={template.source}
                                 selectedResource={props.selectedResource}
                                 syncBackend={props.syncBackend}
