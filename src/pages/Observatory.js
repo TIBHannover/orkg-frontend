@@ -166,12 +166,7 @@ class Observatory extends Component {
 
     loadOrganizations = organizationsData => {
         this.setState({ isLoadingOrganizations: true });
-        let organizations = [];
-        for (let i = 0; i < organizationsData.length; i++) {
-            organizations[i] = getOrganization(organizationsData[i].id);
-        }
-
-        Promise.all(organizations).then(data => {
+        Promise.all(organizationsData.map(o => getOrganization(o.id))).then(data => {
             this.setState({
                 organizationsList: data,
                 isLoadingOrganizations: false
