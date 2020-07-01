@@ -119,7 +119,7 @@ export const get_error_message = (errors, field = null) => {
  * @param {Array} paperStatements
  */
 export const getPaperData_ViewPaper = (id, label, paperStatements) => {
-    const researchField = getResearchFieldViewPaper(paperStatements);
+    const researchField = getResearchField(paperStatements);
     const publishedIn = getPublishedIn(paperStatements);
     const [publicationYear, publicationYearResourceId] = getPublicationYear(paperStatements);
 
@@ -162,7 +162,7 @@ export const getPaperData = (id, label, paperStatements) => {
     // research field
     const researchField = getResearchField(paperStatements);
     const publicationYear = getPublicationYear(paperStatements)[0]; // gets year[0] and resourceId[1]
-    const publicationMonth = getPublicationMonth(paperStatements)[0]; // gets year[0] and resourceId[1]
+    const publicationMonth = getPublicationMonth(paperStatements)[0]; // gets month[0] and resourceId[1]
     const [doi, doiResourceId] = getDOI(paperStatements); // more complex object, returns doi and doi resources as an array
     const authors = getAuthors(paperStatements);
     const contributions = getContributions(paperStatements);
@@ -210,7 +210,7 @@ export const getComparisonData = (id, label, comparisonStatements) => {
 };
 
 /**
- * Sort Methode
+ * Sort Method
  *
  * @param {String} a
  * @param {String} b
@@ -274,7 +274,7 @@ export const getTransposeOptionFromUrl = locationSearch => {
     return true;
 };
 
-export const getResonseHashFromUrl = locationSearch => {
+export const getResponseHashFromUrl = locationSearch => {
     const response_hash = queryString.parse(locationSearch).response_hash;
     if (response_hash) {
         return response_hash;
@@ -482,7 +482,7 @@ export const similarPropertiesByLabel = (propertyLabel, propertyData) => {
 /** ------------------------------------------------------------- **/
 // HERE THE INPUT IS 'paperStatements'  and output is based on some filtering
 
-function getPublicationMonth(paperStatements) {
+export function getPublicationMonth(paperStatements) {
     // publication month
     const publicationMonthStatements = paperStatements.filter(
         statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH
@@ -498,7 +498,7 @@ function getPublicationMonth(paperStatements) {
     return [publicationMonth, publicationMonthResourceId];
 }
 
-function getPublicationYear(paperStatements) {
+export function getPublicationYear(paperStatements) {
     let publicationYear = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
     let publicationYearResourceId = 0;
     if (publicationYear.length > 0) {
@@ -524,14 +524,6 @@ function getURL(paperStatements) {
     return [url, urlResourceId];
 }
 
-function getResearchField(paperStatements) {
-    let researchField = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
-    if (researchField.length > 0) {
-        researchField = researchField[0];
-    }
-    return researchField;
-}
-
 function getPublishedIn(paperStatements) {
     // venue
     let publishedIn = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_VENUE);
@@ -544,7 +536,7 @@ function getPublishedIn(paperStatements) {
     return publishedIn;
 }
 
-function getResearchFieldViewPaper(paperStatements) {
+function getResearchField(paperStatements) {
     let researchField = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD);
     if (researchField.length > 0) {
         researchField = { ...researchField[0].object, statementId: researchField[0].id };
@@ -552,7 +544,7 @@ function getResearchFieldViewPaper(paperStatements) {
     return researchField;
 }
 
-function getAuthors(paperStatements) {
+export function getAuthors(paperStatements) {
     const authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
     const authorNamesArray = [];
     if (authors.length > 0) {

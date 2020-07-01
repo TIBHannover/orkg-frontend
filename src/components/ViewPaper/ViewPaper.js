@@ -10,13 +10,13 @@ import {
     createResource,
     createResourceStatement,
     deleteStatementById
-} from '../../network';
+} from 'network';
 import { connect } from 'react-redux';
 import NotFound from '../StaticPages/NotFound';
 import ContentLoader from 'react-content-loader';
 import Contributions from './Contributions';
 import PropTypes from 'prop-types';
-import ComparisonPopup from '../../components/ComparisonPopup/ComparisonPopup';
+import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import PaperHeader from './PaperHeader';
 import { resetStatementBrowser } from 'actions/statementBrowser';
 import { loadPaper, selectContribution, setPaperAuthors } from 'actions/viewPaper';
@@ -29,7 +29,7 @@ import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
 import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
 import SharePaper from './SharePaper';
-import { getPaperData_ViewPaper } from '../../utils';
+import { getPaperData_ViewPaper } from 'utils';
 
 export const EditModeHeader = styled(Container)`
     background-color: #80869b !important;
@@ -202,7 +202,7 @@ class ViewPaper extends Component {
                 })
             );
         } else {
-            // Initialise the state in case the user switch to another paper that is not linked with observatory
+            // Initialize the state in case the user switch to another paper that is not linked with observatory
             this.setState({
                 observatoryInfo: {},
                 contributors: []
