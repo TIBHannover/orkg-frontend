@@ -14,13 +14,20 @@ export default class TemplateDetailsTooltip extends Component {
     }
 
     componentDidMount = () => {
+        this._isMounted = true;
         this.loadTemplate();
     };
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
 
     loadTemplate = () => {
         this.setState({ isTemplateLoading: true, isTemplateFailedLoading: false });
         getTemplateById(this.props.id).then(template => {
-            this.setState({ template, isTemplateLoading: false, isTemplateFailedLoading: false });
+            if (this._isMounted) {
+                this.setState({ template, isTemplateLoading: false, isTemplateFailedLoading: false });
+            }
         });
     };
     render() {

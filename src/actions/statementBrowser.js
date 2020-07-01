@@ -1,6 +1,7 @@
 import * as type from './types.js';
 import { guid } from 'utils';
 import * as network from 'network';
+import { prefillStatements } from './addPaper';
 import { orderBy, uniq, isEqual } from 'lodash';
 
 export const updateSettings = data => dispatch => {
@@ -595,6 +596,87 @@ export function fetchTemplateIfNeeded(templateID) {
             const template = getState().statementBrowser.templates[templateID];
             return Promise.resolve(template);
         }
+    };
+}
+
+/**
+ * fill a resource with a template
+ *
+ * @param {String} templateID - Template ID
+ * @param {String} selectedResource - The resource to fill with the template
+ * @param {Boolean} syncBackend - syncBackend
+ * @return {Promise} Promise object
+ */
+export function fillResourceWithTemplate({ templateID, selectedResource, syncBackend = false }) {
+    return async (dispatch, getState) => {
+        return dispatch(fetchTemplateIfNeeded(templateID)).then(async templateDate => {
+            const template = templateDate;
+            // Check if it's a contribution template
+            if (template && template.predicate) {
+                // TODO : handle the case where the template isFetching
+                if (template.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION) {
+                    // Add properties
+                    if (template.components && template.components.length > 0) {
+                        const statements = { properties: [], values: [] };
+                        for (const component of template.components) {
+                            statements['properties'].push({
+                                existingPredicateId: component.property.id,
+                                label: component.property.label,
+                                range: component.value ? component.value : null,
+                                validationRules: component.validationRules
+                            });
+                        }
+                        dispatch(prefillStatements({ statements, resourceId: selectedResource, syncBackend: syncBackend }));
+                    }
+                } else {
+                    // Add template to the statement browser
+                    const statements = { properties: [], values: [] };
+                    const pID = guid();
+                    const vID = guid();
+                    const rID = guid();
+                    let newObject = null;
+                    statements['properties'].push({
+                        propertyId: pID,
+                        existingPredicateId: template.predicate.id,
+                        label: template.predicate.label,
+                        isTemplate: true,
+                        isAnimated: false,
+                        canDuplicate: true
+                    });
+                    if (syncBackend) {
+                        newObject = await network.createResource(template.label, template.class ? [template.class.id] : []);
+                    }
+                    statements['values'].push({
+                        valueId: vID,
+                        label: template.label,
+                        existingResourceId: newObject ? newObject.id : rID,
+                        type: 'object',
+                        propertyId: pID,
+                        classes: template.class ? [template.class.id] : []
+                    });
+                    await dispatch(prefillStatements({ statements, resourceId: selectedResource, syncBackend: syncBackend }));
+                    // Add properties
+                    if (template.components && template.components.length > 0) {
+                        const statements = { properties: [], values: [] };
+                        for (const component of template.components) {
+                            statements['properties'].push({
+                                existingPredicateId: component.property.id,
+                                label: component.property.label,
+                                validationRules: component.validationRules
+                            });
+                        }
+                        await dispatch(
+                            prefillStatements({
+                                statements,
+                                resourceId: newObject ? newObject.id : rID,
+                                syncBackend: syncBackend
+                            })
+                        );
+                    }
+                }
+            }
+            return Promise.resolve();
+        });
     };
 }
 

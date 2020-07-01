@@ -3,13 +3,10 @@ import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import TemplateDetailsTooltip from './TemplateDetailsTooltip';
-import { createProperty, fetchTemplateIfNeeded } from 'actions/statementBrowser';
-import { prefillStatements } from 'actions/addPaper';
+import { fillResourceWithTemplate } from 'actions/statementBrowser';
 import { connect } from 'react-redux';
-import { createResource } from 'network';
 import Tippy from '@tippy.js/react';
 import styled from 'styled-components';
-import { guid } from 'utils';
 import PropTypes from 'prop-types';
 
 const IconWrapper = styled.span`
@@ -38,76 +35,23 @@ class AddTemplateButton extends Component {
         super(props);
 
         this.state = {
-            isTemplateLoading: false,
-            isTemplateFailedLoading: true
+            isAdding: false
         };
+        this.ref = React.createRef();
     }
 
-    addTemplate = async templateID => {
-        this.setState({ isTemplateLoading: true, isTemplateFailedLoading: false });
-        this.props.fetchTemplateIfNeeded(templateID).then(async templateDate => {
-            const template = templateDate;
-            // Check if it's a contribution template
-            if (template.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION) {
-                // Add properties
-                if (template.components && template.components.length > 0) {
-                    const statements = { properties: [], values: [] };
-                    for (const component of template.components) {
-                        statements['properties'].push({
-                            existingPredicateId: component.property.id,
-                            label: component.property.label,
-                            range: component.value ? component.value : null,
-                            validationRules: component.validationRules
-                        });
-                    }
-                    this.props.prefillStatements({ statements, resourceId: this.props.selectedResource, syncBackend: this.props.syncBackend });
-                }
-            } else {
-                // Add template to the statement browser
-                const statements = { properties: [], values: [] };
-                const pID = guid();
-                const vID = guid();
-                const rID = guid();
-                let newObject = null;
-                statements['properties'].push({
-                    propertyId: pID,
-                    existingPredicateId: template.predicate.id,
-                    label: template.predicate.label,
-                    isTemplate: true,
-                    isAnimated: false,
-                    canDuplicate: true
-                });
-                if (this.props.syncBackend) {
-                    newObject = await createResource(template.label, template.class ? [template.class.id] : []);
-                }
-                statements['values'].push({
-                    valueId: vID,
-                    label: template.label,
-                    existingResourceId: newObject ? newObject.id : rID,
-                    type: 'object',
-                    propertyId: pID,
-                    classes: template.class ? [template.class.id] : []
-                });
-                await this.props.prefillStatements({ statements, resourceId: this.props.selectedResource, syncBackend: this.props.syncBackend });
-                // Add properties
-                if (template.components && template.components.length > 0) {
-                    const statements = { properties: [], values: [] };
-                    for (const component of template.components) {
-                        statements['properties'].push({
-                            existingPredicateId: component.property.id,
-                            label: component.property.label,
-                            validationRules: component.validationRules
-                        });
-                    }
-                    await this.props.prefillStatements({
-                        statements,
-                        resourceId: newObject ? newObject.id : rID,
-                        syncBackend: this.props.syncBackend
-                    });
-                }
-            }
-            this.setState({ isTemplateLoading: false, isTemplateFailedLoading: false });
-        });
+    addTemplate = () => {
+        this.setState({ isAdding: true });
+        this.props
+            .fillResourceWithTemplate({
+                templateID: this.props.id,
+                selectedResource: this.props.selectedResource,
+                syncBackend: this.props.syncBackend
+            })
+            .then(Data => {
+                this.ref.current.removeAttribute('disabled');
+                this.setState({ isAdding: false });
+            });
     };
 
     render() {
@@ -115,16 +59,18 @@ class AddTemplateButton extends Component {
             <Tippy content={<TemplateDetailsTooltip id={this.props.id} source={this.props.source} />}>
                 <span>
                     <Button
+                        innerRef={this.ref}
                         onClick={() => {
-                            this.addTemplate(this.props.id);
+                            this.ref.current.setAttribute('disabled', 'disabled');
+                            this.addTemplate();
                         }}
                         size="sm"
                         color="light"
                         className="mr-2 mb-2 position-relative px-3 rounded-pill border-0"
                     >
                         <IconWrapper>
-                            {!this.state.isTemplateLoading && <Icon size="sm" icon={faPlus} />}
-                            {this.state.isTemplateLoading && <Icon icon={faSpinner} spin />}
+                            {!this.state.isAdding && <Icon size="sm" icon={faPlus} />}
+                            {this.state.isAdding && <Icon icon={faSpinner} spin />}
                         </IconWrapper>
                         <Label>{this.props.label}</Label>
                     </Button>
@@ -135,14 +81,11 @@ class AddTemplateButton extends Component {
 }
 
 AddTemplateButton.propTypes = {
-    createProperty: PropTypes.func.isRequired,
-    prefillStatements: PropTypes.func.isRequired,
+    fillResourceWithTemplate: PropTypes.func.isRequired,
     selectedResource: PropTypes.string, // The resource to prefill with the template
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     source: PropTypes.object.isRequired,
-    fetchTemplateIfNeeded: PropTypes.func.isRequired,
-    templates: PropTypes.object.isRequired,
     syncBackend: PropTypes.bool.isRequired
 };
 
@@ -151,17 +94,11 @@ AddTemplateButton.defaultProps = {
     syncBackend: false
 };
 
-const mapStateToProps = state => ({
-    templates: state.statementBrowser.templates
-});
-
 const mapDispatchToProps = dispatch => ({
-    createProperty: data => dispatch(createProperty(data)),
-    prefillStatements: data => dispatch(prefillStatements(data)),
-    fetchTemplateIfNeeded: data => dispatch(fetchTemplateIfNeeded(data))
+    fillResourceWithTemplate: data => dispatch(fillResourceWithTemplate(data))
 });
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
 )(AddTemplateButton);

@@ -77,7 +77,8 @@ export default function SuggestedTemplates(props) {
                 setProblemTemplates([]);
                 setLoadingProblemTemplates({ isLoading: false, failed: true });
             });
-    }, [props.researchProblems, loadedProblems, getTemplatesOfResourceId]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.researchProblems.join(','), loadedProblems, getTemplatesOfResourceId]);
 
     const templatesUnique = uniqBy([...problemTemplates, ...fieldTemplates], 'id');
     const isLoading = loadingFieldTemplates.isLoading || loadingProblemTemplates.isLoading;
