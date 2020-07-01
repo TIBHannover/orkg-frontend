@@ -17,7 +17,7 @@ const ZoomContainer = styled.div`
 `;
 
 const PdfAnnotation = () => {
-    const defaultPageWidth = 968;
+    const DEFAULT_PAGE_WIDTH = 968;
     const [zoom, setZoom] = useState(1);
     const pdf = useSelector(state => state.pdfAnnotation.pdf);
     const pages = useSelector(state => state.pdfAnnotation.pages);
@@ -47,8 +47,10 @@ const PdfAnnotation = () => {
     };
 
     const getFullPageScale = () => {
-        return window.innerWidth / (defaultPageWidth + 20);
+        return window.innerWidth / (DEFAULT_PAGE_WIDTH + 20);
     };
+
+    const zoomContainerStyle = { transform: 'scale(' + zoom + ')' };
 
     return (
         <div style={{ paddingTop: 20 }}>
@@ -56,7 +58,7 @@ const PdfAnnotation = () => {
 
             {pages && (
                 <PdfContainer>
-                    <ZoomContainer style={{ transform: 'scale(' + zoom + ')' }} id="zoom-container">
+                    <ZoomContainer style={zoomContainerStyle} id="zoom-container">
                         {pages.map((page, index) => (
                             <div style={{ position: 'relative' }} key={index}>
                                 <TableSelect pageNumber={index + 1} pdf={pdf}>

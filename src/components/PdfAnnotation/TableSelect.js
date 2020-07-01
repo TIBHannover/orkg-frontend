@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
@@ -44,6 +44,8 @@ const RemoveButton = styled(Button)`
 
 const TableSelect = props => {
     const [isDragging, setIsDragging] = useState(false);
+    const selectedTool = useSelector(state => state.pdfAnnotation.selectedTool);
+    const tableRegions = useSelector(state => state.pdfAnnotation.tableRegions);
     const [coordinates, setCoordinates] = useState({
         startX: -1,
         startY: -1
@@ -54,75 +56,85 @@ const TableSelect = props => {
         w: null,
         h: null
     });
-    const selectedTool = useSelector(state => state.pdfAnnotation.selectedTool);
-    const tableRegions = useSelector(state => state.pdfAnnotation.tableRegions);
-    const dispatch = useDispatch();
     const [extractionModal, setExtractionModal] = useState({
         show: false,
         id: null,
         region: {}
     });
+    const dispatch = useDispatch();
 
-    const onMouseDown = e => {
+    const onMouseDown = useCallback(e => {
         setCoordinates({
             startX: e.nativeEvent.offsetX,
             startY: e.nativeEvent.offsetY
         });
         setIsDragging(true);
-    };
+    }, []);
 
-    const onMouseMove = e => {
-        if (!isDragging || selectedTool !== 'tableSelect') {
-            return;
-        }
+    const onMouseMove = useCallback(
+        e => {
+            if (!isDragging || selectedTool !== 'tableSelect') {
+                return;
+            }
 
-        const event = e.nativeEvent;
+            const event = e.nativeEvent;
 
-        setRect({
-            x: Math.min(coordinates.startX, event.offsetX),
-            y: Math.min(coordinates.startY, event.offsetY),
-            w: Math.abs(event.offsetX - coordinates.startX),
-            h: Math.abs(event.offsetY - coordinates.startY)
-        });
-    };
+            setRect({
+                x: Math.min(coordinates.startX, event.offsetX),
+                y: Math.min(coordinates.startY, event.offsetY),
+                w: Math.abs(event.offsetX - coordinates.startX),
+                h: Math.abs(event.offsetY - coordinates.startY)
+            });
+        },
+        [coordinates, isDragging, selectedTool]
+    );
 
-    const onMouseUp = e => {
-        setIsDragging(false);
+    const onMouseUp = useCallback(
+        e => {
+            setIsDragging(false);
 
-        dispatch(addTableRegion({ region: rect, page: props.pageNumber }));
+            // don't create a region if it is too small
+            if (rect.w > 10 && rect.h > 10) {
+                dispatch(addTableRegion({ region: rect, page: props.pageNumber }));
+            }
 
-        setRect({
-            x: null,
-            y: null,
-            w: null,
-            h: null
-        });
-    };
+            setRect({
+                x: null,
+                y: null,
+                w: null,
+                h: null
+            });
+        },
+        [rect, props.pageNumber, dispatch]
+    );
 
-    const handleExtract = (e, id, region) => {
+    const handleExtract = useCallback((e, id, region) => {
         e.stopPropagation(); // don't propagate to mouse down for dragging
-        //setShowExtractionModal(true);
+
         setExtractionModal({
             show: true,
             id,
             region
         });
-    };
+    }, []);
 
-    const toggleModel = () => {
+    const toggleModel = useCallback(() => {
         setExtractionModal({
             ...extractionModal,
             show: false
         });
-    };
+    }, [extractionModal]);
 
     // disable pointer events to ensure offsetX and offsetY on drag are from the page parent (and not other child elements)
     const pointerStyles = { pointerEvents: selectedTool === 'tableSelect' ? 'none' : 'auto' };
 
-    const deleteRegion = (e, id) => {
-        e.stopPropagation();
-        dispatch(deleteTableRegion(id));
-    };
+    const deleteRegion = useCallback(
+        (e, id) => {
+            e.stopPropagation();
+            dispatch(deleteTableRegion(id));
+        },
+        [dispatch]
+    );
 
     return (
         <>

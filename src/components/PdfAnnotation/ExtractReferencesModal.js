@@ -283,8 +283,8 @@ const ExtractReferencesModal = props => {
                     <FormGroup>
                         <Label for="columnSelect">Select the column that contains the citation key</Label>
                         <Input type="select" value={selectedColumn} onChange={e => setSelectedColumn(e.target.value)} id="columnSelect">
-                            {columns.map(column => (
-                                <option>{getColumnLabel(column)}</option>
+                            {columns.map((column, i) => (
+                                <option key={column + i}>{getColumnLabel(column)}</option>
                             ))}
                         </Input>
                     </FormGroup>
@@ -315,8 +315,7 @@ const ExtractReferencesModal = props => {
 ExtractReferencesModal.propTypes = {
     id: PropTypes.string.isRequired,
     isOpen: PropTypes.bool.isRequired,
-    toggle: PropTypes.func.isRequired,
-    data: PropTypes.object.isRequired
+    toggle: PropTypes.func.isRequired
 };
 
 export default ExtractReferencesModal;

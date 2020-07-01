@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert, ListGroup, ListGroupItem } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -12,6 +12,9 @@ import { readString } from 'react-papaparse';
 import { useSelector, useDispatch } from 'react-redux';
 import { zip, omit, isString } from 'lodash';
 import { saveFullPaper, getStatementsBySubject } from 'network';
+import ROUTES from 'constants/routes.js';
+import { Link } from 'react-router-dom';
+import { reverse } from 'named-urls';
 
 const ExtractionModal = props => {
     const [loading, setLoading] = useState(false);
@@ -88,71 +91,32 @@ const ExtractionModal = props => {
         setExtractReferencesModalOpen(!extractReferencesModalOpen);
     };
 
+    const confirmationModal = papers => {
+        return (
+            <div>
+                A contribution will be added for the following papers
+                <ListGroup className="mt-4">
+                    {papers.map(paper => {
+                        return <ListGroupItem key={paper.id}>{paper.title}</ListGroupItem>;
+                    })}
+                </ListGroup>
+            </div>
+        );
+    };
     const handleImportData = async () => {
-        const confirm = await Confirm({
-            title: 'Are you sure?',
-            message: 'For each row in the table, a new paper is added to the ORKG directly. Do you want to start the import right now? ',
-            cancelColor: 'light'
-        });
-
-        if (confirm) {
-            importTableData();
-            /*if (!editorRef.current) {
-                return;
-            }
-
-            const exportPlugin = editorRef.current.hotInstance.getPlugin('exportFile');
-
-            const csv = exportPlugin.exportAsBlob('csv', {
-                bom: false,
-                columnDelimiter: ',',
-                columnHeaders: false,
-                exportHiddenColumns: true,
-                exportHiddenRows: true,
-                rowDelimiter: '\r\n'
-            });
-
-            setLoading(true);
-
-            const form = new FormData();
-            form.append('csv', csv);
-
-            fetch('http://localhost:9000/importCsv', {
-                method: 'POST',
-                body: form
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        console.log('err');
-                    } else {
-                        return response.json();
-                    }
-                })
-                .then(function(importData) {
-                    setLoading(false);
-                    setImportData(importData);
-
-                    toast.success(`Successfully imported papers into the ORKG`);
-                })
-                .catch(err => {
-                    console.log(err);
-                });*/
-        }
+        importTableData();
     };
 
     const importTableData = async () => {
-        console.log('tableData', tableData);
-
         const researchProblemPredicate = process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM;
         const header = tableData[0];
-        let createdContributions = [];
+        const createdContributions = [];
+        const papers = [];
 
         if (!header.includes('paper:title')) {
             alert('Paper titles are missing. Make sure to add metadata for each paper (using the "Extract references" button)');
             return;
         }
-
-        setLoading(true);
 
         for (const [index, row] of tableData.entries()) {
             if (index === 0) {
@@ -192,7 +156,7 @@ const ExtractionModal = props => {
                 'contribution:research_problem'
             ]);
 
-            let contributionStatements = {};
+            const contributionStatements = {};
 
             // replace :orkg prefix in research field
             if (isString(researchField) && researchField.startsWith('orkg:')) {
@@ -239,49 +203,58 @@ const ExtractionModal = props => {
                 }
             }
 
-            const paperObj = {
-                paper: {
-                    title,
-                    doi,
-                    authors,
-                    publicationMonth,
-                    publicationYear,
-                    researchField,
-                    url: '',
-                    publishedIn: '',
-                    contributions: [
-                        {
-                            name: 'Contribution',
-                            values: contributionStatements
-                        }
-                    ]
-                }
+            const paper = {
+                title,
+                doi,
+                authors,
+                publicationMonth,
+                publicationYear,
+                researchField,
+                url: '',
+                publishedIn: '',
+                contributions: [
+                    {
+                        name: 'Contribution',
+                        values: contributionStatements
+                    }
+                ]
             };
 
-            try {
-                const paper = await saveFullPaper(paperObj, true);
-                const paperStatements = await getStatementsBySubject({ id: paper.id });
-
-                for (const statement of paperStatements) {
-                    if (statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION) {
-                        createdContributions.push({
-                            paperId: paper.id,
-                            contributionId: statement.object.id
-                        });
-                        break;
-                    }
-                }
-            } catch (e) {
-                console.log(e);
-                toast.error('Something went wrong while adding the paper: ' + title);
-            }
+            papers.push(paper);
         }
-        const comparisonUrl = '/comparison?contributions=' + createdContributions.map(entry => entry.contributionId);
-        alert(comparisonUrl);
-        console.log(comparisonUrl);
-        setLoading(false);
 
-        toast.success(`Successfully imported papers into the ORKG`);
+        const confirm = await Confirm({
+            title: 'Are you sure?',
+            message: confirmationModal(papers),
+            cancelColor: 'light'
+        });
+
+        if (confirm) {
+            setLoading(true);
+
+            for (const paper of papers) {
+                try {
+                    const _paper = await saveFullPaper({ paper: paper }, true);
+                    const paperStatements = await getStatementsBySubject({ id: _paper.id });
+
+                    for (const statement of paperStatements) {
+                        if (statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION) {
+                            createdContributions.push({
+                                paperId: _paper.id,
+                                contributionId: statement.object.id
+                            });
+                            break;
+                        }
+                    }
+                } catch (e) {
+                    console.log(e);
+                    toast.error('Something went wrong while adding the paper: ' + paper.paper.title);
+                }
+            }
+            setLoading(false);
+            setImportData(createdContributions);
+            toast.success(`Successfully imported papers into the ORKG`);
+        }
     };
 
     const getFirstValue = (object, key, defaultValue = '') => {
@@ -292,6 +265,8 @@ const ExtractionModal = props => {
         const transposed = zip(...tableData);
         dispatch(setTableData(props.id, transposed));
     };
+
+    const comparisonUrl = importData ? reverse(ROUTES.COMPARISON) + '?contributions=' + importData.map(entry => entry.contributionId) : null;
 
     return (
         <>
@@ -345,12 +320,8 @@ const ExtractionModal = props => {
 
                 {importData && (
                     <ModalBody>
-                        Import results:{' '}
-                        <ul>
-                            {importData.map((result, i) => (
-                                <li key={i}>{result}</li>
-                            ))}
-                        </ul>
+                        The imported papers can be viewed in the following comparison: <br />
+                        <Link to={comparisonUrl}>{comparisonUrl}</Link>
                     </ModalBody>
                 )}
             </Modal>
@@ -364,7 +335,6 @@ ExtractionModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     pageNumber: PropTypes.number.isRequired,
-    pdf: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired,
     region: PropTypes.shape({
         x: PropTypes.number.isRequired,

@@ -99,42 +99,29 @@ class EditorComponent extends BaseEditorComponent {
 
     handleSearchChange = async e => {
         let value = e.target.value;
+        const option = this.state.options.find(option => option.id === value);
 
-        for (const option of this.state.options) {
-            if (option.id === value) {
-                if (value === 'Create new property:') {
-                    value = await this.confirmCreatePredicate(option.label);
-
-                    if (!value) {
-                        return;
-                    }
-                } else if (value === 'Create new resource:') {
-                    value = await this.confirmCreateResource(option.label);
-                    if (!value) {
-                        return;
-                    }
-                }
-
-                this.setState(
-                    {
-                        value: `orkg:${value}`
-                    },
-                    () => {
-                        this.finishEditing();
-
-                        this.props.setLabelCache({
-                            id: value,
-                            label: option.label
-                        });
-                    }
-                );
-                return;
+        // if option from datalist is selected
+        if (option) {
+            if (value === 'Create new property:') {
+                value = await this.confirmCreatePredicate(option.label);
+            } else if (value === 'Create new resource:') {
+                value = await this.confirmCreateResource(option.label);
             }
-        }
 
-        this.setState({ value: value }, () => {
-            this.loadResults();
-        });
+            this.setState({ value: `orkg:${value}` }, () => {
+                this.finishEditing();
+
+                this.props.setLabelCache({
+                    id: value,
+                    label: option.label
+                });
+            });
+        } else {
+            this.setState({ value: value }, () => {
+                this.loadResults();
+            });
+        }
     };
 
     confirmCreatePredicate = async label => {

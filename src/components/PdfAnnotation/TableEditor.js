@@ -84,9 +84,6 @@ const TableEditor = props => {
             rowHeaders={true}
             width="100%"
             height="auto"
-            /*colHeaders={col => {
-                return `<div contenteditable="true">${columns[col]}</div>`;
-            }}*/
             licenseKey="non-commercial-and-evaluation"
             renderer={renderer}
             contextMenu={{
@@ -134,7 +131,7 @@ const TableEditor = props => {
 };
 
 TableEditor.propTypes = {
-    setRef: PropTypes.func.isRequired,
+    setRef: PropTypes.object.isRequired,
     id: PropTypes.string.isRequired
 };
 

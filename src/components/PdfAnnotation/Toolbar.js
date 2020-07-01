@@ -45,7 +45,7 @@ const Toolbar = props => {
             </Button>
             */}
             <div className="ml-auto">
-                <ButtonGroup style={{ marginRight: 10 }}>
+                <ButtonGroup className="mr-2">
                     <Button
                         color="darkblueDarker"
                         disabled={!pdf}
