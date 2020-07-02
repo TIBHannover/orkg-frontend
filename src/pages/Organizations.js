@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Row } from 'reactstrap';
+import { Container, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faUser } from '@fortawesome/free-solid-svg-icons';
 import OrganizationCard from 'components/OrganizationCard/OrganizationCard';
@@ -72,13 +72,11 @@ class Organizations extends Component {
                     </div>
 
                     {this.state.organizations.length > 0 && (
-                        <Row>
-                            <div className="mt-3 row justify-content-center">
-                                {this.state.organizations.map(organization => {
-                                    return <OrganizationCard key={organization.id} organization={{ ...organization }} />;
-                                })}
-                            </div>
-                        </Row>
+                        <div className="mt-3 row justify-content-center">
+                            {this.state.organizations.map(organization => {
+                                return <OrganizationCard key={organization.id} organization={{ ...organization }} />;
+                            })}
+                        </div>
                     )}
                     {this.state.organizations.length === 0 && !this.state.isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">No organizations yet!</div>

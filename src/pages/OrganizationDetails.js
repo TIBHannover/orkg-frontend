@@ -1,48 +1,44 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, NavLink, Button } from 'reactstrap';
+import { Container, Row, Col, NavLink, Button, Card, CardTitle } from 'reactstrap';
 import { getOrganization, getUsersByOrganizationId, getAllObservatoriesByOrganizationId } from 'network';
 import InternalServerError from 'components/StaticPages/InternalServerError';
+import ContributorCard from 'components/ContributorCard/ContributorCard';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import NotFound from 'components/StaticPages/NotFound';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import SameAsStatements from './SameAsStatements';
 import styled from 'styled-components';
-import Gravatar from 'react-gravatar';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import Dotdotdot from 'react-dotdotdot';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 
-const StyledScrollBar = styled.div`
-    &::-webkit-scrollbar,
-    &::-webkit-scrollbar-thumb {
-        width: 24px;
-        border-radius: 13px;
-        background-clip: padding-box;
-        border: 10px solid transparent;
-        color: lightgray;
+const StyledOrganizationHeader = styled.div`
+    .logoContainer {
+        position: relative;
+        display: block;
+        &::before {
+            // for aspect ratio
+            content: '';
+            display: block;
+            padding-bottom: 130px;
+        }
+        img {
+            position: absolute;
+            max-width: 100%;
+            max-height: 130px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        &:active,
+        &:focus {
+            outline: 0;
+            border: none;
+            -moz-outline-style: none;
+        }
     }
-
-    &::-webkit-scrollbar-thumb {
-        box-shadow: inset 0 0 0 10px;
-    }
-
-    height: 225px;
-    overflow: auto;
-    
-    }
-`;
-
-const StyledGravatar = styled(Gravatar)`
-    border: 3px solid ${props => props.theme.avatarBorderColor};
-    cursor: pointer;
-`;
-
-const ResearchProblemButton = styled.span`
-    white-space: normal;
-    text-align: left;
-    user-select: text !important;
 `;
 
 class OrganizationDetails extends Component {
@@ -54,12 +50,10 @@ class OrganizationDetails extends Component {
             label: '',
             url: '',
             isLoading: false,
-            isLoadingTotal: false,
             isLoadingObservatories: false,
-            image: '',
+            logo: '',
             contributors: [],
             observatories: [],
-            totalObservatories: 0,
             isLoadingContributors: false,
             createdBy: ''
         };
@@ -87,7 +81,7 @@ class OrganizationDetails extends Component {
                 this.setState({
                     label: responseJson.name,
                     url: responseJson.url,
-                    image: responseJson.logo,
+                    logo: responseJson.logo,
                     isLoading: false,
                     createdBy: responseJson.created_by
                 });
@@ -140,65 +134,61 @@ class OrganizationDetails extends Component {
                 {!this.state.isLoading && this.state.error && <>{this.state.error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
                 {!this.state.isLoading && !this.state.error && this.state.label && (
                     <Container className="mt-5 clearfix">
-                        <div className="box clearfix pt-4 pb-4 pl-5 pr-5">
-                            <div className="mb-2">
-                                <span>
-                                    <NavLink style={{ width: 500 }} href={this.state.url} target="_blank" rel="noopener noreferrer">
-                                        <h4 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                            {this.state.label} <Icon size="sm" icon={faExternalLinkAlt} />
-                                        </h4>
-                                    </NavLink>
-
-                                    <NavLink style={{ float: 'right', width: 500 }} href={this.state.url} target="_blank" rel="noopener noreferrer">
-                                        <h4 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                            <img style={{ marginTop: -45 }} height="100" src={this.state.image} alt="" />{' '}
-                                        </h4>
-                                    </NavLink>
-                                </span>
-                            </div>
-                            <div className="clearfix">
-                                &nbsp; &nbsp;
-                                {this.props.user && this.props.user.id === this.state.createdBy && (
-                                    <Button
-                                        outline
-                                        size="sm"
-                                        color="primary"
-                                        className="mt-4"
-                                        tag={Link}
-                                        to={reverse(ROUTES.ADD_OBSERVATORY, { id: this.props.match.params.id })}
-                                    >
-                                        Create new observatory
-                                    </Button>
-                                )}
-                                <SameAsStatements />
-                            </div>
+                        <div className="box rounded clearfix pt-4 pb-4 pl-5 pr-5">
+                            <StyledOrganizationHeader className="mb-2">
+                                <Row>
+                                    <Col md={{ size: 8, order: 1 }} sm={{ size: 12, order: 2 }} xs={{ size: 12, order: 2 }}>
+                                        <NavLink className="p-0" href={this.state.url} target="_blank" rel="noopener noreferrer">
+                                            <h4>
+                                                {this.state.label} <Icon size="sm" icon={faExternalLinkAlt} />
+                                            </h4>
+                                        </NavLink>
+                                        {this.props.user && this.props.user.id === this.state.createdBy && (
+                                            <Button
+                                                outline
+                                                size="sm"
+                                                color="primary"
+                                                className="mt-4"
+                                                tag={Link}
+                                                to={reverse(ROUTES.ADD_OBSERVATORY, { id: this.props.match.params.id })}
+                                            >
+                                                Create new observatory
+                                            </Button>
+                                        )}
+                                    </Col>
+                                    <Col md={{ size: 4, order: 2 }} sm={{ size: 12, order: 1 }} xs={{ size: 12, order: 1 }}>
+                                        <NavLink className="p-0" href={this.state.url} target="_blank" rel="noopener noreferrer">
+                                            <div className="logoContainer">
+                                                <img className="mx-auto" src={this.state.logo} alt={`${this.state.label} logo`} />
+                                            </div>
+                                        </NavLink>
+                                    </Col>
+                                </Row>
+                            </StyledOrganizationHeader>
                         </div>
-                        <br />
-                        <Row>
-                            <Col md={6} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
-                                <div
-                                    className="box rounded-lg p-3"
-                                    style={{ minHeight: '500px', flexDirection: 'column', display: 'flex', flexGrow: '1' }}
-                                >
-                                    <h5 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Observatories</h5>
+                        <Row className="mt-3">
+                            <Col md={6} sm={12} style={{ minHeight: '500px' }} className="d-flex">
+                                <div className="p-4 box rounded-lg flex-grow-1">
+                                    <h2 className="h5">Observatories</h2>
                                     {!this.state.isLoadingObservatories ? (
-                                        <div className="pb-2 mb-6">
+                                        <div className="mb-4 mt-4">
                                             {this.state.observatories.length > 0 ? (
-                                                <div style={{ paddingTop: 10 }}>
-                                                    <ol className="list-group" style={{ paddingLeft: 15 }}>
-                                                        {this.state.observatories.map((observatory, index) => {
-                                                            return (
-                                                                <li key={`c${index}`}>
+                                                <div>
+                                                    {this.state.observatories.map((observatory, index) => {
+                                                        return (
+                                                            <Card body key={`c${index}`} className="mt-1 border-0 p-0">
+                                                                <CardTitle>
                                                                     <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}>
-                                                                        <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
-                                                                            {observatory.name}
-                                                                        </ResearchProblemButton>
+                                                                        {observatory.name}
                                                                     </Link>
-                                                                    <br />
-                                                                </li>
-                                                            );
-                                                        })}
-                                                    </ol>
+                                                                </CardTitle>
+                                                                <Dotdotdot clamp={3}>
+                                                                    <small className="text-muted">{observatory.description}</small>
+                                                                </Dotdotdot>
+                                                                <hr style={{ width: '50%', margin: '10px auto' }} />
+                                                            </Card>
+                                                        );
+                                                    })}
                                                 </div>
                                             ) : (
                                                 <div className="mt-4">
@@ -213,48 +203,28 @@ class OrganizationDetails extends Component {
                                     )}
                                 </div>
                             </Col>
-                            <Col md={6} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
-                                <div className="box rounded-lg p-3" style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
+                            <Col md={6} sm={12} className="d-flex">
+                                <div className="box rounded-lg p-4 flex-grow-1">
                                     <h2 className="h5">Contributors</h2>
-
                                     {!this.state.isLoadingContributors ? (
-                                        <div className="mb-6">
-                                            <StyledScrollBar className="pb-2 mb-6">
-                                                {this.state.contributors.length > 0 ? (
-                                                    <div className="scrollBarDiv">
-                                                        {this.state.contributors.map((user, index) => {
-                                                            return (
-                                                                <div>
-                                                                    <div>
-                                                                        <StyledGravatar
-                                                                            className="rounded-circle"
-                                                                            style={{ border: '3px solid #fff' }}
-                                                                            email={user.email}
-                                                                            size={45}
-                                                                        />
-                                                                        <p style={{ marginLeft: '48px', marginTop: '-33px' }}>
-                                                                            <Link
-                                                                                onClick={this.toggleUserTooltip}
-                                                                                to={reverse(ROUTES.USER_PROFILE, { userId: user.id })}
-                                                                            >
-                                                                                {' '}
-                                                                                {user.display_name}
-                                                                            </Link>
-                                                                            <br />
-                                                                        </p>
-                                                                    </div>
+                                        <div className="mb-4 mt-4">
+                                            {this.state.contributors.length > 0 ? (
+                                                <div>
+                                                    {this.state.contributors.map((user, index) => {
+                                                        return (
+                                                            <div>
+                                                                <ContributorCard contributor={user} />
 
-                                                                    <hr style={{ width: '275px', marginBottom: '10px', marginTop: '10px' }} />
-                                                                </div>
-                                                            );
-                                                        })}
-                                                    </div>
-                                                ) : (
-                                                    <div className="mt-4">
-                                                        <h5>No Contributors</h5>
-                                                    </div>
-                                                )}
-                                            </StyledScrollBar>
+                                                                <hr style={{ width: '90%', margin: '10px auto' }} />
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            ) : (
+                                                <div className="mt-4">
+                                                    <h5>No Contributors</h5>
+                                                </div>
+                                            )}
                                         </div>
                                     ) : (
                                         <div className="mt-4">
