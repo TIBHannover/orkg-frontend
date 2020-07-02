@@ -669,11 +669,11 @@ export const createOrganization = (organizationName, organizationLogo, createdBy
     return submitPostRequest(organizationsUrl, { 'Content-Type': 'application/json' }, { organizationName, organizationLogo, createdBy, url });
 };
 
-export const getAllObservatoriesbyOrganizationId = id => {
+export const getAllObservatoriesByOrganizationId = id => {
     return submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/observatories`);
 };
 
-export const getObservatorybyId = id => {
+export const getObservatoryById = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/`);
 };
 
@@ -716,9 +716,8 @@ export const getContributorsByResourceId = id => {
 };
 
 export const getObservatoryAndOrganizationInformation = (observatoryId, organizationId) => {
-    return getObservatorybyId(observatoryId).then(obsResponse => {
+    return getObservatoryById(observatoryId).then(obsResponse => {
         return getOrganization(organizationId).then(orgResponse => {
-            console.log(orgResponse);
             return {
                 id: observatoryId,
                 name: obsResponse.name.toUpperCase(),

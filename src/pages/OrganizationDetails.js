@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, NavLink, Button } from 'reactstrap';
-import { getOrganization, getUsersByOrganizationId, getAllObservatoriesbyOrganizationId } from 'network';
+import { getOrganization, getUsersByOrganizationId, getAllObservatoriesByOrganizationId } from 'network';
 import InternalServerError from 'components/StaticPages/InternalServerError';
 import { Link } from 'react-router-dom';
 import NotFound from 'components/StaticPages/NotFound';
@@ -113,7 +113,7 @@ class OrganizationDetails extends Component {
 
     loadObservatories = () => {
         this.setState({ isLoadingObservatories: true });
-        getAllObservatoriesbyOrganizationId(this.props.match.params.id)
+        getAllObservatoriesByOrganizationId(this.props.match.params.id)
             .then(observatories => {
                 if (observatories.length > 0) {
                     this.setState({
@@ -148,8 +148,13 @@ class OrganizationDetails extends Component {
                                             {this.state.label} <Icon size="sm" icon={faExternalLinkAlt} />
                                         </h4>
                                     </NavLink>
+
+                                    <NavLink style={{ float: 'right', width: 500 }} href={this.state.url} target="_blank" rel="noopener noreferrer">
+                                        <h4 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                            <img style={{ marginTop: -45 }} height="100" src={this.state.image} alt="" />{' '}
+                                        </h4>
+                                    </NavLink>
                                 </span>
-                                <img style={{ float: 'right', marginTop: -35 }} height="100" src={this.state.image} alt="" />{' '}
                             </div>
                             <div className="clearfix">
                                 &nbsp; &nbsp;
@@ -180,7 +185,7 @@ class OrganizationDetails extends Component {
                                         <div className="pb-2 mb-6">
                                             {this.state.observatories.length > 0 ? (
                                                 <div style={{ paddingTop: 10 }}>
-                                                    <ul className="list-group" style={{ paddingLeft: 15 }}>
+                                                    <ol className="list-group" style={{ paddingLeft: 15 }}>
                                                         {this.state.observatories.map((observatory, index) => {
                                                             return (
                                                                 <li>
@@ -193,7 +198,7 @@ class OrganizationDetails extends Component {
                                                                 </li>
                                                             );
                                                         })}
-                                                    </ul>
+                                                    </ol>
                                                 </div>
                                             ) : (
                                                 <div className="mt-4">

@@ -115,7 +115,6 @@ class AddOrganization extends Component {
                             <Label for="ResourceLabel">Organization Name</Label>
                             <Input
                                 onChange={this.handleChange}
-                                onKeyUp={this.handleKeyUp}
                                 type="text"
                                 name="value"
                                 id="ResourceLabel"
@@ -128,7 +127,6 @@ class AddOrganization extends Component {
                             <Label for="OrganizationUrl">Organization URL</Label>
                             <Input
                                 onChange={this.handleChange}
-                                onKeyUp={this.handleKeyUp}
                                 type="text"
                                 name="url"
                                 id="OrganizationUrl"

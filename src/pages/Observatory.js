@@ -7,7 +7,7 @@ import {
     getResourcesByObservatoryId,
     getComparisonsByObservatoryId,
     getProblemsByObservatoryId,
-    getObservatorybyId
+    getObservatoryById
 } from 'network';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import InternalServerError from 'components/StaticPages/InternalServerError';
@@ -93,7 +93,7 @@ class Observatory extends Component {
 
     loadObservatory = () => {
         this.setState({ isLoading: true });
-        getObservatorybyId(this.props.match.params.id)
+        getObservatoryById(this.props.match.params.id)
             .then(observatory => {
                 document.title = `${observatory.name} - Details`;
                 this.setState({
@@ -166,12 +166,7 @@ class Observatory extends Component {
 
     loadOrganizations = organizationsData => {
         this.setState({ isLoadingOrganizations: true });
-        let organizations = [];
-        for (let i = 0; i < organizationsData.length; i++) {
-            organizations[i] = getOrganization(organizationsData[i].id);
-        }
-
-        Promise.all(organizations).then(data => {
+        Promise.all(organizationsData.map(o => getOrganization(o.id))).then(data => {
             this.setState({
                 organizationsList: data,
                 isLoadingOrganizations: false
@@ -185,7 +180,7 @@ class Observatory extends Component {
                 {this.state.isLoading && <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
                 {!this.state.isLoading && this.state.error && <>{this.state.error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
                 {!this.state.isLoading && !this.state.error && this.state.label && (
-                    <Container className="mt-5 clearfix">
+                    <Container className="clearfix">
                         <Container className="d-flex align-items-center">
                             <h3 className="h4 mb-4 flex-grow-1">Observatory</h3>
                         </Container>
@@ -206,7 +201,7 @@ class Observatory extends Component {
                                         <div className="pb-2 mb-6">
                                             {this.state.problemsList.length > 0 ? (
                                                 <div style={{ paddingTop: 10 }}>
-                                                    <ul className="list-group" style={{ paddingLeft: 15 }}>
+                                                    <ol className="list-group" style={{ paddingLeft: 15 }}>
                                                         {this.state.problemsList.map((problem, index) => {
                                                             return (
                                                                 <li>
@@ -219,7 +214,7 @@ class Observatory extends Component {
                                                                 </li>
                                                             );
                                                         })}
-                                                    </ul>
+                                                    </ol>
                                                 </div>
                                             ) : (
                                                 <div className="text-center mt-4 mb-4">No Research Problems</div>
@@ -240,6 +235,7 @@ class Observatory extends Component {
                                                     {this.state.organizationsList.map((organization, index) => {
                                                         return (
                                                             <div
+                                                                key={`c${index}`}
                                                                 className="mb-3"
                                                                 style={{
                                                                     border: 'solid lightgray thin',
@@ -290,9 +286,11 @@ class Observatory extends Component {
                                                                                 {user.display_name}
                                                                             </Link>
                                                                             <br />
-                                                                            {this.state.organizationsList.map((o, index) => {
-                                                                                return <span style={{ color: 'gray' }}>{o.name}</span>;
-                                                                            })}
+                                                                            {this.state.organizationsList
+                                                                                .filter(o => o.id.includes(user.organization_id))
+                                                                                .map((o, index) => {
+                                                                                    return <span style={{ color: 'gray' }}>{o.name}</span>;
+                                                                                })}
                                                                         </p>
                                                                     </div>
 
@@ -319,7 +317,7 @@ class Observatory extends Component {
 
                         <div className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
                             <div className="pb-2 mb-3">
-                                <h3 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Comparisons</h3>
+                                <h5 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Comparisons</h5>
                                 {!this.state.isLoadingComparisons ? (
                                     <div className="pb-2 mb-6">
                                         {this.state.comparisonsList.length > 0 ? (
@@ -351,7 +349,7 @@ class Observatory extends Component {
                         <br />
                         <div className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
                             <div className="pb-2 mb-3">
-                                <h3 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Papers</h3>
+                                <h5 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Papers</h5>
                                 {!this.state.isLoadingPapers ? (
                                     <div className="pb-2 mb-6">
                                         {this.state.papersList.length > 0 ? (
