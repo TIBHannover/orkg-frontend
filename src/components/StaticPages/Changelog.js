@@ -25,7 +25,7 @@ class Changelog extends Component {
     render() {
         return (
             <div>
-                <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5">
+                <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5">
                     <div
                         dangerouslySetInnerHTML={{
                             __html: this.state.changelogText

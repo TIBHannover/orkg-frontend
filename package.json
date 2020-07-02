@@ -4,12 +4,13 @@
     "private": true,
     "homepage": "/",
     "dependencies": {
-        "@fortawesome/fontawesome-svg-core": "^1.2.24",
-        "@fortawesome/free-brands-svg-icons": "^5.11.2",
-        "@fortawesome/free-regular-svg-icons": "^5.11.1",
-        "@fortawesome/free-solid-svg-icons": "^5.11.2",
-        "@fortawesome/react-fontawesome": "^0.1.4",
         "@handsontable/react": "^3.1.3",
+        "@fortawesome/fontawesome-svg-core": "^1.2.28",
+        "@fortawesome/free-brands-svg-icons": "^5.13.0",
+        "@fortawesome/free-regular-svg-icons": "^5.13.0",
+        "@fortawesome/free-solid-svg-icons": "^5.13.0",
+        "@fortawesome/react-fontawesome": "^0.1.10",
+        "@hapi/joi": "^17.1.1",
         "@tippy.js/react": "^3.1.1",
         "array-move": "^2.1.0",
         "babel-preset-es2018": "^1.0.0",
@@ -22,11 +23,13 @@
         "d3": "^3.5.6",
         "detect-browser": "^4.7.0",
         "dot-prop-immutable": "^1.5.0",
+        "fast-text-encoding": "^1.0.2",
         "flow-bin": "^0.95.1",
         "greeting-time": "^1.0.0",
         "handsontable": "^7.4.2",
         "html2canvas": "1.0.0-alpha.12",
         "htmlparser2": "^4.1.0",
+        "immutability-helper": "^3.0.2",
         "jspdf": "^1.5.3",
         "lodash": "^4.17.15",
         "make-latex": "^0.1.0",
@@ -51,6 +54,8 @@
         "react-copy-to-clipboard": "^5.0.1",
         "react-csv": "^1.1.1",
         "react-csv-to-table": "0.0.4",
+        "react-dnd": "^10.0.2",
+        "react-dnd-html5-backend": "^10.0.2",
         "react-dom": "^16.9.0",
         "react-dotdotdot": "^1.3.1",
         "react-dropzone": "^10.2.2",
@@ -59,6 +64,7 @@
         "react-hot-loader": "^4.12.13",
         "react-html-parser": "^2.0.2",
         "react-id-generator": "^3.0.0",
+        "react-image-lightbox": "^5.1.1",
         "react-input-autosize": "^2.2.1",
         "react-loading-overlay": "^1.0.1",
         "react-mathjax-preview": "^0.1.16",
@@ -71,7 +77,8 @@
         "react-router-config": "^5.0.1",
         "react-router-dom": "^5.0.1",
         "react-scripts": "^3.4.1",
-        "react-select": "^3.0.4",
+        "react-select": "^3.1.0",
+        "react-select-async-paginate": "^0.3.14",
         "react-sortable-hoc": "^1.10.1",
         "react-split-pane": "^0.1.87",
         "react-table": "^6.10.3",
@@ -79,21 +86,23 @@
         "react-textarea-autosize": "^7.1.0",
         "react-toastify": "^5.3.2",
         "react-transition-group": "^2.9.0",
-        "react-typist": "^2.0.5",
-        "reactour": "^1.15.5",
+        "react-visibility-sensor": "^5.1.1",
+        "reactour": "^1.18.0",
         "reactstrap": "^8.0.1",
         "reactstrap-confirm": "^1.2.0",
         "redux": "^4.0.4",
         "redux-thunk": "^2.3.0",
         "strict-mode": "^1.1.3",
+        "string-format": "^2.0.0",
         "styled-components": "^4.3.2",
+        "typed.js": "^2.0.11",
         "validator": "^10.11.0"
     },
     "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "react-scripts test --env=jsdom",
-        "eject": "react-scripts eject",
+        "start": "react-app-rewired start",
+        "build": "react-app-rewired build",
+        "test": "react-app-rewired test --env=jsdom",
+        "eject": "react-app-rewired eject",
         "flow": "flow",
         "lint": "eslint 'src/**/*.{js,jsx}'",
         "lint:fix": "eslint 'src/**/*.{js,jsx}' --fix",
@@ -102,6 +111,8 @@
     "devDependencies": {
         "auto-changelog": "^1.16.2",
         "babel-preset-env": "^1.7.0",
+        "customize-cra": "^1.0.0",
+        "customize-cra-react-refresh": "^1.1.0",
         "enzyme": "^3.10.0",
         "enzyme-adapter-react-16": "^1.14.0",
         "enzyme-to-json": "^3.4.0",
@@ -113,6 +124,7 @@
         "lint-staged": "^9.4.1",
         "named-urls": "^1.4.0",
         "prettier": "^1.18.2",
+        "react-app-rewired": "^2.1.6",
         "react-test-renderer": "^16.9.0",
         "sass-extract": "^2.1.0",
         "sass-extract-js": "^0.4.0",
@@ -122,7 +134,8 @@
         "template": "./keepachangelog.hbs",
         "unreleased": false,
         "commitLimit": 0,
-        "tagPattern": ".+"
+        "tagPattern": ".+",
+        "tagPrefix": "V"
     },
     "lint-staged": {
         "src/**/*.{js,jsx}": [
@@ -199,6 +212,9 @@
             ],
             "prefer-const": [
                 1
+            ],
+            "react/jsx-curly-brace-presence": [
+                "error"
             ]
         }
     }

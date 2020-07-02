@@ -6,6 +6,9 @@ const initialState = {
     selectedProperty: '',
     level: 0,
     isFetchingStatements: false,
+    openExistingResourcesInDialog: false,
+    propertiesAsLinks: false,
+    resourcesAsLinks: false,
     resources: {
         byId: {},
         allIds: []
@@ -21,7 +24,9 @@ const initialState = {
     resourceHistory: {
         byId: {},
         allIds: []
-    }
+    },
+    templates: {},
+    classes: {}
 };
 
 export default (state = initialState, action) => {
@@ -35,7 +40,8 @@ export default (state = initialState, action) => {
                     label: payload.label ? payload.label : '',
                     existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
                     shared: payload.shared ? payload.shared : 1,
-                    propertyIds: []
+                    propertyIds: [],
+                    classes: payload.classes ? payload.classes : []
                 }
             }));
 
@@ -44,17 +50,64 @@ export default (state = initialState, action) => {
             return newState;
         }
 
-        case type.TOGGLE_PROPERTY_COLLAPSE: {
+        case type.CREATE_TEMPLATE: {
+            const { payload } = action;
+            let newState = dotProp.set(state, `templates.${payload.id}`, payload);
+            if (dotProp.get(state, `classes.${payload.class.id}`) && dotProp.get(state, `classes.${payload.class.id}.templateIds`)) {
+                newState = dotProp.set(newState, `classes.${payload.class.id}.templateIds`, ids => [...ids, payload.id]);
+            } else {
+                newState = dotProp.set(newState, `classes.${payload.class.id}`, { ...payload.class, templateIds: [payload.id] });
+            }
+            return newState;
+        }
+
+        case type.IS_FETCHING_TEMPLATES_OF_CLASS: {
+            const { classID } = action;
+
+            let newState = dotProp.set(state, `classes.${classID}.isFetching`, true);
+            newState = dotProp.set(newState, `classes.${classID}.templateIds`, []); // in case there is no template for this class
             return {
-                ...state,
-                selectedProperty: action.id !== state.selectedProperty ? action.id : ''
+                ...newState
+            };
+        }
+
+        case type.DONE_FETCHING_TEMPLATES_OF_CLASS: {
+            const { classID } = action;
+
+            const newState = dotProp.set(state, `classes.${classID}.isFetching`, false);
+
+            return {
+                ...newState
+            };
+        }
+
+        case type.IS_FETCHING_TEMPLATE_DATA: {
+            const { templateID } = action;
+
+            const newState = dotProp.set(state, `templates.${templateID}.isFetching`, true);
+
+            return {
+                ...newState
+            };
+        }
+
+        case type.DONE_FETCHING_TEMPLATE_DATA: {
+            const { templateID } = action;
+
+            const newState = dotProp.set(state, `templates.${templateID}.isFetching`, false);
+
+            return {
+                ...newState
             };
         }
 
         case type.CREATE_PROPERTY: {
             const { payload } = action;
             let newState;
-            if (dotProp.get(state, `resources.byId.${payload.resourceId}`)) {
+            if (
+                dotProp.get(state, `resources.byId.${payload.resourceId}`) &&
+                dotProp.get(state, `resources.byId.${payload.resourceId}.propertyIds`)
+            ) {
                 newState = dotProp.set(state, `resources.byId.${payload.resourceId}.propertyIds`, propertyIds => [
                     ...propertyIds,
                     payload.propertyId
@@ -69,9 +122,8 @@ export default (state = initialState, action) => {
                         isEditing: false,
                         isSaving: false,
                         isTemplate: payload.isTemplate,
-                        templateId: payload.templateId ? payload.templateId : null,
-                        templateClass: payload.templateClass ? payload.templateClass : null,
-                        isAnimated: payload.isAnimated !== undefined ? payload.isAnimated : false
+                        isAnimated: payload.isAnimated !== undefined ? payload.isAnimated : false,
+                        range: payload.range ? payload.range : null
                     }
                 }));
                 newState = dotProp.set(newState, 'properties.allIds', ids => [...ids, payload.propertyId]);
@@ -156,6 +208,7 @@ export default (state = initialState, action) => {
                         isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
                         existingStatement: payload.existingStatement ? payload.existingStatement : false,
                         statementId: payload.statementId,
+                        ...(payload.type === 'literal' && { datatype: payload.datatype ?? process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE }),
                         isEditing: false,
                         isSaving: false,
                         shared: payload.shared ? payload.shared : 1
@@ -174,12 +227,12 @@ export default (state = initialState, action) => {
                     newState = dotProp.set(newState, 'resources.byId', ids => ({
                         ...ids,
                         [payload.resourceId]: {
-                            existingResourceId: payload.existingResourceId ? payload.existingResourceId : null,
+                            existingResourceId: payload.existingResourceId && payload.isExistingValue ? payload.existingResourceId : null,
                             id: payload.resourceId,
                             label: payload.label,
                             shared: payload.shared ? payload.shared : 1,
                             propertyIds: [],
-                            templateId: payload.templateId ? payload.templateId : null
+                            classes: payload.classes ? payload.classes : []
                         }
                     }));
                 }
@@ -209,6 +262,7 @@ export default (state = initialState, action) => {
                     type: v.type,
                     classes: payload.classes ? payload.classes : [],
                     label: payload.label ? payload.label : '',
+                    ...(v.type === 'literal' && { datatype: payload.datatype ?? process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE }),
                     resourceId: payload.resourceId ? payload.resourceId : null,
                     isExistingValue: payload.isExistingValue ? payload.isExistingValue : false,
                     existingStatement: payload.existingStatement ? payload.existingStatement : false,
@@ -228,7 +282,8 @@ export default (state = initialState, action) => {
                             id: payload.resourceId,
                             label: payload.label,
                             shared: payload.shared ? payload.shared : 1,
-                            propertyIds: []
+                            propertyIds: [],
+                            classes: payload.classes ? payload.classes : []
                         }
                     }));
                 }
@@ -251,6 +306,12 @@ export default (state = initialState, action) => {
         case type.TOGGLE_EDIT_VALUE: {
             const { payload } = action;
             const newState = dotProp.set(state, `values.byId.${payload.id}.isEditing`, v => !v);
+            return newState;
+        }
+
+        case type.UPDATE_RESOURCE_CLASSES: {
+            const { payload } = action;
+            const newState = dotProp.set(state, `resources.byId.${payload.resourceId}.classes`, payload.classes);
             return newState;
         }
 
@@ -334,6 +395,20 @@ export default (state = initialState, action) => {
             };
         }
 
+        case type.STATEMENT_BROWSER_UPDATE_SETTINGS: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                openExistingResourcesInDialog:
+                    typeof payload.openExistingResourcesInDialog === 'boolean'
+                        ? payload.openExistingResourcesInDialog
+                        : state.openExistingResourcesInDialog,
+                propertiesAsLinks: typeof payload.propertiesAsLinks === 'boolean' ? payload.propertiesAsLinks : state.propertiesAsLinks,
+                resourcesAsLinks: typeof payload.resourcesAsLinks === 'boolean' ? payload.resourcesAsLinks : state.resourcesAsLinks
+            };
+        }
+
         case type.CLEAR_RESOURCE_HISTORY: {
             return {
                 ...state,
@@ -366,9 +441,11 @@ export default (state = initialState, action) => {
         }
 
         case type.SET_STATEMENT_IS_FECHTED: {
-            const { resourceId } = action;
+            const { resourceId, depth } = action;
 
-            const newState = dotProp.set(state, `resources.byId.${resourceId}.isFechted`, true);
+            let newState = dotProp.set(state, `resources.byId.${resourceId}.isFechted`, true);
+            newState = dotProp.set(newState, `resources.byId.${resourceId}.fetshedDepth`, depth);
+            newState = dotProp.set(newState, `resources.byId.${resourceId}.isFetching`, false);
 
             return {
                 ...newState
@@ -376,9 +453,15 @@ export default (state = initialState, action) => {
         }
 
         case type.IS_FETCHING_STATEMENTS: {
+            const { resourceId } = action;
+            let newState = dotProp.set(state, `isFetchingStatements`, true);
+            if (resourceId) {
+                newState = dotProp.set(newState, `resources.byId.${resourceId}.isFetching`, true);
+                newState = dotProp.set(newState, `resources.byId.${resourceId}.isFechted`, false);
+            }
+
             return {
-                ...state,
-                isFetchingStatements: true
+                ...newState
             };
         }
 

@@ -85,24 +85,28 @@ class ResearchProblem extends Component {
         }).then(result => {
             // Papers
             if (result.length > 0) {
-                // Get the papers of each contribution
-                const papers = result.map(contribution => {
-                    return getStatementsByObject({
-                        id: contribution.subject.id,
-                        order: 'desc'
-                    }).then(papers => {
-                        // Fetch the data of each paper
-                        const papers_data = papers.map(paper => {
-                            return getStatementsBySubject({ id: paper.subject.id }).then(paperStatements => {
-                                return { ...paper, data: getPaperData(paper.subject.id, paper.subject.label, paperStatements) };
+                // Get the papers of each contribution, ensure all papers have the 'Paper' class
+                const papers = result
+                    .filter(contribution => contribution.subject.classes.includes(process.env.REACT_APP_CLASSES_CONTRIBUTION))
+                    .map(contribution => {
+                        return getStatementsByObject({
+                            id: contribution.subject.id,
+                            order: 'desc'
+                        }).then(papers => {
+                            // Fetch the data of each paper
+                            const papersData = papers
+                                .filter(paper => paper.subject.classes.includes(process.env.REACT_APP_CLASSES_PAPER))
+                                .map(paper => {
+                                    return getStatementsBySubject({ id: paper.subject.id }).then(paperStatements => {
+                                        return { ...paper, data: getPaperData(paper.subject.id, paper.subject.label, paperStatements) };
+                                    });
+                                });
+                            return Promise.all(papersData).then(results => {
+                                contribution.papers = results;
+                                return contribution.papers.length > 0 ? contribution : null;
                             });
                         });
-                        return Promise.all(papers_data).then(results => {
-                            contribution.papers = results;
-                            return contribution.papers.length > 0 ? contribution : null;
-                        });
                     });
-                });
 
                 Promise.all(papers).then(results => {
                     this.setState({
@@ -145,7 +149,7 @@ class ResearchProblem extends Component {
                                         {this.state.researchProblem && this.state.researchProblem.label}
                                         <Tippy content="Go to resource page">
                                             <Link
-                                                className={'h6 ml-2 text-secondary'}
+                                                className="h6 ml-2 text-secondary"
                                                 to={reverse(ROUTES.RESOURCE, { id: this.state.researchProblem.id })}
                                             >
                                                 <Icon icon={faLink} />
@@ -164,7 +168,7 @@ class ResearchProblem extends Component {
                         <Container className="p-0">
                             <h1 className="h4 mt-4 mb-4 flex-grow-1">Papers</h1>
                         </Container>
-                        <Container className={'p-0'}>
+                        <Container className="p-0">
                             {this.state.contributions.length > 0 && (
                                 <div>
                                     {this.state.contributions.map(contribution => {

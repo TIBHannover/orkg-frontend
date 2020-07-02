@@ -64,7 +64,7 @@ const EditItem = props => {
                 requestUrl={resourcesUrl}
                 optionsClass={process.env.REACT_APP_CLASSES_VENUE}
                 onItemSelected={props.onChange}
-                placeholder={'Select or type to enter a venue'}
+                placeholder="Select or type to enter a venue"
                 autoFocus
                 cacheOptions
                 value={props.value ? props.value : null}
@@ -79,7 +79,7 @@ const EditItem = props => {
                 requestUrl={resourcesUrl}
                 optionsClass={process.env.REACT_APP_CLASSES_RESEARCH_FIELD}
                 onItemSelected={props.onChange}
-                placeholder={'Select a research field'}
+                placeholder="Select a research field"
                 autoFocus
                 cacheOptions
                 value={props.value ? props.value : null}

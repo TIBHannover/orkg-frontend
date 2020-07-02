@@ -5,6 +5,7 @@ import auth from './auth';
 import statementBrowser from './statementBrowser';
 import viewPaper from './viewPaper';
 import pdfAnnotation from './pdfAnnotation';
+import addTemplate from './addTemplate';
 
 export default history =>
     combineReducers({
@@ -13,5 +14,6 @@ export default history =>
         viewPaper,
         statementBrowser,
         pdfAnnotation,
-        auth
+        auth,
+        addTemplate
     });

@@ -24,13 +24,7 @@ class GraphView extends Component {
         this.seenDepth = -1;
         this.graphVis = new GraphVis();
 
-        this.updateDepthRange = this.updateDepthRange.bind(this);
-        this.getDataFromApi = this.getDataFromApi.bind(this);
-        this.processStatements = this.processStatements.bind(this);
-        this.fetchMultipleResourcesFromAPI = this.fetchMultipleResourcesFromAPI.bind(this);
-        this.processMultiStatements = this.processMultiStatements.bind(this);
-
-        // graphVis caller to this object (have to be set after the bind.this calls)
+        // set this functions to the graph vis object for communication
         this.graphVis.propagateMaxDepthValue = this.updateDepthRange;
         this.graphVis.getDataFromApi = this.getDataFromApi;
         this.graphVis.fetchMultipleResourcesFromAPI = this.fetchMultipleResourcesFromAPI;
@@ -73,7 +67,7 @@ class GraphView extends Component {
         window.removeEventListener('resize', this.updateDimensions);
     }
 
-    updateDepthRange(value, fullGraph) {
+    updateDepthRange = (value, fullGraph) => {
         // called from the child to ensure that the depth has correct range
         if (fullGraph) {
             this.setState({ maxDepth: value, depth: value, seenFullGraph: true });
@@ -91,13 +85,13 @@ class GraphView extends Component {
                 this.setState({ maxDepth: value, seenFullGraph: true });
             }
         }
-    }
+    };
 
     propagateDictionary = () => {
         this.searchComponent.current.updateDictionary();
     };
 
-    async getDataFromApi(resourceId) {
+    getDataFromApi = async resourceId => {
         try {
             const statements = await getStatementsBySubject({ id: resourceId });
             if (statements.length === 0) {
@@ -109,9 +103,9 @@ class GraphView extends Component {
         } catch (error) {
             return {}; // TODO: handle unsaved resources
         }
-    }
+    };
 
-    async fetchMultipleResourcesFromAPI(resourceIds) {
+    fetchMultipleResourcesFromAPI = async resourceIds => {
         try {
             const objectStatements = await getStatementsBySubjects({ ids: resourceIds });
             if (objectStatements.length === 0) {
@@ -122,9 +116,9 @@ class GraphView extends Component {
         } catch (error) {
             return {}; // TODO: handle unsaved resources
         }
-    }
+    };
 
-    processMultiStatements(objectStatements) {
+    processMultiStatements = objectStatements => {
         let nodes = [];
         let edges = [];
         objectStatements.forEach(obj => {
@@ -137,9 +131,9 @@ class GraphView extends Component {
         nodes = uniqBy(nodes, 'id');
         edges = uniqBy(edges, e => [e.from, e.to, e.label].join());
         return { nodes: nodes, edges: edges };
-    }
+    };
 
-    processSingleStatement(nodes, edges, statement) {
+    processSingleStatement = (nodes, edges, statement) => {
         const subjectLabel = statement.subject.label.substring(0, 20);
         const objectLabel = statement.object.label.substring(0, 20);
 
@@ -168,17 +162,34 @@ class GraphView extends Component {
 
         if (statement.predicate.id === 'P27') {
             // add user Icon to target node if we have 'has author' property === P27
-            edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label, isAuthorProp: true });
+            edges.push({
+                from: statement.subject.id,
+                to: statement.object.id,
+                label: statement.predicate.label,
+                isAuthorProp: true,
+                predicateId: statement.predicate.id
+            });
         } else if (statement.predicate.id === 'P26') {
             // add DOI Icon to target node
-            edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label, isDOIProp: false }); // remove doi icon for now
+            edges.push({
+                from: statement.subject.id,
+                to: statement.object.id,
+                label: statement.predicate.label,
+                isDOIProp: false,
+                predicateId: statement.predicate.id
+            }); // remove doi icon for now
         } else {
             // no Icon for the target node
-            edges.push({ from: statement.subject.id, to: statement.object.id, label: statement.predicate.label });
+            edges.push({
+                from: statement.subject.id,
+                to: statement.object.id,
+                label: statement.predicate.label,
+                predicateId: statement.predicate.id
+            });
         }
-    }
+    };
 
-    processStatements(statements) {
+    processStatements = (statements, auxNode) => {
         let nodes = [];
         let edges = [];
 
@@ -189,8 +200,47 @@ class GraphView extends Component {
         nodes = uniqBy(nodes, 'id');
         edges = uniqBy(edges, e => [e.from, e.to, e.label].join());
 
+        if (auxNode) {
+            // find node with paper resource ID;
+            // heuristic its always node 0;
+            // >> auxNode will only be set in the loadStatements function (only depth 0 statements)
+            // which is only called on onOpened()
+
+            const meta = {
+                id: '__META_NODE__',
+                label: 'Meta Information',
+                title: 'Meta Information',
+                classificationArray: []
+            };
+            const link = {
+                from: nodes[0].id,
+                to: meta.id,
+                label: 'has meta information'
+            };
+
+            nodes.push(meta);
+            edges.push(link);
+
+            edges.forEach(edge => {
+                if (edge.predicateId) {
+                    if (
+                        edge.predicateId === process.env.REACT_APP_PREDICATES_HAS_DOI ||
+                        edge.predicateId === process.env.REACT_APP_PREDICATES_HAS_VENUE ||
+                        edge.predicateId === process.env.REACT_APP_PREDICATES_HAS_AUTHOR ||
+                        edge.predicateId === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH ||
+                        edge.predicateId === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR ||
+                        edge.predicateId === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD ||
+                        edge.predicateId === process.env.REACT_APP_PREDICATES_HAS_SUB_RESEARCH_FIELD ||
+                        edge.predicateId === process.env.REACT_APP_PREDICATES_URL
+                    ) {
+                        edge.from = meta.id;
+                    }
+                }
+            });
+        }
+
         return { nodes: nodes, edges: edges };
-    }
+    };
 
     loadStatements = async () => {
         this.setState({ isLoadingStatements: true, initializeGraph: false });
@@ -198,7 +248,9 @@ class GraphView extends Component {
         if (this.seenDepth < this.state.depth) {
             if (this.props.paperId) {
                 const statements = await this.getResourceAndStatements(this.props.paperId, 0, []);
-                const result = this.processStatements(statements);
+                const auxiliaryMetaDataNode = true; // flag for using or not using auxiliary node for meta info
+                const result = this.processStatements(statements, auxiliaryMetaDataNode);
+                console.log(result);
                 this.setState({ nodes: result.nodes, edges: result.edges });
             } else {
                 await this.visualizeAddPaper();
@@ -400,7 +452,7 @@ class GraphView extends Component {
                 style={{ maxWidth: '90%', marginBottom: 0 }}
             >
                 <ModalHeader toggle={this.props.toggle}>
-                    <div className={'d-flex'} style={{ height: '40px' }}>
+                    <div className="d-flex" style={{ height: '40px' }}>
                         <div style={{ width: '300px', height: '40px', paddingTop: '5px' }}>Paper graph visualization</div>
                         <div style={{ width: '100%', display: 'flex' }}>
                             {' '}
@@ -519,7 +571,7 @@ class GraphView extends Component {
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </Dropdown>
-                                <SearchAutoComplete ref={this.searchComponent} placeHolder={'Search'} graphVis={this.graphVis} />
+                                <SearchAutoComplete ref={this.searchComponent} placeHolder="Search" graphVis={this.graphVis} />
                             </div>
                         </div>
                     </div>
@@ -536,7 +588,7 @@ class GraphView extends Component {
                             graph={{ nodes: this.state.nodes, edges: this.state.edges }}
                             initializeGraph={this.state.initializeGraph}
                             graphVis={this.graphVis}
-                            graphBgColor={'#ecf0f1'}
+                            graphBgColor="#ecf0f1"
                             addPaperVisualization={this.props.addPaperVisualization}
                         />
                     )}

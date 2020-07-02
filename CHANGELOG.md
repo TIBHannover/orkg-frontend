@@ -3,7 +3,170 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
-## [V0.8](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.7.1...V0.8) - 2020-04-15
+## [0.13](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.12...V0.13) - 2020-06-24
+
+### Merged
+
+- enhancement: Loading templates after updating classes in Resource details page [`#304`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/304)
+- Fix: Visiting the same predicate [`#301`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/301)
+- fix: Bug in skipping the help tour [`#302`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/302)
+- ux: Save button for templates header [`#305`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/305)
+- fix: Creating new properties not working [`#306`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/306)
+- fix(Search): character encoding, refactoring search form [`#303`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/303)
+- chore(lint): disallow unnecessary curly braces in JSX props [`#300`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/300)
+
+### Fixed
+
+- Merge branch '247-loading-templates-after-updating-classes-in-resource-details-page' into 'master' [`#247`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/247)
+- Merge branch '253-infinite-loop-when-clicking-description-of-the-description-predicate' into 'master' [`#253`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/253)
+- Merge branch '254-bug-in-skiping-the-help-tour' into 'master' [`#254`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/254)
+- Merge branch '251-save-button-for-templates-header' into 'master' [`#251`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/251)
+- Merge branch '256-creating-new-properties-not-working' into 'master' [`#256`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/256)
+- Merge branch '255-search-form-character-encoding' into 'master' [`#255`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/255)
+- Merge branch '250-disallow-unnecessary-curly-braces-in-jsx-props' into 'master' [`#250`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/250)
+
+---
+## [0.12](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.11...V0.12) - 2020-06-19
+
+### Merged
+
+- feat: Add observatories page [`#298`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/298)
+- style: Use rounded css class where box class is used [`#297`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/297)
+- feat: Improve the predicate landing pages [`#296`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/296)
+- fix: Show loading indicator if the template of the object is still loading [`#295`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/295)
+- enhancement: Use a select input field to specify the cardinality [`#293`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/293)
+- feat: Support pagination in the autocomplete component [`#292`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/292)
+- style(menu): Add features link to top header menu [`#290`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/290)
+- fix: add polyfill for TextEncoder [`#289`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/289)
+- feat: save correct datatype of literals [`#281`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/281)
+- feat: cherry picking, PaperCardPreviews from #215 ( Caching ) [`#287`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/287)
+- chore(package): update Fontawesome [`#288`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/288)
+- fix: Editing paper meta data: doi and url [`#275`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/275)
+- enhancement: Support pagination in listing the statements where the resource is an object [`#279`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/279)
+- refactor: SelectProperties component [`#284`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/284)
+- fix: DeletedPaper doesn't take into account fetching papers of a research problem/field [`#286`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/286)
+- fix: Duplicated labels of mapped comparison properties [`#285`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/285)
+- style(UX): Close alert of horizontal scrolling comparison by cookie [`#278`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/278)
+- feat: support deleting papers, refactor code, upgrade packages [`#272`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/272)
+- Resolve "editing publication month does not provide expectedtype" [`#273`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/273)
+
+### Fixed
+
+- Merge branch '248-replace-organizations-page-by-observatories-page' into 'master' [`#248`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/248)
+- Merge branch '245-use-rounded-corners-in-wrappers-of-some-views' into 'master' [`#245`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/245)
+- Merge branch '203-improve-the-predicate-landing-pages-set-ranges-set-descriptions-support-sameas-links' into 'master' [`#203`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/203)
+- Merge branch '210-sometimes-the-literal-template-components-doesn-t-work-effectively' into 'master' [`#210`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/210)
+- Merge branch '231-improve-the-input-field-of-the-cardinality-in-template-editor' into 'master' [`#231`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/231)
+- Merge branch '233-support-pagination-in-the-autocomplete-fields' into 'master' [`#233`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/233)
+- Merge branch '236-make-top-level-about-menu-a-dropdown' into 'master' [`#246`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/246)
+- Merge branch '238-add-polyfill-to-support-textencoder' into 'master' [`#238`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/238)
+- Merge branch '221-save-correct-data-type-of-literals-that-comes-from-a-template' into 'master' [`#221`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/221)
+- Merge branch '232-feat-cherry-picking-papercardpreviews-from-215-caching' into 'master' [`#232`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/232)
+- Merge branch '234-covid-icons-fontawesome-not-working' into 'master' [`#234`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/234)
+- Merge branch '214-issue-on-editing-paper-meta-data-doi-and-url' into 'master' [`#214`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/214)
+- Merge branch '193-support-pagination-in-the-resource-page' into 'master' [`#193`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/193)
+- Merge branch '228-rewrite-selectproperties-component' into 'master' [`#228`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/228)
+- Merge branch '222-deletedpaper-doesn-t-take-into-account-fetching-papers-of-a-research-problem-field' into 'master' [`#222`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/222)
+- Merge branch '227-fix-the-tooltip-of-mapped-comparison-properties' into 'master' [`#227`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/227)
+- Merge branch '147-close-alert-of-horizontal-scrolling-comparison-by-cookie' into 'master' [`#147`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/147)
+- Merge branch '211-support-delete-paper-from-frontend' into 'master' [`#211`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/211)
+- Merge branch '209-editing-publication-month-does-not-provide-expectedtype' into 'master' [`#209`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/209)
+
+---
+## [0.11](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.10.1...V0.11) - 2020-06-03
+
+### Merged
+
+- feat: Many to many relationship between Organization and Observatory entities [`#260`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/260)
+- Generete latex export only when the model is open [`#268`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/268)
+- Support suggestion of templates based on research problems [`#267`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/267)
+- feat: Indicate mapped comparison properties [`#265`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/265)
+- Fix: Paper venue [`#261`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/261)
+- fix: Template editor issues [`#262`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/262)
+- feat: make resources and research problem selectable [`#264`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/264)
+- fix(Changelog): issue with wrong tag order [`#263`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/263)
+
+### Fixed
+
+- Merge branch '205-generete-latex-export-only-when-the-model-is-open' into 'master' [`#205`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/205)
+- Merge branch '198-indicate-mapped-comparison-properties' into 'master' [`#198`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/198)
+- Merge branch '197-paper-published-in' into 'master' [`#197`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/197)
+- Merge branch '195-template-editor-issues' into 'master' [`#195`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/195)
+- Merge branch '200-not-possible-to-select-text-for-research-problems-and-resources' into 'master' [`#200`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/200)
+- Merge branch '194-bug-in-auto-generated-changelog' into 'master' [`#194`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/194)
+
+---
+## [0.10.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.10...V0.10.1) - 2020-05-19
+
+### Merged
+
+- Fix the issue if the paper is not part of an observatory [`#259`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/259)
+
+---
+## [0.10](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.9...V0.10) - 2020-05-19
+
+### Merged
+
+- fix: Add value if the resource has a formated label [`#257`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/257)
+- fix: Logout user when the token expires [`#258`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/258)
+- style: Fix z-index for comparison popup and page header bar [`#256`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/256)
+- fix: Rendering statements component in resource details page [`#255`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/255)
+- feat(Resource): show statements with resource in object [`#237`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/237)
+- Resolve "Creating organization and observatories" [`#248`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/248)
+- feat: support image resources for comparisons [`#254`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/254)
+- feat: Feedback/Support Chat for the ORKG Frontend [`#253`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/253)
+- feat: Template improvements [`#242`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/242)
+- design: change position of contribution amount [`#252`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/252)
+- fix: Use localstorage instead of cookie to collect contributions for a comparison [`#247`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/247)
+- feat(AddPaper): Show existing paper if the doi already exists [`#250`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/250)
+- feat: Show the resource and predicate id in the autocomplete options [`#251`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/251)
+- feat: Make the option edit a paper visible along the page [`#246`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/246)
+- fix: Comparison with same property label, but different IDs [`#249`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/249)
+- feat: Display the number of compared contributions [`#244`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/244)
+- fix Console Error from the Jumbotron component [`#245`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/245)
+- feat: Listing all published comparisons [`#243`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/243)
+- fix: Fix existing tests [`#240`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/240)
+
+### Fixed
+
+- Merge branch 'AddValueTemplate' into 'master' [`#191`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/191)
+- Merge branch '192-logout-user-when-the-token-expires' into 'master' [`#192`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/192)
+- Merge branch '186-creating-organization-and-observatories' into 'master' [`#186`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/186)
+- Fix #191 Edit property improvements [`#191`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/191)
+- Merge branch '187-include-images-on-comparison-page' into 'master' [`#187`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/187)
+- Merge branch '176-feedback-support-chat-for-the-orkg-frontend' into 'master' [`#176`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/176)
+- Merge branch 'inputValidation5' into 'master' [`#183`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/183)
+- Merge branch '175-display-the-number-of-compared-contributions' into 'master' [`#175`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/175)
+- Merge branch '85-add-to-comparison-button-stops-working-when-there-is-around-16-item-in-the-popup' into 'master' [`#85`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/85)
+- Merge branch '189-feat-addpaper-show-existing-paper-if-the-doi-already-exists' into 'master' [`#189`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/189)
+- Merge branch '188-two-url-properties-in-graph-user-needs-to-guess-which-one-for-setting-related-resources-to' into 'master' [`#188`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/188)
+- Merge branch '171-make-the-option-edit-a-paper-visible-along-the-page' into 'master' [`#171`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/171)
+- Merge branch '174-bug-comparison-with-same-property-label-but-different-ids-are-not-showing-the-property' into 'master' [`#174`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/174)
+- Merge branch '175-display-the-number-of-compared-contributions' into 'master' [`#175`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/175)
+- Merge branch '138-console-error-from-the-jumbotron-component' into 'master' [`#138`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/138)
+- Merge branch '178-listing-all-published-contributions' into 'master' [`#184`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/184)
+- Fix #183 : keep the entered text on switching between literal and object [`#183`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/183)
+- Fixes #185. Published comparison url [`#185`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/185)
+
+---
+## [0.9](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.8...V0.9) - 2020-04-24
+
+### Merged
+
+- feat: support thumbnails for related comparison resources [`#239`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/239)
+- Resolve "Fix double line edit mode" [`#234`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/234)
+- Single node collapse [`#230`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/230)
+- Resolve "Bug: publishing a comparison" [`#236`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/236)
+- Change position "Add contribution" for a comparison [`#233`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/233)
+
+### Fixed
+
+- Merge branch '179-add-a-thumbnail-for-the-resources-links-in-the-comparison' into 'master' [`#179`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/179)
+- Merge branch '167-fix-double-line-edit-mode' into 'master' [`#167`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/167)
+- Merge branch '177-bug-publishing-a-comparison' into 'master' [`#177`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/177)
+
+---
+## [0.8](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.7.1...V0.8) - 2020-04-15
 
 ### Merged
 
@@ -22,7 +185,7 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - Merge branch '166-support-ordering-for-featured-comparisons-on-homepage' into 'master' [`#166`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/166)
 
 ---
-## [V0.7.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.7...V0.7.1) - 2020-04-02
+## [0.7.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.7...V0.7.1) - 2020-04-02
 
 ### Merged
 
@@ -33,7 +196,7 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - Merge branch '164-delete-a-property-of-a-template' into 'master' [`#164`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/164)
 
 ---
-## [V0.7](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.6.2...V0.7) - 2020-04-02
+## [0.7](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.6.2...V0.7) - 2020-04-02
 
 ### Merged
 
@@ -58,7 +221,7 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - Merge branch '155-scolarly-knowledge-structured-comparable-fair' into 'master' [`#155`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/155)
 
 ---
-## [V0.6.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.6.1...V0.6.2) - 2020-03-11
+## [0.6.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.6.1...V0.6.2) - 2020-03-11
 
 ### Commits
 
@@ -66,7 +229,7 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - Update changelog [`ae2c3b2`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/ae2c3b22165152168275ef1c9ba68a0ed1d6ca20)
 - Fix RDF datacube vocabulary tabular view [`dd6a28b`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/dd6a28b9c9299fbbe94e639244a2f3138a3ab90f)
 ---
-## [V0.6.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.6...V0.6.1) - 2020-03-10
+## [0.6.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.6...V0.6.1) - 2020-03-10
 
 ### Commits
 
@@ -74,7 +237,7 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - Include public widget file [`3f119d8`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/3f119d86126a764d8951ab648c0f1af0bdbe6f0a)
 - Fix problem with fetching classes [`fa6223c`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/fa6223cd715f7b30283c46459705d184aab6c8a7)
 ---
-## [V0.6](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.8...V0.6) - 2020-03-10
+## [0.6](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.8...V0.6) - 2020-03-10
 
 ### Merged
 
@@ -90,14 +253,14 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - Merge branch '150-export-latex-issue' into 'master' [`#150`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/150)
 
 ---
-## [V0.5.8](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.7...V0.5.8) - 2020-03-03
+## [0.5.8](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.7...V0.5.8) - 2020-03-03
 
 ### Merged
 
 - Search in graph [`#196`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/196)
 
 ---
-## [V0.5.7](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.6...V0.5.7) - 2020-03-03
+## [0.5.7](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.6...V0.5.7) - 2020-03-03
 
 ### Merged
 
@@ -142,7 +305,7 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - Merge branch '135-add-missing-logos-in-footer' into 'master' [`#135`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/135)
 
 ---
-## [V0.5.6](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.5...V0.5.6) - 2020-01-21
+## [0.5.6](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.5...V0.5.6) - 2020-01-21
 
 ### Merged
 
@@ -158,7 +321,7 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - Merge branch '128-add-tib-logo-to-footer' into 'master' [`#128`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/128)
 
 ---
-## [V0.5.5](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.4...V0.5.5) - 2020-01-17
+## [0.5.5](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.4...V0.5.5) - 2020-01-17
 
 ### Commits
 
@@ -166,7 +329,7 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - Update changelog [`fc46dbd`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/fc46dbd30c79d7a0ad6af8ef5c8e0ca9b658c61c)
 - fix(Comparison): Comparison url [`27f3e7b`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/27f3e7b7966de5fb28bdb197919a3fd5e49015de)
 ---
-## [V0.5.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.3...V0.5.4) - 2020-01-17
+## [0.5.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.3...V0.5.4) - 2020-01-17
 
 ### Merged
 
@@ -208,7 +371,7 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - Merge branch '117-direkt-link-to-imprint-and-data-protection-regulation' into 'master' [`#117`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/117)
 
 ---
-## [V0.5.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.2...V0.5.3) - 2019-12-17
+## [0.5.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.2...V0.5.3) - 2019-12-17
 
 ### Merged
 
@@ -217,7 +380,7 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - fix: Add FeaturedPaper class to default environment variables [`#147`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/147)
 
 ---
-## [V0.5.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.1...V0.5.2) - 2019-12-16
+## [0.5.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.1...V0.5.2) - 2019-12-16
 
 ### Merged
 
@@ -232,14 +395,14 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - fix: typos on homepage and license page [`#135`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/135)
 
 ---
-## [V0.5.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5...V0.5.1) - 2019-12-13
+## [0.5.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5...V0.5.1) - 2019-12-13
 
 ### Merged
 
 - fix: remove the token cookie if it's expired [`#134`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/134)
 
 ---
-## [V0.5](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.4.1...V0.5) - 2019-12-13
+## [0.5](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.4.1...V0.5) - 2019-12-13
 
 ### Merged
 
@@ -317,13 +480,13 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - Add Gitlab link to footer, fixes #62 [`#62`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/62)
 
 ---
-## [V0.4.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.4...V0.4.1) - 2019-09-06
+## [0.4.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.4...V0.4.1) - 2019-09-06
 
 ### Commits
 
 - add missing slashes [`766a1af`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/766a1afd40258265015f741e520138f8e40d042f)
 ---
-## [V0.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.3...V0.4) - 2019-09-06
+## [0.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.3...V0.4) - 2019-09-06
 
 ### Merged
 
@@ -351,7 +514,7 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - Merge branch 'Comparison-fixes' into 'master' [`#63`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/63)
 
 ---
-## [V0.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.2...V0.3) - 2019-06-27
+## [0.3](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.2...V0.3) - 2019-06-27
 
 ### Merged
 
@@ -382,7 +545,7 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - fix #47 research problem browser z-index [`#47`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/47)
 
 ---
-## [V0.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.1...V0.2) - 2019-05-27
+## [0.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.1...V0.2) - 2019-05-27
 
 ### Merged
 
@@ -390,7 +553,7 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - New ui design [`#30`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/30)
 
 ---
-## V0.1 - 2019-01-16
+## 0.1 - 2019-01-16
 
 ### Merged
 

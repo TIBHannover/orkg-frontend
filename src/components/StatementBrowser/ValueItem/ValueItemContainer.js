@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 import {
     selectResource,
     fetchStatementsForResource,
-    fetchStructureForTemplate,
     deleteValue,
     toggleEditValue,
     updateValueLabel,
@@ -11,14 +10,26 @@ import {
     isSavingValue,
     changeValue
 } from 'actions/statementBrowser';
+import { getValueClass, isInlineResource } from 'components/StatementBrowser/AddValue/helpers/utils';
 import ValueItem from './ValueItem';
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, props) => {
+    const predicate = state.statementBrowser.properties.byId[props.propertyId ? props.propertyId : props.selectedProperty];
+    let valueClass = getValueClass(props.components);
+
+    valueClass = valueClass ? valueClass : predicate.range ? predicate.range : null;
+
     return {
         resources: state.statementBrowser.resources,
         values: state.statementBrowser.values,
         properties: state.statementBrowser.properties,
-        selectedProperty: state.statementBrowser.selectedProperty
+        selectedProperty: state.statementBrowser.selectedProperty,
+        openExistingResourcesInDialog: state.statementBrowser.openExistingResourcesInDialog,
+        resourcesAsLinks: state.statementBrowser.resourcesAsLinks,
+        classes: state.statementBrowser.classes,
+        templates: state.statementBrowser.templates,
+        valueClass: valueClass ? valueClass : predicate.range ? predicate.range : null,
+        isInlineResource: isInlineResource(state, valueClass)
     };
 };
 
@@ -26,7 +37,6 @@ const mapDispatchToProps = dispatch => ({
     createResource: data => dispatch(createResource(data)),
     selectResource: data => dispatch(selectResource(data)),
     fetchStatementsForResource: data => dispatch(fetchStatementsForResource(data)),
-    fetchStructureForTemplate: data => dispatch(fetchStructureForTemplate(data)),
     deleteValue: data => dispatch(deleteValue(data)),
     toggleEditValue: data => dispatch(toggleEditValue(data)),
     updateValueLabel: data => dispatch(updateValueLabel(data)),

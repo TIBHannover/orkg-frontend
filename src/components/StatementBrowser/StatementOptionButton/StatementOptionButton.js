@@ -92,16 +92,16 @@ class StatementOptionButton extends Component {
     render() {
         const tippyTarget = (
             <span>
-                <OptionButton color="link" className="p-0" onClick={this.handleClick}>
+                <OptionButton disabled={this.props.isDisabled} color="link" className="p-0" onClick={this.handleClick}>
                     <span
-                        className={'icon-wrapper'}
+                        className="icon-wrapper"
                         style={{
                             width: this.props.iconWrapperSize ? this.props.iconWrapperSize : '24px',
                             height: this.props.iconWrapperSize ? this.props.iconWrapperSize : '24px'
                         }}
                     >
                         <Icon
-                            className={'icon'}
+                            className="icon"
                             style={{
                                 fontSize: this.props.iconSize ? this.props.iconSize : '12px'
                             }}
@@ -112,19 +112,19 @@ class StatementOptionButton extends Component {
             </span>
         );
 
-        return this.props.requireConfirmation ? (
-            <Tippy trigger={'mouseenter'} content={this.props.title} zIndex={999}>
+        return this.props.requireConfirmation && !this.props.isDisabled ? (
+            <Tippy trigger="mouseenter" content={this.props.title} zIndex={999}>
                 <Tippy
                     onShow={this.onShow}
                     onShown={this.onShown}
                     onHide={this.onHide}
                     onCreate={this.onCreate}
                     interactive={true}
-                    trigger={'click'}
+                    trigger="click"
                     content={
-                        <div className={'text-center p-1'} style={{ color: '#fff', fontSize: '0.95rem', wordBreak: 'normal' }}>
+                        <div className="text-center p-1" style={{ color: '#fff', fontSize: '0.95rem', wordBreak: 'normal' }}>
                             <p className="mb-2">{this.props.confirmationMessage}</p>
-                            <ButtonGroup size="sm" className={'mt-1 mb-1'}>
+                            <ButtonGroup size="sm" className="mt-1 mb-1">
                                 <Button
                                     onClick={() => {
                                         this.props.action();
@@ -135,7 +135,7 @@ class StatementOptionButton extends Component {
                                     color="danger"
                                     style={{ paddingTop: 2, paddingBottom: 2 }}
                                 >
-                                    <Icon icon={faCheck} className={'mr-1'} />
+                                    <Icon icon={faCheck} className="mr-1" />
                                     Delete
                                 </Button>
                                 <Button
@@ -147,7 +147,7 @@ class StatementOptionButton extends Component {
                                     style={{ paddingTop: 2, paddingBottom: 2 }}
                                 >
                                     {' '}
-                                    <Icon icon={faTimes} className={'mr-1'} /> Cancel
+                                    <Icon icon={faTimes} className="mr-1" /> Cancel
                                 </Button>
                             </ButtonGroup>
                         </div>
@@ -157,7 +157,7 @@ class StatementOptionButton extends Component {
                 </Tippy>
             </Tippy>
         ) : (
-            <Tippy interactive={false} trigger={'mouseenter'} content={this.props.title}>
+            <Tippy interactive={false} trigger="mouseenter" content={this.props.title}>
                 {tippyTarget}
             </Tippy>
         );
@@ -172,7 +172,8 @@ StatementOptionButton.propTypes = {
     action: PropTypes.func.isRequired,
     requireConfirmation: PropTypes.bool,
     confirmationMessage: PropTypes.string,
-    onVisibilityChange: PropTypes.func
+    onVisibilityChange: PropTypes.func,
+    isDisabled: PropTypes.bool
 };
 
 StatementOptionButton.defaultProps = {

@@ -25,6 +25,7 @@ import { faMagic, faPlus } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import Tippy from '@tippy.js/react';
 import PropTypes from 'prop-types';
+import { updateSettings } from 'actions/statementBrowser';
 
 const AnimationContainer = styled(CSSTransition)`
     transition: 0.3s background-color, 0.3s border-color;
@@ -55,6 +56,9 @@ class Contributions extends Component {
                 selectAfterCreation: true,
                 prefillStatements: true,
                 researchField: this.props.selectedResearchField
+            });
+            this.props.updateSettings({
+                openExistingResourcesInDialog: true
             });
         }
     }
@@ -134,7 +138,7 @@ class Contributions extends Component {
 
         return (
             <div>
-                <div className={'d-flex align-items-center mt-4 mb-5'}>
+                <div className="d-flex align-items-center mt-4 mb-5">
                     <h2 className="h4 flex-shrink-0">
                         <Tooltip
                             message={
@@ -150,7 +154,7 @@ class Contributions extends Component {
                             Specify research contributions
                         </Tooltip>
                     </h2>
-                    <Button onClick={this.props.toggleAbstractDialog} outline size={'sm'} className="flex-shrink-0 ml-auto" color="darkblue">
+                    <Button onClick={this.props.toggleAbstractDialog} outline size="sm" className="flex-shrink-0 ml-auto" color="darkblue">
                         <Icon icon={faMagic} /> Abstract annotator
                     </Button>
                 </div>
@@ -175,7 +179,7 @@ class Contributions extends Component {
                                 );
                             })}
 
-                            <li className={'addContribution'} onClick={this.props.createContribution}>
+                            <li className="addContribution" onClick={this.props.createContribution}>
                                 <Tippy content="Add contribution">
                                     <span>
                                         <Icon size="xs" icon={faPlus} />
@@ -230,6 +234,7 @@ Contributions.propTypes = {
     createContribution: PropTypes.func.isRequired,
     deleteContribution: PropTypes.func.isRequired,
     selectContribution: PropTypes.func.isRequired,
+    updateSettings: PropTypes.func.isRequired,
     updateContributionLabel: PropTypes.func.isRequired,
     saveAddPaper: PropTypes.func.isRequired,
     openTour: PropTypes.func.isRequired,
@@ -263,7 +268,8 @@ const mapDispatchToProps = dispatch => ({
     updateContributionLabel: data => dispatch(updateContributionLabel(data)),
     saveAddPaper: data => dispatch(saveAddPaper(data)),
     openTour: data => dispatch(openTour(data)),
-    toggleAbstractDialog: () => dispatch(toggleAbstractDialog())
+    toggleAbstractDialog: () => dispatch(toggleAbstractDialog()),
+    updateSettings: data => dispatch(updateSettings(data))
 });
 
 export default connect(

@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import { createProperty } from 'actions/statementBrowser';
+import { createProperty, fetchTemplateIfNeeded } from 'actions/statementBrowser';
 import { prefillStatements } from 'actions/addPaper';
 import TemplateDetailsTooltip from './TemplateDetailsTooltip';
 import { guid } from 'utils';
-import { getTemplateById } from 'network';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
@@ -45,7 +44,8 @@ class AddTemplateButton extends Component {
 
     addTemplate = templateID => {
         this.setState({ isTemplateLoading: true, isTemplateFailedLoading: false });
-        getTemplateById(templateID).then(template => {
+        this.props.fetchTemplateIfNeeded(templateID).then(templateDate => {
+            const template = this.props.templates[templateID];
             // Check if it's a contribution template
             if (template.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION) {
                 // Add properties
@@ -55,7 +55,8 @@ class AddTemplateButton extends Component {
                         statements['properties'].push({
                             existingPredicateId: component.property.id,
                             label: component.property.label,
-                            templateClass: component.value
+                            range: component.value ? component.value : null,
+                            validationRules: component.validationRules
                         });
                     }
                     this.props.prefillStatements({ statements, resourceId: this.props.selectedResource });
@@ -77,7 +78,8 @@ class AddTemplateButton extends Component {
                     existingPredicateId: template.predicate.id,
                     label: template.predicate.label,
                     isTemplate: true,
-                    isAnimated: false
+                    isAnimated: false,
+                    canDuplicate: true
                 });
 
                 statements['values'].push({
@@ -86,7 +88,7 @@ class AddTemplateButton extends Component {
                     existingResourceId: rID,
                     type: 'object',
                     propertyId: pID,
-                    classes: template.class ? [template.class] : []
+                    classes: template.class ? [template.class.id] : []
                 });
                 this.props.prefillStatements({ statements, resourceId: this.props.selectedResource });
                 // Add properties
@@ -96,28 +98,11 @@ class AddTemplateButton extends Component {
                         statements['properties'].push({
                             existingPredicateId: component.property.id,
                             label: component.property.label,
-                            templateClass: component.value
+                            validationRules: component.validationRules
                         });
                     }
                     this.props.prefillStatements({ statements, resourceId: rID });
                 }
-                // Tag resource with used template
-                const tagResourceStatements = { properties: [], values: [] };
-                const ipID = guid();
-                tagResourceStatements['properties'].push({
-                    propertyId: ipID,
-                    existingPredicateId: process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE,
-                    label: 'Instance Of Template'
-                });
-                const ivID = guid();
-                tagResourceStatements['values'].push({
-                    valueId: ivID,
-                    label: template.label,
-                    existingResourceId: templateID,
-                    type: 'object',
-                    propertyId: ipID
-                });
-                this.props.prefillStatements({ statements: tagResourceStatements, resourceId: rID });
 
                 // Add templates
                 if (template.subTemplates && template.subTemplates.length > 0) {
@@ -128,9 +113,7 @@ class AddTemplateButton extends Component {
                         statementsSubTemplates['properties'].push({
                             propertyId: tpID,
                             existingPredicateId: subTemplate.predicate.id,
-                            label: subTemplate.predicate.label,
-                            templateId: subTemplate.id,
-                            templateClass: subTemplate.class
+                            label: subTemplate.predicate.label
                         });
                     }
                     this.props.prefillStatements({ statements: statementsSubTemplates, resourceId: rID });
@@ -170,19 +153,30 @@ AddTemplateButton.propTypes = {
     selectedResource: PropTypes.string,
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    source: PropTypes.object.isRequired
+    source: PropTypes.object.isRequired,
+    fetchTemplateIfNeeded: PropTypes.func.isRequired,
+    templates: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired
 };
 
 AddTemplateButton.defaultProps = {
     label: ''
 };
 
+const mapStateToProps = state => ({
+    currentStep: state.addPaper.currentStep,
+    addPaper: state.addPaper,
+    templates: state.statementBrowser.templates,
+    classes: state.statementBrowser.classes
+});
+
 const mapDispatchToProps = dispatch => ({
     createProperty: data => dispatch(createProperty(data)),
-    prefillStatements: data => dispatch(prefillStatements(data))
+    prefillStatements: data => dispatch(prefillStatements(data)),
+    fetchTemplateIfNeeded: data => dispatch(fetchTemplateIfNeeded(data))
 });
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(AddTemplateButton);

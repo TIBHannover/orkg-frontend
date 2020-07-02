@@ -64,14 +64,14 @@ const Label = styled.div`
 
 const ColoredStatsBox = props => {
     return (
-        <StatsBoxStyled className={`box ${props.className} ${props.color}`}>
-            <IconContainer className={props.color}>
+        <StatsBoxStyled className={`box rounded ${props.className} ${props.color}`}>
+            <IconContainer className={`rounded-left ${props.color}`}>
                 <Icon icon={props.icon} />
             </IconContainer>
             <LabelWrapper>
                 {!props.isLoading ? (
                     <Number>
-                        <NumberFormat value={props.number} displayType={'text'} thousandSeparator={' '} />
+                        <NumberFormat value={props.number} displayType="text" thousandSeparator={' '} />
                     </Number>
                 ) : (
                     'Loading...'

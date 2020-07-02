@@ -12,7 +12,8 @@ import {
     createResource,
     deleteStatementsByIds,
     deleteStatementById,
-    updateStatement
+    updateStatement,
+    getStatementsBySubjectAndPredicate
 } from 'network';
 import { connect } from 'react-redux';
 import EditItem from './EditItem';
@@ -68,7 +69,12 @@ class EditPaperDialog extends Component {
     };
 
     handleChange = (event, name) => {
-        this.setState({ [name]: event.target.value });
+        // fixing publication month and year as int number edit;
+        if (name === 'publicationMonth' || name === 'publicationYear') {
+            this.setState({ [name]: parseInt(event.target.value) });
+        } else {
+            this.setState({ [name]: event.target.value });
+        }
     };
 
     handleSave = async () => {
@@ -153,9 +159,17 @@ class EditPaperDialog extends Component {
     updateOrCreateLiteral = async ({ reducerName, value, predicateIdForCreate }) => {
         const literalId = this.props.viewPaper[reducerName];
 
-        if (literalId) {
+        if (literalId && value !== '') {
             updateLiteral(literalId, value);
             return literalId;
+        } else if (literalId && value === '') {
+            // delete statements because it's not possible to set empty label for literal
+            await getStatementsBySubjectAndPredicate({ subjectId: this.props.viewPaper.paperResourceId, predicateId: predicateIdForCreate }).then(
+                statements => {
+                    deleteStatementsByIds(statements.map(s => s.id));
+                }
+            );
+            return null;
         } else if (value) {
             // only create a new literal if a value has been provided
             const newLiteral = await this.createNewLiteral(this.props.viewPaper.paperResourceId, predicateIdForCreate, value);

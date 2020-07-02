@@ -97,7 +97,7 @@ class SimilarContributions extends Component {
                                             <Col>
                                                 {contribution.title ? contribution.title : <em>No title</em>}
                                                 {contribution.contributionLabel && (
-                                                    <div className={'simContributionLabel'}>{contribution.contributionLabel}</div>
+                                                    <div className="simContributionLabel">{contribution.contributionLabel}</div>
                                                 )}
                                             </Col>
                                         </Row>

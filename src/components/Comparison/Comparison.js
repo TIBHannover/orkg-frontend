@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, UncontrolledAlert } from 'reactstrap';
+import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject } from 'network';
-import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResonseHashFromUrl, get_error_message } from 'utils';
+import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResponseHashFromUrl, get_error_message } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faPlus, faArrowsAltH, faLightbulb } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
@@ -9,7 +9,7 @@ import ComparisonLoadingComponent from './ComparisonLoadingComponent';
 import ComparisonTable from './ComparisonTable.js';
 import ExportToLatex from './ExportToLatex.js';
 import GeneratePdf from './GeneratePdf.js';
-import SelectProperties from './SelectProperties.js';
+import SelectProperties from 'components/Comparison/SelectProperties';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
 import Share from './Share.js';
@@ -21,10 +21,13 @@ import arrayMove from 'array-move';
 import { connect } from 'react-redux';
 import dotProp from 'dot-prop-immutable';
 import { reverse } from 'named-urls';
-import { generateRdfDataVocabularyFile } from 'utils';
+import { generateRdfDataVocabularyFile, extendPropertyIds, similarPropertiesByLabel } from 'utils';
 import { ContainerAnimated } from './styled';
 import RelatedResources from './RelatedResources';
-
+import RelatedFigures from './RelatedFigures';
+import Tippy from '@tippy.js/react';
+import { Cookies } from 'react-cookie';
+const cookies = new Cookies();
 class Comparison extends Component {
     constructor(props) {
         super(props);
@@ -52,7 +55,8 @@ class Comparison extends Component {
             fullWidth: false,
             errors: null,
             locationSearch: '',
-            relatedResources: []
+            resourcesStatements: [],
+            hideScrollHint: cookies.get('seenShiftMouseWheelScroll') ? cookies.get('seenShiftMouseWheelScroll') : false
         };
     }
 
@@ -117,7 +121,7 @@ class Comparison extends Component {
     };
 
     getComparisonResult = locationSearch => {
-        const response_hash = getResonseHashFromUrl(locationSearch);
+        const response_hash = getResponseHashFromUrl(locationSearch);
         const contributionIds = getContributionIdsFromUrl(locationSearch);
         const propertyIds = getPropertyIdsFromUrl(locationSearch);
         const transpose = getTransposeOptionFromUrl(locationSearch);
@@ -136,16 +140,20 @@ class Comparison extends Component {
 
                 // if there are properties in the query string
                 if (propertyIds.length > 0) {
+                    // Create an extended version of propertyIds (ADD the IDs of similar properties)
+                    const extendedPropertyIds = extendPropertyIds(propertyIds, comparisonData.data);
+
                     // sort properties based on query string (is not presented in query string, sort at the bottom)
                     // TODO: sort by label when is not active
                     comparisonData.properties.sort((a, b) => {
-                        const index1 = propertyIds.indexOf(a.id) !== -1 ? propertyIds.indexOf(a.id) : 1000;
-                        const index2 = propertyIds.indexOf(b.id) !== -1 ? propertyIds.indexOf(b.id) : 1000;
+                        const index1 = extendedPropertyIds.indexOf(a.id) !== -1 ? extendedPropertyIds.indexOf(a.id) : 1000;
+                        const index2 = extendedPropertyIds.indexOf(b.id) !== -1 ? extendedPropertyIds.indexOf(b.id) : 1000;
                         return index1 - index2;
                     });
+
                     // hide properties based on query string
                     comparisonData.properties.forEach((property, index) => {
-                        if (!propertyIds.includes(property.id)) {
+                        if (!extendedPropertyIds.includes(property.id)) {
                             comparisonData.properties[index].active = false;
                         } else {
                             comparisonData.properties[index].active = true;
@@ -161,6 +169,13 @@ class Comparison extends Component {
                         }
                     });
                 }
+
+                // Get Similar properties by Label
+                comparisonData.properties.forEach((property, index) => {
+                    if (property.active) {
+                        comparisonData.properties[index].similar = similarPropertiesByLabel(property.label, comparisonData.data[property.id]);
+                    }
+                });
 
                 this.setState({
                     contributions: contributions,
@@ -200,13 +215,14 @@ class Comparison extends Component {
                             statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_REFERENCE
                         );
                         const urlStatement = comparisonStatement.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL);
+
                         const resourcesStatements = comparisonStatement.filter(
                             statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_RELATED_RESOURCES
                         );
-                        const relatedResources = [];
-                        for (const resource of resourcesStatements) {
-                            relatedResources.push(resource.object.label);
-                        }
+
+                        const figureStatements = comparisonStatement.filter(
+                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_RELATED_FIGURE
+                        );
 
                         if (urlStatement) {
                             this.getComparisonResult(urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')));
@@ -217,7 +233,8 @@ class Comparison extends Component {
                                 reference: referenceStatement ? referenceStatement.object.label : '',
                                 createdAt: descriptionStatement.object.created_at,
                                 createdBy: descriptionStatement.object.created_by,
-                                relatedResources
+                                resourcesStatements,
+                                figureStatements
                             });
                         } else {
                             throw new Error('The requested comparison has no contributions.');
@@ -339,6 +356,13 @@ class Comparison extends Component {
         }));
     };
 
+    onDismiss = () => {
+        // dismiss function for the alert thingy!;
+        cookies.set('seenShiftMouseWheelScroll', true, { path: process.env.PUBLIC_URL, maxAge: 315360000 }); // << TEN YEARS
+        const token = cookies.get('seenShiftMouseWheelScroll');
+        this.setState({ hideScrollHint: token });
+    };
+
     render() {
         const contributionAmount = getContributionIdsFromUrl(this.state.locationSearch || this.props.location.search).length;
         const containerStyle = this.state.fullWidth ? { maxWidth: 'calc(100% - 20px)' } : {};
@@ -346,7 +370,16 @@ class Comparison extends Component {
         return (
             <div>
                 <ContainerAnimated className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">Contribution comparison</h1>
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">
+                        Contribution comparison{' '}
+                        <Tippy content="The amount of compared contributions">
+                            <span>
+                                <Badge color="darkblue" pill style={{ fontSize: '65%' }}>
+                                    {contributionAmount}
+                                </Badge>
+                            </span>
+                        </Tippy>
+                    </h1>
 
                     {contributionAmount > 1 && !this.state.isLoading && !this.state.loadingFailed && (
                         <div style={{ marginLeft: 'auto' }} className="flex-shrink-0 mt-4">
@@ -377,7 +410,7 @@ class Comparison extends Component {
                                         {this.state.csvData ? (
                                             <CSVLink
                                                 data={this.state.csvData}
-                                                filename={'ORKG Contribution Comparison.csv'}
+                                                filename="ORKG Contribution Comparison.csv"
                                                 className="dropdown-item"
                                                 target="_blank"
                                                 onClick={() => this.toggle('dropdownOpen')}
@@ -427,7 +460,7 @@ class Comparison extends Component {
                     }*/}
                 </ContainerAnimated>
 
-                <ContainerAnimated className="box pt-4 pb-4 pl-5 pr-5 clearfix" style={containerStyle}>
+                <ContainerAnimated className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix" style={containerStyle}>
                     {!this.state.isLoading && this.state.loadingFailed && (
                         <div>
                             <Alert color="danger">
@@ -471,7 +504,7 @@ class Comparison extends Component {
                                             <div style={{ marginBottom: '20px', lineHeight: 1.5 }}>
                                                 <small>
                                                     <i>
-                                                        Reference: <ValuePlugins type={'literal'}>{this.state.reference}</ValuePlugins>
+                                                        Reference: <ValuePlugins type="literal">{this.state.reference}</ValuePlugins>
                                                     </i>
                                                 </small>
                                             </div>
@@ -482,7 +515,7 @@ class Comparison extends Component {
                                 )}
                             </div>
                             {contributionAmount > 3 && (
-                                <UncontrolledAlert color="info">
+                                <Alert color="info" isOpen={!this.state.hideScrollHint} toggle={this.onDismiss}>
                                     <Icon icon={faLightbulb} /> Use{' '}
                                     <b>
                                         <i>Shift</i>
@@ -492,7 +525,7 @@ class Comparison extends Component {
                                         <i>Mouse Wheel</i>
                                     </b>{' '}
                                     for horizontal scrolling in the table.
-                                </UncontrolledAlert>
+                                </Alert>
                             )}
                             {contributionAmount > 1 || this.props.match.params.comparisonId ? (
                                 !this.state.isLoading ? (
@@ -515,7 +548,8 @@ class Comparison extends Component {
                         </>
                     )}
 
-                    <RelatedResources resources={this.state.relatedResources} />
+                    <RelatedResources resourcesStatements={this.state.resourcesStatements} />
+                    <RelatedFigures figureStatements={this.state.figureStatements} />
                 </ContainerAnimated>
 
                 <SelectProperties

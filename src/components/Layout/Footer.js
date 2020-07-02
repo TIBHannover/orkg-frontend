@@ -54,22 +54,22 @@ const Footer = () => (
                 <Row>
                     <FooterCol md={3}>
                         <h5>ORKG</h5>
-                        <hr className={'mr-5'} />
+                        <hr className="mr-5" />
                         <Row>
-                            <div className={'float-left ml-3'}>
+                            <div className="float-left ml-3">
                                 <Link to={ROUTES.HOME}>
                                     <Logo style={{ height: '80px' }} />
                                 </Link>
                             </div>
-                            <div className={'col-md-8 description'}>
+                            <div className="col-md-8 description">
                                 The Open Research Knowledge Graph aims to describe research papers in a structured manner
                             </div>
                         </Row>
                     </FooterCol>
                     <FooterCol md={3}>
                         <h5>About</h5>
-                        <hr className={'mr-5'} />
-                        <ul className={'p-0'} style={{ listStyle: 'none' }}>
+                        <hr className="mr-5" />
+                        <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
                                 <a href="https://projects.tib.eu/orkg/" target="_blank" rel="noopener noreferrer">
                                     About us
@@ -94,17 +94,16 @@ const Footer = () => (
                     </FooterCol>
                     <FooterCol md={3}>
                         <h5>Technical</h5>
-                        <hr className={'mr-5'} />
-                        <ul className={'p-0'} style={{ listStyle: 'none' }}>
+                        <hr className="mr-5" />
+                        <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
-                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues" target="_blank" rel="noopener noreferrer">
-                                    Report an issue
+                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home" target="_blank" rel="noopener noreferrer">
+                                    Documentation
                                 </a>
                             </li>
                             <li>
                                 <Link to={ROUTES.CHANGELOG}>Changelog</Link>
                             </li>
-                            {/*<li>Contributors</li>*/}
                             <li>
                                 <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/" target="_blank" rel="noopener noreferrer">
                                     Gitlab
@@ -117,12 +116,12 @@ const Footer = () => (
                     </FooterCol>
                     <FooterCol md={3}>
                         <h5>More</h5>
-                        <hr className={'mr-5'} />
-                        <ul className={'p-0'} style={{ listStyle: 'none' }}>
+                        <hr className="mr-5" />
+                        <ul className="p-0" style={{ listStyle: 'none' }}>
                             <li>
                                 <TwitterLink href="https://twitter.com/orkg_org" target="_blank" rel="noopener noreferrer">
                                     Follow us
-                                    <Icon className={'ml-2'} icon={faTwitter} />
+                                    <Icon className="ml-2" icon={faTwitter} />
                                 </TwitterLink>
                             </li>
                             <li>
@@ -131,7 +130,12 @@ const Footer = () => (
                                 </a>
                             </li>
                             <li>
-                                <i className={'mr-3'}>Version</i> <Badge color="info">GIT_VERSION</Badge>
+                                <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues" target="_blank" rel="noopener noreferrer">
+                                    Report an issue
+                                </a>
+                            </li>
+                            <li>
+                                <i className="mr-3">Version</i> <Badge color="info">GIT_VERSION</Badge>
                             </li>
                         </ul>
                     </FooterCol>

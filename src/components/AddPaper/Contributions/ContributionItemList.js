@@ -80,7 +80,7 @@ class ContributionItemList extends Component {
                         : undefined
                 }
             >
-                <span className={'selectContribution'}>
+                <span className="selectContribution">
                     {this.state.isEditing && (
                         <StyledInput
                             bsSize="sm"

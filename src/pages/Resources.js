@@ -61,7 +61,7 @@ export default class Resources extends Component {
                 <Container className="p-0">
                     <h1 className="h4 mt-4 mb-4">View all resources</h1>
                 </Container>
-                <Container className={'box pt-4 pb-4 pl-5 pr-5 clearfix'}>
+                <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
                     <div className="clearfix">
                         <Link className="float-right mb-2 mt-2 clearfix" to={ROUTES.ADD_RESOURCE}>
                             <span className="fa fa-plus" /> Create new resource
@@ -71,8 +71,8 @@ export default class Resources extends Component {
                         <div>
                             {this.state.resources.map(resource => {
                                 return (
-                                    <ShortRecord key={resource.id} header={resource.id} href={reverse(ROUTES.RESOURCE, { id: resource.id })}>
-                                        {resource.label}
+                                    <ShortRecord key={resource.id} header={resource.label} href={reverse(ROUTES.RESOURCE, { id: resource.id })}>
+                                        {resource.id}
                                     </ShortRecord>
                                 );
                             })}

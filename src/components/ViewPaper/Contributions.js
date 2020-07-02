@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
 import { Alert, Col, Container, Form, FormGroup, Row, Button } from 'reactstrap';
-import { getResource, getSimilaireContribution, deleteStatementById, createResource, createResourceStatement } from '../../network';
+import { getResource, getSimilaireContribution, deleteStatementById, createResource, createResourceStatement } from 'network';
 import AddToComparison from './AddToComparison';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ContentLoader from 'react-content-loader';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import ROUTES from '../../constants/routes';
+import { isEmpty } from 'lodash';
+import ROUTES from 'constants/routes';
 import SimilarContributions from './SimilarContributions';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProblemInput';
 import ContributionItemList from 'components/AddPaper/Contributions/ContributionItemList';
+import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
 import { toast } from 'react-toastify';
-import { selectContribution, updateResearchProblems } from '../../actions/viewPaper';
+import { selectContribution, updateResearchProblems } from 'actions/viewPaper';
 import styled from 'styled-components';
 import { StyledHorizontalContributionsList, StyledHorizontalContribution } from '../AddPaper/Contributions/styled';
 import Tippy from '@tippy.js/react';
@@ -48,6 +50,12 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
+const ResearchProblemButton = styled.span`
+    white-space: normal;
+    text-align: left;
+    user-select: text !important;
+`;
+
 // TODO: right now, the reducer from addPaper is being used, since the setup of this page is very similar.
 // Dependent on the future look/functionalitiy of this page, the reducers should split and renamed so viewing
 // a paper is not needing a reducer that is called: addPaper (e.g. make a reducer for the statement browser?)
@@ -59,7 +67,8 @@ class Contributions extends Component {
             loading: true,
             similaireContributions: [],
             isSimilaireContributionsLoading: true,
-            isSimilaireContributionsFailedLoading: false
+            isSimilaireContributionsFailedLoading: false,
+            label: ''
         };
     }
 
@@ -149,7 +158,7 @@ class Contributions extends Component {
         return (
             <div>
                 <Container>
-                    <Row noGutters={true}>
+                    <Row>
                         <Col md="9">
                             {this.state.loading && (
                                 <div>
@@ -178,7 +187,7 @@ class Contributions extends Component {
                                         );
                                     })}
                                     {this.props.enableEdit && (
-                                        <li className={'addContribution'} onClick={() => this.props.handleCreateContribution()}>
+                                        <li className="addContribution" onClick={() => this.props.handleCreateContribution()}>
                                             <Tippy content="Add contribution">
                                                 <span>
                                                     <Icon size="xs" icon={faPlus} />
@@ -199,9 +208,9 @@ class Contributions extends Component {
                                             paperId={this.props.paperId}
                                             paperTitle={this.props.paperTitle}
                                             contributionTitle={
-                                                this.props.contributions.find(function(c) {
-                                                    return c.id === selectedContributionId;
-                                                }).label
+                                                this.props.contributions.find(c => c.id === selectedContributionId)
+                                                    ? this.props.contributions.find(c => c.id === selectedContributionId).label
+                                                    : 'Contribution'
                                             }
                                         />
                                     )}
@@ -223,12 +232,9 @@ class Contributions extends Component {
                                                         this.props.researchProblems[selectedContributionId].map((problem, index) => (
                                                             <span key={index}>
                                                                 <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>
-                                                                    <span
-                                                                        style={{ whiteSpace: 'normal', textAlign: 'left' }}
-                                                                        className="btn btn-link p-0 border-0 align-baseline"
-                                                                    >
+                                                                    <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
                                                                         {problem.label}
-                                                                    </span>
+                                                                    </ResearchProblemButton>
                                                                 </Link>
                                                                 <br />
                                                             </span>
@@ -240,7 +246,7 @@ class Contributions extends Component {
                                                                 <Button
                                                                     color="link"
                                                                     style={{ verticalAlign: 'initial', fontStyle: 'italic' }}
-                                                                    className={'m-0 p-0'}
+                                                                    className="m-0 p-0"
                                                                     onClick={() => this.props.toggleEditMode()}
                                                                 >
                                                                     editing
@@ -326,6 +332,9 @@ class Contributions extends Component {
                                 </StyledHorizontalContribution>
                             </AnimationContainer>
                         </TransitionGroup>
+                        {!isEmpty(this.props.observatoryInfo) && (
+                            <ProvenanceBox contributors={this.props.contributors} observatoryInfo={this.props.observatoryInfo} />
+                        )}
                     </Row>
                 </Container>
             </div>
@@ -346,7 +355,9 @@ Contributions.propTypes = {
     updateResearchProblems: PropTypes.func.isRequired,
     handleChangeContributionLabel: PropTypes.func.isRequired,
     handleCreateContribution: PropTypes.func.isRequired,
-    toggleDeleteContribution: PropTypes.func.isRequired
+    toggleDeleteContribution: PropTypes.func.isRequired,
+    observatoryInfo: PropTypes.object,
+    contributors: PropTypes.array
 };
 
 const mapStateToProps = state => ({

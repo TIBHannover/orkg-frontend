@@ -48,9 +48,10 @@ class Publish extends Component {
                     const referenceResponse = await createLiteral(this.state.reference);
                     await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_REFERENCE, referenceResponse.id);
                 }
-                const link = queryString.parse(this.props.url).response_hash
+                let link = queryString.parse(this.props.url).response_hash
                     ? this.props.url
                     : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${comparison.response_hash}`;
+                link = link.substring(link.indexOf('?'));
                 const urlResponse = await createLiteral(link);
                 await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_URL, urlResponse.id);
                 toast.success('Comparison saved successfully');
@@ -84,19 +85,19 @@ class Publish extends Component {
                             {' '}
                             <FormGroup>
                                 <Label for="title">
-                                    <Tooltip message={'Enter the title of the comparison'}>Title</Tooltip>
+                                    <Tooltip message="Enter the title of the comparison">Title</Tooltip>
                                 </Label>
                                 <Input type="text" name="title" id="title" onChange={this.handleChange} />
                             </FormGroup>
                             <FormGroup>
                                 <Label for="description">
-                                    <Tooltip message={'Describe the goal and what is being compared'}>Description</Tooltip>
+                                    <Tooltip message="Describe the goal and what is being compared">Description</Tooltip>
                                 </Label>
                                 <Input type="textarea" name="description" id="description" onChange={this.handleChange} />
                             </FormGroup>
                             <FormGroup>
                                 <Label for="reference">
-                                    <Tooltip message={'Enter a reference to the paper from which the comparison is generated'}>
+                                    <Tooltip message="Enter a reference to the paper from which the comparison is generated">
                                         Reference (optional)
                                     </Tooltip>
                                 </Label>

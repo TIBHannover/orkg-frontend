@@ -345,7 +345,7 @@ class Abstract extends Component {
             <Modal isOpen={this.props.showAbstractDialog} toggle={this.props.toggleAbstractDialog} size="lg">
                 <ModalHeader toggle={this.props.toggleAbstractDialog}>Abstract annotator</ModalHeader>
                 <ModalBody>
-                    <div className={'clearfix'}>
+                    <div className="clearfix">
                         {(this.state.isAbstractLoading || this.state.isAnnotationLoading) && (
                             <div className="text-center text-primary">
                                 <span style={{ fontSize: 80 }}>

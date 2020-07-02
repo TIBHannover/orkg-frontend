@@ -76,6 +76,7 @@ class ResearchField extends Component {
                 // Fetch the data of each paper
                 getStatementsBySubjects({
                     ids: result
+                        .filter(paper => paper.subject.classes.includes(process.env.REACT_APP_CLASSES_PAPER))
                         .filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD)
                         .map(p => p.subject.id)
                 })
@@ -141,7 +142,7 @@ class ResearchField extends Component {
                                     <CardFooter>
                                         Parent research field:
                                         <Link
-                                            className={'ml-2'}
+                                            className="ml-2"
                                             to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.parentResearchField.subject.id })}
                                         >
                                             {this.state.parentResearchField.subject.label}

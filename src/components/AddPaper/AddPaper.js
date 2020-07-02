@@ -27,8 +27,8 @@ const Help = styled.div`
     padding-left: 0;
     list-style: none;
     padding: 0;
-    bottom: 24px;
-    right: 24px;
+    bottom: ${props => (props.woochat ? '74px' : '24px')};
+    right: ${props => (props.woochat ? '4px' : '24px')};
     color: #80869b;
 
     .text {
@@ -225,7 +225,7 @@ class AddPaper extends Component {
 
                     <div className="clearfix" />
                 </Container>
-                <Container className="box pt-4 pb-4 pl-5 pr-5 clearfix ">
+                <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix ">
                     <ProgressBar currentStep={currentStep} />
 
                     <hr />
@@ -245,9 +245,9 @@ class AddPaper extends Component {
                         this.toggleTour();
                     }}
                     id="helpIcon"
+                    woochat={process.env.REACT_APP_WOOCHAT_WEBSITE_TOKEN}
                 >
                     <HelpIcon icon={faQuestion} />
-                    <div className={'text ' + (this.props.addPaper.showAbstractDialog ? 'white' : '')}>Help</div>
                 </Help>
             </div>
         );

@@ -29,7 +29,7 @@ export default function Breadcrumbs(props) {
     return (
         <Container>
             <BackButton className="btn btn-link border-0 align-baseline" onClick={handleBackClick}>
-                <Icon icon={faArrowLeft} /> <div className={'d-none d-md-inline'}>Back</div>
+                <Icon icon={faArrowLeft} /> <div className="d-none d-md-inline">Back</div>
             </BackButton>
             <BreadcrumbList>
                 {props.resourceHistory.allIds.map((history, index) => {
@@ -46,12 +46,8 @@ export default function Breadcrumbs(props) {
                             {item.label}
                             {props.resourceHistory.allIds.length === index + 1 && !props.openExistingResourcesInDialog && existingResourceId && (
                                 <Tippy content="Go to resource page">
-                                    <Link
-                                        title={'Go to resource page'}
-                                        className={'ml-2'}
-                                        to={reverse(ROUTES.RESOURCE, { id: props.selectedResource })}
-                                    >
-                                        <Icon icon={faLink} color={'#fff'} />
+                                    <Link title="Go to resource page" className="ml-2" to={reverse(ROUTES.RESOURCE, { id: props.selectedResource })}>
+                                        <Icon icon={faLink} color="#fff" />
                                     </Link>
                                 </Tippy>
                             )}

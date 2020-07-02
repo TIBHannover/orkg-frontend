@@ -11,7 +11,9 @@ import License from './components/StaticPages/License';
 import Changelog from './components/StaticPages/Changelog';
 import NotFound from './components/StaticPages/NotFound';
 import Papers from './pages/Papers';
+import Comparisons from './pages/Comparisons';
 import PredicateDetails from './pages/PredicateDetails';
+import ClassDetails from './pages/ClassDetails';
 import Predicates from './pages/Predicates';
 import ContributionTemplates from './components/ContributionTemplates/ContributionTemplates';
 import ContributionTemplate from './components/ContributionTemplates/ContributionTemplate';
@@ -20,6 +22,13 @@ import RedirectShortLinks from './components/Comparison/RedirectShortLinks';
 import ResearchField from './components/ResearchField/ResearchField';
 import ResearchProblem from './components/ResearchProblem/ResearchProblem';
 import Resources from './pages/Resources';
+import Organizations from './pages/Organizations';
+import Observatories from './pages/Observatories';
+import OrganizationDetails from './pages/OrganizationDetails';
+import AddOrganization from './pages/AddOrganization';
+import AddObservatory from './pages/AddObservatory';
+import Observatory from './pages/Observatory';
+import OrganizationObservatories from './pages/OrganizationObservatories';
 import SearchResults from './components/Search/Search';
 import ViewPaper from './components/ViewPaper/ViewPaper';
 import Stats from './components/Stats/Stats';
@@ -92,6 +101,16 @@ const routes = [
         component: Comparison
     },
     {
+        path: ROUTES.ORGANIZATIONS,
+        exact: true,
+        component: Organizations
+    },
+    {
+        path: ROUTES.OBSERVATORIES,
+        exact: true,
+        component: Observatories
+    },
+    {
         /* TODO: Remove this route (it's temporarily backward compatibility for moving contributions ids from view args to query string) */
         path: ROUTES.COMPARISON + '*',
         exact: true,
@@ -110,6 +129,11 @@ const routes = [
         path: ROUTES.PAPERS,
         exact: true,
         component: Papers
+    },
+    {
+        path: ROUTES.COMPARISONS,
+        exact: true,
+        component: Comparisons
     },
     {
         path: ROUTES.RESEARCH_PROBLEM,
@@ -153,12 +177,41 @@ const routes = [
         component: PredicateDetails
     },
     {
+        path: ROUTES.CLASS,
+        component: ClassDetails
+    },
+    {
         path: ROUTES.FEATURED_COMPARISONS,
         component: FeaturedComparisons
     },
     {
+        path: ROUTES.ORGANIZATION,
+        exact: true,
+        component: OrganizationDetails
+    },
+    {
+        path: ROUTES.ADD_ORGANIZATION,
+        exact: true,
+        component: AddOrganization
+    },
+    {
+        path: ROUTES.ADD_OBSERVATORY,
+        exact: true,
+        component: AddObservatory
+    },
+    {
+        path: ROUTES.OBSERVATORY,
+        exact: true,
+        component: Observatory
+    },
+    {
+        path: ROUTES.ORGANIZATION_OBSERVATORIES,
+        exact: true,
+        component: OrganizationObservatories
+    },
+    {
         path: ROUTES.TPDL,
-        component: () => <Redirect to={'/'} />
+        component: () => <Redirect to="/" />
     },
     {
         path: ROUTES.PDF_ANNOTATION,

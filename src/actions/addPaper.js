@@ -167,10 +167,11 @@ export const prefillStatements = ({ statements, resourceId }) => dispatch => {
                 existingPredicateId: property.existingPredicateId,
                 resourceId: resourceId,
                 label: property.label,
+                range: property.range ? property.range : null,
                 isTemplate: property.isTemplate ? property.isTemplate : false,
-                templateId: property.templateId ? property.templateId : null,
-                templateClass: property.templateClass ? property.templateClass : null,
-                isAnimated: property.isAnimated !== undefined ? property.isAnimated : false
+                validationRules: property.validationRules ? property.validationRules : {},
+                isAnimated: property.isAnimated !== undefined ? property.isAnimated : false,
+                canDuplicate: property.canDuplicate ? true : false
             })
         );
     }
@@ -182,9 +183,10 @@ export const prefillStatements = ({ statements, resourceId }) => dispatch => {
                 valueId: value.valueId ? value.valueId : guid(),
                 label: value.label,
                 type: value.type ? value.type : 'object',
-                templateId: value.templateId ? value.templateId : null,
                 propertyId: value.propertyId,
+                ...(value.type === 'literal' && { datatype: value.datatype ?? process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE }),
                 existingResourceId: value.existingResourceId ? value.existingResourceId : null,
+                isExistingValue: value.isExistingValue ? value.isExistingValue : false,
                 classes: value.classes ? value.classes : []
             })
         );
@@ -278,7 +280,8 @@ export const getResourceObject = (data, resourceId, newProperties) => {
                     const value = data.values.byId[valueId];
                     if (value.type === 'literal' && !value.isExistingValue) {
                         return {
-                            text: value.label
+                            text: value.label,
+                            datatype: value.datatype
                         };
                     } else {
                         if (!value.isExistingValue) {
@@ -287,7 +290,7 @@ export const getResourceObject = (data, resourceId, newProperties) => {
                             return {
                                 '@temp': `_${value.resourceId}`,
                                 label: value.label,
-                                class: value.classes && value.classes.length > 0 ? value.classes[0].id : null,
+                                class: value.classes && value.classes.length > 0 ? value.classes[0] : null,
                                 values: Object.assign({}, getResourceObject(data, value.resourceId, newProperties))
                             };
                         } else {

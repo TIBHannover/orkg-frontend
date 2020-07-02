@@ -139,7 +139,6 @@ export default function StatementItem(props) {
 
     return (
         <StatementItemTemplate
-            togglePropertyCollapse={props.togglePropertyCollapse}
             property={props.property}
             id={props.id}
             selectedProperty={props.selectedProperty}
@@ -153,8 +152,11 @@ export default function StatementItem(props) {
             toggleEditPropertyLabel={props.toggleEditPropertyLabel}
             inTemplate={props.inTemplate}
             showValueHelp={props.showValueHelp}
-            openExistingResourcesInDialog={props.openExistingResourcesInDialog}
             handleDeleteStatement={handleDeleteStatement}
+            propertiesAsLinks={props.propertiesAsLinks}
+            components={props.components}
+            canAddValue={props.canAddValue}
+            canDeleteProperty={props.canDeleteProperty}
         />
     );
 }
@@ -166,8 +168,14 @@ StatementItem.propTypes = {
     enableEdit: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     isLastItem: PropTypes.bool.isRequired,
-    openExistingResourcesInDialog: PropTypes.bool,
     showValueHelp: PropTypes.bool,
+
+    templates: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
+    resources: PropTypes.object.isRequired,
+    components: PropTypes.array.isRequired,
+    canAddValue: PropTypes.bool.isRequired,
+    canDeleteProperty: PropTypes.bool.isRequired,
 
     contextStyle: PropTypes.string.isRequired,
     resourceId: PropTypes.string,
@@ -178,11 +186,11 @@ StatementItem.propTypes = {
     properties: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
     deleteProperty: PropTypes.func.isRequired,
-    togglePropertyCollapse: PropTypes.func.isRequired,
     toggleEditPropertyLabel: PropTypes.func.isRequired,
     changeProperty: PropTypes.func.isRequired,
     isSavingProperty: PropTypes.func.isRequired,
-    doneSavingProperty: PropTypes.func.isRequired
+    doneSavingProperty: PropTypes.func.isRequired,
+    propertiesAsLinks: PropTypes.bool.isRequired
 };
 
 StatementItem.defaultProps = {

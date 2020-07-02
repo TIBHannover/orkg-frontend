@@ -14,11 +14,6 @@ export default function ContributionTemplate(props) {
         propertyIds = props.resources.byId[props.value.resourceId].propertyIds;
         shared = props.resources.byId[props.value.resourceId].shared;
     }
-    // filter public properties
-    propertyIds = propertyIds.filter(propertyId => {
-        const property = props.properties.byId[propertyId];
-        return property.existingPredicateId !== process.env.REACT_APP_PREDICATES_INSTANCE_OF_TEMPLATE;
-    });
 
     return (
         <AnimationContainer
@@ -52,19 +47,24 @@ export default function ContributionTemplate(props) {
                             enableEdit={shared <= 1 ? props.enableEdit : false}
                             syncBackend={props.syncBackend}
                             isLastItem={propertyIds.length === index + 1}
-                            openExistingResourcesInDialog={props.openExistingResourcesInDialog}
                             showValueHelp={props.cookies && !props.cookies.get('showedValueHelp') && index === 0 ? true : false}
                             inTemplate={true}
-                            contextStyle={'Template'}
+                            contextStyle="Template"
                             resourceId={props.value.resourceId}
                         />
                     );
                 })}
                 <AddPropertWrapper>
-                    <div className={'row no-gutters'}>
-                        <div className={'col-4 propertyHolder'} />
+                    <div className="row no-gutters">
+                        <div className="col-4 propertyHolder" />
                     </div>
-                    <AddProperty syncBackend={props.syncBackend} inTemplate={true} contextStyle="Template" resourceId={props.value.resourceId} />
+                    <AddProperty
+                        isDisabled={!props.canAddProperty}
+                        syncBackend={props.syncBackend}
+                        inTemplate={true}
+                        contextStyle="Template"
+                        resourceId={props.value.resourceId}
+                    />
                 </AddPropertWrapper>
             </ListGroup>
         </AnimationContainer>
@@ -79,8 +79,11 @@ ContributionTemplate.propTypes = {
     inTemplate: PropTypes.bool.isRequired,
     syncBackend: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
-    openExistingResourcesInDialog: PropTypes.bool,
     isAnimated: PropTypes.bool,
+
+    classes: PropTypes.object.isRequired,
+    templates: PropTypes.object.isRequired,
+    canAddProperty: PropTypes.bool.isRequired,
 
     resources: PropTypes.object.isRequired,
     properties: PropTypes.object.isRequired,
