@@ -188,7 +188,7 @@ class OrganizationDetails extends Component {
                                                     <ol className="list-group" style={{ paddingLeft: 15 }}>
                                                         {this.state.observatories.map((observatory, index) => {
                                                             return (
-                                                                <li>
+                                                                <li key={`c${index}`}>
                                                                     <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}>
                                                                         <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
                                                                             {observatory.name}

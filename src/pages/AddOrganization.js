@@ -60,14 +60,7 @@ class AddOrganization extends Component {
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value.trim() });
     };
-
-    handleKeyUp = async event => {
-        event.preventDefault();
-        if (event.keyCode === 13) {
-            await this.createNewOrganization();
-        }
-    };
-
+    
     navigateToOrganization = organizationId => {
         this.setState({ editorState: 'edit', organizationId: organizationId }, () => {
             this.setState({ redirect: true });

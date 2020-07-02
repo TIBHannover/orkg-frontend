@@ -46,13 +46,6 @@ class AddObservatory extends Component {
         this.setState({ [event.target.name]: event.target.value.trim() });
     };
 
-    handleKeyUp = async event => {
-        event.preventDefault();
-        if (event.keyCode === 13) {
-            await this.createNewObservatory();
-        }
-    };
-
     navigateToObservatory = observatoryId => {
         this.setState({ editorState: 'edit', observatoryId: observatoryId }, () => {
             this.setState({ redirect: true });
@@ -80,7 +73,6 @@ class AddObservatory extends Component {
                             <Label for="ObservatoryLabel">Observatory name</Label>
                             <Input
                                 onChange={this.handleChange}
-                                onKeyUp={this.handleKeyUp}
                                 type="text"
                                 name="value"
                                 id="ObservatoryLabel"
@@ -91,7 +83,6 @@ class AddObservatory extends Component {
                             <Label for="ObservatoryDescription">Observatory description</Label>
                             <Input
                                 onChange={this.handleChange}
-                                onKeyUp={this.handleKeyUp}
                                 type="textarea"
                                 name="description"
                                 id="ObservatoryDescription"
