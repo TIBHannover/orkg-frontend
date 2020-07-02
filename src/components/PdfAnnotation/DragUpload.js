@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { useDropzone } from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import { parse } from 'node-html-parser';
-import { setFile, setParsedPdfData } from '../../actions/pdfAnnotation';
+import { convertPdf } from '../../actions/pdfAnnotation';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -40,86 +39,21 @@ const FilePlaceholder = styled(Icon)`
 `;
 
 const DragUpload = () => {
-    const [loading, setLoading] = useState(false);
     const pdf = useSelector(state => state.pdfAnnotation.pdf);
+    const pdfConvertIsFetching = useSelector(state => state.pdfAnnotation.pdfConvertIsFetching);
+    const pdfParseIsFetching = useSelector(state => state.pdfAnnotation.pdfParseIsFetching);
     const dispatch = useDispatch();
 
     const onDrop = files => {
-        setLoading(true);
-
-        if (files.length === 0) {
-            return;
-        }
-
-        const pdf = files[0];
-
-        const form = new FormData();
-        form.append('pdf', pdf);
-
-        fetch('http://localhost:9000/convertPdf', {
-            method: 'POST',
-            body: form
-        })
-            .then(response => {
-                if (!response.ok) {
-                    toast.error(`An error has occurred during the parsing of your PDF file`);
-                } else {
-                    return response.text();
-                }
-            })
-            .then(function(data) {
-                const parseData = parse(data, {
-                    style: true // retrieve content in <style> (hurts performance but required)
-                });
-                const pages = parseData.querySelectorAll('.pf');
-                const styles = parseData.querySelectorAll('style');
-
-                dispatch(
-                    setFile({
-                        pdf,
-                        pages,
-                        styles
-                    })
-                );
-
-                parsePdf(pdf);
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    };
-
-    const parsePdf = pdf => {
-        const form = new FormData();
-        form.append('input', pdf);
-
-        fetch('http://localhost:8070/api/processFulltextDocument', {
-            method: 'POST',
-            body: form
-        })
-            .then(response => {
-                if (!response.ok) {
-                    console.log('err');
-                } else {
-                    return response.text();
-                }
-            })
-            .then(str => new window.DOMParser().parseFromString(str, 'text/xml')) // parse the xml
-            .then(function(data) {
-                dispatch(setParsedPdfData(data));
-                setLoading(false);
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        dispatch(convertPdf({ files }));
     };
 
     const onDropRejected = () => {
         toast.error(`Error uploading your file, only PDF files are accepted`);
-        setLoading(false);
     };
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, onDropRejected, accept: 'application/pdf' });
+    const loading = pdfConvertIsFetching || pdfParseIsFetching;
 
     return (
         <>

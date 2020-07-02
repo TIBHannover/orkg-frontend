@@ -9,7 +9,11 @@ const initialState = {
     tableData: {}, // contains the table data when a table is being extracted
     parsedPdfData: null, // contains the parsed PDF data (from GROBID)
     tableRegions: {},
-    cachedLabels: {} // needed to convert IDs in the table to labels (e.g., P6000 > Machine)
+    cachedLabels: {}, // needed to convert IDs in the table to labels (e.g., P6000 > Machine),
+    pdfParseIsFetching: false, // in case PDF is currently being parsed
+    pdfParseFailed: false,
+    pdfConvertIsFetching: false, // convert PDF is fetching
+    pdfConvertFailed: false
 };
 
 export default (state = initialState, action) => {
@@ -20,17 +24,6 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 selectedTool: payload.tool
-            };
-        }
-
-        case type.PDF_ANNOTATION_SET_FILE: {
-            const { payload } = action;
-
-            return {
-                ...state,
-                pdf: payload.pdf,
-                pages: payload.pages,
-                styles: payload.styles
             };
         }
 
@@ -61,15 +54,6 @@ export default (state = initialState, action) => {
                     ...state.tableData,
                     [id]: newData
                 }
-            };
-        }
-
-        case type.PDF_ANNOTATION_SET_PARSED_PDF_DATA: {
-            const { payload } = action;
-
-            return {
-                ...state,
-                parsedPdfData: payload.parsedPdfData
             };
         }
 
@@ -105,6 +89,62 @@ export default (state = initialState, action) => {
                     ...state.cachedLabels,
                     [payload.id]: payload.label
                 }
+            };
+        }
+
+        case type.PDF_ANNOTATION_FETCH_PDF_PARSE_REQUEST: {
+            return {
+                ...state,
+                pdfParseIsFetching: true,
+                pdfParseFailed: false
+            };
+        }
+
+        case type.PDF_ANNOTATION_FETCH_PDF_PARSE_FAILURE: {
+            return {
+                ...state,
+                pdfParseIsFetching: false,
+                pdfParseFailed: true
+            };
+        }
+
+        case type.PDF_ANNOTATION_FETCH_PDF_PARSE_SUCCESS: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                parsedPdfData: payload.parsedPdfData,
+                pdfParseIsFetching: false,
+                pdfParseFailed: false
+            };
+        }
+
+        case type.PDF_ANNOTATION_FETCH_PDF_CONVERT_SUCCESS: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                pdf: payload.pdf,
+                pages: payload.pages,
+                styles: payload.styles,
+                pdfConvertIsFetching: false,
+                pdfConvertFailed: false
+            };
+        }
+
+        case type.PDF_ANNOTATION_FETCH_PDF_CONVERT_REQUEST: {
+            return {
+                ...state,
+                pdfConvertIsFetching: true,
+                pdfConvertFailed: false
+            };
+        }
+
+        case type.PDF_ANNOTATION_FETCH_PDF_CONVERT_FAILURE: {
+            return {
+                ...state,
+                pdfConvertIsFetching: false,
+                pdfConvertFailed: true
             };
         }
 

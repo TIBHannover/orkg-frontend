@@ -109,7 +109,7 @@ const TableEditor = props => {
                     }
                 ]
             }}
-            stretchH={'all'}
+            stretchH="all"
             ref={props.setRef}
             beforeChange={changes => dispatch(updateTableData(props.id, changes))}
         >

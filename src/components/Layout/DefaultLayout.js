@@ -1,13 +1,15 @@
-import React, { Component } from 'react';
-import '../../assets/scss/DefaultLayout.scss';
+import React from 'react';
+import 'assets/scss/DefaultLayout.scss';
 import { ToastContainer, Slide } from 'react-toastify';
-import { popupDelay } from '../../utils';
-import Header from './Header/Header';
-import Footer from './Footer';
+import { popupDelay } from 'utils';
+import Header from 'components/Layout/Header/Header';
+import Footer from 'components/Layout/Footer';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
+import { useLocation } from 'react-router-dom';
+import ROUTES from 'constants/routes';
 
 const StyledBody = styled.div`
     display: flex;
@@ -41,45 +43,31 @@ CloseToastButton.propTypes = {
     closeToast: PropTypes.func
 };
 
-class DefaultLayout extends Component {
-    constructor(props) {
-        super(props);
+export default function DefaultLayout(props) {
+    const location = useLocation();
+    const showFooter = location.pathname !== ROUTES.PDF_ANNOTATION;
 
-        this.toggle = this.toggle.bind(this);
-        this.state = {
-            isOpen: false
-        };
-    }
-    toggle() {
-        this.setState({
-            isOpen: !this.state.isOpen
-        });
-    }
-
-    render() {
-        return (
-            <StyledBody className="body">
-                <ToastContainer
-                    position="top-right"
-                    autoClose={parseInt(popupDelay)}
-                    hideProgressBar
-                    transition={Slide}
-                    className="toast-container"
-                    closeButton={<CloseToastButton />}
-                />
-
-                <Header />
-                <StyledAppContent>{this.props.children}</StyledAppContent>
+    return (
+        <StyledBody className="body">
+            <ToastContainer
+                position="top-right"
+                autoClose={parseInt(popupDelay)}
+                hideProgressBar
+                transition={Slide}
+                className="toast-container"
+                closeButton={<CloseToastButton />}
+            />
+            <Header />
+            <StyledAppContent>{props.children}</StyledAppContent>
+            {showFooter && (
                 <StyledFooter>
                     <Footer />
                 </StyledFooter>
-            </StyledBody>
-        );
-    }
+            )}
+        </StyledBody>
+    );
 }
 
 DefaultLayout.propTypes = {
     children: PropTypes.array.isRequired
 };
-
-export default DefaultLayout;
