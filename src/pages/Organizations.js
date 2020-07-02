@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import ShortRecord from 'components/ShortRecord/ShortRecord';
-import { Link } from 'react-router-dom';
+import { Container, Button, Row } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faUser } from '@fortawesome/free-solid-svg-icons';
+import OrganizationCard from 'components/OrganizationCard/OrganizationCard';
 import { getAllOrganizations } from 'network';
 import { openAuthDialog } from 'actions/auth';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Container, Button } from 'reactstrap';
+import { getOrganization } from 'network';
 import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
 
 class Organizations extends Component {
     constructor(props) {
@@ -31,9 +31,11 @@ class Organizations extends Component {
         getAllOrganizations()
             .then(organizations => {
                 if (organizations.length > 0) {
-                    this.setState({
-                        organizations: organizations,
-                        isNextPageLoading: false
+                    Promise.all(organizations.map(o => getOrganization(o.id))).then(organizationsData => {
+                        this.setState({
+                            organizations: organizationsData,
+                            isNextPageLoading: false
+                        });
                     });
                 } else {
                     this.setState({
@@ -70,17 +72,13 @@ class Organizations extends Component {
                     </div>
 
                     {this.state.organizations.length > 0 && (
-                        <div>
-                            {this.state.organizations.map(organization => {
-                                return (
-                                    <ShortRecord
-                                        key={organization.id}
-                                        header={organization.name}
-                                        href={reverse(ROUTES.ORGANIZATION, { id: organization.id })}
-                                    />
-                                );
-                            })}
-                        </div>
+                        <Row>
+                            <div className="mt-3 row justify-content-center">
+                                {this.state.organizations.map(organization => {
+                                    return <OrganizationCard key={organization.id} organization={{ ...organization }} />;
+                                })}
+                            </div>
+                        </Row>
                     )}
                     {this.state.organizations.length === 0 && !this.state.isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">No organizations yet!</div>
