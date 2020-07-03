@@ -20,7 +20,7 @@ import ContributionTemplate from './components/ContributionTemplates/Contributio
 import ROUTES from './constants/routes';
 import RedirectShortLinks from './components/Comparison/RedirectShortLinks';
 import ResearchField from './components/ResearchField/ResearchField';
-import ResearchProblem from './components/ResearchProblem/ResearchProblem';
+import ResearchProblem from './pages/ResearchProblem/ResearchProblem';
 import Resources from './pages/Resources';
 import Organizations from './pages/Organizations';
 import Observatories from './pages/Observatories';
