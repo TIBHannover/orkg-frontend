@@ -8,7 +8,6 @@ import { openAuthDialog } from 'actions/auth';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getOrganization } from 'network';
 import ROUTES from 'constants/routes';
 
 class Organizations extends Component {
@@ -29,13 +28,11 @@ class Organizations extends Component {
     loadOrganizations = () => {
         this.setState({ isNextPageLoading: true });
         getAllOrganizations()
-            .then(organizations => {
-                if (organizations.length > 0) {
-                    Promise.all(organizations.map(o => getOrganization(o.id))).then(organizationsData => {
-                        this.setState({
-                            organizations: organizationsData,
-                            isNextPageLoading: false
-                        });
+            .then(organizationsData => {
+                if (organizationsData.length > 0) {
+                    this.setState({
+                        organizations: organizationsData,
+                        isNextPageLoading: false
                     });
                 } else {
                     this.setState({
