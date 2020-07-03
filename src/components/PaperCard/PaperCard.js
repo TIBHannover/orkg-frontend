@@ -6,8 +6,8 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar } from '@fortawesome/free-solid-svg-icons';
-import ROUTES from '../../constants/routes.js';
-import AddToComparison from './../ViewPaper/AddToComparison';
+import ROUTES from 'constants/routes.js';
+import AddToComparison from 'components/ViewPaper/AddToComparison';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
@@ -61,9 +61,9 @@ const PaperCard = props => {
                             </>
                         )}
                         {(props.paper.publicationMonth || props.paper.publicationYear) && <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />}
-                        {props.paper.publicationMonth &&
-                            props.paper.publicationMonth.length > 0 &&
-                            moment(props.paper.publicationMonth, 'M').format('MMMM') + ' '}
+                        {props.paper.publicationMonth && props.paper.publicationMonth > 0
+                            ? moment(props.paper.publicationMonth, 'M').format('MMMM')
+                            : ''}{' '}
                         {props.paper.publicationYear}
                     </small>
                 </Col>

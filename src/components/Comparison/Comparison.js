@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject } from 'network';
-import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResonseHashFromUrl, get_error_message } from 'utils';
+import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResponseHashFromUrl, get_error_message } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faPlus, faArrowsAltH, faLightbulb } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
@@ -121,7 +121,7 @@ class Comparison extends Component {
     };
 
     getComparisonResult = locationSearch => {
-        const response_hash = getResonseHashFromUrl(locationSearch);
+        const response_hash = getResponseHashFromUrl(locationSearch);
         const contributionIds = getContributionIdsFromUrl(locationSearch);
         const propertyIds = getPropertyIdsFromUrl(locationSearch);
         const transpose = getTransposeOptionFromUrl(locationSearch);
