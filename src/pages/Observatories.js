@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import ObservatoryCard from 'components/ObservatoryCard/ObservatoryCard';
 import { observatoriesUrl, submitGetRequest } from 'network';
 import { Container } from 'reactstrap';
-import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
 
 class Observatories extends Component {
     constructor(props) {
@@ -52,15 +50,9 @@ class Observatories extends Component {
                 </Container>
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
                     {this.state.observatories.length > 0 && (
-                        <div>
+                        <div className="mt-3 row justify-content-center">
                             {this.state.observatories.map(observatory => {
-                                return (
-                                    <ShortRecord
-                                        key={observatory.id}
-                                        header={observatory.name}
-                                        href={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}
-                                    />
-                                );
+                                return <ObservatoryCard key={observatory.id} observatory={{ ...observatory }} />;
                             })}
                         </div>
                     )}

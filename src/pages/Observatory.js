@@ -10,7 +10,6 @@ import {
     getObservatoryById,
     getStatementsBySubjects
 } from 'network';
-import ShortRecord from 'components/ShortRecord/ShortRecord';
 import InternalServerError from 'components/StaticPages/InternalServerError';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PaperCard from 'components/PaperCard/PaperCard';
@@ -282,7 +281,7 @@ class Observatory extends Component {
                                                 <div>
                                                     {this.state.contributors.map((user, index) => {
                                                         return (
-                                                            <div>
+                                                            <div key={`oc${index}`}>
                                                                 <ContributorCard
                                                                     contributor={{
                                                                         ...user,
@@ -298,15 +297,11 @@ class Observatory extends Component {
                                                     })}
                                                 </div>
                                             ) : (
-                                                <div className="mt-4">
-                                                    <h5>No Contributors</h5>
-                                                </div>
+                                                <div className="text-center mt-4 mb-4">No Contributors</div>
                                             )}
                                         </div>
                                     ) : (
-                                        <div className="mt-4">
-                                            <h5>Loading Contributors ...</h5>
-                                        </div>
+                                        <div className="text-center mt-4 mb-4">Loading Contributors ...</div>
                                     )}
                                 </div>
                             </Col>
