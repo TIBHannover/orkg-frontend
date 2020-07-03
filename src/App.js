@@ -37,6 +37,16 @@ class App extends Component {
                                 for the best experience
                             </div>
                         )}
+                        {process.env.REACT_APP_IS_A_TESTING_SERVER === 'True' && (
+                            <div
+                                class="alert alert-warning text-center"
+                                role="alert"
+                                style={{ borderRadius: '0', marginTop: '-30px', marginBottom: '30px' }}
+                            >
+                                <strong>Warning:</strong> You are using a testing server. Data you enter in the system can be deleted without any
+                                notice.
+                            </div>
+                        )}
                         <Switch>{renderRoutes(routes)}</Switch>
                     </DefaultLayout>
                 </ScrollToTop>
