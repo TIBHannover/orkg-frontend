@@ -60,7 +60,7 @@ class AddOrganization extends Component {
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value.trim() });
     };
-    
+
     navigateToOrganization = organizationId => {
         this.setState({ editorState: 'edit', organizationId: organizationId }, () => {
             this.setState({ redirect: true });

@@ -7,48 +7,21 @@ import {
     getResourcesByObservatoryId,
     getComparisonsByObservatoryId,
     getProblemsByObservatoryId,
-    getObservatoryById
+    getObservatoryById,
+    getStatementsBySubjects
 } from 'network';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import InternalServerError from 'components/StaticPages/InternalServerError';
+import ContributorCard from 'components/ContributorCard/ContributorCard';
+import PaperCard from 'components/PaperCard/PaperCard';
+import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import NotFound from 'components/StaticPages/NotFound';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import Gravatar from 'react-gravatar';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-
-const StyledGravatar = styled(Gravatar)`
-    border: 3px solid ${props => props.theme.avatarBorderColor};
-    cursor: pointer;
-`;
-
-const StyledScrollBar = styled.div`
-    &::-webkit-scrollbar,
-    &::-webkit-scrollbar-thumb {
-        width: 24px;
-        border-radius: 13px;
-        background-clip: padding-box;
-        border: 10px solid transparent;
-        color: lightgray;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        box-shadow: inset 0 0 0 10px;
-    }
-
-    height: 225px;
-    overflow: auto;
-    
-    }
-`;
-
-const ResearchProblemButton = styled.span`
-    white-space: normal;
-    text-align: left;
-    user-select: text !important;
-`;
+import { getPaperData, getComparisonData } from 'utils';
+import { find } from 'lodash';
 
 class Observatory extends Component {
     constructor(props) {
@@ -111,10 +84,23 @@ class Observatory extends Component {
     loadPapers = () => {
         this.setState({ isLoadingPapers: true });
         getResourcesByObservatoryId(this.props.match.params.id)
-            .then(resources => {
-                this.setState({
-                    papersList: resources,
-                    isLoadingPapers: false
+            .then(papers => {
+                // Fetch the data of each comparison
+                return getStatementsBySubjects({
+                    ids: papers.map(c => c.id)
+                }).then(resourcesStatements => {
+                    const papersData = resourcesStatements.map(resourceStatements => {
+                        const paperSubject = find(papers, { id: resourceStatements.id });
+                        return getPaperData(
+                            resourceStatements.id,
+                            resourceStatements && paperSubject.label ? paperSubject.label : 'No Title',
+                            resourceStatements.statements
+                        );
+                    });
+                    this.setState({
+                        papersList: papersData,
+                        isLoadingPapers: false
+                    });
                 });
             })
             .catch(error => {
@@ -126,9 +112,22 @@ class Observatory extends Component {
         this.setState({ isLoadingComparisons: true });
         getComparisonsByObservatoryId(this.props.match.params.id)
             .then(comparisons => {
-                this.setState({
-                    comparisonsList: comparisons,
-                    isLoadingComparisons: false
+                // Fetch the data of each comparison
+                return getStatementsBySubjects({
+                    ids: comparisons.map(c => c.id)
+                }).then(resourcesStatements => {
+                    const comparisonsData = resourcesStatements.map(resourceStatements => {
+                        const comparisonSubject = find(comparisons, { id: resourceStatements.id });
+                        return getComparisonData(
+                            resourceStatements.id,
+                            resourceStatements && comparisonSubject.label ? comparisonSubject.label : 'No Title',
+                            resourceStatements.statements
+                        );
+                    });
+                    this.setState({
+                        comparisonsList: comparisonsData,
+                        isLoadingComparisons: false
+                    });
                 });
             })
             .catch(error => {
@@ -189,28 +188,21 @@ class Observatory extends Component {
                             <h3>{this.state.label}</h3>
                             {this.state.description}
                         </div>
-                        <br />
-                        <Row>
-                            <Col md={8} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
-                                <div
-                                    className="box rounded-lg p-3"
-                                    style={{ minHeight: '500px', flexDirection: 'column', display: 'flex', flexGrow: '1' }}
-                                >
-                                    <h5 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Research Problems</h5>
+                        <Row className="mt-3">
+                            <Col md={8} sm={12} style={{ minHeight: '500px' }} className="d-flex">
+                                <div className="box rounded-lg p-4 flex-grow-1">
+                                    <h5>Research Problems</h5>
                                     {!this.state.isLoadingProblems ? (
-                                        <div className="pb-2 mb-6">
+                                        <div className="mb-4 mt-2">
                                             {this.state.problemsList.length > 0 ? (
-                                                <div style={{ paddingTop: 10 }}>
+                                                <div>
                                                     <ol className="list-group" style={{ paddingLeft: 15 }}>
                                                         {this.state.problemsList.map((problem, index) => {
                                                             return (
-                                                                <li>
+                                                                <li key={`rp${index}`} className="mt-2">
                                                                     <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>
-                                                                        <ResearchProblemButton className="btn btn-link p-0 border-0 align-baseline">
-                                                                            {problem.label}
-                                                                        </ResearchProblemButton>
+                                                                        {problem.label}
                                                                     </Link>
-                                                                    <br />
                                                                 </li>
                                                             );
                                                         })}
@@ -226,86 +218,95 @@ class Observatory extends Component {
                                 </div>
                             </Col>
                             <Col md={4} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
-                                <div className="box rounded-lg p-3" style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
-                                    <h5 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Organizations</h5>
+                                <div className="box rounded-lg p-4">
+                                    <h5>Organizations</h5>
                                     {!this.state.isLoadingOrganizations ? (
-                                        <StyledScrollBar className="mb-6">
+                                        <div className="mb-4 mt-4">
                                             {this.state.organizationsList.length > 0 ? (
                                                 <div>
                                                     {this.state.organizationsList.map((organization, index) => {
-                                                        return (
-                                                            <div
-                                                                key={`c${index}`}
-                                                                className="mb-3"
-                                                                style={{
-                                                                    border: 'solid lightgray thin',
-                                                                    textAlign: 'center',
-                                                                    verticalAlign: 'middle',
-                                                                    paddingBottom: '11px'
-                                                                }}
-                                                            >
-                                                                <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.id })}>
-                                                                    <img style={{ marginTop: 12 }} height="70" src={organization.logo} alt="" />
-                                                                    <br />{' '}
-                                                                </Link>
-                                                            </div>
-                                                        );
+                                                        if (organization.logo) {
+                                                            return (
+                                                                <div
+                                                                    key={`c${index}`}
+                                                                    className="mb-3"
+                                                                    style={{
+                                                                        border: 'solid lightgray thin',
+                                                                        textAlign: 'center',
+                                                                        verticalAlign: 'middle',
+                                                                        paddingBottom: '11px'
+                                                                    }}
+                                                                >
+                                                                    <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.id })}>
+                                                                        <img
+                                                                            style={{ marginTop: 12 }}
+                                                                            height="70"
+                                                                            src={organization.logo}
+                                                                            alt={`${organization.name} logo`}
+                                                                        />
+                                                                    </Link>
+                                                                </div>
+                                                            );
+                                                        } else {
+                                                            return (
+                                                                <div
+                                                                    key={`c${index}`}
+                                                                    className="mb-3 p-2"
+                                                                    style={{
+                                                                        border: 'solid lightgray thin',
+                                                                        textAlign: 'center'
+                                                                    }}
+                                                                >
+                                                                    <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.id })}>
+                                                                        {organization.name}
+                                                                    </Link>
+                                                                </div>
+                                                            );
+                                                        }
                                                     })}
                                                 </div>
                                             ) : (
                                                 <div className="text-center mt-4 mb-4">No Organizations</div>
                                             )}
-                                        </StyledScrollBar>
+                                        </div>
                                     ) : (
                                         <div className="text-center mt-4 mb-4">Loading organizations ...</div>
                                     )}
                                 </div>
-                                <div className="box rounded-lg mt-4 p-3" style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
-                                    <h2 className="h5">Contributors</h2>
-                                    {!this.state.isLoadingContributors ? (
-                                        <div className="mb-6">
-                                            <StyledScrollBar className="pb-2 mb-6">
-                                                {this.state.contributors.length > 0 ? (
-                                                    <div className="scrollBarDiv">
-                                                        {this.state.contributors.map((user, index) => {
-                                                            return (
-                                                                <div key={`c${index}`}>
-                                                                    <div>
-                                                                        <StyledGravatar
-                                                                            className="rounded-circle"
-                                                                            style={{ border: '3px solid #fff' }}
-                                                                            email={user.email}
-                                                                            size={45}
-                                                                        />
-                                                                        <p style={{ marginLeft: '48px', marginTop: '-47px' }}>
-                                                                            <Link
-                                                                                onClick={this.toggleUserTooltip}
-                                                                                to={reverse(ROUTES.USER_PROFILE, { userId: user.id })}
-                                                                            >
-                                                                                {' '}
-                                                                                {user.display_name}
-                                                                            </Link>
-                                                                            <br />
-                                                                            {this.state.organizationsList
-                                                                                .filter(o => o.id.includes(user.organization_id))
-                                                                                .map((o, index) => {
-                                                                                    return <span style={{ color: 'gray' }}>{o.name}</span>;
-                                                                                })}
-                                                                        </p>
-                                                                    </div>
+                                <div className="box rounded-lg mt-4 p-4 flex-grow-1">
+                                    <h5>Contributors</h5>
 
-                                                                    <hr style={{ width: '275px', marginBottom: '10px', marginTop: '10px' }} />
-                                                                </div>
-                                                            );
-                                                        })}
-                                                    </div>
-                                                ) : (
-                                                    <div className="text-center mt-4 mb-4">No Contributors</div>
-                                                )}
-                                            </StyledScrollBar>
+                                    {!this.state.isLoadingContributors ? (
+                                        <div className="mb-4 mt-4">
+                                            {this.state.contributors.length > 0 ? (
+                                                <div>
+                                                    {this.state.contributors.map((user, index) => {
+                                                        return (
+                                                            <div>
+                                                                <ContributorCard
+                                                                    contributor={{
+                                                                        ...user,
+                                                                        subTitle: this.state.organizationsList.find(o =>
+                                                                            o.id.includes(user.organization_id)
+                                                                        )?.name
+                                                                    }}
+                                                                />
+
+                                                                <hr style={{ width: '90%', margin: '10px auto' }} />
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            ) : (
+                                                <div className="mt-4">
+                                                    <h5>No Contributors</h5>
+                                                </div>
+                                            )}
                                         </div>
                                     ) : (
-                                        <div className="text-center mt-4 mb-4">Loading Contributors ...</div>
+                                        <div className="mt-4">
+                                            <h5>Loading Contributors ...</h5>
+                                        </div>
                                     )}
                                 </div>
                             </Col>
@@ -315,67 +316,49 @@ class Observatory extends Component {
                             <h1 className="h4 mt-4 mb-4 flex-grow-1">Content</h1>
                         </Container>
 
-                        <div className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
-                            <div className="pb-2 mb-3">
-                                <h5 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Comparisons</h5>
-                                {!this.state.isLoadingComparisons ? (
-                                    <div className="pb-2 mb-6">
-                                        {this.state.comparisonsList.length > 0 ? (
-                                            <div style={{ paddingTop: 10 }}>
-                                                {this.state.comparisonsList.map((comparison, index) => {
-                                                    return (
-                                                        <ShortRecord
-                                                            key={`resource${index}`}
-                                                            header={comparison.label}
-                                                            href={
-                                                                comparison.classes.includes(process.env.REACT_APP_CLASSES_COMPARISON)
-                                                                    ? reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })
-                                                                    : reverse(ROUTES.RESOURCE, { id: comparison.id })
-                                                            }
-                                                        />
-                                                    );
-                                                })}
-                                            </div>
-                                        ) : (
-                                            <div className="text-center mt-4 mb-4">No Comparisons</div>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div className="text-center mt-4 mb-4">Loading comparisons ...</div>
-                                )}
-                            </div>
+                        <div className="box rounded-lg p-4">
+                            <h5>Comparisons</h5>
+                            {!this.state.isLoadingComparisons ? (
+                                <div className="mb-4 mt-4">
+                                    {this.state.comparisonsList.length > 0 ? (
+                                        <div>
+                                            {this.state.comparisonsList.map(comparison => {
+                                                return <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} />;
+                                            })}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center mt-4 mb-4">No Comparisons</div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="text-center mt-4 mb-4">Loading comparisons ...</div>
+                            )}
                         </div>
 
                         <br />
-                        <div className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
-                            <div className="pb-2 mb-3">
-                                <h5 style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>Papers</h5>
-                                {!this.state.isLoadingPapers ? (
-                                    <div className="pb-2 mb-6">
-                                        {this.state.papersList.length > 0 ? (
-                                            <div style={{ paddingTop: 10 }}>
-                                                {this.state.papersList.map((resource, index) => {
-                                                    return (
-                                                        <ShortRecord
-                                                            key={`resource${index}`}
-                                                            header={resource.label}
-                                                            href={
-                                                                resource.classes.includes(process.env.REACT_APP_CLASSES_PAPER)
-                                                                    ? reverse(ROUTES.VIEW_PAPER, { resourceId: resource.id })
-                                                                    : reverse(ROUTES.RESOURCE, { id: resource.id })
-                                                            }
-                                                        />
-                                                    );
-                                                })}
-                                            </div>
-                                        ) : (
-                                            <div className="text-center mt-4 mb-4">No Papers</div>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div className="mt-4">Loading papers ...</div>
-                                )}
-                            </div>
+                        <div className="box rounded-lg p-4">
+                            <h5>Papers</h5>
+                            {!this.state.isLoadingPapers ? (
+                                <div className="mb-4 mt-4">
+                                    {this.state.papersList.length > 0 ? (
+                                        <div>
+                                            {this.state.papersList.map(resource => {
+                                                return (
+                                                    <PaperCard
+                                                        selectable={false}
+                                                        paper={{ title: resource.label, ...resource }}
+                                                        key={`p${resource.id}`}
+                                                    />
+                                                );
+                                            })}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center mt-4 mb-4">No Papers</div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="mt-4">Loading papers ...</div>
+                            )}
                         </div>
                     </Container>
                 )}

@@ -140,7 +140,7 @@ class OrganizationDetails extends Component {
                                     <Col md={{ size: 8, order: 1 }} sm={{ size: 12, order: 2 }} xs={{ size: 12, order: 2 }}>
                                         <NavLink className="p-0" href={this.state.url} target="_blank" rel="noopener noreferrer">
                                             <h4>
-                                                {this.state.label} <Icon size="sm" icon={faExternalLinkAlt} />
+                                                {this.state.label} {this.state.url && <Icon size="sm" icon={faExternalLinkAlt} />}
                                             </h4>
                                         </NavLink>
                                         {this.props.user && this.props.user.id === this.state.createdBy && (
@@ -156,13 +156,15 @@ class OrganizationDetails extends Component {
                                             </Button>
                                         )}
                                     </Col>
-                                    <Col md={{ size: 4, order: 2 }} sm={{ size: 12, order: 1 }} xs={{ size: 12, order: 1 }}>
-                                        <NavLink className="p-0" href={this.state.url} target="_blank" rel="noopener noreferrer">
-                                            <div className="logoContainer">
-                                                <img className="mx-auto" src={this.state.logo} alt={`${this.state.label} logo`} />
-                                            </div>
-                                        </NavLink>
-                                    </Col>
+                                    {this.state.logo && (
+                                        <Col md={{ size: 4, order: 2 }} sm={{ size: 12, order: 1 }} xs={{ size: 12, order: 1 }}>
+                                            <NavLink className="p-0" href={this.state.url} target="_blank" rel="noopener noreferrer">
+                                                <div className="logoContainer">
+                                                    <img className="mx-auto" src={this.state.logo} alt={`${this.state.label} logo`} />
+                                                </div>
+                                            </NavLink>
+                                        </Col>
+                                    )}
                                 </Row>
                             </StyledOrganizationHeader>
                         </div>

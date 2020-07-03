@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { createObservatory } from 'network';
 import { Redirect } from 'react-router-dom';
-import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
+import { Container, Button, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
@@ -67,7 +67,7 @@ class AddObservatory extends Component {
         return (
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5">
                 {this.props.user ? (
-                    <Form className="pl-3 pr-3 pt-2">
+                    <div className="pl-3 pr-3 pt-2">
                         {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
                         <FormGroup>
                             <Label for="ObservatoryLabel">Observatory name</Label>
@@ -93,7 +93,7 @@ class AddObservatory extends Component {
                         <Button color="primary" onClick={this.createNewObservatory} outline className="mt-4 mb-2" block disabled={loading}>
                             {!loading ? 'Create Observatory' : <span>Loading</span>}
                         </Button>
-                    </Form>
+                    </div>
                 ) : (
                     <>
                         <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog('signin')}>
