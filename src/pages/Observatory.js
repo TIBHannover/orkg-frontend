@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container } from 'reactstrap';
+import { Container, Modal, ModalBody, ModalHeader, Button } from 'reactstrap';
 import { Col, Row } from 'reactstrap';
 import {
     getUsersByObservatoryId,
@@ -30,6 +30,7 @@ class Observatory extends Component {
             error: null,
             label: '',
             description: '',
+            isContributorsModalOpen: false,
             isLoading: false,
             isLoadingContributors: false,
             isLoadingPapers: false,
@@ -172,6 +173,12 @@ class Observatory extends Component {
         });
     };
 
+    toggle = type => {
+        this.setState(prevState => ({
+            [type]: !prevState[type]
+        }));
+    };
+
     render = () => {
         return (
             <>
@@ -279,7 +286,7 @@ class Observatory extends Component {
                                         <div className="mb-4 mt-4">
                                             {this.state.contributors.length > 0 ? (
                                                 <div>
-                                                    {this.state.contributors.map((user, index) => {
+                                                    {this.state.contributors.slice(0, 3).map((user, index) => {
                                                         return (
                                                             <div key={`oc${index}`}>
                                                                 <ContributorCard
@@ -295,6 +302,46 @@ class Observatory extends Component {
                                                             </div>
                                                         );
                                                     })}
+                                                    {this.state.contributors.length > 3 && (
+                                                        <>
+                                                            <Button
+                                                                onClick={() => this.toggle('isContributorsModalOpen')}
+                                                                className="mt-1 float-right clearfix p-0"
+                                                                color="link"
+                                                            >
+                                                                <small>+ See more</small>
+                                                            </Button>
+                                                            <Modal
+                                                                isOpen={this.state.isContributorsModalOpen}
+                                                                toggle={() => this.toggle('isContributorsModalOpen')}
+                                                                size="lg"
+                                                            >
+                                                                <ModalHeader toggle={() => this.toggle('isContributorsModalOpen')}>
+                                                                    Contributors
+                                                                </ModalHeader>
+                                                                <ModalBody>
+                                                                    <div className="clearfix">
+                                                                        {this.state.contributors.map((user, index) => {
+                                                                            return (
+                                                                                <div key={`moc${index}`}>
+                                                                                    <ContributorCard
+                                                                                        contributor={{
+                                                                                            ...user,
+                                                                                            subTitle: this.state.organizationsList.find(o =>
+                                                                                                o.id.includes(user.organization_id)
+                                                                                            )?.name
+                                                                                        }}
+                                                                                    />
+
+                                                                                    <hr style={{ width: '90%', margin: '10px auto' }} />
+                                                                                </div>
+                                                                            );
+                                                                        })}
+                                                                    </div>
+                                                                </ModalBody>
+                                                            </Modal>
+                                                        </>
+                                                    )}
                                                 </div>
                                             ) : (
                                                 <div className="text-center mt-4 mb-4">No Contributors</div>
