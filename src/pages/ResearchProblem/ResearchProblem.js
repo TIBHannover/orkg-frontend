@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ResearchProblemHeaderBar from './ResearchProblemHeaderBar';
 import useResearchProblem from './hooks/useResearchProblem';
 import useResearchProblemPapers from './hooks/useResearchProblemPapers';
-import { Container, Row, Col, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
@@ -18,6 +18,8 @@ import ROUTES from 'constants/routes';
 function ResearchProblem(props) {
     const [researchProblemData, isLoading, loadResearchProblemData] = useResearchProblem();
     const [editMode, setEditMode] = useState(false);
+    //const [isContributorsModalOpen, setIsContributorsModalOpen] = useState(false);
+    //const [contributors, setContributors] = useState([]);
     const [contributions, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchProblemPapers();
 
     useEffect(() => {
@@ -101,25 +103,7 @@ function ResearchProblem(props) {
                                         <div>
                                             <ContributorCard
                                                 contributor={{
-                                                    ...{ id: '', display_name: 'Kheir Eddine', email: 'test@exmaple.com' },
-                                                    subTitle: '4 papers'
-                                                }}
-                                            />
-                                            <hr style={{ width: '90%', margin: '10px auto' }} />
-                                        </div>
-                                        <div>
-                                            <ContributorCard
-                                                contributor={{
-                                                    ...{ id: '', display_name: 'Kheir Eddine', email: 'test@exmaple.com' },
-                                                    subTitle: '4 papers'
-                                                }}
-                                            />
-                                            <hr style={{ width: '90%', margin: '10px auto' }} />
-                                        </div>
-                                        <div>
-                                            <ContributorCard
-                                                contributor={{
-                                                    ...{ id: '', display_name: 'Kheir Eddine', email: 'test@exmaple.com' },
+                                                    ...{ id: '', display_name: 'Display name', email: 'test@example.com' },
                                                     subTitle: '4 papers'
                                                 }}
                                             />
@@ -127,6 +111,38 @@ function ResearchProblem(props) {
                                         </div>
                                     </div>
                                 </div>
+                                {contributors.length > 3 && (
+                                    <>
+                                        <Button
+                                            onClick={() => setIsContributorsModalOpen(v => !v)}
+                                            className="mt-1 float-right clearfix p-0"
+                                            color="link"
+                                        >
+                                            <small>+ See more</small>
+                                        </Button>
+                                        <Modal isOpen={isContributorsModalOpen} toggle={() => setIsContributorsModalOpen(v => !v)} size="lg">
+                                            <ModalHeader toggle={() => setIsContributorsModalOpen(v => !v)}>Contributors</ModalHeader>
+                                            <ModalBody>
+                                                <div className="clearfix">
+                                                    {contributors.map((user, index) => {
+                                                        return (
+                                                            <div key={`moc${index}`}>
+                                                                <ContributorCard
+                                                                    contributor={{
+                                                                        ...user,
+                                                                        subTitle: '4 papers'
+                                                                    }}
+                                                                />
+
+                                                                <hr style={{ width: '90%', margin: '10px auto' }} />
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </ModalBody>
+                                        </Modal>
+                                    </>
+                                )}
                             </Col>
                             <Col md="4" className="d-flex">
                                 <div className="box rounded-lg p-4 flex-grow-1">
@@ -148,7 +164,7 @@ function ResearchProblem(props) {
                                 </div>
                             </Col>
                         </Row>
-                                                */}
+                         */}
                     </Container>
 
                     <Container className="p-0">
