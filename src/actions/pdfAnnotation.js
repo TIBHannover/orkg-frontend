@@ -103,7 +103,7 @@ export const convertPdf = ({ files }) => dispatch => {
     const form = new FormData();
     form.append('pdf', pdf);
 
-    fetch('http://localhost:9000/convertPdf', {
+    fetch(process.env.REACT_APP_ANNOTATION_SERVICE_URL + 'convertPdf/', {
         method: 'POST',
         body: form
     })

@@ -33,7 +33,11 @@ const ExtractionModal = props => {
         }
 
         const csvTableToObject = csv => {
-            const fullData = readString(csv.join('\n'), {})['data'];
+            let fullData = [];
+
+            if (csv.length) {
+                fullData = readString(csv, {})['data']; //.join('\n')
+            }
 
             dispatch(setTableData(props.id, fullData));
         };
@@ -45,9 +49,9 @@ const ExtractionModal = props => {
         const form = new FormData();
         form.append('pdf', pdf);
         form.append('region', pxToPoint(y) + ',' + pxToPoint(x) + ',' + pxToPoint(y + h) + ',' + pxToPoint(x + w));
-        form.append('pageNumber', props.pageNumber);
+        form.append('page_number', props.pageNumber);
 
-        fetch('http://localhost:9000/extractTable', {
+        fetch(process.env.REACT_APP_ANNOTATION_SERVICE_URL + 'extractTable/', {
             method: 'POST',
             body: form
         })
