@@ -27,7 +27,9 @@ import RelatedResources from './RelatedResources';
 import RelatedFigures from './RelatedFigures';
 import Tippy from '@tippy.js/react';
 import { Cookies } from 'react-cookie';
+
 const cookies = new Cookies();
+
 class Comparison extends Component {
     constructor(props) {
         super(props);

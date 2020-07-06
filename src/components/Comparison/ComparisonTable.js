@@ -120,7 +120,7 @@ class ComparisonTable extends Component {
                                         <div
                                             ref={this.scrollContainerHead}
                                             className="disable-scrollbars"
-                                            style={{ overflow: 'auto', top: '71px', position: 'sticky' }}
+                                            style={{ overflow: 'auto', top: '71px', position: 'sticky', zIndex: '3' }}
                                         >
                                             <div className={`${component.className}`} style={component.style}>
                                                 {component.children}
