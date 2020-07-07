@@ -173,16 +173,22 @@ function ResearchProblem(props) {
                                         <div className="mb-4 mt-4">
                                             {researchFields.length > 0 ? (
                                                 <ul className="pl-1">
-                                                    {researchFields.map((researchField, index) => {
+                                                    {researchFields.map(researchField => {
                                                         return (
-                                                            <li>
-                                                                <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })}>
-                                                                    {researchField.label}
+                                                            <li key={`rf${researchField.field.resourceId}`}>
+                                                                <Link
+                                                                    to={reverse(ROUTES.RESEARCH_FIELD, {
+                                                                        researchFieldId: researchField.field.id
+                                                                    })}
+                                                                >
+                                                                    {researchField.field.label}
                                                                 </Link>
                                                                 <small>
                                                                     <Badge
                                                                         className="ml-1"
-                                                                        href={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })}
+                                                                        href={reverse(ROUTES.RESEARCH_FIELD, {
+                                                                            researchFieldId: researchField.field.id
+                                                                        })}
                                                                         color="info"
                                                                         pill
                                                                     >
