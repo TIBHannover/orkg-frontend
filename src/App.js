@@ -10,6 +10,8 @@ import PropTypes from 'prop-types';
 import { withCookies } from 'react-cookie';
 import { detect } from 'detect-browser';
 import ScrollToTop from './components/ScrollToTop';
+import MetaTags from 'react-meta-tags';
+import { Alert } from 'reactstrap';
 
 class App extends Component {
     constructor(props) {
@@ -27,25 +29,28 @@ class App extends Component {
     }
 
     render() {
+        const alertStyle = { borderRadius: '0', marginTop: '-30px', marginBottom: '30px' };
+
         return (
             <ConnectedRouter history={this.props.history}>
                 <ScrollToTop>
                     <DefaultLayout>
                         {this.state.showBrowserWarning && (
-                            <div class="alert alert-danger alert-server" role="alert" style={{ borderRadius: '0' }}>
+                            <Alert color="danger" style={alertStyle} className="text-center">
                                 <strong>Outdated browser</strong> You are using Internet Explorer which is not supported. Please upgrade your browser
                                 for the best experience
-                            </div>
+                            </Alert>
                         )}
-                        {process.env.REACT_APP_IS_A_TESTING_SERVER === 'True' && (
-                            <div
-                                class="alert alert-warning text-center"
-                                role="alert"
-                                style={{ borderRadius: '0', marginTop: '-30px', marginBottom: '30px' }}
-                            >
-                                <strong>Warning:</strong> You are using a testing server. Data you enter in the system can be deleted without any
-                                notice.
-                            </div>
+                        {process.env.REACT_APP_IS_TESTING_SERVER === 'true' && (
+                            <>
+                                <MetaTags>
+                                    <meta name="robots" content="noindex" /> {/* make sure search engines are not indexing our test server */}
+                                </MetaTags>
+                                <Alert color="warning" style={alertStyle} className="text-center">
+                                    <strong>Warning:</strong> You are using a testing environment. Data you enter in the system can be deleted without
+                                    any notice.
+                                </Alert>
+                            </>
                         )}
                         <Switch>{renderRoutes(routes)}</Switch>
                     </DefaultLayout>
