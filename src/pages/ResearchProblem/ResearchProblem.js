@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Button, Modal, ModalHeader, ModalBody, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -16,19 +16,29 @@ import ExternalDescription from './ExternalDescription';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import ROUTES from 'constants/routes';
 
+function usePrevious(value) {
+    const ref = useRef();
+    useEffect(() => {
+        ref.current = value;
+    });
+    return ref.current;
+}
+
 function ResearchProblem(props) {
     const [researchProblemData, isLoading, loadResearchProblemData] = useResearchProblem();
     const [editMode, setEditMode] = useState(false);
+    const prevEditMode = usePrevious({ editMode });
     const [isContributorsModalOpen, setIsContributorsModalOpen] = useState(false);
     const [contributors, setContributors] = useState([]);
     const [contributions, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchProblemPapers();
     const [researchFields, isLoadingResearchFields] = useResearchProblemStatistics();
 
     useEffect(() => {
-        if (!editMode) {
+        if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
             loadResearchProblemData(props.match.params.researchProblemId);
         }
-    }, [editMode, loadResearchProblemData, props.match.params.researchProblemId]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [editMode]);
 
     return (
         <div>
@@ -101,6 +111,8 @@ function ResearchProblem(props) {
                             <Col md="4" className="d-flex">
                                 <div className="box rounded-lg p-4 flex-grow-1">
                                     <h5>Leaderboard</h5>
+                                    Coming soon
+                                    {/* 
                                     <div className="mt-2">
                                         <div>
                                             <ContributorCard
@@ -112,7 +124,9 @@ function ResearchProblem(props) {
                                             <hr style={{ width: '90%', margin: '10px auto' }} />
                                         </div>
                                     </div>
+                                            */}
                                 </div>
+                                {/* 
                                 {contributors.length > 3 && (
                                     <>
                                         <Button
@@ -145,6 +159,7 @@ function ResearchProblem(props) {
                                         </Modal>
                                     </>
                                 )}
+                                */}
                             </Col>
                             <Col md="4" className="d-flex">
                                 <div className="box rounded-lg p-4 flex-grow-1">
