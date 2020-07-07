@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Button } from 'reactstrap';
+import { Container, Row, Col, Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ResearchProblemHeaderBar from './ResearchProblemHeaderBar';
 import useResearchProblem from './hooks/useResearchProblem';
 import useResearchProblemPapers from './hooks/useResearchProblemPapers';
+import useResearchProblemStatistics from './hooks/useResearchProblemStatistics';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
-//import ContributorCard from 'components/ContributorCard/ContributorCard';
+import ContributorCard from 'components/ContributorCard/ContributorCard';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ExternalDescription from './ExternalDescription';
@@ -18,9 +19,10 @@ import ROUTES from 'constants/routes';
 function ResearchProblem(props) {
     const [researchProblemData, isLoading, loadResearchProblemData] = useResearchProblem();
     const [editMode, setEditMode] = useState(false);
-    //const [isContributorsModalOpen, setIsContributorsModalOpen] = useState(false);
-    //const [contributors, setContributors] = useState([]);
+    const [isContributorsModalOpen, setIsContributorsModalOpen] = useState(false);
+    const [contributors, setContributors] = useState([]);
     const [contributions, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchProblemPapers();
+    const [researchFields, isLoadingResearchFields] = useResearchProblemStatistics();
 
     useEffect(() => {
         if (!editMode) {
@@ -94,7 +96,7 @@ function ResearchProblem(props) {
                                 </div>
                             </Col>
                         </Row>
-                        {/*
+
                         <Row className="mt-3">
                             <Col md="4" className="d-flex">
                                 <div className="box rounded-lg p-4 flex-grow-1">
@@ -150,20 +152,37 @@ function ResearchProblem(props) {
                                     <div>
                                         <small className="text-muted">Research fields of papers that are addressing this problem</small>
                                     </div>
-                                    <ul>
-                                        <li>
-                                            <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: 'R12' })}>Life Science</Link>
-                                        </li>
-                                    </ul>
+                                    {!isLoadingResearchFields ? (
+                                        <ul className="mb-4 mt-4">
+                                            {researchFields.length > 0 ? (
+                                                <div>
+                                                    {researchFields.map((researchField, index) => {
+                                                        return (
+                                                            <li>
+                                                                <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })}>
+                                                                    {researchField.label}
+                                                                </Link>
+                                                            </li>
+                                                        );
+                                                    })}
+                                                </div>
+                                            ) : (
+                                                <div className="text-center mt-4 mb-4">No research fields</div>
+                                            )}
+                                        </ul>
+                                    ) : (
+                                        <div className="text-center mt-4 mb-4">Loading research fields ...</div>
+                                    )}
                                 </div>
                             </Col>
                             <Col md="4" className="d-flex">
                                 <div className="box rounded-lg p-4 flex-grow-1">
                                     <h5>Managed by</h5>
-                                    Organizations logos
+                                    Coming soon
                                 </div>
                             </Col>
                         </Row>
+                        {/*
                          */}
                     </Container>
 

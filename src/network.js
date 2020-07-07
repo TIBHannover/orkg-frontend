@@ -730,3 +730,7 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
         });
     });
 };
+
+export const getResearchFieldsByResearchProblemId = problemId => {
+    return submitGetRequest(`${statsUrl}fields/problem/${encodeURIComponent(problemId)}/`);
+};
