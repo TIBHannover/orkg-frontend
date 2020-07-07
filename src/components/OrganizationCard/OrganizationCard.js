@@ -42,7 +42,7 @@ function OrganizationCard(props) {
                         <img className="mx-auto p-2" src={props.organization.logo} alt={`${props.organization.name} logo`} />
                     </Link>
                     <CardBody>
-                        <CardTitle>
+                        <CardTitle className="text-center">
                             <Link to={reverse(ROUTES.ORGANIZATION, { id: props.organization.id })}>{props.organization.name}</Link>
                         </CardTitle>
                     </CardBody>
