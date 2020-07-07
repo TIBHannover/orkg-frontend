@@ -79,12 +79,20 @@ class ComparisonTable extends Component {
 
     scrollNext = () => {
         const rtTable = this.scrollContainerBody.current;
-        rtTable.scrollLeft += this.scrollAmount;
+        rtTable.scrollTo({
+            top: 0,
+            left: rtTable.scrollLeft + this.scrollAmount,
+            behavior: 'smooth'
+        });
     };
 
     scrollBack = () => {
         const rtTable = this.scrollContainerBody.current;
-        rtTable.scrollLeft -= this.scrollAmount;
+        rtTable.scrollTo({
+            top: 0,
+            left: rtTable.scrollLeft - this.scrollAmount,
+            behavior: 'smooth'
+        });
     };
 
     // debounce is used to prevent real time overwriting of scroll position via the getSnapshotBeforeUpdate
