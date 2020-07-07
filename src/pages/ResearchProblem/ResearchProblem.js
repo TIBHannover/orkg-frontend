@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { Container, Row, Col, Button, Modal, ModalHeader, ModalBody, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ResearchProblemHeaderBar from './ResearchProblemHeaderBar';
@@ -150,26 +150,38 @@ function ResearchProblem(props) {
                                 <div className="box rounded-lg p-4 flex-grow-1">
                                     <h5>Research fields</h5>
                                     <div>
-                                        <small className="text-muted">Research fields of papers that are addressing this problem</small>
+                                        <small className="text-muted">
+                                            Research fields of <i>papers</i> that are addressing this problem
+                                        </small>
                                     </div>
                                     {!isLoadingResearchFields ? (
-                                        <ul className="mb-4 mt-4">
+                                        <div className="mb-4 mt-4">
                                             {researchFields.length > 0 ? (
-                                                <div>
+                                                <ul className="pl-1">
                                                     {researchFields.map((researchField, index) => {
                                                         return (
                                                             <li>
                                                                 <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })}>
                                                                     {researchField.label}
                                                                 </Link>
+                                                                <small>
+                                                                    <Badge
+                                                                        className="ml-1"
+                                                                        href={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: researchField.id })}
+                                                                        color="info"
+                                                                        pill
+                                                                    >
+                                                                        {researchField.freq}
+                                                                    </Badge>
+                                                                </small>
                                                             </li>
                                                         );
                                                     })}
-                                                </div>
+                                                </ul>
                                             ) : (
                                                 <div className="text-center mt-4 mb-4">No research fields</div>
                                             )}
-                                        </ul>
+                                        </div>
                                     ) : (
                                         <div className="text-center mt-4 mb-4">Loading research fields ...</div>
                                     )}
