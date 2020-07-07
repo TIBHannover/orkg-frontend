@@ -117,13 +117,26 @@ export const ReactTableWrapper = styled.div`
     .ReactTable .rt-table {
         position: relative;
         scroll-behavior: smooth;
+        overflow: visible !important;
     }
     .ReactTable .rt-thead.-header {
         box-shadow: none;
+        top: 0px;
+        overflow: auto;
     }
     .ReactTable .rt-tbody .rt-tr-group:last-child .rt-td > div div:first-child {
         border-bottom: 2px solid #cfcbcb !important;
         border-radius: 0 0 11px 11px !important;
+    }
+    .ReactTable .disable-scrollbars {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE 10+ */
+        &::-webkit-scrollbar {
+            display: none; /* Safari and Chrome */
+            background: transparent; /* Chrome/Safari/Webkit */
+            width: 0;
+            height: 0;
+        }
     }
 `;
 
