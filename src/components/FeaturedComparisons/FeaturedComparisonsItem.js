@@ -46,10 +46,6 @@ const ComparisonText = styled(CardText)`
 `;
 
 class FeaturedComparisonsItem extends Component {
-    state = {
-        redirect: false
-    };
-
     render() {
         const icon = require('@fortawesome/free-solid-svg-icons')[this.props.icon];
         const contributionString = queryString.parse(this.props.link).contributions;
@@ -67,7 +63,7 @@ class FeaturedComparisonsItem extends Component {
                                 <Col sm="9">
                                     <ComparisonTitle tag="h5">{this.props.title}</ComparisonTitle>
                                     <ComparisonText>{this.props.description}</ComparisonText>
-                                    <Badge color="lightblue">{contributionsLength} papers</Badge>
+                                    <Badge color="lightblue">{contributionsLength} contributions</Badge>
                                 </Col>
                             </Row>
                         </ComparisonBody>

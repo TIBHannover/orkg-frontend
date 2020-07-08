@@ -115,8 +115,7 @@ class FeaturedComparisons extends Component {
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                     <Alert color="info">
                         With the paper data inside the ORKG, you can build powerful paper comparisons. On this page, we list the featured comparisons
-                        that are created using the comparison functionality. The featured comparisons below are structured by category. They consist
-                        of paper comparisons of state-of-the-art work from the Computer Science field.
+                        that are created using the comparison functionality. The featured comparisons below are organized by category.
                     </Alert>
 
                     {this.state.loading ? (
@@ -149,37 +148,6 @@ class FeaturedComparisons extends Component {
                             </React.Fragment>
                         ))
                     )}
-
-                    {/*<Row>
-                        <FeaturedComparisonsItem
-                            title="Knowledge graph visualizations"
-                            description="The state-of-the-art visualization systems are compared. Particularly interesting is to see which data types are
-                            supported."
-                            paperAmount={11}
-                            icon={faProjectDiagram}
-                            link="/comparison/?contributions=R146306,R146302,R146298,R146294,R146290,R146286,R146282,R146278,R146274,R146270,R146266,R146262,R146258,R146254,R146250,R146246,R146242,R146238&properties=P32,P20037,P15,P20036,P20033,P20035,P20031,P20034,P20030,P20032&transpose=false"
-                        />
-                    </Row>
-                    <h2 className="h4 mt-5 mb-3">Questions answering</h2>
-                    <Row>
-                        <FeaturedComparisonsItem
-                            title="Question answering system tasks"
-                            description="In this comparison 17 different question answering systems are compared based on the tasks that the address."
-                            paperAmount={17}
-                            icon={faQuestion}
-                            link="/comparison/?contributions=R150103,R150106,R150109,R150112,R150138,R150141,R150151,R150154,R150157,R150160,R150188,R150191,R150202,R150218,R150221,R150233,R150236&properties=P32,P15,P20130,P20129,P20131,P20128&transpose=false"
-                        />
-                        <FeaturedComparisonsItem
-                            title="QALD4 QA evaluations"
-                            description="Multiple question answering systems are compared based on the QALD4 task. Results include the system performance using the F-measure."
-                            paperAmount={5}
-                            icon={faCheck}
-                            link="/comparison/?contributions=R150179,R150181,R150177,R150175,R150173&properties=P32,P34,P20126,P16002,P20124,P20122,P20123,P20125&transpose=false"
-                        />
-                    </Row>
-
-                    <h2 className="h4 mt-5 mb-3">Author disambiguation</h2>
-                    <h2 className="h4 mt-5 mb-3">Text summarization</h2>*/}
                 </Container>
             </div>
         );
