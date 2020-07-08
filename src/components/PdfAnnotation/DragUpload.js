@@ -5,7 +5,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
 import { useDropzone } from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import { convertPdf } from '../../actions/pdfAnnotation';
+import { convertPdf, failedToConvertPdf } from 'actions/pdfAnnotation';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -50,6 +50,7 @@ const DragUpload = () => {
 
     const onDropRejected = () => {
         toast.error(`Error uploading your file, only PDF files are accepted`);
+        dispatch(failedToConvertPdf());
     };
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, onDropRejected, accept: 'application/pdf' });

@@ -63,6 +63,12 @@ export const deleteTableRegion = id => dispatch => {
     });
 };
 
+export const failedToConvertPdf = () => dispatch => {
+    dispatch({
+        type: type.PDF_ANNOTATION_FETCH_PDF_CONVERT_FAILURE
+    });
+};
+
 export const setLabelCache = ({ id, label }) => dispatch => {
     dispatch({
         type: type.PDF_ANNOTATION_SET_LABEL_CACHE,
@@ -134,9 +140,7 @@ export const convertPdf = ({ files }) => dispatch => {
         .catch(err => {
             console.log(err);
             toast.error(`Unexpected error occurred, the PDF could not be converted. Please try it again`);
-            dispatch({
-                type: type.PDF_ANNOTATION_FETCH_PDF_CONVERT_FAILURE
-            });
+            dispatch(failedToConvertPdf());
         });
 };
 
