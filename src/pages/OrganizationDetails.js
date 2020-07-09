@@ -133,8 +133,11 @@ class OrganizationDetails extends Component {
                 {this.state.isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
                 {!this.state.isLoading && this.state.error && <>{this.state.error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
                 {!this.state.isLoading && !this.state.error && this.state.label && (
-                    <Container className="mt-5 clearfix">
-                        <div className="box rounded clearfix pt-4 pb-4 pl-5 pr-5">
+                    <>
+                        <Container className="d-flex align-items-center">
+                            <h3 className="h4 my-4 flex-grow-1">Organization</h3>
+                        </Container>
+                        <Container className="box rounded clearfix py-4 px-5">
                             <StyledOrganizationHeader className="mb-2">
                                 <Row>
                                     <Col md={{ size: 8, order: 1 }} sm={{ size: 12, order: 2 }} xs={{ size: 12, order: 2 }}>
@@ -167,76 +170,78 @@ class OrganizationDetails extends Component {
                                     )}
                                 </Row>
                             </StyledOrganizationHeader>
-                        </div>
-                        <Row className="mt-3">
-                            <Col md={6} sm={12} style={{ minHeight: '500px' }} className="d-flex">
-                                <div className="p-4 box rounded-lg flex-grow-1">
-                                    <h2 className="h5">Observatories</h2>
-                                    {!this.state.isLoadingObservatories ? (
-                                        <div className="mb-4 mt-4">
-                                            {this.state.observatories.length > 0 ? (
-                                                <div>
-                                                    {this.state.observatories.map((observatory, index) => {
-                                                        return (
-                                                            <Card body key={`c${index}`} className="mt-1 border-0 p-0">
-                                                                <CardTitle>
-                                                                    <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}>
-                                                                        {observatory.name}
-                                                                    </Link>
-                                                                </CardTitle>
-                                                                <Dotdotdot clamp={3}>
-                                                                    <small className="text-muted">{observatory.description}</small>
-                                                                </Dotdotdot>
-                                                                <hr style={{ width: '50%', margin: '10px auto' }} />
-                                                            </Card>
-                                                        );
-                                                    })}
-                                                </div>
-                                            ) : (
-                                                <div className="mt-4">
-                                                    <h5>No Observatories</h5>
-                                                </div>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <div className="mt-4">
-                                            <h5>Loading observatories ...</h5>
-                                        </div>
-                                    )}
-                                </div>
-                            </Col>
-                            <Col md={6} sm={12} className="d-flex">
-                                <div className="box rounded-lg p-4 flex-grow-1">
-                                    <h2 className="h5">Contributors</h2>
-                                    {!this.state.isLoadingContributors ? (
-                                        <div className="mb-4 mt-4">
-                                            {this.state.contributors.length > 0 ? (
-                                                <div>
-                                                    {this.state.contributors.map((user, index) => {
-                                                        return (
-                                                            <div>
-                                                                <ContributorCard contributor={user} />
+                        </Container>
+                        <Container>
+                            <Row className="mt-4">
+                                <Col md={6} sm={12} style={{ minHeight: '500px' }} className="d-flex px-0 pr-4">
+                                    <div className="p-4 box rounded-lg flex-grow-1">
+                                        <h2 className="h5">Observatories</h2>
+                                        {!this.state.isLoadingObservatories ? (
+                                            <div className="mb-4 mt-4">
+                                                {this.state.observatories.length > 0 ? (
+                                                    <div>
+                                                        {this.state.observatories.map((observatory, index) => {
+                                                            return (
+                                                                <Card body key={`c${index}`} className="mt-1 border-0 p-0">
+                                                                    <CardTitle>
+                                                                        <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}>
+                                                                            {observatory.name}
+                                                                        </Link>
+                                                                    </CardTitle>
+                                                                    <Dotdotdot clamp={3}>
+                                                                        <small className="text-muted">{observatory.description}</small>
+                                                                    </Dotdotdot>
+                                                                    <hr style={{ width: '90%', margin: '10px auto' }} />
+                                                                </Card>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                ) : (
+                                                    <div className="mt-4">
+                                                        <h5>No Observatories</h5>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <div className="mt-4">
+                                                <h5>Loading observatories ...</h5>
+                                            </div>
+                                        )}
+                                    </div>
+                                </Col>
+                                <Col md={6} sm={12} className="d-flex px-0">
+                                    <div className="box rounded-lg p-4 flex-grow-1">
+                                        <h2 className="h5">Contributors</h2>
+                                        {!this.state.isLoadingContributors ? (
+                                            <div className="mb-4 mt-4">
+                                                {this.state.contributors.length > 0 ? (
+                                                    <div>
+                                                        {this.state.contributors.map((user, index) => {
+                                                            return (
+                                                                <div>
+                                                                    <ContributorCard contributor={user} />
 
-                                                                <hr style={{ width: '90%', margin: '10px auto' }} />
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            ) : (
-                                                <div className="mt-4">
-                                                    <h5>No Contributors</h5>
-                                                </div>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <div className="mt-4">
-                                            <h5>Loading Contributors ...</h5>
-                                        </div>
-                                    )}
-                                </div>
-                            </Col>
-                        </Row>
-                    </Container>
+                                                                    <hr style={{ width: '90%', margin: '10px auto' }} />
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                ) : (
+                                                    <div className="mt-4">
+                                                        <h5>No Contributors</h5>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <div className="mt-4">
+                                                <h5>Loading Contributors ...</h5>
+                                            </div>
+                                        )}
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </>
                 )}
             </>
         );

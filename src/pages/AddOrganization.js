@@ -133,7 +133,7 @@ class AddOrganization extends Component {
                         <FormGroup>
                             <Label>Logo</Label>
                             <br />
-                            <input type="file" onChange={this.handlePreview} />
+                            <Input type="file" onChange={this.handlePreview} />
                         </FormGroup>
 
                         <Button color="primary" onClick={this.createNewOrganization} outline className="mt-4 mb-2" block disabled={loading}>
