@@ -67,6 +67,7 @@ function ClassDetails(props) {
                         <div className="mb-2">
                             <div className="pb-2 mb-3">
                                 <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
+                                    Class:{' '}
                                     {label || (
                                         <i>
                                             <small>No label</small>
@@ -93,7 +94,7 @@ function ClassDetails(props) {
                                         {template ? (
                                             <Link to={reverse(ROUTES.CONTRIBUTION_TEMPLATE, { id: template.id })}>{template.label}</Link>
                                         ) : (
-                                            'Not Defined'
+                                            <i>Not Defined</i>
                                         )}
                                     </td>
                                 </tr>
