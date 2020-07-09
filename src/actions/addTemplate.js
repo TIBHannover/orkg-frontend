@@ -7,7 +7,8 @@ import {
     createResourceStatement,
     getTemplateById,
     createLiteral,
-    createClass
+    createClass,
+    getTemplatesByClass
 } from 'network';
 import { toast } from 'react-toastify';
 
@@ -125,6 +126,28 @@ export const saveTemplate = data => {
             type: type.IS_SAVING_TEMPLATE
         });
         dispatch(setEditMode(false));
+
+        if (!data.label) {
+            // Make the template label mandatory
+            dispatch({
+                type: type.FAILURE_SAVING_TEMPLATE
+            });
+            toast.error('Please enter the name of template');
+            return null;
+        }
+
+        if (data.class && data.class.id) {
+            //  Check if the template of the class if already defined
+            const templates = await getTemplatesByClass(data.class.id);
+            if (templates.length > 0 && !templates.includes(data.templateID)) {
+                dispatch({
+                    type: type.FAILURE_SAVING_TEMPLATE
+                });
+                toast.error('The template of this class is already defined');
+                return null;
+            }
+        }
+
         const promises = [];
         let templateResource;
         if (!data.templateID) {
