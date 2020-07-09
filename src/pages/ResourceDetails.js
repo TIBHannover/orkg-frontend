@@ -10,6 +10,9 @@ import EditableHeader from 'components/EditableHeader';
 import ObjectStatements from 'components/ObjectStatements/ObjectStatements';
 import NotFound from 'components/StaticPages/NotFound';
 import { useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes.js';
 import { connect } from 'react-redux';
 import { resetStatementBrowser } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -115,7 +118,7 @@ function ResourceDetails(props) {
 
                                                 return (
                                                     <i key={index}>
-                                                        {classObject.label}
+                                                        <Link to={reverse(ROUTES.CLASS, { id: classObject.id })}>{classObject.label}</Link>
                                                         {separator}
                                                     </i>
                                                 );

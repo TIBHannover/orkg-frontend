@@ -5,8 +5,12 @@ import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes.js';
+import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faClipboard } from '@fortawesome/free-solid-svg-icons';
+import { faClipboard, faLink } from '@fortawesome/free-solid-svg-icons';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import styled, { withTheme } from 'styled-components';
 
@@ -170,11 +174,28 @@ class TemplateEditorAutoComplete extends Component {
                 wrapper={children => (
                     <InputGroup size="sm">
                         {children}
-                        <InputGroupAddon addonType="append">
-                            <Button disabled={!this.props.value || !this.props.value.label} onClick={onCopyClick} outline>
-                                <Icon icon={faClipboard} size="sm" />
-                            </Button>
-                        </InputGroupAddon>
+                        {this.props.value && this.props.value.id && (
+                            <InputGroupAddon addonType="append">
+                                <Button disabled={!this.props.value || !this.props.value.label} onClick={onCopyClick} outline>
+                                    <Tippy content="Copy the label to clipboard">
+                                        <span>
+                                            <Icon icon={faClipboard} size="sm" />
+                                        </span>
+                                    </Tippy>
+                                </Button>
+                                <Link
+                                    target="_blank"
+                                    to={reverse(ROUTES.CLASS, { id: this.props.value.id })}
+                                    className="btn btn-sm btn-outline-secondary"
+                                >
+                                    <Tippy content="Go to class page">
+                                        <span>
+                                            <Icon icon={faLink} size="sm" />
+                                        </span>
+                                    </Tippy>
+                                </Link>
+                            </InputGroupAddon>
+                        )}
                     </InputGroup>
                 )}
             >

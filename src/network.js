@@ -368,8 +368,10 @@ export const getRDFDataCubeVocabularyClasses = () => {
     return submitGetRequest(`${classesUrl}?q=qb:`);
 };
 
-export const getAllClasses = () => {
-    return submitGetRequest(`${classesUrl}`);
+export const getAllClasses = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null }) => {
+    const params = queryString.stringify({ page: page, items: items, sortBy: sortBy, desc: desc, ...(q ? { q: q } : {}) });
+
+    return submitGetRequest(`${classesUrl}?${params}`);
 };
 
 export const saveFullPaper = data => {

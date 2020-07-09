@@ -149,6 +149,13 @@ export default (state = initialState, action) => {
             };
         }
 
+        case type.FAILURE_SAVING_TEMPLATE: {
+            return {
+                ...state,
+                isSaving: false
+            };
+        }
+
         case type.SAVE_TEMPLATE_DONE: {
             return {
                 ...state,
