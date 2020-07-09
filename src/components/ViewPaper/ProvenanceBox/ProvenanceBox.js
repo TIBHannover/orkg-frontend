@@ -25,7 +25,7 @@ export default function ProvenanceBox(props) {
                                 <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.id })}>
                                     <img
                                         style={{ marginTop: 8, marginBottom: 8, maxWidth: '80%', height: 'auto' }}
-                                        class="mx-auto d-block"
+                                        className="mx-auto d-block"
                                         src={props.observatoryInfo.organization.logo}
                                         alt=""
                                     />

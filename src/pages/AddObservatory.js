@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { createObservatory } from 'network';
 import { Redirect } from 'react-router-dom';
-import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
+import { Container, Button, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
@@ -18,6 +18,7 @@ class AddObservatory extends Component {
         this.state = {
             redirect: false,
             value: '',
+            description: '',
             observatoryId: ''
         };
     }
@@ -25,9 +26,10 @@ class AddObservatory extends Component {
     createNewObservatory = async () => {
         this.setState({ editorState: 'loading' });
         const value = this.state.value;
+        const description = this.state.description;
         if (value && value.length !== 0) {
             try {
-                const observatory = await createObservatory(value, this.props.match.params.id);
+                const observatory = await createObservatory(value, this.props.match.params.id, description);
                 this.navigateToObservatory(observatory.id);
             } catch (error) {
                 this.setState({ editorState: 'edit' });
@@ -42,13 +44,6 @@ class AddObservatory extends Component {
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value.trim() });
-    };
-
-    handleKeyUp = async event => {
-        event.preventDefault();
-        if (event.keyCode === 13) {
-            await this.createNewObservatory();
-        }
     };
 
     navigateToObservatory = observatoryId => {
@@ -72,24 +67,33 @@ class AddObservatory extends Component {
         return (
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5">
                 {this.props.user ? (
-                    <Form className="pl-3 pr-3 pt-2">
+                    <div className="pl-3 pr-3 pt-2">
                         {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
                         <FormGroup>
                             <Label for="ObservatoryLabel">Observatory name</Label>
                             <Input
                                 onChange={this.handleChange}
-                                onKeyUp={this.handleKeyUp}
                                 type="text"
                                 name="value"
                                 id="ObservatoryLabel"
                                 disabled={loading}
                                 placeholder="Observatory name"
                             />
+                            <br />
+                            <Label for="ObservatoryDescription">Observatory description</Label>
+                            <Input
+                                onChange={this.handleChange}
+                                type="textarea"
+                                name="description"
+                                id="ObservatoryDescription"
+                                disabled={loading}
+                                placeholder="Observatory description"
+                            />
                         </FormGroup>
                         <Button color="primary" onClick={this.createNewObservatory} outline className="mt-4 mb-2" block disabled={loading}>
                             {!loading ? 'Create Observatory' : <span>Loading</span>}
                         </Button>
-                    </Form>
+                    </div>
                 ) : (
                     <>
                         <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog('signin')}>

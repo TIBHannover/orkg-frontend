@@ -1,48 +1,26 @@
 import React, { Component } from 'react';
-import { Container } from 'reactstrap';
-import { getUsersByObservatoryId, getResourcesByObservatoryId, getObservatorybyId } from 'network';
-import ShortRecord from 'components/ShortRecord/ShortRecord';
+import { Container, Modal, ModalBody, ModalHeader, Button } from 'reactstrap';
+import { Col, Row } from 'reactstrap';
+import {
+    getUsersByObservatoryId,
+    getOrganization,
+    getResourcesByObservatoryId,
+    getComparisonsByObservatoryId,
+    getProblemsByObservatoryId,
+    getObservatoryById,
+    getStatementsBySubjects
+} from 'network';
 import InternalServerError from 'components/StaticPages/InternalServerError';
+import ContributorCard from 'components/ContributorCard/ContributorCard';
+import PaperCard from 'components/PaperCard/PaperCard';
+import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import NotFound from 'components/StaticPages/NotFound';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
-import styled from 'styled-components';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-
-const SidebarStyledBox = styled.div`
-    flex-grow: 1;
-    overflow: hidden;
-    @media (max-width: 768px) {
-        margin-top: 20px;
-    }
-`;
-
-const AnimationContainer = styled(CSSTransition)`
-    &.fadeIn-enter {
-        opacity: 0;
-    }
-
-    &.fadeIn-enter.fadeIn-enter-active {
-        opacity: 1;
-        transition: 1s opacity;
-    }
-`;
-
-const ObservatoryDetailTabs = styled.div`
-    .tab {
-        margin-bottom: 0;
-        padding: 15px;
-        color: #bebbac;
-        cursor: pointer;
-        border-bottom: 2px solid #fff;
-        &.active,
-        &:hover {
-            border-bottom: 2px solid #e86161;
-            color: #646464;
-        }
-    }
-`;
+import { Link } from 'react-router-dom';
+import { getPaperData, getComparisonData } from 'utils';
+import { find } from 'lodash';
 
 class Observatory extends Component {
     constructor(props) {
@@ -51,55 +29,123 @@ class Observatory extends Component {
         this.state = {
             error: null,
             label: '',
+            description: '',
+            isContributorsModalOpen: false,
             isLoading: false,
             isLoadingContributors: false,
-            isLoadingResources: false,
+            isLoadingPapers: false,
+            isLoadingOrganizations: false,
+            isLoadingProblems: false,
+            isLoadingComparisons: false,
             contributors: [],
+            problemsList: [],
             activeTab: 1,
-            resourcesList: []
+            papersList: [],
+            organizationsList: [],
+            comparisonsList: []
         };
     }
 
     componentDidMount() {
         this.loadObservatory();
         this.loadContributors();
-        this.loadResources();
+        this.loadPapers();
+        this.loadComparisons();
+        this.loadProblems();
     }
 
     componentDidUpdate = prevProps => {
         if (this.props.match.params.id !== prevProps.match.params.id) {
             this.loadObservatory();
             this.loadContributors();
-            this.loadResources();
+            this.loadPapers();
+            this.loadComparisons();
+            this.loadProblems();
         }
     };
 
     loadObservatory = () => {
         this.setState({ isLoading: true });
-        getObservatorybyId(this.props.match.params.id)
+        getObservatoryById(this.props.match.params.id)
             .then(observatory => {
                 document.title = `${observatory.name} - Details`;
                 this.setState({
                     label: observatory.name,
+                    description: observatory.description,
                     isLoading: false
                 });
+                this.loadOrganizations(observatory.organizations);
             })
             .catch(error => {
                 this.setState({ error: error, isLoading: false });
             });
     };
 
-    loadResources = () => {
-        this.setState({ isLoadingResources: true });
+    loadPapers = () => {
+        this.setState({ isLoadingPapers: true });
         getResourcesByObservatoryId(this.props.match.params.id)
-            .then(resources => {
-                this.setState({
-                    resourcesList: resources,
-                    isLoadingResources: false
+            .then(papers => {
+                // Fetch the data of each comparison
+                return getStatementsBySubjects({
+                    ids: papers.map(c => c.id)
+                }).then(resourcesStatements => {
+                    const papersData = resourcesStatements.map(resourceStatements => {
+                        const paperSubject = find(papers, { id: resourceStatements.id });
+                        return getPaperData(
+                            resourceStatements.id,
+                            resourceStatements && paperSubject.label ? paperSubject.label : 'No Title',
+                            resourceStatements.statements
+                        );
+                    });
+                    this.setState({
+                        papersList: papersData,
+                        isLoadingPapers: false
+                    });
                 });
             })
             .catch(error => {
-                this.setState({ error: error, isLoadingResources: false });
+                this.setState({ error: error, isLoadingPapers: false });
+            });
+    };
+
+    loadComparisons = () => {
+        this.setState({ isLoadingComparisons: true });
+        getComparisonsByObservatoryId(this.props.match.params.id)
+            .then(comparisons => {
+                // Fetch the data of each comparison
+                return getStatementsBySubjects({
+                    ids: comparisons.map(c => c.id)
+                }).then(resourcesStatements => {
+                    const comparisonsData = resourcesStatements.map(resourceStatements => {
+                        const comparisonSubject = find(comparisons, { id: resourceStatements.id });
+                        return getComparisonData(
+                            resourceStatements.id,
+                            resourceStatements && comparisonSubject.label ? comparisonSubject.label : 'No Title',
+                            resourceStatements.statements
+                        );
+                    });
+                    this.setState({
+                        comparisonsList: comparisonsData,
+                        isLoadingComparisons: false
+                    });
+                });
+            })
+            .catch(error => {
+                this.setState({ error: error, isLoadingComparisons: false });
+            });
+    };
+
+    loadProblems = () => {
+        this.setState({ isLoadingProblems: true });
+        getProblemsByObservatoryId(this.props.match.params.id)
+            .then(problems => {
+                this.setState({
+                    problemsList: problems,
+                    isLoadingProblems: false
+                });
+            })
+            .catch(error => {
+                this.setState({ error: error, isLoadingProblems: false });
             });
     };
 
@@ -117,120 +163,251 @@ class Observatory extends Component {
             });
     };
 
-    barToggle = tab => {
-        if (this.state.activeTab !== tab) {
-            this.setState({ activeTab: tab });
-        }
+    loadOrganizations = organizationsData => {
+        this.setState({ isLoadingOrganizations: true });
+        Promise.all(organizationsData.map(o => getOrganization(o.id))).then(data => {
+            this.setState({
+                organizationsList: data,
+                isLoadingOrganizations: false
+            });
+        });
+    };
+
+    toggle = type => {
+        this.setState(prevState => ({
+            [type]: !prevState[type]
+        }));
     };
 
     render = () => {
-        let currentTabContent;
+        return (
+            <>
+                {this.state.isLoading && <Container className="box pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
+                {!this.state.isLoading && this.state.error && <>{this.state.error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
+                {!this.state.isLoading && !this.state.error && this.state.label && (
+                    <>
+                        <Container className="d-flex align-items-center">
+                            <h3 className="h4 my-4 flex-grow-1">Observatory</h3>
+                        </Container>
 
-        switch (this.state.activeTab) {
-            case 1:
-            default:
-                currentTabContent = (
-                    <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        {!this.state.isLoadingContributors ? (
-                            <div className="mb-6">
-                                <div className="pb-2 mb-6">
-                                    {this.state.contributors.length > 0 ? (
-                                        <div style={{ paddingTop: 10 }}>
-                                            {this.state.contributors.map((user, index) => {
+                        <Container className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
+                            <h3>{this.state.label}</h3>
+                            {this.state.description}
+                        </Container>
+
+                        <Container>
+                            <Row className="mt-4">
+                                <Col md={8} sm={12} style={{ minHeight: '500px' }} className="d-flex px-0 pr-4">
+                                    <div className="box rounded-lg p-4 flex-grow-1">
+                                        <h5>Research Problems</h5>
+                                        {!this.state.isLoadingProblems ? (
+                                            <div className="mb-4 mt-2">
+                                                {this.state.problemsList.length > 0 ? (
+                                                    <div>
+                                                        <ol className="list-group" style={{ paddingLeft: 15 }}>
+                                                            {this.state.problemsList.map((problem, index) => {
+                                                                return (
+                                                                    <li key={`rp${index}`} className="mt-2">
+                                                                        <Link
+                                                                            to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}
+                                                                        >
+                                                                            {problem.label}
+                                                                        </Link>
+                                                                    </li>
+                                                                );
+                                                            })}
+                                                        </ol>
+                                                    </div>
+                                                ) : (
+                                                    <div className="text-center mt-4 mb-4">No Research Problems</div>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <div className="text-center mt-4 mb-4">Loading research problems ...</div>
+                                        )}
+                                    </div>
+                                </Col>
+                                <Col md={4} sm={12} style={{ display: 'flex', flexDirection: 'column' }} className="px-0">
+                                    <div className="box rounded-lg p-4">
+                                        <h5>Organizations</h5>
+                                        {!this.state.isLoadingOrganizations ? (
+                                            <div className="mb-4 mt-4">
+                                                {this.state.organizationsList.length > 0 ? (
+                                                    <div>
+                                                        {this.state.organizationsList.map((organization, index) => {
+                                                            if (organization.logo) {
+                                                                return (
+                                                                    <div
+                                                                        key={`c${index}`}
+                                                                        className="mb-3"
+                                                                        style={{
+                                                                            border: 'solid lightgray thin',
+                                                                            textAlign: 'center',
+                                                                            verticalAlign: 'middle',
+                                                                            paddingBottom: '11px'
+                                                                        }}
+                                                                    >
+                                                                        <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.id })}>
+                                                                            <img
+                                                                                style={{ marginTop: 12 }}
+                                                                                height="70"
+                                                                                src={organization.logo}
+                                                                                alt={`${organization.name} logo`}
+                                                                            />
+                                                                        </Link>
+                                                                    </div>
+                                                                );
+                                                            } else {
+                                                                return (
+                                                                    <div
+                                                                        key={`c${index}`}
+                                                                        className="mb-3 p-2"
+                                                                        style={{
+                                                                            border: 'solid lightgray thin',
+                                                                            textAlign: 'center'
+                                                                        }}
+                                                                    >
+                                                                        <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.id })}>
+                                                                            {organization.name}
+                                                                        </Link>
+                                                                    </div>
+                                                                );
+                                                            }
+                                                        })}
+                                                    </div>
+                                                ) : (
+                                                    <div className="text-center mt-4 mb-4">No Organizations</div>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <div className="text-center mt-4 mb-4">Loading organizations ...</div>
+                                        )}
+                                    </div>
+                                    <div className="box rounded-lg mt-4 p-4 flex-grow-1">
+                                        <h5>Contributors</h5>
+
+                                        {!this.state.isLoadingContributors ? (
+                                            <div className="mb-4 mt-4">
+                                                {this.state.contributors.length > 0 ? (
+                                                    <div>
+                                                        {this.state.contributors.slice(0, 3).map((user, index) => {
+                                                            return (
+                                                                <div key={`oc${index}`}>
+                                                                    <ContributorCard
+                                                                        contributor={{
+                                                                            ...user,
+                                                                            subTitle: this.state.organizationsList.find(o =>
+                                                                                o.id.includes(user.organization_id)
+                                                                            )?.name
+                                                                        }}
+                                                                    />
+
+                                                                    <hr style={{ width: '90%', margin: '10px auto' }} />
+                                                                </div>
+                                                            );
+                                                        })}
+                                                        {this.state.contributors.length > 3 && (
+                                                            <>
+                                                                <Button
+                                                                    onClick={() => this.toggle('isContributorsModalOpen')}
+                                                                    className="mt-1 float-right clearfix p-0"
+                                                                    color="link"
+                                                                >
+                                                                    <small>+ See more</small>
+                                                                </Button>
+                                                                <Modal
+                                                                    isOpen={this.state.isContributorsModalOpen}
+                                                                    toggle={() => this.toggle('isContributorsModalOpen')}
+                                                                    size="lg"
+                                                                >
+                                                                    <ModalHeader toggle={() => this.toggle('isContributorsModalOpen')}>
+                                                                        Contributors
+                                                                    </ModalHeader>
+                                                                    <ModalBody>
+                                                                        <div className="clearfix">
+                                                                            {this.state.contributors.map((user, index) => {
+                                                                                return (
+                                                                                    <div key={`moc${index}`}>
+                                                                                        <ContributorCard
+                                                                                            contributor={{
+                                                                                                ...user,
+                                                                                                subTitle: this.state.organizationsList.find(o =>
+                                                                                                    o.id.includes(user.organization_id)
+                                                                                                )?.name
+                                                                                            }}
+                                                                                        />
+
+                                                                                        <hr style={{ width: '90%', margin: '10px auto' }} />
+                                                                                    </div>
+                                                                                );
+                                                                            })}
+                                                                        </div>
+                                                                    </ModalBody>
+                                                                </Modal>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <div className="text-center mt-4 mb-4">No Contributors</div>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <div className="text-center mt-4 mb-4">Loading Contributors ...</div>
+                                        )}
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Container>
+
+                        <Container className="d-flex align-items-center">
+                            <h1 className="h4 mt-5 mb-4 flex-grow-1">Content</h1>
+                        </Container>
+
+                        <Container className="box rounded-lg p-4">
+                            <h5>Comparisons</h5>
+                            {!this.state.isLoadingComparisons ? (
+                                <div className="mb-4 mt-4">
+                                    {this.state.comparisonsList.length > 0 ? (
+                                        <div>
+                                            {this.state.comparisonsList.map(comparison => {
+                                                return <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} />;
+                                            })}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center mt-4 mb-4">No Comparisons</div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="text-center mt-4 mb-4">Loading comparisons ...</div>
+                            )}
+                        </Container>
+
+                        <br />
+                        <Container className="box rounded-lg p-4">
+                            <h5>Papers</h5>
+                            {!this.state.isLoadingPapers ? (
+                                <div className="mb-4 mt-4">
+                                    {this.state.papersList.length > 0 ? (
+                                        <div>
+                                            {this.state.papersList.map(resource => {
                                                 return (
-                                                    <ShortRecord
-                                                        key={`user${index}`}
-                                                        header={user.display_name}
-                                                        href={reverse(ROUTES.USER_PROFILE, { userId: user.id })}
+                                                    <PaperCard
+                                                        selectable={false}
+                                                        paper={{ title: resource.label, ...resource }}
+                                                        key={`p${resource.id}`}
                                                     />
                                                 );
                                             })}
                                         </div>
                                     ) : (
-                                        <div className="mt-4">
-                                            <h5>No Contributors</h5>
-                                        </div>
+                                        <div className="text-center mt-4 mb-4">No Papers</div>
                                     )}
                                 </div>
-                            </div>
-                        ) : (
-                            <div className="mt-4">
-                                <h5>Loading Contributors ...</h5>
-                            </div>
-                        )}
-                    </AnimationContainer>
-                );
-                break;
-            case 2:
-                currentTabContent = (
-                    <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        {!this.state.isLoadingResources ? (
-                            <div className="pb-2 mb-6">
-                                {this.state.resourcesList.length > 0 ? (
-                                    <div style={{ paddingTop: 10 }}>
-                                        {this.state.resourcesList.map((resource, index) => {
-                                            return (
-                                                <ShortRecord
-                                                    key={`resource${index}`}
-                                                    header={resource.label}
-                                                    href={
-                                                        resource.classes.includes(process.env.REACT_APP_CLASSES_PAPER)
-                                                            ? reverse(ROUTES.VIEW_PAPER, { resourceId: resource.id })
-                                                            : reverse(ROUTES.RESOURCE, { id: resource.id })
-                                                    }
-                                                />
-                                            );
-                                        })}
-                                    </div>
-                                ) : (
-                                    <div className="mt-4">
-                                        <h5>No Resources</h5>
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            <div className="mt-4">
-                                <h5>Loading resources ...</h5>
-                            </div>
-                        )}
-                    </AnimationContainer>
-                );
-                break;
-        }
-
-        return (
-            <>
-                {this.state.isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
-                {!this.state.isLoading && this.state.error && <>{this.state.error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
-                {!this.state.isLoading && !this.state.error && this.state.label && (
-                    <Container className="mt-5 clearfix">
-                        <div className="box rounded clearfix pt-4 pb-4 pl-5 pr-5">
-                            <div className="pb-2 mb-3">
-                                <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
-                                    {this.state.label}
-                                </h3>
-                                <br />
-                                <br />
-                                <SidebarStyledBox>
-                                    <ObservatoryDetailTabs className="clearfix d-flex">
-                                        <div
-                                            className={`h6 col-md-6 text-center tab ${this.state.activeTab === 1 ? 'active' : ''}`}
-                                            onClick={() => this.barToggle(1)}
-                                        >
-                                            Contributors
-                                        </div>
-                                        <div
-                                            className={`h6 col-md-6 text-center tab ${this.state.activeTab === 2 ? 'active' : ''}`}
-                                            onClick={() => this.barToggle(2)}
-                                        >
-                                            Resources
-                                        </div>
-                                    </ObservatoryDetailTabs>
-                                    <TransitionGroup exit={false}>{currentTabContent}</TransitionGroup>
-                                </SidebarStyledBox>
-                            </div>
-                        </div>
-                    </Container>
+                            ) : (
+                                <div className="mt-4">Loading papers ...</div>
+                            )}
+                        </Container>
+                    </>
                 )}
             </>
         );

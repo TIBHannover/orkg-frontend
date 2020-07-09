@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import ShortRecord from 'components/ShortRecord/ShortRecord';
-import { Link } from 'react-router-dom';
+import { Container, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faUser } from '@fortawesome/free-solid-svg-icons';
+import OrganizationCard from 'components/OrganizationCard/OrganizationCard';
 import { getAllOrganizations } from 'network';
 import { openAuthDialog } from 'actions/auth';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Container, Button } from 'reactstrap';
 import ROUTES from 'constants/routes';
-import { reverse } from 'named-urls';
 
 class Organizations extends Component {
     constructor(props) {
@@ -29,10 +28,10 @@ class Organizations extends Component {
     loadOrganizations = () => {
         this.setState({ isNextPageLoading: true });
         getAllOrganizations()
-            .then(organizations => {
-                if (organizations.length > 0) {
+            .then(organizationsData => {
+                if (organizationsData.length > 0) {
                     this.setState({
-                        organizations: organizations,
+                        organizations: organizationsData,
                         isNextPageLoading: false
                     });
                 } else {
@@ -70,15 +69,9 @@ class Organizations extends Component {
                     </div>
 
                     {this.state.organizations.length > 0 && (
-                        <div>
+                        <div className="mt-3 row justify-content-center">
                             {this.state.organizations.map(organization => {
-                                return (
-                                    <ShortRecord
-                                        key={organization.id}
-                                        header={organization.name}
-                                        href={reverse(ROUTES.ORGANIZATION, { id: organization.id })}
-                                    />
-                                );
+                                return <OrganizationCard key={organization.id} organization={{ ...organization }} />;
                             })}
                         </div>
                     )}

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
-import { getAllObservatoriesbyOrganizationId, getOrganization } from '../network';
+import { getAllObservatoriesByOrganizationId, getOrganization } from '../network';
 import { Container } from 'reactstrap';
 import PropTypes from 'prop-types';
 import ROUTES from '../constants/routes';
@@ -30,7 +30,7 @@ class OrganizationObservatories extends Component {
 
     loadObservatories = () => {
         this.setState({ isNextPageLoading: true });
-        getAllObservatoriesbyOrganizationId(this.props.match.params.id)
+        getAllObservatoriesByOrganizationId(this.props.match.params.id)
             .then(observatories => {
                 if (observatories.length > 0) {
                     this.setState({

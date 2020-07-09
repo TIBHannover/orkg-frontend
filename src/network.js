@@ -634,15 +634,15 @@ export const getOrganization = id => {
     return submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/`);
 };
 
-export const createOrganization = (organizationName, organizationLogo, createdBy) => {
-    return submitPostRequest(organizationsUrl, { 'Content-Type': 'application/json' }, { organizationName, organizationLogo, createdBy });
+export const createOrganization = (organizationName, organizationLogo, createdBy, url) => {
+    return submitPostRequest(organizationsUrl, { 'Content-Type': 'application/json' }, { organizationName, organizationLogo, createdBy, url });
 };
 
-export const getAllObservatoriesbyOrganizationId = id => {
+export const getAllObservatoriesByOrganizationId = id => {
     return submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/observatories`);
 };
 
-export const getObservatorybyId = id => {
+export const getObservatoryById = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/`);
 };
 
@@ -650,12 +650,24 @@ export const getUsersByObservatoryId = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/users`);
 };
 
-export const getResourcesByObservatoryId = id => {
-    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/resources`);
+export const getUsersByOrganizationId = id => {
+    return submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/users`);
 };
 
-export const createObservatory = (observatoryName, organizationId) => {
-    return submitPostRequest(observatoriesUrl, { 'Content-Type': 'application/json' }, { observatoryName, organizationId });
+export const getResourcesByObservatoryId = id => {
+    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/papers`);
+};
+
+export const getComparisonsByObservatoryId = id => {
+    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/comparisons`);
+};
+
+export const getProblemsByObservatoryId = id => {
+    return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/problems`);
+};
+
+export const createObservatory = (observatoryName, organizationId, description) => {
+    return submitPostRequest(observatoriesUrl, { 'Content-Type': 'application/json' }, { observatoryName, organizationId, description });
 };
 
 export const getContributorsByResourceId = id => {
@@ -673,15 +685,15 @@ export const getContributorsByResourceId = id => {
 };
 
 export const getObservatoryAndOrganizationInformation = (observatoryId, organizationId) => {
-    return getObservatorybyId(observatoryId).then(obsResponse => {
+    return getObservatoryById(observatoryId).then(obsResponse => {
         return getOrganization(organizationId).then(orgResponse => {
             return {
                 id: observatoryId,
                 name: obsResponse.name.toUpperCase(),
                 organization: {
                     id: organizationId,
-                    name: orgResponse.organization_name,
-                    logo: orgResponse.organization_logo
+                    name: orgResponse.name,
+                    logo: orgResponse.logo
                 }
             };
         });

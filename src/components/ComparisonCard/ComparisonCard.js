@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faCalendar, faDiceD6 } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faFile } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -37,20 +37,15 @@ class ComparisonCard extends Component {
                         {this.props.comparison.created_at && (
                             <div>
                                 <small>
-                                    <Icon size="sm" icon={faDiceD6} className="mr-1" /> {this.props.comparison.nbContributions} Contributions
-                                    <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" /> Published :{' '}
+                                    <Icon size="sm" icon={faFile} className="mr-1" /> {this.props.comparison.nbContributions} Contributions
+                                    <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />{' '}
                                     {moment(this.props.comparison.created_at).format('DD-MM-YYYY')}
                                 </small>
                             </div>
                         )}
                         {this.props.comparison.description && (
                             <div>
-                                <small>Description : {this.props.comparison.description}</small>
-                            </div>
-                        )}
-                        {this.props.comparison.reference && (
-                            <div>
-                                <small>Reference : {this.props.comparison.reference}</small>
+                                <small className="text-muted">{this.props.comparison.description}</small>
                             </div>
                         )}
                     </Col>

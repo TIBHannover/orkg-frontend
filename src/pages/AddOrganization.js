@@ -18,6 +18,7 @@ class AddOrganization extends Component {
         this.state = {
             redirect: false,
             value: '',
+            url: '',
             organizationId: '',
             previewSrc: '',
             editorState: 'edit'
@@ -28,20 +29,26 @@ class AddOrganization extends Component {
         this.setState({ editorState: 'loading' });
         const value = this.state.value;
         const image = this.state.previewSrc;
+        const url = this.state.url;
         if (value && value.length !== 0) {
-            if (image.length !== 0) {
-                try {
-                    const responseJson = await createOrganization(value, image[0], this.props.user.id);
-                    const organizationId = responseJson.id;
-                    await updateUserRole();
-                    this.navigateToOrganization(organizationId);
-                } catch (error) {
+            if (url && url.match(/[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gi)) {
+                if (image.length !== 0) {
+                    try {
+                        const responseJson = await createOrganization(value, image[0], this.props.user.id, url);
+                        const organizationId = responseJson.id;
+                        await updateUserRole();
+                        this.navigateToOrganization(organizationId);
+                    } catch (error) {
+                        this.setState({ editorState: 'edit' });
+                        console.error(error);
+                        toast.error(`Error creating organization ${error.message}`);
+                    }
+                } else {
+                    toast.error(`Please upload an organization logo`);
                     this.setState({ editorState: 'edit' });
-                    console.error(error);
-                    toast.error(`Error creating organization ${error.message}`);
                 }
             } else {
-                toast.error(`Please upload an organization logo`);
+                toast.error(`Please enter a valid URL`);
                 this.setState({ editorState: 'edit' });
             }
         } else {
@@ -52,13 +59,6 @@ class AddOrganization extends Component {
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value.trim() });
-    };
-
-    handleKeyUp = async event => {
-        event.preventDefault();
-        if (event.keyCode === 13) {
-            await this.createNewOrganization();
-        }
     };
 
     navigateToOrganization = organizationId => {
@@ -92,7 +92,8 @@ class AddOrganization extends Component {
             this.setState({
                 redirect: false,
                 value: '',
-                organizationId: ''
+                organizationId: '',
+                url: ''
             });
 
             return <Redirect to={reverse(ROUTES.ORGANIZATION, { id: this.state.organizationId })} />;
@@ -107,12 +108,23 @@ class AddOrganization extends Component {
                             <Label for="ResourceLabel">Organization Name</Label>
                             <Input
                                 onChange={this.handleChange}
-                                onKeyUp={this.handleKeyUp}
                                 type="text"
                                 name="value"
                                 id="ResourceLabel"
                                 disabled={loading}
                                 placeholder="Organization Name"
+                            />
+                        </FormGroup>
+
+                        <FormGroup>
+                            <Label for="OrganizationUrl">Organization URL</Label>
+                            <Input
+                                onChange={this.handleChange}
+                                type="text"
+                                name="url"
+                                id="OrganizationUrl"
+                                disabled={loading}
+                                placeholder="https://www.example.com"
                             />
                         </FormGroup>
                         <div>
@@ -121,7 +133,7 @@ class AddOrganization extends Component {
                         <FormGroup>
                             <Label>Logo</Label>
                             <br />
-                            <input type="file" onChange={this.handlePreview} />
+                            <Input type="file" onChange={this.handlePreview} />
                         </FormGroup>
 
                         <Button color="primary" onClick={this.createNewOrganization} outline className="mt-4 mb-2" block disabled={loading}>
