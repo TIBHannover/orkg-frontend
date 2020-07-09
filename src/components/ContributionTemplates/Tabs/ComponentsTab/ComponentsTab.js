@@ -2,11 +2,10 @@ import React, { useState, useCallback } from 'react';
 import { Button, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
-import { setComponents, setSubTemplates } from 'actions/addTemplate';
+import { setComponents } from 'actions/addTemplate';
 import { createPredicate, createClass } from 'network';
 import TemplateComponent from 'components/ContributionTemplates/TemplateComponent/TemplateComponent';
 import AddPropertyTemplate from 'components/StatementBrowser/AddProperty/AddPropertyTemplate';
-import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 
@@ -14,11 +13,6 @@ function ComponentsTab(props) {
     const [showAddProperty, setShowAddProperty] = useState(false);
     const [newPropertyLabel, setNewPropertyLabel] = useState('');
     const [confirmNewPropertyModal, setConfirmNewPropertyModal] = useState(false);
-
-    const [modal, setModal] = useState(false);
-
-    const [dialogResourceId] = useState(null);
-    const [dialogResourceLabel] = useState(null);
 
     const handleDeleteTemplateComponent = index => {
         props.setComponents(props.components.filter((item, j) => index !== j));
@@ -119,33 +113,7 @@ function ComponentsTab(props) {
         props.setComponents(templateComponents);
         setShowAddProperty(false);
     };
-    /*
-    const handleSubTemplatesSelect = (selected, index) => {
-        const templateSubTemplates = props.subTemplates.map((item, j) => {
-            if (j === index) {
-                item = !selected ? null : selected;
-            }
-            return item;
-        });
-        props.setSubTemplates(templateSubTemplates);
-    };
 
-    const openStatementBrowser = (id, label) => {
-        setModal(true);
-        setDialogResourceId(id);
-        setDialogResourceLabel(label);
-    };
-
-    const deleteSubTemplate = index => {
-        const templateSubTemplates = props.subTemplates.filter((item, j) => index !== j);
-        props.setSubTemplates(templateSubTemplates);
-    };
-
-    const addSubTemplate = () => {
-        const templateSubTemplates = [...props.subTemplates, {}];
-        props.setSubTemplates(templateSubTemplates);
-    };
-    */
     const moveCard = useCallback(
         (dragIndex, hoverIndex) => {
             const dragCard = props.components[dragIndex];
@@ -221,97 +189,25 @@ function ComponentsTab(props) {
                     </>
                 )}
             </div>
-            {/* TODO: Support Research problem target
-            {!props.isClassDescription && (
-                <fieldset className="scheduler-border">
-                    <legend className="scheduler-border">Sub-Templates</legend>
-                    <FormGroup className="mb-4">
-                        <Label>{props.editMode && <FormText>List the sub-templates of this template.</FormText>}</Label>
-                        <div className={'clearfix mb-3'} />
-                        {props.subTemplates &&
-                            props.subTemplates.length > 0 &&
-                            props.subTemplates.map((templateSubTemplate, index) => {
-                                return (
-                                    <div key={`subtemplate-${index}`}>
-                                        <InputGroup className={'mt-2 mb-2'}>
-                                            <InputGroupAddon addonType="prepend">{`${index + 1}`}</InputGroupAddon>
-                                            <AutoComplete
-                                                requestUrl={resourcesUrl}
-                                                optionsClass={process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE}
-                                                placeholder={props.editMode ? 'Select or type to enter a contribution template' : 'No sub template'}
-                                                onItemSelected={selected => handleSubTemplatesSelect(selected, index)}
-                                                onKeyUp={() => {}}
-                                                value={templateSubTemplate}
-                                                isDisabled={!props.editMode}
-                                            />
-                                            {templateSubTemplate.id && (
-                                                <InputGroupAddon addonType="append">
-                                                    <Button
-                                                        outline
-                                                        color="info"
-                                                        onClick={() => openStatementBrowser(templateSubTemplate.id, templateSubTemplate.label)}
-                                                    >
-                                                        View template
-                                                    </Button>
-                                                </InputGroupAddon>
-                                            )}
-                                            {props.editMode && (
-                                                <InputGroupAddon addonType="append">
-                                                    <Button outline color="danger" onClick={() => deleteSubTemplate(index)}>
-                                                        <Icon icon={faTrash} />
-                                                    </Button>
-                                                </InputGroupAddon>
-                                            )}
-                                        </InputGroup>
-                                    </div>
-                                );
-                            })}
-                        {!props.editMode && props.subTemplates && props.subTemplates.length === 0 && (
-                            <i>
-                                <small>No sub-templates specified.</small>
-                            </i>
-                        )}
-                        {props.editMode && (
-                            <Button outline size="sm" className={'mb-3'} onClick={() => addSubTemplate()}>
-                                Add sub-template
-                            </Button>
-                        )}
-                    </FormGroup>
-                </fieldset>
-            )}
-            */}
-            {modal && (
-                <StatementBrowserDialog
-                    show={modal}
-                    enableEdit={false}
-                    toggleModal={() => setModal(prev => !prev)}
-                    resourceId={dialogResourceId}
-                    resourceLabel={dialogResourceLabel}
-                />
-            )}
         </div>
     );
 }
 
 ComponentsTab.propTypes = {
     components: PropTypes.array.isRequired,
-    subTemplates: PropTypes.array,
     editMode: PropTypes.bool.isRequired,
-    setComponents: PropTypes.func.isRequired,
-    setSubTemplates: PropTypes.func.isRequired
+    setComponents: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
     return {
         components: state.addTemplate.components,
-        subTemplates: state.addTemplate.subTemplates,
         editMode: state.addTemplate.editMode
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    setComponents: data => dispatch(setComponents(data)),
-    setSubTemplates: data => dispatch(setSubTemplates(data))
+    setComponents: data => dispatch(setComponents(data))
 });
 
 export default connect(

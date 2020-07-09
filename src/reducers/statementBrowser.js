@@ -360,7 +360,8 @@ export default (state = initialState, action) => {
                 ...ids,
                 [resourceId]: {
                     id: resourceId,
-                    label: payload.label
+                    label: payload.label,
+                    propertyLabel: payload.propertyLabel
                 },
                 ...(lastResourceId
                     ? {

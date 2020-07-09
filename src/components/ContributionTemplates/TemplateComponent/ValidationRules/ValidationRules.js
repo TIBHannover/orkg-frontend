@@ -94,7 +94,6 @@ ValidationRules.propTypes = {
 const mapStateToProps = state => {
     return {
         components: state.addTemplate.components,
-        subTemplates: state.addTemplate.subTemplates,
         editMode: state.addTemplate.editMode
     };
 };

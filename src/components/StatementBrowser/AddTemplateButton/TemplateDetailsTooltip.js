@@ -14,13 +14,20 @@ export default class TemplateDetailsTooltip extends Component {
     }
 
     componentDidMount = () => {
+        this._isMounted = true;
         this.loadTemplate();
     };
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
 
     loadTemplate = () => {
         this.setState({ isTemplateLoading: true, isTemplateFailedLoading: false });
         getTemplateById(this.props.id).then(template => {
-            this.setState({ template, isTemplateLoading: false, isTemplateFailedLoading: false });
+            if (this._isMounted) {
+                this.setState({ template, isTemplateLoading: false, isTemplateFailedLoading: false });
+            }
         });
     };
     render() {
@@ -45,16 +52,6 @@ export default class TemplateDetailsTooltip extends Component {
                                         this.state.template.components.map((component, index) => {
                                             return <li key={`t-${index}-${component.property.id}`}>{component.property.label}</li>;
                                         })}
-                                </ul>
-                            </div>
-                        )}
-                        {this.state.template.subTemplates && this.state.template.subTemplates.length > 0 && (
-                            <div>
-                                <b>Nested Templates: </b>
-                                <ul>
-                                    {this.state.template.subTemplates.map((subTemplate, index) => {
-                                        return <li key={`st-${index}-${subTemplate.id}`}>{subTemplate.label}</li>;
-                                    })}
                                 </ul>
                             </div>
                         )}

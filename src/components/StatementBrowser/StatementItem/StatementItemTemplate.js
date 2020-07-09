@@ -115,6 +115,7 @@ export default function StatementItemTemplate(props) {
                                 components={props.components}
                                 contextStyle="Template"
                                 propertyId={props.id}
+                                resourceId={props.resourceId}
                                 syncBackend={props.syncBackend}
                             />
                         )}
@@ -143,5 +144,6 @@ StatementItemTemplate.propTypes = {
     propertiesAsLinks: PropTypes.bool.isRequired,
     components: PropTypes.array.isRequired,
     canAddValue: PropTypes.bool.isRequired,
-    canDeleteProperty: PropTypes.bool.isRequired
+    canDeleteProperty: PropTypes.bool.isRequired,
+    resourceId: PropTypes.string
 };
