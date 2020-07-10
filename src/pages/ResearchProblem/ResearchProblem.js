@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Container, Row, Col, Button, Modal, ModalHeader, ModalBody, Badge } from 'reactstrap';
+import { Container, Row, Col, Button, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ResearchProblemHeaderBar from './ResearchProblemHeaderBar';
@@ -9,7 +9,7 @@ import useResearchProblemStatistics from './hooks/useResearchProblemStatistics';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
-import ContributorCard from 'components/ContributorCard/ContributorCard';
+//import ContributorCard from 'components/ContributorCard/ContributorCard';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ExternalDescription from './ExternalDescription';
@@ -25,11 +25,11 @@ function usePrevious(value) {
 }
 
 function ResearchProblem(props) {
-    const [researchProblemData, isLoading, loadResearchProblemData] = useResearchProblem();
+    const [researchProblemData, isLoading, isFailedLoading, loadResearchProblemData] = useResearchProblem();
     const [editMode, setEditMode] = useState(false);
     const prevEditMode = usePrevious({ editMode });
-    const [isContributorsModalOpen, setIsContributorsModalOpen] = useState(false);
-    const [contributors, setContributors] = useState([]);
+    //const [isContributorsModalOpen, setIsContributorsModalOpen] = useState(false);
+    //const [contributors, setContributors] = useState([]);
     const [contributions, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchProblemPapers();
     const [researchFields, isLoadingResearchFields] = useResearchProblemStatistics();
 
@@ -47,7 +47,8 @@ function ResearchProblem(props) {
                     <Icon icon={faSpinner} spin /> Loading
                 </div>
             )}
-            {!isLoading && (
+            {!isLoading && isFailedLoading && <div className="text-center mt-4 mb-4">Failed loading the resource</div>}
+            {!isLoading && !isFailedLoading && (
                 <div>
                     {editMode && (
                         <StatementBrowserDialog
@@ -71,7 +72,7 @@ function ResearchProblem(props) {
                             )}
                         </div>
                         <Row className="mt-3">
-                            <Col md="6" className="d-flex">
+                            <Col md="4" className="d-flex">
                                 <div className="box rounded-lg p-4 flex-grow-1">
                                     <h5>Sub-problems</h5>
                                     {researchProblemData.subProblems && researchProblemData.subProblems.length > 0 && (
@@ -87,79 +88,6 @@ function ResearchProblem(props) {
                                         <>No sub research problems.</>
                                     )}
                                 </div>
-                            </Col>
-                            <Col md="6" className="d-flex">
-                                <div className="box rounded-lg p-4 flex-grow-1">
-                                    <h5>Super-problems</h5>
-                                    {researchProblemData.superProblems && researchProblemData.superProblems.length > 0 && (
-                                        <>
-                                            {researchProblemData.superProblems.map(supP => (
-                                                <div key={`suprp${supP.id}`}>
-                                                    <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: supP.id })}>{supP.label}</Link>
-                                                </div>
-                                            ))}
-                                        </>
-                                    )}
-                                    {researchProblemData.superProblems && researchProblemData.superProblems.length === 0 && (
-                                        <>No super research problems.</>
-                                    )}
-                                </div>
-                            </Col>
-                        </Row>
-
-                        <Row className="mt-3">
-                            <Col md="4" className="d-flex">
-                                <div className="box rounded-lg p-4 flex-grow-1">
-                                    <h5>Leaderboard</h5>
-                                    Coming soon
-                                    {/* 
-                                    <div className="mt-2">
-                                        <div>
-                                            <ContributorCard
-                                                contributor={{
-                                                    ...{ id: '', display_name: 'Display name', email: 'test@example.com' },
-                                                    subTitle: '4 papers'
-                                                }}
-                                            />
-                                            <hr style={{ width: '90%', margin: '10px auto' }} />
-                                        </div>
-                                    </div>
-                                            */}
-                                </div>
-                                {/* 
-                                {contributors.length > 3 && (
-                                    <>
-                                        <Button
-                                            onClick={() => setIsContributorsModalOpen(v => !v)}
-                                            className="mt-1 float-right clearfix p-0"
-                                            color="link"
-                                        >
-                                            <small>+ See more</small>
-                                        </Button>
-                                        <Modal isOpen={isContributorsModalOpen} toggle={() => setIsContributorsModalOpen(v => !v)} size="lg">
-                                            <ModalHeader toggle={() => setIsContributorsModalOpen(v => !v)}>Contributors</ModalHeader>
-                                            <ModalBody>
-                                                <div className="clearfix">
-                                                    {contributors.map((user, index) => {
-                                                        return (
-                                                            <div key={`moc${index}`}>
-                                                                <ContributorCard
-                                                                    contributor={{
-                                                                        ...user,
-                                                                        subTitle: '4 papers'
-                                                                    }}
-                                                                />
-
-                                                                <hr style={{ width: '90%', margin: '10px auto' }} />
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            </ModalBody>
-                                        </Modal>
-                                    </>
-                                )}
-                                */}
                             </Col>
                             <Col md="4" className="d-flex">
                                 <div className="box rounded-lg p-4 flex-grow-1">
@@ -207,6 +135,79 @@ function ResearchProblem(props) {
                                         <div className="text-center mt-4 mb-4">Loading research fields ...</div>
                                     )}
                                 </div>
+                            </Col>
+                            <Col md="4" className="d-flex">
+                                <div className="box rounded-lg p-4 flex-grow-1">
+                                    <h5>Super-problems</h5>
+                                    {researchProblemData.superProblems && researchProblemData.superProblems.length > 0 && (
+                                        <>
+                                            {researchProblemData.superProblems.map(supP => (
+                                                <div key={`suprp${supP.id}`}>
+                                                    <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: supP.id })}>{supP.label}</Link>
+                                                </div>
+                                            ))}
+                                        </>
+                                    )}
+                                    {researchProblemData.superProblems && researchProblemData.superProblems.length === 0 && (
+                                        <>No super research problems.</>
+                                    )}
+                                </div>
+                            </Col>
+                        </Row>
+                        {/*
+                        <Row className="mt-3">
+                            <Col md="4" className="d-flex">
+                                <div className="box rounded-lg p-4 flex-grow-1">
+                                    <h5>Leaderboard</h5>
+                                    Coming soon
+                                    {/* 
+                                    <div className="mt-2">
+                                        <div>
+                                            <ContributorCard
+                                                contributor={{
+                                                    ...{ id: '', display_name: 'Display name', email: 'test@example.com' },
+                                                    subTitle: '4 papers'
+                                                }}
+                                            />
+                                            <hr style={{ width: '90%', margin: '10px auto' }} />
+                                        </div>
+                                    </div>
+                                            
+                                </div>
+                                
+                                {contributors.length > 3 && (
+                                    <>
+                                        <Button
+                                            onClick={() => setIsContributorsModalOpen(v => !v)}
+                                            className="mt-1 float-right clearfix p-0"
+                                            color="link"
+                                        >
+                                            <small>+ See more</small>
+                                        </Button>
+                                        <Modal isOpen={isContributorsModalOpen} toggle={() => setIsContributorsModalOpen(v => !v)} size="lg">
+                                            <ModalHeader toggle={() => setIsContributorsModalOpen(v => !v)}>Contributors</ModalHeader>
+                                            <ModalBody>
+                                                <div className="clearfix">
+                                                    {contributors.map((user, index) => {
+                                                        return (
+                                                            <div key={`moc${index}`}>
+                                                                <ContributorCard
+                                                                    contributor={{
+                                                                        ...user,
+                                                                        subTitle: '4 papers'
+                                                                    }}
+                                                                />
+
+                                                                <hr style={{ width: '90%', margin: '10px auto' }} />
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </ModalBody>
+                                        </Modal>
+                                    </>
+                                )}
+                                
                             </Col>
                             <Col md="4" className="d-flex">
                                 <div className="box rounded-lg p-4 flex-grow-1">

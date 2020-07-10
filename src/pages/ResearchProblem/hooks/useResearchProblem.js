@@ -7,16 +7,23 @@ function useResearchProblem(initialVal = {}) {
     const [data, setData] = useState({ initialVal });
     const { researchProblemId } = useParams();
     const [isLoadingData, setIsLoadingData] = useState(true);
+    const [isFailedLoadingData, setIsFailedLoadingData] = useState(true);
 
     const loadResearchProblemData = useCallback(rpId => {
         if (rpId) {
             setIsLoadingData(true);
             // Get the research problem
-            getResource(rpId).then(result => {
-                setData({ id: rpId, label: result.label, superProblems: [], subProblems: [] });
-                setIsLoadingData(false);
-                document.title = `${result.label} - ORKG`;
-            });
+            getResource(rpId)
+                .then(result => {
+                    setData({ id: rpId, label: result.label, superProblems: [], subProblems: [] });
+                    setIsLoadingData(false);
+                    setIsFailedLoadingData(false);
+                    document.title = `${result.label} - ORKG`;
+                })
+                .catch(error => {
+                    setIsLoadingData(false);
+                    setIsFailedLoadingData(true);
+                });
 
             // Get description, same as and sub-problems of the research problem
             getStatementsBySubject({ id: rpId }).then(statements => {
@@ -41,6 +48,6 @@ function useResearchProblem(initialVal = {}) {
             loadResearchProblemData(researchProblemId);
         }
     }, [researchProblemId, loadResearchProblemData]);
-    return [data, isLoadingData, loadResearchProblemData];
+    return [data, isLoadingData, isFailedLoadingData, loadResearchProblemData];
 }
 export default useResearchProblem;
