@@ -85,7 +85,7 @@ function ClassDetails(props) {
                                 <tr>
                                     <th scope="row">Class URI</th>
                                     <td>
-                                        <i>{uri ? <a href={uri}>{uri}</a> : 'Not Defined'}</i>
+                                        <i>{uri && uri !== 'null' ? <a href={uri}>{uri}</a> : 'Not Defined'}</i>
                                     </td>
                                 </tr>
                                 <tr>
