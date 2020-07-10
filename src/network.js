@@ -8,6 +8,7 @@ export const annotationServiceUrl = process.env.REACT_APP_ANNOTATION_SERVICE_URL
 export const resourcesUrl = `${url}resources/`;
 export const organizationsUrl = `${url}organizations/`;
 export const observatoriesUrl = `${url}observatories/`;
+export const problemsUrl = `${url}problems/`;
 export const predicatesUrl = `${url}predicates/`;
 export const userUrl = `${url}user/`;
 export const statementsUrl = `${url}statements/`;
@@ -700,4 +701,8 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
             };
         });
     });
+};
+
+export const getResearchFieldsByResearchProblemId = problemId => {
+    return submitGetRequest(`${problemsUrl}${encodeURIComponent(problemId)}/fields`);
 };
