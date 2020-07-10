@@ -3,6 +3,18 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.15](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.14...V0.15) - 2020-07-10
+
+### Merged
+
+- improvement: Show linked research fields to research problem [`#316`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/316)
+- fix: fetching classes in add resource page [`#320`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/320)
+
+### Fixed
+
+- Merge branch '271-bug-add-resource-page-is-broken' into 'master' [`#271`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/271)
+
+---
 ## [0.14](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.13...V0.14) - 2020-07-09
 
 ### Merged
