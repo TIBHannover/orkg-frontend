@@ -29,7 +29,7 @@ export default class AddResource extends Component {
     };
 
     getClasses = () => {
-        getAllClasses().then(classes => {
+        getAllClasses({}).then(classes => {
             this.setState({ classesOptions: classes });
         });
     };
