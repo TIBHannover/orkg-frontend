@@ -42,7 +42,7 @@ const PdfAnnotation = () => {
                 console.log(difference);
             } */
         } else {
-            setZoom(this.getFullPageScale());
+            setZoom(getFullPageScale());
         }
     };
 
