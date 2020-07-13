@@ -146,14 +146,20 @@ class EditorComponent extends BaseEditorComponent {
         return false;
     };
 
-    loadResults = async () => {
-        const { type, value } = this.state;
+    loadResults = async (e = null) => {
+        let { value } = this.state;
+        const { type } = this.state;
+
+        if (e) {
+            value = e.target.value;
+        }
+
         const url = type === 'resource' || type === 'researchField' ? resourcesUrl : predicatesUrl;
         let responseJson = [];
         if (type === 'researchField') {
             responseJson = await getResourcesByClass({
                 id: process.env.REACT_APP_CLASSES_RESEARCH_FIELD,
-                q: encodeURIComponent(value),
+                q: value,
                 items: 10
             });
         } else {
@@ -226,7 +232,7 @@ class EditorComponent extends BaseEditorComponent {
                                 list="options"
                                 value={value}
                                 onChange={this.handleSearchChange}
-                                onClick={this.handleSearchChange}
+                                onClick={this.loadResults}
                                 style={{ width: '100%' }}
                                 placeholder="Start searching now..."
                             />
