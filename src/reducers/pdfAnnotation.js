@@ -104,7 +104,8 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 pdfParseIsFetching: false,
-                pdfParseFailed: true
+                pdfParseFailed: true,
+                parsedPdfData: document.createElement('div') // create an empty parsing result
             };
         }
 
