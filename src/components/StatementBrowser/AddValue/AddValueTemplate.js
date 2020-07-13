@@ -227,17 +227,37 @@ export default function AddValueTemplate(props) {
                         {!props.valueClass && (
                             <InputGroupButtonDropdown addonType="prepend" isOpen={dropdownValueTypeOpen} toggle={setDropdownValueTypeOpen}>
                                 <StyledDropdownToggle>
-                                    <small>{valueType.charAt(0).toUpperCase() + valueType.slice(1) + ' '}</small>
+                                    <Tippy
+                                        content={
+                                            valueType === 'object' ? (
+                                                <>
+                                                    Choose object to link this to an object, which can contain values on its own. <br /> To fetch an
+                                                    existing resource by ID just type “#” without quotes following with the resource ID (e.g: #R12).
+                                                </>
+                                            ) : (
+                                                'Choose literal for values like numbers, plain text or mathematical expressions using TeX delimiters $$...$$'
+                                            )
+                                        }
+                                    >
+                                        <small>{valueType.charAt(0).toUpperCase() + valueType.slice(1) + ' '}</small>
+                                    </Tippy>
                                     <Icon size="xs" icon={faBars} />
                                 </StyledDropdownToggle>
                                 <DropdownMenu>
                                     <StyledDropdownItem onClick={() => setValueType('object')}>
-                                        <Tippy content="Choose object to link this to an object, which can contain values on its own">
+                                        <Tippy
+                                            content={
+                                                <>
+                                                    Choose object to link this to an object, which can contain values on its own. <br /> To fetch an
+                                                    existing resource by ID just type “#” without quotes following with the resource ID (e.g: #R12).
+                                                </>
+                                            }
+                                        >
                                             <span>Object</span>
                                         </Tippy>
                                     </StyledDropdownItem>
                                     <StyledDropdownItem onClick={() => setValueType('literal')}>
-                                        <Tippy content="Choose literal for values like numbers or plain text">
+                                        <Tippy content="Choose literal for values like numbers, plain text or mathematical expressions using TeX delimiters $$...$$">
                                             <span>Literal</span>
                                         </Tippy>
                                     </StyledDropdownItem>
