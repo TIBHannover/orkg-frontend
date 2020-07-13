@@ -294,10 +294,12 @@ const ExtractReferencesModal = props => {
                         <Input type="select" value={formattingType} onChange={e => setFormattingType(e.target.value)} id="columnFormatting">
                             <option value="numerical">Numerical ([1]; [2])</option>
                             <option value="author-names">Author last name (Doe, 2020; Doe et al., 2020)</option>
+                            {/* 
                             <option value="author-names2">Author last name (Doe, 2020; Doe and Reed, 2020; Doe et al., 2020)</option>
                             <option value="author-names3">
                                 Author last name (Doe, 2020; Doe and Reed, 2020; Doe and Reed and Li 2020; Doe et al. 2020)
                             </option>
+                            */}
                         </Input>
                     </FormGroup>
                 </Form>
