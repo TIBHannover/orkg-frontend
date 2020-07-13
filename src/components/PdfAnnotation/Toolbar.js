@@ -1,9 +1,11 @@
 import React from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
-import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSearchMinus, faSearchPlus, faExpandArrowsAlt } from '@fortawesome/free-solid-svg-icons';
-import { useSelector } from 'react-redux';
+import { faSearchMinus, faSearchPlus, faExpandArrowsAlt, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { resetPdfAnnotation } from 'actions/pdfAnnotation';
+import { useSelector, useDispatch } from 'react-redux';
+import Confirm from 'reactstrap-confirm';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 const ToolbarStyled = styled.div`
@@ -20,6 +22,20 @@ const ToolbarStyled = styled.div`
 
 const Toolbar = props => {
     const pdf = useSelector(state => state.pdfAnnotation.pdf);
+    const dispatch = useDispatch();
+
+    // Reset the pdf Annotation state
+    const discardPdfFile = async () => {
+        const result = await Confirm({
+            title: 'Are you sure?',
+            message: 'Are you sure you want to discard this PDF file?',
+            cancelColor: 'light'
+        });
+
+        if (result) {
+            dispatch(resetPdfAnnotation());
+        }
+    };
 
     return (
         <ToolbarStyled>
@@ -68,6 +84,11 @@ const Toolbar = props => {
                         <Icon icon={faExpandArrowsAlt} />
                     </Button>
                 </ButtonGroup>
+                {pdf && (
+                    <Button className="mr-2" color="darkblueDarker" disabled={!pdf} size="sm" onClick={discardPdfFile}>
+                        <Icon icon={faTimesCircle} className="mr-1" /> Discard PDF
+                    </Button>
+                )}
             </div>
         </ToolbarStyled>
     );

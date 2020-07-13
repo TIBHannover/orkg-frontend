@@ -90,6 +90,12 @@ export const setFile = ({ pages, pdf, styles }) => dispatch => {
     });
 };
 
+export const resetPdfAnnotation = () => dispatch => {
+    dispatch({
+        type: type.PDF_ANNOTATION_RESET_DATA
+    });
+};
+
 /**
  * Converts PDF file into HTML
  *

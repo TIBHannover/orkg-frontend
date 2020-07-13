@@ -149,6 +149,10 @@ export default (state = initialState, action) => {
             };
         }
 
+        case type.PDF_ANNOTATION_RESET_DATA: {
+            return initialState;
+        }
+
         default: {
             return state;
         }
