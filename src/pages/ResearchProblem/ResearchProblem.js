@@ -5,11 +5,11 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ResearchProblemHeaderBar from './ResearchProblemHeaderBar';
 import useResearchProblem from './hooks/useResearchProblem';
 import useResearchProblemPapers from './hooks/useResearchProblemPapers';
-import useResearchProblemStatistics from './hooks/useResearchProblemStatistics';
+import useResearchProblemResearchFields from './hooks/useResearchProblemResearchFields';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
-//import ContributorCard from 'components/ContributorCard/ContributorCard';
+//import LeaderBoard from './LeaderBoard';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ExternalDescription from './ExternalDescription';
@@ -28,10 +28,8 @@ function ResearchProblem(props) {
     const [researchProblemData, isLoading, isFailedLoading, loadResearchProblemData] = useResearchProblem();
     const [editMode, setEditMode] = useState(false);
     const prevEditMode = usePrevious({ editMode });
-    //const [isContributorsModalOpen, setIsContributorsModalOpen] = useState(false);
-    //const [contributors, setContributors] = useState([]);
     const [contributions, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchProblemPapers();
-    const [researchFields, isLoadingResearchFields] = useResearchProblemStatistics();
+    const [researchFields, isLoadingResearchFields] = useResearchProblemResearchFields();
 
     useEffect(() => {
         if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
@@ -103,7 +101,7 @@ function ResearchProblem(props) {
                                                 <ul className="pl-1">
                                                     {researchFields.map(researchField => {
                                                         return (
-                                                            <li key={`rf${researchField.field.resourceId}`}>
+                                                            <li key={`rf${researchField.field.id}`}>
                                                                 <Link
                                                                     to={reverse(ROUTES.RESEARCH_FIELD, {
                                                                         researchFieldId: researchField.field.id
@@ -154,60 +152,10 @@ function ResearchProblem(props) {
                                 </div>
                             </Col>
                         </Row>
-                        {/*
+                        {/* 
                         <Row className="mt-3">
                             <Col md="4" className="d-flex">
-                                <div className="box rounded-lg p-4 flex-grow-1">
-                                    <h5>Leaderboard</h5>
-                                    Coming soon
-                                    {/* 
-                                    <div className="mt-2">
-                                        <div>
-                                            <ContributorCard
-                                                contributor={{
-                                                    ...{ id: '', display_name: 'Display name', email: 'test@example.com' },
-                                                    subTitle: '4 papers'
-                                                }}
-                                            />
-                                            <hr style={{ width: '90%', margin: '10px auto' }} />
-                                        </div>
-                                    </div>
-                                            
-                                </div>
-                                
-                                {contributors.length > 3 && (
-                                    <>
-                                        <Button
-                                            onClick={() => setIsContributorsModalOpen(v => !v)}
-                                            className="mt-1 float-right clearfix p-0"
-                                            color="link"
-                                        >
-                                            <small>+ See more</small>
-                                        </Button>
-                                        <Modal isOpen={isContributorsModalOpen} toggle={() => setIsContributorsModalOpen(v => !v)} size="lg">
-                                            <ModalHeader toggle={() => setIsContributorsModalOpen(v => !v)}>Contributors</ModalHeader>
-                                            <ModalBody>
-                                                <div className="clearfix">
-                                                    {contributors.map((user, index) => {
-                                                        return (
-                                                            <div key={`moc${index}`}>
-                                                                <ContributorCard
-                                                                    contributor={{
-                                                                        ...user,
-                                                                        subTitle: '4 papers'
-                                                                    }}
-                                                                />
-
-                                                                <hr style={{ width: '90%', margin: '10px auto' }} />
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            </ModalBody>
-                                        </Modal>
-                                    </>
-                                )}
-                                
+                                <LeaderBoard />
                             </Col>
                             <Col md="4" className="d-flex">
                                 <div className="box rounded-lg p-4 flex-grow-1">
@@ -216,8 +164,7 @@ function ResearchProblem(props) {
                                 </div>
                             </Col>
                         </Row>
-                        {/*
-                         */}
+                        */}
                     </Container>
 
                     <Container className="p-0">
