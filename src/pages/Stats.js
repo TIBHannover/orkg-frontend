@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Container, Row } from 'reactstrap';
 import { faStream, faBars, faHeading, faTag } from '@fortawesome/free-solid-svg-icons';
-import ColoredStatsBox from './ColoredStatsBox';
-import InlineStatsBox from './InlineStatsBox';
+import ColoredStatsBox from 'components/Stats/ColoredStatsBox';
+import InlineStatsBox from 'components/Stats/InlineStatsBox';
 import { toast } from 'react-toastify';
-import { getStats } from '../../network';
+import { getStats } from '../network';
 
 class Stats extends Component {
     constructor(props) {

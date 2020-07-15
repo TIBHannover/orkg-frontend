@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import ShortRecord from '../components/ShortRecord/ShortRecord';
+import ShortRecord from '../../components/ShortRecord/ShortRecord';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { getAllResources } from '../network';
+import { getAllResources } from '../../network';
 import { Container } from 'reactstrap';
-import ROUTES from '../constants/routes';
+import ROUTES from '../../constants/routes';
 import { reverse } from 'named-urls';
 
 export default class Resources extends Component {

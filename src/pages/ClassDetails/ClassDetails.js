@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Table } from 'reactstrap';
 import { classesUrl, submitGetRequest, getStatementsByObjectAndPredicate } from 'network';
-import InternalServerError from 'components/StaticPages/InternalServerError';
-import NotFound from 'components/StaticPages/NotFound';
+import InternalServerError from 'pages/InternalServerError';
+import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';

@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Container, Button } from 'reactstrap';
 import { getPredicate } from 'network';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
-import InternalServerError from 'components/StaticPages/InternalServerError';
-import NotFound from 'components/StaticPages/NotFound';
+import InternalServerError from 'pages/InternalServerError';
+import NotFound from 'pages/NotFound';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { EditModeHeader, Title } from 'components/ViewPaper/ViewPaper';
+import { EditModeHeader, Title } from 'pages/ViewPaper';
 import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 
-function PredicateDetails(props) {
+function Predicate(props) {
     const location = useLocation();
     const [error, setError] = useState(null);
     const [label, setLabel] = useState('');
@@ -89,7 +89,7 @@ function PredicateDetails(props) {
     );
 }
 
-PredicateDetails.propTypes = {
+Predicate.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
             id: PropTypes.string.isRequired
@@ -97,4 +97,4 @@ PredicateDetails.propTypes = {
     }).isRequired
 };
 
-export default PredicateDetails;
+export default Predicate;

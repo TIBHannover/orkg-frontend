@@ -8,8 +8,8 @@ import queryString from 'query-string';
 import ContentLoader from 'react-content-loader';
 import { getResourcesByClass, getAllPredicates, getAllResources } from 'network';
 import ROUTES from 'constants/routes.js';
-import Results from './Results';
-import Filters from './Filters';
+import Results from '../components/Search/Results';
+import Filters from '../components/Search/Filters';
 import { toast } from 'react-toastify';
 
 class Search extends Component {

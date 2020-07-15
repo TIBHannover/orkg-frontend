@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import ShortRecord from '../components/ShortRecord/ShortRecord';
+import ShortRecord from '../../components/ShortRecord/ShortRecord';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
-import { getAllObservatoriesByOrganizationId, getOrganization } from '../network';
+import { getAllObservatoriesByOrganizationId, getOrganization } from '../../network';
 import { Container } from 'reactstrap';
 import PropTypes from 'prop-types';
-import ROUTES from '../constants/routes';
+import ROUTES from '../../constants/routes';
 import { reverse } from 'named-urls';
 
 class OrganizationObservatories extends Component {

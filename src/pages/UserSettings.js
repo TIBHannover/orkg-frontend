@@ -2,8 +2,8 @@ import { Container, Row, TabContent, TabPane } from 'reactstrap';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import classnames from 'classnames';
-import GeneralSettings from './GeneralSettings';
-import Password from './Password';
+import GeneralSettings from '../components/UserSettings/GeneralSettings';
+import Password from '../components/UserSettings/Password';
 
 export const StyledSettingsMenu = styled.ul`
     list-style: none;

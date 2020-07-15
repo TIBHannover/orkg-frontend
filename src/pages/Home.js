@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faStream } from '@fortawesome/free-solid-svg-icons';
-import ResearchFieldCards from './ResearchFieldCards';
-import Sidebar from './Sidebar';
-import FeaturedComparisons from './FeaturedComparisons';
-import Jumbotron from './Jumbotron';
+import ResearchFieldCards from '../components/Home/ResearchFieldCards';
+import Sidebar from '../components/Home/Sidebar';
+import FeaturedComparisons from '../components/Home/FeaturedComparisons';
+import Jumbotron from '../components/Home/Jumbotron';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 

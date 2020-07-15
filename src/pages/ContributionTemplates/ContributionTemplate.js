@@ -3,20 +3,20 @@ import { Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink, ButtonGro
 import classnames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { EditModeHeader, Title } from 'components/ViewPaper/ViewPaper';
+import { EditModeHeader, Title } from 'pages/ViewPaper';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { setEditMode, loadTemplate, saveTemplate, setIsLoading, doneLoading } from 'actions/addTemplate';
 import { faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled, { withTheme } from 'styled-components';
 import ROUTES from 'constants/routes.js';
-import { StyledContainer } from './styled';
+import { StyledContainer } from '../../components/ContributionTemplates/styled';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
-import GeneralSettings from './Tabs/GeneralSettings/GeneralSettings';
-import TemplateEditorHeaderBar from './TemplateEditorHeaderBar';
+import GeneralSettings from '../../components/ContributionTemplates/Tabs/GeneralSettings/GeneralSettings';
+import TemplateEditorHeaderBar from '../../components/ContributionTemplates/TemplateEditorHeaderBar';
 import VisibilitySensor from 'react-visibility-sensor';
-import ComponentsTab from './Tabs/ComponentsTab/ComponentsTab';
-import Format from './Tabs/Format/Format';
+import ComponentsTab from '../../components/ContributionTemplates/Tabs/ComponentsTab/ComponentsTab';
+import Format from '../../components/ContributionTemplates/Tabs/Format/Format';
 
 const TabPaneStyled = styled(TabPane)`
     border: 1px solid #ced4da;

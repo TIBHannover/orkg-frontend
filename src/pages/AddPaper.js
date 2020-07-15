@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
 import { Container, Button } from 'reactstrap';
 import { compose } from 'redux';
-import ProgressBar from './ProgressBar';
-import GeneralData from './GeneralData/GeneralData';
-import ResearchField from './ResearchField/ResearchField';
-import Contributions from './Contributions/Contributions';
+import ProgressBar from '../components/AddPaper/ProgressBar';
+import GeneralData from '../components/AddPaper/GeneralData/GeneralData';
+import ResearchField from '../components/AddPaper/ResearchField/ResearchField';
+import Contributions from '../components/AddPaper/Contributions/Contributions';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestion, faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
-import Finish from './Finish/Finish';
+import Finish from '../components/AddPaper/Finish/Finish';
 import { withCookies } from 'react-cookie';
 import { connect } from 'react-redux';
 import styled, { withTheme } from 'styled-components';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
-import { resetStatementBrowser } from '../../actions/statementBrowser';
-import { openTour, closeTour, blockNavigation, loadPaperData } from '../../actions/addPaper';
+import { resetStatementBrowser } from '../actions/statementBrowser';
+import { openTour, closeTour, blockNavigation, loadPaperData } from '../actions/addPaper';
 import { Prompt } from 'react-router';
-import GizmoGraphViewModal from '../ViewPaper/GraphView/GizmoGraphViewModal';
+import GizmoGraphViewModal from '../components/ViewPaper/GraphView/GizmoGraphViewModal';
 
 const Help = styled.div`
     box-sizing: border-box;

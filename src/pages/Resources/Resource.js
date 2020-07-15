@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Container, Button, FormGroup, Label, FormText } from 'reactstrap';
 import { getResource, classesUrl, submitGetRequest, createClass, updateResourceClasses as updateResourceClassesNetwork } from 'network';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
-import { EditModeHeader, Title } from 'components/ViewPaper/ViewPaper';
+import { EditModeHeader, Title } from 'pages/ViewPaper';
 import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
-import InternalServerError from 'components/StaticPages/InternalServerError';
-import SameAsStatements from './SameAsStatements';
+import InternalServerError from 'pages/InternalServerError';
+import SameAsStatements from '../SameAsStatements';
 import EditableHeader from 'components/EditableHeader';
 import ObjectStatements from 'components/ObjectStatements/ObjectStatements';
-import NotFound from 'components/StaticPages/NotFound';
+import NotFound from 'pages/NotFound';
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
@@ -22,7 +22,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
 
-function ResourceDetails(props) {
+function Resource(props) {
     const location = useLocation();
     const [error, setError] = useState(null);
     const [label, setLabel] = useState('');
@@ -169,7 +169,7 @@ function ResourceDetails(props) {
     );
 }
 
-ResourceDetails.propTypes = {
+Resource.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
             id: PropTypes.string.isRequired
@@ -185,4 +185,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
     null,
     mapDispatchToProps
-)(ResourceDetails);
+)(Resource);

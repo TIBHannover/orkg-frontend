@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, NavLink, Button, Card, CardTitle } from 'reactstrap';
 import { getOrganization, getUsersByOrganizationId, getAllObservatoriesByOrganizationId } from 'network';
-import InternalServerError from 'components/StaticPages/InternalServerError';
+import InternalServerError from 'pages/InternalServerError';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-import NotFound from 'components/StaticPages/NotFound';
+import NotFound from 'pages/NotFound';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';

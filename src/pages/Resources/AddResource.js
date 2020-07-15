@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { createLiteralStatement, createResource, crossrefUrl, submitGetRequest, createLiteral } from '../network';
+import { createLiteralStatement, createResource, crossrefUrl, submitGetRequest, createLiteral } from '../../network';
 import { Redirect } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { getAllClasses } from 'network';
 import Select from 'react-select';
 import { reverse } from 'named-urls';
-import ROUTES from '../constants/routes';
+import ROUTES from '../../constants/routes';
 
 export default class AddResource extends Component {
     constructor(props) {

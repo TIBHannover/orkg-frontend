@@ -10,11 +10,11 @@ import {
     getObservatoryById,
     getStatementsBySubjects
 } from 'network';
-import InternalServerError from 'components/StaticPages/InternalServerError';
+import InternalServerError from 'pages/InternalServerError';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
-import NotFound from 'components/StaticPages/NotFound';
+import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';

@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
-import { Container, Button, Card, CardText, CardBody, CardHeader, CardFooter } from 'reactstrap';
+import { Container, Button, Card, CardText, CardBody, CardHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { getStatementsByObject, getResource, getStatementsBySubjects } from '../../network';
-import { reverse } from 'named-urls';
-import ROUTES from '../../constants/routes.js';
-import PaperCard from '../PaperCard/PaperCard';
+import { getStatementsByObject, getResource, getStatementsBySubjects } from 'network';
+import ROUTES from 'constants/routes.js';
+import PaperCard from '../components/PaperCard/PaperCard';
 import { getPaperData } from 'utils';
 import { find } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 
-class ResearchField extends Component {
+class VenuePage extends Component {
     constructor(props) {
         super(props);
 
@@ -22,49 +21,47 @@ class ResearchField extends Component {
             isNextPageLoading: false,
             hasNextPage: false,
             page: 1,
-            researchField: null,
+            venue: null,
             papers: [],
-            parentResearchField: null,
             isLastPageReached: false
         };
     }
 
     componentDidMount() {
-        this.loadResearchFieldData();
+        this.loadVenueData();
         this.loadMorePapers();
     }
 
     componentDidUpdate = prevProps => {
-        if (this.props.match.params.researchFieldId !== prevProps.match.params.researchFieldId) {
+        if (this.props.match.params.venueId !== prevProps.match.params.venueId) {
             this.setState({
                 loading: true,
                 isNextPageLoading: false,
                 hasNextPage: false,
                 page: 1,
-                researchField: null,
+                venue: null,
                 papers: [],
-                parentResearchField: null,
                 isLastPageReached: false
             });
-            this.loadResearchFieldData();
+            this.loadVenueData();
             this.loadMorePapers();
         }
     };
 
-    loadResearchFieldData = () => {
-        // Get the research field
-        getResource(this.props.match.params.researchFieldId).then(result => {
-            this.setState({ researchField: result, papers: [], loading: false }, () => {
-                document.title = `${this.state.researchField.label} - ORKG`;
+    loadVenueData = () => {
+        // Get the venue
+        getResource(this.props.match.params.venueId).then(result => {
+            this.setState({ venue: result, papers: [], loading: false }, () => {
+                document.title = `${this.state.venue.label} - ORKG`;
             });
         });
     };
 
     loadMorePapers = () => {
         this.setState({ isNextPageLoading: true });
-        // Get the statements that contains the research field as an object
+        // Get the statements that contains the venue as an object
         getStatementsByObject({
-            id: this.props.match.params.researchFieldId,
+            id: this.props.match.params.venueId,
             page: this.state.page,
             items: this.pageSize,
             sortBy: 'created_at',
@@ -72,13 +69,9 @@ class ResearchField extends Component {
         }).then(result => {
             // Papers
             if (result.length > 0) {
-                const parentResearchField = result.find(statement => statement.predicate.id === 'P36');
                 // Fetch the data of each paper
                 getStatementsBySubjects({
-                    ids: result
-                        .filter(paper => paper.subject.classes.includes(process.env.REACT_APP_CLASSES_PAPER))
-                        .filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD)
-                        .map(p => p.subject.id)
+                    ids: result.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_VENUE).map(p => p.subject.id)
                 })
                     .then(papersStatements => {
                         const papers = papersStatements.map(paperStatements => {
@@ -91,7 +84,6 @@ class ResearchField extends Component {
                         });
                         this.setState({
                             papers: [...this.state.papers, ...papers],
-                            parentResearchField: parentResearchField,
                             isNextPageLoading: false,
                             hasNextPage: papers.length < this.pageSize || papers.length === 0 ? false : true,
                             page: this.state.page + 1
@@ -131,24 +123,13 @@ class ResearchField extends Component {
                                     {/* TODO: Show the total number of papers when number of items is provided with the paginated result
                                         <div className="float-right"><b>{this.state.papers.length}</b> Papers</div>
                                     */}
-                                    <h3 className="h4 mt-4 mb-4">{this.state.researchField && this.state.researchField.label}</h3>
+                                    <h3 className="h4 mt-4 mb-4">{this.state.venue && this.state.venue.label}</h3>
                                 </CardHeader>
                                 <CardBody>
                                     <CardText>
-                                        List of papers in <i>{this.state.researchField && this.state.researchField.label}</i> research field
+                                        List of papers in <i>{this.state.venue && this.state.venue.label}</i> venue
                                     </CardText>
                                 </CardBody>
-                                {this.state.parentResearchField && (
-                                    <CardFooter>
-                                        Parent research field:
-                                        <Link
-                                            className="ml-2"
-                                            to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.parentResearchField.subject.id })}
-                                        >
-                                            {this.state.parentResearchField.subject.label}
-                                        </Link>
-                                    </CardFooter>
-                                )}
                             </Card>
                         </Container>
                         <br />
@@ -162,7 +143,7 @@ class ResearchField extends Component {
                             )}
                             {this.state.papers.length === 0 && !this.state.isNextPageLoading && (
                                 <div className="text-center mt-4 mb-4">
-                                    There are no articles for this research field, yet.
+                                    There are no articles for this venue, yet.
                                     <br />
                                     Start the graphing in ORKG by sharing a paper.
                                     <br />
@@ -199,12 +180,12 @@ class ResearchField extends Component {
     }
 }
 
-ResearchField.propTypes = {
+VenuePage.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
-            researchFieldId: PropTypes.string
+            venueId: PropTypes.string
         }).isRequired
     }).isRequired
 };
 
-export default ResearchField;
+export default VenuePage;

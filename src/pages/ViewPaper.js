@@ -12,15 +12,15 @@ import {
     deleteStatementById
 } from 'network';
 import { connect } from 'react-redux';
-import NotFound from '../StaticPages/NotFound';
+import NotFound from '../pages/NotFound';
 import ContentLoader from 'react-content-loader';
-import Contributions from './Contributions';
+import Contributions from '../components/ViewPaper/Contributions';
 import PropTypes from 'prop-types';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import PaperHeader from './PaperHeader';
+import PaperHeader from '../components/ViewPaper/PaperHeader';
 import { resetStatementBrowser } from 'actions/statementBrowser';
 import { loadPaper, selectContribution, setPaperAuthors } from 'actions/viewPaper';
-import GizmoGraphViewModal from './GraphView/GizmoGraphViewModal';
+import GizmoGraphViewModal from '../components/ViewPaper/GraphView/GizmoGraphViewModal';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
 import Confirm from 'reactstrap-confirm';
@@ -28,7 +28,7 @@ import VisibilitySensor from 'react-visibility-sensor';
 import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
 import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
-import SharePaper from './SharePaper';
+import SharePaper from '../components/ViewPaper/SharePaper';
 import { getPaperData_ViewPaper } from 'utils';
 
 export const EditModeHeader = styled(Container)`
