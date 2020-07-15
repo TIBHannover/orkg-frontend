@@ -1,4 +1,4 @@
-import * as type from '../actions/types';
+import * as type from 'actions/types';
 import dotProp from 'dot-prop-immutable';
 
 const initialState = {

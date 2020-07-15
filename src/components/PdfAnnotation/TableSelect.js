@@ -1,14 +1,14 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
+import { Button } from 'reactstrap';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { Button } from 'reactstrap';
 import ExtractionModal from './ExtractionModal';
-import { useSelector, useDispatch } from 'react-redux';
-import { addTableRegion, deleteTableRegion } from 'actions/pdfAnnotation';
+import { useSelector } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import useTableSelect from './hooks/useTableSelect';
 
-const Container = styled.div`
+const TableSelectContainer = styled.div`
     &.enable-table-select {
         // for pages
         cursor: crosshair; // set the cursor
@@ -32,7 +32,7 @@ const SelectHelper = styled.div`
     align-items: center;
 `;
 
-const RemoveButton = styled(Button)`
+const RemoveTableButton = styled(Button)`
     position: absolute;
     right: -10px;
     top: -10px;
@@ -43,102 +43,15 @@ const RemoveButton = styled(Button)`
 `;
 
 const TableSelect = props => {
-    const [isDragging, setIsDragging] = useState(false);
-    const selectedTool = useSelector(state => state.pdfAnnotation.selectedTool);
     const tableRegions = useSelector(state => state.pdfAnnotation.tableRegions);
-    const [coordinates, setCoordinates] = useState({
-        startX: -1,
-        startY: -1
-    });
-    const [rect, setRect] = useState({
-        x: null,
-        y: null,
-        w: null,
-        h: null
-    });
-    const [extractionModal, setExtractionModal] = useState({
-        show: false,
-        id: null,
-        region: {}
-    });
-    const dispatch = useDispatch();
-
-    const onMouseDown = useCallback(e => {
-        setCoordinates({
-            startX: e.nativeEvent.offsetX,
-            startY: e.nativeEvent.offsetY
-        });
-        setIsDragging(true);
-    }, []);
-
-    const onMouseMove = useCallback(
-        e => {
-            if (!isDragging || selectedTool !== 'tableSelect') {
-                return;
-            }
-
-            const event = e.nativeEvent;
-
-            setRect({
-                x: Math.min(coordinates.startX, event.offsetX),
-                y: Math.min(coordinates.startY, event.offsetY),
-                w: Math.abs(event.offsetX - coordinates.startX),
-                h: Math.abs(event.offsetY - coordinates.startY)
-            });
-        },
-        [coordinates, isDragging, selectedTool]
-    );
-
-    const onMouseUp = useCallback(
-        e => {
-            setIsDragging(false);
-
-            // don't create a region if it is too small
-            if (rect.w > 10 && rect.h > 10) {
-                dispatch(addTableRegion({ region: rect, page: props.pageNumber }));
-            }
-
-            setRect({
-                x: null,
-                y: null,
-                w: null,
-                h: null
-            });
-        },
-        [rect, props.pageNumber, dispatch]
-    );
-
-    const handleExtract = useCallback((e, id, region) => {
-        e.stopPropagation(); // don't propagate to mouse down for dragging
-
-        setExtractionModal({
-            show: true,
-            id,
-            region
-        });
-    }, []);
-
-    const toggleModel = useCallback(() => {
-        setExtractionModal({
-            ...extractionModal,
-            show: false
-        });
-    }, [extractionModal]);
-
-    // disable pointer events to ensure offsetX and offsetY on drag are from the page parent (and not other child elements)
-    const pointerStyles = { pointerEvents: selectedTool === 'tableSelect' ? 'none' : 'auto' };
-
-    const deleteRegion = useCallback(
-        (e, id) => {
-            e.stopPropagation();
-            dispatch(deleteTableRegion(id));
-        },
-        [dispatch]
+    const selectedTool = useSelector(state => state.pdfAnnotation.selectedTool);
+    const [onMouseDown, onMouseUp, onMouseMove, pointerStyles, rect, handleExtract, deleteRegion, extractionModal, toggleModel] = useTableSelect(
+        props
     );
 
     return (
         <>
-            <Container
+            <TableSelectContainer
                 className={selectedTool === 'tableSelect' && 'enable-table-select'}
                 onMouseDown={onMouseDown}
                 onMouseUp={onMouseUp}
@@ -155,9 +68,9 @@ const TableSelect = props => {
                             const { region } = tableRegions[key];
                             return (
                                 <SelectHelper style={{ top: region.y, left: region.x, width: region.w, height: region.h }} key={key}>
-                                    <RemoveButton color="darkblueDarker" size="sm" className="p-0" onMouseDown={e => deleteRegion(e, key)}>
+                                    <RemoveTableButton color="darkblueDarker" size="sm" className="p-0" onMouseDown={e => deleteRegion(e, key)}>
                                         <Icon icon={faTimes} />
-                                    </RemoveButton>
+                                    </RemoveTableButton>
                                     <Button
                                         style={{ pointerEvents: 'all' }}
                                         color="primary"
@@ -170,7 +83,7 @@ const TableSelect = props => {
                             );
                         })}
                 </div>
-            </Container>
+            </TableSelectContainer>
 
             {extractionModal.show && (
                 <ExtractionModal
@@ -187,7 +100,6 @@ const TableSelect = props => {
 
 TableSelect.propTypes = {
     children: PropTypes.node.isRequired,
-    selectedTool: PropTypes.string,
     pageNumber: PropTypes.number.isRequired
 };
 
