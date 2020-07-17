@@ -1,10 +1,10 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useState, useCallback } from 'react';
 import { StyledResearchFieldsInputFormControl, StyledResearchFieldBrowser } from './styled';
 import PropTypes from 'prop-types';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { components } from 'react-select';
 import { connect } from 'react-redux';
-import { guid } from 'utils';
+import { guid, compareOption } from 'utils';
 import { getResourcesByClass } from 'network';
 import styled from 'styled-components';
 
@@ -26,66 +26,64 @@ const StyledSelectOption = styled.div`
     }
 `;
 
-class ResearchProblemInput extends Component {
-    constructor(props) {
-        super(props);
+function ResearchProblemInput(props) {
+    const [problemBrowser, setProblemBrowser] = useState(null);
+    const [inputValue, setInputValue] = useState('');
+    const [createOnBlur, setCreateOnBlur] = useState(true);
 
-        this.state = {
-            problemBrowser: null,
-            inputValue: ''
-        };
-    }
+    const loadOptions = useCallback(
+        async value => {
+            try {
+                // Get the resoures that contains 'Problem' as a class
+                const responseJson = await getResourcesByClass({
+                    id: process.env.REACT_APP_CLASSES_PROBLEM,
+                    page: 1,
+                    items: 999,
+                    sortBy: 'created_at',
+                    desc: true,
+                    q: value
+                });
 
-    loadOptions = async value => {
-        try {
-            // Get the resoures that contains 'Problem' as a class
-            const responseJson = await getResourcesByClass({
-                id: process.env.REACT_APP_CLASSES_PROBLEM,
-                page: 1,
-                items: 999,
-                sortBy: 'created_at',
-                desc: true,
-                q: value
-            });
-
-            const research_problems = [];
-            // Add newly added problem from other contributions
-            for (const contributionId of this.props.contributions.allIds) {
-                const contribution = this.props.contributions.byId[contributionId];
-                for (const rp of contribution.researchProblems) {
-                    if (!rp.existingResourceId) {
-                        research_problems.push({ ...rp, new: true });
+                const research_problems = [];
+                // Add newly added problem from other contributions
+                for (const contributionId of props.contributions.allIds) {
+                    const contribution = props.contributions.byId[contributionId];
+                    for (const rp of contribution.researchProblems) {
+                        if (!rp.existingResourceId) {
+                            research_problems.push({ ...rp, new: true });
+                        }
                     }
                 }
+                responseJson.map(item =>
+                    research_problems.push({
+                        label: item.label,
+                        id: item.id,
+                        existingResourceId: item.id
+                    })
+                );
+
+                return research_problems;
+            } catch (err) {
+                console.error(err);
+                return [];
             }
-            responseJson.map(item =>
-                research_problems.push({
-                    label: item.label,
-                    id: item.id,
-                    existingResourceId: item.id
-                })
-            );
+        },
+        [props.contributions]
+    );
 
-            return research_problems;
-        } catch (err) {
-            console.error(err);
-            return [];
-        }
-    };
-
-    handleCreate = (inputValue, val) => {
+    const handleCreate = (inputValue, val) => {
         const newOption = {
             label: inputValue,
             id: guid()
         };
-        this.props.handler([...this.props.value, newOption], { ...val, createdOptionId: newOption.id });
+        props.handler([...props.value, newOption], { ...val, createdOptionId: newOption.id });
     };
 
-    closeProblemBrowser = () => {
-        this.setState({ problemBrowser: null });
-    };
+    const closeProblemBrowser = useCallback(() => {
+        setProblemBrowser(null);
+    }, []);
 
-    onKeyDown = event => {
+    const onKeyDown = useCallback(event => {
         switch (event.keyCode) {
             case 13: // ENTER
                 event.target.value.trim() === '' && event.preventDefault();
@@ -94,134 +92,167 @@ class ResearchProblemInput extends Component {
                 break;
             }
         }
-    };
+    }, []);
 
-    onInputChange = (inputValue, val) => {
+    const onInputChange = (inputVal, val) => {
         if (val.action === 'input-blur') {
-            if (this.state.inputValue !== '') {
-                this.handleCreate(this.state.inputValue, { action: 'create-option', createdOptionLabel: this.state.inputValue }); //inputvalue is not provided on blur, so use the state value
+            // check if there is an existing research problem
+
+            if (inputValue !== '' && createOnBlur) {
+                handleCreate(inputValue, { action: 'create-option', createdOptionLabel: inputValue }); //inputvalue is not provided on blur, so use the state value
             }
-            this.setState({
-                inputValue: ''
-            });
+            setInputValue('');
         } else if (val.action === 'input-change') {
-            this.setState({
-                inputValue
-            });
+            setInputValue(inputVal);
         } else if (val.action === 'set-value') {
-            this.setState({
-                inputValue: ''
-            });
+            setInputValue('');
         }
     };
 
-    render() {
-        const customStyles = {
-            control: (provided, state) => ({
-                ...provided,
-                background: 'inherit',
-                boxShadow: state.isFocused ? 0 : 0,
-                border: 0,
-                paddingLeft: 0,
-                paddingRight: 0
-            }),
-            multiValue: provided => ({
-                ...provided
-            }),
-            menu: provided => ({
-                ...provided,
-                zIndex: 10
-            }),
-            multiValueLabel: provided => ({
-                ...provided,
-                whiteSpace: 'normal'
-            }),
-            option: provided => ({
-                ...provided,
-                whiteSpace: 'normal'
-            }),
-            input: provided => ({
-                ...provided,
-                whiteSpace: 'normal'
-            })
-        };
+    const customStyles = {
+        control: (provided, state) => ({
+            ...provided,
+            background: 'inherit',
+            boxShadow: state.isFocused ? 0 : 0,
+            border: 0,
+            paddingLeft: 0,
+            paddingRight: 0
+        }),
+        multiValue: provided => ({
+            ...provided
+        }),
+        menu: provided => ({
+            ...provided,
+            zIndex: 10
+        }),
+        multiValueLabel: provided => ({
+            ...provided,
+            whiteSpace: 'normal'
+        }),
+        option: provided => ({
+            ...provided,
+            whiteSpace: 'normal'
+        }),
+        input: provided => ({
+            ...provided,
+            whiteSpace: 'normal'
+        })
+    };
 
-        const Menu = props => {
-            return (
-                <Fragment>
-                    <components.Menu {...props}>{props.children}</components.Menu>
-                </Fragment>
-            );
-        };
-
-        const MultiValueLabel = props => {
-            return (
-                <div
-                    onClick={() => {
-                        this.setState({
-                            problemBrowser: props.data
-                        });
-                    }}
-                >
-                    <components.MultiValueLabel {...props} />
-                </div>
-            );
-        };
-
-        const Option = ({ children, ...props }) => {
-            return (
-                <components.Option {...props}>
-                    <StyledSelectOption>
-                        <span>{children}</span>
-                        {props.data.new && <span className="badge">New</span>}
-                    </StyledSelectOption>
-                </components.Option>
-            );
-        };
-
+    const Menu = useCallback(iprops => {
         return (
-            <>
-                <StyledResearchFieldsInputFormControl id="researchProblemFormControl" className="form-control">
-                    <AsyncCreatableSelect
-                        value={this.props.value}
-                        inputValue={this.state.inputValue}
-                        onInputChange={this.onInputChange}
-                        getOptionLabel={({ label }) => label}
-                        getOptionValue={({ id }) => id}
-                        onChange={this.props.handler}
-                        key={({ id }) => id}
-                        isClearable={false}
-                        isMulti
-                        openMenuOnClick={false}
-                        placeholder="Select or type something..."
-                        styles={customStyles}
-                        components={{ Menu, MultiValueLabel, Option }}
-                        onKeyDown={this.onKeyDown}
-                        cacheOptions
-                        loadOptions={this.loadOptions}
-                        onCreateOption={inputValue => this.handleCreate(inputValue, { action: 'create-option', createdOptionLabel: inputValue })}
-                        getNewOptionData={(inputValue, optionLabel) => ({ label: `Create research problem: "${inputValue}"`, id: inputValue })}
-                    />
-                </StyledResearchFieldsInputFormControl>
-                {false && (
-                    <StyledResearchFieldBrowser className="form-control">
-                        <button type="button" className="close" onClick={this.closeProblemBrowser}>
-                            <span>×</span>
-                        </button>
-                        <>Problem browser:</>
-                        <br />
-                        <>
-                            <b>ID</b> {this.state.problemBrowser.id}
-                        </>
-                        <br />
-                        <>
-                            <b>Label</b> {this.state.problemBrowser.label}
-                        </>
-                    </StyledResearchFieldBrowser>
-                )}
-            </>
+            <Fragment>
+                <components.Menu {...iprops}>{iprops.children}</components.Menu>
+            </Fragment>
         );
-    }
+    }, []);
+
+    const MultiValueLabel = useCallback(iprops => {
+        return (
+            <div
+                onClick={() => {
+                    this.setState({
+                        problemBrowser: iprops.data
+                    });
+                }}
+            >
+                <components.MultiValueLabel {...iprops} />
+            </div>
+        );
+    }, []);
+
+    const Option = useCallback(({ children, ...iprops }) => {
+        return (
+            <components.Option {...iprops}>
+                <StyledSelectOption>
+                    <span>{children}</span>
+                    {iprops.data.new && <span className="badge">New</span>}
+                </StyledSelectOption>
+            </components.Option>
+        );
+    }, []);
+
+    return (
+        <>
+            <StyledResearchFieldsInputFormControl id="researchProblemFormControl" className="form-control">
+                <AsyncCreatableSelect
+                    hideSelectedOptions={true}
+                    value={props.value}
+                    inputValue={inputValue}
+                    onInputChange={onInputChange}
+                    getOptionLabel={({ label }) => label}
+                    getOptionValue={({ id }) => id}
+                    onChange={props.handler}
+                    key={({ id }) => id}
+                    isClearable={false}
+                    isMulti
+                    openMenuOnClick={false}
+                    placeholder="Select or type something..."
+                    styles={customStyles}
+                    components={{ Menu, MultiValueLabel, Option }}
+                    onKeyDown={onKeyDown}
+                    cacheOptions
+                    loadOptions={loadOptions}
+                    onCreateOption={inputValue => handleCreate(inputValue, { action: 'create-option', createdOptionLabel: inputValue })}
+                    getNewOptionData={(inputValue, optionLabel) => ({ label: `Create research problem: "${inputValue}"`, id: inputValue })}
+                    isValidNewOption={(inputValue, selectValue, selectOptions) => {
+                        //check if label exists
+                        if (
+                            inputValue &&
+                            (selectOptions
+                                .map(s =>
+                                    String(s.label)
+                                        .trim()
+                                        .toLowerCase()
+                                )
+                                .includes(
+                                    String(inputValue)
+                                        .trim()
+                                        .toLowerCase()
+                                ) ||
+                                selectValue
+                                    .map(s =>
+                                        String(s.label)
+                                            .trim()
+                                            .toLowerCase()
+                                    )
+                                    .includes(
+                                        String(inputValue)
+                                            .trim()
+                                            .toLowerCase()
+                                    ))
+                        ) {
+                            setCreateOnBlur(false);
+                        } else {
+                            setCreateOnBlur(true);
+                        }
+
+                        return !(
+                            !inputValue ||
+                            selectValue.some(option => compareOption(inputValue, option)) ||
+                            selectOptions.some(option => compareOption(inputValue, option))
+                        );
+                    }}
+                />
+            </StyledResearchFieldsInputFormControl>
+            {false && (
+                <StyledResearchFieldBrowser className="form-control">
+                    <button type="button" className="close" onClick={closeProblemBrowser}>
+                        <span>×</span>
+                    </button>
+                    <>Problem browser:</>
+                    <br />
+                    <>
+                        <b>ID</b> {problemBrowser.id}
+                    </>
+                    <br />
+                    <>
+                        <b>Label</b> {problemBrowser.label}
+                    </>
+                </StyledResearchFieldBrowser>
+            )}
+        </>
+    );
 }
 
 ResearchProblemInput.propTypes = {
@@ -236,9 +267,4 @@ const mapStateToProps = state => {
     };
 };
 
-const mapDispatchToProps = dispatch => ({});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ResearchProblemInput);
+export default connect(mapStateToProps)(ResearchProblemInput);

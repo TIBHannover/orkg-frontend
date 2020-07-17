@@ -18,7 +18,7 @@ const initialState = {
     publicationYearResourceId: 0,
     doi: '',
     doiResourceId: 0,
-    researchField: '',
+    researchField: {},
     publishedIn: '',
     url: '',
     urlResourceId: 0

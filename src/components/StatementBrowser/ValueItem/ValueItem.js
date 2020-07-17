@@ -128,7 +128,8 @@ export default function ValueItem(props) {
         props.selectResource({
             increaseLevel: true,
             resourceId: props.value.resourceId,
-            label: props.value.label
+            label: props.value.label,
+            propertyLabel: props.properties.byId[props.propertyId].label
         });
     };
 
@@ -142,7 +143,8 @@ export default function ValueItem(props) {
         props.selectResource({
             increaseLevel: true,
             resourceId: ressource.id,
-            label: ressource.rlabel ? ressource.rlabel : ressource.label
+            label: ressource.rlabel ? ressource.rlabel : ressource.label,
+            propertyLabel: props.properties.byId[props.propertyId].label
         });
 
         props.fetchStatementsForResource({
@@ -251,13 +253,13 @@ export default function ValueItem(props) {
         handleOnClick = handleResourceClick;
     }
 
-    const generatdFormatedlabel = labelFormat => {
+    const generatedFormattedLabel = labelFormat => {
         const resource = props.resources.byId[props.value.resourceId];
         const valueObject = {};
         for (const propertyId of resource.propertyIds) {
             const property = props.properties.byId[propertyId];
             valueObject[property.existingPredicateId] =
-                property.valueIds && property.valueIds.length > 0 ? props.values.byId[property.valueIds[0]].label : '';
+                property.valueIds && property.valueIds.length > 0 ? props.values.byId[property.valueIds[0]].label : property.label;
         }
         if (Object.keys(valueObject).length > 0) {
             return format(labelFormat, valueObject);
@@ -276,7 +278,7 @@ export default function ValueItem(props) {
                 }
             }
             templateIds = uniq(templateIds);
-            // check if it formated label
+            // check if it formatted label
             let hasLabelFormat = false;
             let labelFormat = '';
             for (const templateId of templateIds) {
@@ -297,10 +299,10 @@ export default function ValueItem(props) {
                         existingResourceId
                     })
                     .then(() => {
-                        return generatdFormatedlabel(labelFormat);
+                        return generatedFormattedLabel(labelFormat);
                     });
             } else {
-                return generatdFormatedlabel(labelFormat);
+                return generatedFormattedLabel(labelFormat);
             }
         } else {
             return props.value.label;

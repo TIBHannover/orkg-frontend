@@ -13,7 +13,6 @@ const initialState = {
     labelFormat: '',
     error: null,
     components: [],
-    subTemplates: [],
     isLoading: false,
     statements: [],
     isSaving: false
@@ -111,15 +110,6 @@ export default (state = initialState, action) => {
             };
         }
 
-        case type.TEMPLATE_SET_SUB_TEMPLATES: {
-            const { payload } = action;
-
-            return {
-                ...state,
-                subTemplates: payload
-            };
-        }
-
         case type.TEMPLATE_INIT: {
             const { payload } = action;
             return {
@@ -134,8 +124,7 @@ export default (state = initialState, action) => {
                 class: payload.class,
                 components: payload.components,
                 researchFields: payload.researchFields,
-                researchProblems: payload.researchProblems,
-                subTemplates: payload.subTemplates
+                researchProblems: payload.researchProblems
             };
         }
 
@@ -157,6 +146,13 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 isSaving: true
+            };
+        }
+
+        case type.FAILURE_SAVING_TEMPLATE: {
+            return {
+                ...state,
+                isSaving: false
             };
         }
 

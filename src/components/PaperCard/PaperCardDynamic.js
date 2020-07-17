@@ -7,6 +7,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
+import { getPublicationMonth, getPublicationYear, getAuthors } from 'utils';
 import moment from 'moment';
 import ContentLoader from 'react-content-loader';
 
@@ -68,39 +69,13 @@ class PaperCardDynamic extends Component {
     getPaperDataForViewAllPapers = paperStatements => {
         // research field
         // publication year
-        // we dont show research field here
-        let publicationYear = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
-        if (publicationYear.length > 0) {
-            publicationYear = publicationYear[0].object.label;
-        } else {
-            publicationYear = '';
-        }
-        // publication month
-        let publicationMonth = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH);
-        if (publicationMonth.length > 0) {
-            publicationMonth = publicationMonth[0].object.label;
-        } else {
-            publicationMonth = '';
-        }
-        // authors
-        const authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
-        const authorNamesArray = [];
-        if (authors.length > 0) {
-            for (const author of authors) {
-                authorNamesArray.push({
-                    id: author.object.id,
-                    statementId: author.id,
-                    class: author.object._class,
-                    label: author.object.label,
-                    classes: author.object.classes,
-                    created_at: author.created_at
-                });
-            }
-        }
+        const publicationYear = getPublicationYear(paperStatements)[0]; // gets year[0] and resourceId[1]
+        const publicationMonth = getPublicationMonth(paperStatements)[0]; // gets month[0] and resourceId[1]
+        const authors = getAuthors(paperStatements);
         return {
             publicationYear,
             publicationMonth,
-            authorNames: authorNamesArray.sort((a, b) => a.created_at.localeCompare(b.created_at))
+            authorNames: authors.sort((a, b) => a.created_at.localeCompare(b.created_at))
         };
     };
 
@@ -123,9 +98,9 @@ class PaperCardDynamic extends Component {
                                 {(this.state.optimizedPaperObject.publicationMonth || this.state.optimizedPaperObject.publicationYear) && (
                                     <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />
                                 )}
-                                {this.state.optimizedPaperObject.publicationMonth &&
-                                    this.state.optimizedPaperObject.length > 0 &&
-                                    moment(this.state.optimizedPaperObject.publicationMonth, 'M').format('MMMM') + ' '}
+                                {this.state.optimizedPaperObject.publicationMonth && this.state.optimizedPaperObject.publicationMonth > 0
+                                    ? moment(this.state.optimizedPaperObject.publicationMonth, 'M').format('MMMM')
+                                    : ''}{' '}
                                 {this.state.optimizedPaperObject.publicationYear}
                             </small>
                         )}
