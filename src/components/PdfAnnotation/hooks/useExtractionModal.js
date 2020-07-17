@@ -151,7 +151,7 @@ function useExtractionModal(props) {
                 'contribution:research_problem'
             ]);
 
-            const contributionStatements = {};
+            const contributionStatements = { [process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM]: [] };
 
             // replace :orkg prefix in research field
             if (isString(researchField) && researchField.startsWith('orkg:')) {

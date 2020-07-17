@@ -1,11 +1,15 @@
 import React from 'react';
 import NativeListener from 'react-native-listener';
 import { BaseEditorComponent } from '@handsontable/react';
-import { CustomInput } from 'reactstrap';
-import nextId from 'react-id-generator';
-import { submitGetRequest, resourcesUrl, predicatesUrl, getResourcesByClass } from 'network';
+import { InputGroup, DropdownMenu, InputGroupButtonDropdown, Input } from 'reactstrap';
+import { StyledDropdownItem, StyledDropdownToggle } from 'components/StatementBrowser/styled';
+import { resourcesUrl, predicatesUrl } from 'network';
 import { connect } from 'react-redux';
-import { setLabelCache } from '../../actions/pdfAnnotation';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { setLabelCache } from 'actions/pdfAnnotation';
+import Tippy from '@tippy.js/react';
+import AutoComplete from 'components/StatementBrowser/AutoComplete';
 import { createPredicate, createResource } from 'network';
 import { isString } from 'lodash';
 
@@ -14,18 +18,20 @@ class EditorComponent extends BaseEditorComponent {
         super(props);
 
         this.mainElementRef = React.createRef();
+        this.resourceInputRef = React.createRef();
+        this.literalInputRef = React.createRef();
 
         this.state = {
             value: '',
-            isResource: false,
             row: 0,
             col: 0,
-            inputSearch: '',
-            options: [],
             type: '',
             top: 0,
             left: 0,
-            show: false
+            show: false,
+            valueType: 'literal',
+            dropdownValueTypeOpen: false,
+            valueClass: null
         };
     }
 
@@ -39,23 +45,37 @@ class EditorComponent extends BaseEditorComponent {
         return this.state.value;
     }
 
+    toggle = type => {
+        this.setState(prevState => ({
+            [type]: !prevState[type]
+        }));
+    };
+
     open = () => {
         const isResearchField = this.cellProperties?.instance?.getSourceDataAtCell(0, this.col) === 'paper:research_field';
+        const isResearchProblem = this.cellProperties?.instance?.getSourceDataAtCell(0, this.col) === 'contribution:research_problem';
 
         let type = '';
 
         if (this.row === 0) {
             type = 'property';
-        } else if (isResearchField) {
-            type = 'researchField';
         } else {
             type = 'resource';
+        }
+
+        let valueClass = null;
+        if (isResearchField) {
+            valueClass = process.env.REACT_APP_CLASSES_RESEARCH_FIELD;
+        } else if (isResearchProblem) {
+            valueClass = process.env.REACT_APP_CLASSES_PROBLEM;
         }
 
         this.setState({
             row: this.row,
             col: this.col,
             type,
+            valueType: valueClass ? 'resource' : 'literal',
+            valueClass,
             show: true
         });
     };
@@ -83,7 +103,7 @@ class EditorComponent extends BaseEditorComponent {
             (originalValue.startsWith('orkg:') || originalValue.startsWith('paper:') || originalValue.startsWith('contribution:'));
 
         this.setState({
-            isResource: isResource,
+            valueType: isResource ? 'resource' : 'literal',
             left: tdPosition.left - 3 + 'px',
             top: tdPosition.top + window.scrollY - 8 + 'px'
         });
@@ -93,35 +113,8 @@ class EditorComponent extends BaseEditorComponent {
         e.stopPropagation();
     };
 
-    handleInputChange = e => {
-        this.setState({ value: e.target.value });
-    };
-
-    handleSearchChange = async e => {
-        let value = e.target.value;
-        const option = this.state.options.find(option => option.id === value);
-
-        // if option from datalist is selected
-        if (option) {
-            if (value === 'Create new property:') {
-                value = await this.confirmCreatePredicate(option.label);
-            } else if (value === 'Create new resource:') {
-                value = await this.confirmCreateResource(option.label);
-            }
-
-            this.setState({ value: `orkg:${value}` }, () => {
-                this.finishEditing();
-
-                this.props.setLabelCache({
-                    id: value,
-                    label: option.label
-                });
-            });
-        } else {
-            this.setState({ value: value }, () => {
-                this.loadResults();
-            });
-        }
+    handleInputChange = value => {
+        this.setState({ value: value });
     };
 
     confirmCreatePredicate = async label => {
@@ -135,67 +128,15 @@ class EditorComponent extends BaseEditorComponent {
         return false;
     };
 
-    confirmCreateResource = async label => {
+    confirmCreateResource = async (label, valueClass) => {
         const result = window.confirm('Are you sure you want to create a new resource?');
 
         if (result) {
-            const newResource = await createResource(label);
+            const newResource = await createResource(label, valueClass ? [valueClass] : []);
             return newResource.id;
         }
 
         return false;
-    };
-
-    loadResults = async (e = null) => {
-        let { value } = this.state;
-        const { type } = this.state;
-
-        if (e) {
-            value = e.target.value;
-        }
-
-        const url = type === 'resource' || type === 'researchField' ? resourcesUrl : predicatesUrl;
-        let responseJson = [];
-        if (type === 'researchField') {
-            responseJson = await getResourcesByClass({
-                id: process.env.REACT_APP_CLASSES_RESEARCH_FIELD,
-                q: value,
-                items: 10
-            });
-        } else {
-            responseJson = await submitGetRequest(url + '?q=' + encodeURIComponent(value));
-        }
-        const options = [];
-        let propertyExists = false;
-
-        responseJson.map(item => {
-            if (type === 'property' && value.toLowerCase() === item.label.toLowerCase()) {
-                propertyExists = true;
-            }
-            return options.push({
-                id: item.id,
-                label: item.label
-            });
-        });
-
-        // ensure "add options" is hidden when property already exists
-        if (type === 'resource' || (type === 'property' && !propertyExists)) {
-            options.push({
-                id: 'Create new ' + type + ':',
-                label: value
-            });
-        }
-
-        this.setState({ options });
-    };
-
-    handleCheckboxChange = e => {
-        if (!this.state.isResource) {
-            this.loadResults();
-        }
-        this.setState(prevState => ({
-            isResource: !prevState.isResource
-        }));
     };
 
     /*finishEditing = () => {
@@ -203,12 +144,11 @@ class EditorComponent extends BaseEditorComponent {
     };*/
 
     render() {
-        const checkboxId = nextId();
         let { value } = this.state;
 
-        if (this.state.isResource && value && value.startsWith('orkg:')) {
+        if (this.state.valueType === 'resource' && value && value.startsWith('orkg:')) {
             const valueClean = value.replace(/^(orkg:)/, '');
-            value = this.props.cachedLabels[valueClean];
+            value = { id: valueClean, label: this.props.cachedLabels[valueClean] };
         }
 
         const containerStyle = {
@@ -226,35 +166,78 @@ class EditorComponent extends BaseEditorComponent {
         return (
             <NativeListener onMouseDown={this.stopMousedownPropagation}>
                 <div style={containerStyle} ref={this.mainElementRef} id="editorElement">
-                    {this.state.isResource || this.state.type === 'property' || this.state.type === 'researchField' ? (
-                        <>
-                            <input
-                                list="options"
+                    <InputGroup size="sm">
+                        {this.state.type === 'resource' && !this.state.valueClass && (
+                            <InputGroupButtonDropdown
+                                addonType="prepend"
+                                isOpen={this.state.dropdownValueTypeOpen}
+                                toggle={() => this.toggle('dropdownValueTypeOpen')}
+                            >
+                                <StyledDropdownToggle>
+                                    <small>{this.state.valueType.charAt(0).toUpperCase() + this.state.valueType.slice(1) + ' '}</small>
+                                    <Icon size="xs" icon={faBars} />
+                                </StyledDropdownToggle>
+                                <DropdownMenu>
+                                    <StyledDropdownItem onClick={() => this.setState({ valueType: 'resource' })}>
+                                        <Tippy content="Choose Object to link this to an object, which can contain values on its own">
+                                            <span>Object</span>
+                                        </Tippy>
+                                    </StyledDropdownItem>
+                                    <StyledDropdownItem onClick={() => this.setState({ valueType: 'literal' })}>
+                                        <Tippy content="Choose literal for values like numbers or plain text">
+                                            <span>Literal</span>
+                                        </Tippy>
+                                    </StyledDropdownItem>
+                                </DropdownMenu>
+                            </InputGroupButtonDropdown>
+                        )}
+                        {this.state.valueType === 'resource' || this.state.type === 'property' ? (
+                            <AutoComplete
+                                requestUrl={this.state.type === 'property' ? predicatesUrl : resourcesUrl}
+                                excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM},${process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE}`}
+                                optionsClass={this.state.valueClass ? this.state.valueClass : undefined}
+                                placeholder={this.state.type === 'property' ? 'Enter a predicate' : 'Enter a resource'}
+                                onChange={async i => {
+                                    let valueID;
+                                    if (i.__isNew__ && this.state.type === 'property') {
+                                        valueID = await this.confirmCreatePredicate(i.value);
+                                    } else if (i.__isNew__) {
+                                        valueID = await this.confirmCreateResource(i.value, this.state.valueClass);
+                                    }
+                                    //i.__isNew__ (the user selected to create an new value)
+                                    if (value || !i.__isNew__) {
+                                        this.setState({ value: `orkg:${i.__isNew__ ? valueID : i.id}` }, () => {
+                                            this.finishEditing();
+
+                                            this.props.setLabelCache({
+                                                id: i.__isNew__ ? valueID : i.id,
+                                                label: i.__isNew__ ? i.value : i.label // we use value because the label contain "create" prefix
+                                            });
+                                        });
+                                    }
+                                }}
+                                onInput={(e, value) => this.handleInputChange(e ? e.target.value : value)}
                                 value={value}
-                                onChange={this.handleSearchChange}
-                                onClick={this.loadResults}
-                                style={{ width: '100%' }}
-                                placeholder="Start searching now..."
+                                disableBorderRadiusRight
+                                disableBorderRadiusLeft={false}
+                                cssClasses="form-control-sm"
+                                eventListener={true}
+                                innerRef={this.resourceInputRef}
+                                allowCreate={this.state.type === process.env.REACT_APP_CLASSES_RESEARCH_FIELD ? false : true}
                             />
-                            <datalist id="options">
-                                {this.state.options.map(({ id, label }) => (
-                                    <option value={`${id}`}>{label}</option>
-                                ))}
-                            </datalist>
-                        </>
-                    ) : (
-                        <input type="text" value={value} style={{ width: '100%' }} onChange={this.handleInputChange} />
-                    )}
-                    {this.state.type === 'resource' && (
-                        <CustomInput
-                            type="checkbox"
-                            id={checkboxId}
-                            label="Resource"
-                            onChange={this.handleCheckboxChange}
-                            checked={this.state.isResource}
-                            style={{ marginLeft: 5 }}
-                        />
-                    )}
+                        ) : (
+                            <Input
+                                placeholder="Enter a value"
+                                name="literalValue"
+                                type="text"
+                                bsSize="sm"
+                                value={value}
+                                onChange={(e, value) => this.handleInputChange(e ? e.target.value : value)}
+                                innerRef={this.literalInputRef}
+                                autoFocus
+                            />
+                        )}
+                    </InputGroup>
                 </div>
             </NativeListener>
         );

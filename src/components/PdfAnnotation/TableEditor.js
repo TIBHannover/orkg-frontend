@@ -27,7 +27,7 @@ const TableEditor = props => {
         tableInstance.alter('remove_row', toRemove);
     };
 
-    const mergeCells = (key, selection) => {
+    const mergeCellsContent = (key, selection) => {
         if (selection.length > 0) {
             const firstSelection = selection[0];
             const selectionStart = firstSelection.start;
@@ -100,8 +100,8 @@ const TableEditor = props => {
                     'undo',
                     'redo',
                     {
-                        name: 'Merge cells',
-                        callback: mergeCells
+                        name: 'Merge cells content',
+                        callback: mergeCellsContent
                     },
                     {
                         name: 'Remove empty rows',

@@ -5,6 +5,7 @@ import Creatable from 'react-select/creatable';
 import { AsyncPaginateBase } from 'react-select-async-paginate';
 import { components } from 'react-select';
 import styled, { withTheme } from 'styled-components';
+import NativeListener from 'react-native-listener';
 
 export const StyledAutoCompleteInputFormControl = styled.div`
     padding-top: 0 !important;
@@ -42,7 +43,7 @@ class AutoComplete extends Component {
         this.state = {
             selectedItemId: null,
             dropdownMenuJsx: null,
-            inputValue: typeof this.props.value !== 'object' ? this.props.value : '',
+            inputValue: typeof this.props.value !== 'object' ? this.props.value : this.props.value.label,
             defaultOptions: this.props.defaultOptions ? this.props.defaultOptions : [],
             value: this.props.value || '',
             menuIsOpen: false
@@ -223,6 +224,69 @@ class AutoComplete extends Component {
         return this.state.inputValue; //https://github.com/JedWatson/react-select/issues/3189#issuecomment-597973958
     };
 
+    Control = props => {
+        if (this.props.eventListener) {
+            return (
+                <NativeListener
+                    onMouseUp={e => {
+                        e.stopPropagation();
+                        this.props.innerRef.current.focus();
+                    }}
+                >
+                    <components.Control {...props} />
+                </NativeListener>
+            );
+        } else {
+            return <components.Control {...props} />;
+        }
+    };
+
+    DropdownIndicator = props => {
+        if (this.props.eventListener) {
+            return (
+                <NativeListener
+                    onMouseUp={e => {
+                        e.stopPropagation();
+                        this.onMenuOpen();
+                        this.props.innerRef.current.focus();
+                    }}
+                >
+                    <components.DropdownIndicator {...props} />
+                </NativeListener>
+            );
+        } else {
+            return <components.DropdownIndicator {...props} />;
+        }
+    };
+
+    Option = ({ children, ...props }) => {
+        if (this.props.eventListener) {
+            return (
+                <NativeListener
+                    onMouseDown={e => {
+                        this.props.onChange(props.data);
+                    }}
+                >
+                    <components.Option {...props}>
+                        <StyledSelectOption>
+                            <span>{children}</span>
+                            <span className="badge">{props.data.id}</span>
+                        </StyledSelectOption>
+                    </components.Option>
+                </NativeListener>
+            );
+        } else {
+            return (
+                <components.Option {...props}>
+                    <StyledSelectOption>
+                        <span>{children}</span>
+                        <span className="badge">{props.data.id}</span>
+                    </StyledSelectOption>
+                </components.Option>
+            );
+        }
+    };
+
     render() {
         this.customStyles = {
             control: (provided, state) => ({
@@ -268,17 +332,6 @@ class AutoComplete extends Component {
             })
         };
 
-        const Option = ({ children, ...props }) => {
-            return (
-                <components.Option {...props}>
-                    <StyledSelectOption>
-                        <span>{children}</span>
-                        <span className="badge">{props.data.id}</span>
-                    </StyledSelectOption>
-                </components.Option>
-            );
-        };
-
         // Creatable with adding new options : https://codesandbox.io/s/6pznz
         const Select = this.props.allowCreate ? Creatable : undefined;
 
@@ -286,7 +339,7 @@ class AutoComplete extends Component {
             <StyledAutoCompleteInputFormControl className={`form-control ${this.props.cssClasses ? this.props.cssClasses : 'default'}`}>
                 <AsyncPaginateBase
                     SelectComponent={Select}
-                    value={this.state.inputValue}
+                    value={this.props.value}
                     loadOptions={this.loadOptions}
                     additional={this.defaultAdditional}
                     noOptionsMessage={this.noResults}
@@ -301,10 +354,12 @@ class AutoComplete extends Component {
                     onBlur={this.props.onBlur}
                     onKeyDown={this.props.onKeyDown}
                     selectRef={this.props.innerRef}
-                    components={{ Option }}
+                    components={{ Option: this.Option, Control: this.Control, DropdownIndicator: this.DropdownIndicator }}
                     menuIsOpen={this.state.menuIsOpen}
                     onMenuOpen={this.onMenuOpen}
                     onMenuClose={this.onMenuClose}
+                    getOptionLabel={({ label }) => label}
+                    getOptionValue={({ id }) => id}
                 />
             </StyledAutoCompleteInputFormControl>
         );
@@ -327,14 +382,16 @@ AutoComplete.propTypes = {
     disableBorderRadiusRight: PropTypes.bool,
     disableBorderRadiusLeft: PropTypes.bool,
     onInput: PropTypes.func,
-    value: PropTypes.string,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     cssClasses: PropTypes.string,
     hideAfterSelection: PropTypes.bool,
     theme: PropTypes.object.isRequired,
-    innerRef: PropTypes.func
+    innerRef: PropTypes.func,
+    eventListener: PropTypes.bool // Used to capture the events in handsontable
 };
 
 AutoComplete.defaultProps = {
-    cssClasses: ''
+    cssClasses: '',
+    eventListener: false
 };
 export default withTheme(AutoComplete);
