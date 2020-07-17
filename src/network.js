@@ -5,6 +5,7 @@ import { sortMethod } from 'utils';
 export const url = `${process.env.REACT_APP_SERVER_URL}api/`;
 export const similaireServiceUrl = process.env.REACT_APP_SIMILARITY_SERVICE_URL;
 export const annotationServiceUrl = process.env.REACT_APP_ANNOTATION_SERVICE_URL;
+export const dataciteServiceUrl = process.env.REACT_APP_DATACITE_URL;
 export const resourcesUrl = `${url}resources/`;
 export const organizationsUrl = `${url}organizations/`;
 export const observatoriesUrl = `${url}observatories/`;
@@ -19,6 +20,7 @@ export const arxivUrl = process.env.REACT_APP_ARXIV_URL;
 export const semanticScholarUrl = process.env.REACT_APP_SEMANTICSCHOLAR_URL;
 export const comparisonUrl = `${similaireServiceUrl}compare/`;
 export const similaireUrl = `${similaireServiceUrl}similar/`;
+export const dataciteUrl = `${dataciteServiceUrl}`;
 export const authenticationUrl = process.env.REACT_APP_SERVER_URL;
 
 /**
@@ -28,9 +30,7 @@ export const submitGetRequest = (url, headers, send_token = false) => {
     if (!url) {
         throw new Error('Cannot submit GET request. URL is null or undefined.');
     }
-
     const myHeaders = headers ? new Headers(headers) : {};
-
     if (send_token) {
         const cookies = new Cookies();
         const token = cookies.get('token') ? cookies.get('token') : null;
@@ -53,6 +53,7 @@ export const submitGetRequest = (url, headers, send_token = false) => {
                     });
                 } else {
                     const json = response.json();
+                    //console.log(json);
                     if (json.then) {
                         json.then(resolve).catch(reject);
                     } else {
@@ -699,5 +700,85 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
                 }
             };
         });
+    });
+};
+
+export const getBibTex = comparisonId => {
+    //console.log((`${dataciteUrl}${encodeURIComponent(comparisonId)}`));
+    const a = submitGetRequest(`${dataciteUrl}${encodeURIComponent(comparisonId)}`);
+    //return submitGetRequest(`${dataciteUrl}${encodeURIComponent(comparisonId)}`);
+    console.log(a);
+    return a;
+};
+
+export const generateDOIForComparison = (resourceId, base64xml, comparisonLink) => {
+    const token = Buffer.from(`${process.env.REACT_APP_DATACITE_TEST_USERNAME}:${process.env.REACT_APP_DATACITE_TEST_PASSWORD}`, 'utf8').toString(
+        'base64'
+    );
+    //console.log((`${dataciteUrl}${encodeURIComponent(comparisonId)}`));
+    //const jsonData = {
+    const data = {
+        id: `${process.env.REACT_APP_DATACITE_TEST_DOI}/${resourceId}`,
+        types: 'dois',
+        attributes: {
+            event: 'publish',
+            doi: `${process.env.REACT_APP_DATACITE_TEST_DOI}/${resourceId}`,
+            url: comparisonLink,
+            xml: base64xml
+        }
+    };
+
+    //};
+
+    //console.log(token);
+    console.log(dataciteUrl);
+    console.log(data);
+    //return "1";
+    return submitPostRequest(dataciteUrl, { 'Content-Type': 'application/vnd.api+json', Authorization: `Basic ${token}` }, { data });
+};
+
+export const getComparisonDataByDOI = id => {
+    return submitGetRequest(`${dataciteUrl}/${process.env.REACT_APP_DATACITE_TEST_DOI}/${encodeURIComponent(id)}`);
+};
+
+export const getCitationByDOI = (id, style = '', header = 'text/x-bibliography;') => {
+    console.log(id);
+    //console.log(submitGetRequest('https://doi.org/10.1145/3064911.3064924', {"Accept": "text/x-bibliography; style=ieee"}));
+    //-LH "Accept: text/x-bibliography; style=ieee" https://doi.org/10.1145/3064911.3064924
+    const r = '';
+    //let headers=`${header} style=${style}`;
+    //const headers = {"Accept": `text/x-bibliography; style=${style}`};
+    let headers = '';
+    if (style.length > 0) {
+        headers = { Accept: `${header} style=${style}` };
+    } else {
+        headers = { Accept: `${header}` };
+    }
+    const myHeaders = headers ? new Headers(headers) : {};
+    const url = 'https://doi.org/10.1145/3064911.3064924';
+
+    return new Promise((resolve, reject) => {
+        fetch(url, {
+            method: 'GET',
+            headers: myHeaders
+        })
+            .then(response => {
+                if (!response.ok) {
+                    reject({
+                        error: new Error(`Error response. (${response.status}) ${response.statusText}`),
+                        statusCode: response.status,
+                        statusText: response.statusText
+                    });
+                } else {
+                    const text = response.text();
+                    //console.log(json);
+                    if (text.then) {
+                        text.then(resolve).catch(reject);
+                    } else {
+                        return resolve(text);
+                    }
+                }
+            })
+            .catch(reject);
     });
 };
