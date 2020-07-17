@@ -223,7 +223,9 @@ class EditorComponent extends BaseEditorComponent {
                                 cssClasses="form-control-sm"
                                 eventListener={true}
                                 innerRef={this.resourceInputRef}
-                                allowCreate={this.state.type === process.env.REACT_APP_CLASSES_RESEARCH_FIELD ? false : true}
+                                allowCreate={
+                                    this.state.valueClass && this.state.valueClass === process.env.REACT_APP_CLASSES_RESEARCH_FIELD ? false : true
+                                }
                             />
                         ) : (
                             <Input
