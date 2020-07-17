@@ -205,7 +205,7 @@ class EditorComponent extends BaseEditorComponent {
                                         valueID = await this.confirmCreateResource(i.value, this.state.valueClass);
                                     }
                                     //i.__isNew__ (the user selected to create an new value)
-                                    if (value || !i.__isNew__) {
+                                    if (valueID || !i.__isNew__) {
                                         this.setState({ value: `orkg:${i.__isNew__ ? valueID : i.id}` }, () => {
                                             this.finishEditing();
 
