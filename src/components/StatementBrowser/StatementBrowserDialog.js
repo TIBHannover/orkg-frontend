@@ -63,7 +63,8 @@ class StatementBrowserDialog extends Component {
                     {this.props.newStore ? (
                         <Provider store={this.store}>
                             <Statements
-                                enableEdit={false}
+                                enableEdit={this.props.enableEdit}
+                                syncBackend={this.props.syncBackend}
                                 initialResourceId={this.props.resourceId}
                                 initialResourceLabel={this.props.resourceLabel}
                                 newStore={this.props.newStore}
@@ -93,13 +94,15 @@ StatementBrowserDialog.propTypes = {
     toggleModal: PropTypes.func.isRequired,
     newStore: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
+    syncBackend: PropTypes.bool.isRequired,
     openExistingResourcesInDialog: PropTypes.bool.isRequired,
     updateSettings: PropTypes.func.isRequired
 };
 
 StatementBrowserDialog.defaultProps = {
     newStore: true,
-    enableEdit: false
+    enableEdit: false,
+    syncBackend: false
 };
 
 const mapStateToProps = state => {

@@ -3,6 +3,46 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.15](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.14...V0.15) - 2020-07-10
+
+### Merged
+
+- improvement: Show linked research fields to research problem [`#316`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/316)
+- fix: fetching classes in add resource page [`#320`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/320)
+
+### Fixed
+
+- Merge branch '271-bug-add-resource-page-is-broken' into 'master' [`#271`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/271)
+
+---
+## [0.14](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.13...V0.14) - 2020-07-09
+
+### Merged
+
+- enhancement: Create page for classes [`#318`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/318)
+- feat: Improve Observatory Overview page [`#294`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/294)
+- feat: Normalization of research problem names [`#310`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/310)
+- feat: Add the possibility to use templates in existing contributions [`#312`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/312)
+- style: replace text labels featured comparisons [`#317`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/317)
+- ux: Comparison table with sticky header [`#307`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/307)
+- Add warning message for testing server [`#315`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/315)
+- feat: Add meta information node for graph visualizations [`#311`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/311)
+- fix: Literal linked to contribution [`#309`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/309)
+
+### Fixed
+
+- Merge branch '267-create-page-for-classes' into 'master' [`#268`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/268)
+- Merge branch '217-improve-observatory-overview-page' into 'master' [`#217`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/217)
+- Merge branch '229-normalization-of-research-problem-names' into 'master' [`#229`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/229)
+- Merge branch '212-add-the-possibility-to-use-templates-in-existing-contributions' into 'master' [`#258`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/258)
+- Merge branch '249-replace-papers-label-on-featured-comparisons-page' into 'master' [`#249`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/249)
+- Merge branch '240-fixed-header-for-comparison-table' into 'master' [`#240`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/240)
+- Merge branch '262-add-warning-message-for-the-incubating-version' into 'master' [`#262`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/262)
+- Show a placeholder when the formatted label is an empty string, closes #258 [`#258`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/258)
+- Merge branch '263-add-meta-information-node-for-graph-visualizations' into 'master' [`#263`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/263)
+- Merge branch '261-templates-support-literal-linked-to-contribution' into 'master' [`#261`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/261)
+
+---
 ## [0.13](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.12...V0.13) - 2020-06-24
 
 ### Merged

@@ -1,7 +1,8 @@
 import * as type from './types.js';
 import { guid } from 'utils';
 import * as network from 'network';
-import { orderBy, uniq } from 'lodash';
+import { prefillStatements } from './addPaper';
+import { orderBy, uniq, isEqual } from 'lodash';
 
 export const updateSettings = data => dispatch => {
     dispatch({
@@ -292,9 +293,18 @@ export function createProperty(data) {
             const resource = getState().statementBrowser.resources.byId[data.resourceId];
 
             if (resource && resource.propertyIds) {
-                const isExstingProperty = resource.propertyIds.find(
-                    p => getState().statementBrowser.properties.byId[p].existingPredicateId === data.existingPredicateId
-                );
+                const isExstingProperty = resource.propertyIds.find(p => {
+                    if (getState().statementBrowser.properties.byId[p].existingPredicateId === data.existingPredicateId) {
+                        if (data.range) {
+                            // if the range is set check the equality also
+                            return isEqual(data.range, getState().statementBrowser.properties.byId[p].range) ? true : false;
+                        } else {
+                            return true;
+                        }
+                    } else {
+                        return false;
+                    }
+                });
                 if (isExstingProperty) {
                     // Property already exists
                     return null;
@@ -590,6 +600,87 @@ export function fetchTemplateIfNeeded(templateID) {
 }
 
 /**
+ * fill a resource with a template
+ *
+ * @param {String} templateID - Template ID
+ * @param {String} selectedResource - The resource to fill with the template
+ * @param {Boolean} syncBackend - syncBackend
+ * @return {Promise} Promise object
+ */
+export function fillResourceWithTemplate({ templateID, selectedResource, syncBackend = false }) {
+    return async (dispatch, getState) => {
+        return dispatch(fetchTemplateIfNeeded(templateID)).then(async templateDate => {
+            const template = templateDate;
+            // Check if it's a contribution template
+            if (template && template.predicate) {
+                // TODO : handle the case where the template isFetching
+                if (template.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION) {
+                    // Add properties
+                    if (template.components && template.components.length > 0) {
+                        const statements = { properties: [], values: [] };
+                        for (const component of template.components) {
+                            statements['properties'].push({
+                                existingPredicateId: component.property.id,
+                                label: component.property.label,
+                                range: component.value ? component.value : null,
+                                validationRules: component.validationRules
+                            });
+                        }
+                        dispatch(prefillStatements({ statements, resourceId: selectedResource, syncBackend: syncBackend }));
+                    }
+                } else {
+                    // Add template to the statement browser
+                    const statements = { properties: [], values: [] };
+                    const pID = guid();
+                    const vID = guid();
+                    const rID = guid();
+                    let newObject = null;
+                    statements['properties'].push({
+                        propertyId: pID,
+                        existingPredicateId: template.predicate.id,
+                        label: template.predicate.label,
+                        isTemplate: true,
+                        isAnimated: false,
+                        canDuplicate: true
+                    });
+                    if (syncBackend) {
+                        newObject = await network.createResource(template.label, template.class ? [template.class.id] : []);
+                    }
+                    statements['values'].push({
+                        valueId: vID,
+                        label: template.label,
+                        existingResourceId: newObject ? newObject.id : rID,
+                        type: 'object',
+                        propertyId: pID,
+                        classes: template.class ? [template.class.id] : []
+                    });
+                    await dispatch(prefillStatements({ statements, resourceId: selectedResource, syncBackend: syncBackend }));
+                    // Add properties
+                    if (template.components && template.components.length > 0) {
+                        const statements = { properties: [], values: [] };
+                        for (const component of template.components) {
+                            statements['properties'].push({
+                                existingPredicateId: component.property.id,
+                                label: component.property.label,
+                                validationRules: component.validationRules
+                            });
+                        }
+                        await dispatch(
+                            prefillStatements({
+                                statements,
+                                resourceId: newObject ? newObject.id : rID,
+                                syncBackend: syncBackend
+                            })
+                        );
+                    }
+                }
+            }
+            return Promise.resolve();
+        });
+    };
+}
+
+/**
  * Check if the class template should be fetched
  *
  * @param {Object} state - Current state of the Store
@@ -658,7 +749,8 @@ export function selectResource(data) {
             type: type.ADD_RESOURCE_HISTORY,
             payload: {
                 resourceId: data.resourceId,
-                label: data.label
+                label: data.label,
+                propertyLabel: data.propertyLabel
             }
         });
 

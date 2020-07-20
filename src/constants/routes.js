@@ -10,6 +10,7 @@ export default {
     ADD_RESOURCE: '/addResource',
     PREDICATES: '/predicates',
     PREDICATE: '/predicate/:id',
+    CLASSES: '/classes',
     CLASS: '/class/:id',
     CONTRIBUTION_TEMPLATES: '/templates',
     CONTRIBUTION_TEMPLATE: '/template/:id?',

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Creatable from 'react-select/creatable';
 import { AsyncPaginateBase } from 'react-select-async-paginate';
 import { components } from 'react-select';
+import { compareOption } from 'utils';
 import styled, { withTheme } from 'styled-components';
 import NativeListener from 'react-native-listener';
 
@@ -151,7 +152,7 @@ class AutoComplete extends Component {
                 newProperties = newProperties.filter(({ label, classes }) => {
                     return (
                         label.toLowerCase().includes(value.trim().toLowerCase()) &&
-                        (!this.props.optionsClass || (classes.length > 0 && classes.include?.(this.props.optionsClass)))
+                        (!this.props.optionsClass || (classes.length > 0 && classes.includes?.(this.props.optionsClass)))
                     );
                 }); // ensure the label of the new property contains the search value and from the same class
 
@@ -360,6 +361,21 @@ class AutoComplete extends Component {
                     onMenuClose={this.onMenuClose}
                     getOptionLabel={({ label }) => label}
                     getOptionValue={({ id }) => id}
+                    isValidNewOption={(inputValue, selectValue, selectOptions) => {
+                        if (this.props.handleCreateExistingLabel) {
+                            // to disable the create button
+                            this.props.handleCreateExistingLabel(inputValue, selectOptions);
+                        }
+                        if (!this.props.allowCreate) {
+                            return false;
+                        } else {
+                            return !(
+                                !inputValue ||
+                                selectValue.some(option => compareOption(inputValue, option)) ||
+                                selectOptions.some(option => compareOption(inputValue, option))
+                            );
+                        }
+                    }}
                 />
             </StyledAutoCompleteInputFormControl>
         );
@@ -387,7 +403,8 @@ AutoComplete.propTypes = {
     hideAfterSelection: PropTypes.bool,
     theme: PropTypes.object.isRequired,
     innerRef: PropTypes.func,
-    eventListener: PropTypes.bool // Used to capture the events in handsontable
+    eventListener: PropTypes.bool, // Used to capture the events in handsontable
+    handleCreateExistingLabel: PropTypes.func
 };
 
 AutoComplete.defaultProps = {
