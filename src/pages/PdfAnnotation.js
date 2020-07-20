@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Toolbar from './Toolbar';
-import TableSelect from './TableSelect';
+import Toolbar from 'components/PdfAnnotation/Toolbar';
+import TableSelect from 'components/PdfAnnotation/TableSelect';
 import styled from 'styled-components';
-import DragUpload from './DragUpload';
+import DragUpload from 'components/PdfAnnotation/DragUpload';
 import { useSelector } from 'react-redux';
 
 const PdfContainer = styled.div`
