@@ -8,48 +8,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import EditorComponent from './EditorComponent';
 import Handsontable from 'handsontable';
 import { isString } from 'lodash';
+import useTableEditor from './hooks/useTableEditor';
 
 const TableEditor = props => {
     const dispatch = useDispatch();
     const tableData = useSelector(state => state.pdfAnnotation.tableData[props.id]);
     const cachedLabels = useSelector(state => state.pdfAnnotation.cachedLabels);
-
-    const removeEmptyRows = () => {
-        const tableInstance = props.setRef.current.hotInstance;
-        const rowAmount = tableInstance.countRows();
-
-        const toRemove = [];
-        for (let i = 0; i < rowAmount; i++) {
-            if (tableInstance.isEmptyRow(i)) {
-                toRemove.push([i, 1]);
-            }
-        }
-        tableInstance.alter('remove_row', toRemove);
-    };
-
-    const mergeCellsContent = (key, selection) => {
-        if (selection.length > 0) {
-            const firstSelection = selection[0];
-            const selectionStart = firstSelection.start;
-            const selectionEnd = firstSelection.end;
-            const colAmount = selectionEnd.col - selectionStart.col + 1;
-
-            for (let i = 0; i < colAmount; i++) {
-                const col = selectionStart.col + i;
-                const tableUpdates = [];
-                let newValue = tableData[selectionStart.row][col];
-                const rowAmount = selectionEnd.row - selectionStart.row;
-
-                for (let i = 1; i <= rowAmount; i++) {
-                    tableUpdates.push([selectionStart.row + i, col, null, '']);
-                    newValue += ' ' + tableData[selectionStart.row + i][col];
-                }
-
-                tableUpdates.push([selectionStart.row, col, null, newValue]);
-                dispatch(updateTableData(props.id, tableUpdates));
-            }
-        }
-    };
+    const { removeEmptyRows, mergeCellValues, splitIntoSeveralColumns } = useTableEditor(props);
 
     const renderer = function(instance, td, row, col, prop, value, cellProperties) {
         // I tried it with a nice RendererComponent, but after a lot of trying this just isn't supported well in Hansontable
@@ -100,8 +65,12 @@ const TableEditor = props => {
                     'undo',
                     'redo',
                     {
-                        name: 'Merge cells content',
-                        callback: mergeCellsContent
+                        name: 'Merge cell values',
+                        callback: mergeCellValues
+                    },
+                    {
+                        name: 'Split into several columns',
+                        callback: splitIntoSeveralColumns
                     },
                     {
                         name: 'Remove empty rows',
