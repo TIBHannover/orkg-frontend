@@ -704,10 +704,7 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
 };
 
 export const getBibTex = comparisonId => {
-    //console.log((`${dataciteUrl}${encodeURIComponent(comparisonId)}`));
     const a = submitGetRequest(`${dataciteUrl}${encodeURIComponent(comparisonId)}`);
-    //return submitGetRequest(`${dataciteUrl}${encodeURIComponent(comparisonId)}`);
-    console.log(a);
     return a;
 };
 
@@ -715,8 +712,7 @@ export const generateDOIForComparison = (resourceId, base64xml, comparisonLink) 
     const token = Buffer.from(`${process.env.REACT_APP_DATACITE_TEST_USERNAME}:${process.env.REACT_APP_DATACITE_TEST_PASSWORD}`, 'utf8').toString(
         'base64'
     );
-    //console.log((`${dataciteUrl}${encodeURIComponent(comparisonId)}`));
-    //const jsonData = {
+
     const data = {
         id: `${process.env.REACT_APP_DATACITE_TEST_DOI}/${resourceId}`,
         types: 'dois',
@@ -727,14 +723,8 @@ export const generateDOIForComparison = (resourceId, base64xml, comparisonLink) 
             xml: base64xml
         }
     };
-
-    //};
-
-    //console.log(token);
-    console.log(dataciteUrl);
-    console.log(data);
-    //return "1";
-    return submitPostRequest(dataciteUrl, { 'Content-Type': 'application/vnd.api+json', Authorization: `Basic ${token}` }, { data });
+    return '1';
+    //return submitPostRequest(dataciteUrl, { 'Content-Type': 'application/vnd.api+json', Authorization: `Basic ${token}` }, { data });
 };
 
 export const getComparisonDataByDOI = id => {
@@ -742,12 +732,6 @@ export const getComparisonDataByDOI = id => {
 };
 
 export const getCitationByDOI = (id, style = '', header = 'text/x-bibliography;') => {
-    console.log(id);
-    //console.log(submitGetRequest('https://doi.org/10.1145/3064911.3064924', {"Accept": "text/x-bibliography; style=ieee"}));
-    //-LH "Accept: text/x-bibliography; style=ieee" https://doi.org/10.1145/3064911.3064924
-    const r = '';
-    //let headers=`${header} style=${style}`;
-    //const headers = {"Accept": `text/x-bibliography; style=${style}`};
     let headers = '';
     if (style.length > 0) {
         headers = { Accept: `${header} style=${style}` };
@@ -771,7 +755,6 @@ export const getCitationByDOI = (id, style = '', header = 'text/x-bibliography;'
                     });
                 } else {
                     const text = response.text();
-                    //console.log(json);
                     if (text.then) {
                         text.then(resolve).catch(reject);
                     } else {

@@ -3,7 +3,7 @@ import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, Bu
 import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject, getComparisonDataByDOI } from 'network';
 import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResponseHashFromUrl, get_error_message } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPlus, faArrowsAltH, faQuoteRight, faUser, faLightbulb, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faPlus, faArrowsAltH, faUser, faLightbulb, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import ComparisonLoadingComponent from './ComparisonLoadingComponent';
 import ComparisonTable from './ComparisonTable.js';
@@ -23,8 +23,8 @@ import dotProp from 'dot-prop-immutable';
 import { reverse } from 'named-urls';
 import moment from 'moment';
 //import ProvenanceBox from 'components/Comparison/ProvenanceBox/ProvenanceBox';
-import ExportCitations from 'components/Comparison/ExportCitations';
 import ExportCitation from 'components/Comparison/ExportCitation';
+import PublishWithDOI from 'components/Comparison/PublishWithDOI';
 import { generateRdfDataVocabularyFile, extendPropertyIds, similarPropertiesByLabel } from 'utils';
 import { ContainerAnimated } from './styled';
 import RelatedResources from './RelatedResources';
@@ -51,14 +51,12 @@ class Comparison extends Component {
             properties: [],
             DOIData: {},
             data: {},
-            doi: '',
-            author: '',
-            date: '',
             csvData: [],
             showPropertiesDialog: false,
             showShareDialog: false,
             showLatexDialog: false,
             showExportCitationsDialog: false,
+            showPublishWithDOIDialog: false,
             showPublishDialog: false,
             showAddContribuion: false,
             isLoading: false,
@@ -99,18 +97,12 @@ class Comparison extends Component {
         if (this.props.match.params.comparisonId) {
             getComparisonDataByDOI(this.props.match.params.comparisonId)
                 .then(response => {
-                    const date = moment(response.data.attributes.created).format('MMMM');
-                    //console.log(date);
                     this.setState({
                         DOIData: {
                             doi: response.data.attributes.doi,
                             authors: response.data.attributes.creators,
                             date: response.data.attributes.created
                         }
-                        //doi: response.data.attributes.doi,
-                        //author: response.data.attributes.creators[0].name,
-                        //date: response.data.attributes.created
-                        //isLoadingContributors: false
                     });
                 })
                 .catch(error => {
@@ -303,19 +295,6 @@ class Comparison extends Component {
         this.generateUrl(contributionIds.join(','));
     };
 
-    download = () => {
-        //const a = getBibTex("0012");
-        setTimeout(() => {
-            const response = {
-                file: `${process.env.REACT_APP_DATACITE_BIBTEX_URL}${process.env.REACT_APP_DATACITE_TEST_DOI}/${this.props.match.params.comparisonId}`
-            };
-            //window.open(response.file);
-            window.location.href = response.file;
-        }, 100);
-
-        //console.log(a);
-    };
-
     addContributions = newContributionIds => {
         const contributionIds = getContributionIdsFromUrl(this.state.locationSearch || this.props.location.search);
         this.generateUrl(contributionIds.concat(newContributionIds).join(','));
@@ -494,6 +473,9 @@ class Comparison extends Component {
                                         <DropdownItem divider />
                                         <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
                                         <DropdownItem onClick={() => this.toggle('showPublishDialog')}>Publish</DropdownItem>
+                                        {this.props.match.params.comparisonId && (
+                                            <DropdownItem onClick={() => this.toggle('showPublishWithDOIDialog')}>Publish with DOI</DropdownItem>
+                                        )}
                                     </DropdownMenu>
                                 </Dropdown>
                             </ButtonGroup>
@@ -564,7 +546,6 @@ class Comparison extends Component {
                                                     ''
                                                 )}
 
-                                                {/* <div style={{ marginBottom: '20px', lineHeight: 1.5 }}> */}
                                                 {this.state.DOIData.authors && (
                                                     <>
                                                         {this.state.DOIData.authors.map((author, index) =>
@@ -582,16 +563,16 @@ class Comparison extends Component {
                                                         )}
                                                     </>
                                                 )}
-                                                {/* </div> */}
-
-                                                <div style={{ marginBottom: '20px', lineHeight: 1.5 }}>
-                                                    <small>
-                                                        DOI:{' '}
-                                                        <i>
-                                                            <ValuePlugins type="literal">{this.state.DOIData.doi}</ValuePlugins>
-                                                        </i>
-                                                    </small>
-                                                </div>
+                                                {this.state.DOIData.doi && (
+                                                    <div style={{ marginBottom: '20px', lineHeight: 1.5 }}>
+                                                        <small>
+                                                            DOI:{' '}
+                                                            <i>
+                                                                <ValuePlugins type="literal">{this.state.DOIData.doi}</ValuePlugins>
+                                                            </i>
+                                                        </small>
+                                                    </div>
+                                                )}
                                             </div>
                                         )}
                                     </>
@@ -691,18 +672,22 @@ class Comparison extends Component {
                 />
 
                 <ExportCitation
-                    //data={this.state.csvData}
-                    //contributions={this.state.contributions}
-                    //properties={this.state.properties}
                     showDialog={this.state.showExportCitationsDialog}
                     toggle={() => this.toggle('showExportCitationsDialog')}
-                    //transpose={this.state.transpose}
-                    //location={window.location}
-                    //response_hash={this.state.response_hash}
-                    //title={this.state.title}
-                    //description={this.state.description}
                     DOI={this.state.DOIData.doi}
                     comparisonId={this.props.match.params.comparisonId}
+                />
+
+                <PublishWithDOI
+                    showDialog={this.state.showPublishWithDOIDialog}
+                    toggle={() => this.toggle('showPublishWithDOIDialog')}
+                    url={window.location.href}
+                    location={this.state.locationSearch}
+                    response_hash={this.state.response_hash}
+                    comparisonId={this.props.match.params.comparisonId}
+                    title={this.state.title}
+                    description={this.state.description}
+                    updateComparisonMetadata={this.updateComparisonMetadata}
                 />
             </div>
         );

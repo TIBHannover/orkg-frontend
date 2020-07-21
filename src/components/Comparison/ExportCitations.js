@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
-import { getCitationByDOI, getObservatoryAndOrganizationInformation, getUserInformationById } from 'network';
+import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
+import { getCitationByDOI } from 'network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { ContainerAnimated } from './styled';
-import { faEllipsisV, faPlus, faArrowsAltH, faLightbulb, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 //import { StyledItemProvenanceBox, AnimationContainer, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
-import moment from 'moment';
-import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 
 class ExportCitations extends Component {

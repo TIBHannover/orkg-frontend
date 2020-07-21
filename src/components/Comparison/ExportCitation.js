@@ -1,21 +1,12 @@
 import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, Tooltip as ReactstrapTooltip } from 'reactstrap';
 import React, { Component } from 'react';
-import { createShortLink, getStatementsBySubject, getCitationByDOI, getComparison } from 'network';
+import { getCitationByDOI } from 'network';
 
-import Cite from 'citation-js';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { CustomInput } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import MakeLatex from 'make-latex';
 import PropTypes from 'prop-types';
-import ROUTES from '../../constants/routes.js';
-import Tooltip from '../Utils/Tooltip';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import moment from 'moment';
-import queryString from 'query-string';
-import { reverse } from 'named-urls';
 import styled from 'styled-components';
-import { getContributionIdsFromUrl } from 'utils';
 
 const Textarea = styled(Input)`
     font-family: 'Courier New';
@@ -31,21 +22,11 @@ class ExportCitation extends Component {
             bibtexReferencesLoading: true,
             selectedTab: 'APA',
             latexTable: '',
-            //citationAPA: '',
-            //citationIEEE: '',
-            //citationHarvard: '',
-            //citationChi: '',
-
             citations: {},
-            //isLoading: false,
-            //isLoadingIEEE: false,
-            //isLoadingHarvard: false,
-            //isloadingBibTex: false,
             isLoadingBiBTeX: false,
             citationBibTeX: '',
-            //replaceTitles: true,
-            //includeFootnote: true,
             shortLink: null,
+            values: [],
             showTooltipCopiedAPA: false,
             showTooltipCopiedIEEE: false,
             showTooltipCopiedHarvard: false,
@@ -54,19 +35,9 @@ class ExportCitation extends Component {
         };
     }
 
-    componentDidMount() {
-        //this.getCitation();
-        //this.getCitationBibTeX();
-    }
+    componentDidMount() {}
 
-    componentDidUpdate = (prevProps, prevState) => {
-        //if (this.props.location.href !== prevProps.location.href) {
-        //this.setState({ shortLink: null });
-        //}
-        //if (this.props.contributions !== prevProps.contributions) {
-        //this.setState({ shortLink: null });
-        //}
-    };
+    componentDidUpdate = (prevProps, prevState) => {};
 
     getCitation = () => {
         const styles = ['apa', 'ieee', 'harvard3', 'chicago-author-date'];
@@ -85,7 +56,6 @@ class ExportCitation extends Component {
     };
 
     getCitationBibTeX = () => {
-        //console.log("1");
         this.setState({ isLoadingBibTeX: true });
         if (this.props.DOI) {
             getCitationByDOI(this.props.DOI, '', 'application/x-bibtex')
@@ -110,17 +80,6 @@ class ExportCitation extends Component {
         });
     };
 
-    //toggleCheckbox = type => {
-    //this.setState(
-    //prevState => ({
-    //[type]: !prevState[type]
-    //}),
-    //() => {
-    //this.generateLatex();
-    //}
-    //);
-    //};
-
     toggleTooltip = (e, type) => {
         if (e && e.type !== 'mouseover') {
             this.setState(prevState => ({
@@ -130,8 +89,6 @@ class ExportCitation extends Component {
     };
 
     render() {
-        //console.log(this.state.citations)
-        //console.log(new Date().getMonth())
         return (
             <Modal
                 isOpen={this.props.showDialog}
@@ -183,7 +140,6 @@ class ExportCitation extends Component {
                                     disabled
                                     rows="10"
                                 />
-                                {/* {this.state.citation} */}
                             </p>
 
                             <CopyToClipboard
@@ -355,16 +311,8 @@ class ExportCitation extends Component {
 }
 
 ExportCitation.propTypes = {
-    //data: PropTypes.array.isRequired,
-    //contributions: PropTypes.array.isRequired,
-    //properties: PropTypes.array.isRequired,
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    //transpose: PropTypes.bool.isRequired,
-    //location: PropTypes.object.isRequired,
-    //response_hash: PropTypes.string,
-    //title: PropTypes.string,
-    //description: PropTypes.string,
     DOI: PropTypes.string,
     comparisonId: PropTypes.string
 };
