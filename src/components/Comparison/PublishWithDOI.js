@@ -70,7 +70,7 @@ class PublishWithDOI extends Component {
                     />
                 </FormGroup>
                 <div style={{}} onClick={this.removeClick.bind(this, i)}>
-                    <Tippy content="delete contribution">
+                    <Tippy content="Delete creator">
                         <span style={{ marginLeft: '10px' }}>
                             <Icon size="xs" icon={faMinus} />
                         </span>
@@ -249,7 +249,7 @@ class PublishWithDOI extends Component {
                             <br />
                             {this.createUI()}
                             <div style={{ marginTop: '-22px', float: 'right' }} onClick={this.addClick.bind(this)}>
-                                <Tippy content="add contribution">
+                                <Tippy content="Add creator">
                                     <span style={{ marginLeft: '30px' }}>
                                         <Icon size="xs" icon={faPlus} />
                                     </span>
