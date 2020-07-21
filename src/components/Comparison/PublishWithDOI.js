@@ -13,7 +13,6 @@ import Tooltip from '../Utils/Tooltip';
 class PublishWithDOI extends Component {
     constructor(props) {
         super(props);
-        //console.log(this.props.title);
         this.state = {
             title: '',
             description: '',
