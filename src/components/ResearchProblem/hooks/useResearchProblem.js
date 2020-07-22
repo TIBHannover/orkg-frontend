@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { getResource, getStatementsBySubject, getStatementsByObjectAndPredicate } from 'network';
 import { useParams } from 'react-router-dom';
 import { filterObjectOfStatementsByPredicate } from 'utils';
+import { PREDICATES } from 'constants/graphSettings';
 
 function useResearchProblem(initialVal = {}) {
     const [data, setData] = useState({ initialVal });
@@ -27,16 +28,16 @@ function useResearchProblem(initialVal = {}) {
 
             // Get description, same as and sub-problems of the research problem
             getStatementsBySubject({ id: rpId }).then(statements => {
-                const description = filterObjectOfStatementsByPredicate(statements, process.env.REACT_APP_PREDICATES_DESCRIPTION, true);
-                const sameAs = filterObjectOfStatementsByPredicate(statements, process.env.REACT_APP_PREDICATES_SAME_AS, true);
-                const subProblems = filterObjectOfStatementsByPredicate(statements, process.env.REACT_APP_PREDICATES_SUB_PROBLEM, false);
+                const description = filterObjectOfStatementsByPredicate(statements, PREDICATES.DESCRIPTION, true);
+                const sameAs = filterObjectOfStatementsByPredicate(statements, PREDICATES.SAME_AS, true);
+                const subProblems = filterObjectOfStatementsByPredicate(statements, PREDICATES.SUB_PROBLEM, false);
                 setData(data => ({ ...data, description: description?.label, sameAs: sameAs, subProblems: subProblems ?? [] }));
             });
 
             // Get super research problems
             getStatementsByObjectAndPredicate({
                 objectId: rpId,
-                predicateId: process.env.REACT_APP_PREDICATES_SUB_PROBLEM
+                predicateId: PREDICATES.SUB_PROBLEM
             }).then(superProblems => {
                 setData(data => ({ ...data, superProblems: superProblems.map(s => s.subject) }));
             });

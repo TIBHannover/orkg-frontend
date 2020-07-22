@@ -8,6 +8,7 @@ import { find } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
+import { CLASSES } from 'constants/graphSettings';
 
 class RecentlyAddedPapers extends Component {
     state = {
@@ -17,7 +18,7 @@ class RecentlyAddedPapers extends Component {
     // TODO: replace a lot of this logic to the backend (select papers, first author and research fields)
     async componentDidMount() {
         getResourcesByClass({
-            id: process.env.REACT_APP_CLASSES_PAPER,
+            id: CLASSES.PAPER,
             page: 1,
             items: 7,
             sortBy: 'created_at',

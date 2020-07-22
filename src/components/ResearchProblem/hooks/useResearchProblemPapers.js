@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { getStatementsByObject, getStatementsBySubject } from 'network';
 import { useParams } from 'react-router-dom';
 import { getPaperData } from 'utils';
+import { CLASSES } from 'constants/graphSettings';
 
 function useResearchProblemPapers() {
     const pageSize = 10;
@@ -28,7 +29,7 @@ function useResearchProblemPapers() {
                 if (result.length > 0) {
                     // Get the papers of each contribution, ensure all papers have the 'Paper' class
                     const papers = result
-                        .filter(contribution => contribution.subject.classes.includes(process.env.REACT_APP_CLASSES_CONTRIBUTION))
+                        .filter(contribution => contribution.subject.classes.includes(CLASSES.CONTRIBUTION))
                         .map(contribution => {
                             return getStatementsByObject({
                                 id: contribution.subject.id,
@@ -36,7 +37,7 @@ function useResearchProblemPapers() {
                             }).then(papers => {
                                 // Fetch the data of each paper
                                 const papersData = papers
-                                    .filter(paper => paper.subject.classes.includes(process.env.REACT_APP_CLASSES_PAPER))
+                                    .filter(paper => paper.subject.classes.includes(CLASSES.PAPER))
                                     .map(paper => {
                                         return getStatementsBySubject({ id: paper.subject.id }).then(paperStatements => {
                                             return { ...paper, data: getPaperData(paper.subject.id, paper.subject.label, paperStatements) };

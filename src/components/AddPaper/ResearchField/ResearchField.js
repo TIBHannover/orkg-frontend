@@ -14,6 +14,7 @@ import Tour from 'reactour';
 import Tooltip from '../../Utils/Tooltip';
 import flattenDeep from 'lodash/flattenDeep';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+import { MISC } from 'constants/graphSettings';
 
 const ListGroupItemTransition = styled(CSSTransition)`
     &.fadeIn-enter,
@@ -64,7 +65,7 @@ class ResearchField extends Component {
     componentDidMount() {
         // select the main field is none is selected yet (i.e. first time visiting this step)
         if (this.props.selectedResearchField === '') {
-            this.getFields(process.env.REACT_APP_RESEARCH_FIELD_MAIN, 0);
+            this.getFields(MISC.RESEARCH_FIELD_MAIN, 0);
         }
     }
 
@@ -77,7 +78,7 @@ class ResearchField extends Component {
 
     handleNextClick = () => {
         // TODO validation: check if a research field is selected
-        if (this.props.selectedResearchField === process.env.REACT_APP_RESEARCH_FIELD_MAIN) {
+        if (this.props.selectedResearchField === MISC.RESEARCH_FIELD_MAIN) {
             this.setState({
                 showError: true
             });
@@ -209,7 +210,7 @@ class ResearchField extends Component {
                         })}
                 </CardDeck>
 
-                {researchFieldLabel && this.props.selectedResearchField !== process.env.REACT_APP_RESEARCH_FIELD_MAIN ? (
+                {researchFieldLabel && this.props.selectedResearchField !== MISC.RESEARCH_FIELD_MAIN ? (
                     <div className="mt-5 mb-3">
                         Selected research field: <b>{researchFieldLabel}</b>
                     </div>

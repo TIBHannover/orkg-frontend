@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { useLocation } from 'react-router-dom';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 
 function ClassDetails(props) {
     const location = useLocation();
@@ -26,13 +27,11 @@ function ClassDetails(props) {
                 // Get the template of the class
                 getStatementsByObjectAndPredicate({
                     objectId: props.match.params.id,
-                    predicateId: process.env.REACT_APP_TEMPLATE_OF_CLASS
+                    predicateId: PREDICATES.TEMPLATE_OF_CLASS
                 })
                     .then(statements =>
                         Promise.all(
-                            statements
-                                .filter(statement => statement.subject.classes?.includes(process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE))
-                                .map(st => st.subject)
+                            statements.filter(statement => statement.subject.classes?.includes(CLASSES.CONTRIBUTION_TEMPLATE)).map(st => st.subject)
                         )
                     )
                     .then(templates => {

@@ -9,6 +9,7 @@ import ROUTES from 'constants/routes';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
+import { CLASSES } from 'constants/graphSettings';
 
 class PaperHeader extends Component {
     render() {
@@ -37,7 +38,7 @@ class PaperHeader extends Component {
                     </Link>
                 )}
                 {this.props.viewPaper.authors.map((author, index) =>
-                    author.classes && author.classes.includes(process.env.REACT_APP_CLASSES_AUTHOR) ? (
+                    author.classes && author.classes.includes(CLASSES.AUTHOR) ? (
                         <Link key={index} to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}>
                             <Badge color="lightblue" className="mr-2 mb-2" key={index}>
                                 <Icon icon={faUser} className="text-primary" /> {author.label}

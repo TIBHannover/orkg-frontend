@@ -2,6 +2,7 @@ import { Cookies } from 'react-cookie';
 import queryString from 'query-string';
 import { orderBy } from 'lodash';
 import { sortMethod } from 'utils';
+import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
 export const url = `${process.env.REACT_APP_SERVER_URL}api/`;
 export const similaireServiceUrl = process.env.REACT_APP_SIMILARITY_SERVICE_URL;
 export const annotationServiceUrl = process.env.REACT_APP_ANNOTATION_SERVICE_URL;
@@ -180,7 +181,7 @@ export const createResource = (label, classes = []) => {
     return submitPostRequest(resourcesUrl, { 'Content-Type': 'application/json' }, { label, classes });
 };
 
-export const createLiteral = (label, datatype = process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE) => {
+export const createLiteral = (label, datatype = MISC.DEFAULT_LITERAL_DATATYPE) => {
     return submitPostRequest(literalsUrl, { 'Content-Type': 'application/json' }, { label: label, datatype: datatype });
 };
 
@@ -488,40 +489,40 @@ export const getClassOfTemplate = templateId => {
 export const getTemplateById = templateId => {
     return getResource(templateId).then(template =>
         getStatementsBySubject({ id: templateId }).then(templateStatements => {
-            const templatePredicate = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_PREDICATE);
+            const templatePredicate = templateStatements.find(statement => statement.predicate.id === PREDICATES.TEMPLATE_OF_PREDICATE);
 
-            const templateClass = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_CLASS);
+            const templateClass = templateStatements.find(statement => statement.predicate.id === PREDICATES.TEMPLATE_OF_CLASS);
 
-            const templateFormatLabel = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_LABEL_FORMAT);
+            const templateFormatLabel = templateStatements.find(statement => statement.predicate.id === PREDICATES.TEMPLATE_LABEL_FORMAT);
 
-            const templateIsStrict = templateStatements.find(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_STRICT);
+            const templateIsStrict = templateStatements.find(statement => statement.predicate.id === PREDICATES.TEMPLATE_STRICT);
 
-            const templateComponents = templateStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT);
+            const templateComponents = templateStatements.filter(statement => statement.predicate.id === PREDICATES.TEMPLATE_COMPONENT);
 
             const components = getStatementsBySubjects({ ids: templateComponents.map(component => component.object.id) }).then(
                 componentsStatements => {
                     return componentsStatements.map(componentStatements => {
                         const property = componentStatements.statements.find(
-                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY
+                            statement => statement.predicate.id === PREDICATES.TEMPLATE_COMPONENT_PROPERTY
                         );
                         const value = componentStatements.statements.find(
-                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALUE
+                            statement => statement.predicate.id === PREDICATES.TEMPLATE_COMPONENT_VALUE
                         );
 
                         const validationRules = componentStatements.statements.filter(
-                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_VALIDATION_RULE
+                            statement => statement.predicate.id === PREDICATES.TEMPLATE_COMPONENT_VALIDATION_RULE
                         );
 
                         const minOccurs = componentStatements.statements.find(
-                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_OCCURRENCE_MIN
+                            statement => statement.predicate.id === PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MIN
                         );
 
                         const maxOccurs = componentStatements.statements.find(
-                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_OCCURRENCE_MAX
+                            statement => statement.predicate.id === PREDICATES.TEMPLATE_COMPONENT_OCCURRENCE_MAX
                         );
 
                         const order = componentStatements.statements.find(
-                            statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_COMPONENT_ORDER
+                            statement => statement.predicate.id === PREDICATES.TEMPLATE_COMPONENT_ORDER
                         );
 
                         return {
@@ -575,13 +576,13 @@ export const getTemplateById = templateId => {
                       }
                     : {},
                 researchFields: templateStatements
-                    .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD)
+                    .filter(statement => statement.predicate.id === PREDICATES.TEMPLATE_OF_RESEARCH_FIELD)
                     .map(statement => ({
                         id: statement.object.id,
                         label: statement.object.label
                     })),
                 researchProblems: templateStatements
-                    .filter(statement => statement.predicate.id === process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM)
+                    .filter(statement => statement.predicate.id === PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM)
                     .map(statement => ({
                         id: statement.object.id,
                         label: statement.object.label
@@ -597,13 +598,13 @@ export const getTemplateById = templateId => {
  * @param {String} researchFieldId research field Id
  */
 export const getParentResearchFields = (researchFieldId, parents = []) => {
-    if (researchFieldId === process.env.REACT_APP_RESEARCH_FIELD_MAIN) {
+    if (researchFieldId === MISC.RESEARCH_FIELD_MAIN) {
         parents.push({ id: researchFieldId, label: 'Research Field' });
         return Promise.resolve(parents);
     } else {
         return getStatementsByObjectAndPredicate({
             objectId: researchFieldId,
-            predicateId: process.env.REACT_APP_PREDICATES_HAS_SUB_RESEARCH_FIELD
+            predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD
         }).then(parentResearchField => {
             parents.push(parentResearchField[0].object);
             return getParentResearchFields(parentResearchField[0].subject.id, parents);
@@ -619,13 +620,9 @@ export const getParentResearchFields = (researchFieldId, parents = []) => {
 export const getTemplatesByClass = classID => {
     return getStatementsByObjectAndPredicate({
         objectId: classID,
-        predicateId: process.env.REACT_APP_TEMPLATE_OF_CLASS
+        predicateId: PREDICATES.TEMPLATE_OF_CLASS
     }).then(statements =>
-        Promise.all(
-            statements
-                .filter(statement => statement.subject.classes?.includes(process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE))
-                .map(st => st.subject.id)
-        )
+        Promise.all(statements.filter(statement => statement.subject.classes?.includes(CLASSES.CONTRIBUTION_TEMPLATE)).map(st => st.subject.id))
     );
 };
 

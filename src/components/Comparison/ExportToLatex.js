@@ -1,7 +1,6 @@
 import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, Tooltip as ReactstrapTooltip } from 'reactstrap';
 import React, { Component } from 'react';
 import { createShortLink, getStatementsBySubject, getComparison } from 'network';
-
 import Cite from 'citation-js';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CustomInput } from 'reactstrap';
@@ -16,6 +15,7 @@ import queryString from 'query-string';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { getContributionIdsFromUrl } from 'utils';
+import { PREDICATES } from 'constants/graphSettings';
 
 const Textarea = styled(Input)`
     font-family: 'Courier New';
@@ -189,14 +189,14 @@ class ExportToLatex extends Component {
 
     parsePaperStatements = paperStatements => {
         // publication year
-        let publicationYear = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR);
+        let publicationYear = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_PUBLICATION_YEAR);
 
         if (publicationYear.length > 0) {
             publicationYear = publicationYear[0].object.label;
         }
 
         // authors
-        const authors = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR);
+        const authors = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR);
 
         const authorNamesArray = [];
 
@@ -240,7 +240,7 @@ class ExportToLatex extends Component {
             // Fetch the data of each contribution
             return getStatementsBySubject({ id: contribution.paperId })
                 .then(paperStatements => {
-                    let publicationDOI = paperStatements.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_DOI);
+                    let publicationDOI = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_DOI);
                     if (publicationDOI.length > 0) {
                         publicationDOI = publicationDOI[0].object.label;
                         if (publicationDOI !== '') {

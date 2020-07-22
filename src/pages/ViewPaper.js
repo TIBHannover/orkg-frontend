@@ -30,6 +30,7 @@ import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
 import SharePaper from '../components/ViewPaper/SharePaper';
 import { getPaperData_ViewPaper } from 'utils';
+import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
 export const EditModeHeader = styled(Container)`
     background-color: #80869b !important;
@@ -137,14 +138,8 @@ class ViewPaper extends Component {
     };
 
     handleCreateContribution = async () => {
-        const newContribution = await createResource(`Contribution ${this.state.contributions.length + 1}`, [
-            process.env.REACT_APP_CLASSES_CONTRIBUTION
-        ]);
-        const statement = await createResourceStatement(
-            this.props.match.params.resourceId,
-            process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION,
-            newContribution.id
-        );
+        const newContribution = await createResource(`Contribution ${this.state.contributions.length + 1}`, [CLASSES.CONTRIBUTION]);
+        const statement = await createResourceStatement(this.props.match.params.resourceId, PREDICATES.HAS_CONTRIBUTION, newContribution.id);
         this.setState({ contributions: [...this.state.contributions, { ...statement.object, statementId: statement.id }] });
         toast.success('Contribution created successfully');
     };
@@ -250,10 +245,10 @@ class ViewPaper extends Component {
         let authors = [];
         if (this.props.viewPaper.authors.length > 0) {
             authors = this.props.viewPaper.authors
-                .filter(author => author.classes && author.classes.includes(process.env.REACT_APP_CLASSES_AUTHOR))
+                .filter(author => author.classes && author.classes.includes(CLASSES.AUTHOR))
                 .map(author => {
                     return getStatementsBySubject({ id: author.id }).then(authorStatements => {
-                        return authorStatements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_ORCID);
+                        return authorStatements.find(statement => statement.predicate.id === PREDICATES.HAS_ORCID);
                     });
                 });
         }

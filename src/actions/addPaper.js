@@ -4,6 +4,7 @@ import { guid } from '../utils';
 import { mergeWith, isArray, uniqBy } from 'lodash';
 import { createResource, selectResource, createProperty, createValue, loadStatementBrowserData } from './statementBrowser';
 import { toast } from 'react-toastify';
+import { PREDICATES, MISC } from 'constants/graphSettings';
 
 export const updateGeneralData = data => dispatch => {
     dispatch({
@@ -231,7 +232,7 @@ export const prefillStatements = ({ statements, resourceId, syncBackend = false 
                 valueId: value.valueId ? value.valueId : valueId,
                 label: value.label,
                 type: value.type ? value.type : 'object',
-                ...(value.type === 'literal' && { datatype: value.datatype ?? process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE }),
+                ...(value.type === 'literal' && { datatype: value.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE }),
                 propertyId: value.propertyId,
                 existingResourceId: syncBackend && newObject ? newObject.id : value.existingResourceId ? value.existingResourceId : null,
                 isExistingValue: syncBackend ? true : value.isExistingValue ? value.isExistingValue : false,
@@ -358,7 +359,7 @@ export const getResourceObject = (data, resourceId, newProperties) => {
 // Middleware function to transform frontend data to backend format
 export const saveAddPaper = data => {
     return async dispatch => {
-        const researchProblemPredicate = process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM;
+        const researchProblemPredicate = PREDICATES.HAS_RESEARCH_PROBLEM;
         // Get new properties (ensure that  no duplicate labels are in the new properties)
         let newProperties = data.properties.allIds.filter(propertyId => !data.properties.byId[propertyId].existingPredicateId);
         newProperties = newProperties.map(propertyId => ({ id: propertyId, label: data.properties.byId[propertyId].label }));
