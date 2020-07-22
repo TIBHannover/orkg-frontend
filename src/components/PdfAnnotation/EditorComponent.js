@@ -84,6 +84,7 @@ class EditorComponent extends BaseEditorComponent {
         this.setState({
             show: false
         });
+        this.clearHooks();
     }
 
     prepare(row, col, prop, td, originalValue, cellProperties) {
@@ -236,6 +237,7 @@ class EditorComponent extends BaseEditorComponent {
                                 value={value}
                                 onChange={(e, value) => this.handleInputChange(e ? e.target.value : value)}
                                 innerRef={this.literalInputRef}
+                                onKeyDown={e => e.keyCode === 13 && this.finishEditing()}
                                 autoFocus
                             />
                         )}
