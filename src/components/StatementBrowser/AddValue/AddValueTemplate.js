@@ -170,6 +170,14 @@ export default function AddValueTemplate(props) {
         }
     }, [props]);
 
+    const resourceTooltip = (
+        <>
+            Choose resource to link this to a resource which can contain values on its own. <br /> To fetch an existing resource by ID type “#”
+            without quotes following with the resource ID (e.g: #R12).
+        </>
+    );
+    const literalTooltip = 'Choose literal for values like numbers, plain text or mathematical expressions using TeX delimiters $$...$$';
+
     return (
         <ValueItemStyle className={showAddValue ? 'editingLabel' : ''}>
             {modal ? (
@@ -227,37 +235,19 @@ export default function AddValueTemplate(props) {
                         {!props.valueClass && (
                             <InputGroupButtonDropdown addonType="prepend" isOpen={dropdownValueTypeOpen} toggle={setDropdownValueTypeOpen}>
                                 <StyledDropdownToggle>
-                                    <Tippy
-                                        content={
-                                            valueType === 'object' ? (
-                                                <>
-                                                    Choose object to link this to an object, which can contain values on its own. <br /> To fetch an
-                                                    existing resource by ID just type “#” without quotes following with the resource ID (e.g: #R12).
-                                                </>
-                                            ) : (
-                                                'Choose literal for values like numbers, plain text or mathematical expressions using TeX delimiters $$...$$'
-                                            )
-                                        }
-                                    >
-                                        <small>{valueType.charAt(0).toUpperCase() + valueType.slice(1) + ' '}</small>
+                                    <Tippy content={valueType === 'object' ? resourceTooltip : literalTooltip}>
+                                        <small>{valueType === 'object' ? 'Resource' : 'Literal'} </small>
                                     </Tippy>
                                     <Icon size="xs" icon={faBars} />
                                 </StyledDropdownToggle>
                                 <DropdownMenu>
                                     <StyledDropdownItem onClick={() => setValueType('object')}>
-                                        <Tippy
-                                            content={
-                                                <>
-                                                    Choose object to link this to an object, which can contain values on its own. <br /> To fetch an
-                                                    existing resource by ID just type “#” without quotes following with the resource ID (e.g: #R12).
-                                                </>
-                                            }
-                                        >
-                                            <span>Object</span>
+                                        <Tippy content={resourceTooltip}>
+                                            <span>Resource</span>
                                         </Tippy>
                                     </StyledDropdownItem>
                                     <StyledDropdownItem onClick={() => setValueType('literal')}>
-                                        <Tippy content="Choose literal for values like numbers, plain text or mathematical expressions using TeX delimiters $$...$$">
+                                        <Tippy content={literalTooltip}>
                                             <span>Literal</span>
                                         </Tippy>
                                     </StyledDropdownItem>
