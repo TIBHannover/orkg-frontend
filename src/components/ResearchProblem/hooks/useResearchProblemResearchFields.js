@@ -2,12 +2,12 @@ import { useState, useEffect, useCallback } from 'react';
 import { getResearchFieldsByResearchProblemId } from 'network';
 import { useParams } from 'react-router-dom';
 
-function useResearchProblemStatistics() {
+function useResearchProblemResearchFields() {
     const [researchFields, setResearchFields] = useState([]);
     const { researchProblemId } = useParams();
     const [isLoadingResearchFields, setIsLoadingResearchFields] = useState(true);
 
-    const loadResearchProblemStatistics = useCallback(rpId => {
+    const loadResearchProblemResearchFields = useCallback(rpId => {
         if (rpId) {
             setIsLoadingResearchFields(true);
             // Get the research fields of research problem
@@ -20,9 +20,9 @@ function useResearchProblemStatistics() {
 
     useEffect(() => {
         if (researchProblemId !== undefined) {
-            loadResearchProblemStatistics(researchProblemId);
+            loadResearchProblemResearchFields(researchProblemId);
         }
-    }, [researchProblemId, loadResearchProblemStatistics]);
+    }, [researchProblemId, loadResearchProblemResearchFields]);
     return [researchFields, isLoadingResearchFields];
 }
-export default useResearchProblemStatistics;
+export default useResearchProblemResearchFields;

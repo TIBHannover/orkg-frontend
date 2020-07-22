@@ -706,3 +706,13 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
 export const getResearchFieldsByResearchProblemId = problemId => {
     return submitGetRequest(`${problemsUrl}${encodeURIComponent(problemId)}/fields`);
 };
+
+export const getContributorsByResearchProblemId = ({ id, page = 1, items = 9999 }) => {
+    const params = queryString.stringify({ page: page, items: items });
+    return submitGetRequest(`${problemsUrl}${encodeURIComponent(id)}/users?${params}`);
+};
+
+export const getAuthorsByResearchProblemId = ({ id, page = 1, items = 9999 }) => {
+    const params = queryString.stringify({ page: page, items: items });
+    return submitGetRequest(`${problemsUrl}${encodeURIComponent(id)}/authors?${params}`);
+};

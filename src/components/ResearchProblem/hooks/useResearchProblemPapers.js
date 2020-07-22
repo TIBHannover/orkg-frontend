@@ -16,7 +16,7 @@ function useResearchProblemPapers() {
         page => {
             setIsLoading(true);
 
-            // Get the statements that contains the research field as an object
+            // Get the statements that contains the research problem as an object
             getStatementsByObject({
                 id: researchProblemId,
                 page: page,
@@ -52,14 +52,15 @@ function useResearchProblemPapers() {
                     Promise.all(papers).then(results => {
                         setPapers(prevResources => [...prevResources, ...results]);
                         setIsLoading(false);
-                        setHasNextPage(results.length < pageSize || results.length === 0 ? false : true);
+                        // use result instead of results because filtering by contribution class might reduce the number of items
+                        setHasNextPage(result.length < pageSize || result.length === 0 ? false : true);
                         setIsLastPageReached(false);
                         setPage(page + 1);
                     });
                 } else {
                     setIsLoading(false);
                     setHasNextPage(false);
-                    setIsLastPageReached(true);
+                    setIsLastPageReached(page > 1 ? true : false);
                 }
             });
         },
