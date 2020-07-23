@@ -4,6 +4,7 @@ import { Container } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PaperCardDynamic from './../components/PaperCard/PaperCardDynamic';
+import { CLASSES } from 'constants/graphSettings';
 
 export default class Papers extends Component {
     constructor(props) {
@@ -35,7 +36,7 @@ export default class Papers extends Component {
     loadMorePapers = () => {
         this.setState({ isNextPageLoading: true });
         getResourcesByClass({
-            id: process.env.REACT_APP_CLASSES_PAPER,
+            id: CLASSES.PAPER,
             page: this.state.page,
             items: this.pageSize,
             sortBy: 'created_at',

@@ -11,6 +11,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { updateResourceClasses, getStatementsBySubjectAndPredicate } from 'network';
 import { toast } from 'react-toastify';
+import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
 const Items = props => {
     const pageSize = 5;
@@ -44,14 +45,14 @@ const Items = props => {
                 .then(resourcesStatements => {
                     const resources = resourcesStatements.map(resourceStatements => {
                         const resourceSubject = find(result, { id: resourceStatements.id });
-                        if (props.filterClass === process.env.REACT_APP_CLASSES_PAPER) {
+                        if (props.filterClass === CLASSES.PAPER) {
                             return getPaperData(
                                 resourceStatements.id,
                                 resourceStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
                                 resourceStatements.statements
                             );
                         }
-                        if (props.filterClass === process.env.REACT_APP_CLASSES_COMPARISON) {
+                        if (props.filterClass === CLASSES.COMPARISON) {
                             return getComparisonData(
                                 resourceStatements.id,
                                 resourceStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
@@ -110,17 +111,13 @@ const Items = props => {
 
             const promises = selectedItems.map(id => {
                 // set the class of paper to DeletedPapers
-                const promisePaper = updateResourceClasses(id, [process.env.REACT_APP_CLASSES_PAPER_DELETED]);
+                const promisePaper = updateResourceClasses(id, [CLASSES.PAPER_DELETED]);
                 // set the class of paper of contributions to DeletedContribution
                 const promisesContributions = getStatementsBySubjectAndPredicate({
                     subjectId: id,
-                    predicateId: process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION
+                    predicateId: PREDICATES.HAS_CONTRIBUTION
                 }).then(contributions =>
-                    Promise.all(
-                        contributions.map(contribution =>
-                            updateResourceClasses(contribution.object.id, [process.env.REACT_APP_CLASSES_CONTRIBUTION_DELETED])
-                        )
-                    )
+                    Promise.all(contributions.map(contribution => updateResourceClasses(contribution.object.id, [CLASSES.CONTRIBUTION_DELETED])))
                 );
                 return Promise.all([promisePaper, promisesContributions]);
             });
@@ -149,7 +146,7 @@ const Items = props => {
             {resources.length > 0 && (
                 <div>
                     {resources.map(resource => {
-                        if (props.filterClass === process.env.REACT_APP_CLASSES_PAPER) {
+                        if (props.filterClass === CLASSES.PAPER) {
                             const paperId = resource.id;
                             const selected = selectedItems.includes(paperId);
 
@@ -163,7 +160,7 @@ const Items = props => {
                                 />
                             );
                         }
-                        if (props.filterClass === process.env.REACT_APP_CLASSES_COMPARISON) {
+                        if (props.filterClass === CLASSES.COMPARISON) {
                             return <ComparisonCard comparison={{ ...resource }} key={`pc${resource.id}`} />;
                         }
                         return null;

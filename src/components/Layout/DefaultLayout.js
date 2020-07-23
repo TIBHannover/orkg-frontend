@@ -1,7 +1,6 @@
 import React from 'react';
 import 'assets/scss/DefaultLayout.scss';
 import { ToastContainer, Slide } from 'react-toastify';
-import { popupDelay } from 'utils';
 import Header from 'components/Layout/Header/Header';
 import Footer from 'components/Layout/Footer';
 import PropTypes from 'prop-types';
@@ -51,7 +50,7 @@ export default function DefaultLayout(props) {
         <StyledBody className="body">
             <ToastContainer
                 position="top-right"
-                autoClose={parseInt(popupDelay)}
+                autoClose={5000}
                 hideProgressBar
                 transition={Slide}
                 className="toast-container"

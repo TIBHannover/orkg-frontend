@@ -245,7 +245,7 @@ class AddPaper extends Component {
                         this.toggleTour();
                     }}
                     id="helpIcon"
-                    woochat={process.env.REACT_APP_WOOCHAT_WEBSITE_TOKEN}
+                    woochat={process.env.REACT_APP_CHATWOOT_WEBSITE_TOKEN}
                 >
                     <HelpIcon icon={faQuestion} />
                 </Help>

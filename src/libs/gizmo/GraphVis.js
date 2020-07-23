@@ -8,6 +8,7 @@ import MinimumSpanningTree from './mst';
 import Layout from './Layout';
 import Navigation from './Navigation';
 import groupBy from 'lodash/groupBy';
+import { CLASSES } from 'constants/graphSettings';
 
 export default class GraphVis {
     constructor() {
@@ -934,7 +935,7 @@ export default class GraphVis {
 
         if (node_data.classificationArray) {
             // todo: based on the classificationArray, add further icons
-            if (node_data.classificationArray.indexOf(process.env.REACT_APP_CLASSES_PAPER) !== -1) {
+            if (node_data.classificationArray.indexOf(CLASSES.PAPER) !== -1) {
                 node.addIcon('paperIcon');
             }
         }

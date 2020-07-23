@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import html2canvas from 'html2canvas';
+// There is an issue in the main package (Unhandled Rejection (TypeError): setting getter-only property "className")
+import html2canvas from '@trainiac/html2canvas';
 import jsPDF from 'jspdf';
 import { DropdownItem } from 'reactstrap';
 import PropTypes from 'prop-types';
@@ -12,7 +13,7 @@ class GeneratePdf extends Component {
         return (
             <DropdownItem
                 onClick={() => {
-                    const header = document.getElementById(this.props.id).getElementsByClassName('rt-thead')[0];
+                    const header = document.getElementById(this.props.id).getElementsByClassName('comparison-thead')[0];
                     const headerHeightMm = header.offsetHeight;
                     const headerWidthMm = header.offsetWidth;
                     const body = document.getElementById(this.props.id).getElementsByClassName('rt-tbody')[0];
@@ -22,6 +23,8 @@ class GeneratePdf extends Component {
                         const imgData = canvas.toDataURL('image/png');
                         const pdf = new jsPDF('l', 'mm', [headerHeightMm + bodyHeightMm, headerWidthMm]);
                         pdf.addImage(imgData, 'PNG', 0, 5);
+                        // There is issue (Unable to find element in cloned iframe) if we don't select the body again!
+                        const body = document.getElementById(this.props.id).getElementsByClassName('rt-tbody')[0];
                         // Body
                         html2canvas(body).then(canvas => {
                             const imgData2 = canvas.toDataURL('image/png');

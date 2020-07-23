@@ -16,7 +16,7 @@ function ContributorCard(props) {
         <div>
             <div className="d-flex">
                 <Link className="float-left" to={reverse(ROUTES.USER_PROFILE, { userId: props.contributor.id })}>
-                    <StyledGravatar className="rounded-circle" style={{ border: '3px solid #fff' }} email={props.contributor.email} size={50} />
+                    <StyledGravatar className="rounded-circle" style={{ border: '3px solid #fff' }} md5={props.contributor.email} size={50} />
                 </Link>
                 <div className="d-flex justify-content-center" style={{ marginLeft: '10px', flexDirection: 'column' }}>
                     <div>

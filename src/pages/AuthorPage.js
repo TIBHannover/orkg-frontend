@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { getPaperData } from 'utils';
 import { find } from 'lodash';
 import PropTypes from 'prop-types';
+import { PREDICATES } from 'constants/graphSettings';
 
 const AuthorMetaInfo = styled.div`
     .key {
@@ -62,7 +63,7 @@ class AuthorPage extends Component {
     loadAuthorData = () => {
         // Get the author data
         getStatementsBySubject({ id: this.props.match.params.authorId }).then(authorStatements => {
-            const orcidStatement = authorStatements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_ORCID);
+            const orcidStatement = authorStatements.find(statement => statement.predicate.id === PREDICATES.HAS_ORCID);
             let orcid = null;
             if (orcidStatement) {
                 orcid = orcidStatement.object.label;
@@ -89,7 +90,7 @@ class AuthorPage extends Component {
             if (result.length > 0) {
                 // Fetch the data of each paper
                 getStatementsBySubjects({
-                    ids: result.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR).map(p => p.subject.id)
+                    ids: result.filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR).map(p => p.subject.id)
                 })
                     .then(papersStatements => {
                         const papers = papersStatements.map(paperStatements => {

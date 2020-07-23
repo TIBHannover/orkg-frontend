@@ -28,6 +28,7 @@ import RelatedResources from '../components/Comparison/RelatedResources';
 import RelatedFigures from '../components/Comparison/RelatedFigures';
 import Tippy from '@tippy.js/react';
 import { Cookies } from 'react-cookie';
+import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
 const cookies = new Cookies();
 
@@ -207,25 +208,17 @@ class Comparison extends Component {
         if (this.props.match.params.comparisonId) {
             getResource(this.props.match.params.comparisonId)
                 .then(comparisonResource => {
-                    if (!comparisonResource.classes.includes(process.env.REACT_APP_CLASSES_COMPARISON)) {
-                        throw new Error(`The requested resource is not of class "${process.env.REACT_APP_CLASSES_COMPARISON}".`);
+                    if (!comparisonResource.classes.includes(CLASSES.COMPARISON)) {
+                        throw new Error(`The requested resource is not of class "${CLASSES.COMPARISON}".`);
                     }
                     return getStatementsBySubject({ id: this.props.match.params.comparisonId }).then(comparisonStatement => {
-                        const descriptionStatement = comparisonStatement.find(
-                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_DESCRIPTION
-                        );
-                        const referenceStatement = comparisonStatement.find(
-                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_REFERENCE
-                        );
-                        const urlStatement = comparisonStatement.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL);
+                        const descriptionStatement = comparisonStatement.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
+                        const referenceStatement = comparisonStatement.find(statement => statement.predicate.id === PREDICATES.REFERENCE);
+                        const urlStatement = comparisonStatement.find(statement => statement.predicate.id === PREDICATES.URL);
 
-                        const resourcesStatements = comparisonStatement.filter(
-                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_RELATED_RESOURCES
-                        );
+                        const resourcesStatements = comparisonStatement.filter(statement => statement.predicate.id === PREDICATES.RELATED_RESOURCES);
 
-                        const figureStatements = comparisonStatement.filter(
-                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_RELATED_FIGURE
-                        );
+                        const figureStatements = comparisonStatement.filter(statement => statement.predicate.id === PREDICATES.RELATED_FIGURE);
 
                         if (urlStatement) {
                             this.getComparisonResult(urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')));

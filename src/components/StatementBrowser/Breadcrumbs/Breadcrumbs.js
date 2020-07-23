@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, BackButton, BreadcrumbList, BreadcrumbItem } from './styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faLink } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faLink, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
@@ -43,7 +43,13 @@ export default function Breadcrumbs(props) {
                             key={index}
                             onClick={() => (props.resourceHistory.allIds.length !== index + 1 ? handleOnClick(item.id, index) : undefined)}
                         >
-                            {item.propertyLabel ? `${item.propertyLabel} : ${item.label}` : item.label}
+                            {item.propertyLabel ? (
+                                <>
+                                    <i>{item.propertyLabel}</i> <Icon icon={faArrowRight} /> {item.label}
+                                </>
+                            ) : (
+                                item.label
+                            )}
 
                             {props.resourceHistory.allIds.length === index + 1 && !props.openExistingResourcesInDialog && existingResourceId && (
                                 <Tippy content="Go to resource page">

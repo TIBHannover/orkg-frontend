@@ -6,6 +6,7 @@ import { getResourcesByClass, getStatementsBySubjects } from '../network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
 class FeaturedComparisons extends Component {
     state = {
@@ -28,7 +29,7 @@ class FeaturedComparisons extends Component {
         });
 
         const responseJson = await getResourcesByClass({
-            id: process.env.REACT_APP_CLASSES_FEATURED_COMPARISON_CATEGORY,
+            id: CLASSES.FEATURED_COMPARISON_CATEGORY,
             sortBy: 'created_at',
             desc: false
         });
@@ -45,7 +46,7 @@ class FeaturedComparisons extends Component {
 
     getFeaturedComparisons = async () => {
         const responseJson = await getResourcesByClass({
-            id: process.env.REACT_APP_CLASSES_FEATURED_COMPARISON,
+            id: CLASSES.FEATURED_COMPARISON,
             sortBy: 'created_at',
             desc: false
         });
@@ -64,23 +65,17 @@ class FeaturedComparisons extends Component {
             for (const comparisonStatement of comparisonStatements) {
                 if (comparisonStatement.id === comparison.id) {
                     const descriptionStatement = comparisonStatement.statements.filter(
-                        statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_DESCRIPTION
+                        statement => statement.predicate.id === PREDICATES.DESCRIPTION
                     );
                     description = descriptionStatement.length > 0 ? descriptionStatement[0].object.label : '';
 
-                    const iconStatement = comparisonStatement.statements.filter(
-                        statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_ICON
-                    );
+                    const iconStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.ICON);
                     icon = iconStatement.length > 0 ? iconStatement[0].object.label : '';
 
-                    const urlStatement = comparisonStatement.statements.filter(
-                        statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL
-                    );
+                    const urlStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.URL);
                     url = urlStatement.length > 0 ? urlStatement[0].object.label : '';
 
-                    const typeStatement = comparisonStatement.statements.filter(
-                        statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_TYPE
-                    );
+                    const typeStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.TYPE);
                     type = typeStatement.length > 0 ? typeStatement[0].object.id : '';
                 }
             }

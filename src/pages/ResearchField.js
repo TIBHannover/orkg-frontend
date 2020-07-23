@@ -10,6 +10,7 @@ import { find } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
+import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
 class ResearchField extends Component {
     constructor(props) {
@@ -76,8 +77,8 @@ class ResearchField extends Component {
                 // Fetch the data of each paper
                 getStatementsBySubjects({
                     ids: result
-                        .filter(paper => paper.subject.classes.includes(process.env.REACT_APP_CLASSES_PAPER))
-                        .filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD)
+                        .filter(paper => paper.subject.classes.includes(CLASSES.PAPER))
+                        .filter(statement => statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD)
                         .map(p => p.subject.id)
                 })
                     .then(papersStatements => {
