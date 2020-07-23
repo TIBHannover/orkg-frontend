@@ -102,6 +102,16 @@ function useExtractionModal(props) {
         importTableData();
     };
 
+    const predefinedColumns = [
+        'paper:title',
+        'paper:authors',
+        'paper:publication_month',
+        'paper:publication_year',
+        'paper:doi',
+        'paper:research',
+        'contribution:research_problem'
+    ];
+
     const importTableData = async () => {
         const researchProblemPredicate = process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM;
         const header = tableData[0];
@@ -111,6 +121,16 @@ function useExtractionModal(props) {
         if (!header.includes('paper:title')) {
             alert('Paper titles are missing. Make sure to add metadata for each paper (using the "Extract references" button)');
             return;
+        }
+
+        for (const value of header) {
+            // ensure all predicates are mapped
+            if (!predefinedColumns.includes(value) && !value.startsWith('orkg:')) {
+                alert(
+                    "Make sure all header labels are using ORKG properties (the values in the first row should be black instead of grey). In case you don't want to import a column, remove it before importing"
+                );
+                return;
+            }
         }
 
         for (const [index, row] of tableData.entries()) {
@@ -141,15 +161,7 @@ function useExtractionModal(props) {
                 continue;
             }
 
-            rowObject = omit(rowObject, [
-                'paper:title',
-                'paper:authors',
-                'paper:publication_month',
-                'paper:publication_year',
-                'paper:doi',
-                'paper:research',
-                'contribution:research_problem'
-            ]);
+            rowObject = omit(rowObject, predefinedColumns);
 
             const contributionStatements = { [process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM]: [] };
 

@@ -3,12 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { isString } from 'lodash';
 
-function useTableEditor(props) {
+function useTableEditor(tableId, tableRef) {
     const dispatch = useDispatch();
-    const tableData = useSelector(state => state.pdfAnnotation.tableData[props.id]);
+    const tableData = useSelector(state => state.pdfAnnotation.tableData[tableId]);
 
     const removeEmptyRows = () => {
-        const tableInstance = props.setRef.current.hotInstance;
+        const tableInstance = tableRef.current.hotInstance;
         const rowAmount = tableInstance.countRows();
 
         const toRemove = [];
@@ -39,7 +39,7 @@ function useTableEditor(props) {
                 }
 
                 tableUpdates.push([selectionStart.row, col, null, newValue]);
-                dispatch(updateTableData(props.id, tableUpdates));
+                dispatch(updateTableData(tableId, tableUpdates));
             }
         }
     };
@@ -51,7 +51,7 @@ function useTableEditor(props) {
             return;
         }
 
-        const tableInstance = props.setRef.current.hotInstance;
+        const tableInstance = tableRef.current.hotInstance;
         const firstSelection = selection[0];
         const selectionStart = firstSelection.start;
         const selectionEnd = firstSelection.end;
@@ -102,7 +102,7 @@ function useTableEditor(props) {
             return;
         }
 
-        dispatch(updateTableData(props.id, tableUpdates));
+        dispatch(updateTableData(tableId, tableUpdates));
         toast.success('Columns successfully splitted');
     };
 
