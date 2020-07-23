@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import useExtractionModal from './hooks/useExtractionModal';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
+import useTableEditor from './hooks/useTableEditor';
 
 const ExtractionModal = props => {
     const [loading, importedData, extractionSuccessful, editorRef, transposeTable, handleCsvDownload, handleImportData] = useExtractionModal(props);
@@ -17,6 +18,7 @@ const ExtractionModal = props => {
     const toggleExtractReferencesModal = () => {
         setExtractReferencesModalOpen(!extractReferencesModalOpen);
     };
+    const { removeEmptyRows } = useTableEditor(props.id, editorRef);
 
     const comparisonUrl = importedData ? reverse(ROUTES.COMPARISON) + '?contributions=' + importedData.map(entry => entry.contributionId) : null;
 
@@ -43,11 +45,14 @@ const ExtractionModal = props => {
                                         <Button size="sm" color="darkblue" onClick={toggleExtractReferencesModal}>
                                             Extract references
                                         </Button>{' '}
+                                        <Button size="sm" color="darkblue" onClick={handleCsvDownload}>
+                                            Download CSV
+                                        </Button>{' '}
                                         <Button size="sm" color="darkblue" onClick={transposeTable}>
                                             Transpose
                                         </Button>{' '}
-                                        <Button size="sm" color="darkblue" onClick={handleCsvDownload}>
-                                            Download CSV
+                                        <Button size="sm" color="darkblue" onClick={removeEmptyRows}>
+                                            Remove empty rows
                                         </Button>
                                     </div>
                                 </>
