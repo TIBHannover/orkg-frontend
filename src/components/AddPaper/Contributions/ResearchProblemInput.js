@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { guid, compareOption } from 'utils';
 import { getResourcesByClass } from 'network';
 import styled from 'styled-components';
+import { CLASSES } from 'constants/graphSettings';
 
 const StyledSelectOption = styled.div`
     display: flex;
@@ -36,7 +37,7 @@ function ResearchProblemInput(props) {
             try {
                 // Get the resoures that contains 'Problem' as a class
                 const responseJson = await getResourcesByClass({
-                    id: process.env.REACT_APP_CLASSES_PROBLEM,
+                    id: CLASSES.PROBLEM,
                     page: 1,
                     items: 999,
                     sortBy: 'created_at',

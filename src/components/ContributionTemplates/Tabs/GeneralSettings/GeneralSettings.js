@@ -6,6 +6,7 @@ import { setLabel, setPredicate, setClass, setResearchFields, setResearchProblem
 import { predicatesUrl, resourcesUrl, classesUrl, createPredicate, createClass } from 'network';
 import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
 import PropTypes from 'prop-types';
+import { CLASSES } from 'constants/graphSettings';
 
 function GeneralSettings(props) {
     const inputRef = useRef(null);
@@ -152,7 +153,7 @@ function GeneralSettings(props) {
                         <Label>Research fields</Label>
                         <AutoComplete
                             requestUrl={resourcesUrl}
-                            optionsClass={process.env.REACT_APP_CLASSES_RESEARCH_FIELD}
+                            optionsClass={CLASSES.RESEARCH_FIELD}
                             onItemSelected={handleResearchFieldSelect}
                             placeholder={props.editMode ? 'Select or type to enter a research field' : 'No research fields'}
                             autoFocus
@@ -167,7 +168,7 @@ function GeneralSettings(props) {
                         <Label>Research problems</Label>
                         <AutoComplete
                             requestUrl={resourcesUrl}
-                            optionsClass={process.env.REACT_APP_CLASSES_PROBLEM}
+                            optionsClass={CLASSES.PROBLEM}
                             onItemSelected={handleResearchProblemSelect}
                             placeholder={props.editMode ? 'Select or type to enter a research problem' : 'No research problem'}
                             autoFocus

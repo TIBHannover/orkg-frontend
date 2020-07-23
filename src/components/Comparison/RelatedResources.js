@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getStatementsBySubject } from 'network';
 import { Card, CardImg, CardText, CardBody, CardTitle, Button, CardColumns } from 'reactstrap';
+import { PREDICATES } from 'constants/graphSettings';
 
 class RelatedResources extends Component {
     constructor(props) {
@@ -40,11 +41,9 @@ class RelatedResources extends Component {
                     });
                 } else {
                     await getStatementsBySubject({ id: resource.object.id }).then(statements => {
-                        const imageStatement = statements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_IMAGE);
-                        const urlStatement = statements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_URL);
-                        const descriptionStatement = statements.find(
-                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_DESCRIPTION
-                        );
+                        const imageStatement = statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
+                        const urlStatement = statements.find(statement => statement.predicate.id === PREDICATES.URL);
+                        const descriptionStatement = statements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
 
                         relatedResources.push({
                             url: urlStatement ? urlStatement.object.label : '',

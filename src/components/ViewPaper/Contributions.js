@@ -24,6 +24,7 @@ import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import SuggestedTemplates from 'components/StatementBrowser/SuggestedTemplates/SuggestedTemplates';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
 const Title = styled.div`
     font-size: 18px;
@@ -118,11 +119,7 @@ class Contributions extends Component {
     handleResearchProblemsChange = async (problemsArray, a) => {
         problemsArray = problemsArray ? problemsArray : [];
         if (a.action === 'select-option') {
-            const statement = await createResourceStatement(
-                this.state.selectedContribution,
-                process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM,
-                a.option.id
-            );
+            const statement = await createResourceStatement(this.state.selectedContribution, PREDICATES.HAS_RESEARCH_PROBLEM, a.option.id);
             //find the index of research problem
             const objIndex = problemsArray.findIndex(obj => obj.id === a.option.id);
             // set the statement of the research problem
@@ -131,12 +128,8 @@ class Contributions extends Component {
             problemsArray = [...problemsArray.slice(0, objIndex), updatedObj, ...problemsArray.slice(objIndex + 1)];
             toast.success('Research problem added successfully');
         } else if (a.action === 'create-option') {
-            const newResource = await createResource(a.createdOptionLabel, [process.env.REACT_APP_CLASSES_PROBLEM]);
-            const statement = await createResourceStatement(
-                this.state.selectedContribution,
-                process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM,
-                newResource.id
-            );
+            const newResource = await createResource(a.createdOptionLabel, [CLASSES.PROBLEM]);
+            const statement = await createResourceStatement(this.state.selectedContribution, PREDICATES.HAS_RESEARCH_PROBLEM, newResource.id);
             //find the index of research problem
             const objIndex = problemsArray.findIndex(obj => obj.id === a.createdOptionId);
             // set the statement of the research problem

@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import { sortMethod } from 'utils';
 import { reverse } from 'named-urls';
 import ContentLoader from 'react-content-loader';
+import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
 const CarouselContainer = styled.div`
     width: 100%;
@@ -54,7 +55,7 @@ class FeaturedComparisons extends Component {
         });
 
         const responseJson = await getResourcesByClass({
-            id: process.env.REACT_APP_CLASSES_FEATURED_COMPARISON,
+            id: CLASSES.FEATURED_COMPARISON,
             sortBy: 'created_at',
             desc: false
         });
@@ -75,29 +76,21 @@ class FeaturedComparisons extends Component {
 
             for (const comparisonStatement of comparisonStatements) {
                 if (comparisonStatement.id === comparison.id) {
-                    const onHomepageStatement = comparisonStatement.statements.filter(
-                        statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_ON_HOMEPAGE
-                    );
+                    const onHomepageStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.ON_HOMEPAGE);
                     onHomepage = onHomepageStatement.length > 0 ? true : false;
 
                     const descriptionStatement = comparisonStatement.statements.filter(
-                        statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_DESCRIPTION
+                        statement => statement.predicate.id === PREDICATES.DESCRIPTION
                     );
                     description = descriptionStatement.length > 0 ? descriptionStatement[0].object.label : '';
 
-                    const iconStatement = comparisonStatement.statements.filter(
-                        statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_ICON
-                    );
+                    const iconStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.ICON);
                     icon = iconStatement.length > 0 ? iconStatement[0].object.label : '';
 
-                    const typeStatement = comparisonStatement.statements.filter(
-                        statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_TYPE
-                    );
+                    const typeStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.TYPE);
                     type = typeStatement.length > 0 ? typeStatement[0].object.id : '';
 
-                    const orderStatement = comparisonStatement.statements.filter(
-                        statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_ORDER
-                    );
+                    const orderStatement = comparisonStatement.statements.filter(statement => statement.predicate.id === PREDICATES.ORDER);
                     order = orderStatement.length > 0 ? orderStatement[0].object.label : Infinity;
                 }
             }

@@ -8,6 +8,7 @@ import TemplateCard from 'components/ContributionTemplates/TemplateCard';
 import { Container, Col, Row, FormGroup, Label, Form } from 'reactstrap';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 
 export default class ContributionTemplates extends Component {
     constructor(props) {
@@ -57,7 +58,7 @@ export default class ContributionTemplates extends Component {
         }).then(statements => {
             // Filter statement with subjects of type Contribution Template
             return statements
-                .filter(statement => statement.subject.classes.includes(process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE))
+                .filter(statement => statement.subject.classes.includes(CLASSES.CONTRIBUTION_TEMPLATE))
                 .map(st => ({ id: st.subject.id, label: st.subject.label, source: resourceId })); // return the template Object
         });
     };
@@ -80,12 +81,12 @@ export default class ContributionTemplates extends Component {
         this.setState({ isNextPageLoading: true });
         let templates = [];
         if (this.state.filterReseachField) {
-            templates = this.getTemplatesOfResourceId(this.state.filterReseachField.id, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD);
+            templates = this.getTemplatesOfResourceId(this.state.filterReseachField.id, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD);
         } else if (this.state.filterResearchProblem) {
-            templates = this.getTemplatesOfResourceId(this.state.filterResearchProblem.id, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM);
+            templates = this.getTemplatesOfResourceId(this.state.filterResearchProblem.id, PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM);
         } else {
             templates = getResourcesByClass({
-                id: process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE,
+                id: CLASSES.CONTRIBUTION_TEMPLATE,
                 page: this.state.page,
                 items: this.pageSize,
                 sortBy: 'created_at',
@@ -131,7 +132,7 @@ export default class ContributionTemplates extends Component {
                                     <Label for="exampleEmail">Filter by research field</Label>
                                     <AutoComplete
                                         requestUrl={resourcesUrl}
-                                        optionsClass={process.env.REACT_APP_CLASSES_RESEARCH_FIELD}
+                                        optionsClass={CLASSES.RESEARCH_FIELD}
                                         onItemSelected={this.handleResearchFieldSelect}
                                         placeholder="Select or type to enter a research field"
                                         autoFocus
@@ -146,7 +147,7 @@ export default class ContributionTemplates extends Component {
                                     <Label for="examplePassword">Filter by reseach problem</Label>
                                     <AutoComplete
                                         requestUrl={resourcesUrl}
-                                        optionsClass={process.env.REACT_APP_CLASSES_PROBLEM}
+                                        optionsClass={CLASSES.PROBLEM}
                                         onItemSelected={this.handleResearchProblemSelect}
                                         placeholder="Select or type to enter a research problem"
                                         autoFocus

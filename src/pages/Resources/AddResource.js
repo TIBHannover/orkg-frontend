@@ -7,6 +7,7 @@ import { getAllClasses } from 'network';
 import Select from 'react-select';
 import { reverse } from 'named-urls';
 import ROUTES from '../../constants/routes';
+import { PREDICATES } from 'constants/graphSettings';
 
 export default class AddResource extends Component {
     constructor(props) {
@@ -91,7 +92,7 @@ export default class AddResource extends Component {
                 const resourceId = responseJson.id;
 
                 if (usingDoi) {
-                    await this.createDoiStatement(resourceId, process.env.REACT_APP_PREDICATES_HAS_DOI);
+                    await this.createDoiStatement(resourceId, PREDICATES.HAS_DOI);
                 } else {
                     this.navigateToResource(resourceId);
                 }

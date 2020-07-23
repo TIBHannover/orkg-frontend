@@ -6,6 +6,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getComparisonData } from 'utils';
 import { find } from 'lodash';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
+import { CLASSES } from 'constants/graphSettings';
 
 export default class Comparisons extends Component {
     constructor(props) {
@@ -31,7 +32,7 @@ export default class Comparisons extends Component {
     loadMoreComparisons = () => {
         this.setState({ isNextPageLoading: true });
         getResourcesByClass({
-            id: process.env.REACT_APP_CLASSES_COMPARISON,
+            id: CLASSES.COMPARISON,
             page: this.state.page,
             items: this.pageSize,
             sortBy: 'created_at',

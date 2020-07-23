@@ -7,6 +7,7 @@ import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import ContentLoader from 'react-content-loader';
 import styled from 'styled-components';
+import { CLASSES } from 'constants/graphSettings';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
@@ -41,23 +42,23 @@ const Results = props => {
         let link = '';
 
         switch (filterClass) {
-            case process.env.REACT_APP_CLASSES_PAPER: {
+            case CLASSES.PAPER: {
                 link = reverse(ROUTES.VIEW_PAPER, { resourceId: resourceId });
                 break;
             }
-            case process.env.REACT_APP_CLASSES_PROBLEM: {
+            case CLASSES.PROBLEM: {
                 link = reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: resourceId });
                 break;
             }
-            case process.env.REACT_APP_CLASSES_AUTHOR: {
+            case CLASSES.AUTHOR: {
                 link = reverse(ROUTES.AUTHOR_PAGE, { authorId: resourceId });
                 break;
             }
-            case process.env.REACT_APP_CLASSES_COMPARISON: {
+            case CLASSES.COMPARISON: {
                 link = reverse(ROUTES.COMPARISON, { comparisonId: resourceId });
                 break;
             }
-            case process.env.REACT_APP_CLASSES_VENUE: {
+            case CLASSES.VENUE: {
                 link = reverse(ROUTES.VENUE_PAGE, { venueId: resourceId });
                 break;
             }

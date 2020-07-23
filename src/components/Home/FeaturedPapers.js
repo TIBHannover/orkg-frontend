@@ -8,6 +8,7 @@ import { find } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
+import { CLASSES } from 'constants/graphSettings';
 
 class FeaturedPapers extends Component {
     state = {
@@ -21,7 +22,7 @@ class FeaturedPapers extends Component {
     loadfeaturedPapers = async () => {
         this.setState({ loadingPapers: true });
         getResourcesByClass({
-            id: process.env.REACT_APP_CLASSES_FEATURED_PAPER,
+            id: CLASSES.FEATURED_PAPER,
             page: 1,
             items: 7,
             desc: true

@@ -13,6 +13,7 @@ import useTogggle from './helpers/useToggle';
 import validationSchema from './helpers/validationSchema';
 import InputField from 'components/StatementBrowser/InputField/InputField';
 import PropTypes from 'prop-types';
+import { CLASSES, MISC } from 'constants/graphSettings';
 
 export default function AddValueTemplate(props) {
     const literalInputRef = useRef(null);
@@ -31,7 +32,7 @@ export default function AddValueTemplate(props) {
     const [templateIsLoading, setTemplateIsLoading] = useState(false); // to show loading indicator of the template if the value class has a template
 
     // uniqueLabel is set to true when it's a research problem
-    const [uniqueLabel, setuniqueLabel] = useState(props.valueClass && props.valueClass.id === process.env.REACT_APP_CLASSES_PROBLEM ? true : false);
+    const [uniqueLabel, setuniqueLabel] = useState(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
     const [disabledCreate, setDisabledCreate] = useState(false);
 
     const handleCreateExistingLabel = (inputValue, selectOptions) => {
@@ -70,7 +71,7 @@ export default function AddValueTemplate(props) {
     }, [props.isLiteral]);
 
     useEffect(() => {
-        setuniqueLabel(props.valueClass && props.valueClass.id === process.env.REACT_APP_CLASSES_PROBLEM ? true : false);
+        setuniqueLabel(props.valueClass && props.valueClass.id === CLASSES.PROBLEM ? true : false);
     }, [props.valueClass]);
 
     useEffect(() => {
@@ -118,16 +119,16 @@ export default function AddValueTemplate(props) {
         if (props.valueClass && valueType === 'literal') {
             switch (props.valueClass.id) {
                 case 'String':
-                    return process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE;
+                    return MISC.DEFAULT_LITERAL_DATATYPE;
                 case 'Number':
                     return 'xsd:decimal';
                 case 'Date':
                     return 'xsd:date';
                 default:
-                    return process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE;
+                    return MISC.DEFAULT_LITERAL_DATATYPE;
             }
         } else {
-            return process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE;
+            return MISC.DEFAULT_LITERAL_DATATYPE;
         }
     };
 
@@ -257,7 +258,7 @@ export default function AddValueTemplate(props) {
                         {valueType === 'object' ? (
                             <AutoComplete
                                 requestUrl={resourcesUrl}
-                                excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM},${process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE}`}
+                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
                                 optionsClass={props.valueClass ? props.valueClass.id : undefined}
                                 placeholder="Enter a resource"
                                 onItemSelected={i => {

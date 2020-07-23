@@ -3,6 +3,7 @@ import { guid } from 'utils';
 import * as network from 'network';
 import { prefillStatements } from './addPaper';
 import { orderBy, uniq, isEqual } from 'lodash';
+import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
 
 export const updateSettings = data => dispatch => {
     dispatch({
@@ -166,7 +167,7 @@ export function getReseachProblemsOfContribution(state, resourceId) {
     }
     if (resource && resource.propertyIds) {
         const researchProblemProperty = resource.propertyIds.find(
-            p => state.statementBrowser.properties.byId[p].existingPredicateId === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM
+            p => state.statementBrowser.properties.byId[p].existingPredicateId === PREDICATES.HAS_RESEARCH_PROBLEM
         );
         if (researchProblemProperty) {
             const resourcesId = state.statementBrowser.properties.byId[researchProblemProperty].valueIds
@@ -614,7 +615,7 @@ export function fillResourceWithTemplate({ templateID, selectedResource, syncBac
             // Check if it's a contribution template
             if (template && template.predicate) {
                 // TODO : handle the case where the template isFetching
-                if (template.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION) {
+                if (template.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
                     // Add properties
                     if (template.components && template.components.length > 0) {
                         const statements = { properties: [], values: [] };
@@ -836,7 +837,7 @@ export const fetchStatementsForResource = data => {
                 });
                 if (rootNodeType === 'predicate') {
                     // get templates of classes
-                    const predicateClass = dispatch(fetchTemplatesofClassIfNeeded(process.env.REACT_APP_CLASSES_PREDICATE));
+                    const predicateClass = dispatch(fetchTemplatesofClassIfNeeded(CLASSES.PREDICATE));
                     promises = Promise.all([predicateClass, resourceStatementsPromise]);
                 } else {
                     let resourceClasses = response.classes ?? [];
@@ -875,7 +876,7 @@ export const fetchStatementsForResource = data => {
                             let propertyId = guid();
                             const valueId = guid();
                             // filter out research problem to show differently
-                            if (isContribution && statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM) {
+                            if (isContribution && statement.predicate.id === PREDICATES.HAS_RESEARCH_PROBLEM) {
                                 researchProblems.push({
                                     label: statement.object.label,
                                     id: statement.object.id,
@@ -912,7 +913,7 @@ export const fetchStatementsForResource = data => {
                                         type: statement.object._class === 'resource' ? 'object' : statement.object._class, // TODO: change 'object' to 'resource' (wrong term used here, since it is always an object)
                                         classes: statement.object.classes ? statement.object.classes : [],
                                         ...(statement.object._class === 'literal' && {
-                                            datatype: statement.object.datatype ?? process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE
+                                            datatype: statement.object.datatype ?? MISC.DEFAULT_LITERAL_DATATYPE
                                         }),
                                         isExistingValue: true,
                                         existingStatement: true,

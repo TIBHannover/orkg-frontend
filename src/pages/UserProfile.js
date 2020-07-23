@@ -5,6 +5,7 @@ import { getUserInformationById } from 'network';
 import Items from '../components/UserProfile/Items';
 import NotFound from 'pages/NotFound';
 import { useSelector } from 'react-redux';
+import { CLASSES } from 'constants/graphSettings';
 
 /*
 const StyledGravatar = styled(Gravatar)`
@@ -99,16 +100,11 @@ const UserProfile = props => {
                 <Row>
                     <Col md={6} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
                         <h5 className="mb-4">Added papers</h5>
-                        <Items
-                            filterLabel="papers"
-                            filterClass={process.env.REACT_APP_CLASSES_PAPER}
-                            userId={userId}
-                            showDelete={userId === currentUserId}
-                        />
+                        <Items filterLabel="papers" filterClass={CLASSES.PAPER} userId={userId} showDelete={userId === currentUserId} />
                     </Col>
                     <Col md={6} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
                         <h5 className="mb-4">Published comparisons</h5>
-                        <Items filterLabel="comparisons" filterClass={process.env.REACT_APP_CLASSES_COMPARISON} userId={userId} />
+                        <Items filterLabel="comparisons" filterClass={CLASSES.COMPARISON} userId={userId} />
                     </Col>
                 </Row>
             </Container>

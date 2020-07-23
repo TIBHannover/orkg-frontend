@@ -9,6 +9,7 @@ import { find } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
+import { PREDICATES } from 'constants/graphSettings';
 
 class VenuePage extends Component {
     constructor(props) {
@@ -71,7 +72,7 @@ class VenuePage extends Component {
             if (result.length > 0) {
                 // Fetch the data of each paper
                 getStatementsBySubjects({
-                    ids: result.filter(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_VENUE).map(p => p.subject.id)
+                    ids: result.filter(statement => statement.predicate.id === PREDICATES.HAS_VENUE).map(p => p.subject.id)
                 })
                     .then(papersStatements => {
                         const papers = papersStatements.map(paperStatements => {

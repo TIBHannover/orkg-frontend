@@ -12,6 +12,7 @@ import ROUTES from 'constants/routes.js';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
+import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
@@ -65,14 +66,14 @@ export default function AddContribution(props) {
             sortBy: 'id',
             desc: true,
             q: searchQuery,
-            id: process.env.REACT_APP_CLASSES_PAPER
+            id: CLASSES.PAPER
         })
             .then(results => {
                 if (results.length > 0) {
                     const paper = results.map(resource =>
                         getStatementsBySubjectAndPredicate({
                             subjectId: resource.id,
-                            predicateId: process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION
+                            predicateId: PREDICATES.HAS_CONTRIBUTION
                         }).then(contributions => {
                             return {
                                 ...resource,

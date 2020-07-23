@@ -6,6 +6,7 @@ import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css'; // This only needs to be imported once in your app
 import { find } from 'lodash';
 import styled from 'styled-components';
+import { PREDICATES } from 'constants/graphSettings';
 
 const CardStyled = styled(Card)`
     cursor: pointer;
@@ -33,12 +34,8 @@ const RelatedFigures = props => {
                 .then(figuresStatements => {
                     const _figures = figuresStatements.map(figureStatements => {
                         const figureTitle = find(props.figureStatements.map(p => p.object), { id: figureStatements.id });
-                        const imageStatement = figureStatements.statements.find(
-                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_IMAGE
-                        );
-                        const descriptionStatement = figureStatements.statements.find(
-                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_DESCRIPTION
-                        );
+                        const imageStatement = figureStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
+                        const descriptionStatement = figureStatements.statements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
                         return {
                             src: imageStatement ? imageStatement.object.label : '',
                             title: figureTitle.label,

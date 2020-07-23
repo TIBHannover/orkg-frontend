@@ -11,6 +11,7 @@ import ROUTES from 'constants/routes.js';
 import Results from '../components/Search/Results';
 import Filters from '../components/Search/Filters';
 import { toast } from 'react-toastify';
+import { CLASSES } from 'constants/graphSettings';
 
 class Search extends Component {
     constructor(props) {
@@ -27,7 +28,7 @@ class Search extends Component {
                 {
                     label: 'Paper',
                     labelPlural: 'Papers',
-                    class: process.env.REACT_APP_CLASSES_PAPER
+                    class: CLASSES.PAPER
                 }
             ],
             [
@@ -35,7 +36,7 @@ class Search extends Component {
                 {
                     label: 'Research Problem',
                     labelPlural: 'Research Problems',
-                    class: process.env.REACT_APP_CLASSES_PROBLEM
+                    class: CLASSES.PROBLEM
                 }
             ],
             [
@@ -43,7 +44,7 @@ class Search extends Component {
                 {
                     label: 'Author',
                     labelPlural: 'Authors',
-                    class: process.env.REACT_APP_CLASSES_AUTHOR
+                    class: CLASSES.AUTHOR
                 }
             ],
             [
@@ -51,7 +52,7 @@ class Search extends Component {
                 {
                     label: 'Comparison',
                     labelPlural: 'Comparisons',
-                    class: process.env.REACT_APP_CLASSES_COMPARISON
+                    class: CLASSES.COMPARISON
                 }
             ],
             [
@@ -59,7 +60,7 @@ class Search extends Component {
                 {
                     label: 'Venue',
                     labelPlural: 'Venues',
-                    class: process.env.REACT_APP_CLASSES_VENUE
+                    class: CLASSES.VENUE
                 }
             ],
             [
@@ -80,14 +81,7 @@ class Search extends Component {
             ]
         ]);
 
-        this.orkg_classes = [
-            process.env.REACT_APP_CLASSES_CONTRIBUTION,
-            process.env.REACT_APP_CLASSES_PAPER,
-            process.env.REACT_APP_CLASSES_PROBLEM,
-            process.env.REACT_APP_CLASSES_AUTHOR,
-            process.env.REACT_APP_CLASSES_COMPARISON,
-            process.env.REACT_APP_CLASSES_VENUE
-        ];
+        this.orkg_classes = [CLASSES.CONTRIBUTION, CLASSES.PAPER, CLASSES.PROBLEM, CLASSES.AUTHOR, CLASSES.COMPARISON, CLASSES.VENUE];
 
         const selectedFilters = this.getTypesFromUrl();
 
