@@ -4,8 +4,6 @@ import { flattenDepth, uniq } from 'lodash';
 import rdf from 'rdf';
 import { PREDICATES } from 'constants/graphSettings';
 
-export const popupDelay = process.env.REACT_APP_POPUP_DELAY;
-
 export function hashCode(s) {
     return s.split('').reduce((a, b) => {
         a = (a << 5) - a + b.charCodeAt(0);
