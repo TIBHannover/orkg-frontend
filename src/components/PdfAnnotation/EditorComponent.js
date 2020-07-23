@@ -10,6 +10,7 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { setLabelCache } from 'actions/pdfAnnotation';
 import Tippy from '@tippy.js/react';
 import AutoComplete from 'components/StatementBrowser/AutoComplete';
+import { CLASSES } from 'constants/graphSettings';
 import { createPredicate, createResource } from 'network';
 import { isString } from 'lodash';
 
@@ -65,19 +66,19 @@ class EditorComponent extends BaseEditorComponent {
 
         let valueClass = null;
         if (isResearchField) {
-            valueClass = process.env.REACT_APP_CLASSES_RESEARCH_FIELD;
+            valueClass = CLASSES.RESEARCH_FIELD;
         } else if (isResearchProblem) {
-            valueClass = process.env.REACT_APP_CLASSES_PROBLEM;
+            valueClass = CLASSES.PROBLEM;
         }
 
-        this.setState({
+        this.setState(prevState => ({
             row: this.row,
             col: this.col,
             type,
-            valueType: valueClass ? 'resource' : 'literal',
+            valueType: valueClass ? 'resource' : prevState.valueType,
             valueClass,
             show: true
-        });
+        }));
     };
 
     close() {
@@ -195,7 +196,7 @@ class EditorComponent extends BaseEditorComponent {
                         {this.state.valueType === 'resource' || this.state.type === 'property' ? (
                             <AutoComplete
                                 requestUrl={this.state.type === 'property' ? predicatesUrl : resourcesUrl}
-                                excludeClasses={`${process.env.REACT_APP_CLASSES_CONTRIBUTION},${process.env.REACT_APP_CLASSES_PROBLEM},${process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE}`}
+                                excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
                                 optionsClass={this.state.valueClass ? this.state.valueClass : undefined}
                                 placeholder={this.state.type === 'property' ? 'Enter a predicate' : 'Enter a resource'}
                                 onChange={async i => {
@@ -224,9 +225,7 @@ class EditorComponent extends BaseEditorComponent {
                                 cssClasses="form-control-sm"
                                 eventListener={true}
                                 innerRef={this.resourceInputRef}
-                                allowCreate={
-                                    this.state.valueClass && this.state.valueClass === process.env.REACT_APP_CLASSES_RESEARCH_FIELD ? false : true
-                                }
+                                allowCreate={this.state.valueClass && this.state.valueClass === CLASSES.RESEARCH_FIELD ? false : true}
                             />
                         ) : (
                             <Input

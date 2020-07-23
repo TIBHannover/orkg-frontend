@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { readString } from 'react-papaparse';
 import { useSelector, useDispatch } from 'react-redux';
 import { zip, omit, isString } from 'lodash';
+import { PREDICATES, MISC } from 'constants/graphSettings';
 import { saveFullPaper, getStatementsBySubject } from 'network';
 
 function useExtractionModal(props) {
@@ -113,7 +114,6 @@ function useExtractionModal(props) {
     ];
 
     const importTableData = async () => {
-        const researchProblemPredicate = process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM;
         const header = tableData[0];
         const createdContributions = [];
         const papers = [];
@@ -154,7 +154,7 @@ function useExtractionModal(props) {
             const publicationMonth = getFirstValue(rowObject, 'paper:publication_month');
             const publicationYear = getFirstValue(rowObject, 'paper:publication_year');
             const doi = getFirstValue(rowObject, 'paper:doi');
-            let researchField = getFirstValue(rowObject, 'paper:research_field', process.env.REACT_APP_RESEARCH_FIELD_MAIN);
+            let researchField = getFirstValue(rowObject, 'paper:research_field', MISC.RESEARCH_FIELD_MAIN);
             let researchProblem = getFirstValue(rowObject, 'contribution:research_problem');
 
             if (!title) {
@@ -163,7 +163,7 @@ function useExtractionModal(props) {
 
             rowObject = omit(rowObject, predefinedColumns);
 
-            const contributionStatements = { [process.env.REACT_APP_PREDICATES_HAS_RESEARCH_PROBLEM]: [] };
+            const contributionStatements = { [PREDICATES.HAS_RESEARCH_PROBLEM]: [] };
 
             // replace :orkg prefix in research field
             if (isString(researchField) && researchField.startsWith('orkg:')) {
@@ -180,7 +180,7 @@ function useExtractionModal(props) {
                     };
                 }
 
-                contributionStatements[researchProblemPredicate] = [problemObject];
+                contributionStatements[PREDICATES.HAS_RESEARCH_PROBLEM] = [problemObject];
             }
 
             for (const property in rowObject) {
@@ -245,7 +245,7 @@ function useExtractionModal(props) {
                     const paperStatements = await getStatementsBySubject({ id: _paper.id });
 
                     for (const statement of paperStatements) {
-                        if (statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_CONTRIBUTION) {
+                        if (statement.predicate.id === PREDICATES.HAS_CONTRIBUTION) {
                             createdContributions.push({
                                 paperId: _paper.id,
                                 contributionId: statement.object.id
