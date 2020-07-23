@@ -109,7 +109,7 @@ function useExtractionModal(props) {
         'paper:publication_month',
         'paper:publication_year',
         'paper:doi',
-        'paper:research',
+        'paper:research_field',
         'contribution:research_problem'
     ];
 
@@ -122,6 +122,8 @@ function useExtractionModal(props) {
             alert('Paper titles are missing. Make sure to add metadata for each paper (using the "Extract references" button)');
             return;
         }
+
+        console.log(header);
 
         for (const value of header) {
             // ensure all predicates are mapped
