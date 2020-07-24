@@ -20,6 +20,11 @@ function useTableEditor(tableId, tableRef) {
         tableInstance.alter('remove_row', toRemove);
     };
 
+    const renderTable = () => {
+        const tableInstance = tableRef.current.hotInstance;
+        tableInstance.render();
+    };
+
     const mergeCellValues = (key, selection) => {
         if (selection.length > 0) {
             const firstSelection = selection[0];
@@ -106,7 +111,7 @@ function useTableEditor(tableId, tableRef) {
         toast.success('Columns successfully splitted');
     };
 
-    return { mergeCellValues, splitIntoSeveralColumns, removeEmptyRows };
+    return { mergeCellValues, splitIntoSeveralColumns, removeEmptyRows, renderTable };
 }
 
 export default useTableEditor;

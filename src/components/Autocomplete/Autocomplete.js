@@ -420,7 +420,7 @@ Autocomplete.propTypes = {
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     cssClasses: PropTypes.string,
     theme: PropTypes.object.isRequired,
-    innerRef: PropTypes.func,
+    innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })]),
     autoLoadOption: PropTypes.bool, // Used to loadOptions by default
     openMenuOnFocus: PropTypes.bool, // whether the menu is opened when the Select is focused
     eventListener: PropTypes.bool, // Used to capture the events in handsontable

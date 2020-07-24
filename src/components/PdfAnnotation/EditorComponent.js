@@ -197,7 +197,7 @@ class EditorComponent extends BaseEditorComponent {
                                 onInput={(e, value) => this.handleInputChange(e ? e.target.value : value)}
                                 value={value}
                                 disableBorderRadiusLeft={true}
-                                disableBorderRadiusRight
+                                disableBorderRadiusRight={true}
                                 cssClasses="form-control-sm"
                                 eventListener={true}
                                 innerRef={this.resourceInputRef}

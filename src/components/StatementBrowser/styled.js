@@ -92,9 +92,13 @@ export const StyledButton = styled(Button)`
     }
 `;
 
-export const StyledDropdownToggle = styled(DropdownToggle)`
+export const StyledDropdownToggle = styled(DropdownToggle).withConfig({
+    shouldForwardProp: prop => !['disableBorderRadiusLeft', 'disableBorderRadiusRight'].includes(prop)
+})`
     border-top-left-radius: ${props => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
     border-bottom-left-radius: ${props => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
+    border-top-right-radius: ${props => (props.disableBorderRadiusRight ? '0' : '4px !important')};
+    border-bottom-right-radius: ${props => (props.disableBorderRadiusRight ? '0' : '4px !important')};
     background: ${props => props.theme.ultraLightBlueDarker} !important;
     color: ${props => props.theme.buttonDark} !important;
     border-color: #ced4da !important;
