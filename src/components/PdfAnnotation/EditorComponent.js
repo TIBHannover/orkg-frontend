@@ -9,7 +9,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { setLabelCache } from 'actions/pdfAnnotation';
 import Tippy from '@tippy.js/react';
-import AutoComplete from 'components/StatementBrowser/AutoComplete';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES } from 'constants/graphSettings';
 import { createPredicate, createResource } from 'network';
 import { isString } from 'lodash';
@@ -225,6 +225,7 @@ class EditorComponent extends BaseEditorComponent {
                                 cssClasses="form-control-sm"
                                 eventListener={true}
                                 innerRef={this.resourceInputRef}
+                                openMenuOnFocus={true}
                                 allowCreate={this.state.valueClass && this.state.valueClass === CLASSES.RESEARCH_FIELD ? false : true}
                             />
                         ) : (

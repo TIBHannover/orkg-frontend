@@ -8,7 +8,7 @@ import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDa
 import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import AutoComplete from 'components/StatementBrowser/AutoComplete';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
 import useTogggle from './helpers/useToggle';
 import validationSchema from './helpers/validationSchema';
 import InputField from 'components/StatementBrowser/InputField/InputField';
@@ -268,6 +268,7 @@ export default function AddValueTemplate(props) {
                                 onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                                 value={inputValue}
                                 additionalData={props.newResources}
+                                autoLoadOption={false}
                                 disableBorderRadiusRight
                                 disableBorderRadiusLeft={!props.valueClass}
                                 cssClasses="form-control-sm"
