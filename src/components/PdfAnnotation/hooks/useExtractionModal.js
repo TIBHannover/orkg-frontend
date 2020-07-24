@@ -92,8 +92,8 @@ function useExtractionModal(props) {
             <div>
                 A contribution will be added for the following papers
                 <ListGroup className="mt-4">
-                    {papers.map(paper => {
-                        return <ListGroupItem key={paper.id}>{paper.title}</ListGroupItem>;
+                    {papers.map((paper, index) => {
+                        return <ListGroupItem key={`paper${index}`}>{paper.title}</ListGroupItem>;
                     })}
                 </ListGroup>
             </div>
@@ -169,7 +169,19 @@ function useExtractionModal(props) {
             let researchProblem = getFirstValue(rowObject, 'contribution:research_problem');
 
             if (!title) {
-                continue;
+                setImportError(
+                    <>
+                        Please notice that the lines without a title will not be imported, You can use the options <i>'Merge cell values'</i> and
+                        <i> 'Remove empty rows'</i> of cells context menu to fix the data.
+                        <br />
+                        <ul className="mb-0">
+                            <li>
+                                The line <b>{`number ${1 + index}`}</b> will not be imported.
+                            </li>
+                        </ul>
+                    </>
+                );
+                return;
             }
 
             rowObject = omit(rowObject, predefinedColumns);
