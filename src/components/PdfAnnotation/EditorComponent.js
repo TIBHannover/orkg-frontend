@@ -169,30 +169,6 @@ class EditorComponent extends BaseEditorComponent {
             <NativeListener onMouseDown={this.stopMousedownPropagation}>
                 <div style={containerStyle} ref={this.mainElementRef} id="editorElement">
                     <InputGroup size="sm">
-                        {this.state.type === 'resource' && !this.state.valueClass && (
-                            <InputGroupButtonDropdown
-                                addonType="prepend"
-                                isOpen={this.state.dropdownValueTypeOpen}
-                                toggle={() => this.toggle('dropdownValueTypeOpen')}
-                            >
-                                <StyledDropdownToggle>
-                                    <small>{this.state.valueType.charAt(0).toUpperCase() + this.state.valueType.slice(1) + ' '}</small>
-                                    <Icon size="xs" icon={faBars} />
-                                </StyledDropdownToggle>
-                                <DropdownMenu>
-                                    <StyledDropdownItem onClick={() => this.setState({ valueType: 'resource' })}>
-                                        <Tippy content="Choose Object to link this to an object, which can contain values on its own">
-                                            <span>Object</span>
-                                        </Tippy>
-                                    </StyledDropdownItem>
-                                    <StyledDropdownItem onClick={() => this.setState({ valueType: 'literal' })}>
-                                        <Tippy content="Choose literal for values like numbers or plain text">
-                                            <span>Literal</span>
-                                        </Tippy>
-                                    </StyledDropdownItem>
-                                </DropdownMenu>
-                            </InputGroupButtonDropdown>
-                        )}
                         {this.state.valueType === 'resource' || this.state.type === 'property' ? (
                             <AutoComplete
                                 requestUrl={this.state.type === 'property' ? predicatesUrl : resourcesUrl}
@@ -220,8 +196,8 @@ class EditorComponent extends BaseEditorComponent {
                                 }}
                                 onInput={(e, value) => this.handleInputChange(e ? e.target.value : value)}
                                 value={value}
+                                disableBorderRadiusLeft={true}
                                 disableBorderRadiusRight
-                                disableBorderRadiusLeft={false}
                                 cssClasses="form-control-sm"
                                 eventListener={true}
                                 innerRef={this.resourceInputRef}
@@ -240,6 +216,30 @@ class EditorComponent extends BaseEditorComponent {
                                 onKeyDown={e => e.keyCode === 13 && this.finishEditing()}
                                 autoFocus
                             />
+                        )}
+                        {this.state.type === 'resource' && !this.state.valueClass && (
+                            <InputGroupButtonDropdown
+                                addonType="append"
+                                isOpen={this.state.dropdownValueTypeOpen}
+                                toggle={() => this.toggle('dropdownValueTypeOpen')}
+                            >
+                                <StyledDropdownToggle disableBorderRadiusLeft={true}>
+                                    <small>{this.state.valueType.charAt(0).toUpperCase() + this.state.valueType.slice(1) + ' '}</small>
+                                    <Icon size="xs" icon={faBars} />
+                                </StyledDropdownToggle>
+                                <DropdownMenu>
+                                    <StyledDropdownItem onClick={() => this.setState({ valueType: 'resource' })}>
+                                        <Tippy content="Choose Object to link this to an object, which can contain values on its own">
+                                            <span>Object</span>
+                                        </Tippy>
+                                    </StyledDropdownItem>
+                                    <StyledDropdownItem onClick={() => this.setState({ valueType: 'literal' })}>
+                                        <Tippy content="Choose literal for values like numbers or plain text">
+                                            <span>Literal</span>
+                                        </Tippy>
+                                    </StyledDropdownItem>
+                                </DropdownMenu>
+                            </InputGroupButtonDropdown>
                         )}
                     </InputGroup>
                 </div>
