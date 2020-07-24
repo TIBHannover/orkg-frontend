@@ -12,7 +12,17 @@ import { reverse } from 'named-urls';
 import useTableEditor from './hooks/useTableEditor';
 
 const ExtractionModal = props => {
-    const [loading, importedData, extractionSuccessful, editorRef, transposeTable, handleCsvDownload, handleImportData] = useExtractionModal(props);
+    const [
+        loading,
+        importedData,
+        extractionSuccessful,
+        editorRef,
+        transposeTable,
+        handleCsvDownload,
+        handleImportData,
+        importError,
+        clearImportError
+    ] = useExtractionModal(props);
 
     const [extractReferencesModalOpen, setExtractReferencesModalOpen] = useState(false);
     const toggleExtractReferencesModal = () => {
@@ -38,6 +48,12 @@ const ExtractionModal = props => {
                 {!loading && !importedData && (
                     <>
                         <ModalBody>
+                            {importError && (
+                                <Alert className="mt-2 mb-3" color="danger">
+                                    {importError}
+                                </Alert>
+                            )}
+
                             {extractionSuccessful && (
                                 <>
                                     <TableEditor setRef={editorRef} id={props.id} />
@@ -83,7 +99,12 @@ const ExtractionModal = props => {
                 )}
             </Modal>
 
-            <ExtractReferencesModal isOpen={extractReferencesModalOpen} toggle={toggleExtractReferencesModal} id={props.id} />
+            <ExtractReferencesModal
+                clearImportError={clearImportError}
+                isOpen={extractReferencesModalOpen}
+                toggle={toggleExtractReferencesModal}
+                id={props.id}
+            />
         </>
     );
 };

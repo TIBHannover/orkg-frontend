@@ -50,6 +50,7 @@ const ExtractReferencesModal = props => {
     };
 
     const handleExtractReferences = () => {
+        props.clearImportError();
         const idMapping = citationKeyToInternalId();
         const allReferences = getAllReferences();
         const tableHead = tableData[0];
@@ -317,7 +318,8 @@ const ExtractReferencesModal = props => {
 ExtractReferencesModal.propTypes = {
     id: PropTypes.string.isRequired,
     isOpen: PropTypes.bool.isRequired,
-    toggle: PropTypes.func.isRequired
+    toggle: PropTypes.func.isRequired,
+    clearImportError: PropTypes.func.isRequired
 };
 
 export default ExtractReferencesModal;

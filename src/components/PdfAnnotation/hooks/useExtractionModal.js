@@ -11,6 +11,7 @@ import { saveFullPaper, getStatementsBySubject } from 'network';
 
 function useExtractionModal(props) {
     const [loading, setLoading] = useState(false);
+    const [importError, setImportError] = useState(false);
     const [importedData, setImportedData] = useState(null);
     const editorRef = React.createRef();
     const dispatch = useDispatch();
@@ -114,22 +115,30 @@ function useExtractionModal(props) {
     ];
 
     const importTableData = async () => {
+        clearImportError();
         const header = tableData[0];
         const createdContributions = [];
         const papers = [];
 
         if (!header.includes('paper:title')) {
-            alert('Paper titles are missing. Make sure to add metadata for each paper (using the "Extract references" button)');
+            setImportError('Paper titles are missing. Make sure to add metadata for each paper (using the "Extract references" button)');
             return;
         }
 
-        console.log(header);
-
-        for (const value of header) {
+        for (const [index, value] of header.entries()) {
             // ensure all predicates are mapped
-            if (!predefinedColumns.includes(value) && !value.startsWith('orkg:')) {
-                alert(
-                    "Make sure all header labels are using ORKG properties (the values in the first row should be black instead of grey). In case you don't want to import a column, remove it before importing"
+            if (!value || (!predefinedColumns.includes(value) && !value.startsWith('orkg:'))) {
+                setImportError(
+                    <>
+                        Make sure all header labels are using ORKG properties (the values in the first row should be black instead of grey). In case
+                        you don't want to import a column, remove it before importing.
+                        <br />
+                        <ul className="mb-0">
+                            <li>
+                                The column <b>{value ? value : `number ${1 + index}`}</b> is not mapped to an ORKG property.
+                            </li>
+                        </ul>
+                    </>
                 );
                 return;
             }
@@ -275,6 +284,20 @@ function useExtractionModal(props) {
         dispatch(setTableData(props.id, transposed));
     };
 
-    return [loading, importedData, extractionSuccessful, editorRef, transposeTable, handleCsvDownload, handleImportData];
+    const clearImportError = () => {
+        return setImportError(null);
+    };
+
+    return [
+        loading,
+        importedData,
+        extractionSuccessful,
+        editorRef,
+        transposeTable,
+        handleCsvDownload,
+        handleImportData,
+        importError,
+        clearImportError
+    ];
 }
 export default useExtractionModal;
