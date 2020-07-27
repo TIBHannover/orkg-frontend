@@ -632,7 +632,7 @@ class GeneralData extends Component {
                                             </Row>
                                             <FormGroup>
                                                 <Label for="publishedIn">
-                                                    <Tooltip message="The paper venue ">Published in</Tooltip>
+                                                    <Tooltip message="The conference or journal name">Published in</Tooltip>
                                                 </Label>
                                                 <Input
                                                     type="text"
