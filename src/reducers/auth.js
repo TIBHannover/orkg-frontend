@@ -3,7 +3,8 @@ import * as type from '../actions/types';
 const initialState = {
     dialogIsOpen: false,
     action: 'signin',
-    user: null
+    user: null,
+    role: 'admin' // mocking, should be replace when the backend functionality is implemented (maybe something like user.role?)
 };
 
 export default (state = initialState, action) => {

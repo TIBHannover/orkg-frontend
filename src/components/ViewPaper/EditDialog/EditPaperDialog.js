@@ -300,11 +300,9 @@ class EditPaperDialog extends Component {
     render() {
         return (
             <>
-                <div className="flex-grow-1">
-                    <Button color="darkblue" size="sm" className="mt-2" style={{ marginLeft: 'auto' }} onClick={this.toggleDialog}>
-                        <Icon icon={faPen} /> Edit data
-                    </Button>
-                </div>
+                <Button color="darkblue" size="sm" className="mt-2" style={{ marginLeft: 'auto' }} onClick={this.toggleDialog}>
+                    <Icon icon={faPen} /> Edit data
+                </Button>
 
                 <Modal isOpen={this.state.showDialog} toggle={this.toggleDialog} size="lg">
                     <LoadingOverlayStyled
