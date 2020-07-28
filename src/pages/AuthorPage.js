@@ -95,12 +95,20 @@ class AuthorPage extends Component {
                     .then(papersStatements => {
                         const papers = papersStatements.map(paperStatements => {
                             const paperSubject = find(result.map(p => p.subject), { id: paperStatements.id });
-                            return getPaperData(
-                                paperStatements.id,
-                                paperSubject && paperSubject.label ? paperSubject.label : 'No Title',
-                                paperStatements.statements
-                            );
+                            if (paperSubject.classes.indexOf('Paper') === -1) {
+                                /* the map function always returns a value so undefined is also counted as a 'paper'
+                                 * so there is no logic update for hasNextPage: papers.length < this.pageSize */
+                                /**  returns an empty resource for a paper >> handle in renderer **/
+                                return undefined;
+                            } else {
+                                return getPaperData(
+                                    paperStatements.id,
+                                    paperSubject && paperSubject.label ? paperSubject.label : 'No Title',
+                                    paperStatements.statements
+                                );
+                            }
                         });
+
                         this.setState({
                             papers: [...this.state.papers, ...papers],
                             isNextPageLoading: false,
@@ -193,11 +201,20 @@ class AuthorPage extends Component {
                                 <Col className="col-8">
                                     <div className="box rounded p-4">
                                         <h5>Papers</h5>
+
                                         {this.state.papers.length > 0 && (
                                             <div>
                                                 {this.state.papers.map(resource => {
-                                                    return <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />;
+                                                    if (resource) {
+                                                        return <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />;
+                                                    }
                                                 })}
+                                            </div>
+                                        )}
+                                        {/*Add loading indicator*/}
+                                        {this.state.isNextPageLoading && (
+                                            <div className="text-center mt-4 mb-4">
+                                                <Icon icon={faSpinner} spin /> Loading
                                             </div>
                                         )}
                                         {!this.state.isNextPageLoading && this.state.hasNextPage && (
