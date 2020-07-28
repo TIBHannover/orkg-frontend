@@ -162,7 +162,7 @@ const Items = props => {
             )}
 
             {selectedItems.length > 0 && (
-                <Button size="sm" color="darkblue" className="mt-2" onClick={deletePapers}>
+                <Button size="sm" color="danger" className="mt-2" onClick={deletePapers}>
                     Delete selected {props.filterLabel} ({selectedItems.length})
                 </Button>
             )}
