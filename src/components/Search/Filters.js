@@ -7,12 +7,23 @@ import { Input, InputGroup, InputGroupAddon, Button, Form, Label } from 'reactst
 import ROUTES from '../../constants/routes.js';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
+import { isString } from 'lodash';
 
 const Filters = props => {
-    const handleSubmit = e => {
-        props.history.push(reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(props.value) }) + '?types=' + props.selectedFilters.join(','));
+    const PROPERTY_PATTERN = /^#P([0-9])+$/;
+    const RESOURCE_PATTERN = /^#R([0-9])+$/;
+    const MINIMUM_LENGTH_PATTERN = 3;
 
+    const handleSubmit = e => {
         e.preventDefault();
+
+        const value = decodeURIComponent(props.value);
+        if (isString(value) && value.length >= MINIMUM_LENGTH_PATTERN && (value.match(RESOURCE_PATTERN) || value.match(PROPERTY_PATTERN))) {
+            const id = value.substring(1);
+            return props.history.push(reverse(value.match(RESOURCE_PATTERN) ? ROUTES.RESOURCE : ROUTES.PREDICATE, { id }));
+        } else {
+            props.history.push(reverse(ROUTES.SEARCH, { searchTerm: encodeURIComponent(value) }) + '?types=' + props.selectedFilters.join(','));
+        }
     };
 
     return (
