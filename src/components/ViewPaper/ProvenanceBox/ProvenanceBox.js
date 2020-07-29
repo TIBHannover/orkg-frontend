@@ -4,8 +4,9 @@ import { StyledItemProvenanceBox, AnimationContainer, StyledActivity, Provenance
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
+import { MISC } from 'constants/graphSettings';
 
 export default function ProvenanceBox(props) {
     let rightSidebar;
@@ -95,7 +96,7 @@ export default function ProvenanceBox(props) {
                                                 {contributor.created_by.display_name !== props.observatoryInfo.created_by.display_name && (
                                                     <>
                                                         Updated by{' '}
-                                                        {contributor.created_by.id !== '00000000-0000-0000-0000-000000000000' ? (
+                                                        {contributor.created_by.id !== MISC.ANONYMOUS_USER_ID ? (
                                                             <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.created_by.id })}>
                                                                 <b>{contributor.created_by.display_name}</b>
                                                             </Link>

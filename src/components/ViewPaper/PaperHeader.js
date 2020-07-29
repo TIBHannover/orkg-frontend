@@ -9,13 +9,15 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import EditPaperDialog from './EditDialog/EditPaperDialog';
 import { CLASSES } from 'constants/graphSettings';
-import { useSelector } from 'react-redux';
+import { useSelector, shallowEqual } from 'react-redux';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
 
 const PaperHeader = props => {
-    const viewPaper = useSelector(state => state.viewPaper);
-    const role = useSelector(state => state.auth.role);
+    const viewPaper = useSelector(state => state.viewPaper, shallowEqual);
+    const role = useSelector(state => state.auth.role); //TODO: replace mocking value from (probably) user.role
+    const userId = useSelector(state => state.auth.user?.id);
     const [deletePapers] = useDeletePapers({ paperIds: [viewPaper.paperResourceId], redirect: true });
+    const userCreatedThisPaper = viewPaper.createdBy && userId && viewPaper.createdBy === userId; // make sure a user is signed in (not null)
 
     return (
         <>
@@ -82,7 +84,7 @@ const PaperHeader = props => {
             </div>
             <div className="flex-grow-1">
                 {props.editMode && <EditPaperDialog />}{' '}
-                {props.editMode && role === 'admin' && (
+                {props.editMode && (role === 'admin' || userCreatedThisPaper) && (
                     <Button color="danger" size="sm" className="mt-2" style={{ marginLeft: 'auto' }} onClick={deletePapers}>
                         <Icon icon={faTrash} /> Delete paper
                     </Button>
@@ -93,9 +95,7 @@ const PaperHeader = props => {
 };
 
 PaperHeader.propTypes = {
-    viewPaper: PropTypes.object.isRequired,
-    editMode: PropTypes.bool.isRequired,
-    role: PropTypes.string.isRequired
+    editMode: PropTypes.bool.isRequired
 };
 
 export default PaperHeader;

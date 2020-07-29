@@ -4,8 +4,9 @@ import { StyledItemProvenanceBox, AnimationContainer, ProvenanceBoxTabs, ErrorMe
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
+import { MISC } from 'constants/graphSettings';
 
 class ProvenanceBox extends Component {
     constructor(props) {
@@ -35,9 +36,9 @@ class ProvenanceBox extends Component {
 
                     if (
                         comparisonResource.observatory_id &&
-                        comparisonResource.observatory_id !== '00000000-0000-0000-0000-000000000000' &&
+                        comparisonResource.observatory_id !== MISC.ANONYMOUS_USER_ID &&
                         comparisonResource.created_by &&
-                        comparisonResource.created_by !== '00000000-0000-0000-0000-000000000000'
+                        comparisonResource.created_by !== MISC.ANONYMOUS_USER_ID
                     ) {
                         const observatory = getObservatoryAndOrganizationInformation(
                             comparisonResource.observatory_id,

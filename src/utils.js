@@ -2,7 +2,7 @@ import capitalize from 'capitalize';
 import queryString from 'query-string';
 import { flattenDepth, uniq } from 'lodash';
 import rdf from 'rdf';
-import { PREDICATES } from 'constants/graphSettings';
+import { PREDICATES, MISC } from 'constants/graphSettings';
 
 export function hashCode(s) {
     return s.split('').reduce((a, b) => {
@@ -117,7 +117,7 @@ export const get_error_message = (errors, field = null) => {
  *
  * @param {Array} paperStatements
  */
-export const getPaperData_ViewPaper = (id, label, paperStatements) => {
+export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
     const researchField = getResearchField(paperStatements);
     const publishedIn = getPublishedIn(paperStatements);
     const [publicationYear, publicationYearResourceId] = getPublicationYear(paperStatements);
@@ -133,8 +133,8 @@ export const getPaperData_ViewPaper = (id, label, paperStatements) => {
     const [url, urlResourceId] = getURL(paperStatements);
 
     return {
-        title: label,
-        paperResourceId: id,
+        title: paperResource.label,
+        paperResourceId: paperResource.id,
         contributions: contributions.sort((a, b) => a.label.localeCompare(b.label)), // sort contributions ascending, so contribution 1, is actually the first one
         authors: authors.reverse(), // statements are ordered desc, so first author is last => thus reverse
         publicationMonth: parseInt(publicationMonth),
@@ -146,7 +146,8 @@ export const getPaperData_ViewPaper = (id, label, paperStatements) => {
         researchField,
         publishedIn,
         url,
-        urlResourceId
+        urlResourceId,
+        createdBy: paperResource.created_by !== MISC.ANONYMOUS_USER_ID ? paperResource.created_by : null
     };
 };
 
