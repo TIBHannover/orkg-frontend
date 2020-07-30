@@ -18,6 +18,7 @@ const PaperHeader = props => {
     const userId = useSelector(state => state.auth.user?.id);
     const [deletePapers] = useDeletePapers({ paperIds: [viewPaper.paperResourceId], redirect: true });
     const userCreatedThisPaper = viewPaper.createdBy && userId && viewPaper.createdBy === userId; // make sure a user is signed in (not null)
+    const showDeleteButton = props.editMode && (role === 'admin' || userCreatedThisPaper);
 
     return (
         <>
@@ -84,7 +85,7 @@ const PaperHeader = props => {
             </div>
             <div className="flex-grow-1">
                 {props.editMode && <EditPaperDialog />}{' '}
-                {props.editMode && (role === 'admin' || userCreatedThisPaper) && (
+                {showDeleteButton && (
                     <Button color="danger" size="sm" className="mt-2" style={{ marginLeft: 'auto' }} onClick={deletePapers}>
                         <Icon icon={faTrash} /> Delete paper
                     </Button>

@@ -47,7 +47,7 @@ class EditableHeader extends Component {
 
     render() {
         return (
-            <div className=" pb-2 mb-3">
+            <div className="pb-2">
                 {this.state.editorState === 'view' && (
                     <div>
                         <h3>

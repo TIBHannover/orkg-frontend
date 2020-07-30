@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 
 const ObjectStatements = props => {
     const pageSize = 10;
+    const { resourceId, setHasObjectStatement } = props;
     const [showObjectStatements, setShowObjectStatements] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [hasNextPage, setHasNextPage] = useState(false);
@@ -20,13 +21,19 @@ const ObjectStatements = props => {
         setIsLoading(true);
 
         getStatementsByObject({
-            id: props.resourceId,
+            id: resourceId,
             page: page + 1,
             items: pageSize,
             sortBy: 'id',
             desc: true
         }).then(result => {
             // Resources
+            if (page === 0 && result.length === 0) {
+                setHasObjectStatement(false);
+            } else {
+                setHasObjectStatement(true);
+            }
+
             if (result.length === 0) {
                 setIsLoading(false);
                 setHasNextPage(false);
@@ -37,7 +44,7 @@ const ObjectStatements = props => {
                 setHasNextPage(result.length < pageSize || result.length === 0 ? false : true);
             }
         });
-    }, [page, props.resourceId]);
+    }, [page, resourceId, setHasObjectStatement]);
 
     useEffect(() => {
         loadStatements();
@@ -46,7 +53,7 @@ const ObjectStatements = props => {
     // reset resources when the userId has changed
     useEffect(() => {
         setStatements([]);
-    }, [props.resourceId]);
+    }, [resourceId]);
 
     const handleLoadMore = () => {
         if (!isLoading) {
@@ -109,7 +116,12 @@ const ObjectStatements = props => {
 };
 
 ObjectStatements.propTypes = {
-    resourceId: PropTypes.string.isRequired
+    resourceId: PropTypes.string.isRequired,
+    setHasObjectStatement: PropTypes.func
+};
+
+ObjectStatements.defaultProps = {
+    setHasObjectStatement: () => {}
 };
 
 export default ObjectStatements;
