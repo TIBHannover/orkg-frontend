@@ -23,7 +23,7 @@ function useDeleteResource({ resourceId, redirect = false }) {
                 toast.success(`Successfully delete this resource`);
 
                 if (redirect) {
-                    history.push(ROUTES.HOME);
+                    history.push(ROUTES.RESOURCES);
                 }
             } catch (err) {
                 toast.error(`An error occurred, resource not deleted`);

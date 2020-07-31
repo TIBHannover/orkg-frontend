@@ -34,6 +34,7 @@ function Resource(props) {
     const [editMode, setEditMode] = useState(false);
     const [canBeDeleted, setCanBeDeleted] = useState(false);
     const values = useSelector(state => state.statementBrowser.values);
+    const properties = useSelector(state => state.statementBrowser.properties);
     const role = useSelector(state => state.auth.role); //TODO: replace mocking value from (probably) user.role
     const showDeleteButton = editMode && role === 'admin';
     const [hasObjectStatement, setHasObjectStatement] = useState(false);
@@ -64,11 +65,8 @@ function Resource(props) {
     }, [location, resourceId]);
 
     useEffect(() => {
-        console.log(hasObjectStatement);
-        console.log(values.allIds.length);
-
-        setCanBeDeleted(values.allIds.length === 0 && !hasObjectStatement);
-    }, [values, hasObjectStatement]);
+        setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && !hasObjectStatement);
+    }, [values, properties, hasObjectStatement]);
 
     const handleClassSelect = async (selected, action) => {
         if (action.action === 'create-option') {
