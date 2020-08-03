@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSearchMinus, faSearchPlus, faExpandArrowsAlt, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { faSearchMinus, faSearchPlus, faExpandArrowsAlt, faTimesCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { resetPdfAnnotation } from 'actions/pdfAnnotation';
 import { useSelector, useDispatch } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import Tippy from '@tippy.js/react';
+import HelpModal from 'components/PdfAnnotation/HelpModal';
 
 const ToolbarStyled = styled.div`
     background: ${props => props.theme.darkblue};
@@ -23,6 +25,7 @@ const ToolbarStyled = styled.div`
 const Toolbar = props => {
     const pdf = useSelector(state => state.pdfAnnotation.pdf);
     const dispatch = useDispatch();
+    const [helpModalOpen, setHelpModalOpen] = useState(false);
 
     // Reset the pdf Annotation state
     const discardPdfFile = async () => {
@@ -37,13 +40,32 @@ const Toolbar = props => {
         }
     };
 
+    const toggleHelpModal = () => {
+        console.log('helpModalOpen', helpModalOpen);
+        setHelpModalOpen(!helpModalOpen);
+    };
+
     return (
         <ToolbarStyled>
             <h1 className="h5 mb-0 ml-2" style={{ color: '#fff', height: 'auto' }}>
                 {/* Set the height to overwrite styles from the PDF  */}
                 Survey table extractor
             </h1>
-
+            <Tippy content="Open help popup">
+                <span className="ml-3">
+                    <Button
+                        color="link"
+                        pill
+                        outline
+                        size="sm"
+                        style={{ fontSize: 22, lineHeight: 1, color: '#fff' }}
+                        className="p-0"
+                        onClick={toggleHelpModal}
+                    >
+                        <Icon icon={faQuestionCircle} />
+                    </Button>
+                </span>
+            </Tippy>
             {/*
             <Button color="darkblueDarker" size="sm">
                 <Icon icon={faICursor} className="mr-2" />
@@ -90,6 +112,8 @@ const Toolbar = props => {
                     </Button>
                 )}
             </div>
+
+            <HelpModal isOpen={helpModalOpen} toggle={toggleHelpModal} />
         </ToolbarStyled>
     );
 };

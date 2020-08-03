@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import TableEditor from './TableEditor';
 import ExtractReferencesModal from './ExtractReferencesModal';
 import { Link } from 'react-router-dom';
@@ -10,6 +10,7 @@ import useExtractionModal from './hooks/useExtractionModal';
 import ROUTES from 'constants/routes.js';
 import { reverse } from 'named-urls';
 import useTableEditor from './hooks/useTableEditor';
+import HelpModal from 'components/PdfAnnotation/HelpModal';
 
 const ExtractionModal = props => {
     const [
@@ -23,6 +24,7 @@ const ExtractionModal = props => {
         importError,
         clearImportError
     ] = useExtractionModal(props);
+    const [helpModalOpen, setHelpModalOpen] = useState(false);
 
     const [extractReferencesModalOpen, setExtractReferencesModalOpen] = useState(false);
     const toggleExtractReferencesModal = () => {
@@ -32,10 +34,19 @@ const ExtractionModal = props => {
 
     const comparisonUrl = importedData ? reverse(ROUTES.COMPARISON) + '?contributions=' + importedData.map(entry => entry.contributionId) : null;
 
+    const toggleHelpModal = () => {
+        console.log('helpModalOpen', helpModalOpen);
+        setHelpModalOpen(!helpModalOpen);
+    };
     return (
         <>
             <Modal isOpen={props.isOpen} toggle={props.toggle} style={{ maxWidth: '95%' }}>
-                <ModalHeader toggle={props.toggle}>Table extraction</ModalHeader>
+                <ModalHeader toggle={props.toggle}>
+                    Table extraction{' '}
+                    <Button color="link" pill outline size="sm" style={{ fontSize: 18, lineHeight: 1 }} className="p-0" onClick={toggleHelpModal}>
+                        <Icon icon={faQuestionCircle} />
+                    </Button>
+                </ModalHeader>
 
                 {loading && (
                     <ModalBody>
@@ -105,6 +116,8 @@ const ExtractionModal = props => {
                 toggle={toggleExtractReferencesModal}
                 id={props.id}
             />
+
+            <HelpModal isOpen={helpModalOpen} toggle={toggleHelpModal} />
         </>
     );
 };
