@@ -70,7 +70,6 @@ const PaperCard = props => {
                         {props.paper.publicationYear}
                     </small>
                 </Col>
-                {console.log(props)}
                 {props.contribution && (
                     <div className="options mr-2">
                         <AddToComparison
