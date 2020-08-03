@@ -1,7 +1,6 @@
 import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, Tooltip as ReactstrapTooltip } from 'reactstrap';
 import React, { Component } from 'react';
 import { getCitationByDOI } from 'network';
-
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
@@ -25,7 +24,6 @@ class ExportCitation extends Component {
             citations: {},
             isLoadingBiBTeX: false,
             citationBibTeX: '',
-            shortLink: null,
             values: [],
             showTooltipCopiedAPA: false,
             showTooltipCopiedIEEE: false,
@@ -35,24 +33,23 @@ class ExportCitation extends Component {
         };
     }
 
-    componentDidMount() {}
-
-    componentDidUpdate = (prevProps, prevState) => {};
-
     getCitation = () => {
         const styles = ['apa', 'ieee', 'harvard3', 'chicago-author-date'];
+        styles.map(s => {
+            this.setState(prevState => ({ citations: { ...prevState.citations, [s]: { citation: 'test', loading: true } } }));
+        });
 
-        for (const style of styles) {
-            this.setState(prevState => ({ citations: { ...prevState.citations, [style]: { citation: 'test', loading: true } } }));
-            getCitationByDOI(this.props.DOI, style)
-                .then(response => {
-                    console.log(response);
-                    this.setState(prevState => ({ citations: { ...prevState.citations, [style]: { citation: response, loading: false } } }));
-                })
-                .catch(error => {
-                    this.setState(prevState => ({ citations: { ...prevState.citations, [style]: { citation: 'failed to load', loading: true } } }));
-                });
-        }
+        Promise.all(
+            styles.map(s =>
+                getCitationByDOI(this.props.DOI, s)
+                    .then(data => {
+                        this.setState(prevState => ({ citations: { ...prevState.citations, [s]: { citation: data, loading: false } } }));
+                    })
+                    .catch(error => {
+                        this.setState(prevState => ({ citations: { ...prevState.citations, [s]: { citation: 'failed to load', loading: true } } }));
+                    })
+            )
+        );
     };
 
     getCitationBibTeX = () => {
@@ -60,7 +57,6 @@ class ExportCitation extends Component {
         if (this.props.DOI) {
             getCitationByDOI(this.props.DOI, '', 'application/x-bibtex')
                 .then(response => {
-                    console.log(response);
                     this.setState({
                         citationBibTeX: response,
                         isLoadingBibTeX: false
@@ -95,10 +91,8 @@ class ExportCitation extends Component {
                 toggle={this.props.toggle}
                 size="lg"
                 onOpened={() => {
-                    if (!this.state.shortLink) {
-                        this.getCitation();
-                        this.getCitationBibTeX();
-                    }
+                    this.getCitation();
+                    this.getCitationBibTeX();
                 }}
             >
                 <ModalHeader toggle={this.props.toggle}>Export Citation</ModalHeader>
@@ -150,7 +144,7 @@ class ExportCitation extends Component {
                                 }}
                             >
                                 <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                                    <Icon icon={faClipboard} /> Copy to clipboard {/* TODO: show a success message after copy */}
+                                    <Icon icon={faClipboard} /> Copy to clipboard
                                 </Button>
                             </CopyToClipboard>
                             <ReactstrapTooltip
@@ -183,7 +177,7 @@ class ExportCitation extends Component {
                                 }}
                             >
                                 <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                                    <Icon icon={faClipboard} /> Copy to clipboard {/* TODO: show a success message after copy */}
+                                    <Icon icon={faClipboard} /> Copy to clipboard
                                 </Button>
                             </CopyToClipboard>
                             <ReactstrapTooltip
@@ -216,7 +210,7 @@ class ExportCitation extends Component {
                                 }}
                             >
                                 <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                                    <Icon icon={faClipboard} /> Copy to clipboard {/* TODO: show a success message after copy */}
+                                    <Icon icon={faClipboard} /> Copy to clipboard
                                 </Button>
                             </CopyToClipboard>
                             <ReactstrapTooltip
@@ -257,7 +251,7 @@ class ExportCitation extends Component {
                                 }}
                             >
                                 <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                                    <Icon icon={faClipboard} /> Copy to clipboard {/* TODO: show a success message after copy */}
+                                    <Icon icon={faClipboard} /> Copy to clipboard
                                 </Button>
                             </CopyToClipboard>
                             <ReactstrapTooltip
@@ -290,7 +284,7 @@ class ExportCitation extends Component {
                                 }}
                             >
                                 <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                                    <Icon icon={faClipboard} /> Copy to clipboard {/* TODO: show a success message after copy */}
+                                    <Icon icon={faClipboard} /> Copy to clipboard
                                 </Button>
                             </CopyToClipboard>
                             <ReactstrapTooltip

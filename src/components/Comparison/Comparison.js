@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
+import { Alert, Dropdown, DropdownItem, DropdownMenu, NavLink, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject, getComparisonDataByDOI } from 'network';
 import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResponseHashFromUrl, get_error_message } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -49,7 +49,7 @@ class Comparison extends Component {
             contributions: [],
             dropdownOpen: false,
             properties: [],
-            DOIData: {},
+            DOIData: [],
             data: {},
             csvData: [],
             showPropertiesDialog: false,
@@ -468,12 +468,13 @@ class Comparison extends Component {
                                         >
                                             Export as RDF
                                         </DropdownItem>
-
-                                        <DropdownItem onClick={() => this.toggle('showExportCitationsDialog')}>Export Citation</DropdownItem>
+                                        {this.props.match.params.comparisonId && this.state.DOIData.doi && (
+                                            <DropdownItem onClick={() => this.toggle('showExportCitationsDialog')}>Export Citation</DropdownItem>
+                                        )}
                                         <DropdownItem divider />
                                         <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
                                         <DropdownItem onClick={() => this.toggle('showPublishDialog')}>Publish</DropdownItem>
-                                        {this.props.match.params.comparisonId && (
+                                        {this.props.match.params.comparisonId && !this.state.DOIData.doi && (
                                             <DropdownItem onClick={() => this.toggle('showPublishWithDOIDialog')}>Publish with DOI</DropdownItem>
                                         )}
                                     </DropdownMenu>
@@ -549,15 +550,23 @@ class Comparison extends Component {
                                                 {this.state.DOIData.authors && (
                                                     <>
                                                         {this.state.DOIData.authors.map((author, index) =>
-                                                            author.classes && author.classes.includes(process.env.REACT_APP_CLASSES_AUTHOR) ? (
-                                                                <Link key={index} to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}>
+                                                            author.nameIdentifiers[0].nameIdentifier &&
+                                                            author.nameIdentifiers[0].nameIdentifier !== '' ? (
+                                                                <NavLink
+                                                                    className="p-0"
+                                                                    style={{ display: 'contents' }}
+                                                                    href={author.nameIdentifiers[0].nameIdentifier}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                >
                                                                     <Badge color="lightblue" className="mr-2 mb-2" key={index}>
                                                                         <Icon icon={faUser} className="text-primary" /> {author.name}
                                                                     </Badge>
-                                                                </Link>
+                                                                </NavLink>
                                                             ) : (
                                                                 <Badge color="lightblue" className="mr-2 mb-2" key={index}>
                                                                     <Icon icon={faUser} className="text-darkblue" /> {author.name}
+                                                                    <span>{console.log(author.nameIdentifiers[0].nameIdentifier)} </span>
                                                                 </Badge>
                                                             )
                                                         )}

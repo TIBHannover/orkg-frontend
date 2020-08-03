@@ -11,6 +11,7 @@ export const organizationsUrl = `${url}organizations/`;
 export const observatoriesUrl = `${url}observatories/`;
 export const predicatesUrl = `${url}predicates/`;
 export const userUrl = `${url}user/`;
+export const doisUrl = `${url}dois/`;
 export const statementsUrl = `${url}statements/`;
 export const literalsUrl = `${url}literals/`;
 export const classesUrl = `${url}classes/`;
@@ -703,43 +704,23 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
     });
 };
 
-export const getBibTex = comparisonId => {
-    const a = submitGetRequest(`${dataciteUrl}${encodeURIComponent(comparisonId)}`);
-    return a;
-};
-
-export const generateDOIForComparison = (resourceId, base64xml, comparisonLink) => {
-    const token = Buffer.from(`${process.env.REACT_APP_DATACITE_TEST_USERNAME}:${process.env.REACT_APP_DATACITE_TEST_PASSWORD}`, 'utf8').toString(
-        'base64'
+export const generateDOIForComparison = (comparisonId, title, subject, description, relatedResources, authors, url) => {
+    return submitPostRequest(
+        doisUrl,
+        { 'Content-Type': 'application/json' },
+        { comparisonId, title, subject, description, relatedResources, authors, url }
     );
-
-    const data = {
-        id: `${process.env.REACT_APP_DATACITE_TEST_DOI}/${resourceId}`,
-        types: 'dois',
-        attributes: {
-            event: 'publish',
-            doi: `${process.env.REACT_APP_DATACITE_TEST_DOI}/${resourceId}`,
-            url: comparisonLink,
-            xml: base64xml
-        }
-    };
-    return '1';
-    //return submitPostRequest(dataciteUrl, { 'Content-Type': 'application/vnd.api+json', Authorization: `Basic ${token}` }, { data });
 };
 
 export const getComparisonDataByDOI = id => {
     return submitGetRequest(`${dataciteUrl}/${process.env.REACT_APP_DATACITE_TEST_DOI}/${encodeURIComponent(id)}`);
 };
 
-export const getCitationByDOI = (id, style = '', header = 'text/x-bibliography;') => {
+export const getCitationByDOI = (DOI, style = '', header = 'text/x-bibliography') => {
     let headers = '';
-    if (style.length > 0) {
-        headers = { Accept: `${header} style=${style}` };
-    } else {
-        headers = { Accept: `${header}` };
-    }
+    headers = { Accept: `${header}` };
     const myHeaders = headers ? new Headers(headers) : {};
-    const url = 'https://doi.org/10.1145/3064911.3064924';
+    const url = `${process.env.REACT_APP_DATACITE_URL}/${DOI}?style=${style}`;
 
     return new Promise((resolve, reject) => {
         fetch(url, {
