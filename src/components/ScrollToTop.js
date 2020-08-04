@@ -7,7 +7,11 @@ but preserves scroll position when previous page is visited */
 class ScrollToTop extends Component {
     componentDidUpdate(prevProps) {
         if (this.props.location !== prevProps.location) {
-            window.scrollTo(0, 0);
+            const isViewPaper_contributionChange =
+                this.props.location.pathname.startsWith('/paper/') && prevProps.location.pathname.startsWith('/paper/');
+            if (!isViewPaper_contributionChange) {
+                window.scrollTo(0, 0);
+            }
         }
     }
 
