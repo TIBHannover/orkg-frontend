@@ -66,7 +66,7 @@ const PdfTextAnnotation = props => {
                     position: 'relative'
                 }}
             >
-                <PdfLoader url={'https://arxiv.org/pdf/1901.10816.pdf'} beforeLoad={<Icon icon={faSpinner} />}>
+                <PdfLoader url="https://arxiv.org/pdf/1901.10816.pdf" beforeLoad={<Icon icon={faSpinner} />}>
                     {pdfDocument => (
                         <PdfHighlighter
                             pdfDocument={pdfDocument}
