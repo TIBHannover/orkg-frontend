@@ -3,6 +3,7 @@ import { connectRouter } from 'connected-react-router';
 import addPaper from './addPaper';
 import auth from './auth';
 import statementBrowser from './statementBrowser';
+import pdfTextAnnotation from './pdfTextAnnotation';
 import viewPaper from './viewPaper';
 import addTemplate from './addTemplate';
 
@@ -13,5 +14,6 @@ export default history =>
         viewPaper,
         statementBrowser,
         auth,
-        addTemplate
+        addTemplate,
+        pdfTextAnnotation
     });

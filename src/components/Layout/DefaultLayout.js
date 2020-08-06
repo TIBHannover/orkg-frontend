@@ -10,7 +10,7 @@ import styled from 'styled-components';
 
 const StyledBody = styled.div`
     display: flex;
-    min-height: 100vh;
+    min-height: calc(100vh - 30px);
     flex-direction: column;
     padding-top: 73px;
     margin-top: 30px;

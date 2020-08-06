@@ -247,6 +247,12 @@ class Header extends Component {
                                             <Badge color="info">Beta</Badge>
                                         </small>
                                     </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.PDF_TEXT_ANNOTATION}>
+                                        PDF text annotation{' '}
+                                        <small>
+                                            <Badge color="danger">Alpha</Badge>
+                                        </small>
+                                    </DropdownItem>
                                 </DropdownMenu>
                             </ButtonDropdown>
 

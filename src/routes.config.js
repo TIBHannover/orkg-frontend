@@ -36,6 +36,7 @@ import Stats from 'pages/Stats';
 import UserSettings from 'pages/UserSettings';
 import UserProfile from 'pages/UserProfile';
 import FeaturedComparisons from 'pages/FeaturedComparisons';
+import PdfTextAnnotation from 'pages/PdfTextAnnotation';
 import { reverse } from 'named-urls';
 
 const routes = [
@@ -213,6 +214,11 @@ const routes = [
         path: ROUTES.ORGANIZATION_OBSERVATORIES,
         exact: true,
         component: OrganizationObservatories
+    },
+    {
+        path: ROUTES.PDF_TEXT_ANNOTATION,
+        exact: true,
+        component: PdfTextAnnotation
     },
     {
         path: ROUTES.TPDL,

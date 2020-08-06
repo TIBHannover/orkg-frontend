@@ -1,4 +1,4 @@
-@import '../../assets/scss/ThemeVariables.scss';
+@import "../../assets/scss/ThemeVariables.scss";
 
 body {
     color: #646464;
@@ -106,4 +106,8 @@ body {
         -webkit-transform: scale(1.2, 1.2);
         opacity: 0;
     }
+}
+
+.page {
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.13);
 }
