@@ -44,7 +44,11 @@ function useTableEditor(tableId, tableRef) {
                 }
 
                 tableUpdates.push([selectionStart.row, col, null, newValue]);
-                dispatch(updateTableData(tableId, tableUpdates));
+
+                // TODO: follow up with handontable issue https://forum.handsontable.com/t/gh-5727-contextmenu-callback-the-runhooks-method-cannot-be-called/4134/11
+                setTimeout(function() {
+                    dispatch(updateTableData(tableId, tableUpdates));
+                }, 100);
             }
         }
     };
@@ -107,7 +111,11 @@ function useTableEditor(tableId, tableRef) {
             return;
         }
 
-        dispatch(updateTableData(tableId, tableUpdates));
+        // TODO: follow up with handontable issue https://forum.handsontable.com/t/gh-5727-contextmenu-callback-the-runhooks-method-cannot-be-called/4134/11
+        setTimeout(function() {
+            dispatch(updateTableData(tableId, tableUpdates));
+        }, 100);
+
         toast.success('Columns successfully splitted');
     };
 

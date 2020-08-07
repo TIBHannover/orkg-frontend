@@ -115,7 +115,7 @@ const HelpModal = props => {
                     <li>
                         <strong>contribution:research_problem</strong>
                         <br /> is a textual description of that problem that the listed papers address. The problem normally consists of 2-3 words,
-                        but more words are allowed. Tip: use the same research field for all rows to save time.
+                        but more words are allowed. Tip: use the same research problem for all rows to save time.
                     </li>
                 </ul>
                 <p>
