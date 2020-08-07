@@ -208,6 +208,7 @@ class AuthorPage extends Component {
                                                     if (resource) {
                                                         return <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />;
                                                     }
+                                                    return <></>;
                                                 })}
                                             </div>
                                         )}
