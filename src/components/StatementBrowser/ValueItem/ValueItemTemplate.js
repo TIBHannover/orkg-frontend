@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
+import { CLASSES } from 'constants/graphSettings';
 
 export default function ValueItemTemplate(props) {
     const [disableHover, setDisableHover] = useState(false);
@@ -99,7 +100,7 @@ export default function ValueItemTemplate(props) {
                     )}
 
                     <div className={valueOptionClasses}>
-                        {!props.value.isEditing && props.value.classes && props.value.classes.includes(process.env.REACT_APP_QB_DATASET_CLASS) && (
+                        {!props.value.isEditing && props.value.classes && props.value.classes.includes(CLASSES.QB_DATASET_CLASS) && (
                             <StatementOptionButton title="Visualize data in tabular form" icon={faTable} action={props.handleDatasetClick} />
                         )}
 

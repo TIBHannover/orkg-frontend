@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import DbpediaAbstract from './DbpediaAbstract';
 import WikidataDescription from './WikidataDescription';
 import WikipediaSummary from './WikipediaSummary';
+import { PREDICATES } from 'constants/graphSettings';
 
 class SameAsStatements extends Component {
     constructor(props) {
@@ -32,7 +33,7 @@ class SameAsStatements extends Component {
         const internalSameAsIds =
             this.props.selectedResource && this.props.resources.byId[this.props.selectedResource].propertyIds.length > 0
                 ? this.props.resources.byId[this.props.selectedResource].propertyIds.filter(
-                      property => this.props.properties.byId[property].existingPredicateId === process.env.REACT_APP_PREDICATES_SAME_AS
+                      property => this.props.properties.byId[property].existingPredicateId === PREDICATES.SAME_AS
                   )
                 : [];
 

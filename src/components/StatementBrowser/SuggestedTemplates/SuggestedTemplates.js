@@ -6,6 +6,7 @@ import AddTemplateButton from 'components/StatementBrowser/AddTemplateButton/Add
 import { flattenDepth, uniqBy } from 'lodash';
 import PropTypes from 'prop-types';
 import { FormGroup, Label, UncontrolledAlert } from 'reactstrap';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 
 export default function SuggestedTemplates(props) {
     const [problemTemplates, setProblemTemplates] = useState([]);
@@ -25,7 +26,7 @@ export default function SuggestedTemplates(props) {
             // Filter statement with subjects of type Contribution Template
             const source = statements.length > 0 ? statements[0].object : '';
             return statements
-                .filter(statement => statement.subject.classes.includes(process.env.REACT_APP_CLASSES_CONTRIBUTION_TEMPLATE))
+                .filter(statement => statement.subject.classes.includes(CLASSES.CONTRIBUTION_TEMPLATE))
                 .map(st => ({ id: st.subject.id, label: st.subject.label, source })); // return the template Object
         });
     }, []);
@@ -37,7 +38,7 @@ export default function SuggestedTemplates(props) {
         setLoadingFieldTemplates({ isLoading: true, failed: false });
 
         getParentResearchFields(props.researchField).then(parents => {
-            Promise.all([...parents.map(rf => getTemplatesOfResourceId(rf.id, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_FIELD))])
+            Promise.all([...parents.map(rf => getTemplatesOfResourceId(rf.id, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD))])
                 .then(templates => {
                     setFieldTemplates(templates.flat());
                     setLoadingFieldTemplates({ isLoading: false, failed: false });
@@ -58,7 +59,7 @@ export default function SuggestedTemplates(props) {
         // fetch templates for problems there aren't loaded yet
         const problemPromises = props.researchProblems
             .filter(problem => !loadedProblems.includes(problem))
-            .map(problem => getTemplatesOfResourceId(problem, process.env.REACT_APP_TEMPLATE_OF_RESEARCH_PROBLEM));
+            .map(problem => getTemplatesOfResourceId(problem, PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM));
 
         Promise.all(problemPromises)
             .then(addTemplates => {

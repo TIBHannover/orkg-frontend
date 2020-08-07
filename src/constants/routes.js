@@ -18,9 +18,9 @@ export default {
     OBSERVATORIES: '/observatories',
     ADD_ORGANIZATION: '/addOrganization',
     ORGANIZATION: '/organizations/:id',
-    ADD_OBSERVATORY: '/organizations/:id/addObsevatory',
+    ADD_OBSERVATORY: '/organizations/:id/addObservatory',
     ORGANIZATION_OBSERVATORIES: '/organizations/:id/observatories',
-    OBSERVATORY: '/obsevatory/:id',
+    OBSERVATORY: '/observatory/:id',
     ADD_PAPER: {
         GENERAL_DATA: '/add-paper'
     },

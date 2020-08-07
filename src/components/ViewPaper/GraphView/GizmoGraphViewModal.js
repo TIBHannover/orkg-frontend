@@ -14,6 +14,7 @@ import flattenDeep from 'lodash/flattenDeep';
 // moving GraphVis here in order to maintain the layouts and status related stuff;
 import GraphVis from '../../../libs/gizmo/GraphVis';
 import SearchAutoComplete from './SearchAutoComplete';
+import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
 class GraphView extends Component {
     constructor(props) {
@@ -143,13 +144,16 @@ class GraphView extends Component {
             title: statement.subject.label,
             classificationArray: statement.subject.classes
         });
+
         // check if node type is resource or literal
         if (statement.object._class === 'resource') {
             nodes.push({
                 id: statement.object.id,
                 label: objectLabel,
                 title: statement.object.label,
-                classificationArray: statement.object.classes
+                classificationArray: statement.object.classes,
+                isResearchFieldRelated:
+                    statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD || statement.predicate.id === PREDICATES.HAS_SUB_RESEARCH_FIELD
             });
         } else {
             nodes.push({
@@ -224,14 +228,14 @@ class GraphView extends Component {
             edges.forEach(edge => {
                 if (edge.predicateId) {
                     if (
-                        edge.predicateId === process.env.REACT_APP_PREDICATES_HAS_DOI ||
-                        edge.predicateId === process.env.REACT_APP_PREDICATES_HAS_VENUE ||
-                        edge.predicateId === process.env.REACT_APP_PREDICATES_HAS_AUTHOR ||
-                        edge.predicateId === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_MONTH ||
-                        edge.predicateId === process.env.REACT_APP_PREDICATES_HAS_PUBLICATION_YEAR ||
-                        edge.predicateId === process.env.REACT_APP_PREDICATES_HAS_RESEARCH_FIELD ||
-                        edge.predicateId === process.env.REACT_APP_PREDICATES_HAS_SUB_RESEARCH_FIELD ||
-                        edge.predicateId === process.env.REACT_APP_PREDICATES_URL
+                        edge.predicateId === PREDICATES.HAS_DOI ||
+                        edge.predicateId === PREDICATES.HAS_VENUE ||
+                        edge.predicateId === PREDICATES.HAS_AUTHOR ||
+                        edge.predicateId === PREDICATES.HAS_PUBLICATION_MONTH ||
+                        edge.predicateId === PREDICATES.HAS_PUBLICATION_YEAR ||
+                        edge.predicateId === PREDICATES.HAS_RESEARCH_FIELD ||
+                        edge.predicateId === PREDICATES.HAS_SUB_RESEARCH_FIELD ||
+                        edge.predicateId === PREDICATES.URL
                     ) {
                         edge.from = meta.id;
                     }
@@ -250,7 +254,6 @@ class GraphView extends Component {
                 const statements = await this.getResourceAndStatements(this.props.paperId, 0, []);
                 const auxiliaryMetaDataNode = true; // flag for using or not using auxiliary node for meta info
                 const result = this.processStatements(statements, auxiliaryMetaDataNode);
-                console.log(result);
                 this.setState({ nodes: result.nodes, edges: result.edges });
             } else {
                 await this.visualizeAddPaper();
@@ -266,7 +269,7 @@ class GraphView extends Component {
         const { title, authors, doi, publicationMonth, publicationYear, selectedResearchField, contributions } = this.props.addPaper;
 
         // title
-        nodes.push({ id: 'title', label: title.substring(0, 20), title: title, classificationArray: [process.env.REACT_APP_CLASSES_PAPER] });
+        nodes.push({ id: 'title', label: title.substring(0, 20), title: title, classificationArray: [CLASSES.PAPER] });
 
         // authors
         if (authors.length > 0) {

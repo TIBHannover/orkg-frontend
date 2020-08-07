@@ -8,6 +8,7 @@ import MinimumSpanningTree from './mst';
 import Layout from './Layout';
 import Navigation from './Navigation';
 import groupBy from 'lodash/groupBy';
+import { CLASSES } from 'constants/graphSettings';
 
 export default class GraphVis {
     constructor() {
@@ -347,7 +348,6 @@ export default class GraphVis {
                 if (aNode.type() === 'resource') {
                     aNode.status = 'unknown';
                 }
-                // put parent position to the child node for the expand animation
                 this.classNodes.push(aNode);
                 this.Id2NodeMap[aNode.id()] = aNode;
                 iterator++;
@@ -360,6 +360,12 @@ export default class GraphVis {
                 const anEdge = this.createEdge(edge, iterator);
                 this.propNodes.push(anEdge);
                 this.Id2PropnodeMap[anEdge.id()] = anEdge;
+
+                // fixing positions of new nodes to its parents
+                const childNode = anEdge.rangeNode();
+                const parentNode = anEdge.domainNode();
+                childNode.parentNodeForPosition(parentNode);
+                childNode.setToParentNodePosition();
                 iterator++;
             });
         }
@@ -485,7 +491,7 @@ export default class GraphVis {
             for (let it = 0; it < this.sortedByDepthNodes.length; it++) {
                 if (this.sortedByDepthNodes[it]) {
                     this.sortedByDepthNodes[it].forEach(item => {
-                        if (item.type() === 'resource' && item.status === 'unknown') {
+                        if (item.type() === 'resource' && item.status === 'unknown' && item.isResearchFieldRelated !== true) {
                             unexploredNodes.push(item);
                             item.setExploreAnimation(true);
                         }
@@ -917,6 +923,7 @@ export default class GraphVis {
         node.setLabel(node_data.title);
         node.setPosition(-1, -1);
         node.graph = this;
+        node.isResearchFieldRelated = node_data.isResearchFieldRelated;
         if (node_data.type === 'literal') {
             node.type('literal');
             node.setConfigObj(this.graphOptions.datatypeConfig());
@@ -934,7 +941,7 @@ export default class GraphVis {
 
         if (node_data.classificationArray) {
             // todo: based on the classificationArray, add further icons
-            if (node_data.classificationArray.indexOf(process.env.REACT_APP_CLASSES_PAPER) !== -1) {
+            if (node_data.classificationArray.indexOf(CLASSES.PAPER) !== -1) {
                 node.addIcon('paperIcon');
             }
         }

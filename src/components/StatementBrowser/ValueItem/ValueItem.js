@@ -16,6 +16,7 @@ import { uniq } from 'lodash';
 import format from 'string-format';
 import ValueItemTemplate from './ValueItemTemplate';
 import PropTypes from 'prop-types';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 
 export default function ValueItem(props) {
     const [modal, setModal] = useState(false);
@@ -209,7 +210,7 @@ export default function ValueItem(props) {
                     '?q=' +
                     encodeURIComponent(value) +
                     queryParams +
-                    `&exclude=${encodeURIComponent(process.env.REACT_APP_CLASSES_CONTRIBUTION + ',' + process.env.REACT_APP_CLASSES_PROBLEM)}`
+                    `&exclude=${encodeURIComponent(CLASSES.CONTRIBUTION + ',' + CLASSES.PROBLEM)}`
             );
             responseJson = await IdMatch(value, responseJson);
 
@@ -312,7 +313,7 @@ export default function ValueItem(props) {
     return (
         <>
             <ValueItemTemplate
-                isProperty={[process.env.REACT_APP_TEMPLATE_COMPONENT_PROPERTY, process.env.REACT_APP_TEMPLATE_OF_PREDICATE].includes(
+                isProperty={[PREDICATES.TEMPLATE_COMPONENT_PROPERTY, PREDICATES.TEMPLATE_OF_PREDICATE].includes(
                     props.properties.byId[props.propertyId].existingPredicateId
                 )}
                 id={props.id}

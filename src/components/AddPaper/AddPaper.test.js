@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import AddPaper from './AddPaper';
+import AddPaper from '../../pages/AddPaper';
 import { Provider } from 'react-redux';
 import { theme } from 'App.test.js';
 import { ThemeProvider } from 'styled-components';

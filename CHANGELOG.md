@@ -3,6 +3,40 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.16](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.15...V0.16) - 2020-07-22
+
+### Merged
+
+- ux: change term object to resource [`#331`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/331)
+- style(StatementBrowser): replace colon by arrow [`#330`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/330)
+- fix: Load more papers in research problem page [`#321`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/321)
+- fix: Observatory link typo [`#329`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/329)
+- ux : Update tooltip content of the dropdown menu [`#322`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/322)
+- fix: Export comparison as PDF [`#327`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/327)
+- refactor: change file structure, use pages directory [`#325`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/325)
+
+### Fixed
+
+- Merge branch '280-replace-term-object-with-resource-throughout-the-ui' into 'master' [`#280`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/280)
+- Merge branch '279-statement-browser-replace-colon-by-arrow' into 'master' [`#279`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/279)
+- Merge branch '278-fix-typo-in-observatory-link' into 'master' [`#278`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/278)
+- Merge branch '273-update-tooltip-content-of-the-dropdown-menu-object-or-literal' into 'master' [`#273`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/273)
+- Merge branch '277-bug-export-comparison-as-pdf-is-broken' into 'master' [`#277`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/277)
+- Merge branch '276-refactor-file-structure' into 'master' [`#276`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/276)
+
+---
+## [0.15](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.14...V0.15) - 2020-07-10
+
+### Merged
+
+- improvement: Show linked research fields to research problem [`#316`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/316)
+- fix: fetching classes in add resource page [`#320`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/320)
+
+### Fixed
+
+- Merge branch '271-bug-add-resource-page-is-broken' into 'master' [`#271`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/271)
+
+---
 ## [0.14](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.13...V0.14) - 2020-07-09
 
 ### Merged
@@ -177,7 +211,7 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - Fixes #185. Published comparison url [`#185`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/185)
 
 ---
-## [0.9](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.8...V0.9) - 2020-04-24
+## [0.9](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.8...V0.9) - 2020-05-05
 
 ### Merged
 
@@ -262,8 +296,6 @@ All notable changes to the ORKG will be documented in this file. The format is b
 ### Commits
 
 - Fix datacube vocabulary tabular view [`1e770d8`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/1e770d8a25143736794893550ea3d869c1efed5a)
-- Include public widget file [`3f119d8`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/3f119d86126a764d8951ab648c0f1af0bdbe6f0a)
-- Fix problem with fetching classes [`fa6223c`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/fa6223cd715f7b30283c46459705d184aab6c8a7)
 ---
 ## [0.6](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.8...V0.6) - 2020-03-10
 
@@ -354,7 +386,6 @@ All notable changes to the ORKG will be documented in this file. The format is b
 ### Commits
 
 - fix(Comparison): Export as RDF [`c6abbd6`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/c6abbd667fac2bcb441360dac68925ff12bd1674)
-- Update changelog [`fc46dbd`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/fc46dbd30c79d7a0ad6af8ef5c8e0ca9b658c61c)
 - fix(Comparison): Comparison url [`27f3e7b`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/27f3e7b7966de5fb28bdb197919a3fd5e49015de)
 ---
 ## [0.5.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.3...V0.5.4) - 2020-01-17

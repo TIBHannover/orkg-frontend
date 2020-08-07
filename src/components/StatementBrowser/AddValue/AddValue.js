@@ -3,6 +3,7 @@ import { createResourceStatement, createResource, createLiteral, createLiteralSt
 import AddValueTemplate from './AddValueTemplate';
 import { guid } from 'utils';
 import PropTypes from 'prop-types';
+import { MISC } from 'constants/graphSettings';
 
 export default class AddValue extends Component {
     handleValueSelect = async (valueType, { id, value, shared, classes }) => {
@@ -32,7 +33,7 @@ export default class AddValue extends Component {
         }
     };
 
-    handleAddValue = async (valueType, inputValue, datatype = process.env.REACT_APP_DEFAULT_LITERAL_DATATYPE) => {
+    handleAddValue = async (valueType, inputValue, datatype = MISC.DEFAULT_LITERAL_DATATYPE) => {
         let newObject = null;
         let newStatement = null;
         const valueId = guid();
