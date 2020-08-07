@@ -47,23 +47,22 @@ const HelpModal = props => {
                     <img src={image3} alt="Select table within the PDF" style={{ width: 300 }} />
                 </div>
                 <h5>2. Format the extracted table</h5>
-                <p>
-                    The extracted table should be formatted in such a way that it adheres to the following rules:
-                    <ul>
-                        <li>
-                            <strong>First row labels.</strong> Only the first row should contain the header labels (transpose the table if necessary,
-                            reformat the table if necessary)
-                        </li>
-                        <li>
-                            <strong>One paper per row.</strong> Each row should contain a single paper. It is not possible to use multiple rows to
-                            describe the same paper. Merge information in the same cells if necessary (to click to do, right click on multiple cells,
-                            and click "Merge cell values")
-                        </li>
-                    </ul>
-                    <div className="text-center">
-                        <img src={image4} alt="Fix the formatting of the table after extraction" style={{ width: 700 }} />
-                    </div>
-                </p>
+                <p>The extracted table should be formatted in such a way that it adheres to the following rules:</p>
+                <ul>
+                    <li>
+                        <strong>First row labels.</strong> Only the first row should contain the header labels (transpose the table if necessary,
+                        reformat the table if necessary)
+                    </li>
+                    <li>
+                        <strong>One paper per row.</strong> Each row should contain a single paper. It is not possible to use multiple rows to
+                        describe the same paper. Merge information in the same cells if necessary (to click to do, right click on multiple cells, and
+                        click "Merge cell values")
+                    </li>
+                </ul>
+                <div className="text-center">
+                    <img src={image4} alt="Fix the formatting of the table after extraction" style={{ width: 700 }} />
+                </div>
+
                 <h5>3. Map header labels</h5>
                 <p>
                     The header labels should be mapped to ORKG properties. This means that for each header label, you have to select or create an ORKG
@@ -84,42 +83,42 @@ const HelpModal = props => {
                     <img src={image7} alt="Extract references dialog" style={{ width: 400 }} />
                 </div>
                 <p>When the reference extraction is performed, 7 new columns are added to the table:</p>
+
+                <ul>
+                    <li>
+                        <strong>paper:title</strong>
+                        <br /> this is a <strong>required</strong> column, each row should contain a paper title. In case the automatic extraction
+                        wasn't able to extract all references automatically, please add the metadata yourself. That means, go to the original paper,
+                        and copy the reference information into the respective columns. Rows that don't have a paper title, won't be imported.
+                    </li>
+                    <li>
+                        <strong>paper:authors</strong>
+                        <br /> contains the author names. Separate the individual authors by a semicolon (;)
+                    </li>
+                    <li>
+                        <strong>paper:publication_month</strong>
+                        <br /> often cannot be automatically extracted. Add the months manually, or just remove the column.
+                    </li>
+                    <li>
+                        <strong>paper:publication_year</strong>
+                        <br /> contains the year of publication.
+                    </li>
+                    <li>
+                        <strong>paper:doi</strong>
+                        <br /> contains the paper DOIs.
+                    </li>
+                    <li>
+                        <strong>paper:research_field</strong>
+                        <br /> can be selected by double clicking on the cell. It is not possible to create a new research field. Tip: use the same
+                        research field for all rows to save time.
+                    </li>
+                    <li>
+                        <strong>contribution:research_problem</strong>
+                        <br /> is a textual description of that problem that the listed papers address. The problem normally consists of 2-3 words,
+                        but more words are allowed. Tip: use the same research field for all rows to save time.
+                    </li>
+                </ul>
                 <p>
-                    <ul>
-                        <li>
-                            <strong>paper:title</strong>
-                            <br /> this is a <strong>required</strong> column, each row should contain a paper title. In case the automatic extraction
-                            wasn't able to extract all references automatically, please add the metadata yourself. That means, go to the original
-                            paper, and copy the reference information into the respective columns. Rows that don't have a paper title, won't be
-                            imported.
-                        </li>
-                        <li>
-                            <strong>paper:authors</strong>
-                            <br /> contains the author names. Separate the individual authors by a semicolon (;)
-                        </li>
-                        <li>
-                            <strong>paper:publication_month</strong>
-                            <br /> often cannot be automatically extracted. Add the months manually, or just remove the column.
-                        </li>
-                        <li>
-                            <strong>paper:publication_year</strong>
-                            <br /> contains the year of publication.
-                        </li>
-                        <li>
-                            <strong>paper:doi</strong>
-                            <br /> contains the paper DOIs.
-                        </li>
-                        <li>
-                            <strong>paper:research_field</strong>
-                            <br /> can be selected by double clicking on the cell. It is not possible to create a new research field. Tip: use the
-                            same research field for all rows to save time.
-                        </li>
-                        <li>
-                            <strong>contribution:research_problem</strong>
-                            <br /> is a textual description of that problem that the listed papers address. The problem normally consists of 2-3
-                            words, but more words are allowed. Tip: use the same research field for all rows to save time.
-                        </li>
-                    </ul>
                     When all cells are filled out, click the <em>Import data</em> button to start the import.
                 </p>
             </ModalBody>

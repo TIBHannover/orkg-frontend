@@ -41,7 +41,6 @@ const Toolbar = props => {
     };
 
     const toggleHelpModal = () => {
-        console.log('helpModalOpen', helpModalOpen);
         setHelpModalOpen(!helpModalOpen);
     };
 
@@ -55,7 +54,6 @@ const Toolbar = props => {
                 <span className="ml-3">
                     <Button
                         color="link"
-                        pill
                         outline
                         size="sm"
                         style={{ fontSize: 22, lineHeight: 1, color: '#fff' }}
