@@ -34,13 +34,11 @@ class Publish extends Component {
             values: [{ creator: '', ORCID: '' }],
             doi: '',
             comparisonLink: '',
-            //comparisonId: this.props.comparisonId,
             comparisonId: '',
             isPublishedComparison: false,
             isCreatingDOI: false,
             isLoading: false
         };
-        //console.log(props.title);
     }
 
     componentWillReceiveProps(props) {
@@ -69,24 +67,18 @@ class Publish extends Component {
                 }
 
                 await this.saveCreators(this.state.values, resourceId);
-                console.log(this.state.values);
                 let link = queryString.parse(this.props.url).response_hash
                     ? this.props.url
                     : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${comparison.response_hash}`;
                 link = link.substring(link.indexOf('?'));
                 const urlResponse = await createLiteral(link);
-                console.log(this.props.url);
                 await createLiteralStatement(resourceId, PREDICATES.URL, urlResponse.id);
 
-                //console.log(urlResponse.id);
                 toast.success('Comparison saved successfully');
-                //this.setState({ isLoading: false, comparisonId: resourceId, isPublishedComparison: true });
                 const comparisonLink = `${window.location.protocol}//${window.location.host}${window.location.pathname
                     .replace(reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparisonId }), '')
                     .replace(/\/$/, '')}${reverse(ROUTES.COMPARISON, { comparisonId: resourceId })}`;
                 this.setState({ isLoading: false, comparisonId: resourceId, comparisonLink: comparisonLink, isPublishedComparison: true });
-                //this.props.url=comparisonLink;
-                console.log(comparisonLink);
                 this.props.updateComparisonMetadata(
                     this.state.title,
                     this.state.description,
@@ -99,7 +91,6 @@ class Publish extends Component {
                 throw Error('Please enter a title and a description');
             }
         } catch (error) {
-            console.error(error);
             toast.error(`Error publishing a comparison : ${error.message}`);
             this.setState({ isLoading: false });
         }
@@ -117,7 +108,6 @@ class Publish extends Component {
         try {
             console.log(this.state.comparisonId);
             if (this.state.comparisonId) {
-                //console.log(this.props.title);
                 if (this.props.title && this.props.title.trim() !== '' && this.props.description && this.props.description.trim() !== '') {
                     const response = await generateDOIForComparison(
                         this.state.comparisonId,
@@ -128,7 +118,6 @@ class Publish extends Component {
                         this.state.values,
                         this.props.url
                     );
-                    //console.log(response);
                     this.setState({ isCreatingDOI: false, doi: response.data.attributes.doi });
                     toast.success('DOI has been registered successfully');
                 } else {
@@ -138,7 +127,6 @@ class Publish extends Component {
                 throw Error('Comparison has not been saved in ORKG yet');
             }
         } catch (error) {
-            //console.error(error);
             toast.error(`Error publishing a comparison : ${error.message}`);
             this.setState({ isLoading: false });
         }
@@ -149,7 +137,6 @@ class Publish extends Component {
         creators.map(async c => {
             const creator = await createResource(c.creator, [process.env.REACT_APP_CLASSES_AUTHOR]);
             await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_HAS_AUTHOR, creator.id);
-            //console.log(c.creator + ' ' + c.ORCID);
             if (c.ORCID !== '') {
                 const ORCID = await createLiteral(c.ORCID);
                 await createLiteralStatement(creator.id, process.env.REACT_APP_PREDICATES_HAS_ORCID, ORCID.id);
@@ -241,8 +228,6 @@ class Publish extends Component {
                             A published comparison is made public to other users. The state of the comparison is saved and a persistent link is
                             created.
                         </Alert>
-                        {/* {!this.props.comparisonId && !this.state.comparisonId && !this.state.doi && ( */}
-                        {console.log(this.state.comparisonId)}
                         {!this.state.comparisonId && !this.state.doi ? (
                             <>
                                 {' '}
@@ -285,10 +270,7 @@ class Publish extends Component {
                         )}
                     </ModalBody>
                     <ModalFooter>
-                        <div>
-                            {this.state.comparisonId && 'Comparison has been saved successfully in ORKG.'}
-                            {/* <div> */}
-                        </div>
+                        <div>{this.state.comparisonId && 'Comparison has been saved successfully in ORKG.'}</div>
                         <div className="text-align-center mt-2">
                             {!this.props.comparisonId && !this.state.comparisonId && (
                                 <Button color="primary" disabled={this.state.isLoading} onClick={this.handleSubmit}>
@@ -335,9 +317,5 @@ Publish.propTypes = {
     authors: PropTypes.isRequired,
     updateComparisonMetadata: PropTypes.func.isRequired
 };
-
-const mapStateToProps = state => ({
-    //viewPaper: state.viewPaper,
-});
 
 export default connect()(Publish);

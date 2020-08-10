@@ -14,29 +14,13 @@ class PublishWithDOI extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: '',
-            description: '',
-            //reference: '',
-            comparisonId: '',
-            //creator: '',
-            subject: '',
             showPublishWithDOIDialog: false,
-            //redirect: false,
             doi: '',
-            values: [{ creator: '', ORCID: '' }],
             isLoading: false
         };
     }
 
-    componentDidUpdate = prevProps => {
-        if (prevProps.title !== this.props.title) {
-            this.setState({ title: this.props.title });
-        }
-
-        if (prevProps.description !== this.props.description) {
-            this.setState({ description: this.props.description });
-        }
-    };
+    componentDidUpdate = prevProps => {};
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value });
@@ -46,8 +30,6 @@ class PublishWithDOI extends Component {
         this.setState({ isLoading: true });
         try {
             if (this.props.title && this.props.title.trim() !== '' && this.props.description && this.props.description.trim() !== '') {
-                console.log(this.props.url);
-                console.log(this.props.location);
                 const response = await generateDOIForComparison(
                     this.props.comparisonId,
                     this.props.title,
@@ -112,14 +94,12 @@ PublishWithDOI.propTypes = {
     showPublishWithDOIDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     url: PropTypes.string.isRequired,
-    //response_hash: PropTypes.string,
     comparisonId: PropTypes.string,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
     creators: PropTypes.isRequired,
     subject: PropTypes.string
-    //updateComparisonMetadata: PropTypes.func.isRequired
 };
 
 export default connect()(PublishWithDOI);
