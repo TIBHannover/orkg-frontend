@@ -52,6 +52,7 @@ class Comparison extends Component {
             dropdownOpen: false,
             properties: [],
             authors: [],
+            comparisonLink: '',
             DOIData: [],
             data: {},
             csvData: [],
@@ -114,8 +115,8 @@ class Comparison extends Component {
         }
     };
 
-    updateComparisonMetadata = (title, description, reference, subject, authors) => {
-        this.setState({ title, description, reference, subject, authors });
+    updateComparisonMetadata = (title, description, reference, subject, authors, comparisonLink) => {
+        this.setState({ title, description, reference, subject, authors, comparisonLink });
     };
 
     generateMatrixOfComparison = () => {
@@ -795,18 +796,6 @@ class Comparison extends Component {
                     DOI={this.state.DOIData.doi}
                     comparisonId={this.props.match.params.comparisonId}
                 />
-
-                {/* <PublishWithDOI
-                    showDialog={this.state.showPublishWithDOIDialog}
-                    toggle={() => this.toggle('showPublishWithDOIDialog')}
-                    url={window.location.href}
-                    location={this.state.locationSearch}
-                    response_hash={this.state.response_hash}
-                    comparisonId={this.props.match.params.comparisonId}
-                    title={this.state.title}
-                    description={this.state.description}
-                    updateComparisonMetadata={this.updateComparisonMetadata}
-                /> */}
             </div>
         );
     }

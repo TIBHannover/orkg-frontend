@@ -33,6 +33,7 @@ class Publish extends Component {
             redirect: false,
             values: [{ creator: '', ORCID: '' }],
             doi: '',
+            comparisonLink: '',
             //comparisonId: this.props.comparisonId,
             comparisonId: '',
             isPublishedComparison: false,
@@ -42,21 +43,9 @@ class Publish extends Component {
         //console.log(props.title);
     }
 
-    //componentDidMount() {}
-
-    //componentDidUpdate = prevProps => {
-    //if (prevProps.comparisonId !== this.props.comparisonId) {
-    //this.setState({ comparisonId: this.props.comparisonId });
-    //}
-
-    //if (prevProps.description !== this.props.description) {
-    //this.setState({ description: this.props.description });
-    //}
-    //};
-
     componentWillReceiveProps(props) {
         if (this.state.comparisonId === '') {
-            this.setState({ comparisonId: props.comparisonId });
+            this.setState({ comparisonId: props.comparisonId, comparisonLink: props.url });
         }
     }
 
@@ -86,17 +75,25 @@ class Publish extends Component {
                     : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${comparison.response_hash}`;
                 link = link.substring(link.indexOf('?'));
                 const urlResponse = await createLiteral(link);
+                console.log(this.props.url);
                 await createLiteralStatement(resourceId, PREDICATES.URL, urlResponse.id);
+
+                //console.log(urlResponse.id);
                 toast.success('Comparison saved successfully');
-                this.setState({ isLoading: false, comparisonId: resourceId, isPublishedComparison: true });
-                console.log(this.state.comparisonId);
-                //this.setState({ isLoading: false, comparisonId: 'R10500', isPublishedComparison: true });
+                //this.setState({ isLoading: false, comparisonId: resourceId, isPublishedComparison: true });
+                const comparisonLink = `${window.location.protocol}//${window.location.host}${window.location.pathname
+                    .replace(reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparisonId }), '')
+                    .replace(/\/$/, '')}${reverse(ROUTES.COMPARISON, { comparisonId: resourceId })}`;
+                this.setState({ isLoading: false, comparisonId: resourceId, comparisonLink: comparisonLink, isPublishedComparison: true });
+                //this.props.url=comparisonLink;
+                console.log(comparisonLink);
                 this.props.updateComparisonMetadata(
                     this.state.title,
                     this.state.description,
                     this.state.reference,
                     this.state.subject,
-                    this.state.values
+                    this.state.values,
+                    this.state.comparisonLink
                 );
             } else {
                 throw Error('Please enter a title and a description');
@@ -110,7 +107,6 @@ class Publish extends Component {
     };
 
     toggle = type => {
-        //this.handleCloseModal();
         this.setState(prevState => ({
             [type]: !prevState[type]
         }));
@@ -121,9 +117,7 @@ class Publish extends Component {
         try {
             console.log(this.state.comparisonId);
             if (this.state.comparisonId) {
-                //console.log(this.state.values);
-                //this.setState(prevState => ({ citations: { ...prevState.citations, [s]: { citation: data, loading: false } } }));
-                console.log(this.props.title);
+                //console.log(this.props.title);
                 if (this.props.title && this.props.title.trim() !== '' && this.props.description && this.props.description.trim() !== '') {
                     const response = await generateDOIForComparison(
                         this.state.comparisonId,
@@ -134,18 +128,17 @@ class Publish extends Component {
                         this.state.values,
                         this.props.url
                     );
-                    console.log(response);
+                    //console.log(response);
                     this.setState({ isCreatingDOI: false, doi: response.data.attributes.doi });
                     toast.success('DOI has been registered successfully');
                 } else {
                     toast.error(`Please enter a title and a description`);
                 }
-                //this.props.updateComparisonMetadata(this.state.title, this.state.description, this.state.reference);
             } else {
                 throw Error('Comparison has not been saved in ORKG yet');
             }
         } catch (error) {
-            console.error(error);
+            //console.error(error);
             toast.error(`Error publishing a comparison : ${error.message}`);
             this.setState({ isLoading: false });
         }
@@ -156,7 +149,7 @@ class Publish extends Component {
         creators.map(async c => {
             const creator = await createResource(c.creator, [process.env.REACT_APP_CLASSES_AUTHOR]);
             await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_HAS_AUTHOR, creator.id);
-            console.log(c.creator + ' ' + c.ORCID);
+            //console.log(c.creator + ' ' + c.ORCID);
             if (c.ORCID !== '') {
                 const ORCID = await createLiteral(c.ORCID);
                 await createLiteralStatement(creator.id, process.env.REACT_APP_PREDICATES_HAS_ORCID, ORCID.id);
@@ -181,10 +174,8 @@ class Publish extends Component {
 
     handleRemoveCreator = i => {
         const values = [...this.state.values];
-        //if (values.length > 1) {
         values.splice(i, 1);
         this.setState({ values });
-        //}
     };
 
     handleAddButton = () => {
@@ -312,53 +303,11 @@ class Publish extends Component {
                         </div>
                     </ModalFooter>
                 </Modal>
-                {/* <Modal isOpen={this.state.isWarningModalOpen}
-                    toggle={() => this.toggle('isWarningModalOpen')}
-
-                >
-                    <ModalHeader toggle={() => this.toggle('isWarningModalOpen')}>Publish comparison</ModalHeader>
-                    <ModalBody>
-                        <Alert color="info">A DOI {process.env.REACT_APP_DATACITE_TEST_DOI}/{this.state.comparisonId} will be assigned to published comparison and it cannot be changed in future.
-                    Pressing <i>Register </i> will publish the DOI.</Alert>
-                        {this.state.doi && (
-
-
-                            <>
-                                <FormGroup>
-                                    <Label for="persistent_link">Comparison link</Label>
-                                    <Input value={comparisonLink} disabled />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label for="persistent_link">DOI</Label>
-                                    <Input value={this.state.doi} disabled />
-                                </FormGroup>
-                            </>
-                        )}
-
-                    </ModalBody>
-                    <ModalFooter>
-
-                        <div className="text-align-center mt-2">
-                            {/* <div> */}
-                {/* {' '} */}
-                {/* {console.log(this.state.isPublishedComparison)} */}
-                {/* {!this.state.doi && ( */}
-                {/* <Button color="danger" disabled={!this.state.comparisonId} onClick={() => this.toggle('showPublishWithDOIDialog')}> */}
-                {/* {this.state.isCreatingDOI && <span className="fa fa-spinner fa-spin" />} Register */}
-                {/* </Button> */}
-
-                {/* ) */}
-
-                {/* } */}
-                {/* </div> */}
-                {/* </ModalFooter> */}
-
-                {/* </Modal> */}
 
                 <PublishWithDOI
                     showPublishWithDOIDialog={this.state.showPublishWithDOIDialog}
                     toggle={() => this.toggle('showPublishWithDOIDialog')}
-                    url={this.props.url}
+                    url={this.state.comparisonLink}
                     location={this.props.location}
                     response_hash={this.state.response_hash}
                     comparisonId={this.state.comparisonId}
