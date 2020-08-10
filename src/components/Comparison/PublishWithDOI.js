@@ -194,7 +194,7 @@ class PublishWithDOI extends Component {
                             {/* <div> */} {/* {console.log(this.state.isPublishedComparison)} */}
                             {!this.state.doi && (
                                 <Button color="danger" disabled={false} onClick={this.handleSubmit}>
-                                    {this.state.isCreatingDOI && <span className="fa fa-spinner fa-spin" />} Register
+                                    {this.state.isLoading && <span className="fa fa-spinner fa-spin" />} Register
                                 </Button>
                             )}
                         </div>

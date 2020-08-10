@@ -33,7 +33,8 @@ class Publish extends Component {
             redirect: false,
             values: [{ creator: '', ORCID: '' }],
             doi: '',
-            comparisonId: this.props.comparisonId,
+            //comparisonId: this.props.comparisonId,
+            comparisonId: '',
             isPublishedComparison: false,
             isCreatingDOI: false,
             isLoading: false
@@ -41,9 +42,23 @@ class Publish extends Component {
         //console.log(props.title);
     }
 
-    componentDidMount() {}
+    //componentDidMount() {}
 
-    componentDidUpdate = prevProps => {};
+    //componentDidUpdate = prevProps => {
+    //if (prevProps.comparisonId !== this.props.comparisonId) {
+    //this.setState({ comparisonId: this.props.comparisonId });
+    //}
+
+    //if (prevProps.description !== this.props.description) {
+    //this.setState({ description: this.props.description });
+    //}
+    //};
+
+    componentWillReceiveProps(props) {
+        if (this.state.comparisonId === '') {
+            this.setState({ comparisonId: props.comparisonId });
+        }
+    }
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value });
@@ -74,6 +89,7 @@ class Publish extends Component {
                 await createLiteralStatement(resourceId, PREDICATES.URL, urlResponse.id);
                 toast.success('Comparison saved successfully');
                 this.setState({ isLoading: false, comparisonId: resourceId, isPublishedComparison: true });
+                console.log(this.state.comparisonId);
                 //this.setState({ isLoading: false, comparisonId: 'R10500', isPublishedComparison: true });
                 this.props.updateComparisonMetadata(
                     this.state.title,
@@ -235,7 +251,8 @@ class Publish extends Component {
                             created.
                         </Alert>
                         {/* {!this.props.comparisonId && !this.state.comparisonId && !this.state.doi && ( */}
-                        {!this.props.comparisonId && !this.state.comparisonId && !this.state.doi ? (
+                        {console.log(this.state.comparisonId)}
+                        {!this.state.comparisonId && !this.state.doi ? (
                             <>
                                 {' '}
                                 <FormGroup>
@@ -278,7 +295,7 @@ class Publish extends Component {
                     </ModalBody>
                     <ModalFooter>
                         <div>
-                            {!this.props.comparisonId && this.state.comparisonId && 'Comparison has been saved successfully in ORKG.'}
+                            {this.state.comparisonId && 'Comparison has been saved successfully in ORKG.'}
                             {/* <div> */}
                         </div>
                         <div className="text-align-center mt-2">
@@ -344,7 +361,7 @@ class Publish extends Component {
                     url={this.props.url}
                     location={this.props.location}
                     response_hash={this.state.response_hash}
-                    comparisonId={this.props.comparisonId}
+                    comparisonId={this.state.comparisonId}
                     title={this.props.title}
                     description={this.props.description}
                     creators={this.props.authors}

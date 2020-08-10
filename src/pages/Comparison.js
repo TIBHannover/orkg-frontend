@@ -332,27 +332,28 @@ class Comparison extends Component {
         //a= { creator: '', ORCID: '' };
         //ab=[];
         return Promise.all(authors).then(authorsORCID => {
-            const a = { creator: '', ORCID: '' };
+            //const auth= { creator: '', ORCID: '' };
             const ab = [];
             const authorsArray = [];
             for (const author of creators) {
                 //console.log(author);
                 console.log(authorsORCID);
                 const orcid = authorsORCID.find(a => a !== undefined && a.subject.id === author.object.id);
-                //console.log(orcid);
+                const auth = { creator: '', ORCID: '' };
+                console.log(orcid);
                 if (orcid) {
-                    a.ORCID = orcid.object.label;
-                    a.creator = author.object.label;
+                    auth.ORCID = orcid.object.label;
+                    auth.creator = author.object.label;
                     //ab.push(a);
                     author.orcid = orcid.object.label;
-                    authorsArray.push(a);
+                    authorsArray.push(auth);
                     //authorsArray.push(author);
                 } else {
-                    a.ORCID = '';
-                    a.creator = author.object.label;
+                    auth.ORCID = '';
+                    auth.creator = author.object.label;
                     //ab.push(a);
                     author.orcid = '';
-                    authorsArray.push(a);
+                    authorsArray.push(auth);
                     //authorsArray.push(author);
                 }
             }
