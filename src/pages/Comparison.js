@@ -44,12 +44,14 @@ class Comparison extends Component {
             response_hash: null,
             title: '',
             description: '',
+            subject: '',
             reference: '',
             createdAt: '',
             createdBy: '',
             contributions: [],
             dropdownOpen: false,
             properties: [],
+            authors: [],
             DOIData: [],
             data: {},
             csvData: [],
@@ -112,8 +114,8 @@ class Comparison extends Component {
         }
     };
 
-    updateComparisonMetadata = (title, description, reference) => {
-        this.setState({ title, description, reference });
+    updateComparisonMetadata = (title, description, reference, subject, authors) => {
+        this.setState({ title, description, reference, subject, authors });
     };
 
     generateMatrixOfComparison = () => {
@@ -244,7 +246,10 @@ class Comparison extends Component {
                         const resourcesStatements = comparisonStatement.filter(statement => statement.predicate.id === PREDICATES.RELATED_RESOURCES);
 
                         const figureStatements = comparisonStatement.filter(statement => statement.predicate.id === PREDICATES.RELATED_FIGURE);
-
+                        const creators = comparisonStatement.filter(
+                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR
+                        );
+                        this.loadAuthorsORCID(creators);
                         if (urlStatement) {
                             this.getComparisonResult(urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')));
                             this.setState({
@@ -254,6 +259,7 @@ class Comparison extends Component {
                                 reference: referenceStatement ? referenceStatement.object.label : '',
                                 createdAt: descriptionStatement.object.created_at,
                                 createdBy: descriptionStatement.object.created_by,
+                                //authors: authors,
                                 resourcesStatements,
                                 figureStatements
                             });
@@ -291,6 +297,70 @@ class Comparison extends Component {
     addContributions = newContributionIds => {
         const contributionIds = getContributionIdsFromUrl(this.state.locationSearch || this.props.location.search);
         this.generateUrl(contributionIds.concat(newContributionIds).join(','));
+    };
+
+    loadAuthorsORCID = async creators => {
+        // let authors = {};
+
+        //     await creators.map(async author => {
+        //             await getStatementsBySubject({ id: author.object.id }).then(a=>{
+        //                     if(a.length!==0) {
+        //                     authors[author.object.label] = a[0].object.label;
+        //                     }
+        //                     else
+
+        //                         authors[author.object.label] = "";
+        //             });
+        //     });
+
+        //     this.setState({
+        //                  authors: authors
+        //              });
+
+        //     return authors;
+
+        let authors = [];
+        if (creators.length > 0) {
+            authors = creators
+                //.filter(author => author.classes && author.classes.includes(process.env.REACT_APP_CLASSES_AUTHOR))
+                .map(async author => {
+                    const authorStatements = await getStatementsBySubject({ id: author.object.id });
+                    return authorStatements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_ORCID);
+                });
+        }
+        //console.log(authors);
+        //a= { creator: '', ORCID: '' };
+        //ab=[];
+        return Promise.all(authors).then(authorsORCID => {
+            const a = { creator: '', ORCID: '' };
+            const ab = [];
+            const authorsArray = [];
+            for (const author of creators) {
+                //console.log(author);
+                console.log(authorsORCID);
+                const orcid = authorsORCID.find(a => a !== undefined && a.subject.id === author.object.id);
+                //console.log(orcid);
+                if (orcid) {
+                    a.ORCID = orcid.object.label;
+                    a.creator = author.object.label;
+                    //ab.push(a);
+                    author.orcid = orcid.object.label;
+                    authorsArray.push(a);
+                    //authorsArray.push(author);
+                } else {
+                    a.ORCID = '';
+                    a.creator = author.object.label;
+                    //ab.push(a);
+                    author.orcid = '';
+                    authorsArray.push(a);
+                    //authorsArray.push(author);
+                }
+            }
+            //console.log(ab);
+            this.setState({
+                authors: authorsArray
+            });
+        });
     };
 
     toggle = type => {
@@ -528,7 +598,46 @@ class Comparison extends Component {
                                                 {this.state.description}
                                             </div>
                                         )}
-                                        {this.state.DOIData && (
+
+                                        <div>
+                                            {this.state.createdAt ? (
+                                                <span className="badge badge-lightblue mr-2">
+                                                    <Icon icon={faCalendar} className="text-primary" />{' '}
+                                                    {this.state.createdAt ? moment(this.state.createdAt).format('MMMM') : ''}{' '}
+                                                    {this.state.createdAt ? moment(this.state.createdAt).format('YYYY') : ''}
+                                                </span>
+                                            ) : (
+                                                ''
+                                            )}
+
+                                            {this.state.authors && this.state.authors.length > 0 && (
+                                                <>
+                                                    {this.state.authors.map((author, index) =>
+                                                        //author.nameIdentifiers[0].nameIdentifier &&
+                                                        //author.nameIdentifiers[0].nameIdentifier !== '' ? (
+                                                        author.ORCID && author.ORCID != '' ? (
+                                                            <NavLink
+                                                                className="p-0"
+                                                                style={{ display: 'contents' }}
+                                                                href={'https://orcid.org/' + author.ORCID}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                            >
+                                                                <Badge color="lightblue" className="mr-2 mb-2" key={index}>
+                                                                    <Icon icon={faUser} className="text-primary" /> {author.creator}
+                                                                </Badge>
+                                                            </NavLink>
+                                                        ) : (
+                                                            <Badge color="lightblue" className="mr-2 mb-2" key={index}>
+                                                                <Icon icon={faUser} className="text-darkblue" /> {author.creator}
+                                                                {/* <span>{console.log(author.nameIdentifiers[0].nameIdentifier)} </span> */}
+                                                            </Badge>
+                                                        )
+                                                    )}
+                                                </>
+                                            )}
+                                        </div>
+                                        {/* {this.state.DOIData && (
                                             <div>
                                                 {this.state.DOIData.date ? (
                                                     <span className="badge badge-lightblue mr-2">
@@ -576,7 +685,7 @@ class Comparison extends Component {
                                                     </div>
                                                 )}
                                             </div>
-                                        )}
+                                        )} */}
                                     </>
                                 ) : (
                                     <br />
@@ -649,6 +758,12 @@ class Comparison extends Component {
                     toggle={() => this.toggle('showPublishDialog')}
                     url={window.location.href}
                     response_hash={this.state.response_hash}
+                    authors={this.state.authors}
+                    title={this.state.title}
+                    location={this.state.locationSearch}
+                    description={this.state.description}
+                    reference={this.state.reference}
+                    subject={this.state.subject}
                     comparisonId={this.props.match.params.comparisonId}
                     updateComparisonMetadata={this.updateComparisonMetadata}
                 />
@@ -680,7 +795,7 @@ class Comparison extends Component {
                     comparisonId={this.props.match.params.comparisonId}
                 />
 
-                <PublishWithDOI
+                {/* <PublishWithDOI
                     showDialog={this.state.showPublishWithDOIDialog}
                     toggle={() => this.toggle('showPublishWithDOIDialog')}
                     url={window.location.href}
@@ -690,7 +805,7 @@ class Comparison extends Component {
                     title={this.state.title}
                     description={this.state.description}
                     updateComparisonMetadata={this.updateComparisonMetadata}
-                />
+                /> */}
             </div>
         );
     }
