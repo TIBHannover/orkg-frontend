@@ -1,5 +1,4 @@
 import * as type from '../actions/types';
-import dotProp from 'dot-prop-immutable';
 
 const initialState = {
     annotations: []
@@ -22,6 +21,27 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 annotations: [...state.annotations.filter(annotation => annotation.id !== payload)]
+            };
+        }
+
+        case type.PDF_TEXT_ANNOTATION_UPDATE_ANNOTATION: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                annotations: [
+                    ...state.annotations.map(annotation => {
+                        if (annotation.id === payload.id) {
+                            return {
+                                ...annotation,
+                                content: {
+                                    text: payload.text
+                                }
+                            };
+                        }
+                        return annotation;
+                    })
+                ]
             };
         }
 

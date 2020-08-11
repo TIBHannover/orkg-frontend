@@ -1,15 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
-import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
 import { upperFirst } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faQuestionCircle, faQuoteLeft, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle, faQuoteLeft, faTrash, faExclamationTriangle, faPen } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippy.js/react';
 import { Button } from 'reactstrap';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { filter } from 'lodash';
 import PropTypes from 'prop-types';
-import { deleteAnnotation } from 'actions/pdfTextAnnotation';
+import useDeleteAnnotation from 'components/PdfTextAnnotation/hooks/useDeleteAnnotation';
+import useEditAnnotation from 'components/PdfTextAnnotation/hooks/useEditAnnotation';
+import { SentenceTokenizer } from 'natural';
 
 const Container = styled.div`
     width: 100%;
@@ -40,61 +41,102 @@ const Quote = styled(Icon)`
     padding-right: 6px;
 `;
 
+const SentenceWarning = styled(Icon)`
+    font-size: 28px;
+    padding-right: 6px;
+`;
+
 const updateHash = highlight => {
     document.location.hash = `annotation-${highlight.id}`;
 };
 
 const AnnotationCategory = props => {
     const DEFAULT_HIGHLIGHT_COLOR = '#FFE28F';
-    const { className } = props;
+    const MAX_SENTENCES_PER_ANNOTATION = 2;
+    const { annotationClass } = props;
     const annotations = useSelector(state => state.pdfTextAnnotation.annotations);
-    const annotationsFiltered = filter(annotations, { type: className.iri });
+    const annotationsFiltered = filter(annotations, { type: annotationClass.iri });
     const amount = annotationsFiltered.length;
-    const dispatch = useDispatch();
+    const { deleteAnnotation } = useDeleteAnnotation();
+    const { editModal, editAnnotation } = useEditAnnotation();
+    const color = annotationClass.color ?? DEFAULT_HIGHLIGHT_COLOR;
+
+    const handleEditClick = (e, id) => {
+        e.stopPropagation();
+        editAnnotation(id);
+    };
+
+    const handleDeleteClick = (e, id) => {
+        e.stopPropagation();
+        deleteAnnotation(id);
+    };
 
     if (props.hideEmpty && amount === 0) {
         return null;
     }
 
-    const handleDelete = id => {
-        if (window.confirm('Are you sure?')) {
-            dispatch(deleteAnnotation(id));
-        }
-    };
-
-    const color = className.color ?? DEFAULT_HIGHLIGHT_COLOR;
-
     return (
         <Container>
             <h2 className="h5 d-flex justify-content-between">
-                <Tippy content={className.comment}>
+                <Tippy content={annotationClass.comment}>
                     <span>
-                        {upperFirst(className.label)} <QuestionIcon icon={faQuestionCircle} />
+                        {upperFirst(annotationClass.label)} <QuestionIcon icon={faQuestionCircle} />
                     </span>
                 </Tippy>
-                <AnnotationAmount>{amount}/3 annotations</AnnotationAmount>
+                <Tippy content="Is is recommended to have maximum 3 annotated sentences per type">
+                    <AnnotationAmount>
+                        {amount > 3 ? <Icon icon={faExclamationTriangle} /> : ''} {amount}/3 annotations
+                    </AnnotationAmount>
+                </Tippy>
             </h2>
-            {annotationsFiltered.map(annotation => (
-                <AnnotationItem style={{ background: color }} onClick={() => updateHash(annotation)}>
-                    <Quote icon={faQuoteLeft} />
-                    <div className="float-right">
-                        <Tippy content="Delete this annotation">
-                            <span>
-                                <Button className="p-0 text-body" color="link" onClick={() => handleDelete(annotation.id)}>
-                                    <Icon icon={faTrash} />
-                                </Button>
-                            </span>
-                        </Tippy>
-                    </div>
-                    {annotation.content.text}
-                </AnnotationItem>
-            ))}
+            {annotationsFiltered.map(annotation => {
+                const tokenizer = new SentenceTokenizer();
+                const sentences = tokenizer.tokenize(annotation.content.text);
+                const sentenceAmount = sentences.length;
+                const hasTooManySentences = sentenceAmount > MAX_SENTENCES_PER_ANNOTATION;
+
+                return (
+                    <AnnotationItem style={{ background: color }} onClick={() => updateHash(annotation)} key={annotation.id}>
+                        {!hasTooManySentences ? (
+                            <Quote icon={faQuoteLeft} />
+                        ) : (
+                            <Tippy
+                                content={`It looks like you selected ${sentenceAmount} sentences for this annotation. It is recommended to select maximum 2 sentences`}
+                            >
+                                <span>
+                                    <SentenceWarning icon={faExclamationTriangle} />
+                                </span>
+                            </Tippy>
+                        )}
+
+                        <div className="float-right">
+                            <Tippy content="Edit annotation text">
+                                <span>
+                                    <Button className="p-0 text-body" color="link" onClick={e => handleEditClick(e, annotation.id)}>
+                                        <Icon icon={faPen} />
+                                    </Button>
+                                </span>
+                            </Tippy>{' '}
+                            <Tippy content="Delete this annotation">
+                                <span>
+                                    <Button className="p-0 text-body" color="link" onClick={e => handleDeleteClick(e, annotation.id)}>
+                                        <Icon icon={faTrash} />
+                                    </Button>
+                                </span>
+                            </Tippy>
+                        </div>
+                        {annotation.content.text}
+                    </AnnotationItem>
+                );
+            })}
+
+            {editModal}
         </Container>
     );
 };
 
 AnnotationCategory.propTypes = {
-    className: PropTypes.string.isRequired,
+    annotationClass: PropTypes.object.isRequired,
     hideEmpty: PropTypes.bool.isRequired
 };
 

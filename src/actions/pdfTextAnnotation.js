@@ -17,3 +17,10 @@ export const deleteAnnotation = annotationId => dispatch => {
         payload: annotationId
     });
 };
+
+export const updateAnnotationText = payload => dispatch => {
+    dispatch({
+        type: type.PDF_TEXT_ANNOTATION_UPDATE_ANNOTATION,
+        payload
+    });
+};

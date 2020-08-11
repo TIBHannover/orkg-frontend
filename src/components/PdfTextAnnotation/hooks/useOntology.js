@@ -205,7 +205,9 @@ const useOntology = () => {
     const recommendedClasses = filter(classes, { recommendedProperty: true });
     const nonRecommendedClasses = filter(classes, { recommendedProperty: false });
 
-    return { classes, recommendedClasses, nonRecommendedClasses };
+    const findByType = type => classes.find(_class => _class.iri === type);
+
+    return { classes, recommendedClasses, nonRecommendedClasses, findByType };
 };
 
 export default useOntology;

@@ -34,7 +34,8 @@ export const PREDICATES = {
     TEMPLATE_COMPONENT_OCCURRENCE_MIN: 'TemplateComponentOccurrenceMin',
     TEMPLATE_COMPONENT_ORDER: 'TemplateComponentOrder',
     TEMPLATE_STRICT: 'TemplateStrict',
-    TEMPLATE_LABEL_FORMAT: 'TemplateLabelFormat'
+    TEMPLATE_LABEL_FORMAT: 'TemplateLabelFormat',
+    HAS_PART: 'HasPart'
 };
 
 export const CLASSES = {

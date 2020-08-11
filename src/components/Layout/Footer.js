@@ -49,7 +49,7 @@ const TwitterLink = styled.a`
 
 const Footer = () => (
     <FooterWrapper>
-        {/*<Container>
+        <Container>
             <footer className="pt-4 pb-4">
                 <Row>
                     <FooterCol md={3}>
@@ -164,7 +164,7 @@ const Footer = () => (
                     </PartnerLogoCol>
                 </Row>
             </footer>
-        </Container>*/}
+        </Container>
     </FooterWrapper>
 );
 

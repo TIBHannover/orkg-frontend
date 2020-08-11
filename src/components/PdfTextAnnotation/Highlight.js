@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
 
 const HighlightPart = styled.div`
-    cursor: pointer;
     position: absolute;
     transition: 0.3s background;
     background: rgba(255, 226, 143, 1);
@@ -25,31 +25,32 @@ const HighlightWrapper = styled.div`
         }
     }
 `;
-
 const Highlight = props => {
     const DEFAULT_HIGHLIGHT_COLOR = '#FFE28F';
-    const { position, onClick, onMouseOver, onMouseOut, isScrolledTo, type } = props;
+    const { position, isScrolledTo, type } = props;
 
-    const { rects, boundingRect } = position;
+    const { rects } = position;
     const { classes } = useOntology();
-    const ontologyType = classes.find(_class => _class.iri === type);
+    const ontologyType = type ? classes.find(_class => _class.iri === type) : {};
     const backgroundColor = ontologyType.color ?? DEFAULT_HIGHLIGHT_COLOR;
-    console.log('isScrolledTo', isScrolledTo);
+
     return (
-        <HighlightWrapper className={`Highlight ${isScrolledTo ? 'blink' : ''}`}>
-            <div className="Highlight__parts">
-                {rects.map((rect, index) => (
-                    <HighlightPart
-                        onMouseOver={onMouseOver}
-                        onMouseOut={onMouseOut}
-                        onClick={onClick}
-                        key={index}
-                        style={{ ...rect, background: backgroundColor }}
-                    />
-                ))}
-            </div>
+        <HighlightWrapper className={isScrolledTo ? 'blink' : ''}>
+            {rects.map((rect, index) => (
+                <HighlightPart key={index} style={{ ...rect, background: backgroundColor }} />
+            ))}
         </HighlightWrapper>
     );
+};
+
+Highlight.propTypes = {
+    position: PropTypes.object.isRequired,
+    isScrolledTo: PropTypes.bool.isRequired,
+    type: PropTypes.string
+};
+
+Highlight.defaultProps = {
+    type: null
 };
 
 export default Highlight;

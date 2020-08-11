@@ -33,6 +33,7 @@
         "markdown-into-html": "^1.0.3",
         "marked": "^0.7.0",
         "moment": "^2.24.0",
+        "natural": "^2.1.5",
         "node-sass": "^4.12.0",
         "olap-cube": "^1.0.0",
         "prop-types": "^15.7.2",
@@ -43,7 +44,6 @@
         "react": "^16.9.0",
         "react-app-polyfill": "^1.0.2",
         "react-content-loader": "^4.2.2",
-        "react-contenteditable": "^3.3.2",
         "react-cookie": "^4.0.1",
         "react-copy-to-clipboard": "^5.0.1",
         "react-csv": "^1.1.1",
@@ -86,7 +86,8 @@
         "string-format": "^2.0.0",
         "styled-components": "^4.3.2",
         "typed.js": "^2.0.11",
-        "validator": "^10.11.0"
+        "validator": "^10.11.0",
+        "wink-nlp-utils": "^2.0.6"
     },
     "scripts": {
         "start": "react-app-rewired start",

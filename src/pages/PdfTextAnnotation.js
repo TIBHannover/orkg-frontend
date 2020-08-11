@@ -1,22 +1,15 @@
 import React, { useEffect, useRef } from 'react';
-import { Button, Container, Input } from 'reactstrap';
-import { PdfLoader, PdfHighlighter, Tip, Popup, AreaHighlight } from 'react-pdf-highlighter';
+import { PdfLoader, PdfHighlighter, Popup, AreaHighlight } from 'react-pdf-highlighter';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import Sidebar from 'components/PdfTextAnnotation/SideBar';
-import AnnotationTooltip from 'components/PdfTextAnnotation/AnnotationTooltip';
+import AnnotationTooltipNew from 'components/PdfTextAnnotation/AnnotationTooltipNew';
+import AnnotationTooltipExisting from 'components/PdfTextAnnotation/AnnotationTooltipExisting';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAnnotation } from 'actions/pdfTextAnnotation';
 import Highlight from 'components/PdfTextAnnotation/Highlight';
-
-const HighlightPopup = ({ comment }) => null;
-/*
-    comment.text ? (
-        <div className="Highlight__popup">
-            {comment.emoji} {comment.text}
-        </div>
-    ) : null;*/
+import useDeleteAnnotation from 'components/PdfTextAnnotation/hooks/useDeleteAnnotation';
 
 const Wrapper = styled.div`
     margin-top: -30px;
@@ -24,10 +17,17 @@ const Wrapper = styled.div`
     display: flex;
 `;
 
+const Main = styled.div`
+    height: calc(100vh - 73px);
+    width: calc(100% - 380px);
+    position: relative;
+`;
+
 const PdfTextAnnotation = props => {
     const annotations = useSelector(state => state.pdfTextAnnotation.annotations);
     const dispatch = useDispatch();
     const PdfHighlighterRef = useRef();
+    const { deleteAnnotation } = useDeleteAnnotation();
 
     const handleAnnotate = ({ content, position, type }) => {
         dispatch(createAnnotation({ content, position, type }));
@@ -50,6 +50,7 @@ const PdfTextAnnotation = props => {
         };
 
         window.addEventListener('hashchange', scrollToHighlightFromHash, false);
+
         return () => {
             window.removeEventListener('hashchange', scrollToHighlightFromHash);
         };
@@ -58,14 +59,7 @@ const PdfTextAnnotation = props => {
     return (
         <Wrapper>
             <Sidebar />
-            <div
-                style={{
-                    height: 'calc(100vh - 73px)',
-                    width: 'calc(100% - 380px)',
-                    //overflowY: 'scroll',
-                    position: 'relative'
-                }}
-            >
+            <Main>
                 <PdfLoader url="https://arxiv.org/pdf/1901.10816.pdf" beforeLoad={<Icon icon={faSpinner} />}>
                     {pdfDocument => (
                         <PdfHighlighter
@@ -75,7 +69,7 @@ const PdfTextAnnotation = props => {
                             scrollRef={() => {}} // if this is not present, the component will break
                             ref={PdfHighlighterRef}
                             onSelectionFinished={(position, content, hideTipAndSelection, transformSelection) => (
-                                <AnnotationTooltip
+                                <AnnotationTooltipNew
                                     position={position}
                                     content={content}
                                     hideTipAndSelection={hideTipAndSelection}
@@ -103,7 +97,7 @@ const PdfTextAnnotation = props => {
 
                                 return (
                                     <Popup
-                                        popupContent={<HighlightPopup {...highlight} />}
+                                        popupContent={<AnnotationTooltipExisting {...highlight} deleteAnnotation={deleteAnnotation} />}
                                         onMouseOver={popupContent => setTip(highlight, highlight => popupContent)}
                                         onMouseOut={hideTip}
                                         key={index}
@@ -115,7 +109,7 @@ const PdfTextAnnotation = props => {
                         />
                     )}
                 </PdfLoader>
-            </div>
+            </Main>
         </Wrapper>
     );
 };
