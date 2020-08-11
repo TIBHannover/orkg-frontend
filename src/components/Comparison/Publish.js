@@ -31,7 +31,7 @@ class Publish extends Component {
             creator: '',
             subject: this.props.subject,
             redirect: false,
-            values: [{ creator: '', ORCID: '' }],
+            creators: [{ creator: '', ORCID: '' }],
             doi: '',
             comparisonLink: '',
             comparisonId: '',
@@ -66,7 +66,7 @@ class Publish extends Component {
                     await createLiteralStatement(resourceId, PREDICATES.REFERENCE, referenceResponse.id);
                 }
 
-                await this.saveCreators(this.state.values, resourceId);
+                await this.saveCreators(this.state.creators, resourceId);
                 let link = queryString.parse(this.props.url).response_hash
                     ? this.props.url
                     : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${comparison.response_hash}`;
@@ -84,7 +84,7 @@ class Publish extends Component {
                     this.state.description,
                     this.state.reference,
                     this.state.subject,
-                    this.state.values,
+                    this.state.creators,
                     this.state.comparisonLink
                 );
             } else {
@@ -115,7 +115,7 @@ class Publish extends Component {
                         this.props.subject,
                         this.props.description,
                         getContributionIdsFromUrl(this.props.url),
-                        this.state.values,
+                        this.state.creators,
                         this.props.url
                     );
                     this.setState({ isCreatingDOI: false, doi: response.data.attributes.doi });
@@ -149,20 +149,20 @@ class Publish extends Component {
     };
 
     handleChangeCreator = (event, i) => {
-        const values = [...this.state.values];
+        const creators = [...this.state.creators];
         const { name, value } = event.target;
-        values[i][name] = value;
-        this.setState({ values });
+        creators[i][name] = value;
+        this.setState({ creators });
     };
 
     handleAddCreator = () => {
-        this.setState(prevState => ({ values: [...prevState.values, { creator: '', ORCID: '' }] }));
+        this.setState(prevState => ({ creators: [...prevState.creators, { creator: '', ORCID: '' }] }));
     };
 
     handleRemoveCreator = i => {
-        const values = [...this.state.values];
-        values.splice(i, 1);
-        this.setState({ values });
+        const creators = [...this.state.creators];
+        creators.splice(i, 1);
+        this.setState({ creators });
     };
 
     handleAddButton = () => {
@@ -178,7 +178,7 @@ class Publish extends Component {
     };
 
     renderCreatorsInput() {
-        return this.state.values.map((el, i) => (
+        return this.state.creators.map((el, i) => (
             <div key={i}>
                 <Row form>
                     <Col md={5}>
@@ -198,9 +198,9 @@ class Publish extends Component {
                         </FormGroup>
                     </Col>
 
-                    {this.state.values.length > 1 && (
+                    {this.state.creators.length > 1 && (
                         <Col style={{ marginTop: '39px' }} md={2}>
-                            <div onClick={this.handleRemoveCreator.bind(this, i)}>
+                            <div onClick={() => this.handleRemoveCreator(i)}>
                                 <Tippy content="Delete creator">
                                     <span style={{ marginLeft: '10px' }}>
                                         <Icon size="xs" icon={faWindowClose} />

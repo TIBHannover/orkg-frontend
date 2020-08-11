@@ -301,43 +301,17 @@ class Comparison extends Component {
     };
 
     loadAuthorsORCID = async creators => {
-        // let authors = {};
-
-        //     await creators.map(async author => {
-        //             await getStatementsBySubject({ id: author.object.id }).then(a=>{
-        //                     if(a.length!==0) {
-        //                     authors[author.object.label] = a[0].object.label;
-        //                     }
-        //                     else
-
-        //                         authors[author.object.label] = "";
-        //             });
-        //     });
-
-        //     this.setState({
-        //                  authors: authors
-        //              });
-
-        //     return authors;
-
         let authors = [];
         if (creators.length > 0) {
-            authors = creators
-                //.filter(author => author.classes && author.classes.includes(process.env.REACT_APP_CLASSES_AUTHOR))
-                .map(async author => {
-                    const authorStatements = await getStatementsBySubject({ id: author.object.id });
-                    return authorStatements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_ORCID);
-                });
+            authors = creators.map(async author => {
+                const authorStatements = await getStatementsBySubject({ id: author.object.id });
+                return authorStatements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_ORCID);
+            });
         }
-        //console.log(authors);
-        //a= { creator: '', ORCID: '' };
-        //ab=[];
         return Promise.all(authors).then(authorsORCID => {
-            //const auth= { creator: '', ORCID: '' };
             const ab = [];
             const authorsArray = [];
             for (const author of creators) {
-                //console.log(author);
                 console.log(authorsORCID);
                 const orcid = authorsORCID.find(a => a !== undefined && a.subject.id === author.object.id);
                 const auth = { creator: '', ORCID: '' };
@@ -345,15 +319,15 @@ class Comparison extends Component {
                 if (orcid) {
                     auth.ORCID = orcid.object.label;
                     auth.creator = author.object.label;
-                    //ab.push(a);
-                    author.orcid = orcid.object.label;
+
+                    // author.orcid = orcid.object.label;
                     authorsArray.push(auth);
                     //authorsArray.push(author);
                 } else {
                     auth.ORCID = '';
                     auth.creator = author.object.label;
                     //ab.push(a);
-                    author.orcid = '';
+                    //author.orcid = '';
                     authorsArray.push(auth);
                     //authorsArray.push(author);
                 }
@@ -539,9 +513,9 @@ class Comparison extends Component {
                                         <DropdownItem divider />
                                         <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
                                         <DropdownItem onClick={() => this.toggle('showPublishDialog')}>Publish</DropdownItem>
-                                        {this.props.match.params.comparisonId && !this.state.DOIData.doi && (
-                                            <DropdownItem onClick={() => this.toggle('showPublishWithDOIDialog')}>Publish with DOI</DropdownItem>
-                                        )}
+                                        {/* {this.props.match.params.comparisonId && !this.state.DOIData.doi && ( */}
+                                        {/* <DropdownItem onClick={() => this.toggle('showPublishWithDOIDialog')}>Publish with DOI</DropdownItem> */}
+                                        {/* )} */}
                                     </DropdownMenu>
                                 </Dropdown>
                             </ButtonGroup>
@@ -612,7 +586,7 @@ class Comparison extends Component {
                                                 ''
                                             )}
 
-                                            {this.state.authors && this.state.authors.length > 0 && (
+                                            {this.state.authors && this.state.authors.length > 0 && !this.state.DOIData.doi && (
                                                 <>
                                                     {this.state.authors.map((author, index) =>
                                                         //author.nameIdentifiers[0].nameIdentifier &&
@@ -639,17 +613,17 @@ class Comparison extends Component {
                                                 </>
                                             )}
                                         </div>
-                                        {/* {this.state.DOIData && (
+                                        {this.state.DOIData && (
                                             <div>
-                                                {this.state.DOIData.date ? (
-                                                    <span className="badge badge-lightblue mr-2">
-                                                        <Icon icon={faCalendar} className="text-primary" />{' '}
-                                                        {this.state.DOIData.date ? moment(this.state.DOIData.date).format('MMMM') : ''}{' '}
-                                                        {this.state.DOIData.date ? moment(this.state.DOIData.date).format('YYYY') : ''}
-                                                    </span>
-                                                ) : (
-                                                    ''
-                                                )}
+                                                {/* {this.state.DOIData.date ? ( */}
+                                                {/* <span className="badge badge-lightblue mr-2"> */}
+                                                {/* <Icon icon={faCalendar} className="text-primary" />{' '} */}
+                                                {/* {this.state.DOIData.date ? moment(this.state.DOIData.date).format('MMMM') : ''}{' '} */}
+                                                {/* {this.state.DOIData.date ? moment(this.state.DOIData.date).format('YYYY') : ''} */}
+                                                {/* </span> */}
+                                                {/* ) : ( */}
+                                                {/* '' */}
+                                                {/* )} */}
 
                                                 {this.state.DOIData.authors && (
                                                     <>
@@ -687,7 +661,7 @@ class Comparison extends Component {
                                                     </div>
                                                 )}
                                             </div>
-                                        )} */}
+                                        )}
                                     </>
                                 ) : (
                                     <br />
