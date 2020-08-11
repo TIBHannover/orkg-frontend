@@ -1,10 +1,11 @@
-import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, Tooltip as ReactstrapTooltip } from 'reactstrap';
+import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink } from 'reactstrap';
 import React, { Component } from 'react';
 import { getCitationByDOI } from 'network';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
 const Textarea = styled(Input)`
@@ -24,12 +25,7 @@ class ExportCitation extends Component {
             citations: {},
             isLoadingBiBTeX: false,
             citationBibTeX: '',
-            values: [],
-            showTooltipCopiedAPA: false,
-            showTooltipCopiedIEEE: false,
-            showTooltipCopiedHarvard: false,
-            showTooltipCopiedBibTeX: false,
-            showTooltipCopiedChi: false
+            values: []
         };
     }
 
@@ -140,22 +136,13 @@ class ExportCitation extends Component {
                                 id="copyToClipboardAPA"
                                 text={!this.state.citations['apa'].loading ? this.state.citations['apa'].citation : 'Loading...'}
                                 onCopy={() => {
-                                    this.setState({ showTooltipCopiedAPA: true });
+                                    toast.success('Copied');
                                 }}
                             >
                                 <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
                                     <Icon icon={faClipboard} /> Copy to clipboard
                                 </Button>
                             </CopyToClipboard>
-                            <ReactstrapTooltip
-                                placement="top"
-                                target="copyToClipboardAPA"
-                                trigger="hover"
-                                toggle={e => this.toggleTooltip(e, 'showTooltipCopiedAPA')}
-                                isOpen={this.state.showTooltipCopiedAPA}
-                            >
-                                Copied!
-                            </ReactstrapTooltip>
                         </>
                     )}
                     {this.state.selectedTab === 'IEEE' && this.state.citations['ieee'] && (
@@ -173,22 +160,13 @@ class ExportCitation extends Component {
                                 id="copyToClipboardIEEE"
                                 text={!this.state.citations['ieee'].loading ? this.state.citations['ieee'].citation : 'Loading...'}
                                 onCopy={() => {
-                                    this.setState({ showTooltipCopiedIEEE: true });
+                                    toast.success('Copied');
                                 }}
                             >
                                 <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
                                     <Icon icon={faClipboard} /> Copy to clipboard
                                 </Button>
                             </CopyToClipboard>
-                            <ReactstrapTooltip
-                                placement="top"
-                                target="copyToClipboardIEEE"
-                                trigger="hover"
-                                toggle={e => this.toggleTooltip(e, 'showTooltipCopiedIEEE')}
-                                isOpen={this.state.showTooltipCopiedIEEE}
-                            >
-                                Copied!
-                            </ReactstrapTooltip>
                         </>
                     )}
                     {this.state.selectedTab === 'Harvard' && this.state.citations['harvard3'] && (
@@ -206,22 +184,13 @@ class ExportCitation extends Component {
                                 id="copyToClipboardHarvard"
                                 text={!this.state.citations['harvard3'].loading ? this.state.citations['harvard3'].citation : 'Loading...'}
                                 onCopy={() => {
-                                    this.setState({ showTooltipCopiedHarvard: true });
+                                    toast.success('Copied');
                                 }}
                             >
                                 <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
                                     <Icon icon={faClipboard} /> Copy to clipboard
                                 </Button>
                             </CopyToClipboard>
-                            <ReactstrapTooltip
-                                placement="top"
-                                target="copyToClipboardHarvard"
-                                trigger="hover"
-                                toggle={e => this.toggleTooltip(e, 'showTooltipCopiedHarvard')}
-                                isOpen={this.state.showTooltipCopiedHarvard}
-                            >
-                                Copied!
-                            </ReactstrapTooltip>
                         </>
                     )}
                     {this.state.selectedTab === 'Chicago' && this.state.citations['chicago-author-date'] && (
@@ -247,22 +216,13 @@ class ExportCitation extends Component {
                                         : 'Loading...'
                                 }
                                 onCopy={() => {
-                                    this.setState({ showTooltipCopiedChi: true });
+                                    toast.success('Copied');
                                 }}
                             >
                                 <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
                                     <Icon icon={faClipboard} /> Copy to clipboard
                                 </Button>
                             </CopyToClipboard>
-                            <ReactstrapTooltip
-                                placement="top"
-                                target="copyToClipboardChi"
-                                trigger="hover"
-                                toggle={e => this.toggleTooltip(e, 'showTooltipCopiedChi')}
-                                isOpen={this.state.showTooltipCopiedChi}
-                            >
-                                Copied!
-                            </ReactstrapTooltip>
                         </>
                     )}
                     {this.state.selectedTab === 'BibTeX' && (
@@ -280,22 +240,13 @@ class ExportCitation extends Component {
                                 id="copyToClipboardChi"
                                 text={!this.state.isLoadingBibTeX ? this.state.citationBibTeX : 'Loading...'}
                                 onCopy={() => {
-                                    this.setState({ showTooltipCopiedBibTeX: true });
+                                    toast.success('Copied');
                                 }}
                             >
                                 <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
                                     <Icon icon={faClipboard} /> Copy to clipboard
                                 </Button>
                             </CopyToClipboard>
-                            <ReactstrapTooltip
-                                placement="top"
-                                target="copyToClipboardChi"
-                                trigger="hover"
-                                toggle={e => this.toggleTooltip(e, 'showTooltipCopiedChi')}
-                                isOpen={this.state.showTooltipCopiedBibTeX}
-                            >
-                                Copied!
-                            </ReactstrapTooltip>
                         </>
                     )}
                 </ModalBody>

@@ -2,21 +2,18 @@ import React, { Component } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Row, Col, Button, Label, FormGroup, Alert } from 'reactstrap';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import ROUTES from '../../constants/routes.js';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { createResource, createLiteralStatement, createLiteral, getComparison, generateDOIForComparison } from 'network';
 import { getContributionIdsFromUrl } from 'utils';
 import PublishWithDOI from 'components/Comparison/PublishWithDOI';
 import Tippy from '@tippy.js/react';
-import { faPlus, faWindowClose } from '@fortawesome/free-solid-svg-icons';
+import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../Utils/Tooltip';
 import queryString from 'query-string';
 import { reverse } from 'named-urls';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
-import { property } from 'lodash';
 
 class Publish extends Component {
     constructor(props) {
@@ -169,7 +166,7 @@ class Publish extends Component {
         return (
             <Row>
                 <Col md={6}>
-                    <Button style={{ fontSize: '14px' }} color="primary" disabled={this.state.isLoading} onClick={this.handleAddCreator.bind(this)}>
+                    <Button style={{ fontSize: '14px' }} color="primary" disabled={this.state.isLoading} onClick={() => this.handleAddCreator(this)}>
                         Add creator
                     </Button>
                 </Col>
@@ -266,6 +263,12 @@ class Publish extends Component {
                                     <Label for="persistent_link">Comparison link</Label>
                                     <Input value={comparisonLink} disabled />
                                 </FormGroup>
+                                {this.props.doi && (
+                                    <FormGroup>
+                                        <Label for="persistent_link">DOI</Label>
+                                        <Input value={this.props.doi} disabled />
+                                    </FormGroup>
+                                )}
                             </>
                         )}
                     </ModalBody>
@@ -277,7 +280,7 @@ class Publish extends Component {
                                     {this.state.isLoading && <span className="fa fa-spinner fa-spin" />} Save
                                 </Button>
                             )}{' '}
-                            {!this.state.doi && (
+                            {!this.state.doi && !this.props.doi && (
                                 <Button color="danger" disabled={!this.state.comparisonId} onClick={() => this.toggle('showPublishWithDOIDialog')}>
                                     {this.state.isCreatingDOI && <span className="fa fa-spinner fa-spin" />} Publish
                                 </Button>
@@ -315,6 +318,7 @@ Publish.propTypes = {
     description: PropTypes.string,
     location: PropTypes.string.isRequired,
     authors: PropTypes.isRequired,
+    doi: PropTypes.string,
     updateComparisonMetadata: PropTypes.func.isRequired
 };
 

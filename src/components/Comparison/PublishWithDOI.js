@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Row, Col, Input, Button, Label, FormGroup, Alert } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert } from 'reactstrap';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { generateDOIForComparison } from 'network';
-import Tippy from '@tippy.js/react';
 import { getContributionIdsFromUrl } from 'utils';
-import Tooltip from '../Utils/Tooltip';
 
 class PublishWithDOI extends Component {
     constructor(props) {

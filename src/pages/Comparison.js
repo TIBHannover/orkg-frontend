@@ -24,7 +24,6 @@ import { reverse } from 'named-urls';
 import moment from 'moment';
 //import ProvenanceBox from 'components/Comparison/ProvenanceBox/ProvenanceBox';
 import ExportCitation from 'components/Comparison/ExportCitation';
-import PublishWithDOI from 'components/Comparison/PublishWithDOI';
 import { generateRdfDataVocabularyFile, extendPropertyIds, similarPropertiesByLabel } from 'utils';
 import { ContainerAnimated } from '../components/Comparison/styled';
 import RelatedResources from '../components/Comparison/RelatedResources';
@@ -309,30 +308,21 @@ class Comparison extends Component {
             });
         }
         return Promise.all(authors).then(authorsORCID => {
-            const ab = [];
             const authorsArray = [];
             for (const author of creators) {
-                console.log(authorsORCID);
                 const orcid = authorsORCID.find(a => a !== undefined && a.subject.id === author.object.id);
                 const auth = { creator: '', ORCID: '' };
-                console.log(orcid);
                 if (orcid) {
                     auth.ORCID = orcid.object.label;
                     auth.creator = author.object.label;
-
-                    // author.orcid = orcid.object.label;
                     authorsArray.push(auth);
-                    //authorsArray.push(author);
                 } else {
                     auth.ORCID = '';
                     auth.creator = author.object.label;
-                    //ab.push(a);
-                    //author.orcid = '';
                     authorsArray.push(auth);
-                    //authorsArray.push(author);
                 }
             }
-            //console.log(ab);
+
             this.setState({
                 authors: authorsArray
             });
@@ -589,9 +579,7 @@ class Comparison extends Component {
                                             {this.state.authors && this.state.authors.length > 0 && !this.state.DOIData.doi && (
                                                 <>
                                                     {this.state.authors.map((author, index) =>
-                                                        //author.nameIdentifiers[0].nameIdentifier &&
-                                                        //author.nameIdentifiers[0].nameIdentifier !== '' ? (
-                                                        author.ORCID && author.ORCID != '' ? (
+                                                        author.ORCID && author.ORCID !== '' ? (
                                                             <NavLink
                                                                 className="p-0"
                                                                 style={{ display: 'contents' }}
@@ -606,7 +594,6 @@ class Comparison extends Component {
                                                         ) : (
                                                             <Badge color="lightblue" className="mr-2 mb-2" key={index}>
                                                                 <Icon icon={faUser} className="text-darkblue" /> {author.creator}
-                                                                {/* <span>{console.log(author.nameIdentifiers[0].nameIdentifier)} </span> */}
                                                             </Badge>
                                                         )
                                                     )}
@@ -615,16 +602,6 @@ class Comparison extends Component {
                                         </div>
                                         {this.state.DOIData && (
                                             <div>
-                                                {/* {this.state.DOIData.date ? ( */}
-                                                {/* <span className="badge badge-lightblue mr-2"> */}
-                                                {/* <Icon icon={faCalendar} className="text-primary" />{' '} */}
-                                                {/* {this.state.DOIData.date ? moment(this.state.DOIData.date).format('MMMM') : ''}{' '} */}
-                                                {/* {this.state.DOIData.date ? moment(this.state.DOIData.date).format('YYYY') : ''} */}
-                                                {/* </span> */}
-                                                {/* ) : ( */}
-                                                {/* '' */}
-                                                {/* )} */}
-
                                                 {this.state.DOIData.authors && (
                                                     <>
                                                         {this.state.DOIData.authors.map((author, index) =>
@@ -741,6 +718,7 @@ class Comparison extends Component {
                     reference={this.state.reference}
                     subject={this.state.subject}
                     comparisonId={this.props.match.params.comparisonId}
+                    doi={this.state.DOIData.doi}
                     updateComparisonMetadata={this.updateComparisonMetadata}
                 />
 
