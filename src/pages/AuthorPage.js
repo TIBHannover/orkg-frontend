@@ -204,12 +204,11 @@ class AuthorPage extends Component {
 
                                         {this.state.papers.length > 0 && (
                                             <div>
-                                                {this.state.papers.map(resource => {
-                                                    if (resource) {
+                                                {this.state.papers
+                                                    .filter(p => p !== undefined)
+                                                    .map(resource => {
                                                         return <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />;
-                                                    }
-                                                    return <></>;
-                                                })}
+                                                    })}
                                             </div>
                                         )}
                                         {/*Add loading indicator*/}
