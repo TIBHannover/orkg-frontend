@@ -1,9 +1,14 @@
-@import '../../assets/scss/ThemeVariables.scss';
+@import "../../assets/scss/ThemeVariables.scss";
 
 body {
     color: #646464;
-    padding-right: 0px !important; // overwrite bootstrap's model padding-right: 15px
     overflow-y: scroll; // always show scrollbars to prevent moving elements when scrollbars become visible
+}
+
+.modal-open {
+    #main-navbar {
+        right: 15px;
+    }
 }
 
 #main-navbar {
