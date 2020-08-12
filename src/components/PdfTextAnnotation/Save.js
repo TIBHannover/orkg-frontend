@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Modal, ModalBody, ModalHeader, Alert, Input, ModalFooter, Button, FormGroup, Label } from 'reactstrap';
+import { Modal, ModalBody, ModalHeader, Alert, Input, ModalFooter, Button, FormGroup, Label, ButtonGroup } from 'reactstrap';
 import { saveFullPaper, createResource } from 'network';
 import { PREDICATES } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
@@ -11,8 +11,11 @@ import PropTypes from 'prop-types';
 const Save = props => {
     const annotations = useSelector(state => state.pdfTextAnnotation.annotations);
     const [title, setTitle] = useState('Open Research Knowledge Graph: Next GenerationInfrastructure for Semantic Scholarly Knowledge'); //TODO: get result from grobid
+    const [doi, setDoi] = useState('');
     const [paperId, setPaperId] = useState(null);
+    const [saveBy, setSaveBy] = useState('doi');
 
+    // TODO: fetch data when DOI is provided
     const handleSave = async () => {
         const contributionStatements = {};
 
@@ -59,12 +62,33 @@ const Save = props => {
             <ModalBody>
                 {!paperId ? (
                     annotations.length > 0 ? (
-                        <FormGroup>
-                            <Label for="exampleUrl">Paper title</Label>
-                            <Input type="url" name="url" value={title} onChange={e => setTitle(e.target.value)} />
-                        </FormGroup>
+                        <>
+                            <Label for="exampleUrl">Add paper by</Label>
+                            <br />
+                            <ButtonGroup size="sm">
+                                <Button color={saveBy === 'doi' ? 'primary' : 'light'} onClick={() => setSaveBy('doi')}>
+                                    Paper DOI
+                                </Button>
+                                <Button color={saveBy === 'title' ? 'primary' : 'light'} onClick={() => setSaveBy('title')}>
+                                    Paper title
+                                </Button>
+                            </ButtonGroup>
+                            <hr />
+                            {saveBy === 'doi' && (
+                                <FormGroup>
+                                    <Label for="exampleUrl">Paper DOI</Label>
+                                    <Input type="url" name="url" value={doi} onChange={e => setDoi(e.target.value)} />
+                                </FormGroup>
+                            )}
+                            {saveBy === 'title' && (
+                                <FormGroup>
+                                    <Label for="exampleUrl">Paper title</Label>
+                                    <Input type="url" name="url" value={title} onChange={e => setTitle(e.target.value)} />
+                                </FormGroup>
+                            )}
+                        </>
                     ) : (
-                        <Alert color="danger">You don't have any annotations yet, so there is nothing to save</Alert>
+                        <Alert color="danger">You didn't make any annotations yet, so there is nothing to save</Alert>
                     )
                 ) : (
                     <Alert color="success">

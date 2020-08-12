@@ -1,7 +1,9 @@
 import * as type from '../actions/types';
 
 const initialState = {
-    annotations: []
+    annotations: [],
+    pdf: null,
+    encodedPdf: null
 };
 
 export default (state = initialState, action) => {
@@ -42,6 +44,16 @@ export default (state = initialState, action) => {
                         return annotation;
                     })
                 ]
+            };
+        }
+
+        case type.PDF_TEXT_ANNOTATION_SET_PDF: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                pdf: payload.pdf,
+                encodedPdf: payload.encodedPdf
             };
         }
 

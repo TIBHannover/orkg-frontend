@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createAnnotation } from 'actions/pdfTextAnnotation';
 import Highlight from 'components/PdfTextAnnotation/Highlight';
 import useDeleteAnnotation from 'components/PdfTextAnnotation/hooks/useDeleteAnnotation';
+import DragUpload from 'components/PdfTextAnnotation/DragUpload';
 
 const Wrapper = styled.div`
     margin-top: -30px;
@@ -25,6 +26,7 @@ const Main = styled.div`
 
 const PdfTextAnnotation = props => {
     const annotations = useSelector(state => state.pdfTextAnnotation.annotations);
+    const encodedPdf = useSelector(state => state.pdfTextAnnotation.encodedPdf);
     const dispatch = useDispatch();
     const PdfHighlighterRef = useRef();
     const { deleteAnnotation } = useDeleteAnnotation();
@@ -60,55 +62,59 @@ const PdfTextAnnotation = props => {
         <Wrapper>
             <Sidebar />
             <Main>
-                <PdfLoader url="https://arxiv.org/pdf/1901.10816.pdf" beforeLoad={<Icon icon={faSpinner} />}>
-                    {pdfDocument => (
-                        <PdfHighlighter
-                            pdfDocument={pdfDocument}
-                            enableAreaSelection={event => event.altKey}
-                            onScrollChange={resetHash}
-                            scrollRef={() => {}} // if this is not present, the component will break
-                            ref={PdfHighlighterRef}
-                            onSelectionFinished={(position, content, hideTipAndSelection, transformSelection) => (
-                                <AnnotationTooltipNew
-                                    position={position}
-                                    content={content}
-                                    hideTipAndSelection={hideTipAndSelection}
-                                    transformSelection={transformSelection}
-                                    handleAnnotate={handleAnnotate}
-                                />
-                            )}
-                            highlightTransform={(highlight, index, setTip, hideTip, viewportToScaled, screenshot, isScrolledTo) => {
-                                const isTextHighlight = !Boolean(highlight.content && highlight.content.image);
-
-                                const component = isTextHighlight ? (
-                                    <Highlight isScrolledTo={isScrolledTo} position={highlight.position} type={highlight.type} />
-                                ) : (
-                                    <AreaHighlight
-                                        highlight={highlight}
-                                        onChange={boundingRect => {
-                                            this.updateHighlight(
-                                                highlight.id,
-                                                { boundingRect: viewportToScaled(boundingRect) },
-                                                { image: screenshot(boundingRect) }
-                                            );
-                                        }}
+                {encodedPdf ? (
+                    <PdfLoader url={encodedPdf} beforeLoad={<Icon icon={faSpinner} />}>
+                        {pdfDocument => (
+                            <PdfHighlighter
+                                pdfDocument={pdfDocument}
+                                enableAreaSelection={event => event.altKey}
+                                onScrollChange={resetHash}
+                                scrollRef={() => {}} // if this is not present, the component will break
+                                ref={PdfHighlighterRef}
+                                onSelectionFinished={(position, content, hideTipAndSelection, transformSelection) => (
+                                    <AnnotationTooltipNew
+                                        position={position}
+                                        content={content}
+                                        hideTipAndSelection={hideTipAndSelection}
+                                        transformSelection={transformSelection}
+                                        handleAnnotate={handleAnnotate}
                                     />
-                                );
+                                )}
+                                highlightTransform={(highlight, index, setTip, hideTip, viewportToScaled, screenshot, isScrolledTo) => {
+                                    const isTextHighlight = !Boolean(highlight.content && highlight.content.image);
 
-                                return (
-                                    <Popup
-                                        popupContent={<AnnotationTooltipExisting {...highlight} deleteAnnotation={deleteAnnotation} />}
-                                        onMouseOver={popupContent => setTip(highlight, highlight => popupContent)}
-                                        onMouseOut={hideTip}
-                                        key={index}
-                                        children={component}
-                                    />
-                                );
-                            }}
-                            highlights={annotations}
-                        />
-                    )}
-                </PdfLoader>
+                                    const component = isTextHighlight ? (
+                                        <Highlight isScrolledTo={isScrolledTo} position={highlight.position} type={highlight.type} />
+                                    ) : (
+                                        <AreaHighlight
+                                            highlight={highlight}
+                                            onChange={boundingRect => {
+                                                this.updateHighlight(
+                                                    highlight.id,
+                                                    { boundingRect: viewportToScaled(boundingRect) },
+                                                    { image: screenshot(boundingRect) }
+                                                );
+                                            }}
+                                        />
+                                    );
+
+                                    return (
+                                        <Popup
+                                            popupContent={<AnnotationTooltipExisting {...highlight} deleteAnnotation={deleteAnnotation} />}
+                                            onMouseOver={popupContent => setTip(highlight, highlight => popupContent)}
+                                            onMouseOut={hideTip}
+                                            key={index}
+                                            children={component}
+                                        />
+                                    );
+                                }}
+                                highlights={annotations}
+                            />
+                        )}
+                    </PdfLoader>
+                ) : (
+                    <DragUpload />
+                )}
             </Main>
         </Wrapper>
     );
