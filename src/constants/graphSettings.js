@@ -52,7 +52,8 @@ export const CLASSES = {
     FEATURED_COMPARISON_CATEGORY: 'FeaturedComparisonCategory',
     CONTRIBUTION_TEMPLATE: 'ContributionTemplate',
     PREDICATE: 'Predicate',
-    QB_DATASET_CLASS: 'QBDataset'
+    QB_DATASET_CLASS: 'QBDataset',
+    LOCATION: 'C2000'
 };
 
 export const MISC = {

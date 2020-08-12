@@ -6,7 +6,9 @@ import PropTypes from 'prop-types';
 import { components } from 'react-select';
 import { compareOption } from 'utils';
 import styled, { withTheme } from 'styled-components';
+import getExternalData from './3rdPartyRegistries/index';
 import NativeListener from 'react-native-listener';
+import CustomOption from './CustomOption';
 
 export const StyledAutoCompleteInputFormControl = styled.div`
     padding-top: 0 !important;
@@ -17,25 +19,6 @@ export const StyledAutoCompleteInputFormControl = styled.div`
     }
     cursor: text;
     padding: 0 !important;
-`;
-
-const StyledSelectOption = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .badge {
-        background-color: #ebecf0;
-        border-radius: 2em;
-        color: #172b4d;
-        display: inline-block;
-        font-size: 12;
-        font-weight: normal;
-        line-height: '1';
-        min-width: 1;
-        padding: 0.16666666666667em 0.5em;
-        text-align: center;
-    }
 `;
 
 function Autocomplete(props) {
@@ -172,6 +155,12 @@ function Autocomplete(props) {
             const hasMore = options.length < pageSize ? false : true;
 
             options = AddAdditionalData(value, options, page);
+
+            // Add resources from third party registries
+            if (!hasMore) {
+                options = await getExternalData(value, options, props.optionsClass);
+            }
+
             return {
                 options,
                 hasMore,
@@ -214,7 +203,9 @@ function Autocomplete(props) {
                 id: selected.id,
                 value: selected.label,
                 shared: selected.shared,
-                classes: selected.classes
+                classes: selected.classes,
+                external: selected.external ?? false,
+                statements: selected.statements
             });
         } else if (action === 'create-option') {
             props.onNewItemSelected && props.onNewItemSelected(selected.label);
@@ -287,23 +278,11 @@ function Autocomplete(props) {
                         props.onChange(innerProps.data);
                     }}
                 >
-                    <components.Option {...innerProps}>
-                        <StyledSelectOption>
-                            <span>{children}</span>
-                            <span className="badge">{innerProps.data.id}</span>
-                        </StyledSelectOption>
-                    </components.Option>
+                    <CustomOption {...innerProps}>{children}</CustomOption>
                 </NativeListener>
             );
         } else {
-            return (
-                <components.Option {...innerProps}>
-                    <StyledSelectOption>
-                        <span>{children}</span>
-                        <span className="badge">{innerProps.data.id}</span>
-                    </StyledSelectOption>
-                </components.Option>
-            );
+            return <CustomOption {...innerProps}>{children}</CustomOption>;
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
