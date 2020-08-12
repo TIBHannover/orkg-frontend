@@ -4,6 +4,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippy.js/react';
 import { components } from 'react-select';
 import styled from 'styled-components';
+import { truncate } from 'lodash';
 import { PREDICATES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 
@@ -35,38 +36,52 @@ const StyledSelectOption = styled.div`
     }
 `;
 
+const MAXIMUM_DESCRIPTION_LENGTH = 120;
+
 export default function CustomOption(props) {
     const { innerProps, ...propsWithoutInnerProps } = props;
     const { onClick, ...newInnerProps } = innerProps;
+    const truncatedDescription = truncate(props.data.description ? props.data.description : '', { length: MAXIMUM_DESCRIPTION_LENGTH });
+
     return (
         <components.Option {...propsWithoutInnerProps} innerProps={newInnerProps}>
             <StyledSelectOption>
                 <span onClick={onClick} style={{ flex: 1 }}>
                     {props.children}
+                    {truncatedDescription && (
+                        <div>
+                            <small className="text-muted">{truncatedDescription}</small>
+                        </div>
+                    )}
                 </span>
                 <span>
-                    {props.data.tooltipData && props.data.tooltipData.length > 0 && (
-                        <div className="info">
+                    {((truncatedDescription && props.data.description.length > MAXIMUM_DESCRIPTION_LENGTH) ||
+                        (props.data.tooltipData && props.data.tooltipData.length > 0)) && (
+                        <div className="info mr-1">
                             <Tippy
                                 interactive={true}
                                 key="c"
                                 content={
                                     <div className="text-left">
-                                        {props.data.tooltipData.map((info, index) => (
-                                            <div key={`s${index}`}>
-                                                <b>{info.property} : </b> {info.value}
-                                            </div>
-                                        ))}
-                                        {props.data.statements
-                                            .filter(statement => statement.predicate.id === PREDICATES.URL)
-                                            .map((statement, index) => (
+                                        {props.data.tooltipData &&
+                                            props.data.tooltipData.length > 0 &&
+                                            props.data.tooltipData.map((info, index) => (
                                                 <div key={`s${index}`}>
-                                                    <b>URL : </b>{' '}
-                                                    <a target="_blank" rel="noopener noreferrer" href={statement.value.label}>
-                                                        {statement.value.label}
-                                                    </a>
+                                                    <b>{info.property} : </b> {info.value}
                                                 </div>
                                             ))}
+                                        {props.data.statements &&
+                                            props.data.statements
+                                                .filter(statement => statement.predicate.id === PREDICATES.URL)
+                                                .map((statement, index) => (
+                                                    <div key={`s${index}`}>
+                                                        <b>URL : </b>{' '}
+                                                        <a target="_blank" rel="noopener noreferrer" href={statement.value.label}>
+                                                            {statement.value.label}
+                                                        </a>
+                                                    </div>
+                                                ))}
+                                        {truncatedDescription && props.data.description.length > MAXIMUM_DESCRIPTION_LENGTH && props.data.description}
                                     </div>
                                 }
                             >

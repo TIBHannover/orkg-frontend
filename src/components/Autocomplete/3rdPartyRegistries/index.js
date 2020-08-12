@@ -29,7 +29,7 @@ export default function getExternalData(value, options, optionsClass) {
             items = getGeonames(value, options);
             break;
         default:
-            console('No third party registries');
+            //console.log('No third party registries');
             break;
     }
     return items;

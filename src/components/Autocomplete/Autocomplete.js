@@ -148,7 +148,8 @@ function Autocomplete(props) {
                     label: item.label,
                     id: item.id,
                     ...(item.shared ? { shared: item.shared } : {}),
-                    ...(item.classes ? { classes: item.classes } : {})
+                    ...(item.classes ? { classes: item.classes } : {}),
+                    ...(item.description ? { description: item.description } : {})
                 })
             );
 
@@ -157,7 +158,7 @@ function Autocomplete(props) {
             options = AddAdditionalData(value, options, page);
 
             // Add resources from third party registries
-            if (!hasMore) {
+            if (!hasMore && props.optionsClass) {
                 options = await getExternalData(value, options, props.optionsClass);
             }
 
