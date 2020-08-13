@@ -130,7 +130,11 @@ export const ValueItemStyle = styled(ListGroupItem)`
         }
     }
 
-    &:hover .valueOptions,
+    &:hover .valueOptions {
+        visibility: visible;
+        opacity: 1;
+    }
+
     &:focus-within .valueOptions {
         visibility: visible;
         opacity: 1;
@@ -295,8 +299,14 @@ export const PropertyStyle = styled.div`
     &:focus {
         outline: 0;
     }
-    &:hover .propertyOptions,
-    &:focus-within .propertyOptions {
+    &:hover .propertyOptions {
+        visibility: visible;
+        opacity: 1;
+        span {
+            color: ${props => props.theme.buttonDark};
+        }
+    }
+    &:focus-within .propertyOption {
         visibility: visible;
         opacity: 1;
         span {
