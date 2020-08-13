@@ -12,6 +12,8 @@ import Tippy from '@tippy.js/react';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { CLASSES } from 'constants/graphSettings';
 import { createPredicate, createResource } from 'network';
+import moment from 'moment';
+import { range } from 'utils';
 import { isString } from 'lodash';
 
 class EditorComponent extends BaseEditorComponent {
@@ -164,6 +166,66 @@ class EditorComponent extends BaseEditorComponent {
             zIndex: 9999,
             width: 300
         };
+
+        // show a select input for publication month
+        if (this.cellProperties?.instance?.getSourceDataAtCell(0, this.col) === 'paper:publication_month') {
+            return (
+                <NativeListener onMouseDown={this.stopMousedownPropagation}>
+                    <div style={containerStyle} ref={this.mainElementRef} id="editorElement">
+                        <Input
+                            type="select"
+                            onChange={(e, value) => this.handleInputChange(e ? e.target.value : value)}
+                            name="paperPublicationMonth"
+                            bsSize="sm"
+                            innerRef={this.literalInputRef}
+                            value={value}
+                            onKeyDown={e => e.keyCode === 13 && this.finishEditing()}
+                            aria-label="Select publication month"
+                        >
+                            <option value="" key="">
+                                Month
+                            </option>
+                            {moment.months().map((el, index) => {
+                                return (
+                                    <option value={index + 1} key={index + 1}>
+                                        {el}
+                                    </option>
+                                );
+                            })}
+                        </Input>
+                    </div>
+                </NativeListener>
+            );
+        }
+
+        // show a select input for publication year
+        if (this.cellProperties?.instance?.getSourceDataAtCell(0, this.col) === 'paper:publication_year') {
+            return (
+                <NativeListener onMouseDown={this.stopMousedownPropagation}>
+                    <div style={containerStyle} ref={this.mainElementRef} id="editorElement">
+                        <Input
+                            type="select"
+                            name="paperPublicationYear"
+                            aria-label="Select publication year"
+                            onChange={(e, value) => this.handleInputChange(e ? e.target.value : value)}
+                            bsSize="sm"
+                            innerRef={this.literalInputRef}
+                            value={value}
+                            onKeyDown={e => e.keyCode === 13 && this.finishEditing()}
+                        >
+                            <option value="" key="">
+                                Year
+                            </option>
+                            {range(1900, moment().year())
+                                .reverse()
+                                .map(year => (
+                                    <option key={year}>{year}</option>
+                                ))}
+                        </Input>
+                    </div>
+                </NativeListener>
+            );
+        }
 
         return (
             <NativeListener onMouseDown={this.stopMousedownPropagation}>

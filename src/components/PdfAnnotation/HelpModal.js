@@ -23,8 +23,8 @@ const HelpModal = props => {
             <ModalBody>
                 <Alert color="warning">This is a beta feature, this functionality might be unstable</Alert>
                 <p>
-                    With the <em>Survey table extractor</em> it is possible to extract survey tables from PDF papers. The information presented in
-                    those tables are used to add papers to the ORKG. In this tutorial we explain how to use this functionality.
+                    With the <em>Survey table extractor</em>, it is possible to extract survey tables from PDF papers. The information presented in
+                    those tables are used to add papers to the ORKG. In this tutorial, we explain how to use this functionality.
                 </p>
                 <hr />
                 <h4 className="mt-4">What are survey tables?</h4>
@@ -45,7 +45,7 @@ const HelpModal = props => {
                 <h4 className="mt-4">How to import survey tables?</h4>
                 <h5 className="mt-3">1. Upload the PDF and select the table</h5>
                 <p>
-                    First upload your PDF file to the tool. Afterwards, select the region of the table you want to import. Click the{' '}
+                    First, upload your PDF file to the tool. Afterwards, select the region of the table you want to import. Click the{' '}
                     <em>Extract table</em> button to extract the table from the PDF. Table extraction from PDFs is a complicated process, the
                     extracted table might contain errors which should be fixed manually.
                 </p>
@@ -80,9 +80,9 @@ const HelpModal = props => {
                 </div>
                 <h5>4. Extract references</h5>
                 <p>
-                    The final step is to extract the references used in the table. In this step, the related metadata for each references is captured.
+                    The final step is to extract the references used in the table. In this step, the related metadata for each reference is captured.
                     This includes the title, authors and publication date. To extract the references, click the <em>Extract references button</em>. In
-                    the popup that opens, select the column in which the references are used. Also, you can selected the references formatting/style.
+                    the popup that opens, select the column in which the references are used. Also, you can select the references formatting/style.
                 </p>
                 <div className="text-center mb-4">
                     <Image src={image6} alt="Extract references button" style={{ width: 300, marginRight: 20 }} />
