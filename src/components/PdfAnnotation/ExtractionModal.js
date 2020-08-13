@@ -35,7 +35,6 @@ const ExtractionModal = props => {
     const comparisonUrl = importedData ? reverse(ROUTES.COMPARISON) + '?contributions=' + importedData.map(entry => entry.contributionId) : null;
 
     const toggleHelpModal = () => {
-        console.log('helpModalOpen', helpModalOpen);
         setHelpModalOpen(!helpModalOpen);
     };
     return (

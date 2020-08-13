@@ -44,9 +44,12 @@ const PaperCard = props => {
                 )}
                 <Col>
                     {props.contribution && (
-                        <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution.id })}>
-                            {props.paper.title ? props.paper.title : <em>No title</em>}
-                        </Link>
+                        <>
+                            <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id, contributionId: props.contribution.id })}>
+                                {props.paper.title ? props.paper.title : <em>No title</em>}
+                            </Link>{' '}
+                            - <span className="text-muted">{props.contribution.title}</span>
+                        </>
                     )}
                     {!props.contribution && (
                         <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: props.paper.id })}>

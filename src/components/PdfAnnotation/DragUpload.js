@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 
 const DragPdf = styled.div`
     margin: 20% auto 0;
-    width: 300px;
+    width: 310px;
     text-align: center;
     border: 4px dashed #bbbdc0;
     padding: 40px 20px;
@@ -61,7 +61,7 @@ const DragUpload = () => {
             {!loading && !pdf && (
                 <DragPdf {...getRootProps()} className={isDragActive && 'active'}>
                     <FilePlaceholder icon={faFile} style={{ fontSize: 70 }} /> <br />
-                    Drag 'n' drop a PDF file here, or click here to upload one
+                    Drag 'n' drop a PDF file here, or click here to upload one. Uploaded files are not stored on our servers
                     <input {...getInputProps()} />
                 </DragPdf>
             )}

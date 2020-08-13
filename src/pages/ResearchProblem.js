@@ -185,7 +185,7 @@ function ResearchProblem(props) {
                         )}
                         {contributions.length === 0 && !isLoadingPapers && (
                             <div className="text-center mt-4 mb-4">
-                                There are no articles for this research problem, yet.
+                                There are no papers for this research problem, yet.
                                 <br />
                                 Start the graphing in ORKG by sharing a paper.
                                 <br />

@@ -377,7 +377,7 @@ export const saveAddPaper = data => {
                 authors: data.authors.map(author => ({ label: author.label, ...(author.orcid ? { orcid: author.orcid } : {}) })),
                 publicationMonth: data.publicationMonth,
                 publicationYear: data.publicationYear,
-                publishedIn: data.publishedIn,
+                publishedIn: data.publishedIn ? data.publishedIn : undefined,
                 url: data.url,
                 researchField: data.selectedResearchField,
                 // Set the contributions data

@@ -241,7 +241,7 @@ function useExtractionModal(props) {
                 publicationYear,
                 researchField,
                 url: '',
-                publishedIn: '',
+                publishedIn: null,
                 contributions: [
                     {
                         name: 'Contribution',
