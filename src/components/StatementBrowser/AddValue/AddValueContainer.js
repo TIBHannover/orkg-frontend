@@ -15,7 +15,7 @@ const mapStateToProps = (state, props) => {
     for (const key in state.statementBrowser.resources.byId) {
         const resource = state.statementBrowser.resources.byId[key];
 
-        if (!resource.existingResourceId) {
+        if (!resource.existingResourceId && resource.label && resource.id) {
             newResourcesList.push({
                 id: resource.id,
                 label: resource.label,

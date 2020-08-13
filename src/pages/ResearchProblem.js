@@ -108,19 +108,12 @@ function ResearchProblem(props) {
                                                                     })}
                                                                 >
                                                                     {researchField.field.label}
+                                                                    <small>
+                                                                        <Badge className="ml-1" color="info" pill>
+                                                                            {researchField.freq}
+                                                                        </Badge>
+                                                                    </small>
                                                                 </Link>
-                                                                <small>
-                                                                    <Badge
-                                                                        className="ml-1"
-                                                                        href={reverse(ROUTES.RESEARCH_FIELD, {
-                                                                            researchFieldId: researchField.field.id
-                                                                        })}
-                                                                        color="info"
-                                                                        pill
-                                                                    >
-                                                                        {researchField.freq}
-                                                                    </Badge>
-                                                                </small>
                                                             </li>
                                                         );
                                                     })}

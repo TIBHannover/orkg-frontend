@@ -4,7 +4,7 @@ import { InputGroupAddon, Button, InputGroup } from 'reactstrap';
 import { AddPropertyStyle, AddPropertyContentStyle, AddPropertyFormStyle, StyledButton } from 'components/StatementBrowser/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import AutoComplete from 'components/StatementBrowser/AutoComplete';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
 import defaultProperties from './helpers/defaultProperties';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import Tippy from '@tippy.js/react';
