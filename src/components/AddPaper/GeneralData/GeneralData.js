@@ -123,8 +123,11 @@ class GeneralData extends Component {
         clearAllBodyScrollLocks();
     }
 
-    disableBody = target => disableBodyScroll();
-    enableBody = target => enableBodyScroll();
+    disableBody = target =>
+        disableBodyScroll(target, {
+            reserveScrollBarGap: true
+        });
+    enableBody = target => enableBodyScroll(target);
 
     //moved callback after stateUpdate into a function
     updateGlobalStateForVisualization = () => {
