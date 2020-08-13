@@ -8,6 +8,12 @@ import image4 from 'assets/img/help/survey4.png';
 import image5 from 'assets/img/help/survey5.png';
 import image6 from 'assets/img/help/survey6.png';
 import image7 from 'assets/img/help/survey7.png';
+import styled from 'styled-components';
+
+const Image = styled.img`
+    border: 3px solid grey;
+    margin: 10px 5px;
+`;
 
 const HelpModal = props => {
     return (
@@ -17,20 +23,20 @@ const HelpModal = props => {
             <ModalBody>
                 <Alert color="warning">This is a beta feature, this functionality might be unstable</Alert>
                 <p>
-                    The with <em>Survey table extractor</em> it is possible to extract survey tables from PDF papers. The contents of those tables are
-                    used to add papers to the ORKG. In this tutorial we explain how to use this functionality.
+                    With the <em>Survey table extractor</em> it is possible to extract survey tables from PDF papers. The information presented in
+                    those tables are used to add papers to the ORKG. In this tutorial we explain how to use this functionality.
                 </p>
                 <hr />
                 <h4 className="mt-4">What are survey tables?</h4>
                 <p>
                     Survey tables present information found in other papers, they are often presented in survey or review articles. Because the tables
-                    present information in a structure way, they can be used to quickly generate structured descriptions of those papers. Survey
+                    present information in a structured way, they can be used to quickly generate structured descriptions of those papers. Survey
                     tables also contain references to the papers that are reviewed, based on the reference a description is generated for the
                     referenced paper. Two examples of survey tables (note the references):{' '}
                 </p>
                 <div className="text-center">
-                    <img src={image} alt="Example of a survey table" style={{ width: 340 }} />
-                    <img src={image2} alt="Second example of a survey table" style={{ width: 400 }} />
+                    <Image src={image} alt="Example of a survey table" style={{ height: 160 }} />
+                    <Image src={image2} alt="Second example of a survey table" style={{ height: 160 }} />
                 </div>
                 <Alert color="info" className="mt-3">
                     In case a table doesn't contain references, you cannot use this tool to import the table
@@ -44,7 +50,7 @@ const HelpModal = props => {
                     extracted table might contain errors which should be fixed manually.
                 </p>
                 <div className="text-center">
-                    <img src={image3} alt="Select table within the PDF" style={{ width: 300 }} />
+                    <Image src={image3} alt="Select table within the PDF" style={{ width: 300 }} />
                 </div>
                 <h5>2. Format the extracted table</h5>
                 <p>The extracted table should be formatted in such a way that it adheres to the following rules:</p>
@@ -60,7 +66,7 @@ const HelpModal = props => {
                     </li>
                 </ul>
                 <div className="text-center">
-                    <img src={image4} alt="Fix the formatting of the table after extraction" style={{ width: 700 }} />
+                    <Image src={image4} alt="Fix the formatting of the table after extraction" style={{ width: 700 }} />
                 </div>
 
                 <h5>3. Map header labels</h5>
@@ -70,7 +76,7 @@ const HelpModal = props => {
                     <em>property name</em>".
                 </p>
                 <div className="text-center">
-                    <img src={image5} alt="Map the header labels to existing properties" />
+                    <Image src={image5} alt="Map the header labels to existing properties" />
                 </div>
                 <h5>4. Extract references</h5>
                 <p>
@@ -79,8 +85,8 @@ const HelpModal = props => {
                     the popup that opens, select the column in which the references are used. Also, you can selected the references formatting/style.
                 </p>
                 <div className="text-center mb-4">
-                    <img src={image6} alt="Extract references button" style={{ width: 300, marginRight: 20 }} />
-                    <img src={image7} alt="Extract references dialog" style={{ width: 400 }} />
+                    <Image src={image6} alt="Extract references button" style={{ width: 300, marginRight: 20 }} />
+                    <Image src={image7} alt="Extract references dialog" style={{ width: 400 }} />
                 </div>
                 <p>When the reference extraction is performed, 7 new columns are added to the table:</p>
 

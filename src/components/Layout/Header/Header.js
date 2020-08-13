@@ -196,6 +196,14 @@ class Header extends Component {
         });
     };
 
+    requireAuthentication = e => {
+        if (!this.props.user) {
+            this.props.openAuthDialog('signin', true);
+            // Don't follow the link when user is not authenticated
+            e.preventDefault();
+        }
+    };
+
     render() {
         if (this.state.redirectLogout) {
             return <Redirect to={{ pathname: '/', state: { signedOut: true } }} />;
@@ -217,7 +225,6 @@ class Header extends Component {
                             <NavItem className="ml-2 ml-md-0">
                                 <NavLink tag={RouterNavLink} exact to={ROUTES.PAPERS}>
                                     Papers
-                                    {/* TODO: add taxonomy "Browse by research field" <FontAwesomeIcon icon={faSortDown} pull="right" /> */}
                                 </NavLink>
                             </NavItem>
 
@@ -229,12 +236,13 @@ class Header extends Component {
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS}>
                                         Statistics
                                     </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.PDF_ANNOTATION}>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.PDF_ANNOTATION} onClick={this.requireAuthentication}>
                                         PDF annotation{' '}
                                         <small>
                                             <Badge color="info">Beta</Badge>
                                         </small>
                                     </DropdownItem>
+
                                     <DropdownItem divider />
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>
                                         Resources{' '}
@@ -366,7 +374,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     resetAuth: () => dispatch(resetAuth()),
-    openAuthDialog: action => dispatch(openAuthDialog(action)),
+    openAuthDialog: (action, signInRequired) => dispatch(openAuthDialog(action, signInRequired)),
     updateAuth: data => dispatch(updateAuth(data))
 });
 
