@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faFire } from '@fortawesome/free-solid-svg-icons';
+import { faFire, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { problemsUrl, submitGetRequest } from 'network';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes';
 
 const List = styled.ul`
     list-style: none;
@@ -47,13 +50,18 @@ const List = styled.ul`
 `;
 
 const TrendingProblems = props => {
-    const data = [
-        'Similarity measures',
-        'COVID-19 reproductive number',
-        'Traffic situation knowledge representation',
-        'Structured descriptions of research contributions',
-        'Road vehicle classification'
-    ];
+    const [problems, setProblems] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const getProblems = async () => {
+            const problemsList = await submitGetRequest(`${problemsUrl}top`);
+            setProblems(problemsList);
+            setIsLoading(false);
+        };
+
+        getProblems();
+    }, []);
 
     return (
         <div>
@@ -65,15 +73,21 @@ const TrendingProblems = props => {
 
                 <hr className="mx-3 mt-0" />
 
-                <div className="px-4 mb-3 text-center pb-1">
-                    <List>
-                        {data.map((data, index) => (
-                            <li className={`item-${index}`} key={`${index}-problem`}>
-                                <Link>{data}</Link>
-                            </li>
-                        ))}
-                    </List>
-                </div>
+                {isLoading ? (
+                    <div className="text-center py-5">
+                        <Icon icon={faSpinner} spin /> Loading
+                    </div>
+                ) : (
+                    <div className="px-4 mb-3 text-center pb-1">
+                        <List>
+                            {problems.map((problem, index) => (
+                                <li className={`item-${index}`} key={`${index}-problem`}>
+                                    <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}>{problem.label}</Link>
+                                </li>
+                            ))}
+                        </List>
+                    </div>
+                )}
             </div>
         </div>
     );
