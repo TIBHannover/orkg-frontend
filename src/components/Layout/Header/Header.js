@@ -45,8 +45,14 @@ const cookies = new Cookies();
 // determine the scroll bar width and compensate the width when a modal is opened
 const GlobalStyle = createGlobalStyle`
     body.modal-open {
-        #main-navbar {
+        #main-navbar, #paperHeaderBar {
             right: ${props => props.scrollbarWidth}px
+        }
+        #helpIcon {
+            padding-right: ${props => props.scrollbarWidth}px
+        }
+        .woot-widget-bubble, .woot-widget-holder {
+            margin-right: ${props => props.scrollbarWidth}px
         }
     }
 `;
