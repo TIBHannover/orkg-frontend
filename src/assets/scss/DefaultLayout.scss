@@ -1,14 +1,8 @@
-@import "../../assets/scss/ThemeVariables.scss";
+@import '../../assets/scss/ThemeVariables.scss';
 
 body {
     color: #646464;
     overflow-y: scroll; // always show scrollbars to prevent moving elements when scrollbars become visible
-}
-
-.modal-open {
-    #main-navbar {
-        right: 15px;
-    }
 }
 
 #main-navbar {

@@ -33,12 +33,23 @@ import { openAuthDialog, updateAuth, resetAuth } from 'actions/auth';
 import { Redirect } from 'react-router-dom';
 import { getUserInformation } from 'network';
 import greetingTime from 'greeting-time';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import { toast } from 'react-toastify';
+import { scrollbarWidth } from '@xobotyi/scrollbar-width';
+
 const cookies = new Cookies();
+
+// determine the scroll bar width and compensate the width when a modal is opened
+const GlobalStyle = createGlobalStyle`
+    body.modal-open {
+        #main-navbar {
+            right: ${props => props.scrollbarWidth}px
+        }
+    }
+`;
 
 const StyledLink = styled(Link)`
     :focus {
@@ -205,6 +216,8 @@ class Header extends Component {
 
         return (
             <Navbar color="light" expand="md" fixed="top" id="main-navbar" light>
+                <GlobalStyle scrollbarWidth={scrollbarWidth(true)} />
+
                 <Container className="p-0">
                     <StyledLink to={ROUTES.HOME} className="mr-4 p-0">
                         <Logo />

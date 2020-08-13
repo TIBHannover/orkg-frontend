@@ -12,6 +12,7 @@
         "@hapi/joi": "^17.1.1",
         "@tippy.js/react": "^3.1.1",
         "@trainiac/html2canvas": "^1.0.0",
+        "@xobotyi/scrollbar-width": "^1.9.5",
         "array-move": "^2.1.0",
         "babel-preset-es2018": "^1.0.0",
         "body-scroll-lock": "^2.6.4",
