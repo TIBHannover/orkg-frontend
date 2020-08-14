@@ -1,4 +1,4 @@
-import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink } from 'reactstrap';
+import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import React, { Component } from 'react';
 import { getCitationByDOI } from 'network';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import { zipObject } from 'lodash';
 
 const Textarea = styled(Input)`
     font-family: 'Courier New';
@@ -18,66 +19,35 @@ class ExportCitation extends Component {
         super(props);
 
         this.state = {
-            latexTableLoading: true,
-            bibtexReferencesLoading: true,
             selectedTab: 'APA',
-            latexTable: '',
-            citations: {},
-            isLoadingBiBTeX: false,
-            citationBibTeX: '',
-            values: []
+            citations: {}
         };
+
+        this.CITATION_STYLES = [
+            { styleID: 'apa', styleTabID: 'APA', styleLabel: 'APA', header: null },
+            { styleID: 'ieee', styleTabID: 'IEEE', styleLabel: 'IEEE', header: null },
+            { styleID: 'harvard3', styleTabID: 'Harvard', styleLabel: 'Harvard', header: null },
+            { styleID: 'chicago-author-date', styleTabID: 'Chicago', styleLabel: 'Chicago', header: null },
+            { styleID: 'bibtex', styleTabID: 'BibTeX', styleLabel: 'BibTeX', header: 'application/x-bibtex' }
+        ];
     }
 
     getCitation = () => {
-        const styles = ['apa', 'ieee', 'harvard3', 'chicago-author-date'];
-        styles.map(s => {
-            this.setState(prevState => ({ citations: { ...prevState.citations, [s]: { citation: 'test', loading: true } } }));
-        });
-
         Promise.all(
-            styles.map(s =>
-                getCitationByDOI(this.props.DOI, s)
-                    .then(data => {
-                        this.setState(prevState => ({ citations: { ...prevState.citations, [s]: { citation: data, loading: false } } }));
-                    })
-                    .catch(error => {
-                        this.setState(prevState => ({ citations: { ...prevState.citations, [s]: { citation: 'failed to load', loading: true } } }));
-                    })
+            this.CITATION_STYLES.map(s =>
+                getCitationByDOI(this.props.DOI, s.header ? undefined : s.styleID, s.header ? s.header : undefined).catch(
+                    error => 'Failed to load citation'
+                )
             )
-        );
-    };
-
-    getCitationBibTeX = () => {
-        this.setState({ isLoadingBibTeX: true });
-        if (this.props.DOI) {
-            getCitationByDOI(this.props.DOI, '', 'application/x-bibtex')
-                .then(response => {
-                    this.setState({
-                        citationBibTeX: response,
-                        isLoadingBibTeX: false
-                    });
-                })
-                .catch(error => {
-                    this.setState({
-                        isLoadingBibTeX: false
-                    });
-                });
-        }
+        ).then(citations => {
+            this.setState({ citations: zipObject(this.CITATION_STYLES.map(s => s.styleID), citations) });
+        });
     };
 
     selectTab = tab => {
         this.setState({
             selectedTab: tab
         });
-    };
-
-    toggleTooltip = (e, type) => {
-        if (e && e.type !== 'mouseover') {
-            this.setState(prevState => ({
-                [type]: !prevState[type]
-            }));
-        }
     };
 
     render() {
@@ -88,167 +58,50 @@ class ExportCitation extends Component {
                 size="lg"
                 onOpened={() => {
                     this.getCitation();
-                    this.getCitationBibTeX();
                 }}
             >
                 <ModalHeader toggle={this.props.toggle}>Export Citation</ModalHeader>
                 <ModalBody>
                     <Nav tabs className="mb-4">
-                        <NavItem>
-                            <NavLink href="#" active={this.state.selectedTab === 'APA'} onClick={() => this.selectTab('APA')}>
-                                APA
-                            </NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink href="#" active={this.state.selectedTab === 'IEEE'} onClick={() => this.selectTab('IEEE')}>
-                                IEEE
-                            </NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink href="#" active={this.state.selectedTab === 'Harvard'} onClick={() => this.selectTab('Harvard')}>
-                                Harvard
-                            </NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink href="#" active={this.state.selectedTab === 'Chicago'} onClick={() => this.selectTab('Chicago')}>
-                                Chicago
-                            </NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink href="#" active={this.state.selectedTab === 'BibTeX'} onClick={() => this.selectTab('BibTeX')}>
-                                BibTeX
-                            </NavLink>
-                        </NavItem>
+                        {this.CITATION_STYLES.map(style => (
+                            <NavItem key={`navItem${style.styleTabID}`}>
+                                <NavLink
+                                    href="#"
+                                    active={this.state.selectedTab === style.styleTabID}
+                                    onClick={() => this.selectTab(style.styleTabID)}
+                                >
+                                    {style.styleLabel}
+                                </NavLink>
+                            </NavItem>
+                        ))}
                     </Nav>
+                    <TabContent activeTab={this.state.selectedTab}>
+                        {this.CITATION_STYLES.map(style => (
+                            <TabPane key={`tabPane${style.styleTabID}`} tabId={style.styleTabID}>
+                                <p>
+                                    <Textarea
+                                        type="textarea"
+                                        value={this.state.citations[style.styleID] ? this.state.citations[style.styleID] : 'Loading...'}
+                                        disabled
+                                        rows="10"
+                                    />
+                                </p>
 
-                    {this.state.selectedTab === 'APA' && this.state.citations['apa'] && (
-                        <>
-                            <p>
-                                <Textarea
-                                    type="textarea"
-                                    value={!this.state.citations['apa'].loading ? this.state.citations['apa'].citation : 'Loading...'}
-                                    disabled
-                                    rows="10"
-                                />
-                            </p>
-
-                            <CopyToClipboard
-                                id="copyToClipboardAPA"
-                                text={!this.state.citations['apa'].loading ? this.state.citations['apa'].citation : 'Loading...'}
-                                onCopy={() => {
-                                    toast.success('Copied');
-                                }}
-                            >
-                                <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                                    <Icon icon={faClipboard} /> Copy to clipboard
-                                </Button>
-                            </CopyToClipboard>
-                        </>
-                    )}
-                    {this.state.selectedTab === 'IEEE' && this.state.citations['ieee'] && (
-                        <>
-                            <p>
-                                <Textarea
-                                    type="textarea"
-                                    value={!this.state.citations['ieee'].loading ? this.state.citations['ieee'].citation : 'Loading...'}
-                                    disabled
-                                    rows="10"
-                                />
-                            </p>
-
-                            <CopyToClipboard
-                                id="copyToClipboardIEEE"
-                                text={!this.state.citations['ieee'].loading ? this.state.citations['ieee'].citation : 'Loading...'}
-                                onCopy={() => {
-                                    toast.success('Copied');
-                                }}
-                            >
-                                <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                                    <Icon icon={faClipboard} /> Copy to clipboard
-                                </Button>
-                            </CopyToClipboard>
-                        </>
-                    )}
-                    {this.state.selectedTab === 'Harvard' && this.state.citations['harvard3'] && (
-                        <>
-                            <p>
-                                <Textarea
-                                    type="textarea"
-                                    value={!this.state.citations['harvard3'].loading ? this.state.citations['harvard3'].citation : 'Loading...'}
-                                    disabled
-                                    rows="10"
-                                />
-                            </p>
-
-                            <CopyToClipboard
-                                id="copyToClipboardHarvard"
-                                text={!this.state.citations['harvard3'].loading ? this.state.citations['harvard3'].citation : 'Loading...'}
-                                onCopy={() => {
-                                    toast.success('Copied');
-                                }}
-                            >
-                                <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                                    <Icon icon={faClipboard} /> Copy to clipboard
-                                </Button>
-                            </CopyToClipboard>
-                        </>
-                    )}
-                    {this.state.selectedTab === 'Chicago' && this.state.citations['chicago-author-date'] && (
-                        <>
-                            <p>
-                                <Textarea
-                                    type="textarea"
-                                    value={
-                                        !this.state.citations['chicago-author-date'].loading
-                                            ? this.state.citations['chicago-author-date'].citation
-                                            : 'Loading...'
-                                    }
-                                    disabled
-                                    rows="10"
-                                />
-                            </p>
-
-                            <CopyToClipboard
-                                id="copyToClipboardChi"
-                                text={
-                                    !this.state.citations['chicago-author-date'].loading
-                                        ? this.state.citations['chicago-author-date'].citation
-                                        : 'Loading...'
-                                }
-                                onCopy={() => {
-                                    toast.success('Copied');
-                                }}
-                            >
-                                <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                                    <Icon icon={faClipboard} /> Copy to clipboard
-                                </Button>
-                            </CopyToClipboard>
-                        </>
-                    )}
-                    {this.state.selectedTab === 'BibTeX' && (
-                        <>
-                            <p>
-                                <Textarea
-                                    type="textarea"
-                                    value={!this.state.isLoadingBibTeX ? this.state.citationBibTeX : 'Loading...'}
-                                    disabled
-                                    rows="10"
-                                />
-                            </p>
-
-                            <CopyToClipboard
-                                id="copyToClipboardChi"
-                                text={!this.state.isLoadingBibTeX ? this.state.citationBibTeX : 'Loading...'}
-                                onCopy={() => {
-                                    toast.success('Copied');
-                                }}
-                            >
-                                <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
-                                    <Icon icon={faClipboard} /> Copy to clipboard
-                                </Button>
-                            </CopyToClipboard>
-                        </>
-                    )}
+                                <CopyToClipboard
+                                    id={`copyToClipboard${style.styleID}`}
+                                    text={this.state.citations[style.styleID] ? this.state.citations[style.styleID] : 'Loading...'}
+                                    onCopy={() => {
+                                        toast.dismiss();
+                                        toast.success(`${style.styleLabel} Citation Copied`);
+                                    }}
+                                >
+                                    <Button color="primary" className="pl-3 pr-3 float-right" size="sm">
+                                        <Icon icon={faClipboard} /> Copy to clipboard
+                                    </Button>
+                                </CopyToClipboard>
+                            </TabPane>
+                        ))}
+                    </TabContent>
                 </ModalBody>
             </Modal>
         );
@@ -258,8 +111,7 @@ class ExportCitation extends Component {
 ExportCitation.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    DOI: PropTypes.string,
-    comparisonId: PropTypes.string
+    DOI: PropTypes.string
 };
 
 export default ExportCitation;
