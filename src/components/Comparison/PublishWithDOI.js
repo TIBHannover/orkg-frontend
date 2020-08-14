@@ -37,9 +37,6 @@ class PublishWithDOI extends Component {
                     this.props.url
                 );
                 this.setState({ isLoading: false, doi: response.data.attributes.doi });
-                //this._modal.openModal()
-                //this._modal.closeModal();
-                //this.setState({ isLoading: false, doi: "9" });
                 toast.success('DOI has been registered successfully');
             } else {
                 throw Error('Please enter a title and a description');
