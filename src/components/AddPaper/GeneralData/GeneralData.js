@@ -40,7 +40,7 @@ import { getPaperData } from 'utils';
 import { getPaperByDOI, getStatementsBySubject } from 'network';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import ExistingDoiModal from './ExistingDoiModal';
-import { isString } from 'lodash';
+import { parseCiteResult } from 'utils';
 
 const Container = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -221,48 +221,8 @@ class GeneralData extends Component {
             })
             .then(paper => {
                 if (paper) {
-                    let paperTitle = '',
-                        paperAuthors = [],
-                        paperPublicationMonth = '',
-                        paperPublicationYear = '',
-                        doi = '',
-                        publishedIn = '';
-                    try {
-                        const { title, subtitle, author, issued, DOI, 'container-title': containerTitle } = paper.data[0];
-
-                        paperTitle = title;
-                        if (subtitle && subtitle.length > 0) {
-                            // include the subtitle
-                            paperTitle = `${paperTitle}: ${subtitle[0]}`;
-                        }
-                        if (author) {
-                            paperAuthors = author.map(author => {
-                                let fullname = [author.given, author.family].join(' ').trim();
-                                if (!fullname) {
-                                    fullname = author.literal ? author.literal : '';
-                                }
-                                return {
-                                    label: fullname,
-                                    id: fullname,
-                                    orcid: author.ORCID ? author.ORCID : ''
-                                };
-                            });
-                        }
-                        const [year, month] = issued['date-parts'][0];
-
-                        if (month) {
-                            paperPublicationMonth = month;
-                        }
-                        if (year) {
-                            paperPublicationYear = year;
-                        }
-                        doi = DOI ? DOI : '';
-                        if (containerTitle && isString(containerTitle)) {
-                            publishedIn = containerTitle;
-                        }
-                    } catch (e) {
-                        console.log('Error setting paper data: ', e);
-                    }
+                    const parseResult = parseCiteResult(paper);
+                    const { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi, publishedIn } = parseResult;
 
                     this.setState(
                         {
