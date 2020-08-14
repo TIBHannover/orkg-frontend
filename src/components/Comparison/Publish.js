@@ -107,6 +107,10 @@ class Publish extends Component {
         }));
     };
 
+    updateDOIState = doi => {
+        this.setState({ doi });
+    };
+
     publishComparison = async e => {
         this.setState({ isCreatingDOI: true });
         try {
@@ -114,6 +118,7 @@ class Publish extends Component {
                 await this.saveCreators(this.state.creators, this.state.comparisonId);
             }
             this.toggle('showPublishWithDOIDialog');
+            this.setState({ isCreatingDOI: false });
         } catch (error) {
             toast.error(`Error publishing a comparison : ${error.message}`);
             this.setState({ isCreatingDOI: false });
@@ -288,7 +293,7 @@ class Publish extends Component {
                                     <Input value={comparisonLink} disabled />
                                 </FormGroup>
                             )}
-                            {this.props.doi && (
+                            {this.state.doi && (
                                 <FormGroup>
                                     <Label for="persistent_link">DOI</Label>
                                     <Input value={this.props.doi} disabled />
@@ -325,7 +330,7 @@ class Publish extends Component {
                     description={this.props.description}
                     creators={this.props.authors.length > 0 ? this.props.authors : this.state.creators}
                     subject={this.props.subject}
-                    updateComparisonMetadata={this.updateComparisonMetadata}
+                    updateDOIState={this.updateDOIState}
                 />
             </div>
         );

@@ -12,11 +12,17 @@ class PublishWithDOI extends Component {
         this.state = {
             showPublishWithDOIDialog: false,
             doi: '',
-            isLoading: false
+            isLoading: false,
+            DOIToggle: ''
         };
+        this.toggle = this.toggle.bind(this);
     }
 
-    componentDidUpdate = prevProps => {};
+    componentDidUpdate = prevProps => {
+        if (prevProps.showPublishWithDOIDialog !== this.props.showPublishWithDOIDialog) {
+            this.setState({ showPublishWithDOIDialog: true });
+        }
+    };
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value });
@@ -25,7 +31,6 @@ class PublishWithDOI extends Component {
     handleSubmit = async e => {
         this.setState({ isLoading: true });
         try {
-            //console.log(this.props.creators.length);
             if (this.props.title && this.props.title.trim() !== '' && this.props.description && this.props.description.trim() !== '') {
                 const response = await generateDOIForComparison(
                     this.props.comparisonId,
@@ -37,6 +42,7 @@ class PublishWithDOI extends Component {
                     this.props.url
                 );
                 this.setState({ isLoading: false, doi: response.data.attributes.doi });
+                this.props.updateDOIState(response.data.attributes.doi);
                 toast.success('DOI has been registered successfully');
             } else {
                 throw Error('Please enter a title and a description');
@@ -49,11 +55,16 @@ class PublishWithDOI extends Component {
         e.preventDefault();
     };
 
+    toggle = () => {
+        this.setState({
+            showPublishWithDOIDialog: !this.state.showPublishWithDOIDialog
+        });
+    };
+
     render() {
         return (
-            // <div style={{ width: '150%' }}>
-            <Modal isOpen={this.props.showPublishWithDOIDialog} toggle={() => this.props.DOIToggle}>
-                <ModalHeader toggle={() => this.props.DOIToggle}>Publish comparison</ModalHeader>
+            <Modal isOpen={this.state.showPublishWithDOIDialog} toggle={this.toggle}>
+                <ModalHeader toggle={() => this.toggle}>Publish comparison</ModalHeader>
                 <ModalBody>
                     <Alert color="info">
                         A DOI {process.env.REACT_APP_DATACITE_TEST_DOI}/{this.props.comparisonId} will be assigned to published comparison and it
@@ -78,11 +89,13 @@ class PublishWithDOI extends Component {
                             <Button color="danger" disabled={false} onClick={this.handleSubmit}>
                                 {this.state.isLoading && <span className="fa fa-spinner fa-spin" />} Register
                             </Button>
-                        )}
+                        )}{' '}
+                        <Button color="secondary" onClick={this.toggle}>
+                            Close
+                        </Button>
                     </div>
                 </ModalFooter>
             </Modal>
-            // </div>
         );
     }
 }
@@ -96,7 +109,8 @@ PublishWithDOI.propTypes = {
     description: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
     creators: PropTypes.isRequired,
-    subject: PropTypes.string
+    subject: PropTypes.string,
+    updateDOIState: PropTypes.func.isRequired
 };
 
 export default connect()(PublishWithDOI);
