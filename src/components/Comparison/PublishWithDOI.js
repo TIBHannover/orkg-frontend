@@ -25,6 +25,7 @@ class PublishWithDOI extends Component {
     handleSubmit = async e => {
         this.setState({ isLoading: true });
         try {
+            //console.log(this.props.creators.length);
             if (this.props.title && this.props.title.trim() !== '' && this.props.description && this.props.description.trim() !== '') {
                 const response = await generateDOIForComparison(
                     this.props.comparisonId,
@@ -36,6 +37,9 @@ class PublishWithDOI extends Component {
                     this.props.url
                 );
                 this.setState({ isLoading: false, doi: response.data.attributes.doi });
+                //this._modal.openModal()
+                //this._modal.closeModal();
+                //this.setState({ isLoading: false, doi: "9" });
                 toast.success('DOI has been registered successfully');
             } else {
                 throw Error('Please enter a title and a description');
@@ -50,45 +54,45 @@ class PublishWithDOI extends Component {
 
     render() {
         return (
-            <div style={{ width: '150%' }}>
-                <Modal isOpen={this.props.showPublishWithDOIDialog} toggle={() => this.props.toggle}>
-                    <ModalHeader toggle={() => this.props.toggle}>Publish comparison</ModalHeader>
-                    <ModalBody>
-                        <Alert color="info">
-                            A DOI {process.env.REACT_APP_DATACITE_TEST_DOI}/{this.props.comparisonId} will be assigned to published comparison and it
-                            cannot be changed in future. Pressing <i>Register </i> will publish the DOI.
-                        </Alert>
-                        {this.state.doi && (
-                            <>
-                                <FormGroup>
-                                    <Label for="persistent_link">Comparison link</Label>
-                                    <Input value={this.props.url} disabled />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label for="persistent_link">DOI</Label>
-                                    <Input value={this.state.doi} disabled />
-                                </FormGroup>
-                            </>
+            // <div style={{ width: '150%' }}>
+            <Modal isOpen={this.props.showPublishWithDOIDialog} toggle={() => this.props.DOIToggle}>
+                <ModalHeader toggle={() => this.props.DOIToggle}>Publish comparison</ModalHeader>
+                <ModalBody>
+                    <Alert color="info">
+                        A DOI {process.env.REACT_APP_DATACITE_TEST_DOI}/{this.props.comparisonId} will be assigned to published comparison and it
+                        cannot be changed in future. Pressing <i>Register </i> will publish the DOI.
+                    </Alert>
+                    {this.state.doi && (
+                        <>
+                            <FormGroup>
+                                <Label for="persistent_link">Comparison link</Label>
+                                <Input value={this.props.url} disabled />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="persistent_link">DOI</Label>
+                                <Input value={`https://${this.state.doi}`} disabled />
+                            </FormGroup>
+                        </>
+                    )}
+                </ModalBody>
+                <ModalFooter>
+                    <div className="text-align-center mt-2">
+                        {!this.state.doi && (
+                            <Button color="danger" disabled={false} onClick={this.handleSubmit}>
+                                {this.state.isLoading && <span className="fa fa-spinner fa-spin" />} Register
+                            </Button>
                         )}
-                    </ModalBody>
-                    <ModalFooter>
-                        <div className="text-align-center mt-2">
-                            {!this.state.doi && (
-                                <Button color="danger" disabled={false} onClick={this.handleSubmit}>
-                                    {this.state.isLoading && <span className="fa fa-spinner fa-spin" />} Register
-                                </Button>
-                            )}
-                        </div>
-                    </ModalFooter>
-                </Modal>
-            </div>
+                    </div>
+                </ModalFooter>
+            </Modal>
+            // </div>
         );
     }
 }
 
 PublishWithDOI.propTypes = {
     showPublishWithDOIDialog: PropTypes.bool.isRequired,
-    toggle: PropTypes.func.isRequired,
+    DOIToggle: PropTypes.func.isRequired,
     url: PropTypes.string.isRequired,
     comparisonId: PropTypes.string,
     title: PropTypes.string.isRequired,
