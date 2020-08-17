@@ -311,14 +311,14 @@ class Comparison extends Component {
             const authorsArray = [];
             for (const author of creators) {
                 const orcid = authorsORCID.find(a => a !== undefined && a.subject.id === author.object.id);
-                const auth = { creator: '', ORCID: '' };
+                const auth = { label: '', orcid: '' };
                 if (orcid) {
-                    auth.ORCID = orcid.object.label;
-                    auth.creator = author.object.label;
+                    auth.orcid = orcid.object.label;
+                    auth.label = author.object.label;
                     authorsArray.push(auth);
                 } else {
-                    auth.ORCID = '';
-                    auth.creator = author.object.label;
+                    auth.orcid = '';
+                    auth.label = author.object.label;
                     authorsArray.push(auth);
                 }
             }
@@ -579,21 +579,21 @@ class Comparison extends Component {
                                             {this.state.authors && this.state.authors.length > 0 && !this.state.DOIData.doi && (
                                                 <>
                                                     {this.state.authors.map((author, index) =>
-                                                        author.ORCID && author.ORCID !== '' ? (
+                                                        author.orcid && author.orcid !== '' ? (
                                                             <NavLink
                                                                 className="p-0"
                                                                 style={{ display: 'contents' }}
-                                                                href={'https://orcid.org/' + author.ORCID}
+                                                                href={'https://orcid.org/' + author.orcid}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
                                                             >
                                                                 <Badge color="lightblue" className="mr-2 mb-2" key={index}>
-                                                                    <Icon icon={faUser} className="text-primary" /> {author.creator}
+                                                                    <Icon icon={faUser} className="text-primary" /> {author.label}
                                                                 </Badge>
                                                             </NavLink>
                                                         ) : (
                                                             <Badge color="lightblue" className="mr-2 mb-2" key={index}>
-                                                                <Icon icon={faUser} className="text-darkblue" /> {author.creator}
+                                                                <Icon icon={faUser} className="text-darkblue" /> {author.label}
                                                             </Badge>
                                                         )
                                                     )}
