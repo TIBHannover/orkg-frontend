@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Row, Col, Button, Label, FormGroup, Alert } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert, CustomInput } from 'reactstrap';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
-import ROUTES from '../../constants/routes.js';
+import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { createResource, createLiteralStatement, createLiteral, getComparison, generateDOIForComparison } from 'network';
-import { getContributionIdsFromUrl, filterObjectOfStatementsByPredicate } from 'utils';
+import { createResource, createLiteralStatement, createLiteral, getComparison } from 'network';
+import { getContributionIdsFromUrl } from 'utils';
 import PublishWithDOI from 'components/Comparison/PublishWithDOI';
-import Tippy from '@tippy.js/react';
-import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
-import Tooltip from '../Utils/Tooltip';
+import Tooltip from 'components/Utils/Tooltip';
+import AuthorsInput from 'components/Utils/AuthorsInput';
+import { generateDOIForComparison } from 'network';
 import queryString from 'query-string';
 import { reverse } from 'named-urls';
+import styled from 'styled-components';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
+
+const StyledCustomInput = styled(CustomInput)`
+    margin-right: 0;
+`;
 
 class Publish extends Component {
     constructor(props) {
@@ -23,30 +27,54 @@ class Publish extends Component {
             title: '',
             description: '',
             reference: '',
+            subject: this.props.subject,
+            doi: '',
+            comparisonLink: props.url,
+            comparisonId: props.comparisonId,
+            creators: [{ creator: '', ORCID: '' }],
             isWarningModalOpen: false,
             showPublishWithDOIDialog: false,
-            creator: '',
-            subject: this.props.subject,
-            redirect: false,
-            creators: [{ creator: '', ORCID: '' }],
-            doi: '',
-            comparisonLink: '',
-            comparisonId: '',
-            isPublishedComparison: false,
             isCreatingDOI: false,
             isLoading: false,
-            hasCreator: false
+            comparisonCreators: [],
+            assignDOI: false
         };
-    }
-
-    componentWillReceiveProps(props) {
-        if (this.state.comparisonId === '') {
-            this.setState({ comparisonId: props.comparisonId, comparisonLink: props.url });
-        }
     }
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value });
+    };
+
+    handleAuthorsChange = creators => {
+        console.log(creators);
+        creators = creators ? creators : [];
+        this.setState({
+            comparisonCreators: creators
+        });
+    };
+
+    publishDOI = async (comparisonId, comparisonLink) => {
+        try {
+            if (this.state.title && this.state.title.trim() !== '' && this.state.description && this.state.description.trim() !== '') {
+                const response = await generateDOIForComparison(
+                    comparisonId,
+                    this.state.title,
+                    this.state.subject,
+                    this.state.description,
+                    getContributionIdsFromUrl(this.props.location),
+                    this.state.comparisonCreators.map(c => ({ creator: c.label, ORCID: c.orcid })),
+                    comparisonLink
+                );
+                this.setState({ doi: response.data.attributes.doi });
+                toast.success('DOI has been registered successfully');
+            } else {
+                throw Error('Please enter a title and a description');
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error(`Error publishing a comparison : ${error.message}`);
+            this.setState({ isLoading: false });
+        }
     };
 
     handleSubmit = async e => {
@@ -64,7 +92,7 @@ class Publish extends Component {
                     await createLiteralStatement(resourceId, PREDICATES.REFERENCE, referenceResponse.id);
                 }
 
-                await this.saveCreators(this.state.creators, resourceId);
+                await this.saveCreators(this.state.comparisonCreators, resourceId);
                 let link = queryString.parse(this.props.url).response_hash
                     ? this.props.url
                     : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${comparison.response_hash}`;
@@ -76,19 +104,22 @@ class Publish extends Component {
                 const comparisonLink = `${window.location.protocol}//${window.location.host}${window.location.pathname
                     .replace(reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparisonId }), '')
                     .replace(/\/$/, '')}${reverse(ROUTES.COMPARISON, { comparisonId: resourceId })}`;
+                // Assign a DOI
+                if (this.state.assignDOI) {
+                    console.log('assign DOI');
+                    this.publishDOI(resourceId, comparisonLink);
+                }
                 this.setState({
                     isLoading: false,
                     comparisonId: resourceId,
-                    comparisonLink: comparisonLink,
-                    isPublishedComparison: true,
-                    hasCreator: true
+                    comparisonLink: comparisonLink
                 });
                 this.props.updateComparisonMetadata(
                     this.state.title,
                     this.state.description,
                     this.state.reference,
                     this.state.subject,
-                    this.state.creators,
+                    this.state.comparisonCreators,
                     this.state.comparisonLink
                 );
             } else {
@@ -127,85 +158,22 @@ class Publish extends Component {
     };
 
     saveCreators = async (creators, resourceId) => {
+        // Check if the author is in ORKG
         creators.map(async c => {
-            const creator = await createResource(c.creator, [process.env.REACT_APP_CLASSES_AUTHOR]);
-            await createLiteralStatement(resourceId, process.env.REACT_APP_PREDICATES_HAS_AUTHOR, creator.id);
-            if (c.ORCID !== '') {
-                const ORCID = await createLiteral(c.ORCID);
-                await createLiteralStatement(creator.id, process.env.REACT_APP_PREDICATES_HAS_ORCID, ORCID.id);
+            const creator = await createResource(c.label, [CLASSES.AUTHOR]);
+            await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, creator.id);
+            if (c.orcid !== '') {
+                const ORCID = await createLiteral(c.orcid);
+                await createLiteralStatement(creator.id, PREDICATES.HAS_ORCID, ORCID.id);
             }
         });
     };
 
-    navigateToComparison = () => {
-        window.location.reload(false);
+    handleSwitchIsStrictTemplate = event => {
+        this.setState(prevState => ({
+            assignDOI: !prevState.assignDOI
+        }));
     };
-
-    handleChangeCreator = (event, i) => {
-        const creators = [...this.state.creators];
-        const { name, value } = event.target;
-        creators[i][name] = value;
-        this.setState({ creators });
-    };
-
-    handleAddCreator = () => {
-        this.setState(prevState => ({ creators: [...prevState.creators, { creator: '', ORCID: '' }] }));
-    };
-
-    handleRemoveCreator = i => {
-        const creators = [...this.state.creators];
-        creators.splice(i, 1);
-        this.setState({ creators });
-    };
-
-    handleAddButton = () => {
-        return (
-            <Row>
-                <Col md={6}>
-                    <Button style={{ fontSize: '14px' }} color="primary" disabled={this.state.isLoading} onClick={() => this.handleAddCreator(this)}>
-                        Add creator
-                    </Button>
-                </Col>
-            </Row>
-        );
-    };
-
-    renderCreatorsInput() {
-        return this.state.creators.map((el, i) => (
-            <div key={i}>
-                <Row form>
-                    <Col md={5}>
-                        <FormGroup>
-                            <Label for="Creator">
-                                <Tooltip message="Name of the creator">Creator</Tooltip>
-                            </Label>
-                            <Input type="text" value={el.creator || ''} name="creator" id="creator" onChange={e => this.handleChangeCreator(e, i)} />
-                        </FormGroup>
-                    </Col>
-                    <Col md={5}>
-                        <FormGroup>
-                            <Label for="ORCID">
-                                <Tooltip message="ORCID of the creator">ORCID</Tooltip>
-                            </Label>
-                            <Input type="text" value={el.ORCID || ''} name="ORCID" id="ORCID" onChange={e => this.handleChangeCreator(e, i)} />
-                        </FormGroup>
-                    </Col>
-
-                    {this.state.creators.length > 1 && (
-                        <Col style={{ marginTop: '39px' }} md={2}>
-                            <div onClick={() => this.handleRemoveCreator(i)}>
-                                <Tippy content="Delete creator">
-                                    <span style={{ marginLeft: '10px' }}>
-                                        <Icon size="xs" icon={faWindowClose} />
-                                    </span>
-                                </Tippy>
-                            </div>
-                        </Col>
-                    )}
-                </Row>
-            </div>
-        ));
-    }
 
     render() {
         const comparisonLink = `${window.location.protocol}//${window.location.host}${window.location.pathname
@@ -213,112 +181,94 @@ class Publish extends Component {
             .replace(/\/$/, '')}${reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparisonId || this.state.comparisonId })}`;
 
         return (
-            <div style={{ width: '150%' }}>
-                <Modal size="lg" isOpen={this.props.showDialog} toggle={this.props.toggle}>
-                    <ModalHeader toggle={this.props.toggle}>Publish comparison</ModalHeader>
-                    <ModalBody>
-                        <Alert color="info">
-                            A published comparison is made public to other users. The state of the comparison is saved and a persistent link is
-                            created.
-                        </Alert>
-                        {!this.state.comparisonId && !this.state.doi && (
-                            <>
-                                {' '}
-                                <FormGroup>
-                                    <Label for="title">
-                                        <Tooltip message="Enter the title of the comparison">Title</Tooltip>
-                                    </Label>
-                                    <Input type="text" name="title" id="title" onChange={this.handleChange} />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label for="description">
-                                        <Tooltip message="Describe the goal and what is being compared">Description</Tooltip>
-                                    </Label>
-                                    <Input type="textarea" name="description" id="description" onChange={this.handleChange} />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label for="reference">
-                                        <Tooltip message="Enter a reference to the paper from which the comparison is generated">
-                                            Reference (optional)
-                                        </Tooltip>
-                                    </Label>
-                                    <Input type="text" name="reference" id="reference" onChange={this.handleChange} />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label for="subject">
-                                        <Tooltip message="Enter a subject of the comparison">Subject</Tooltip>
-                                    </Label>
-                                    <Input type="text" name="subject" id="subject" onChange={this.handleChange} />
-                                </FormGroup>
-                                {this.renderCreatorsInput()}
-                                {this.handleAddButton()}
-                            </>
-                        )}
-                        {this.state.comparisonId && !this.props.doi && this.props.authors.length === 0 && (
-                            <>
-                                {' '}
-                                <FormGroup>
-                                    <Label for="title">
-                                        <Tooltip message="Enter the title of the comparison">Title</Tooltip>
-                                    </Label>
-                                    <Input type="text" value={this.props.title} disabled name="title" id="title" onChange={this.handleChange} />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label for="description">
-                                        <Tooltip message="Describe the goal and what is being compared">Description</Tooltip>
-                                    </Label>
-                                    <Input
-                                        type="textarea"
-                                        name="description"
-                                        value={this.props.description}
-                                        disabled
-                                        id="description"
-                                        onChange={this.handleChange}
+            <Modal size="lg" isOpen={this.props.showDialog} toggle={this.props.toggle}>
+                <ModalHeader toggle={this.props.toggle}>Publish comparison</ModalHeader>
+                <ModalBody>
+                    <Alert color="info">
+                        A published comparison is made public to other users. The state of the comparison is saved and a persistent link is created.
+                    </Alert>
+                    <>
+                        {' '}
+                        <FormGroup>
+                            <Label for="title">
+                                <Tooltip message="Enter the title of the comparison">Title</Tooltip>
+                            </Label>
+                            <Input type="text" name="title" disabled={Boolean(this.state.doi)} id="title" onChange={this.handleChange} />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="description">
+                                <Tooltip message="Describe the goal and what is being compared">Description</Tooltip>
+                            </Label>
+                            <Input
+                                type="textarea"
+                                name="description"
+                                disabled={Boolean(this.state.doi)}
+                                id="description"
+                                onChange={this.handleChange}
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="reference">
+                                <Tooltip message="Enter a reference to the paper from which the comparison is generated">
+                                    Reference (optional)
+                                </Tooltip>
+                            </Label>
+                            <Input type="text" name="reference" id="reference" onChange={this.handleChange} />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="subject">
+                                <Tooltip message="Enter a subject of the comparison">Subject</Tooltip>
+                            </Label>
+                            <Input type="text" name="subject" id="subject" onChange={this.handleChange} />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="Creator">
+                                <Tooltip message="Name of the creator">Creators</Tooltip>
+                            </Label>
+                            <AuthorsInput itemLabel="creator" handler={this.handleAuthorsChange} value={this.state.comparisonCreators} />
+                        </FormGroup>
+                        <FormGroup>
+                            <div>
+                                <Tooltip
+                                    message="A DOI will be assigned to published comparison and it
+                        cannot be changed in future."
+                                >
+                                    <StyledCustomInput
+                                        onChange={this.handleSwitchIsStrictTemplate}
+                                        checked={this.state.assignDOI}
+                                        id="switchAssignDoi"
+                                        type="switch"
+                                        name="customSwitch"
+                                        inline
+                                        label="Assign a DOI to the comparison"
                                     />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label for="subject">
-                                        <Tooltip message="Enter a subject of the comparison">Subject</Tooltip>
-                                    </Label>
-                                    <Input type="text" name="subject" id="subject" onChange={this.handleChange} />
-                                </FormGroup>
-                                {this.renderCreatorsInput()}
-                                {this.handleAddButton()}
-                            </>
+                                </Tooltip>
+                            </div>
+                        </FormGroup>
+                    </>
+                    <>
+                        {this.state.comparisonId && this.props.authors.length > 0 && (
+                            <FormGroup>
+                                <Label for="persistent_link">Comparison link</Label>
+                                <Input value={comparisonLink} disabled />
+                            </FormGroup>
                         )}
-                        <>
-                            {this.state.comparisonId && this.props.authors.length > 0 && (
-                                <FormGroup>
-                                    <Label for="persistent_link">Comparison link</Label>
-                                    <Input value={comparisonLink} disabled />
-                                </FormGroup>
-                            )}
-                            {this.state.doi && (
-                                <FormGroup>
-                                    <Label for="persistent_link">DOI</Label>
-                                    <Input value={this.props.doi} disabled />
-                                </FormGroup>
-                            )}
-                        </>
-                    </ModalBody>
-                    <ModalFooter>
-                        <div>{this.state.comparisonId && !this.props.comparisonId && 'Comparison has been saved successfully in ORKG.'}</div>
-                        <div className="text-align-center mt-2">
-                            {!this.props.comparisonId && !this.state.comparisonId && (
-                                <Button color="primary" disabled={this.state.isLoading} onClick={this.handleSubmit}>
-                                    {this.state.isLoading && <span className="fa fa-spinner fa-spin" />} Save
-                                </Button>
-                            )}{' '}
-                            {!this.state.doi && !this.props.doi && (
-                                // <Button color="danger" disabled={!this.state.comparisonId} onClick={() => this.toggle('showPublishWithDOIDialog')}>
-                                <Button color="danger" disabled={!this.state.comparisonId} onClick={this.publishComparison}>
-                                    {this.state.isCreatingDOI && <span className="fa fa-spinner fa-spin" />} Publish
-                                </Button>
-                            )}
-                        </div>
-                    </ModalFooter>
-                </Modal>
-
+                        {this.state.doi && (
+                            <FormGroup>
+                                <Label for="persistent_link">DOI</Label>
+                                <Input value={this.props.doi} disabled />
+                            </FormGroup>
+                        )}
+                    </>
+                </ModalBody>
+                <ModalFooter>
+                    <div className="text-align-center mt-2">
+                        <Button color="primary" disabled={this.state.isLoading} onClick={this.handleSubmit}>
+                            {this.state.isLoading && <span className="fa fa-spinner fa-spin" />}{' '}
+                            {!this.props.comparisonId && !this.props.doi ? 'Publish' : 'Publish DOI'}
+                        </Button>
+                    </div>
+                </ModalFooter>
                 <PublishWithDOI
                     showPublishWithDOIDialog={this.state.showPublishWithDOIDialog}
                     DOIToggle={() => this.toggle('showPublishWithDOIDialog')}
@@ -332,7 +282,7 @@ class Publish extends Component {
                     subject={this.props.subject}
                     updateDOIState={this.updateDOIState}
                 />
-            </div>
+            </Modal>
         );
     }
 }
@@ -347,7 +297,7 @@ Publish.propTypes = {
     subject: PropTypes.string,
     description: PropTypes.string,
     location: PropTypes.string.isRequired,
-    authors: PropTypes.isRequired,
+    authors: PropTypes.array.isRequired,
     doi: PropTypes.string,
     updateComparisonMetadata: PropTypes.func.isRequired
 };

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert } from 'reactstrap';
-import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { generateDOIForComparison } from 'network';
@@ -108,9 +107,9 @@ PublishWithDOI.propTypes = {
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
-    creators: PropTypes.isRequired,
+    creators: PropTypes.array.isRequired,
     subject: PropTypes.string,
     updateDOIState: PropTypes.func.isRequired
 };
 
-export default connect()(PublishWithDOI);
+export default PublishWithDOI;
