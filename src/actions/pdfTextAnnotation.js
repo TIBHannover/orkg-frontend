@@ -1,13 +1,7 @@
 import * as type from './types.js';
 import { guid } from '../utils';
-import WordsNinjaPack from 'wordsninja';
 
-export const createAnnotation = annotation => async dispatch => {
-    const WordsNinja = new WordsNinjaPack();
-    await WordsNinja.loadDictionary();
-    const words = WordsNinja.splitSentence(annotation.content.text, { joinWords: true });
-    console.log(words);
-
+export const createAnnotation = annotation => dispatch => {
     dispatch({
         type: type.PDF_TEXT_ANNOTATION_CREATE_ANNOTATION,
         payload: {
