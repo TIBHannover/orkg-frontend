@@ -7,6 +7,8 @@ import PropTypes from 'prop-types';
 import { createResource, createLiteralStatement, createLiteral, getComparison } from 'network';
 import { getContributionIdsFromUrl } from 'utils';
 import PublishWithDOI from 'components/Comparison/PublishWithDOI';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import Tooltip from 'components/Utils/Tooltip';
 import AuthorsInput from 'components/Utils/AuthorsInput';
 import { generateDOIForComparison } from 'network';
@@ -14,10 +16,41 @@ import queryString from 'query-string';
 import { reverse } from 'named-urls';
 import styled from 'styled-components';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
-import { timeThursdays } from 'd3';
 
 const StyledCustomInput = styled(CustomInput)`
     margin-right: 0;
+`;
+
+const AuthorTag = styled.div`
+    background-color: #e9ecef;
+    display: flex;
+    margin: 0 0 4px 0;
+    box-sizing: border-box;
+    color: rgb(147, 147, 147);
+    cursor: pointer;
+    border-radius: 12px;
+    overflow: hidden;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    &:hover {
+        background-color: #ffbdad;
+        color: #de350b;
+    }
+
+    .name {
+        padding: 8px 10px;
+        color: #495057;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        flex: 1;
+        display: flex;
+    }
 `;
 
 class Publish extends Component {
@@ -40,11 +73,13 @@ class Publish extends Component {
             comparisonCreators: props.authors,
             assignDOI: false
         };
-        console.log(props.authors.length);
     }
     componentDidUpdate = prevProps => {
         if (this.props.description !== prevProps.description || this.props.title !== prevProps.title || this.props.authors !== prevProps.authors) {
             this.setState({ description: this.props.description, title: this.props.title, comparisonCreators: this.props.authors });
+        }
+        if (this.props.comparisonId !== prevProps.comparisonId && !this.props.comparisonId) {
+            this.setState({ comparisonId: this.props.comparisonId });
         }
     };
     handleChange = event => {
@@ -118,7 +153,6 @@ class Publish extends Component {
                         .replace(/\/$/, '')}${reverse(ROUTES.COMPARISON, { comparisonId: resourceId })}`;
                     // Assign a DOI
                     if (this.state.assignDOI) {
-                        console.log('assign DOI');
                         this.publishDOI(resourceId, comparisonLink);
                     }
                     this.setState({
@@ -139,7 +173,6 @@ class Publish extends Component {
                 }
             } else {
                 //if (this.state.assignDOI) {
-                console.log('assign DOI');
                 this.publishDOI(this.state.comparisonId, this.state.comparisonLink);
                 //}
             }
@@ -205,79 +238,100 @@ class Publish extends Component {
                     <Alert color="info">
                         A published comparison is made public to other users. The state of the comparison is saved and a persistent link is created.
                     </Alert>
-                    {console.log(this.props.authors.length)}
-                    {!this.state.comparisonId ||
-                        (this.props.authors.length == 0 && (
-                            <>
-                                {' '}
-                                <FormGroup>
-                                    <Label for="title">
-                                        <Tooltip message="Enter the title of the comparison">Title</Tooltip>
-                                    </Label>
-                                    <Input
-                                        type="text"
-                                        name="title"
-                                        value={this.state.title}
-                                        disabled={Boolean(this.state.comparisonId)}
-                                        id="title"
-                                        onChange={this.handleChange}
+                    {!this.state.doi && (
+                        <>
+                            {' '}
+                            <FormGroup>
+                                <Label for="title">
+                                    <Tooltip message="Enter the title of the comparison">Title</Tooltip>
+                                </Label>
+                                <Input
+                                    type="text"
+                                    name="title"
+                                    value={this.state.title}
+                                    disabled={Boolean(this.state.comparisonId)}
+                                    id="title"
+                                    onChange={this.handleChange}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="description">
+                                    <Tooltip message="Describe the goal and what is being compared">Description</Tooltip>
+                                </Label>
+                                <Input
+                                    type="textarea"
+                                    name="description"
+                                    value={this.state.description}
+                                    disabled={Boolean(this.state.comparisonId)}
+                                    id="description"
+                                    onChange={this.handleChange}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="reference">
+                                    <Tooltip message="Enter a reference to the paper from which the comparison is generated">
+                                        Reference (optional)
+                                    </Tooltip>
+                                </Label>
+                                <Input
+                                    disabled={Boolean(this.state.comparisonId)}
+                                    type="text"
+                                    name="reference"
+                                    id="reference"
+                                    onChange={this.handleChange}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="subject">
+                                    <Tooltip message="Enter a subject of the comparison">Subject</Tooltip>
+                                </Label>
+                                <Input disabled={Boolean(this.state.doi)} type="text" name="subject" id="subject" onChange={this.handleChange} />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="Creator">
+                                    <Tooltip message="Name of the creator">Creators</Tooltip>
+                                </Label>
+                                {!this.state.doi && (
+                                    <AuthorsInput
+                                        disabled={Boolean()}
+                                        itemLabel="creator"
+                                        handler={this.handleAuthorsChange}
+                                        value={this.state.comparisonCreators}
                                     />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label for="description">
-                                        <Tooltip message="Describe the goal and what is being compared">Description</Tooltip>
-                                    </Label>
-                                    <Input
-                                        type="textarea"
-                                        name="description"
-                                        value={this.state.description}
-                                        disabled={Boolean(this.state.comparisonId)}
-                                        id="description"
-                                        onChange={this.handleChange}
-                                    />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label for="reference">
-                                        <Tooltip message="Enter a reference to the paper from which the comparison is generated">
-                                            Reference (optional)
-                                        </Tooltip>
-                                    </Label>
-                                    <Input type="text" name="reference" id="reference" onChange={this.handleChange} />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label for="subject">
-                                        <Tooltip message="Enter a subject of the comparison">Subject</Tooltip>
-                                    </Label>
-                                    <Input type="text" name="subject" id="subject" onChange={this.handleChange} />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label for="Creator">
-                                        <Tooltip message="Name of the creator">Creators</Tooltip>
-                                    </Label>
-                                    <AuthorsInput itemLabel="creator" handler={this.handleAuthorsChange} value={this.state.comparisonCreators} />
-                                </FormGroup>
-                                <FormGroup>
-                                    {!this.state.comparisonId && (
-                                        <div>
-                                            <Tooltip
-                                                message="A DOI will be assigned to published comparison and it
+                                )}
+                                {(this.state.doi || this.state.comparisonCreators.length > 0) &&
+                                    this.state.comparisonCreators.map(author => (
+                                        <AuthorTag>
+                                            <div className="name">
+                                                {author.label}
+                                                {author.orcid && <Icon style={{ margin: '4px' }} icon={faOrcid} />}
+                                            </div>
+                                        </AuthorTag>
+                                    ))}
+                            </FormGroup>
+                            <FormGroup>
+                                {!this.state.comparisonId && (
+                                    <div>
+                                        <Tooltip
+                                            message="A DOI will be assigned to published comparison and it
                         cannot be changed in future."
-                                            >
-                                                <StyledCustomInput
-                                                    onChange={this.handleSwitchIsStrictTemplate}
-                                                    checked={this.state.assignDOI}
-                                                    id="switchAssignDoi"
-                                                    type="switch"
-                                                    name="customSwitch"
-                                                    inline
-                                                    label="Assign a DOI to the comparison"
-                                                />
-                                            </Tooltip>
-                                        </div>
-                                    )}
-                                </FormGroup>
-                            </>
-                        ))}
+                                        >
+                                            <StyledCustomInput
+                                                onChange={this.handleSwitchIsStrictTemplate}
+                                                checked={this.state.assignDOI}
+                                                id="switchAssignDoi"
+                                                type="switch"
+                                                name="customSwitch"
+                                                inline
+                                                label="Assign a DOI to the comparison"
+                                            />
+                                        </Tooltip>
+                                    </div>
+                                )}
+                            </FormGroup>
+                        </>
+                    )}
+
                     <>
                         {this.state.comparisonId && this.state.comparisonCreators.length > 0 && (
                             <FormGroup>
