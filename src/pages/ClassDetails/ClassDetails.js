@@ -3,6 +3,7 @@ import { Container, Table } from 'reactstrap';
 import { classesUrl, submitGetRequest, getStatementsByObjectAndPredicate } from 'network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import ClassInstances from 'components/ClassInstances/ClassInstances';
 import InternalServerError from 'pages/InternalServerError';
 import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
@@ -107,6 +108,7 @@ function ClassDetails(props) {
                                 </tr>
                             </tbody>
                         </Table>
+                        <ClassInstances classId={props.match.params.id} />
                     </div>
                 </Container>
             )}
