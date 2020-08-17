@@ -35,7 +35,8 @@ export const PREDICATES = {
     TEMPLATE_COMPONENT_ORDER: 'TemplateComponentOrder',
     TEMPLATE_STRICT: 'TemplateStrict',
     TEMPLATE_LABEL_FORMAT: 'TemplateLabelFormat',
-    HAS_PART: 'HasPart'
+    HAS_PART: 'HasPart', //DEO
+    HAS_CONTENT: 'HasContent' //c4o
 };
 
 export const CLASSES = {

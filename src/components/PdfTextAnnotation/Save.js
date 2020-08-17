@@ -14,8 +14,8 @@ import {
     InputGroupAddon,
     InputGroup
 } from 'reactstrap';
-import { saveFullPaper, createResource } from 'network';
-import { PREDICATES } from 'constants/graphSettings';
+import { saveFullPaper, createResource, createLiteral, createLiteralStatement } from 'network';
+import { PREDICATES, MISC } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
@@ -25,7 +25,6 @@ import { parseCiteResult } from 'utils';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { MISC } from 'constants/graphSettings';
 
 const Save = props => {
     const annotations = useSelector(state => state.pdfTextAnnotation.annotations);
@@ -37,7 +36,7 @@ const Save = props => {
     const [isLoading, setIsLoading] = useState(false);
     const [paperData, setPaperData] = useState({
         paperTitle: null,
-        paperAuthors: null,
+        paperAuthors: [],
         paperPublicationMonth: null,
         paperPublicationYear: null,
         doi: null,
@@ -61,7 +60,10 @@ const Save = props => {
         const contributionStatements = {};
 
         for (const annotation of annotations) {
-            const resource = await createResource(annotation.content.text, [annotation.type]); // ,'http://purl.org/dc/terms/' +
+            const resource = await createResource(annotation.type, [annotation.type]); // ,'http://purl.org/dc/terms/' +
+            const annotationLiteral = await createLiteral(annotation.content.text); // ,'http://purl.org/dc/terms/' +
+            createLiteralStatement(resource.id, PREDICATES.HAS_CONTENT, annotationLiteral.id);
+
             if (!(PREDICATES.HAS_PART in contributionStatements)) {
                 contributionStatements[PREDICATES.HAS_PART] = [
                     {
@@ -76,9 +78,11 @@ const Save = props => {
         }
 
         const paper = {
-            title: paperTitle,
+            title: _title,
             researchField: MISC.RESEARCH_FIELD_MAIN,
-            authors: paperAuthors.map(author => ({ label: author.label, ...(author.orcid ? { orcid: author.orcid } : {}) })),
+            authors: paperAuthors.length
+                ? paperAuthors.map(author => ({ label: author.label, ...(author.orcid ? { orcid: author.orcid } : {}) }))
+                : null,
             publicationMonth: paperPublicationMonth,
             publicationYear: paperPublicationYear,
             doi,

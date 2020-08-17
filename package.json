@@ -87,7 +87,8 @@
         "string-format": "^2.0.0",
         "styled-components": "^4.3.2",
         "typed.js": "^2.0.11",
-        "validator": "^10.11.0"
+        "validator": "^10.11.0",
+        "wordsninja": "^1.0.0"
     },
     "scripts": {
         "start": "react-app-rewired start",
