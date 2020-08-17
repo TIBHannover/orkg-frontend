@@ -90,8 +90,9 @@ const ClassInstances = props => {
             <Collapse isOpen={showClassInstances}>
                 <Form inline className="mt-3">
                     <FormGroup>
-                        <Label for="exampleEmail">Search</Label>
+                        <Label for="searchInputField">Search</Label>
                         <Input
+                            id="searchInputField"
                             className="ml-2"
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}

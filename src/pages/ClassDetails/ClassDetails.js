@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Table } from 'reactstrap';
+import { Container, Table, ButtonGroup, Button } from 'reactstrap';
 import { classesUrl, submitGetRequest, getStatementsByObjectAndPredicate } from 'network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faFileCsv } from '@fortawesome/free-solid-svg-icons';
 import ClassInstances from 'components/ClassInstances/ClassInstances';
+import ImportCSVInstances from 'components/ClassInstances/ImportCSVInstances';
 import InternalServerError from 'pages/InternalServerError';
 import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
@@ -20,6 +21,7 @@ function ClassDetails(props) {
     const [template, setTemplate] = useState(null);
     const [uri, setURI] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [modalImportIsOpen, setModalImportIsOpen] = useState(false);
 
     useEffect(() => {
         const findClass = async () => {
@@ -75,12 +77,17 @@ function ClassDetails(props) {
                                             <small>No label</small>
                                         </i>
                                     )}
-                                    <Link
-                                        to={`${ROUTES.ADD_RESOURCE}?classes=${props.match.params.id}`}
-                                        className="float-right btn btn-darkblue flex-shrink-0 btn-sm"
-                                    >
-                                        <Icon icon={faPlus} /> Add resource
-                                    </Link>
+                                    <ButtonGroup className="float-right mb-4 ml-1">
+                                        <Link
+                                            to={`${ROUTES.ADD_RESOURCE}?classes=${props.match.params.id}`}
+                                            className="float-right btn btn-darkblue flex-shrink-0 btn-sm"
+                                        >
+                                            <Icon icon={faPlus} /> Add resource
+                                        </Link>
+                                        <Button size="sm" color="darkblue" onClick={() => setModalImportIsOpen(true)}>
+                                            <Icon icon={faFileCsv} /> Import Instances
+                                        </Button>
+                                    </ButtonGroup>
                                 </h3>
                             </div>
                         </div>
@@ -109,6 +116,11 @@ function ClassDetails(props) {
                             </tbody>
                         </Table>
                         <ClassInstances classId={props.match.params.id} />
+                        <ImportCSVInstances
+                            classId={props.match.params.id}
+                            showDialog={modalImportIsOpen}
+                            toggle={() => setModalImportIsOpen(v => !v)}
+                        />
                     </div>
                 </Container>
             )}
