@@ -11,6 +11,7 @@ import { createAnnotation } from 'actions/pdfTextAnnotation';
 import Highlight from 'components/PdfTextAnnotation/Highlight';
 import useDeleteAnnotation from 'components/PdfTextAnnotation/hooks/useDeleteAnnotation';
 import DragUpload from 'components/PdfTextAnnotation/DragUpload';
+import ZoomBar from 'components/PdfTextAnnotation/ZoomBar';
 
 const Wrapper = styled.div`
     margin-top: -30px;
@@ -27,6 +28,7 @@ const Main = styled.div`
 const PdfTextAnnotation = props => {
     const annotations = useSelector(state => state.pdfTextAnnotation.annotations);
     const encodedPdf = useSelector(state => state.pdfTextAnnotation.encodedPdf);
+    const zoom = useSelector(state => state.pdfTextAnnotation.zoom);
     const dispatch = useDispatch();
     const PdfHighlighterRef = useRef();
     const { deleteAnnotation } = useDeleteAnnotation();
@@ -61,6 +63,8 @@ const PdfTextAnnotation = props => {
     return (
         <Wrapper>
             <Sidebar />
+            <ZoomBar />
+
             <Main>
                 {encodedPdf ? (
                     <PdfLoader url={encodedPdf} beforeLoad={<Icon icon={faSpinner} />}>
@@ -80,6 +84,7 @@ const PdfTextAnnotation = props => {
                                         handleAnnotate={handleAnnotate}
                                     />
                                 )}
+                                zoom={zoom}
                                 highlightTransform={(highlight, index, setTip, hideTip, viewportToScaled, screenshot, isScrolledTo) => {
                                     const isTextHighlight = !Boolean(highlight.content && highlight.content.image);
 

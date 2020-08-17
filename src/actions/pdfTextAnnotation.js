@@ -25,6 +25,15 @@ export const updateAnnotationText = payload => dispatch => {
     });
 };
 
+export const changeZoom = zoom => dispatch => {
+    dispatch({
+        type: type.PDF_TEXT_ANNOTATION_CHANGE_ZOOM,
+        payload: {
+            zoom
+        }
+    });
+};
+
 const toBase64 = file =>
     new Promise((resolve, reject) => {
         const reader = new FileReader();

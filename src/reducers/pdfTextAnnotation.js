@@ -3,7 +3,8 @@ import * as type from '../actions/types';
 const initialState = {
     annotations: [],
     pdf: null,
-    encodedPdf: null
+    encodedPdf: null,
+    zoom: 1.2
 };
 
 export default (state = initialState, action) => {
@@ -54,6 +55,15 @@ export default (state = initialState, action) => {
                 ...state,
                 pdf: payload.pdf,
                 encodedPdf: payload.encodedPdf
+            };
+        }
+
+        case type.PDF_TEXT_ANNOTATION_CHANGE_ZOOM: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                zoom: payload.zoom
             };
         }
 
