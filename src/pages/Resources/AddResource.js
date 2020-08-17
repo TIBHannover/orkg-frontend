@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { createLiteralStatement, createResource, crossrefUrl, submitGetRequest, createLiteral } from '../../network';
+import { createLiteralStatement, createResource, crossrefUrl, submitGetRequest, createLiteral, classesUrl } from 'network';
 import { Redirect } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { getAllClasses } from 'network';
 import Select from 'react-select';
 import { reverse } from 'named-urls';
-import ROUTES from '../../constants/routes';
+import ROUTES from 'constants/routes';
 import { PREDICATES } from 'constants/graphSettings';
+import { getArrayParamFromQueryString } from 'utils';
+import PropTypes from 'prop-types';
 
 export default class AddResource extends Component {
     constructor(props) {
@@ -17,6 +19,7 @@ export default class AddResource extends Component {
         this.state = {
             redirect: false,
             value: '',
+            loadingDefaultClasses: false,
             classes: [],
             /* Possible values: 'edit', 'loading'. */
             editorState: 'edit',
@@ -26,7 +29,23 @@ export default class AddResource extends Component {
     }
 
     componentDidMount = () => {
+        this.getDefaultClass();
         this.getClasses();
+    };
+
+    getDefaultClass = async () => {
+        const classes = getArrayParamFromQueryString(this.props.location.search, 'classes');
+        if (classes && classes.length > 0) {
+            this.setState({ loadingDefaultClasses: true });
+            const fetchDefaultClasses = classes.map(c => submitGetRequest(classesUrl + encodeURIComponent(c)));
+            Promise.all(fetchDefaultClasses)
+                .then(classesData => {
+                    this.setState({ loadingDefaultClasses: false, classes: classesData });
+                })
+                .catch(() => {
+                    this.setState({ loadingDefaultClasses: true });
+                });
+        }
     };
 
     getClasses = () => {
@@ -148,15 +167,18 @@ export default class AddResource extends Component {
                     </FormGroup>
                     <FormGroup>
                         <Label for="Classes">Classes</Label>
-                        <Select
-                            isClearable
-                            isMulti
-                            value={this.state.classes}
-                            onChange={this.handleClassesChange}
-                            options={this.state.classesOptions}
-                            getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
-                            getOptionValue={({ id }) => id}
-                        />
+                        {!this.state.loadingDefaultClasses && (
+                            <Select
+                                isClearable
+                                isMulti
+                                value={this.state.classes}
+                                onChange={this.handleClassesChange}
+                                options={this.state.classesOptions}
+                                getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
+                                getOptionValue={({ id }) => id}
+                            />
+                        )}
+                        {this.state.loadingDefaultClasses && <div>Loading default classes</div>}
                     </FormGroup>
                     <Button
                         color="primary"
@@ -175,3 +197,7 @@ export default class AddResource extends Component {
         );
     }
 }
+
+AddResource.propTypes = {
+    location: PropTypes.object.isRequired
+};

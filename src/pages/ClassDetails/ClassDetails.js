@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Table } from 'reactstrap';
 import { classesUrl, submitGetRequest, getStatementsByObjectAndPredicate } from 'network';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import InternalServerError from 'pages/InternalServerError';
 import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
@@ -72,6 +74,12 @@ function ClassDetails(props) {
                                             <small>No label</small>
                                         </i>
                                     )}
+                                    <Link
+                                        to={`${ROUTES.ADD_RESOURCE}?classes=${props.match.params.id}`}
+                                        className="float-right btn btn-darkblue flex-shrink-0 btn-sm"
+                                    >
+                                        <Icon icon={faPlus} /> Add resource
+                                    </Link>
                                 </h3>
                             </div>
                         </div>
