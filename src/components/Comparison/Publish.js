@@ -64,7 +64,6 @@ class Publish extends Component {
             doi: '',
             comparisonLink: props.url,
             comparisonId: props.comparisonId,
-            creators: [{ creator: '', ORCID: '' }],
             isWarningModalOpen: false,
             showPublishWithDOIDialog: false,
             isCreatingDOI: false,
@@ -195,21 +194,6 @@ class Publish extends Component {
 
     updateDOIState = doi => {
         this.setState({ doi });
-    };
-
-    publishComparison = async e => {
-        this.setState({ isCreatingDOI: true });
-        try {
-            if (this.state.comparisonId && this.props.authors.length === 0) {
-                await this.saveCreators(this.state.creators, this.state.comparisonId);
-            }
-            this.toggle('showPublishWithDOIDialog');
-            this.setState({ isCreatingDOI: false });
-        } catch (error) {
-            toast.error(`Error publishing a comparison : ${error.message}`);
-            this.setState({ isCreatingDOI: false });
-        }
-        e.preventDefault();
     };
 
     saveCreators = async (creators, resourceId) => {

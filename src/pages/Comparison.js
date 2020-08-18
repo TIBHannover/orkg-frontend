@@ -246,9 +246,7 @@ class Comparison extends Component {
                         const resourcesStatements = comparisonStatement.filter(statement => statement.predicate.id === PREDICATES.RELATED_RESOURCES);
 
                         const figureStatements = comparisonStatement.filter(statement => statement.predicate.id === PREDICATES.RELATED_FIGURE);
-                        const creators = comparisonStatement.filter(
-                            statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_AUTHOR
-                        );
+                        const creators = comparisonStatement.filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR);
                         this.loadAuthorsORCID(creators);
                         if (urlStatement) {
                             this.getComparisonResult(urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')));
@@ -304,7 +302,7 @@ class Comparison extends Component {
         if (creators.length > 0) {
             authors = creators.map(async author => {
                 const authorStatements = await getStatementsBySubject({ id: author.object.id });
-                return authorStatements.find(statement => statement.predicate.id === process.env.REACT_APP_PREDICATES_HAS_ORCID);
+                return authorStatements.find(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR);
             });
         }
         return Promise.all(authors).then(authorsORCID => {
