@@ -63,7 +63,7 @@ const PdfTextAnnotation = props => {
     return (
         <Wrapper>
             <Sidebar />
-            <ZoomBar />
+            {encodedPdf && <ZoomBar />}
 
             <Main>
                 {encodedPdf ? (
