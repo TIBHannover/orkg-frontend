@@ -174,6 +174,14 @@ export const updateLiteral = (id, label) => {
     return submitPutRequest(`${literalsUrl}${id}`, { 'Content-Type': 'application/json' }, { label: label });
 };
 
+export const findLiteral = label => {
+    return submitGetRequest(`${literalsUrl}?q=${label}&exact=true`);
+};
+
+export const findResourceByLabel = label => {
+    return submitGetRequest(`${resourcesUrl}?q=${label}&exact=true`);
+};
+
 export const updatePredicate = (id, label) => {
     return submitPutRequest(`${predicatesUrl}${id}`, { 'Content-Type': 'application/json' }, { label: label });
 };
