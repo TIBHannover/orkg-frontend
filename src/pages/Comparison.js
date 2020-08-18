@@ -302,7 +302,7 @@ class Comparison extends Component {
         if (creators.length > 0) {
             authors = creators.map(async author => {
                 const authorStatements = await getStatementsBySubject({ id: author.object.id });
-                return authorStatements.find(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR);
+                return authorStatements.find(statement => statement.predicate.id === PREDICATES.HAS_ORCID);
             });
         }
         return Promise.all(authors).then(authorsORCID => {
