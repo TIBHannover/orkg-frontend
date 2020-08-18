@@ -235,7 +235,7 @@ export default function AddValueTemplate(props) {
                     <InputGroup size="sm">
                         {!props.valueClass && (
                             <InputGroupButtonDropdown addonType="prepend" isOpen={dropdownValueTypeOpen} toggle={setDropdownValueTypeOpen}>
-                                <StyledDropdownToggle>
+                                <StyledDropdownToggle disableBorderRadiusRight={true}>
                                     <Tippy content={valueType === 'object' ? resourceTooltip : literalTooltip}>
                                         <small>{valueType === 'object' ? 'Resource' : 'Literal'} </small>
                                     </Tippy>
@@ -268,7 +268,8 @@ export default function AddValueTemplate(props) {
                                 onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                                 value={inputValue}
                                 additionalData={props.newResources}
-                                autoLoadOption={false}
+                                autoLoadOption={props.valueClass ? true : false}
+                                openMenuOnFocus={true}
                                 disableBorderRadiusRight
                                 disableBorderRadiusLeft={!props.valueClass}
                                 cssClasses="form-control-sm"

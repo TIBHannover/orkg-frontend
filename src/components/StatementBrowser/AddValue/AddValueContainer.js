@@ -6,6 +6,7 @@ import {
     selectResource,
     createRequiredPropertiesInResource
 } from 'actions/statementBrowser';
+import { prefillStatements } from 'actions/addPaper';
 import { isLiteral, getValueClass } from './helpers/utils';
 import AddValue from './AddValue';
 
@@ -49,6 +50,7 @@ const mapDispatchToProps = dispatch => ({
     createValue: data => dispatch(createValue(data)),
     createProperty: data => dispatch(createProperty(data)),
     selectResource: data => dispatch(selectResource(data)),
+    prefillStatements: data => dispatch(prefillStatements(data)),
     fetchTemplatesofClassIfNeeded: data => dispatch(fetchTemplatesofClassIfNeeded(data)),
     createRequiredPropertiesInResource: data => dispatch(createRequiredPropertiesInResource(data))
 });
