@@ -236,7 +236,7 @@ class Publish extends Component {
         });
     };
 
-    handleSwitchIsStrictTemplate = event => {
+    handleSwitchAssignDOI = event => {
         this.setState(prevState => ({
             assignDOI: !prevState.assignDOI
         }));
@@ -374,7 +374,9 @@ class Publish extends Component {
                             </FormGroup>
                             <FormGroup>
                                 <Label for="Creator">
-                                    <Tooltip message="Name of the creator">Creators</Tooltip>
+                                    <Tooltip message="The creator or creators of the comparison. Enter both the first and last name">
+                                        Creators
+                                    </Tooltip>
                                 </Label>
                                 {!this.state.doi && this.props.authors.length === 0 && (
                                     <AuthorsInput
@@ -404,7 +406,7 @@ class Publish extends Component {
                         cannot be changed in future."
                                         >
                                             <StyledCustomInput
-                                                onChange={this.handleSwitchIsStrictTemplate}
+                                                onChange={this.handleSwitchAssignDOI}
                                                 checked={this.state.assignDOI}
                                                 id="switchAssignDoi"
                                                 type="switch"
