@@ -51,7 +51,7 @@ export const CLASSES = {
     FEATURED_COMPARISON: 'FeaturedComparison',
     FEATURED_COMPARISON_CATEGORY: 'FeaturedComparisonCategory',
     CONTRIBUTION_TEMPLATE: 'ContributionTemplate',
-    PREDICATE: 'Predicate',
+    PREDICATE: 'Predicates',
     QB_DATASET_CLASS: 'QBDataset',
     LOCATION: 'DCLocation'
 };
