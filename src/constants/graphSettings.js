@@ -53,7 +53,7 @@ export const CLASSES = {
     CONTRIBUTION_TEMPLATE: 'ContributionTemplate',
     PREDICATE: 'Predicate',
     QB_DATASET_CLASS: 'QBDataset',
-    LOCATION: 'C2000'
+    LOCATION: 'DCLocation'
 };
 
 export const MISC = {
