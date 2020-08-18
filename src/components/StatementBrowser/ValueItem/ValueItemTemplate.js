@@ -62,7 +62,7 @@ export default function ValueItemTemplate(props) {
                         <Button className="p-0 text-left" color="link" onClick={props.handleOnClick} style={{ userSelect: 'text' }}>
                             {props.showHelp && props.value.type === 'object' ? (
                                 <Pulse content="Click on the resource to browse it">
-                                    <ValuePlugins type="resource">{props.value.label}</ValuePlugins>
+                                    <ValuePlugins type="resource">{props.getLabel() || ''}</ValuePlugins>
                                 </Pulse>
                             ) : (
                                 <ValuePlugins type="resource">{props.getLabel() || ''}</ValuePlugins>
