@@ -81,7 +81,11 @@ class ExportCitation extends Component {
                                 <p>
                                     <Textarea
                                         type="textarea"
-                                        value={this.state.citations[style.styleID] ? this.state.citations[style.styleID] : 'Loading...'}
+                                        value={
+                                            this.state.citations[style.styleID]
+                                                ? this.state.citations[style.styleID].replace(/<[^>]+>/g, '')
+                                                : 'Loading...'
+                                        }
                                         disabled
                                         rows="10"
                                     />
