@@ -97,7 +97,6 @@ class Publish extends Component {
     };
 
     handleAuthorsChange = creators => {
-        console.log(creators);
         creators = creators ? creators : [];
         this.setState({
             comparisonCreators: creators

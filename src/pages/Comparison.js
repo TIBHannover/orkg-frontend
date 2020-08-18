@@ -576,7 +576,7 @@ class Comparison extends Component {
                                                 ''
                                             )}
 
-                                            {this.state.authors && this.state.authors.length > 0 && !this.state.DOIData.doi && (
+                                            {this.state.authors && this.state.authors.length > 0 && (
                                                 <>
                                                     {this.state.authors.map((author, index) =>
                                                         author.orcid && author.orcid !== '' ? (
@@ -602,31 +602,6 @@ class Comparison extends Component {
                                         </div>
                                         {this.state.DOIData && (
                                             <div>
-                                                {this.state.DOIData.authors && (
-                                                    <>
-                                                        {this.state.DOIData.authors.map((author, index) =>
-                                                            author.nameIdentifiers[0].nameIdentifier &&
-                                                            author.nameIdentifiers[0].nameIdentifier !== '' ? (
-                                                                <NavLink
-                                                                    className="p-0"
-                                                                    style={{ display: 'contents' }}
-                                                                    href={author.nameIdentifiers[0].nameIdentifier}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                >
-                                                                    <Badge color="lightblue" className="mr-2 mb-2" key={index}>
-                                                                        <Icon icon={faUser} className="text-primary" /> {author.name}
-                                                                    </Badge>
-                                                                </NavLink>
-                                                            ) : (
-                                                                <Badge color="lightblue" className="mr-2 mb-2" key={index}>
-                                                                    <Icon icon={faUser} className="text-darkblue" /> {author.name}
-                                                                    <span>{console.log(author.nameIdentifiers[0].nameIdentifier)} </span>
-                                                                </Badge>
-                                                            )
-                                                        )}
-                                                    </>
-                                                )}
                                                 {this.state.DOIData.doi && (
                                                     <div style={{ marginBottom: '20px', lineHeight: 1.5 }}>
                                                         <small>
