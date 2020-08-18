@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { createResource } from 'network';
+import { createResource, createLiteral, createLiteralStatement, getResourcesByClass } from 'network';
+import { PREDICATES } from 'constants/graphSettings';
 import CSVReader from 'react-csv-reader';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
@@ -8,11 +9,11 @@ import PropTypes from 'prop-types';
 export default function ImportCSVInstances(props) {
     const [data, setData] = useState([]);
     const [error, seError] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [isImporting, setIsImporting] = useState(false);
 
     const handleOnFileLoad = data => {
         // Check the csv file
-        if (data[0][0] === 'label' || data[0][1] === 'uri' || data[0].length > 2) {
+        if (!data || data.length === 0 || data[0].length !== 2 || data[0][0].toLowerCase() !== 'label' || data[0][1].toLowerCase() !== 'uri') {
             toast.error('Please Upload a CSV file that has only two columns : Label and URI');
             setData([]);
         } else {
@@ -32,14 +33,31 @@ export default function ImportCSVInstances(props) {
 
     const handleImport = () => {
         if (data.length >= 2) {
-            setLoading(true);
+            setIsImporting(true);
             const dataCalls = data.slice(1).map(r => createResource(r[0], [props.classId]));
             Promise.all(dataCalls)
                 .then(instances => {
-                    setLoading(false);
+                    const statements = instances.map((newResource, index) => {
+                        if (data[index + 1][1]) {
+                            // add statement for URI
+                            return createLiteral(data[index + 1][1]).then(literal =>
+                                createLiteralStatement(newResource.id, PREDICATES.URL, literal.id)
+                            );
+                        } else {
+                            return Promise.resolve();
+                        }
+                    });
+                    Promise.all(statements).then(() => {
+                        toast.success(`${data.length - 1} instances imported successfully`);
+                        props.callBack(); // Basically to refresh the list of instances
+                        setIsImporting(false);
+                        setData([]);
+                    });
                 })
                 .catch(e => {
-                    setLoading(false);
+                    toast.error(`Something went wrong when importing instances`);
+                    setIsImporting(false);
+                    setData([]);
                 });
         }
     };
@@ -52,19 +70,18 @@ export default function ImportCSVInstances(props) {
                 <div className="mt-3">
                     <CSVReader
                         cssClass="csv-reader-input"
-                        label="Select CSV"
+                        label="Select a CSV File"
                         onFileLoaded={handleOnFileLoad}
                         onError={handleOnError}
-                        inputId="ObiWan"
                         parserOptions={csvReaderOptions}
                         inputStyle={{ marginLeft: '5px' }}
                     />
                 </div>
             </ModalBody>
             <ModalFooter>
-                <Button color="primary" onClick={handleImport} disabled={Boolean(loading || !data || data.length === 0 || error)}>
-                    {!loading && <>Import {data.length > 2 ? ` ${data.length - 1} ` : ''} instances</>}
-                    {loading && 'Importing ....'}
+                <Button color="primary" onClick={handleImport} disabled={Boolean(isImporting || !data || data.length === 0 || error)}>
+                    {!isImporting && <>Import {data.length > 2 ? ` ${data.length - 1} ` : ''} instances</>}
+                    {isImporting && 'Importing ....'}
                 </Button>{' '}
                 <Button color="secondary" onClick={props.toggle}>
                     Cancel
@@ -77,5 +94,6 @@ export default function ImportCSVInstances(props) {
 ImportCSVInstances.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    classId: PropTypes.string.isRequired
+    classId: PropTypes.string.isRequired,
+    callBack: PropTypes.func.isRequired
 };

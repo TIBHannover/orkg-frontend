@@ -18,6 +18,7 @@ function ClassDetails(props) {
     const location = useLocation();
     const [error, setError] = useState(null);
     const [label, setLabel] = useState('');
+    const [keyInstances, setKeyInstances] = useState(1);
     const [template, setTemplate] = useState(null);
     const [uri, setURI] = useState('');
     const [isLoading, setIsLoading] = useState(true);
@@ -115,11 +116,12 @@ function ClassDetails(props) {
                                 </tr>
                             </tbody>
                         </Table>
-                        <ClassInstances classId={props.match.params.id} />
+                        <ClassInstances classId={props.match.params.id} key={keyInstances} />
                         <ImportCSVInstances
                             classId={props.match.params.id}
                             showDialog={modalImportIsOpen}
                             toggle={() => setModalImportIsOpen(v => !v)}
+                            callBack={() => setKeyInstances(Math.random())}
                         />
                     </div>
                 </Container>
