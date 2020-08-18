@@ -7,8 +7,6 @@ import PropTypes from 'prop-types';
 import { createResource, createLiteralStatement, createLiteral, getComparison } from 'network';
 import { getContributionIdsFromUrl } from 'utils';
 import PublishWithDOI from 'components/Comparison/PublishWithDOI';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import Tooltip from 'components/Utils/Tooltip';
 import AuthorsInput from 'components/Utils/AuthorsInput';
 import { generateDOIForComparison, findLiteral, findResourceByLabel } from 'network';
@@ -215,7 +213,7 @@ class Publish extends Component {
 
     saveCreators = async (creators, resourceId) => {
         creators.map(async c => {
-            if (c.orcid != '') {
+            if (c.orcid !== '') {
                 findLiteral(c.orcid).then(async response => {
                     if (response.length !== 0) {
                         findResourceByLabel(c.label).then(async labelResponse => {
