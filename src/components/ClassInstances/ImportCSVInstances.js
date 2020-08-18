@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { createResource, createLiteral, createLiteralStatement, getResourcesByClass } from 'network';
+import { createResource, createLiteral, createLiteralStatement } from 'network';
 import { PREDICATES } from 'constants/graphSettings';
 import CSVReader from 'react-csv-reader';
 import { toast } from 'react-toastify';
@@ -14,7 +14,7 @@ export default function ImportCSVInstances(props) {
     const handleOnFileLoad = data => {
         // Check the csv file
         if (!data || data.length === 0 || data[0].length !== 2 || data[0][0].toLowerCase() !== 'label' || data[0][1].toLowerCase() !== 'uri') {
-            toast.error('Please Upload a CSV file that has only two columns : Label and URI');
+            toast.error('Please upload a CSV file that has only two columns: Label and URI');
             setData([]);
         } else {
             setData(data);
@@ -66,7 +66,7 @@ export default function ImportCSVInstances(props) {
         <Modal isOpen={props.showDialog} toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>Import instances</ModalHeader>
             <ModalBody>
-                Please import your csv file that has two columns : <b>Label</b> and <b>URI</b> using the form bellow.
+                Please import your CSV file that has two columns: <b>Label</b> and <b>URI</b> using the form below.
                 <div className="mt-3">
                     <CSVReader
                         cssClass="csv-reader-input"
@@ -79,13 +79,13 @@ export default function ImportCSVInstances(props) {
                 </div>
             </ModalBody>
             <ModalFooter>
+                <Button color="light" onClick={props.toggle}>
+                    Cancel
+                </Button>
                 <Button color="primary" onClick={handleImport} disabled={Boolean(isImporting || !data || data.length === 0 || error)}>
                     {!isImporting && <>Import {data.length > 2 ? ` ${data.length - 1} ` : ''} instances</>}
                     {isImporting && 'Importing ....'}
                 </Button>{' '}
-                <Button color="secondary" onClick={props.toggle}>
-                    Cancel
-                </Button>
             </ModalFooter>
         </Modal>
     );
