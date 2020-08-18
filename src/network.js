@@ -718,7 +718,7 @@ export const generateDOIForComparison = (comparisonId, title, subject, descripti
 };
 
 export const getComparisonDataByDOI = id => {
-    return submitGetRequest(`${process.env.REACT_APP_DATACITE_URL}/${process.env.REACT_APP_DATACITE_TEST_DOI}/${encodeURIComponent(id)}`);
+    return submitGetRequest(`${process.env.REACT_APP_DATACITE_URL}/${process.env.REACT_APP_DATACITE_DOI_PREFIX}/${encodeURIComponent(id)}`);
 };
 
 export const getCitationByDOI = (DOI, style = '', header = 'text/x-bibliography') => {

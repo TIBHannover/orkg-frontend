@@ -256,7 +256,7 @@ class Publish extends Component {
                             <>
                                 <br />A DOI{' '}
                                 <i>
-                                    {process.env.REACT_APP_DATACITE_TEST_DOI}/{this.state.comparisonId}
+                                    {process.env.REACT_APP_DATACITE_DOI_PREFIX}/{this.state.comparisonId}
                                 </i>{' '}
                                 will be assigned to published comparison and it cannot be changed in future.
                             </>
