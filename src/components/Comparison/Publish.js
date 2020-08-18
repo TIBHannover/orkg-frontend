@@ -6,9 +6,10 @@ import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import { createResource, createLiteralStatement, createLiteral, getComparison } from 'network';
 import { getContributionIdsFromUrl } from 'utils';
-import PublishWithDOI from 'components/Comparison/PublishWithDOI';
 import Tooltip from 'components/Utils/Tooltip';
 import AuthorsInput from 'components/Utils/AuthorsInput';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { generateDOIForComparison, findLiteral, findResourceByLabel } from 'network';
 import queryString from 'query-string';
 import { reverse } from 'named-urls';
@@ -250,7 +251,7 @@ class Publish extends Component {
                 <ModalBody>
                     <Alert color="info">
                         A published comparison is made public to other users. The state of the comparison is saved and a persistent link is created.
-                        {this.state.comparisonId && (
+                        {(!this.state.doi || !this.props.doi) && this.state.comparisonId && (
                             <>
                                 <br />A DOI{' '}
                                 <i>
@@ -325,7 +326,7 @@ class Publish extends Component {
                                 <Label for="Creator">
                                     <Tooltip message="Name of the creator">Creators</Tooltip>
                                 </Label>
-                                {!this.state.doi && (
+                                {!this.state.doi && this.props.authors.length === 0 && (
                                     <AuthorsInput
                                         disabled={Boolean(this.state.comparisonCreators.length > 0)}
                                         itemLabel="creator"
@@ -333,7 +334,9 @@ class Publish extends Component {
                                         value={this.state.comparisonCreators}
                                     />
                                 )}
-                                {/* {(this.state.doi || this.state.comparisonCreators.length > 0) &&
+                                {!this.state.doi &&
+                                    this.state.comparisonId &&
+                                    this.props.authors.length !== 0 &&
                                     this.state.comparisonCreators.map(author => (
                                         <AuthorTag>
                                             <div className="name">
@@ -341,7 +344,7 @@ class Publish extends Component {
                                                 {author.orcid && <Icon style={{ margin: '4px' }} icon={faOrcid} />}
                                             </div>
                                         </AuthorTag>
-                                    ))} */}
+                                    ))}
                             </FormGroup>
                             <FormGroup>
                                 {!this.state.comparisonId && (
@@ -378,19 +381,6 @@ class Publish extends Component {
                         </div>
                     )}
                 </ModalFooter>
-                <PublishWithDOI
-                    showPublishWithDOIDialog={this.state.showPublishWithDOIDialog}
-                    DOIToggle={() => this.toggle('showPublishWithDOIDialog')}
-                    url={this.state.comparisonLink}
-                    location={this.props.location}
-                    response_hash={this.state.response_hash}
-                    comparisonId={this.state.comparisonId}
-                    title={this.props.title}
-                    description={this.props.description}
-                    creators={this.props.authors.length > 0 ? this.props.authors : this.state.creators}
-                    subject={this.props.subject}
-                    updateDOIState={this.updateDOIState}
-                />
             </Modal>
         );
     }
