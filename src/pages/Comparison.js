@@ -501,9 +501,6 @@ class Comparison extends Component {
                                         <DropdownItem divider />
                                         <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
                                         <DropdownItem onClick={() => this.toggle('showPublishDialog')}>Publish</DropdownItem>
-                                        {/* {this.props.match.params.comparisonId && !this.state.DOIData.doi && ( */}
-                                        {/* <DropdownItem onClick={() => this.toggle('showPublishWithDOIDialog')}>Publish with DOI</DropdownItem> */}
-                                        {/* )} */}
                                     </DropdownMenu>
                                 </Dropdown>
                             </ButtonGroup>

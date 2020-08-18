@@ -1,5 +1,19 @@
 import React, { Component } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Input, Button, Label, FormGroup, Alert, CustomInput } from 'reactstrap';
+import {
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    Input,
+    Button,
+    Label,
+    FormGroup,
+    Alert,
+    CustomInput,
+    InputGroupAddon,
+    Tooltip as ReactstrapTooltip,
+    InputGroup
+} from 'reactstrap';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
@@ -13,6 +27,8 @@ import { faOrcid } from '@fortawesome/free-brands-svg-icons';
 import { generateDOIForComparison, findLiteral, findResourceByLabel } from 'network';
 import queryString from 'query-string';
 import { reverse } from 'named-urls';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import styled from 'styled-components';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
@@ -69,6 +85,8 @@ class Publish extends Component {
             isCreatingDOI: false,
             isLoading: false,
             comparisonCreators: props.authors,
+            showComparisonTooltipCopiedLink: false,
+            showDOITooltipCopiedLink: false,
             assignDOI: false
         };
     }
@@ -248,13 +266,61 @@ class Publish extends Component {
                     {this.state.comparisonId && (
                         <FormGroup>
                             <Label for="persistent_link">Comparison link</Label>
-                            <Input value={comparisonLink} disabled />
+                            <InputGroup>
+                                <Input value={comparisonLink} disabled />
+                                <InputGroupAddon addonType="append">
+                                    <CopyToClipboard
+                                        id="comparisonCopyToClipboardLink"
+                                        text={comparisonLink ? comparisonLink : 'Loading share link...'}
+                                        onCopy={() => {
+                                            this.setState({ showComparisonTooltipCopiedLink: true });
+                                        }}
+                                    >
+                                        <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+                                            <Icon icon={faClipboard} />
+                                        </Button>
+                                    </CopyToClipboard>
+                                    <ReactstrapTooltip
+                                        placement="top"
+                                        target="comparisonCopyToClipboardLink"
+                                        trigger="hover"
+                                        toggle={this.toggleTooltip}
+                                        isOpen={this.state.showComparisonTooltipCopiedLink}
+                                    >
+                                        Copied!
+                                    </ReactstrapTooltip>
+                                </InputGroupAddon>
+                            </InputGroup>
                         </FormGroup>
                     )}
                     {(this.state.doi || this.props.doi) && (
                         <FormGroup>
                             <Label for="persistent_link">DOI</Label>
-                            <Input value={`https://${this.state.doi || this.props.doi}`} disabled />
+                            <InputGroup>
+                                <Input value={`https://${this.state.doi || this.props.doi}`} disabled />
+                                <InputGroupAddon addonType="append">
+                                    <CopyToClipboard
+                                        id="DOIcopyToClipboardLink"
+                                        text={this.state.doi ? `https://${this.state.doi}` : 'Loading share link...'}
+                                        onCopy={() => {
+                                            this.setState({ showDOITooltipCopiedLink: true });
+                                        }}
+                                    >
+                                        <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+                                            <Icon icon={faClipboard} />
+                                        </Button>
+                                    </CopyToClipboard>
+                                    <ReactstrapTooltip
+                                        placement="top"
+                                        target="DOIcopyToClipboardLink"
+                                        trigger="hover"
+                                        toggle={this.toggleTooltip}
+                                        isOpen={this.state.showDOITooltipCopiedLink}
+                                    >
+                                        Copied!
+                                    </ReactstrapTooltip>
+                                </InputGroupAddon>
+                            </InputGroup>
                         </FormGroup>
                     )}
                     {!this.state.doi && (
