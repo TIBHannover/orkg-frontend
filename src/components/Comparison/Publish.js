@@ -26,7 +26,7 @@ import {
     generateDOIForComparison,
     literalsUrl,
     submitGetRequest,
-    getStatementsByObjectAndPredicate
+    getStatementsByObject
 } from 'network';
 import { getContributionIdsFromUrl } from 'utils';
 import Tooltip from 'components/Utils/Tooltip';
@@ -38,7 +38,6 @@ import { reverse } from 'named-urls';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import styled from 'styled-components';
-import { flattenDepth } from 'lodash';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
 const StyledCustomInput = styled(CustomInput)`
@@ -215,51 +214,50 @@ class Publish extends Component {
         this.setState({ doi });
     };
 
+    // TODO: improve code by using reduce function and unify code with paper edit dialog
     saveCreators = async (creators, resourceId) => {
-        creators.map(async c => {
-            if (c.orcid !== '') {
-                // Search for literal that contain the ORCID
-                await submitGetRequest(`${literalsUrl}?q=${c.orcid}&exact=true`).then(async orcidLiterals => {
-                    if (orcidLiterals.length !== 0) {
-                        // ORCID exist in the database
-                        // search for the  author ID
-                        let authors = orcidLiterals.map(
-                            async orcidLiteral =>
-                                await getStatementsByObjectAndPredicate({
-                                    objectId: orcidLiteral.id,
-                                    predicateId: PREDICATES.HAS_ORCID,
-                                    items: 9999,
-                                    sortBy: 'created_at',
-                                    desc: true
-                                }).then(statements => statements.map(s => s.subject).filter(r => r.classes?.includes(CLASSES.AUTHOR)))
-                        );
-                        await Promise.all(authors).then(async authorsResources => {
-                            authors = flattenDepth(authorsResources, 2);
-                            console.log(authors);
-                            if (authors.length !== 0) {
-                                await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, authors[0].id);
-                            } else {
-                                // ORCID doesn't exist in the database
-                                // Create an author resource
-                                const creator = await createResource(c.label, [CLASSES.AUTHOR]);
-                                await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, creator.id);
-                                const ORCID = await createLiteral(c.orcid);
-                                await createLiteralStatement(creator.id, PREDICATES.HAS_ORCID, ORCID.id);
-                            }
-                        });
-                    } else {
-                        // ORCID doesn't exist in the database
-                        // Create an author resource
-                        const creator = await createResource(c.label, [CLASSES.AUTHOR]);
-                        await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, creator.id);
-                        const ORCID = await createLiteral(c.orcid);
-                        await createLiteralStatement(creator.id, PREDICATES.HAS_ORCID, ORCID.id);
-                    }
-                });
+        const authors = creators;
+        for (const author of authors) {
+            // create the author
+            if (author.orcid) {
+                // Create author with ORCID
+                // check if there's an author resource
+                const responseJson = await submitGetRequest(literalsUrl + '?q=' + encodeURIComponent(author.orcid) + '&exact=true');
+                if (responseJson.length > 0) {
+                    // Author resource exists
+                    let authorResource = await getStatementsByObject({ id: responseJson[0].id });
+                    authorResource = authorResource.find(s => s.predicate.id === PREDICATES.HAS_ORCID);
+                    const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, authorResource.subject.id);
+                    authors.statementId = authorStatement.id;
+                    authors.id = authorResource.subject.id;
+                    authors.class = authorResource.subject._class;
+                    authors.classes = authorResource.subject.classes;
+                } else {
+                    // Author resource doesn't exist
+                    // Create resource author
+                    const authorResource = await createResource(author.label, [CLASSES.AUTHOR]);
+                    const orcidLiteral = await createLiteral(author.orcid);
+                    await createLiteralStatement(authorResource.id, PREDICATES.HAS_ORCID, orcidLiteral.id);
+                    const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, authorResource.id);
+                    authors.statementId = authorStatement.id;
+                    authors.id = authorResource.id;
+                    authors.class = authorResource._class;
+                    authors.classes = authorResource.classes;
+                }
             } else {
-                const creatorL = await createLiteral(c.label);
-                await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, creatorL.id);
+                // Author resource doesn't exist
+                const newLiteral = await createLiteral(author.label);
+                // Create literal of author
+                const authorStatement = await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
+                authors.statementId = authorStatement.id;
+                authors.id = newLiteral.id;
+                authors.class = authorStatement.object._class;
+                authors.classes = authorStatement.object.classes;
             }
+        }
+
+        this.setState({
+            authors
         });
     };
 

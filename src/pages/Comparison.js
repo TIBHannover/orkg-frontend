@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, NavLink, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
-import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject, getComparisonDataByDOI } from 'network';
+import {
+    comparisonUrl,
+    submitGetRequest,
+    getResource,
+    getStatementsBySubject,
+    getComparisonDataByDOI,
+    getStatementsBySubjectAndPredicate
+} from 'network';
 import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResponseHashFromUrl, get_error_message } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faPlus, faArrowsAltH, faUser, faLightbulb, faCalendar } from '@fortawesome/free-solid-svg-icons';
@@ -30,6 +37,7 @@ import RelatedResources from '../components/Comparison/RelatedResources';
 import RelatedFigures from '../components/Comparison/RelatedFigures';
 import Tippy from '@tippy.js/react';
 import { Cookies } from 'react-cookie';
+import { flattenDepth } from 'lodash';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
 const cookies = new Cookies();
@@ -246,7 +254,8 @@ class Comparison extends Component {
                         const resourcesStatements = comparisonStatement.filter(statement => statement.predicate.id === PREDICATES.RELATED_RESOURCES);
 
                         const figureStatements = comparisonStatement.filter(statement => statement.predicate.id === PREDICATES.RELATED_FIGURE);
-                        const creators = comparisonStatement.filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR);
+                        let creators = comparisonStatement.filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR);
+                        creators = creators.reverse(); // statements are ordered desc, so first author is last => thus reverse
                         this.loadAuthorsORCID(creators);
                         if (urlStatement) {
                             this.getComparisonResult(urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')));
@@ -298,29 +307,18 @@ class Comparison extends Component {
     };
 
     loadAuthorsORCID = async creators => {
-        let authors = [];
-        if (creators.length > 0) {
-            authors = creators.map(async author => {
-                const authorStatements = await getStatementsBySubject({ id: author.object.id });
-                return authorStatements.find(statement => statement.predicate.id === PREDICATES.HAS_ORCID);
-            });
-        }
-        return Promise.all(authors).then(authorsORCID => {
+        return Promise.all(
+            creators.map(author => getStatementsBySubjectAndPredicate({ subjectId: author.object.id, predicateId: PREDICATES.HAS_ORCID }))
+        ).then(authorsORCID => {
             const authorsArray = [];
             for (const author of creators) {
-                const orcid = authorsORCID.find(a => a !== undefined && a.subject.id === author.object.id);
-                const auth = { label: '', orcid: '' };
+                const orcid = flattenDepth(authorsORCID, 2).find(a => a !== undefined && a.subject.id === author.object.id);
                 if (orcid) {
-                    auth.orcid = orcid.object.label;
-                    auth.label = author.object.label;
-                    authorsArray.push(auth);
+                    authorsArray.push({ orcid: orcid.object.label, label: author.object.label, id: author.object.id });
                 } else {
-                    auth.orcid = '';
-                    auth.label = author.object.label;
-                    authorsArray.push(auth);
+                    authorsArray.push({ orcid: '', label: author.object.label, id: author.object.id });
                 }
             }
-
             this.setState({
                 authors: authorsArray
             });
@@ -574,15 +572,26 @@ class Comparison extends Component {
                                             {this.state.authors && this.state.authors.length > 0 && (
                                                 <>
                                                     {this.state.authors.map((author, index) =>
-                                                        author.orcid && author.orcid !== '' ? (
+                                                        author.id && author.id !== '' && author.orcid && author.orcid !== '' ? (
+                                                            <Link
+                                                                className="p-0"
+                                                                to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
+                                                                key={index}
+                                                            >
+                                                                <Badge color="lightblue" className="mr-2 mb-2">
+                                                                    <Icon icon={faUser} className="text-primary" /> {author.label}
+                                                                </Badge>
+                                                            </Link>
+                                                        ) : author.orcid && author.orcid !== '' ? (
                                                             <NavLink
                                                                 className="p-0"
                                                                 style={{ display: 'contents' }}
                                                                 href={'https://orcid.org/' + author.orcid}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
+                                                                key={index}
                                                             >
-                                                                <Badge color="lightblue" className="mr-2 mb-2" key={index}>
+                                                                <Badge color="lightblue" className="mr-2 mb-2">
                                                                     <Icon icon={faUser} className="text-primary" /> {author.label}
                                                                 </Badge>
                                                             </NavLink>
