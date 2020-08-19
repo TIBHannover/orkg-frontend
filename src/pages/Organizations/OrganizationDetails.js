@@ -12,6 +12,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Dotdotdot from 'react-dotdotdot';
 import ROUTES from 'constants/routes';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
+import EditOrganization from '../Organizations/EditOrganization';
 import { reverse } from 'named-urls';
 
 const StyledOrganizationHeader = styled.div`
@@ -55,7 +57,8 @@ class OrganizationDetails extends Component {
             contributors: [],
             observatories: [],
             isLoadingContributors: false,
-            createdBy: ''
+            createdBy: '',
+            showEditDialog: false
         };
     }
 
@@ -127,6 +130,12 @@ class OrganizationDetails extends Component {
             });
     };
 
+    toggle = type => {
+        this.setState(prevState => ({
+            [type]: !prevState[type]
+        }));
+    };
+
     render() {
         return (
             <>
@@ -147,16 +156,27 @@ class OrganizationDetails extends Component {
                                             </h4>
                                         </NavLink>
                                         {this.props.user && this.props.user.id === this.state.createdBy && (
-                                            <Button
-                                                outline
-                                                size="sm"
-                                                color="primary"
-                                                className="mt-4"
-                                                tag={Link}
-                                                to={reverse(ROUTES.ADD_OBSERVATORY, { id: this.props.match.params.id })}
-                                            >
-                                                Create new observatory
-                                            </Button>
+                                            <div>
+                                                <Button
+                                                    outline
+                                                    size="sm"
+                                                    color="primary"
+                                                    className="mt-4"
+                                                    tag={Link}
+                                                    to={reverse(ROUTES.ADD_OBSERVATORY, { id: this.props.match.params.id })}
+                                                >
+                                                    Create new observatory
+                                                </Button>
+
+                                                <Button
+                                                    color="darkblue"
+                                                    size="sm"
+                                                    className="mt-4 ml-4"
+                                                    onClick={() => this.toggle('showEditDialog')}
+                                                >
+                                                    <Icon icon={faPen} /> Edit
+                                                </Button>
+                                            </div>
                                         )}
                                     </Col>
                                     {this.state.logo && (
@@ -243,6 +263,14 @@ class OrganizationDetails extends Component {
                         </Container>
                     </>
                 )}
+                <EditOrganization
+                    showDialog={this.state.showEditDialog}
+                    toggle={() => this.toggle('showEditDialog')}
+                    label={this.state.label}
+                    id={this.props.match.params.id}
+                    url={this.state.url}
+                    previewSrc={this.state.logo}
+                />
             </>
         );
     }

@@ -637,12 +637,32 @@ export const createOrganization = (organizationName, organizationLogo, createdBy
     return submitPostRequest(organizationsUrl, { 'Content-Type': 'application/json' }, { organizationName, organizationLogo, createdBy, url });
 };
 
+export const updateOrganizationName = (id, organizationName) => {
+    return submitPutRequest(`${organizationsUrl}updateName`, { 'Content-Type': 'application/json' }, { id, organizationName });
+};
+
+export const updateOrganizationUrl = (id, url) => {
+    return submitPutRequest(`${organizationsUrl}updateUrl`, { 'Content-Type': 'application/json' }, { id, url });
+};
+
+export const updateOrganizationLogo = (id, organizationLogo) => {
+    return submitPutRequest(`${organizationsUrl}updateLogo`, { 'Content-Type': 'application/json' }, { id, organizationLogo });
+};
+
 export const getAllObservatoriesByOrganizationId = id => {
     return submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/observatories`);
 };
 
 export const getObservatoryById = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/`);
+};
+
+export const updateObservatoryName = (id, observatoryName) => {
+    return submitPutRequest(`${observatoriesUrl}updateName`, { 'Content-Type': 'application/json' }, { id, observatoryName });
+};
+
+export const updateObservatoryDescription = (id, description) => {
+    return submitPutRequest(`${observatoriesUrl}updateDescription`, { 'Content-Type': 'application/json' }, { id, description });
 };
 
 export const getUsersByObservatoryId = id => {

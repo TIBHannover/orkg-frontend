@@ -19,8 +19,11 @@ import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { getPaperData, getComparisonData } from 'utils';
 import { find } from 'lodash';
+import EditObservatory from '../Observatories/EditObservatory';
 
 class Observatory extends Component {
     constructor(props) {
@@ -42,7 +45,8 @@ class Observatory extends Component {
             activeTab: 1,
             papersList: [],
             organizationsList: [],
-            comparisonsList: []
+            comparisonsList: [],
+            showEditDialog: false
         };
     }
 
@@ -192,6 +196,14 @@ class Observatory extends Component {
 
                         <Container className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
                             <h3>{this.state.label}</h3>
+                            <Button
+                                color="darkblue"
+                                size="sm"
+                                style={{ float: 'right', marginTop: '-40px' }}
+                                onClick={() => this.toggle('showEditDialog')}
+                            >
+                                <Icon icon={faPen} /> Edit
+                            </Button>
                             {this.state.description}
                         </Container>
 
@@ -409,6 +421,13 @@ class Observatory extends Component {
                         </Container>
                     </>
                 )}
+                <EditObservatory
+                    showDialog={this.state.showEditDialog}
+                    toggle={() => this.toggle('showEditDialog')}
+                    label={this.state.label}
+                    id={this.props.match.params.id}
+                    description={this.state.description}
+                />
             </>
         );
     };
