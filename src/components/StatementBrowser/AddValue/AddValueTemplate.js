@@ -82,7 +82,7 @@ export default function AddValueTemplate(props) {
 
     /* Select component reference can be used to check if menu is opened */
     const isMenuOpen = () => {
-        return resourceInputRef.current.select.state.menuIsOpen && resourceInputRef.current.state.loadedOptions.length > 0;
+        return resourceInputRef.current.state.menuIsOpen && resourceInputRef.current.props.options.length > 0;
     };
 
     const validateValue = () => {
