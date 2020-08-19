@@ -33,12 +33,29 @@ import { openAuthDialog, updateAuth, resetAuth } from 'actions/auth';
 import { Redirect } from 'react-router-dom';
 import { getUserInformation } from 'network';
 import greetingTime from 'greeting-time';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import { toast } from 'react-toastify';
+import { scrollbarWidth } from '@xobotyi/scrollbar-width';
+
 const cookies = new Cookies();
+
+// determine the scroll bar width and compensate the width when a modal is opened
+const GlobalStyle = createGlobalStyle`
+    body.modal-open {
+        #main-navbar, #paperHeaderBar {
+            right: ${props => props.scrollbarWidth}px
+        }
+        #helpIcon {
+            padding-right: ${props => props.scrollbarWidth}px
+        }
+        .woot-widget-bubble, .woot-widget-holder {
+            margin-right: ${props => props.scrollbarWidth}px
+        }
+    }
+`;
 
 const StyledLink = styled(Link)`
     :focus {
@@ -196,6 +213,14 @@ class Header extends Component {
         });
     };
 
+    requireAuthentication = e => {
+        if (!this.props.user) {
+            this.props.openAuthDialog('signin', true);
+            // Don't follow the link when user is not authenticated
+            e.preventDefault();
+        }
+    };
+
     render() {
         if (this.state.redirectLogout) {
             return <Redirect to={{ pathname: '/', state: { signedOut: true } }} />;
@@ -205,6 +230,8 @@ class Header extends Component {
 
         return (
             <Navbar color="light" expand="md" fixed="top" id="main-navbar" light>
+                <GlobalStyle scrollbarWidth={scrollbarWidth(true)} />
+
                 <Container className="p-0">
                     <StyledLink to={ROUTES.HOME} className="mr-4 p-0">
                         <Logo />
@@ -217,7 +244,6 @@ class Header extends Component {
                             <NavItem className="ml-2 ml-md-0">
                                 <NavLink tag={RouterNavLink} exact to={ROUTES.PAPERS}>
                                     Papers
-                                    {/* TODO: add taxonomy "Browse by research field" <FontAwesomeIcon icon={faSortDown} pull="right" /> */}
                                 </NavLink>
                             </NavItem>
 
@@ -229,6 +255,14 @@ class Header extends Component {
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS}>
                                         Statistics
                                     </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.PDF_ANNOTATION} onClick={this.requireAuthentication}>
+                                        PDF annotation{' '}
+                                        <small>
+                                            <Badge color="info">Beta</Badge>
+                                        </small>
+                                    </DropdownItem>
+
+                                    <DropdownItem divider />
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>
                                         Resources{' '}
                                         <small>
@@ -359,7 +393,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     resetAuth: () => dispatch(resetAuth()),
-    openAuthDialog: action => dispatch(openAuthDialog(action)),
+    openAuthDialog: (action, signInRequired) => dispatch(openAuthDialog(action, signInRequired)),
     updateAuth: data => dispatch(updateAuth(data))
 });
 

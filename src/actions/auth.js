@@ -13,11 +13,12 @@ export const resetAuth = () => dispatch => {
     });
 };
 
-export const openAuthDialog = action => dispatch => {
+export const openAuthDialog = (action, signInRequired = false) => dispatch => {
     dispatch({
         type: type.OPEN_AUTHENTICATION_DIALOG,
         payload: {
-            action
+            action,
+            signInRequired
         }
     });
 };

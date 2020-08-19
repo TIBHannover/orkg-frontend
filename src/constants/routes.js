@@ -39,5 +39,6 @@ export default {
     TPDL: '/tpdl',
     STATS: '/stats',
     CHANGELOG: '/changelog',
-    FEATURED_COMPARISONS: '/featured-comparisons'
+    FEATURED_COMPARISONS: '/featured-comparisons',
+    PDF_ANNOTATION: '/pdf-annotation'
 };

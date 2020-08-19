@@ -2,7 +2,6 @@
 
 body {
     color: #646464;
-    padding-right: 0px !important; // overwrite bootstrap's model padding-right: 15px
     overflow-y: scroll; // always show scrollbars to prevent moving elements when scrollbars become visible
 }
 
@@ -106,4 +105,18 @@ body {
         -webkit-transform: scale(1.2, 1.2);
         opacity: 0;
     }
+}
+
+#page-container {
+    //overwrite styles of returned pdf
+    position: initial !important;
+    background: transparent !important;
+    display: inline-block !important;
+    padding: 10px !important;
+}
+#sidebar {
+    display: none;
+}
+::selection {
+    background: #e8616169 !important;
 }
