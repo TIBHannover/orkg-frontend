@@ -17,18 +17,28 @@ import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
-import { createResource, createLiteralStatement, createLiteral, getComparison } from 'network';
+import {
+    createResource,
+    createLiteralStatement,
+    createLiteral,
+    getComparison,
+    createResourceStatement,
+    generateDOIForComparison,
+    literalsUrl,
+    submitGetRequest,
+    getStatementsByObjectAndPredicate
+} from 'network';
 import { getContributionIdsFromUrl } from 'utils';
 import Tooltip from 'components/Utils/Tooltip';
 import AuthorsInput from 'components/Utils/AuthorsInput';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
-import { generateDOIForComparison, findLiteral, findResourceByLabel } from 'network';
 import queryString from 'query-string';
 import { reverse } from 'named-urls';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import styled from 'styled-components';
+import { flattenDepth } from 'lodash';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
 const StyledCustomInput = styled(CustomInput)`
@@ -208,21 +218,47 @@ class Publish extends Component {
     saveCreators = async (creators, resourceId) => {
         creators.map(async c => {
             if (c.orcid !== '') {
-                findLiteral(c.orcid).then(async response => {
-                    if (response.length !== 0) {
-                        findResourceByLabel(c.label).then(async labelResponse => {
-                            await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, labelResponse[0].id);
+                // Search for literal that contain the ORCID
+                await submitGetRequest(`${literalsUrl}?q=${c.orcid}&exact=true`).then(async orcidLiterals => {
+                    if (orcidLiterals.length !== 0) {
+                        // ORCID exist in the database
+                        // search for the  author ID
+                        let authors = orcidLiterals.map(
+                            async orcidLiteral =>
+                                await getStatementsByObjectAndPredicate({
+                                    objectId: orcidLiteral.id,
+                                    predicateId: PREDICATES.HAS_ORCID,
+                                    items: 9999,
+                                    sortBy: 'created_at',
+                                    desc: true
+                                }).then(statements => statements.map(s => s.subject).filter(r => r.classes?.includes(CLASSES.AUTHOR)))
+                        );
+                        await Promise.all(authors).then(async authorsResources => {
+                            authors = flattenDepth(authorsResources, 2);
+                            console.log(authors);
+                            if (authors.length !== 0) {
+                                await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, authors[0].id);
+                            } else {
+                                // ORCID doesn't exist in the database
+                                // Create an author resource
+                                const creator = await createResource(c.label, [CLASSES.AUTHOR]);
+                                await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, creator.id);
+                                const ORCID = await createLiteral(c.orcid);
+                                await createLiteralStatement(creator.id, PREDICATES.HAS_ORCID, ORCID.id);
+                            }
                         });
                     } else {
+                        // ORCID doesn't exist in the database
+                        // Create an author resource
                         const creator = await createResource(c.label, [CLASSES.AUTHOR]);
-                        await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, creator.id);
+                        await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, creator.id);
                         const ORCID = await createLiteral(c.orcid);
                         await createLiteralStatement(creator.id, PREDICATES.HAS_ORCID, ORCID.id);
                     }
                 });
             } else {
-                const creator = await createResource(c.label, [CLASSES.AUTHOR]);
-                await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, creator.id);
+                const creatorL = await createLiteral(c.label);
+                await createLiteralStatement(resourceId, PREDICATES.HAS_AUTHOR, creatorL.id);
             }
         });
     };
