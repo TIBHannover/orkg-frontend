@@ -78,7 +78,7 @@ const TrendingProblems = props => {
                         <Icon icon={faSpinner} spin /> Loading
                     </div>
                 ) : (
-                    <div className="px-4 mb-3 text-center pb-1">
+                    <div className="px-4 text-center pb-1">
                         <List>
                             {problems.map((problem, index) => (
                                 <li className={`item-${index}`} key={`${index}-problem`}>
