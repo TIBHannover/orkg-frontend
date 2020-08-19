@@ -11,7 +11,6 @@ import {
     Alert,
     CustomInput,
     InputGroupAddon,
-    Tooltip as ReactstrapTooltip,
     InputGroup
 } from 'reactstrap';
 import { connect } from 'react-redux';
@@ -80,16 +79,13 @@ class Publish extends Component {
             doi: '',
             comparisonLink: props.url,
             comparisonId: props.comparisonId,
-            isWarningModalOpen: false,
-            showPublishWithDOIDialog: false,
             isCreatingDOI: false,
             isLoading: false,
             comparisonCreators: props.authors,
-            showComparisonTooltipCopiedLink: false,
-            showDOITooltipCopiedLink: false,
             assignDOI: false
         };
     }
+
     componentDidUpdate = prevProps => {
         if (
             this.props.description !== prevProps.description ||
@@ -108,11 +104,12 @@ class Publish extends Component {
             this.setState({ comparisonId: this.props.comparisonId });
         }
     };
+
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value });
     };
 
-    handleAuthorsChange = creators => {
+    handleCreatorsChange = creators => {
         creators = creators ? creators : [];
         this.setState({
             comparisonCreators: creators
@@ -147,6 +144,7 @@ class Publish extends Component {
     };
 
     handleSubmit = async e => {
+        e.preventDefault();
         this.setState({ isLoading: true });
         try {
             if (!this.state.comparisonId) {
@@ -201,13 +199,6 @@ class Publish extends Component {
             toast.error(`Error publishing a comparison : ${error.message}`);
             this.setState({ isLoading: false });
         }
-        e.preventDefault();
-    };
-
-    toggle = type => {
-        this.setState(prevState => ({
-            [type]: !prevState[type]
-        }));
     };
 
     updateDOIState = doi => {
@@ -265,60 +256,42 @@ class Publish extends Component {
                     </Alert>
                     {this.state.comparisonId && (
                         <FormGroup>
-                            <Label for="persistent_link">Comparison link</Label>
+                            <Label for="comparison_link">Comparison link</Label>
                             <InputGroup>
-                                <Input value={comparisonLink} disabled />
+                                <Input id="comparison_link" value={comparisonLink} disabled />
                                 <InputGroupAddon addonType="append">
                                     <CopyToClipboard
-                                        id="comparisonCopyToClipboardLink"
-                                        text={comparisonLink ? comparisonLink : 'Loading share link...'}
+                                        text={comparisonLink ? comparisonLink : 'Loading comparison link...'}
                                         onCopy={() => {
-                                            this.setState({ showComparisonTooltipCopiedLink: true });
+                                            toast.dismiss();
+                                            toast.success(`Comparison link copied!`);
                                         }}
                                     >
                                         <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
                                             <Icon icon={faClipboard} />
                                         </Button>
                                     </CopyToClipboard>
-                                    <ReactstrapTooltip
-                                        placement="top"
-                                        target="comparisonCopyToClipboardLink"
-                                        trigger="hover"
-                                        toggle={this.toggleTooltip}
-                                        isOpen={this.state.showComparisonTooltipCopiedLink}
-                                    >
-                                        Copied!
-                                    </ReactstrapTooltip>
                                 </InputGroupAddon>
                             </InputGroup>
                         </FormGroup>
                     )}
                     {(this.state.doi || this.props.doi) && (
                         <FormGroup>
-                            <Label for="persistent_link">DOI</Label>
+                            <Label for="doi_link">DOI</Label>
                             <InputGroup>
-                                <Input value={`https://${this.state.doi || this.props.doi}`} disabled />
+                                <Input id="doi_link" value={`https://doi.org/${this.state.doi || this.props.doi}`} disabled />
                                 <InputGroupAddon addonType="append">
                                     <CopyToClipboard
-                                        id="DOIcopyToClipboardLink"
-                                        text={this.state.doi ? `https://${this.state.doi}` : 'Loading share link...'}
+                                        text={this.state.doi ? `https://doi.org/${this.state.doi}` : 'Loading share link...'}
                                         onCopy={() => {
-                                            this.setState({ showDOITooltipCopiedLink: true });
+                                            toast.dismiss();
+                                            toast.success(`DOI link copied!`);
                                         }}
                                     >
                                         <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
                                             <Icon icon={faClipboard} />
                                         </Button>
                                     </CopyToClipboard>
-                                    <ReactstrapTooltip
-                                        placement="top"
-                                        target="DOIcopyToClipboardLink"
-                                        trigger="hover"
-                                        toggle={this.toggleTooltip}
-                                        isOpen={this.state.showDOITooltipCopiedLink}
-                                    >
-                                        Copied!
-                                    </ReactstrapTooltip>
                                 </InputGroupAddon>
                             </InputGroup>
                         </FormGroup>
@@ -382,7 +355,7 @@ class Publish extends Component {
                                     <AuthorsInput
                                         disabled={Boolean(this.state.comparisonCreators.length > 0)}
                                         itemLabel="creator"
-                                        handler={this.handleAuthorsChange}
+                                        handler={this.handleCreatorsChange}
                                         value={this.state.comparisonCreators}
                                     />
                                 )}
