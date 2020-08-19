@@ -41,7 +41,7 @@ const AuthorTag = styled.div`
     margin: 0 0 4px 0;
     box-sizing: border-box;
     color: rgb(147, 147, 147);
-    cursor: pointer;
+    cursor: default;
     border-radius: 12px;
     overflow: hidden;
     -webkit-touch-callout: none;
@@ -244,15 +244,6 @@ class Publish extends Component {
                 <ModalBody>
                     <Alert color="info">
                         A published comparison is made public to other users. The state of the comparison is saved and a persistent link is created.
-                        {(!this.state.doi || !this.props.doi) && this.state.comparisonId && (
-                            <>
-                                <br />A DOI{' '}
-                                <i>
-                                    {process.env.REACT_APP_DATACITE_DOI_PREFIX}/{this.state.comparisonId}
-                                </i>{' '}
-                                will be assigned to published comparison and it cannot be changed in future.
-                            </>
-                        )}
                     </Alert>
                     {this.state.comparisonId && (
                         <FormGroup>
@@ -296,7 +287,26 @@ class Publish extends Component {
                             </InputGroup>
                         </FormGroup>
                     )}
-                    {!this.state.doi && (
+                    {this.state.comparisonId && (!this.state.doi && !this.props.doi) && (
+                        <FormGroup>
+                            <div>
+                                <Tooltip
+                                    message={`A DOI ${process.env.REACT_APP_DATACITE_DOI_PREFIX}/${this.state.comparisonId} will be assigned to published comparison and it cannot be changed in future.`}
+                                >
+                                    <StyledCustomInput
+                                        onChange={this.handleSwitchAssignDOI}
+                                        checked={this.state.assignDOI}
+                                        id="switchAssignDoi"
+                                        type="switch"
+                                        name="customSwitch"
+                                        inline
+                                        label="Assign a DOI to the comparison"
+                                    />
+                                </Tooltip>
+                            </div>
+                        </FormGroup>
+                    )}
+                    {!this.state.doi && (!this.state.comparisonId || (this.state.comparisonId && this.state.assignDOI)) && (
                         <>
                             {' '}
                             <FormGroup>
@@ -362,11 +372,11 @@ class Publish extends Component {
                                 {!this.state.doi &&
                                     this.state.comparisonId &&
                                     this.props.authors.length !== 0 &&
-                                    this.state.comparisonCreators.map(author => (
+                                    this.state.comparisonCreators.map((creator, index) => (
                                         <AuthorTag>
-                                            <div className="name">
-                                                {author.label}
-                                                {author.orcid && <Icon style={{ margin: '4px' }} icon={faOrcid} />}
+                                            <div key={`creator${index}`} className="name">
+                                                {creator.label}
+                                                {creator.orcid && <Icon style={{ margin: '4px' }} icon={faOrcid} />}
                                             </div>
                                         </AuthorTag>
                                     ))}
@@ -374,10 +384,7 @@ class Publish extends Component {
                             <FormGroup>
                                 {!this.state.comparisonId && (
                                     <div>
-                                        <Tooltip
-                                            message="A DOI will be assigned to published comparison and it
-                        cannot be changed in future."
-                                        >
+                                        <Tooltip message="A DOI will be assigned to published comparison and it cannot be changed in future.">
                                             <StyledCustomInput
                                                 onChange={this.handleSwitchAssignDOI}
                                                 checked={this.state.assignDOI}
@@ -396,16 +403,25 @@ class Publish extends Component {
 
                     <></>
                 </ModalBody>
-                <ModalFooter>
-                    {!this.props.doi && !this.state.doi && (
-                        <div className="text-align-center mt-2">
-                            <Button color="primary" disabled={this.state.isLoading} onClick={this.handleSubmit}>
-                                {this.state.isLoading && <span className="fa fa-spinner fa-spin" />}{' '}
-                                {!this.props.comparisonId && !this.state.comparisonId && !this.props.doi ? 'Publish' : 'Publish DOI'}
-                            </Button>
-                        </div>
-                    )}
-                </ModalFooter>
+                {((!this.props.doi && !this.state.doi && !this.props.comparisonId && !this.state.comparisonId) ||
+                    (this.state.comparisonId && (!this.state.doi && !this.props.doi) && this.state.assignDOI)) && (
+                    <ModalFooter>
+                        {!this.props.doi && !this.state.doi && !this.props.comparisonId && !this.state.comparisonId && (
+                            <div className="text-align-center mt-2">
+                                <Button color="primary" disabled={this.state.isLoading} onClick={this.handleSubmit}>
+                                    {this.state.isLoading && <span className="fa fa-spinner fa-spin" />} Publish
+                                </Button>
+                            </div>
+                        )}
+                        {this.state.comparisonId && (!this.state.doi && !this.props.doi) && this.state.assignDOI && (
+                            <div className="text-align-center mt-2">
+                                <Button color="primary" disabled={this.state.isLoading} onClick={this.handleSubmit}>
+                                    {this.state.isLoading && <span className="fa fa-spinner fa-spin" />} Publish DOI
+                                </Button>
+                            </div>
+                        )}
+                    </ModalFooter>
+                )}
             </Modal>
         );
     }
