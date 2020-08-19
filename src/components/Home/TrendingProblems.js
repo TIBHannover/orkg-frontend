@@ -54,10 +54,15 @@ const TrendingProblems = props => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const getProblems = async () => {
-            const problemsList = await submitGetRequest(`${problemsUrl}top`);
-            setProblems(problemsList);
-            setIsLoading(false);
+        const getProblems = () => {
+            submitGetRequest(`${problemsUrl}top`)
+                .then(problemsList => {
+                    setProblems(problemsList);
+                    setIsLoading(false);
+                })
+                .catch(error => {
+                    setIsLoading(false);
+                });
         };
 
         getProblems();
