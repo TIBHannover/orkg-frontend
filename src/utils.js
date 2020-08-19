@@ -12,6 +12,25 @@ export function hashCode(s) {
     }, 0);
 }
 
+/**
+ * Parse comma separated values from the query string
+ *
+ * @param {String} locationSearch this.props.location.search
+ * @param {String} param parameter name
+ * @return {Array} the list of values
+ */
+
+export function getArrayParamFromQueryString(locationSearch, param) {
+    const values = queryString.parse(locationSearch, { arrayFormat: 'comma' })[param];
+    if (!values) {
+        return [];
+    }
+    if (typeof values === 'string' || values instanceof String) {
+        return [values];
+    }
+    return values;
+}
+
 export function groupBy(array, group) {
     const hash = Object.create(null);
     const result = [];

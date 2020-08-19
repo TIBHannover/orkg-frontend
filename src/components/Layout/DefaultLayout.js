@@ -44,7 +44,7 @@ CloseToastButton.propTypes = {
 
 export default function DefaultLayout(props) {
     const location = useLocation();
-    const showFooter = location.pathname !== ROUTES.PDF_TEXT_ANNOTATION;
+    const showFooter = location.pathname !== ROUTES.PDF_TEXT_ANNOTATION && location.pathname !== ROUTES.PDF_ANNOTATION;
 
     return (
         <StyledBody className="body">

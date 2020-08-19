@@ -75,6 +75,9 @@ class SignIn extends Component {
             <>
                 <Form className="pl-3 pr-3 pt-2" onSubmit={this.signIn}>
                     {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
+
+                    {this.props.signInRequired && <Alert color="info">You need to be signed in to use this functionality</Alert>}
+
                     <FormGroup>
                         <Label for="Email">Email address</Label>
                         <Input
@@ -128,8 +131,13 @@ class SignIn extends Component {
 SignIn.propTypes = {
     openAuthDialog: PropTypes.func.isRequired,
     updateAuth: PropTypes.func.isRequired,
-    toggleAuthDialog: PropTypes.func.isRequired
+    toggleAuthDialog: PropTypes.func.isRequired,
+    signInRequired: PropTypes.bool.isRequired
 };
+
+const mapStateToProps = state => ({
+    signInRequired: state.auth.signInRequired
+});
 
 const mapDispatchToProps = dispatch => ({
     openAuthDialog: action => dispatch(openAuthDialog(action)),
@@ -138,6 +146,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(SignIn);

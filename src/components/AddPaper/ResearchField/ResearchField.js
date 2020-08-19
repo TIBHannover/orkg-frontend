@@ -73,7 +73,10 @@ class ResearchField extends Component {
         clearAllBodyScrollLocks();
     }
 
-    disableBody = target => disableBodyScroll(target);
+    disableBody = target =>
+        disableBodyScroll(target, {
+            reserveScrollBarGap: true
+        });
     enableBody = target => enableBodyScroll(target);
 
     handleNextClick = () => {

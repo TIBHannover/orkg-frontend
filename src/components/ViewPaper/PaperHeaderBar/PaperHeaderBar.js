@@ -36,7 +36,7 @@ const AnimationContainer = styled(CSSTransition)`
 function PaperHeaderBar(props) {
     return (
         <AnimationContainer in={true} appear={true} classNames="fade" timeout={500}>
-            <PaperHeaderBarContainer>
+            <PaperHeaderBarContainer id="paperHeaderBar">
                 <Container className="d-flex align-items-center py-2">
                     <div className="title flex-grow-1 text-truncate">
                         {props.editMode ? (

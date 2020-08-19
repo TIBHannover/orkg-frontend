@@ -123,8 +123,11 @@ class GeneralData extends Component {
         clearAllBodyScrollLocks();
     }
 
-    disableBody = target => disableBodyScroll();
-    enableBody = target => enableBodyScroll();
+    disableBody = target =>
+        disableBodyScroll(target, {
+            reserveScrollBarGap: true
+        });
+    enableBody = target => enableBodyScroll(target);
 
     //moved callback after stateUpdate into a function
     updateGlobalStateForVisualization = () => {
@@ -592,7 +595,7 @@ class GeneralData extends Component {
                                             </Row>
                                             <FormGroup>
                                                 <Label for="publishedIn">
-                                                    <Tooltip message="The paper venue ">Published in</Tooltip>
+                                                    <Tooltip message="The conference or journal name">Published in</Tooltip>
                                                 </Label>
                                                 <Input
                                                     type="text"

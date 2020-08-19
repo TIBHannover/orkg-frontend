@@ -108,19 +108,12 @@ function ResearchProblem(props) {
                                                                     })}
                                                                 >
                                                                     {researchField.field.label}
+                                                                    <small>
+                                                                        <Badge className="ml-1" color="info" pill>
+                                                                            {researchField.freq}
+                                                                        </Badge>
+                                                                    </small>
                                                                 </Link>
-                                                                <small>
-                                                                    <Badge
-                                                                        className="ml-1"
-                                                                        href={reverse(ROUTES.RESEARCH_FIELD, {
-                                                                            researchFieldId: researchField.field.id
-                                                                        })}
-                                                                        color="info"
-                                                                        pill
-                                                                    >
-                                                                        {researchField.freq}
-                                                                    </Badge>
-                                                                </small>
                                                             </li>
                                                         );
                                                     })}
@@ -192,7 +185,7 @@ function ResearchProblem(props) {
                         )}
                         {contributions.length === 0 && !isLoadingPapers && (
                             <div className="text-center mt-4 mb-4">
-                                There are no articles for this research problem, yet.
+                                There are no papers for this research problem, yet.
                                 <br />
                                 Start the graphing in ORKG by sharing a paper.
                                 <br />
