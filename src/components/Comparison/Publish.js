@@ -395,7 +395,7 @@ class Publish extends Component {
                                         Creators
                                     </Tooltip>
                                 </Label>
-                                {!this.state.doi && this.props.authors.length === 0 && (
+                                {!this.state.doi && (!this.state.comparisonId || this.props.authors.length === 0) && (
                                     <AuthorsInput
                                         disabled={Boolean(this.state.comparisonCreators.length > 0)}
                                         itemLabel="creator"
