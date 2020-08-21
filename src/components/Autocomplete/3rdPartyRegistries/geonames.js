@@ -9,7 +9,8 @@ import { PREDICATES } from 'constants/graphSettings';
  */
 export default async function getGeonames(value, options) {
     let responseXML = await fetch(
-        'http://api.geonames.org/search?q=' +
+        process.env.REACT_APP_GEONAMES_API_SEARCH_URL +
+            '?q=' +
             encodeURIComponent(value.trim()) +
             '&maxRows=10&type=rdf&username=' +
             process.env.REACT_APP_GEONAMES_API_USERNAME
