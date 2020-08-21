@@ -197,7 +197,7 @@ class Observatory extends Component {
 
                         <Container>
                             <Row className="mt-4">
-                                <Col md={8} sm={12} style={{ minHeight: '500px' }} className="d-flex px-0 pr-4">
+                                <Col md={4} sm={12} style={{ minHeight: '300px' }} className="d-flex px-0 pr-3">
                                     <div className="box rounded-lg p-4 flex-grow-1">
                                         <h5>Research Problems</h5>
                                         {!this.state.isLoadingProblems ? (
@@ -227,8 +227,8 @@ class Observatory extends Component {
                                         )}
                                     </div>
                                 </Col>
-                                <Col md={4} sm={12} style={{ display: 'flex', flexDirection: 'column' }} className="px-0">
-                                    <div className="box rounded-lg p-4">
+                                <Col md={4} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <div className="box rounded-lg p-4 flex-grow-1">
                                         <h5>Organizations</h5>
                                         {!this.state.isLoadingOrganizations ? (
                                             <div className="mb-4 mt-4">
@@ -283,7 +283,9 @@ class Observatory extends Component {
                                             <div className="text-center mt-4 mb-4">Loading organizations ...</div>
                                         )}
                                     </div>
-                                    <div className="box rounded-lg mt-4 p-4 flex-grow-1">
+                                </Col>
+                                <Col md={4} sm={12} style={{ display: 'flex', flexDirection: 'column' }} className="px-0 pl-3">
+                                    <div className="box rounded-lg p-4 flex-grow-1">
                                         <h5>Contributors</h5>
 
                                         {!this.state.isLoadingContributors ? (
