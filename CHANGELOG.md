@@ -3,37 +3,27 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
-## [0.18](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.17...V0.18) - 2020-08-21
+## [0.17.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.17...V0.17.1) - 2020-08-21
 
 ### Merged
 
 - style(Observatory): change design to three column layout [`#352`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/352)
 - fix: Loading the template of predicates and Geonames CORS issues [`#351`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/351)
+
+### Fixed
+
+- Merge branch '296-loading-the-template-of-predicates-and-geoname-cors-issues' into 'master' [`#296`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/296)
+
+---
+## [0.17](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.16...V0.17) - 2020-08-19
+
+### Merged
+
 - fix: AddValue Template addes two items [`#350`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/350)
 - feat(Homepage): show trending research problems [`#342`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/342)
 - fix: "Add filtering of deleted papers on profile page" [`#339`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/339)
 - fix: Showing formatted label while showing a Pulse indicator [`#349`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/349)
 - fix: Change Predicate class ID constant [`#348`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/348)
-
-### Fixed
-
-- Merge branch '296-loading-the-template-of-predicates-and-geoname-cors-issues' into 'master' [`#296`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/296)
-- Merge branch '295-addvalue-template-addes-two-items' into 'master' [`#295`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/295)
-- Merge branch '244-add-filtering-of-deleted-papers-on-profile-page' into 'master' [`#244`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/244)
-- Merge branch '294-case-fatality-rate-value' into 'master' [`#294`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/294)
-- Merge branch '288-handle-backend-response-for-reserved-class-ids' into 'master' [`#288`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/288)
-
----
-## [0.17.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.18...V0.17.1) - 2020-08-21
-
-### Commits
-
-- Update Changelog [`bcc87f7`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/bcc87f7ddc8db33db64327e00157c3ff75a49c42)
----
-## [0.17](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.16...V0.17) - 2020-08-18
-
-### Merged
-
 - Autocomplete improvements [`#346`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/346)
 - fix:  Prevent Scrolling on contribution selection change (ViewPaper) [`#341`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/341)
 - fix: editing issue with Edge [`#347`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/347)
@@ -48,6 +38,10 @@ All notable changes to the ORKG will be documented in this file. The format is b
 
 ### Fixed
 
+- Merge branch '295-addvalue-template-addes-two-items' into 'master' [`#295`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/295)
+- Merge branch '244-add-filtering-of-deleted-papers-on-profile-page' into 'master' [`#244`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/244)
+- Merge branch '294-case-fatality-rate-value' into 'master' [`#294`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/294)
+- Merge branch '288-handle-backend-response-for-reserved-class-ids' into 'master' [`#288`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/288)
 - Merge branch 'Autocomplete' into 'master' [`#201`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/201)
 - Merge branch '289-prevent-scrolling-on-contribution-selection-change-viewpaper' into 'master' [`#289`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/289)
 - Merge branch '293-problem-with-editing-papers-while-opening-orkg-web-page-in-different-browsers' into 'master' [`#293`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/293)
