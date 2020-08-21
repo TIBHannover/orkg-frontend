@@ -24,6 +24,12 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - Merge branch '288-handle-backend-response-for-reserved-class-ids' into 'master' [`#288`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/288)
 
 ---
+## [0.17.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.18...V0.17.1) - 2020-08-21
+
+### Commits
+
+- Update Changelog [`bcc87f7`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/bcc87f7ddc8db33db64327e00157c3ff75a49c42)
+---
 ## [0.17](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.16...V0.17) - 2020-08-18
 
 ### Merged
