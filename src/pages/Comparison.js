@@ -361,6 +361,7 @@ class Comparison extends Component {
     };
 
     toggleTranpose = () => {
+        this.props.match.params.comparisonId = '';
         this.setState(
             prevState => ({
                 transpose: !prevState.transpose
@@ -692,7 +693,7 @@ class Comparison extends Component {
                     response_hash={this.state.response_hash}
                     authors={this.state.authors}
                     title={this.state.title}
-                    location={this.state.locationSearch}
+                    location={this.state.locationSearch || this.props.location.search}
                     description={this.state.description}
                     reference={this.state.reference}
                     subject={this.state.subject}

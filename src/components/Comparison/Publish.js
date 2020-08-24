@@ -26,7 +26,8 @@ import {
     generateDOIForComparison,
     literalsUrl,
     submitGetRequest,
-    getStatementsByObject
+    getStatementsByObject,
+    getStatementsBySubject
 } from 'network';
 import { getContributionIdsFromUrl } from 'utils';
 import Tooltip from 'components/Utils/Tooltip';
@@ -39,6 +40,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import styled from 'styled-components';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { MISC } from 'constants/graphSettings';
 
 const StyledCustomInput = styled(CustomInput)`
     margin-right: 0;
@@ -91,8 +93,13 @@ class Publish extends Component {
             isCreatingDOI: false,
             isLoading: false,
             comparisonCreators: props.authors,
-            assignDOI: false
+            assignDOI: false,
+            researchField: []
         };
+    }
+
+    componentDidMount() {
+        this.getFields(MISC.RESEARCH_FIELD_MAIN);
     }
 
     componentDidUpdate = prevProps => {
@@ -110,7 +117,7 @@ class Publish extends Component {
             });
         }
         if (this.props.comparisonId !== prevProps.comparisonId && !this.props.comparisonId) {
-            this.setState({ comparisonId: this.props.comparisonId });
+            this.setState({ comparisonId: this.props.comparisonId, isLoading: false, doi: '' });
         }
     };
 
@@ -125,6 +132,24 @@ class Publish extends Component {
         });
     };
 
+    getFields(fieldId) {
+        const researchFields = [];
+        getStatementsBySubject({ id: fieldId }).then(res => {
+            res.forEach(elm => {
+                getStatementsBySubject({ id: elm.object.id }).then(result1 => {
+                    result1.forEach(r => {
+                        getStatementsBySubject({ id: r.object.id }).then(result2 => {
+                            result2.forEach(value => {
+                                researchFields.push(value.object.label);
+                            });
+                        });
+                    });
+                });
+            });
+        });
+        this.setState({ researchField: researchFields });
+    }
+
     publishDOI = async (comparisonId, comparisonLink) => {
         try {
             if (this.state.comparisonId && this.props.authors.length === 0) {
@@ -137,7 +162,7 @@ class Publish extends Component {
                     this.state.subject,
                     this.state.description,
                     getContributionIdsFromUrl(this.props.location),
-                    this.state.comparisonCreators.map(c => ({ creator: c.label, ORCID: c.orcid })),
+                    this.state.comparisonCreators.map(c => ({ creator: c.label, orcid: c.orcid })),
                     comparisonLink
                 );
                 this.setState({ doi: response.data.attributes.doi });
@@ -385,9 +410,20 @@ class Publish extends Component {
                             </FormGroup>
                             <FormGroup>
                                 <Label for="subject">
-                                    <Tooltip message="Enter a subject of the comparison">Subject</Tooltip>
+                                    <Tooltip message="Enter a subject of the comparison">Research Field</Tooltip>
                                 </Label>
-                                <Input disabled={Boolean(this.state.doi)} type="text" name="subject" id="subject" onChange={this.handleChange} />
+                                <Input
+                                    disabled={Boolean(this.state.doi)}
+                                    value="123"
+                                    type="select"
+                                    name="subject"
+                                    id="subject"
+                                    onChange={this.handleChange}
+                                >
+                                    {this.state.researchField.map(rf => {
+                                        return <option value={rf}>{rf}</option>;
+                                    })}
+                                </Input>
                             </FormGroup>
                             <FormGroup>
                                 <Label for="Creator">

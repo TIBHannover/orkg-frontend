@@ -701,11 +701,11 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
     });
 };
 
-export const generateDOIForComparison = (comparisonId, title, subject, description, relatedResources, authors, url) => {
+export const generateDOIForComparison = (comparison_id, title, subject, description, related_resources, authors, url) => {
     return submitPostRequest(
         doisUrl,
         { 'Content-Type': 'application/json' },
-        { comparisonId, title, subject, description, relatedResources, authors, url }
+        { comparison_id, title, subject, description, related_resources, authors, url }
     );
 };
 
