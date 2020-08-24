@@ -412,14 +412,7 @@ class Publish extends Component {
                                 <Label for="subject">
                                     <Tooltip message="Enter a subject of the comparison">Research Field</Tooltip>
                                 </Label>
-                                <Input
-                                    disabled={Boolean(this.state.doi)}
-                                    value="123"
-                                    type="select"
-                                    name="subject"
-                                    id="subject"
-                                    onChange={this.handleChange}
-                                >
+                                <Input disabled={Boolean(this.state.doi)} type="select" name="subject" id="subject" onChange={this.handleChange}>
                                     {this.state.researchField.map(rf => {
                                         return <option value={rf}>{rf}</option>;
                                     })}
