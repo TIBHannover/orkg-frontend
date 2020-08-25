@@ -89,9 +89,12 @@ class Contributions extends Component {
     handleSelectContribution = contributionId => {
         this.setState({ loading: true, isSimilaireContributionsLoading: true });
         const contributionIsLoaded = this.props.resources.byId[contributionId] ? true : false;
+        // get the contribution label
+        const contributionResource = this.props.contributions.find(c => c.id === this.props.selectedContribution);
         this.props.selectContribution({
             contributionId,
-            contributionIsLoaded
+            contributionIsLoaded,
+            contributionLabel: contributionResource.label
         });
         getSimilaireContribution(this.state.selectedContribution)
             .then(similaireContributions => {

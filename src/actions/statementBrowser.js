@@ -771,6 +771,13 @@ export const goToResourceHistory = data => dispatch => {
     });
 };
 
+export const updateContributionLabel = data => dispatch => {
+    dispatch({
+        type: type.STATEMENT_BROWSER_UPDATE_CONTRIBUTION_LABEL,
+        payload: data
+    });
+};
+
 /**
  * Check if it should fetch statements for resources
  *

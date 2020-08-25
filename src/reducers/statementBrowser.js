@@ -468,6 +468,17 @@ export default (state = initialState, action) => {
                 ...newState
             };
         }
+        case type.STATEMENT_BROWSER_UPDATE_CONTRIBUTION_LABEL: {
+            const newLabel = action.payload.label;
+            const contribId = action.payload.id;
+
+            let newState = dotProp.set(state, `resources.byId.${contribId}.label`, newLabel);
+            newState = dotProp.set(newState, `resourceHistory.byId.${contribId}.label`, newLabel);
+            console.log(newState);
+            return {
+                ...newState
+            };
+        }
 
         case type.DONE_FETCHING_STATEMENTS: {
             return {

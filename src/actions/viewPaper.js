@@ -1,7 +1,7 @@
 import * as type from './types.js';
 import { createResource, fetchStatementsForResource, selectResource } from './statementBrowser';
 
-export const selectContribution = ({ contributionId: id, contributionIsLoaded }) => dispatch => {
+export const selectContribution = ({ contributionId: id, contributionIsLoaded, contributionLabel }) => dispatch => {
     if (!contributionIsLoaded) {
         //let resourceId = guid(); //use this as ID in the future, when changing the data is possible
 
@@ -17,7 +17,7 @@ export const selectContribution = ({ contributionId: id, contributionIsLoaded })
             createResource({
                 //only needed for connecting properties, label is not shown
                 resourceId: id,
-                label: '',
+                label: contributionLabel,
                 existingResourceId: id
             })
         );
@@ -35,16 +35,14 @@ export const selectContribution = ({ contributionId: id, contributionIsLoaded })
     dispatch({
         type: type.CLEAR_RESOURCE_HISTORY
     });
-
     dispatch(
         selectResource({
             increaseLevel: false,
             resourceId: id,
-            label: 'Main',
+            label: contributionLabel,
             resetLevel: true
         })
     );
-
     dispatch({
         type: type.SELECT_CONTRIBUTION,
         payload: {

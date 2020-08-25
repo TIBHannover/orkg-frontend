@@ -18,7 +18,7 @@ import Contributions from '../components/ViewPaper/Contributions';
 import PropTypes from 'prop-types';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import PaperHeader from '../components/ViewPaper/PaperHeader';
-import { resetStatementBrowser } from 'actions/statementBrowser';
+import { resetStatementBrowser, updateContributionLabel } from 'actions/statementBrowser';
 import { loadPaper, selectContribution, setPaperAuthors } from 'actions/viewPaper';
 import GizmoGraphViewModal from '../components/ViewPaper/GraphView/GizmoGraphViewModal';
 import queryString from 'query-string';
@@ -131,7 +131,10 @@ class ViewPaper extends Component {
             const updatedObj = { ...this.state.contributions[objIndex], label: label };
             // update the contributions array
             const newContributions = [...this.state.contributions.slice(0, objIndex), updatedObj, ...this.state.contributions.slice(objIndex + 1)];
-            this.setState({ contributions: newContributions });
+            this.setState({
+                contributions: newContributions
+            });
+            this.props.updateContributionLabel({ id: contributionId, label: label });
             await updateResource(contributionId, label);
             toast.success('Contribution name updated successfully');
         }
@@ -162,7 +165,9 @@ class ViewPaper extends Component {
                     selectedContribution: newContributions[0].id
                 },
                 () => {
-                    this.setState({ contributions: newContributions });
+                    this.setState({
+                        contributions: newContributions
+                    });
                 }
             );
             await deleteStatementById(statementId);
@@ -389,6 +394,7 @@ ViewPaper.propTypes = {
     }).isRequired,
     resetStatementBrowser: PropTypes.func.isRequired,
     selectContribution: PropTypes.func.isRequired,
+    updateContributionLabel: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     viewPaper: PropTypes.object.isRequired,
     loadPaper: PropTypes.func.isRequired,
@@ -403,7 +409,8 @@ const mapDispatchToProps = dispatch => ({
     resetStatementBrowser: () => dispatch(resetStatementBrowser()),
     loadPaper: payload => dispatch(loadPaper(payload)),
     selectContribution: payload => dispatch(selectContribution(payload)),
-    setPaperAuthors: payload => dispatch(setPaperAuthors(payload))
+    setPaperAuthors: payload => dispatch(setPaperAuthors(payload)),
+    updateContributionLabel: payload => dispatch(updateContributionLabel(payload))
 });
 
 export default connect(
