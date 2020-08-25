@@ -152,7 +152,12 @@ class Contributions extends Component {
 
         let shared = 1;
         if (Object.keys(this.props.resources.byId).length !== 0 && (this.props.selectedResource || selectedContributionId)) {
-            shared = this.props.resources.byId[this.props.selectedResource ? this.props.selectedResource : selectedContributionId].shared;
+            const resourceObj = this.props.resources.byId[this.props.selectedResource ? this.props.selectedResource : selectedContributionId];
+            if (resourceObj) {
+                shared = resourceObj.shared;
+            } else {
+                shared = 0;
+            }
         }
 
         return (

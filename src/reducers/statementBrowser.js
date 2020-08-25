@@ -1,6 +1,8 @@
 import * as type from '../actions/types';
 import dotProp from 'dot-prop-immutable';
 import { MISC } from 'constants/graphSettings';
+import { match } from 'path-to-regexp';
+import ROUTES from 'constants/routes';
 
 const initialState = {
     selectedResource: '',
@@ -482,9 +484,29 @@ export default (state = initialState, action) => {
 
         case '@@router/LOCATION_CHANGE': {
             //from connected-react-router, reset the wizard when the page is changed
-            return {
-                ...initialState
-            };
+            const matchViewPaper = match(ROUTES.VIEW_PAPER);
+            const contributionChange = matchViewPaper(action.payload.location.pathname);
+            if (!contributionChange) {
+                return {
+                    ...initialState
+                };
+            } else {
+                return {
+                    ...state,
+                    // returns current state but resets some variables :
+                    selectedResource: '',
+                    selectedProperty: '',
+                    level: 0,
+                    isFetchingStatements: false,
+                    openExistingResourcesInDialog: false,
+                    propertiesAsLinks: false,
+                    resourcesAsLinks: false,
+                    resourceHistory: {
+                        byId: {},
+                        allIds: []
+                    }
+                };
+            }
         }
 
         default: {
