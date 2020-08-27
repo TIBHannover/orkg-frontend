@@ -6,12 +6,14 @@ import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
 export const url = `${process.env.REACT_APP_SERVER_URL}api/`;
 export const similaireServiceUrl = process.env.REACT_APP_SIMILARITY_SERVICE_URL;
 export const annotationServiceUrl = process.env.REACT_APP_ANNOTATION_SERVICE_URL;
+export const dataciteServiceUrl = process.env.REACT_APP_DATACITE_URL;
 export const resourcesUrl = `${url}resources/`;
 export const organizationsUrl = `${url}organizations/`;
 export const observatoriesUrl = `${url}observatories/`;
 export const problemsUrl = `${url}problems/`;
 export const predicatesUrl = `${url}predicates/`;
 export const userUrl = `${url}user/`;
+export const doisUrl = `${url}dois/`;
 export const statementsUrl = `${url}statements/`;
 export const literalsUrl = `${url}literals/`;
 export const classesUrl = `${url}classes/`;
@@ -20,6 +22,7 @@ export const crossrefUrl = process.env.REACT_APP_CROSSREF_URL;
 export const semanticScholarUrl = process.env.REACT_APP_SEMANTICSCHOLAR_URL;
 export const comparisonUrl = `${similaireServiceUrl}compare/`;
 export const similaireUrl = `${similaireServiceUrl}similar/`;
+export const dataciteUrl = `${dataciteServiceUrl}`;
 export const authenticationUrl = process.env.REACT_APP_SERVER_URL;
 
 /**
@@ -29,9 +32,7 @@ export const submitGetRequest = (url, headers, send_token = false) => {
     if (!url) {
         throw new Error('Cannot submit GET request. URL is null or undefined.');
     }
-
     const myHeaders = headers ? new Headers(headers) : {};
-
     if (send_token) {
         const cookies = new Cookies();
         const token = cookies.get('token') ? cookies.get('token') : null;
@@ -54,6 +55,7 @@ export const submitGetRequest = (url, headers, send_token = false) => {
                     });
                 } else {
                     const json = response.json();
+                    //console.log(json);
                     if (json.then) {
                         json.then(resolve).catch(reject);
                     } else {
@@ -696,6 +698,49 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
                 }
             };
         });
+    });
+};
+
+export const generateDOIForComparison = (comparison_id, title, subject, description, related_resources, authors, url) => {
+    return submitPostRequest(
+        doisUrl,
+        { 'Content-Type': 'application/json' },
+        { comparison_id, title, subject, description, related_resources, authors, url }
+    );
+};
+
+export const getComparisonDataByDOI = id => {
+    return submitGetRequest(`${process.env.REACT_APP_DATACITE_URL}/${process.env.REACT_APP_DATACITE_DOI_PREFIX}/${encodeURIComponent(id)}`);
+};
+
+export const getCitationByDOI = (DOI, style = '', header = 'text/x-bibliography') => {
+    let headers = '';
+    headers = { Accept: `${header}` };
+    const myHeaders = headers ? new Headers(headers) : {};
+    const url = `${process.env.REACT_APP_DATACITE_URL}/${DOI}?style=${style}`;
+
+    return new Promise((resolve, reject) => {
+        fetch(url, {
+            method: 'GET',
+            headers: myHeaders
+        })
+            .then(response => {
+                if (!response.ok) {
+                    reject({
+                        error: new Error(`Error response. (${response.status}) ${response.statusText}`),
+                        statusCode: response.status,
+                        statusText: response.statusText
+                    });
+                } else {
+                    const text = response.text();
+                    if (text.then) {
+                        text.then(resolve).catch(reject);
+                    } else {
+                        return resolve(text);
+                    }
+                }
+            })
+            .catch(reject);
     });
 };
 

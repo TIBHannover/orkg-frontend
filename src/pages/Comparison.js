@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
-import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
-import { comparisonUrl, submitGetRequest, getResource, getStatementsBySubject } from 'network';
+import { Alert, Dropdown, DropdownItem, DropdownMenu, NavLink, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
+import {
+    comparisonUrl,
+    submitGetRequest,
+    getResource,
+    getStatementsBySubject,
+    getComparisonDataByDOI,
+    getStatementsBySubjectAndPredicate
+} from 'network';
 import { getContributionIdsFromUrl, getPropertyIdsFromUrl, getTransposeOptionFromUrl, getResponseHashFromUrl, get_error_message } from 'utils';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPlus, faArrowsAltH, faLightbulb } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faPlus, faArrowsAltH, faUser, faLightbulb, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import ComparisonLoadingComponent from '../components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from '../components/Comparison/ComparisonTable.js';
@@ -21,13 +28,16 @@ import arrayMove from 'array-move';
 import { connect } from 'react-redux';
 import dotProp from 'dot-prop-immutable';
 import { reverse } from 'named-urls';
+import moment from 'moment';
 //import ProvenanceBox from 'components/Comparison/ProvenanceBox/ProvenanceBox';
+import ExportCitation from 'components/Comparison/ExportCitation';
 import { generateRdfDataVocabularyFile, extendPropertyIds, similarPropertiesByLabel } from 'utils';
 import { ContainerAnimated } from '../components/Comparison/styled';
 import RelatedResources from '../components/Comparison/RelatedResources';
 import RelatedFigures from '../components/Comparison/RelatedFigures';
 import Tippy from '@tippy.js/react';
 import { Cookies } from 'react-cookie';
+import { flattenDepth } from 'lodash';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
 const cookies = new Cookies();
@@ -41,17 +51,23 @@ class Comparison extends Component {
             response_hash: null,
             title: '',
             description: '',
+            subject: '',
             reference: '',
             createdAt: '',
             createdBy: '',
             contributions: [],
             dropdownOpen: false,
             properties: [],
+            authors: [],
+            comparisonLink: '',
+            DOIData: [],
             data: {},
             csvData: [],
             showPropertiesDialog: false,
             showShareDialog: false,
             showLatexDialog: false,
+            showExportCitationsDialog: false,
+            showPublishWithDOIDialog: false,
             showPublishDialog: false,
             showAddContribuion: false,
             isLoading: false,
@@ -66,6 +82,7 @@ class Comparison extends Component {
 
     componentDidMount = () => {
         this.performComparison();
+        this.getComparisonData();
         document.title = 'Comparison - ORKG';
     };
 
@@ -87,8 +104,26 @@ class Comparison extends Component {
         }
     };
 
-    updateComparisonMetadata = (title, description, reference) => {
-        this.setState({ title, description, reference });
+    getComparisonData = () => {
+        if (this.props.match.params.comparisonId) {
+            getComparisonDataByDOI(this.props.match.params.comparisonId)
+                .then(response => {
+                    this.setState({
+                        DOIData: {
+                            doi: response.data.attributes.doi,
+                            authors: response.data.attributes.creators,
+                            date: response.data.attributes.created
+                        }
+                    });
+                })
+                .catch(error => {
+                    this.setState({ error: error });
+                });
+        }
+    };
+
+    updateComparisonMetadata = (title, description, reference, subject, authors, comparisonLink) => {
+        this.setState({ title, description, reference, subject, authors, comparisonLink });
     };
 
     generateMatrixOfComparison = () => {
@@ -219,7 +254,9 @@ class Comparison extends Component {
                         const resourcesStatements = comparisonStatement.filter(statement => statement.predicate.id === PREDICATES.RELATED_RESOURCES);
 
                         const figureStatements = comparisonStatement.filter(statement => statement.predicate.id === PREDICATES.RELATED_FIGURE);
-
+                        let creators = comparisonStatement.filter(statement => statement.predicate.id === PREDICATES.HAS_AUTHOR);
+                        creators = creators.reverse(); // statements are ordered desc, so first author is last => thus reverse
+                        this.loadAuthorsORCID(creators);
                         if (urlStatement) {
                             this.getComparisonResult(urlStatement.object.label.substring(urlStatement.object.label.indexOf('?')));
                             this.setState({
@@ -229,6 +266,7 @@ class Comparison extends Component {
                                 reference: referenceStatement ? referenceStatement.object.label : '',
                                 createdAt: descriptionStatement.object.created_at,
                                 createdBy: descriptionStatement.object.created_by,
+                                //authors: authors,
                                 resourcesStatements,
                                 figureStatements
                             });
@@ -268,6 +306,25 @@ class Comparison extends Component {
         this.generateUrl(contributionIds.concat(newContributionIds).join(','));
     };
 
+    loadAuthorsORCID = async creators => {
+        return Promise.all(
+            creators.map(author => getStatementsBySubjectAndPredicate({ subjectId: author.object.id, predicateId: PREDICATES.HAS_ORCID }))
+        ).then(authorsORCID => {
+            const authorsArray = [];
+            for (const author of creators) {
+                const orcid = flattenDepth(authorsORCID, 2).find(a => a !== undefined && a.subject.id === author.object.id);
+                if (orcid) {
+                    authorsArray.push({ orcid: orcid.object.label, label: author.object.label, id: author.object.id });
+                } else {
+                    authorsArray.push({ orcid: '', label: author.object.label, id: author.object.id });
+                }
+            }
+            this.setState({
+                authors: authorsArray
+            });
+        });
+    };
+
     toggle = type => {
         this.setState(prevState => ({
             [type]: !prevState[type]
@@ -304,6 +361,7 @@ class Comparison extends Component {
     };
 
     toggleTranpose = () => {
+        this.props.match.params.comparisonId = '';
         this.setState(
             prevState => ({
                 transpose: !prevState.transpose
@@ -436,6 +494,9 @@ class Comparison extends Component {
                                         >
                                             Export as RDF
                                         </DropdownItem>
+                                        {this.props.match.params.comparisonId && this.state.DOIData.doi && (
+                                            <DropdownItem onClick={() => this.toggle('showExportCitationsDialog')}>Export Citation</DropdownItem>
+                                        )}
                                         <DropdownItem divider />
                                         <DropdownItem onClick={() => this.toggle('showShareDialog')}>Share link</DropdownItem>
                                         <DropdownItem onClick={() => this.toggle('showPublishDialog')}>Publish</DropdownItem>
@@ -481,6 +542,7 @@ class Comparison extends Component {
                                     <h2 className="h4 mb-4 mt-4">
                                         {this.props.match.params.comparisonId && this.state.title ? this.state.title : 'Compare'}
                                     </h2>
+
                                     {/*this.props.match.params.comparisonId && (
                                         <>
                                             <SubtitleSeparator />
@@ -496,13 +558,65 @@ class Comparison extends Component {
                                                 {this.state.description}
                                             </div>
                                         )}
-                                        {this.state.reference && (
-                                            <div style={{ marginBottom: '20px', lineHeight: 1.5 }}>
-                                                <small>
-                                                    <i>
-                                                        Reference: <ValuePlugins type="literal">{this.state.reference}</ValuePlugins>
-                                                    </i>
-                                                </small>
+
+                                        <div>
+                                            {this.state.createdAt ? (
+                                                <span className="badge badge-lightblue mr-2">
+                                                    <Icon icon={faCalendar} className="text-primary" />{' '}
+                                                    {this.state.createdAt ? moment(this.state.createdAt).format('MMMM') : ''}{' '}
+                                                    {this.state.createdAt ? moment(this.state.createdAt).format('YYYY') : ''}
+                                                </span>
+                                            ) : (
+                                                ''
+                                            )}
+
+                                            {this.state.authors && this.state.authors.length > 0 && (
+                                                <>
+                                                    {this.state.authors.map((author, index) =>
+                                                        author.id && author.id !== '' && author.orcid && author.orcid !== '' ? (
+                                                            <Link
+                                                                className="p-0"
+                                                                to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}
+                                                                key={index}
+                                                            >
+                                                                <Badge color="lightblue" className="mr-2 mb-2">
+                                                                    <Icon icon={faUser} className="text-primary" /> {author.label}
+                                                                </Badge>
+                                                            </Link>
+                                                        ) : author.orcid && author.orcid !== '' ? (
+                                                            <NavLink
+                                                                className="p-0"
+                                                                style={{ display: 'contents' }}
+                                                                href={'https://orcid.org/' + author.orcid}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                key={index}
+                                                            >
+                                                                <Badge color="lightblue" className="mr-2 mb-2">
+                                                                    <Icon icon={faUser} className="text-primary" /> {author.label}
+                                                                </Badge>
+                                                            </NavLink>
+                                                        ) : (
+                                                            <Badge color="lightblue" className="mr-2 mb-2" key={index}>
+                                                                <Icon icon={faUser} className="text-darkblue" /> {author.label}
+                                                            </Badge>
+                                                        )
+                                                    )}
+                                                </>
+                                            )}
+                                        </div>
+                                        {this.state.DOIData && (
+                                            <div>
+                                                {this.state.DOIData.doi && (
+                                                    <div style={{ marginBottom: '20px', lineHeight: 1.5 }}>
+                                                        <small>
+                                                            DOI:{' '}
+                                                            <i>
+                                                                <ValuePlugins type="literal">{this.state.DOIData.doi}</ValuePlugins>
+                                                            </i>
+                                                        </small>
+                                                    </div>
+                                                )}
                                             </div>
                                         )}
                                     </>
@@ -549,6 +663,9 @@ class Comparison extends Component {
                     {/*
                     <ProvenanceBox resourceId={this.props.match.params.comparisonId} />
                     */}
+                    {/* {this.props.match.params.comparisonId && ( */}
+                    {/* <ExportCitations DOI={this.props.match.params.comparisonId} /> */}
+                    {/* )} */}
                 </ContainerAnimated>
 
                 <SelectProperties
@@ -574,7 +691,14 @@ class Comparison extends Component {
                     toggle={() => this.toggle('showPublishDialog')}
                     url={window.location.href}
                     response_hash={this.state.response_hash}
+                    authors={this.state.authors}
+                    title={this.state.title}
+                    location={this.state.locationSearch || this.props.location.search}
+                    description={this.state.description}
+                    reference={this.state.reference}
+                    subject={this.state.subject}
                     comparisonId={this.props.match.params.comparisonId}
+                    doi={this.state.DOIData.doi}
                     updateComparisonMetadata={this.updateComparisonMetadata}
                 />
 
@@ -595,6 +719,13 @@ class Comparison extends Component {
                     response_hash={this.state.response_hash}
                     title={this.state.title}
                     description={this.state.description}
+                    comparisonId={this.props.match.params.comparisonId}
+                />
+
+                <ExportCitation
+                    showDialog={this.state.showExportCitationsDialog}
+                    toggle={() => this.toggle('showExportCitationsDialog')}
+                    DOI={this.state.DOIData.doi}
                     comparisonId={this.props.match.params.comparisonId}
                 />
             </div>
