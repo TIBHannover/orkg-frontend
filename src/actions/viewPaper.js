@@ -21,6 +21,13 @@ export const selectContribution = ({ contributionId: id, contributionIsLoaded, c
                 existingResourceId: id
             })
         );
+        // this will create or set the selected contribution id in the statementBrowser (HERE CREATE)
+        dispatch({
+            type: type.STATEMENT_BROWSER_CREATE_CONTRIBUTION_OBJECT,
+            payload: {
+                id
+            }
+        });
 
         dispatch(
             fetchStatementsForResource({
@@ -30,21 +37,35 @@ export const selectContribution = ({ contributionId: id, contributionIsLoaded, c
                 depth: 3 // load depth 3 the first time
             })
         );
+        dispatch({
+            type: type.CLEAR_RESOURCE_HISTORY
+        });
     }
-
+    // this will create or set the selected contribution id in the statementBrowser (HERE SELECT)
     dispatch({
-        type: type.CLEAR_RESOURCE_HISTORY
+        type: type.STATEMENT_BROWSER_CREATE_CONTRIBUTION_OBJECT,
+        payload: {
+            id
+        }
     });
     dispatch(
         selectResource({
             increaseLevel: false,
             resourceId: id,
             label: contributionLabel,
-            resetLevel: true
+            resetLevel: false
         })
     );
     dispatch({
         type: type.SELECT_CONTRIBUTION,
+        payload: {
+            id
+        }
+    });
+
+    // this will load the contribution data/history into the statementBrowser
+    dispatch({
+        type: type.STATEMENT_BROWSER_LOAD_CONTRIBUTION_HISTORY,
         payload: {
             id
         }

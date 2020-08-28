@@ -40,8 +40,8 @@ export default function Statements(props) {
         let propertyIds = [];
         let shared = 1;
         if (Object.keys(props.resources.byId).length !== 0 && props.selectedResource) {
-            propertyIds = props.resources.byId[props.selectedResource].propertyIds;
-            shared = props.resources.byId[props.selectedResource].shared;
+            propertyIds = props.resources.byId[props.selectedResource] ? props.resources.byId[props.selectedResource].propertyIds : [];
+            shared = props.resources.byId[props.selectedResource] ? props.resources.byId[props.selectedResource].shared : 0;
         }
 
         return (

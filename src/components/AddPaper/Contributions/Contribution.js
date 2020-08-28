@@ -23,7 +23,11 @@ class Contribution extends Component {
     render() {
         let shared = 1;
         if (Object.keys(this.props.resources.byId).length !== 0 && (this.props.selectedResource || this.props.resourceId)) {
-            shared = this.props.resources.byId[this.props.selectedResource ? this.props.selectedResource : this.props.resourceId].shared;
+            if (this.props.resources.byId[this.props.selectedResource ? this.props.selectedResource : this.props.resourceId]) {
+                shared = this.props.resources.byId[this.props.selectedResource ? this.props.selectedResource : this.props.resourceId].shared;
+            } else {
+                shared = 0;
+            }
         }
 
         return (

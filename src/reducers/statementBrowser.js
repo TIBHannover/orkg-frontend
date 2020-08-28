@@ -29,7 +29,10 @@ const initialState = {
         allIds: []
     },
     templates: {},
-    classes: {}
+    classes: {},
+    // adding contribution object plus selected contributionId;
+    contributions: {},
+    selectedContributionId: ''
 };
 
 export default (state = initialState, action) => {
@@ -340,6 +343,27 @@ export default (state = initialState, action) => {
             const { payload } = action;
             const level = payload.increaseLevel ? state.level + 1 : state.level - 1;
 
+            // get statementBrowserBehaviour;
+            const isViewPaper = __getStatementBrowserBehaviour(state);
+            if (isViewPaper && state.contributions[state.selectedContributionId]) {
+                // this wants to update the contribution object
+                const contribObj = state.contributions[state.selectedContributionId];
+                if (payload.resourceId === state.selectedContributionId) {
+                    if (contribObj.selectedResource === '') {
+                        // there is no selected data yet;
+                        contribObj.selectedResource = payload.resourceId;
+                        contribObj.level = level > 0 ? level : 0;
+                    }
+                } else {
+                    // check if this resource exists in the contribution data ;
+                    const isContributionResource = !!state.contributions[payload.resourceId];
+                    if (!isContributionResource) {
+                        contribObj.selectedResource = payload.resourceId;
+                        contribObj.level = level > 0 ? level : 0;
+                    }
+                }
+            }
+
             return {
                 ...state,
                 selectedResource: payload.resourceId,
@@ -378,12 +402,42 @@ export default (state = initialState, action) => {
 
             newState = dotProp.set(newState, 'resourceHistory.allIds', ids => [...ids, resourceId]);
 
+            // overwrite contribution history if needed
+            const isViewPaper = __getStatementBrowserBehaviour(state);
+            const contribObj = state.contributions[state.selectedContributionId];
+            if (isViewPaper && contribObj) {
+                const isContributionResource = !!state.contributions[resourceId];
+
+                if (!isContributionResource) {
+                    contribObj.resourceHistory = newState.resourceHistory;
+                } else {
+                    if (contribObj.resourceHistory.allIds.length === 0) {
+                        // will ignore history updates if there is already some data;
+                        contribObj.resourceHistory = newState.resourceHistory;
+                    }
+                }
+            }
+
             return newState;
         }
 
         case type.GOTO_RESOURCE_HISTORY: {
             const { payload } = action;
             const ids = state.resourceHistory.allIds.slice(0, payload.historyIndex + 1); //TODO: it looks like historyIndex can be derived, so remove it from payload
+            const isViewPaper = __getStatementBrowserBehaviour(state);
+            if (isViewPaper && state.contributions[state.selectedContributionId]) {
+                const contribObj = state.contributions[state.selectedContributionId];
+                contribObj.resourceHistory = {
+                    byId: {
+                        ...state.resourceHistory.byId // TODO: remove the history item from byId object (not really necessary, but it is cleaner)
+                    },
+                    allIds: ids
+                };
+                contribObj.level = payload.historyIndex;
+                contribObj.selectedResource = payload.id;
+                contribObj.selectedProperty = state.resourceHistory.byId[payload.id].selectedProperty;
+                state.contributions[state.selectedContributionId] = contribObj;
+            }
 
             return {
                 ...state,
@@ -474,7 +528,6 @@ export default (state = initialState, action) => {
 
             let newState = dotProp.set(state, `resources.byId.${contribId}.label`, newLabel);
             newState = dotProp.set(newState, `resourceHistory.byId.${contribId}.label`, newLabel);
-            console.log(newState);
             return {
                 ...newState
             };
@@ -520,8 +573,48 @@ export default (state = initialState, action) => {
             }
         }
 
+        /** -- Handling for creation of contribution objects**/
+        case type.STATEMENT_BROWSER_CREATE_CONTRIBUTION_OBJECT: {
+            __createContributionObject(state, action.payload.id);
+            return state;
+        }
+        case type.STATEMENT_BROWSER_LOAD_CONTRIBUTION_HISTORY: {
+            const contribObj = state.contributions[action.payload.id];
+            if (contribObj) {
+                state.selectedResource = contribObj.selectedResource;
+                state.selectedProperty = contribObj.selectedProperty;
+                state.isFetchingStatements = contribObj.isFetchingStatements;
+                state.level = contribObj.level;
+                state.resourceHistory = contribObj.resourceHistory;
+            }
+
+            return state;
+        }
+
         default: {
             return state;
         }
     }
+};
+
+/** --- SOME HELPER FUNCTIONS --- **/
+
+const __createContributionObject = (state, id) => {
+    if (!state.contributions.hasOwnProperty(id)) {
+        state.contributions[id] = {
+            selectedResource: '',
+            selectedProperty: '',
+            isFetchingStatements: false,
+            level: 0,
+            resourceHistory: {
+                byId: {},
+                allIds: []
+            }
+        };
+    }
+    state.selectedContributionId = id;
+};
+
+export const __getStatementBrowserBehaviour = state => {
+    return !state.openExistingResourcesInDialog && !state.propertiesAsLinks && !state.resourcesAsLinks;
 };
