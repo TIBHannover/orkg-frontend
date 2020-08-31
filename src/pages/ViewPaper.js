@@ -71,7 +71,15 @@ class ViewPaper extends Component {
         if (this.props.match.params.resourceId !== prevProps.match.params.resourceId) {
             this.loadPaperData();
         } else if (this.props.match.params.contributionId !== prevProps.match.params.contributionId) {
-            this.setState({ selectedContribution: this.props.match.params.contributionId });
+            const selectedContribution =
+                this.props.match.params.contributionId &&
+                this.state.contributions.some(el => {
+                    return el.id === this.props.match.params.contributionId;
+                })
+                    ? this.props.match.params.contributionId
+                    : this.state.contributions[0].id;
+
+            this.setState({ selectedContribution: selectedContribution });
         }
     };
 

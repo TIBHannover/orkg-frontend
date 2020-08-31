@@ -26,6 +26,10 @@ export default function Breadcrumbs(props) {
         });
     };
 
+    // fail save
+    if (!props.resources.byId[props.selectedResource]) {
+        return <div />;
+    }
     return (
         <Container>
             <BackButton className="btn btn-link border-0 align-baseline" onClick={handleBackClick}>

@@ -88,14 +88,16 @@ class Contributions extends Component {
 
     handleSelectContribution = contributionId => {
         this.setState({ loading: true, isSimilaireContributionsLoading: true });
-        const contributionIsLoaded = this.props.resources.byId[contributionId] ? true : false;
+        const contributionIsLoaded = !!this.props.resources.byId[contributionId];
         // get the contribution label
         const contributionResource = this.props.contributions.find(c => c.id === this.props.selectedContribution);
-        this.props.selectContribution({
-            contributionId,
-            contributionIsLoaded,
-            contributionLabel: contributionResource.label
-        });
+        if (contributionResource) {
+            this.props.selectContribution({
+                contributionId,
+                contributionIsLoaded,
+                contributionLabel: contributionResource.label
+            });
+        }
         getSimilaireContribution(this.state.selectedContribution)
             .then(similaireContributions => {
                 const similaireContributionsData = similaireContributions.map(paper => {
@@ -396,7 +398,6 @@ const mapStateToProps = (state, ownProps) => {
         ),
         ...(researchProblems.length > 0 ? researchProblems.map(c => c.id) : [])
     ];
-
     return {
         researchProblemsIds: researchProblemsIds,
         researchProblems: researchProblems,

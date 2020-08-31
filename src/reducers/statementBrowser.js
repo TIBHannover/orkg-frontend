@@ -403,10 +403,10 @@ export default (state = initialState, action) => {
             newState = dotProp.set(newState, 'resourceHistory.allIds', ids => [...ids, resourceId]);
 
             // overwrite contribution history if needed
-            const isViewPaper = __getStatementBrowserBehaviour(state);
-            const contribObj = state.contributions[state.selectedContributionId];
+            const isViewPaper = __getStatementBrowserBehaviour(newState);
+            const contribObj = newState.contributions[newState.selectedContributionId];
             if (isViewPaper && contribObj) {
-                const isContributionResource = !!state.contributions[resourceId];
+                const isContributionResource = !!newState.contributions[resourceId];
 
                 if (!isContributionResource) {
                     contribObj.resourceHistory = newState.resourceHistory;
@@ -418,12 +418,13 @@ export default (state = initialState, action) => {
                 }
             }
 
-            return newState;
+            return { ...newState };
         }
 
         case type.GOTO_RESOURCE_HISTORY: {
             const { payload } = action;
             const ids = state.resourceHistory.allIds.slice(0, payload.historyIndex + 1); //TODO: it looks like historyIndex can be derived, so remove it from payload
+
             const isViewPaper = __getStatementBrowserBehaviour(state);
             if (isViewPaper && state.contributions[state.selectedContributionId]) {
                 const contribObj = state.contributions[state.selectedContributionId];
@@ -541,21 +542,20 @@ export default (state = initialState, action) => {
         }
 
         case type.RESET_STATEMENT_BROWSER: {
-            return {
-                ...initialState
-            };
+            return initialState;
         }
 
         case '@@router/LOCATION_CHANGE': {
             //from connected-react-router, reset the wizard when the page is changed
             const matchViewPaper = match(ROUTES.VIEW_PAPER);
             const contributionChange = matchViewPaper(action.payload.location.pathname);
-            if (!contributionChange) {
-                return {
-                    ...initialState
-                };
+
+            let newState;
+            const isViewPaper = __getStatementBrowserBehaviour(state);
+            if (!contributionChange || !isViewPaper) {
+                newState = initialState;
             } else {
-                return {
+                newState = {
                     ...state,
                     // returns current state but resets some variables :
                     selectedResource: '',
@@ -571,12 +571,13 @@ export default (state = initialState, action) => {
                     }
                 };
             }
+            return { ...newState };
         }
 
         /** -- Handling for creation of contribution objects**/
         case type.STATEMENT_BROWSER_CREATE_CONTRIBUTION_OBJECT: {
-            __createContributionObject(state, action.payload.id);
-            return state;
+            const newState = __createContributionObject(state, action.payload.id);
+            return { ...newState };
         }
         case type.STATEMENT_BROWSER_LOAD_CONTRIBUTION_HISTORY: {
             const contribObj = state.contributions[action.payload.id];
@@ -588,7 +589,7 @@ export default (state = initialState, action) => {
                 state.resourceHistory = contribObj.resourceHistory;
             }
 
-            return state;
+            return { ...state };
         }
 
         default: {
@@ -600,8 +601,10 @@ export default (state = initialState, action) => {
 /** --- SOME HELPER FUNCTIONS --- **/
 
 const __createContributionObject = (state, id) => {
+    state.selectedContributionId = id;
+
     if (!state.contributions.hasOwnProperty(id)) {
-        state.contributions[id] = {
+        const initData = {
             selectedResource: '',
             selectedProperty: '',
             isFetchingStatements: false,
@@ -611,8 +614,10 @@ const __createContributionObject = (state, id) => {
                 allIds: []
             }
         };
+        const updatedState = dotProp.set(state, `contributions.${id}`, initData);
+        return { ...updatedState };
     }
-    state.selectedContributionId = id;
+    return { ...state };
 };
 
 export const __getStatementBrowserBehaviour = state => {
