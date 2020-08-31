@@ -34,7 +34,7 @@ export const initializeWithoutContribution = data => dispatch => {
             label: label,
             existingResourceId: resourceId,
             resourceId: resourceId,
-            ...(rootNodeType === 'predicate' ? { classes: ['Predicate'] } : {})
+            ...(rootNodeType === 'predicate' ? { classes: [CLASSES.PREDICATE] } : {})
         })
     );
 

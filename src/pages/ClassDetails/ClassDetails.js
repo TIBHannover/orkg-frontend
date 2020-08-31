@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Table } from 'reactstrap';
+import { Container, Table, ButtonGroup, Button } from 'reactstrap';
 import { classesUrl, submitGetRequest, getStatementsByObjectAndPredicate } from 'network';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faPlus, faFileCsv } from '@fortawesome/free-solid-svg-icons';
+import ClassInstances from 'components/ClassInstances/ClassInstances';
+import ImportCSVInstances from 'components/ClassInstances/ImportCSVInstances';
 import InternalServerError from 'pages/InternalServerError';
 import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
@@ -14,9 +18,11 @@ function ClassDetails(props) {
     const location = useLocation();
     const [error, setError] = useState(null);
     const [label, setLabel] = useState('');
+    const [keyInstances, setKeyInstances] = useState(1);
     const [template, setTemplate] = useState(null);
     const [uri, setURI] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [modalImportIsOpen, setModalImportIsOpen] = useState(false);
 
     useEffect(() => {
         const findClass = async () => {
@@ -72,6 +78,17 @@ function ClassDetails(props) {
                                             <small>No label</small>
                                         </i>
                                     )}
+                                    <ButtonGroup className="float-right mb-4 ml-1">
+                                        <Link
+                                            to={`${ROUTES.ADD_RESOURCE}?classes=${props.match.params.id}`}
+                                            className="float-right btn btn-darkblue flex-shrink-0 btn-sm"
+                                        >
+                                            <Icon icon={faPlus} /> Add resource
+                                        </Link>
+                                        <Button size="sm" color="darkblue" onClick={() => setModalImportIsOpen(true)}>
+                                            <Icon icon={faFileCsv} /> Import Instances
+                                        </Button>
+                                    </ButtonGroup>
                                 </h3>
                             </div>
                         </div>
@@ -99,6 +116,13 @@ function ClassDetails(props) {
                                 </tr>
                             </tbody>
                         </Table>
+                        <ClassInstances classId={props.match.params.id} key={keyInstances} />
+                        <ImportCSVInstances
+                            classId={props.match.params.id}
+                            showDialog={modalImportIsOpen}
+                            toggle={() => setModalImportIsOpen(v => !v)}
+                            callBack={() => setKeyInstances(Math.random())}
+                        />
                     </div>
                 </Container>
             )}

@@ -8,7 +8,7 @@ import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDa
 import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import AutoComplete from 'components/StatementBrowser/AutoComplete';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
 import useTogggle from './helpers/useToggle';
 import validationSchema from './helpers/validationSchema';
 import InputField from 'components/StatementBrowser/InputField/InputField';
@@ -82,7 +82,7 @@ export default function AddValueTemplate(props) {
 
     /* Select component reference can be used to check if menu is opened */
     const isMenuOpen = () => {
-        return resourceInputRef.current.select.state.menuIsOpen && resourceInputRef.current.state.loadedOptions.length > 0;
+        return resourceInputRef.current.state.menuIsOpen && resourceInputRef.current.props.options.length > 0;
     };
 
     const validateValue = () => {
@@ -235,7 +235,7 @@ export default function AddValueTemplate(props) {
                     <InputGroup size="sm">
                         {!props.valueClass && (
                             <InputGroupButtonDropdown addonType="prepend" isOpen={dropdownValueTypeOpen} toggle={setDropdownValueTypeOpen}>
-                                <StyledDropdownToggle>
+                                <StyledDropdownToggle disableBorderRadiusRight={true}>
                                     <Tippy content={valueType === 'object' ? resourceTooltip : literalTooltip}>
                                         <small>{valueType === 'object' ? 'Resource' : 'Literal'} </small>
                                     </Tippy>
@@ -268,6 +268,8 @@ export default function AddValueTemplate(props) {
                                 onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                                 value={inputValue}
                                 additionalData={props.newResources}
+                                autoLoadOption={props.valueClass ? true : false}
+                                openMenuOnFocus={true}
                                 disableBorderRadiusRight
                                 disableBorderRadiusLeft={!props.valueClass}
                                 cssClasses="form-control-sm"

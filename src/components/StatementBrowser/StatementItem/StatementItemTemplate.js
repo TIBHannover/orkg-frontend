@@ -9,7 +9,7 @@ import StatementOptionButton from 'components/StatementBrowser/StatementOptionBu
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
 import { predicatesUrl } from 'network';
 import defaultProperties from 'components/StatementBrowser/AddProperty/helpers/defaultProperties';
-import AutoComplete from 'components/StatementBrowser/AutoComplete';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';

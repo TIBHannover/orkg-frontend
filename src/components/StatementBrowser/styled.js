@@ -92,9 +92,13 @@ export const StyledButton = styled(Button)`
     }
 `;
 
-export const StyledDropdownToggle = styled(DropdownToggle)`
-    border-top-left-radius: 4px !important;
-    border-bottom-left-radius: 4px !important;
+export const StyledDropdownToggle = styled(DropdownToggle).withConfig({
+    shouldForwardProp: prop => !['disableBorderRadiusLeft', 'disableBorderRadiusRight'].includes(prop)
+})`
+    border-top-left-radius: ${props => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
+    border-bottom-left-radius: ${props => (props.disableBorderRadiusLeft ? '0' : '4px !important')};
+    border-top-right-radius: ${props => (props.disableBorderRadiusRight ? '0' : '4px !important')};
+    border-bottom-right-radius: ${props => (props.disableBorderRadiusRight ? '0' : '4px !important')};
     background: ${props => props.theme.ultraLightBlueDarker} !important;
     color: ${props => props.theme.buttonDark} !important;
     border-color: #ced4da !important;
@@ -126,7 +130,11 @@ export const ValueItemStyle = styled(ListGroupItem)`
         }
     }
 
-    &:hover .valueOptions,
+    &:hover .valueOptions {
+        visibility: visible;
+        opacity: 1;
+    }
+
     &:focus-within .valueOptions {
         visibility: visible;
         opacity: 1;
@@ -291,8 +299,14 @@ export const PropertyStyle = styled.div`
     &:focus {
         outline: 0;
     }
-    &:hover .propertyOptions,
-    &:focus-within .propertyOptions {
+    &:hover .propertyOptions {
+        visibility: visible;
+        opacity: 1;
+        span {
+            color: ${props => props.theme.buttonDark};
+        }
+    }
+    &:focus-within .propertyOption {
         visibility: visible;
         opacity: 1;
         span {

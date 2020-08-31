@@ -8,6 +8,7 @@ import FeaturedComparisons from '../components/Home/FeaturedComparisons';
 import Jumbotron from '../components/Home/Jumbotron';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import TrendingProblems from 'components/Home/TrendingProblems';
 
 class Home extends Component {
     componentDidMount = () => {
@@ -33,6 +34,7 @@ class Home extends Component {
                     <Row>
                         <Col md={7} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
                             <FeaturedComparisons />
+                            <TrendingProblems />
                             <div className="box rounded-lg mt-4 p-3" style={{ flexDirection: 'column', display: 'flex', flexGrow: '1' }}>
                                 <h2 className="h5">
                                     <Icon icon={faStream} className="text-primary" /> Browse by research field

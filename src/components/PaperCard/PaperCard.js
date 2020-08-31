@@ -90,7 +90,7 @@ PaperCard.propTypes = {
         id: PropTypes.string.isRequired,
         title: PropTypes.string,
         authorNames: PropTypes.array,
-        publicationMonth: PropTypes.string,
+        publicationMonth: PropTypes.any,
         publicationYear: PropTypes.string
     }).isRequired,
     contribution: PropTypes.shape({

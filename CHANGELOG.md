@@ -3,6 +3,58 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.17.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.17...V0.17.1) - 2020-08-21
+
+### Merged
+
+- style(Observatory): change design to three column layout [`#352`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/352)
+- fix: Loading the template of predicates and Geonames CORS issues [`#351`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/351)
+
+### Fixed
+
+- Merge branch '296-loading-the-template-of-predicates-and-geoname-cors-issues' into 'master' [`#296`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/296)
+
+---
+## [0.17](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.16...V0.17) - 2020-08-19
+
+### Merged
+
+- fix: AddValue Template addes two items [`#350`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/350)
+- feat(Homepage): show trending research problems [`#342`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/342)
+- fix: "Add filtering of deleted papers on profile page" [`#339`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/339)
+- fix: Showing formatted label while showing a Pulse indicator [`#349`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/349)
+- fix: Change Predicate class ID constant [`#348`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/348)
+- Autocomplete improvements [`#346`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/346)
+- fix:  Prevent Scrolling on contribution selection change (ViewPaper) [`#341`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/341)
+- fix: editing issue with Edge [`#347`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/347)
+- fix: shifting page when modal opens/closes [`#345`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/345)
+- feat: PDF survey table extractor [`#314`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/314)
+- fix: Hashtag Search does not work in search page [`#338`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/338)
+- ux: change label of 'published in' [`#335`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/335)
+- fix: empty venue in add paper wizard [`#334`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/334)
+- style(ResearchProblem): show contribution label in papers list [`#340`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/340)
+- fix(GraphView): never automatically expand research fields [`#336`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/336)
+- refactor: move fixed IDs out of .env file to separate config file [`#332`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/332)
+
+### Fixed
+
+- Merge branch '295-addvalue-template-addes-two-items' into 'master' [`#295`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/295)
+- Merge branch '244-add-filtering-of-deleted-papers-on-profile-page' into 'master' [`#244`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/244)
+- Merge branch '294-case-fatality-rate-value' into 'master' [`#294`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/294)
+- Merge branch '288-handle-backend-response-for-reserved-class-ids' into 'master' [`#288`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/288)
+- Merge branch 'Autocomplete' into 'master' [`#201`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/201)
+- Merge branch '289-prevent-scrolling-on-contribution-selection-change-viewpaper' into 'master' [`#289`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/289)
+- Merge branch '293-problem-with-editing-papers-while-opening-orkg-web-page-in-different-browsers' into 'master' [`#293`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/293)
+- Merge branch '292-page-moving-when-modal-is-opened' into 'master' [`#292`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/292)
+- Merge branch 'pdf-annotation' into 'master' [`#252`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/252)
+- Merge branch '270-hashtag-search-does-not-work-in-search-page' into 'master' [`#270`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/270)
+- Merge branch '285-replace-label-paper-venue' into 'master' [`#285`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/285)
+- Merge branch '283-add-paper-handeling-empty-venues' into 'master' [`#283`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/283)
+- Merge branch '286-list-contribution-label-in-paper-list' into 'master' [`#286`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/286)
+- Merge branch '284-graph-view-never-automatically-expand-research-fields' into 'master' [`#284`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/284)
+- Merge branch '281-move-graph-ids-to-config-files' into 'master' [`#281`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/281)
+
+---
 ## [0.16](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.15...V0.16) - 2020-07-22
 
 ### Merged

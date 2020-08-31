@@ -189,14 +189,14 @@ class ResearchFieldCards extends Component {
         const showPapers = this.state.breadcrumb.length > 1;
 
         return (
-            <div className="mt-5">
+            <div className="mt-3">
                 {this.state.breadcrumb.map((field, index) => (
                     <BreadcrumbLink key={field.id} onClick={() => this.handleClickBreadcrumb(field.id, field.label)}>
                         {field.label} {index !== this.state.breadcrumb.length - 1 && <Icon icon={faAngleDoubleRight} />}
                     </BreadcrumbLink>
                 ))}
 
-                <hr className="mt-3 mb-5" />
+                <hr className="mt-3 mb-3" />
                 <div>
                     <TransitionGroup id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap" exit={false}>
                         {this.state.researchFields.map(field => {
