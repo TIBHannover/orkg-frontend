@@ -24,9 +24,10 @@ class Observatories extends Component {
         this.setState({ isNextPageLoading: true });
         submitGetRequest(observatoriesUrl)
             .then(observatories => {
+                const g = this.groupBy(observatories, 'researchField');
                 if (observatories.length > 0) {
                     this.setState({
-                        observatories: observatories,
+                        observatories: g,
                         isNextPageLoading: false
                     });
                 } else {
@@ -42,6 +43,13 @@ class Observatories extends Component {
             });
     };
 
+    groupBy = (array, key) => {
+        return array.reduce((result, currentValue) => {
+            (result[currentValue[key]] = result[currentValue[key]] || []).push(currentValue);
+            return result;
+        }, {});
+    };
+
     render() {
         return (
             <>
@@ -49,13 +57,21 @@ class Observatories extends Component {
                     <h1 className="h4 mt-4 mb-4">View all observatories </h1>
                 </Container>
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
-                    {this.state.observatories.length > 0 && (
-                        <div className="mt-3 row justify-content-center">
-                            {this.state.observatories.map(observatory => {
-                                return <ObservatoryCard key={observatory.id} observatory={{ ...observatory }} />;
-                            })}
-                        </div>
-                    )}
+                    {Object.keys(this.state.observatories)
+                        .reverse()
+                        .map(os => {
+                            return (
+                                <>
+                                    <h5>{os === 'null' ? 'Others' : os}</h5>
+                                    <div className="mt-3 row justify-content-center">
+                                        {this.state.observatories[os].map(observatory => {
+                                            return <ObservatoryCard key={observatory.id} observatory={observatory} />;
+                                        })}
+                                    </div>
+                                </>
+                            );
+                        })}
+
                     {this.state.observatories.length === 0 && !this.state.isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">No observatories yet!</div>
                     )}

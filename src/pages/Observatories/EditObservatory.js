@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup } from 'reactstrap';
-import { updateObservatoryName, updateObservatoryDescription } from 'network';
+import { updateObservatoryName, updateObservatoryDescription, updateObservatoryResearchField } from 'network';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
 
 class EditObservatory extends Component {
     constructor(props) {
         super(props);
-
+        this.resourceInputRef = React.createRef();
         this.state = {
             label: '',
             description: '',
             isLoadingName: true,
-            isLoadingDescription: true
+            isLoadingDescription: true,
+            researchField: '',
+            isLoadindResearchField: true
         };
     }
 
@@ -25,6 +28,10 @@ class EditObservatory extends Component {
         if (prevProps.description !== this.props.description) {
             this.setState({ description: this.props.description });
         }
+
+        if (prevProps.researchField !== this.props.researchField) {
+            this.setState({ researchField: this.props.researchField });
+        }
     };
 
     handleChange = event => {
@@ -35,6 +42,7 @@ class EditObservatory extends Component {
         const value = this.state.label;
         const description = this.state.description;
         const id = this.props.id;
+        const researchField = this.state.researchField.label;
 
         value !== this.props.label ? await this.updateObservatoryName(id, value) : this.setState({ isLoadingName: true });
 
@@ -42,7 +50,11 @@ class EditObservatory extends Component {
             ? await this.updateObservatoryDescription(id, description)
             : this.setState({ isLoadingDescription: true });
 
-        if (this.state.isLoadingName && this.state.isLoadingDescription) {
+        researchField !== this.props.researchField
+            ? await this.updateObservatoryResearchField(id, researchField)
+            : this.setState({ isLoadingResearchField: true });
+
+        if (this.state.isLoadingName && this.state.isLoadingDescription && this.state.isLoadingResearchField) {
             window.location.reload(false);
         }
     };
@@ -71,10 +83,26 @@ class EditObservatory extends Component {
             } catch (error) {
                 this.setState({ isLoadingDescription: false });
                 console.error(error);
-                toast.error(`Error updating ab observatory ${error.message}`);
+                toast.error(`Error updating an observatory ${error.message}`);
             }
         } else {
             toast.error(`Please enter observatory description`);
+            this.setState({ isLoadingDescription: false });
+        }
+    };
+
+    updateObservatoryResearchField = async (id, researchField) => {
+        this.setState({ isLoadingResearchField: true });
+        if (researchField && researchField.length !== 0) {
+            try {
+                await updateObservatoryResearchField(id, researchField);
+            } catch (error) {
+                this.setState({ isLoadingResearchField: false });
+                console.error(error);
+                toast.error(`Error updating an observatory ${error.message}`);
+            }
+        } else {
+            toast.error(`Please enter observatory research field`);
             this.setState({ isLoadingDescription: false });
         }
     };
@@ -95,9 +123,22 @@ class EditObservatory extends Component {
                                     type="text"
                                     name="label"
                                     id="ObservatoryName"
-                                    // disabled={loading}
                                     value={this.state.label}
                                     placeholder="Observatory Name"
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="ObservatoryResearchField">Observatory Research Field</Label>
+                                <AutoComplete
+                                    requestUrl=""
+                                    optionsClass="ResearchField"
+                                    placeholder="Observatory research field"
+                                    onItemSelected={async rf => {
+                                        this.setState({ researchField: { ...rf, label: rf.value } });
+                                    }}
+                                    cssClasses="form-control-sm"
+                                    value={this.state.researchField}
+                                    allowCreate={false}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -133,7 +174,8 @@ EditObservatory.propTypes = {
     toggle: PropTypes.func.isRequired,
     label: PropTypes.string.isRequired,
     id: PropTypes.string,
-    description: PropTypes.string
+    description: PropTypes.string,
+    researchField: PropTypes.string
 };
 
 export default connect()(EditObservatory);

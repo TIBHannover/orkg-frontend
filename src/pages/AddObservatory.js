@@ -10,6 +10,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { openAuthDialog } from 'actions/auth';
 import { connect } from 'react-redux';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
 
 class AddObservatory extends Component {
     constructor(props) {
@@ -19,7 +20,8 @@ class AddObservatory extends Component {
             redirect: false,
             value: '',
             description: '',
-            observatoryId: ''
+            observatoryId: '',
+            researchField: ''
         };
     }
 
@@ -27,9 +29,11 @@ class AddObservatory extends Component {
         this.setState({ editorState: 'loading' });
         const value = this.state.value;
         const description = this.state.description;
-        if (value && value.length !== 0) {
+        const researchField = this.state.researchField.label;
+
+        if (value && value.length !== 0 && description && description.length !== 0 && researchField && researchField !== 0) {
             try {
-                const observatory = await createObservatory(value, this.props.match.params.id, description);
+                const observatory = await createObservatory(value, this.props.match.params.id, description, researchField);
                 this.navigateToObservatory(observatory.id);
             } catch (error) {
                 this.setState({ editorState: 'edit' });
@@ -37,7 +41,7 @@ class AddObservatory extends Component {
                 toast.error(`Error creating observatory ${error.message}`);
             }
         } else {
-            toast.error(`Please enter an observatory name`);
+            toast.error(`Please enter an observatory name, description and research field`);
             this.setState({ editorState: 'edit' });
         }
     };
@@ -78,6 +82,19 @@ class AddObservatory extends Component {
                                 id="ObservatoryLabel"
                                 disabled={loading}
                                 placeholder="Observatory name"
+                            />
+                            <br />
+                            <Label for="ObservatoryResearchField">Research Field</Label>
+                            <AutoComplete
+                                requestUrl=""
+                                optionsClass="ResearchField"
+                                placeholder="Observatory research field"
+                                onItemSelected={async rf => {
+                                    this.setState({ researchField: { ...rf, label: rf.value } });
+                                }}
+                                cssClasses="form-control-sm"
+                                value={this.state.researchField}
+                                allowCreate={false}
                             />
                             <br />
                             <Label for="ObservatoryDescription">Observatory description</Label>

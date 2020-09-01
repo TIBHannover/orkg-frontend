@@ -665,6 +665,10 @@ export const updateObservatoryDescription = (id, description) => {
     return submitPutRequest(`${observatoriesUrl}updateDescription`, { 'Content-Type': 'application/json' }, { id, description });
 };
 
+export const updateObservatoryResearchField = (id, researchField) => {
+    return submitPutRequest(`${observatoriesUrl}updateResearchField`, { 'Content-Type': 'application/json' }, { id, researchField });
+};
+
 export const getUsersByObservatoryId = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/users`);
 };
@@ -685,8 +689,12 @@ export const getProblemsByObservatoryId = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/problems`);
 };
 
-export const createObservatory = (observatoryName, organizationId, description) => {
-    return submitPostRequest(observatoriesUrl, { 'Content-Type': 'application/json' }, { observatoryName, organizationId, description });
+export const createObservatory = (observatoryName, organizationId, description, researchField) => {
+    return submitPostRequest(
+        observatoriesUrl,
+        { 'Content-Type': 'application/json' },
+        { observatoryName, organizationId, description, researchField }
+    );
 };
 
 export const getContributorsByResourceId = id => {
