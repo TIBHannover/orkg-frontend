@@ -57,7 +57,7 @@ export default function Statements(props) {
                                 if (!property.isTemplate) {
                                     return (
                                         <StatementItem
-                                            key={'statement-' + index}
+                                            key={'statement-' + index + 'p' + propertyId + 's' + props.selectedResource}
                                             id={propertyId}
                                             property={property}
                                             predicateLabel={property.label}
