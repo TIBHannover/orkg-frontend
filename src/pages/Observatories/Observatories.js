@@ -57,20 +57,18 @@ class Observatories extends Component {
                     <h1 className="h4 mt-4 mb-4">View all observatories </h1>
                 </Container>
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
-                    {Object.keys(this.state.observatories)
-                        .reverse()
-                        .map(os => {
-                            return (
-                                <>
-                                    <h5>{os === 'null' ? 'Others' : os}</h5>
-                                    <div className="mt-3 row justify-content-center">
-                                        {this.state.observatories[os].map(observatory => {
-                                            return <ObservatoryCard key={observatory.id} observatory={observatory} />;
-                                        })}
-                                    </div>
-                                </>
-                            );
-                        })}
+                    {Object.keys(this.state.observatories).map(rf => {
+                        return (
+                            <>
+                                <h5>{rf === 'null' || '' ? 'Others' : rf}</h5>
+                                <div className="mt-3 row justify-content-center">
+                                    {this.state.observatories[rf].map(observatory => {
+                                        return <ObservatoryCard key={observatory.id} observatory={observatory} />;
+                                    })}
+                                </div>
+                            </>
+                        );
+                    })}
 
                     {this.state.observatories.length === 0 && !this.state.isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">No observatories yet!</div>

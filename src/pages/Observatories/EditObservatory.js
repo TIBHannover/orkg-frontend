@@ -137,7 +137,7 @@ class EditObservatory extends Component {
                                         this.setState({ researchField: { ...rf, label: rf.value } });
                                     }}
                                     cssClasses="form-control-sm"
-                                    value={this.state.researchField}
+                                    value={this.state.researchField || ''}
                                     allowCreate={false}
                                 />
                             </FormGroup>

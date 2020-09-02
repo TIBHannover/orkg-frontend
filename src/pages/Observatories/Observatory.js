@@ -23,6 +23,8 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { getPaperData, getComparisonData } from 'utils';
 import { find } from 'lodash';
+import { openAuthDialog } from 'actions/auth';
+import { connect } from 'react-redux';
 import EditObservatory from '../Observatories/EditObservatory';
 
 class Observatory extends Component {
@@ -33,6 +35,7 @@ class Observatory extends Component {
             error: null,
             label: '',
             description: '',
+            researchField: '',
             isContributorsModalOpen: false,
             isLoading: false,
             isLoadingContributors: false,
@@ -76,7 +79,8 @@ class Observatory extends Component {
                 this.setState({
                     label: observatory.name,
                     description: observatory.description,
-                    isLoading: false
+                    isLoading: false,
+                    researchField: observatory.researchField
                 });
                 this.loadOrganizations(observatory.organizations);
             })
@@ -196,14 +200,16 @@ class Observatory extends Component {
 
                         <Container className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
                             <h3>{this.state.label}</h3>
-                            <Button
-                                color="darkblue"
-                                size="sm"
-                                style={{ float: 'right', marginTop: '-40px' }}
-                                onClick={() => this.toggle('showEditDialog')}
-                            >
-                                <Icon icon={faPen} /> Edit
-                            </Button>
+                            {this.props.user && (
+                                <Button
+                                    color="darkblue"
+                                    size="sm"
+                                    style={{ float: 'right', marginTop: '-40px' }}
+                                    onClick={() => this.toggle('showEditDialog')}
+                                >
+                                    <Icon icon={faPen} /> Edit
+                                </Button>
+                            )}
                             {this.state.description}
                         </Container>
 
@@ -262,7 +268,7 @@ class Observatory extends Component {
                                                                         <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.id })}>
                                                                             <img
                                                                                 style={{ marginTop: 12 }}
-                                                                                height="70"
+                                                                                height="50"
                                                                                 src={organization.logo}
                                                                                 alt={`${organization.name} logo`}
                                                                             />
@@ -429,18 +435,32 @@ class Observatory extends Component {
                     label={this.state.label}
                     id={this.props.match.params.id}
                     description={this.state.description}
+                    researchField={this.state.researchField}
                 />
             </>
         );
     };
 }
 
+const mapStateToProps = state => ({
+    user: state.auth.user
+});
+
+const mapDispatchToProps = dispatch => ({
+    openAuthDialog: action => dispatch(openAuthDialog(action))
+});
+
 Observatory.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
             id: PropTypes.string.isRequired
         }).isRequired
-    }).isRequired
+    }).isRequired,
+    openAuthDialog: PropTypes.func.isRequired,
+    user: PropTypes.object
 };
 
-export default Observatory;
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Observatory);
