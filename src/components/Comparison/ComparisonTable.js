@@ -313,17 +313,18 @@ class ComparisonTable extends Component {
                         />
                     </ScrollSync>
                 </ReactTableWrapper>
-
-                {this.state.showBackButton && (
-                    <ScrollButton onClick={this.scrollBack} className="back">
-                        <Icon icon={faArrowCircleLeft} />
-                    </ScrollButton>
-                )}
-                {this.state.showNextButton && (
-                    <ScrollButton onClick={this.scrollNext} className="next">
-                        <Icon icon={faArrowCircleRight} />
-                    </ScrollButton>
-                )}
+                <div className="clearfix">
+                    {this.state.showBackButton && (
+                        <ScrollButton onClick={this.scrollBack} className="back">
+                            <Icon icon={faArrowCircleLeft} />
+                        </ScrollButton>
+                    )}
+                    {this.state.showNextButton && (
+                        <ScrollButton onClick={this.scrollNext} className="next">
+                            <Icon icon={faArrowCircleRight} />
+                        </ScrollButton>
+                    )}
+                </div>
             </>
         );
     }

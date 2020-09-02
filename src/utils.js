@@ -20,7 +20,7 @@ export function hashCode(s) {
  */
 
 export function getArrayParamFromQueryString(locationSearch, param) {
-    const values = queryString.parse(locationSearch, { arrayFormat: 'comma' })[param];
+    const values = queryString.parse(decodeURIComponent(locationSearch), { arrayFormat: 'comma' })[param];
     if (!values) {
         return [];
     }
@@ -28,6 +28,29 @@ export function getArrayParamFromQueryString(locationSearch, param) {
         return [values];
     }
     return values;
+}
+
+/**
+ * Parse value from the query string
+ *
+ * @param {String} locationSearch this.props.location.search
+ * @param {String} param parameter name
+ * @param {Boolean} boolean return false instead of null
+ * @return {String|Boolean} value
+ */
+
+export function getParamFromQueryString(locationSearch, param, boolean = false) {
+    const value = queryString.parse(locationSearch)[param];
+    if (!value) {
+        return boolean ? false : null;
+    }
+    if (typeof value === 'string' || value instanceof String) {
+        if (boolean && (value === 'false' || !value || !['true', '1'].includes(value))) {
+            return false;
+        }
+        return boolean ? true : value;
+    }
+    return value;
 }
 
 export function groupBy(array, group) {
@@ -220,7 +243,7 @@ export const getComparisonData = (id, label, comparisonStatements) => {
         id,
         label,
         created_at: url ? url.object.created_at : '',
-        nbContributions: url ? getContributionIdsFromUrl(url.object.label).length : 0,
+        nbContributions: url ? getArrayParamFromQueryString(url.object.label, 'contributions').length : 0,
         url: url ? url.object.label : '',
         reference: reference ? reference.object.label : '',
         description: description ? description.object.label : ''
@@ -257,47 +280,6 @@ export const sortMethod = (a, b) => {
     }
     // returning 0 or undefined will use any subsequent column sorting methods or the row index as a tiebreaker
     return 0;
-};
-
-export const getContributionIdsFromUrl = locationSearch => {
-    const l = locationSearch.substring(locationSearch.indexOf('?'));
-    let ids = queryString.parse(l, { arrayFormat: 'comma' }).contributions;
-    if (!ids) {
-        return [];
-    }
-    if (typeof ids === 'string' || ids instanceof String) {
-        return [ids];
-    }
-    ids = ids.filter(n => n); //filter out empty element ids
-    return ids;
-};
-
-export const getPropertyIdsFromUrl = locationSearch => {
-    let ids = queryString.parse(locationSearch).properties;
-
-    if (!ids) {
-        return [];
-    }
-    ids = ids.split(',');
-    ids = ids.filter(n => n); //filter out empty elements
-
-    return ids;
-};
-
-export const getTransposeOptionFromUrl = locationSearch => {
-    const transpose = queryString.parse(locationSearch).transpose;
-    if (!transpose || !['true', '1'].includes(transpose)) {
-        return false;
-    }
-    return true;
-};
-
-export const getResponseHashFromUrl = locationSearch => {
-    const response_hash = queryString.parse(locationSearch).response_hash;
-    if (response_hash) {
-        return response_hash;
-    }
-    return null;
 };
 
 export const generateRdfDataVocabularyFile = (data, contributions, properties, metadata) => {
@@ -415,15 +397,36 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
  * @param {String} predicateID Predicate ID
  * @param {Boolean} isUnique if this predicate is unique and has one value
  */
-export const filterObjectOfStatementsByPredicate = (statementsArray, predicateID, oneStatement = true) => {
+export const filterObjectOfStatementsByPredicate = (statementsArray, predicateID, isUnique = true) => {
     if (!statementsArray) {
         return null;
     }
     const result = statementsArray.filter(statement => statement.predicate.id === predicateID);
-    if (result.length > 0 && oneStatement) {
+    if (result.length > 0 && isUnique) {
         return result[0].object;
-    } else if (result.length > 0 && !oneStatement) {
+    } else if (result.length > 0 && !isUnique) {
         return result.map(s => s.object);
+    } else {
+        return null;
+    }
+};
+
+/**
+ * Filter a list of statements by predicate id and return the subject
+ *
+ * @param {Array} statementsArray Array of statements
+ * @param {String} predicateID Predicate ID
+ * @param {Boolean} isUnique if this predicate is unique and has one value
+ */
+export const filterSubjectOfStatementsByPredicate = (statementsArray, predicateID, isUnique = true) => {
+    if (!statementsArray) {
+        return null;
+    }
+    const result = statementsArray.filter(statement => statement.predicate.id === predicateID);
+    if (result.length > 0 && isUnique) {
+        return result[0].subject;
+    } else if (result.length > 0 && !isUnique) {
+        return result.map(s => s.subject);
     } else {
         return null;
     }

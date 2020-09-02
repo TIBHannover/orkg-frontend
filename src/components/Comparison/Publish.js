@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Modal,
     ModalHeader,
@@ -13,7 +13,6 @@ import {
     InputGroupAddon,
     InputGroup
 } from 'reactstrap';
-import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
@@ -27,20 +26,20 @@ import {
     literalsUrl,
     submitGetRequest,
     getStatementsByObject,
-    getStatementsBySubject
+    resourcesUrl
 } from 'network';
-import { getContributionIdsFromUrl } from 'utils';
 import Tooltip from 'components/Utils/Tooltip';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 import AuthorsInput from 'components/Utils/AuthorsInput';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
-import queryString from 'query-string';
+import { faClipboard } from '@fortawesome/free-regular-svg-icons';
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { faClipboard } from '@fortawesome/free-regular-svg-icons';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
-import { MISC } from 'constants/graphSettings';
 
 const StyledCustomInput = styled(CustomInput)`
     margin-right: 0;
@@ -78,169 +77,32 @@ const AuthorTag = styled.div`
     }
 `;
 
-class Publish extends Component {
-    constructor(props) {
-        super(props);
+function Publish(props) {
+    const [isLoading, setIsLoading] = useState(false);
 
-        this.state = {
-            title: props.title,
-            description: props.description,
-            reference: '',
-            subject: this.props.subject,
-            doi: '',
-            comparisonLink: props.url,
-            comparisonId: props.comparisonId,
-            isCreatingDOI: false,
-            isLoading: false,
-            comparisonCreators: props.authors,
-            assignDOI: false,
-            researchField: []
-        };
-    }
+    const [assignDOI, setAssignDOI] = useState(false);
+    const [title, setTitle] = useState(props.metaData && props.metaData.title ? props.metaData.title : '');
+    const [description, setDescription] = useState(props.metaData && props.metaData.description ? props.metaData.description : '');
+    const [references, setReferences] = useState(
+        props.metaData?.references && props.metaData.references.length > 0 ? props.metaData.references : ['']
+    );
+    const [subject, setSubject] = useState(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
+    const [comparisonCreators, setComparisonCreators] = useState(props.authors ?? []);
 
-    componentDidMount() {
-        this.getFields(MISC.RESEARCH_FIELD_MAIN);
-    }
-
-    componentDidUpdate = prevProps => {
-        if (
-            this.props.description !== prevProps.description ||
-            this.props.title !== prevProps.title ||
-            this.props.authors !== prevProps.authors ||
-            this.props.doi !== prevProps.doi
-        ) {
-            this.setState({
-                description: this.props.description,
-                title: this.props.title,
-                comparisonCreators: this.props.authors,
-                doi: this.props.doi
-            });
-        }
-        if (this.props.comparisonId !== prevProps.comparisonId && !this.props.comparisonId) {
-            this.setState({ comparisonId: this.props.comparisonId, isLoading: false, doi: '' });
-        }
-    };
-
-    handleChange = event => {
-        this.setState({ [event.target.name]: event.target.value });
-    };
-
-    handleCreatorsChange = creators => {
+    const handleCreatorsChange = creators => {
         creators = creators ? creators : [];
-        this.setState({
-            comparisonCreators: creators
-        });
+        setComparisonCreators(creators);
     };
 
-    getFields(fieldId) {
-        const researchFields = [];
-        getStatementsBySubject({ id: fieldId }).then(res => {
-            res.forEach(elm => {
-                getStatementsBySubject({ id: elm.object.id }).then(result1 => {
-                    result1.forEach(r => {
-                        getStatementsBySubject({ id: r.object.id }).then(result2 => {
-                            result2.forEach(value => {
-                                researchFields.push(value.object.label);
-                            });
-                        });
-                    });
-                });
-            });
-        });
-        this.setState({ researchField: researchFields });
-    }
-
-    publishDOI = async (comparisonId, comparisonLink) => {
-        try {
-            if (this.state.comparisonId && this.props.authors.length === 0) {
-                await this.saveCreators(this.state.comparisonCreators, this.state.comparisonId);
-            }
-            if (this.state.title && this.state.title.trim() !== '' && this.state.description && this.state.description.trim() !== '') {
-                const response = await generateDOIForComparison(
-                    comparisonId,
-                    this.state.title,
-                    this.state.subject,
-                    this.state.description,
-                    getContributionIdsFromUrl(this.props.location),
-                    this.state.comparisonCreators.map(c => ({ creator: c.label, orcid: c.orcid })),
-                    comparisonLink
-                );
-                this.setState({ doi: response.data.attributes.doi });
-                toast.success('DOI has been registered successfully');
-            } else {
-                throw Error('Please enter a title and a description');
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error(`Error publishing a comparison : ${error.message}`);
-            this.setState({ isLoading: false });
-        }
-    };
-
-    handleSubmit = async e => {
-        e.preventDefault();
-        this.setState({ isLoading: true });
-        try {
-            if (!this.state.comparisonId) {
-                if (this.state.title && this.state.title.trim() !== '' && this.state.description && this.state.description.trim() !== '') {
-                    const contributionIds = getContributionIdsFromUrl(this.props.url.substring(this.props.url.indexOf('?')));
-                    const comparison = await getComparison({ contributionIds: contributionIds, save_response: true });
-                    const titleResponse = await createResource(this.state.title, [CLASSES.COMPARISON]);
-                    const resourceId = titleResponse.id;
-                    const descriptionResponse = await createLiteral(this.state.description);
-                    await createLiteralStatement(resourceId, PREDICATES.DESCRIPTION, descriptionResponse.id);
-                    if (this.state.reference && this.state.reference.trim() !== '') {
-                        const referenceResponse = await createLiteral(this.state.reference);
-                        await createLiteralStatement(resourceId, PREDICATES.REFERENCE, referenceResponse.id);
-                    }
-
-                    await this.saveCreators(this.state.comparisonCreators, resourceId);
-                    let link = queryString.parse(this.props.url).response_hash
-                        ? this.props.url
-                        : this.props.url + `${this.props.url.indexOf('?') !== -1 ? '&response_hash=' : '?response_hash='}${comparison.response_hash}`;
-                    link = link.substring(link.indexOf('?'));
-                    const urlResponse = await createLiteral(link);
-                    await createLiteralStatement(resourceId, PREDICATES.URL, urlResponse.id);
-
-                    toast.success('Comparison saved successfully');
-                    const comparisonLink = `${window.location.protocol}//${window.location.host}${window.location.pathname
-                        .replace(reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparisonId }), '')
-                        .replace(/\/$/, '')}${reverse(ROUTES.COMPARISON, { comparisonId: resourceId })}`;
-                    // Assign a DOI
-                    if (this.state.assignDOI) {
-                        this.publishDOI(resourceId, comparisonLink);
-                    }
-                    this.setState({
-                        isLoading: false,
-                        comparisonId: resourceId,
-                        comparisonLink: comparisonLink
-                    });
-                    this.props.updateComparisonMetadata(
-                        this.state.title,
-                        this.state.description,
-                        this.state.reference,
-                        this.state.subject,
-                        this.state.comparisonCreators,
-                        this.state.comparisonLink
-                    );
-                } else {
-                    throw Error('Please enter a title and a description');
-                }
-            } else {
-                this.publishDOI(this.state.comparisonId, this.state.comparisonLink);
-            }
-        } catch (error) {
-            toast.error(`Error publishing a comparison : ${error.message}`);
-            this.setState({ isLoading: false });
-        }
-    };
-
-    updateDOIState = doi => {
-        this.setState({ doi });
-    };
+    useEffect(() => {
+        setTitle(props.metaData && props.metaData.title ? props.metaData.title : '');
+        setDescription(props.metaData && props.metaData.description ? props.metaData.description : '');
+        setReferences(props.metaData?.references && props.metaData.references.length > 0 ? props.metaData.references : ['']);
+        setSubject(props.metaData && props.metaData.subject ? props.metaData.subject : undefined);
+    }, [props.metaData]);
 
     // TODO: improve code by using reduce function and unify code with paper edit dialog
-    saveCreators = async (creators, resourceId) => {
+    const saveCreators = async (creators, resourceId) => {
         const authors = creators;
         for (const author of authors) {
             // create the author
@@ -280,229 +142,393 @@ class Publish extends Component {
                 authors.classes = authorStatement.object.classes;
             }
         }
-
-        this.setState({
-            authors
-        });
     };
 
-    handleSwitchAssignDOI = event => {
-        this.setState(prevState => ({
-            assignDOI: !prevState.assignDOI
-        }));
+    const handleSubmit = async e => {
+        e.preventDefault();
+        setIsLoading(true);
+        try {
+            if (!props.comparisonId) {
+                if (title && title.trim() !== '' && description && description.trim() !== '') {
+                    const comparison = await getComparison({
+                        contributionIds: props.contributionsList,
+                        type: props.comparisonType,
+                        save_response: true
+                    });
+                    const titleResponse = await createResource(title, [CLASSES.COMPARISON]);
+                    const resourceId = titleResponse.id;
+                    const descriptionResponse = await createLiteral(description);
+                    await createLiteralStatement(resourceId, PREDICATES.DESCRIPTION, descriptionResponse.id);
+                    if (references && references.length > 0) {
+                        for (const reference of references) {
+                            if (reference && reference.trim() !== '') {
+                                const referenceResponse = await createLiteral(reference);
+                                await createLiteralStatement(resourceId, PREDICATES.REFERENCE, referenceResponse.id);
+                            }
+                        }
+                    }
+                    if (subject && subject.id) {
+                        // has research field is not used because it affects the page "research field"
+                        // this should be updated when the issue !169 in back-end is resolved
+                        await createResourceStatement(resourceId, PREDICATES.HAS_SUBJECT, subject.id);
+                    }
+                    await saveCreators(comparisonCreators, resourceId);
+                    const urlResponse = await createLiteral(`${props.comparisonURLConfig}&response_hash=${comparison.response_hash}`);
+                    await createLiteralStatement(resourceId, PREDICATES.URL, urlResponse.id);
+                    props.contributionsList.forEach(contirbutionID => {
+                        createResourceStatement(resourceId, PREDICATES.COMPARE_CONTRIBUTION, contirbutionID);
+                    });
+                    props.predicatesList.forEach(predicateID => {
+                        createResourceStatement(resourceId, PREDICATES.HAS_PROPERTY, predicateID);
+                    });
+                    if (props.metaData.hasPreviousVersion) {
+                        createResourceStatement(resourceId, PREDICATES.HAS_PREVIOUS_VERSION, props.metaData.hasPreviousVersion.id);
+                    }
+                    toast.success('Comparison saved successfully');
+                    // Assign a DOI
+                    if (assignDOI) {
+                        publishDOI(resourceId);
+                    }
+                    setIsLoading(false);
+                    props.setMetaData(prevMetaData => ({
+                        ...prevMetaData,
+                        id: resourceId,
+                        title,
+                        description,
+                        references: references.filter(Boolean), // Remove empty strings from array
+                        subject,
+                        comparisonCreators,
+                        createdAt: titleResponse.created_at,
+                        createdBy: titleResponse.created_by,
+                        resources: [],
+                        figures: [],
+                        hasPreviousVersion: props.metaData.hasPreviousVersion,
+                        hasNextVersion: null
+                    }));
+                    props.setAuthors(comparisonCreators);
+                    props.loadCreatedBy(titleResponse.created_by);
+                    props.loadProvenanceInfos(titleResponse.observatory_id, titleResponse.organization_id);
+                } else {
+                    throw Error('Please enter a title and a description');
+                }
+            } else {
+                publishDOI(props.comparisonId);
+            }
+        } catch (error) {
+            toast.error(`Error publishing a comparison : ${error.message}`);
+            setIsLoading(false);
+        }
     };
 
-    render() {
-        const comparisonLink = `${window.location.protocol}//${window.location.host}${window.location.pathname
-            .replace(reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparisonId }), '')
-            .replace(/\/$/, '')}${reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparisonId || this.state.comparisonId })}`;
+    const publishDOI = async comparisonId => {
+        try {
+            if (props.comparisonId && props.authors.length === 0) {
+                await saveCreators(comparisonCreators, props.comparisonId);
+            }
+            if (title && title.trim() !== '' && description && description.trim() !== '') {
+                const response = await generateDOIForComparison(
+                    comparisonId,
+                    title,
+                    subject ? subject.label : '',
+                    description,
+                    props.contributionsList,
+                    comparisonCreators.map(c => ({ creator: c.label, orcid: c.orcid })),
+                    `${props.publicURL}${reverse(ROUTES.COMPARISON, { comparisonId: comparisonId })}`
+                );
+                props.setMetaData(prevMetaData => ({
+                    ...prevMetaData,
+                    doi: response.data.attributes.doi
+                }));
+                const doiResponse = await createLiteral(response.data.attributes.doi);
+                createResourceStatement(comparisonId, PREDICATES.HAS_DOI, doiResponse.id);
+                toast.success('DOI has been registered successfully');
+            } else {
+                throw Error('Please enter a title and a description');
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error(`Error publishing a comparison : ${error.message}`);
+            setIsLoading(false);
+        }
+    };
 
-        return (
-            <Modal size="lg" isOpen={this.props.showDialog} toggle={this.props.toggle}>
-                <ModalHeader toggle={this.props.toggle}>Publish comparison</ModalHeader>
-                <ModalBody>
-                    <Alert color="info">
-                        A published comparison is made public to other users. The state of the comparison is saved and a persistent link is created.
-                    </Alert>
-                    {this.state.comparisonId && (
-                        <FormGroup>
-                            <Label for="comparison_link">Comparison link</Label>
-                            <InputGroup>
-                                <Input id="comparison_link" value={comparisonLink} disabled />
-                                <InputGroupAddon addonType="append">
-                                    <CopyToClipboard
-                                        text={comparisonLink ? comparisonLink : 'Loading comparison link...'}
-                                        onCopy={() => {
-                                            toast.dismiss();
-                                            toast.success(`Comparison link copied!`);
-                                        }}
-                                    >
-                                        <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                            <Icon icon={faClipboard} />
-                                        </Button>
-                                    </CopyToClipboard>
-                                </InputGroupAddon>
-                            </InputGroup>
-                        </FormGroup>
-                    )}
-                    {(this.state.doi || this.props.doi) && (
-                        <FormGroup>
-                            <Label for="doi_link">DOI</Label>
-                            <InputGroup>
-                                <Input id="doi_link" value={`https://doi.org/${this.state.doi || this.props.doi}`} disabled />
-                                <InputGroupAddon addonType="append">
-                                    <CopyToClipboard
-                                        text={this.state.doi ? `https://doi.org/${this.state.doi}` : 'Loading share link...'}
-                                        onCopy={() => {
-                                            toast.dismiss();
-                                            toast.success(`DOI link copied!`);
-                                        }}
-                                    >
-                                        <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                                            <Icon icon={faClipboard} />
-                                        </Button>
-                                    </CopyToClipboard>
-                                </InputGroupAddon>
-                            </InputGroup>
-                        </FormGroup>
-                    )}
-                    {this.state.comparisonId && (!this.state.doi && !this.props.doi) && (
-                        <FormGroup>
-                            <div>
-                                <Tooltip
-                                    message={`A DOI ${process.env.REACT_APP_DATACITE_DOI_PREFIX}/${this.state.comparisonId} will be assigned to published comparison and it cannot be changed in future.`}
+    const handleRemoveReferenceClick = index => {
+        const list = [...references];
+        list.splice(index, 1);
+        setReferences(list);
+    };
+
+    const handleReferenceChange = (e, index) => {
+        const { value } = e.target;
+        const list = [...references];
+        list[index] = value;
+        setReferences(list);
+    };
+
+    return (
+        <Modal size="lg" isOpen={props.showDialog} toggle={props.toggle}>
+            <ModalHeader toggle={props.toggle}>Publish comparison</ModalHeader>
+            <ModalBody>
+                <Alert color="info">
+                    A published comparison is made public to other users. The state of the comparison is saved and a persistent link is created.
+                </Alert>
+                {props.comparisonId && (
+                    <FormGroup>
+                        <Label for="comparison_link">Comparison link</Label>
+                        <InputGroup>
+                            <Input
+                                id="comparison_link"
+                                value={`${props.publicURL}${reverse(ROUTES.COMPARISON, { comparisonId: props.comparisonId })}`}
+                                disabled
+                            />
+                            <InputGroupAddon addonType="append">
+                                <CopyToClipboard
+                                    text={`${props.publicURL}${reverse(ROUTES.COMPARISON, { comparisonId: props.comparisonId })}`}
+                                    onCopy={() => {
+                                        toast.dismiss();
+                                        toast.success(`Comparison link copied!`);
+                                    }}
                                 >
-                                    <StyledCustomInput
-                                        onChange={this.handleSwitchAssignDOI}
-                                        checked={this.state.assignDOI}
-                                        id="switchAssignDoi"
-                                        type="switch"
-                                        name="customSwitch"
-                                        inline
-                                        label="Assign a DOI to the comparison"
-                                    />
-                                </Tooltip>
-                            </div>
-                        </FormGroup>
-                    )}
-                    {!this.state.doi && (!this.state.comparisonId || (this.state.comparisonId && this.state.assignDOI)) && (
-                        <>
-                            {' '}
-                            <FormGroup>
-                                <Label for="title">
-                                    <Tooltip message="Enter the title of the comparison">Title</Tooltip>
-                                </Label>
-                                <Input
-                                    type="text"
-                                    name="title"
-                                    value={this.state.title}
-                                    disabled={Boolean(this.state.comparisonId)}
-                                    id="title"
-                                    onChange={this.handleChange}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="description">
-                                    <Tooltip message="Describe the goal and what is being compared">Description</Tooltip>
-                                </Label>
-                                <Input
-                                    type="textarea"
-                                    name="description"
-                                    value={this.state.description}
-                                    disabled={Boolean(this.state.comparisonId)}
-                                    id="description"
-                                    onChange={this.handleChange}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="reference">
-                                    <Tooltip message="Enter a reference to the paper from which the comparison is generated">
-                                        Reference (optional)
-                                    </Tooltip>
-                                </Label>
-                                <Input
-                                    disabled={Boolean(this.state.comparisonId)}
-                                    type="text"
-                                    name="reference"
-                                    id="reference"
-                                    onChange={this.handleChange}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="subject">
-                                    <Tooltip message="Enter a subject of the comparison">Research Field</Tooltip>
-                                </Label>
-                                <Input disabled={Boolean(this.state.doi)} type="select" name="subject" id="subject" onChange={this.handleChange}>
-                                    {this.state.researchField.map(rf => {
-                                        return <option value={rf}>{rf}</option>;
-                                    })}
-                                </Input>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="Creator">
-                                    <Tooltip message="The creator or creators of the comparison. Enter both the first and last name">
-                                        Creators
-                                    </Tooltip>
-                                </Label>
-                                {!this.state.doi && (!this.state.comparisonId || this.props.authors.length === 0) && (
-                                    <AuthorsInput
-                                        disabled={Boolean(this.state.comparisonCreators.length > 0)}
-                                        itemLabel="creator"
-                                        handler={this.handleCreatorsChange}
-                                        value={this.state.comparisonCreators}
-                                    />
-                                )}
-                                {!this.state.doi &&
-                                    this.state.comparisonId &&
-                                    this.props.authors.length !== 0 &&
-                                    this.state.comparisonCreators.map((creator, index) => (
-                                        <AuthorTag>
-                                            <div key={`creator${index}`} className="name">
-                                                {creator.label}
-                                                {creator.orcid && <Icon style={{ margin: '4px' }} icon={faOrcid} />}
-                                            </div>
-                                        </AuthorTag>
-                                    ))}
-                            </FormGroup>
-                            <FormGroup>
-                                {!this.state.comparisonId && (
-                                    <div>
-                                        <Tooltip message="A DOI will be assigned to published comparison and it cannot be changed in future.">
-                                            <StyledCustomInput
-                                                onChange={this.handleSwitchAssignDOI}
-                                                checked={this.state.assignDOI}
-                                                id="switchAssignDoi"
-                                                type="switch"
-                                                name="customSwitch"
-                                                inline
-                                                label="Assign a DOI to the comparison"
-                                            />
-                                        </Tooltip>
-                                    </div>
-                                )}
-                            </FormGroup>
-                        </>
-                    )}
-
-                    <></>
-                </ModalBody>
-                {((!this.props.doi && !this.state.doi && !this.props.comparisonId && !this.state.comparisonId) ||
-                    (this.state.comparisonId && (!this.state.doi && !this.props.doi) && this.state.assignDOI)) && (
-                    <ModalFooter>
-                        {!this.props.doi && !this.state.doi && !this.props.comparisonId && !this.state.comparisonId && (
-                            <div className="text-align-center mt-2">
-                                <Button color="primary" disabled={this.state.isLoading} onClick={this.handleSubmit}>
-                                    {this.state.isLoading && <span className="fa fa-spinner fa-spin" />} Publish
-                                </Button>
-                            </div>
-                        )}
-                        {this.state.comparisonId && (!this.state.doi && !this.props.doi) && this.state.assignDOI && (
-                            <div className="text-align-center mt-2">
-                                <Button color="primary" disabled={this.state.isLoading} onClick={this.handleSubmit}>
-                                    {this.state.isLoading && <span className="fa fa-spinner fa-spin" />} Publish DOI
-                                </Button>
-                            </div>
-                        )}
-                    </ModalFooter>
+                                    <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+                                        <Icon icon={faClipboard} />
+                                    </Button>
+                                </CopyToClipboard>
+                            </InputGroupAddon>
+                        </InputGroup>
+                    </FormGroup>
                 )}
-            </Modal>
-        );
-    }
+                {props.doi && (
+                    <FormGroup>
+                        <Label for="doi_link">DOI</Label>
+                        <InputGroup>
+                            <Input id="doi_link" value={`https://doi.org/${props.doi}`} disabled />
+                            <InputGroupAddon addonType="append">
+                                <CopyToClipboard
+                                    text={`https://doi.org/${props.doi}`}
+                                    onCopy={() => {
+                                        toast.dismiss();
+                                        toast.success(`DOI link copied!`);
+                                    }}
+                                >
+                                    <Button color="primary" className="pl-3 pr-3" style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+                                        <Icon icon={faClipboard} />
+                                    </Button>
+                                </CopyToClipboard>
+                            </InputGroupAddon>
+                        </InputGroup>
+                    </FormGroup>
+                )}
+                {props.comparisonId && !props.doi && (
+                    <FormGroup>
+                        <div>
+                            <Tooltip
+                                message={`A DOI ${process.env.REACT_APP_DATACITE_DOI_PREFIX}/${props.comparisonId} will be assigned to published comparison and it cannot be changed in future.`}
+                            >
+                                <StyledCustomInput
+                                    onChange={e => {
+                                        setAssignDOI(e.target.checked);
+                                    }}
+                                    checked={assignDOI}
+                                    id="switchAssignDoi"
+                                    type="switch"
+                                    name="customSwitch"
+                                    inline
+                                    label="Assign a DOI to the comparison"
+                                />
+                            </Tooltip>
+                        </div>
+                    </FormGroup>
+                )}
+                {!props.doi && (!props.comparisonId || (props.comparisonId && assignDOI)) && (
+                    <>
+                        {' '}
+                        <FormGroup>
+                            <Label for="title">
+                                <Tooltip message="Enter the title of the comparison">Title</Tooltip>
+                            </Label>
+                            <Input
+                                type="text"
+                                name="title"
+                                value={title}
+                                disabled={Boolean(props.comparisonId)}
+                                id="title"
+                                onChange={e => setTitle(e.target.value)}
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="description">
+                                <Tooltip message="Describe the goal and what is being compared">Description</Tooltip>
+                            </Label>
+                            <Input
+                                type="textarea"
+                                name="description"
+                                value={description}
+                                disabled={Boolean(props.comparisonId)}
+                                id="description"
+                                onChange={e => setDescription(e.target.value)}
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label>
+                                <Tooltip message="Enter a reference to the data sources from which the comparison is generated">
+                                    Reference (optional)
+                                </Tooltip>
+                            </Label>
+                            {references &&
+                                references.map((x, i) => {
+                                    return (
+                                        <InputGroup className="mb-1" key={`ref${i}`}>
+                                            <Input
+                                                disabled={Boolean(props.comparisonId)}
+                                                type="text"
+                                                name="reference"
+                                                value={x}
+                                                onChange={e => handleReferenceChange(e, i)}
+                                            />
+                                            <InputGroupAddon addonType="append">
+                                                {references.length !== 1 && (
+                                                    <Button
+                                                        color="light"
+                                                        onClick={() => handleRemoveReferenceClick(i)}
+                                                        className="pl-3 pr-3"
+                                                        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                                                    >
+                                                        <Icon icon={faTrash} />
+                                                    </Button>
+                                                )}
+                                                {references.length - 1 === i && (
+                                                    <Button
+                                                        color="secondary"
+                                                        onClick={() => setReferences([...references, ''])}
+                                                        className="pl-3 pr-3"
+                                                        outline
+                                                        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                                                    >
+                                                        <Icon icon={faPlus} />
+                                                    </Button>
+                                                )}
+                                            </InputGroupAddon>
+                                        </InputGroup>
+                                    );
+                                })}
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="subject">
+                                <Tooltip message="Enter a subject of the comparison">Research Field</Tooltip>
+                            </Label>
+
+                            <Autocomplete
+                                requestUrl={resourcesUrl}
+                                optionsClass={CLASSES.RESEARCH_FIELD}
+                                placeholder="Enter a research field"
+                                onItemSelected={i => {
+                                    setSubject({ ...i, label: i.value });
+                                }}
+                                value={subject}
+                                autoLoadOption={true}
+                                openMenuOnFocus={false}
+                                allowCreate={false}
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="Creator">
+                                <Tooltip message="The creator or creators of the comparison. Enter both the first and last name">Creators</Tooltip>
+                            </Label>
+                            {!props.doi && (!props.comparisonId || props.authors.length === 0) && (
+                                <AuthorsInput
+                                    disabled={Boolean(comparisonCreators.length > 0)}
+                                    itemLabel="creator"
+                                    handler={handleCreatorsChange}
+                                    value={comparisonCreators}
+                                />
+                            )}
+                            {!props.doi &&
+                                props.comparisonId &&
+                                props.authors.length !== 0 &&
+                                props.authors.map((creator, index) => (
+                                    <AuthorTag key={`creator${index}`}>
+                                        <div className="name">
+                                            {creator.label}
+                                            {creator.orcid && <Icon style={{ margin: '4px' }} icon={faOrcid} />}
+                                        </div>
+                                    </AuthorTag>
+                                ))}
+                        </FormGroup>
+                        {!props.comparisonId && (
+                            <FormGroup>
+                                <div>
+                                    <Tooltip message="A DOI will be assigned to published comparison and it cannot be changed in future.">
+                                        <StyledCustomInput
+                                            onChange={e => {
+                                                setAssignDOI(e.target.checked);
+                                            }}
+                                            checked={assignDOI}
+                                            id="switchAssignDoi"
+                                            type="switch"
+                                            name="customSwitch"
+                                            inline
+                                            label="Assign a DOI to the comparison"
+                                        />
+                                    </Tooltip>
+                                </div>
+                            </FormGroup>
+                        )}
+                        {!props.comparisonId && props.metaData.hasPreviousVersion && (
+                            <FormGroup>
+                                <div>
+                                    <hr />
+                                    <>
+                                        This comparison will be marked as new version of the comparison{' '}
+                                        <Link target="_blank" to={reverse(ROUTES.COMPARISON, { comparisonId: props.metaData.hasPreviousVersion.id })}>
+                                            {props.metaData.hasPreviousVersion.id}
+                                        </Link>
+                                    </>
+                                </div>
+                            </FormGroup>
+                        )}
+                    </>
+                )}
+
+                <></>
+            </ModalBody>
+            {((!props.doi && !props.comparisonId) || (props.comparisonId && !props.doi && assignDOI)) && (
+                <ModalFooter>
+                    {!props.doi && !props.comparisonId && (
+                        <div className="text-align-center mt-2">
+                            <Button color="primary" disabled={isLoading} onClick={handleSubmit}>
+                                {isLoading && <span className="fa fa-spinner fa-spin" />} Publish
+                            </Button>
+                        </div>
+                    )}
+                    {props.comparisonId && !props.doi && assignDOI && (
+                        <div className="text-align-center mt-2">
+                            <Button color="primary" disabled={isLoading} onClick={handleSubmit}>
+                                {isLoading && <span className="fa fa-spinner fa-spin" />} Publish DOI
+                            </Button>
+                        </div>
+                    )}
+                </ModalFooter>
+            )}
+        </Modal>
+    );
 }
 
 Publish.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
-    url: PropTypes.string.isRequired,
-    response_hash: PropTypes.string,
     comparisonId: PropTypes.string,
-    title: PropTypes.string,
-    subject: PropTypes.string,
-    description: PropTypes.string,
-    location: PropTypes.string.isRequired,
-    authors: PropTypes.array.isRequired,
     doi: PropTypes.string,
-    updateComparisonMetadata: PropTypes.func.isRequired
+    authors: PropTypes.array.isRequired,
+    setMetaData: PropTypes.func.isRequired,
+    publicURL: PropTypes.string.isRequired,
+    metaData: PropTypes.object.isRequired,
+    contributionsList: PropTypes.array.isRequired,
+    predicatesList: PropTypes.array.isRequired,
+    comparisonType: PropTypes.string,
+    comparisonURLConfig: PropTypes.string.isRequired,
+    setAuthors: PropTypes.func.isRequired,
+    loadCreatedBy: PropTypes.func.isRequired,
+    loadProvenanceInfos: PropTypes.func.isRequired
 };
 
-export default connect()(Publish);
+export default Publish;

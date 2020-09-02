@@ -333,8 +333,28 @@ export const getStatementsByObjectAndPredicate = ({ objectId, predicateId, page 
     return submitGetRequest(`${statementsUrl}object/${objectId}/predicate/${predicateId}/?${params}`);
 };
 
-export const getComparison = ({ contributionIds = [], save_response = false }) => {
-    return submitGetRequest(`${comparisonUrl}?contributions=${contributionIds.join()}&save_response=${save_response}`);
+/**
+ * Get comparison result
+ *
+ * @param {Array[String]} contributionIds Contribution id
+ * @param {String} type Method used to compare (path | merge)
+ * @param {String} response_hash Response hash
+ * @param {Boolean} save_response To return a response hash and save a copy of the result
+ */
+export const getComparison = ({ contributionIds = [], type = null, response_hash = null, save_response = false }) => {
+    const params = queryString.stringify(
+        {
+            contributions: contributionIds.join(','),
+            response_hash: response_hash,
+            type: type,
+            save_response: save_response
+        },
+        {
+            skipNull: true,
+            skipEmptyString: true
+        }
+    );
+    return submitGetRequest(`${comparisonUrl}?${params}`);
 };
 
 export const getSimilaireContribution = id => {
@@ -690,7 +710,7 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
         return getOrganization(organizationId).then(orgResponse => {
             return {
                 id: observatoryId,
-                name: obsResponse.name.toUpperCase(),
+                name: obsResponse.name,
                 organization: {
                     id: organizationId,
                     name: orgResponse.name,

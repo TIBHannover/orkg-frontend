@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Button, Card, CardText, CardBody, CardHeader, CardFooter } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { getStatementsByObject, getResource, getStatementsBySubjects } from '../network';
+import { getStatementsByObjectAndPredicate, getResource, getStatementsBySubjects } from '../network';
 import { reverse } from 'named-urls';
 import ROUTES from '../constants/routes.js';
 import PaperCard from '../components/PaperCard/PaperCard';
@@ -64,8 +64,9 @@ class ResearchField extends Component {
     loadMorePapers = () => {
         this.setState({ isNextPageLoading: true });
         // Get the statements that contains the research field as an object
-        getStatementsByObject({
-            id: this.props.match.params.researchFieldId,
+        getStatementsByObjectAndPredicate({
+            objectId: this.props.match.params.researchFieldId,
+            predicateId: PREDICATES.HAS_RESEARCH_FIELD,
             page: this.state.page,
             items: this.pageSize,
             sortBy: 'created_at',

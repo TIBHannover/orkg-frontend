@@ -29,11 +29,11 @@ const RelatedFigures = props => {
             }
             // Fetch the data of each figure
             getStatementsBySubjects({
-                ids: props.figureStatements.map(resource => resource.object.id)
+                ids: props.figureStatements.map(resource => resource.id)
             })
                 .then(figuresStatements => {
                     const _figures = figuresStatements.map(figureStatements => {
-                        const figureTitle = find(props.figureStatements.map(p => p.object), { id: figureStatements.id });
+                        const figureTitle = find(props.figureStatements, { id: figureStatements.id });
                         const imageStatement = figureStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
                         const descriptionStatement = figureStatements.statements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
                         return {

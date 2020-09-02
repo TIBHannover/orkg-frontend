@@ -208,6 +208,7 @@ function Autocomplete(props) {
                 external: selected.external ?? false,
                 statements: selected.statements
             });
+            setInputValue('');
         } else if (action === 'create-option') {
             props.onNewItemSelected && props.onNewItemSelected(selected.label);
         }

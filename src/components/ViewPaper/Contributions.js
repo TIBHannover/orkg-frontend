@@ -12,6 +12,7 @@ import SimilarContributions from './SimilarContributions';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProblemInput';
 import ContributionItemList from 'components/AddPaper/Contributions/ContributionItemList';
+import ContributionComparisons from 'components/ViewPaper/ContirbutionComparisons/ContributionComparisons';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
@@ -293,7 +294,7 @@ class Contributions extends Component {
                                             )}
                                         </FormGroup>
 
-                                        <FormGroup>
+                                        <div>
                                             <Title>Similar contributions</Title>
                                             {this.state.isSimilaireContributionsLoading && (
                                                 <div>
@@ -336,7 +337,9 @@ class Contributions extends Component {
                                                     </span>
                                                 </Link>
                                             )}
-                                        </FormGroup>
+                                        </div>
+
+                                        {selectedContributionId && <ContributionComparisons contributionId={selectedContributionId} />}
                                     </Form>
                                 </StyledHorizontalContribution>
                             </AnimationContainer>
