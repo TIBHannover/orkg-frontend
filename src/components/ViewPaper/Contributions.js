@@ -299,6 +299,8 @@ class Contributions extends Component {
                                                     syncBackend={this.props.enableEdit}
                                                     openExistingResourcesInDialog={false}
                                                     templatesFound={false}
+                                                    initOnLocationChange={false}
+                                                    keyToKeepStateOnLocationChange={this.props.paperId}
                                                 />
                                             )}
                                         </FormGroup>

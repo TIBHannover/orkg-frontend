@@ -12,6 +12,8 @@ const initialState = {
     openExistingResourcesInDialog: false,
     propertiesAsLinks: false,
     resourcesAsLinks: false,
+    initOnLocationChange: true,
+    keyToKeepStateOnLocationChange: null,
     resources: {
         byId: {},
         allIds: []
@@ -464,7 +466,9 @@ export default (state = initialState, action) => {
                         ? payload.openExistingResourcesInDialog
                         : state.openExistingResourcesInDialog,
                 propertiesAsLinks: typeof payload.propertiesAsLinks === 'boolean' ? payload.propertiesAsLinks : state.propertiesAsLinks,
-                resourcesAsLinks: typeof payload.resourcesAsLinks === 'boolean' ? payload.resourcesAsLinks : state.resourcesAsLinks
+                resourcesAsLinks: typeof payload.resourcesAsLinks === 'boolean' ? payload.resourcesAsLinks : state.resourcesAsLinks,
+                initOnLocationChange: typeof payload.initOnLocationChange === 'boolean' ? payload.initOnLocationChange : state.initOnLocationChange,
+                keyToKeepStateOnLocationChange: payload.keyToKeepStateOnLocationChange ? payload.keyToKeepStateOnLocationChange : null
             };
         }
 
@@ -551,10 +555,7 @@ export default (state = initialState, action) => {
             const contributionChange = matchViewPaper(action.payload.location.pathname);
 
             let newState;
-            const isViewPaper = __getStatementBrowserBehaviour(state);
-            if (!contributionChange || !isViewPaper) {
-                newState = initialState;
-            } else {
+            if (!state.initOnLocationChange && state.keyToKeepStateOnLocationChange === contributionChange?.params?.resourceId) {
                 newState = {
                     ...state,
                     // returns current state but resets some variables :
@@ -562,14 +563,13 @@ export default (state = initialState, action) => {
                     selectedProperty: '',
                     level: 0,
                     isFetchingStatements: false,
-                    openExistingResourcesInDialog: false,
-                    propertiesAsLinks: false,
-                    resourcesAsLinks: false,
                     resourceHistory: {
                         byId: {},
                         allIds: []
                     }
                 };
+            } else {
+                newState = initialState;
             }
             return { ...newState };
         }

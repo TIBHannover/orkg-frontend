@@ -30,7 +30,14 @@ export default function Statements(props) {
             props.updateSettings({
                 openExistingResourcesInDialog: props.openExistingResourcesInDialog,
                 propertiesAsLinks: props.propertiesAsLinks,
-                resourcesAsLinks: props.resourcesAsLinks
+                resourcesAsLinks: props.resourcesAsLinks,
+                initOnLocationChange: props.initOnLocationChange,
+                keyToKeepStateOnLocationChange: props.keyToKeepStateOnLocationChange
+            });
+        } else {
+            props.updateSettings({
+                initOnLocationChange: props.initOnLocationChange,
+                keyToKeepStateOnLocationChange: props.keyToKeepStateOnLocationChange
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -164,7 +171,9 @@ Statements.propTypes = {
     newStore: PropTypes.bool,
     templatesFound: PropTypes.bool,
     propertiesAsLinks: PropTypes.bool,
-    resourcesAsLinks: PropTypes.bool
+    resourcesAsLinks: PropTypes.bool,
+    initOnLocationChange: PropTypes.bool.isRequired,
+    keyToKeepStateOnLocationChange: PropTypes.string
 };
 
 Statements.defaultProps = {
@@ -176,6 +185,8 @@ Statements.defaultProps = {
     templatesFound: false,
     propertiesAsLinks: false,
     resourcesAsLinks: false,
+    initOnLocationChange: true,
+    keyToKeepStateOnLocationChange: null,
     rootNodeType: 'resource',
     level: 1
 };
