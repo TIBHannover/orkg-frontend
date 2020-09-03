@@ -68,6 +68,7 @@ class Contribution extends Component {
                                 syncBackend={false}
                                 openExistingResourcesInDialog={false}
                                 initialResourceId={this.props.resourceId}
+                                initialResourceLabel={this.props.resourceLabel}
                                 templatesFound={false}
                             />
                         </FormGroup>
@@ -84,6 +85,7 @@ Contribution.propTypes = {
     researchProblems: PropTypes.array.isRequired,
     selectedResearchField: PropTypes.string.isRequired,
     selectedResource: PropTypes.string,
+    resourceLabel: PropTypes.string,
     openTour: PropTypes.func.isRequired,
     resourceId: PropTypes.string,
     resources: PropTypes.object.isRequired
@@ -92,6 +94,7 @@ Contribution.propTypes = {
 const mapStateToProps = (state, ownProps) => {
     return {
         resourceId: state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].resourceId : null,
+        resourceLabel: state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].label : null,
         researchProblems: getReseachProblemsOfContribution(
             state,
             state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].resourceId : null

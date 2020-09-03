@@ -2,7 +2,14 @@ import * as network from '../network';
 import * as type from './types.js';
 import { guid } from '../utils';
 import { mergeWith, isArray, uniqBy } from 'lodash';
-import { createResource, selectResource, createProperty, createValue, loadStatementBrowserData } from './statementBrowser';
+import {
+    createResource,
+    selectResource,
+    createProperty,
+    createValue,
+    loadStatementBrowserData,
+    updateContributionLabel as updateContributionLabelInSB
+} from './statementBrowser';
 import { toast } from 'react-toastify';
 import { PREDICATES, MISC } from 'constants/graphSettings';
 
@@ -113,21 +120,27 @@ export const clearAnnotations = () => dispatch => {
     });
 };
 
-export const createContribution = ({ selectAfterCreation = false, prefillStatements: performPrefill = false, statements = null }) => dispatch => {
+export const createContribution = ({ selectAfterCreation = false, prefillStatements: performPrefill = false, statements = null }) => (
+    dispatch,
+    getState
+) => {
     const newResourceId = guid();
     const newContributionId = guid();
+    const newContributionLabel = `Contribution ${getState().addPaper.contributions.allIds.length + 1}`;
 
     dispatch({
         type: type.CREATE_CONTRIBUTION,
         payload: {
             id: newContributionId,
-            resourceId: newResourceId
+            resourceId: newResourceId,
+            label: newContributionLabel
         }
     });
 
     dispatch(
         createResource({
-            resourceId: newResourceId
+            resourceId: newResourceId,
+            label: newContributionLabel
         })
     );
 
@@ -136,7 +149,7 @@ export const createContribution = ({ selectAfterCreation = false, prefillStateme
             selectResource({
                 increaseLevel: false,
                 resourceId: newResourceId,
-                label: 'Main'
+                label: newContributionLabel
             })
         );
 
@@ -285,7 +298,7 @@ export const selectContribution = data => dispatch => {
         selectResource({
             increaseLevel: false,
             resourceId: data.resourceId,
-            label: 'Main',
+            label: data.label,
             resetLevel: true
         })
     );
@@ -296,6 +309,8 @@ export const updateContributionLabel = data => dispatch => {
         type: type.UPDATE_CONTRIBUTION_LABEL,
         payload: data
     });
+
+    dispatch(updateContributionLabelInSB({ id: data.resourceId, label: data.label }));
 };
 
 export const updateResearchProblems = data => dispatch => {
