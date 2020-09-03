@@ -16,7 +16,7 @@ function ObservatoryCard(props) {
                         </CardTitle>
                         {props.observatory.organizations.length > 0 && (
                             <CardText className="align-self-center text-muted">
-                                <small>Supported by: {props.observatory.organizations.map(o => o.name).join(',')}</small>
+                                <small>By: {props.observatory.organizations.map(o => o.name).join(',')}</small>
                             </CardText>
                         )}
                     </CardBody>
