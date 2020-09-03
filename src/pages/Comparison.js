@@ -329,7 +329,7 @@ function Comparison(props) {
                 </div>
             </ContainerAnimated>
 
-            {metaData.id && (isObject(createdBy) || provenance) && <ProvenanceBox creator={createdBy} provenance={provenance} />}
+            {metaData.id && ((isObject(createdBy) && createdBy.id) || provenance) && <ProvenanceBox creator={createdBy} provenance={provenance} />}
 
             <SelectProperties
                 properties={properties}
@@ -354,12 +354,14 @@ function Comparison(props) {
                 setShortLink={setShortLink}
             />
 
-            <ComparisonVersions
-                showDialog={showComparisonVersions}
-                toggle={() => setShowComparisonVersions(v => !v)}
-                metaData={metaData}
-                hasNextVersions={hasNextVersions}
-            />
+            {(metaData?.hasPreviousVersion || (hasNextVersions && hasNextVersions.length > 0)) && (
+                <ComparisonVersions
+                    showDialog={showComparisonVersions}
+                    toggle={() => setShowComparisonVersions(v => !v)}
+                    metaData={metaData}
+                    hasNextVersions={hasNextVersions}
+                />
+            )}
 
             <Publish
                 showDialog={showPublishDialog}

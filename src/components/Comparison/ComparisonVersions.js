@@ -56,7 +56,7 @@ function ComparisonVersions(props) {
                                 </div>
                             </StyledActivity>
                         ))}
-                    {props.metaData.id && (
+                    {props.metaData && props.metaData.id && (
                         <StyledActivity className="pl-3 pb-3">
                             <div className="time">{props.metaData.createdAt ? moment(props.metaData.createdAt).format('DD MMMM YYYY') : ''}</div>
                             <div>
@@ -65,7 +65,7 @@ function ComparisonVersions(props) {
                         </StyledActivity>
                     )}
 
-                    {props.metaData.hasPreviousVersion && (
+                    {props.metaData && props.metaData.hasPreviousVersion && (
                         <StyledActivity className="pl-3 pb-3">
                             <div className="time">
                                 {props.metaData.hasPreviousVersion.created_at
@@ -90,7 +90,7 @@ ComparisonVersions.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     metaData: PropTypes.object.isRequired,
-    hasNextVersions: PropTypes.array.isRequired
+    hasNextVersions: PropTypes.array
 };
 
 export default ComparisonVersions;
