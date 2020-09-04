@@ -15,7 +15,7 @@ export const selectContribution = ({ contributionId: id, contributionIsLoaded, c
 
         dispatch(
             createResource({
-                //only needed for connecting properties, label is not shown
+                //only needed for connecting properties, label is shown in the breadcrumb
                 resourceId: id,
                 label: contributionLabel,
                 existingResourceId: id
@@ -42,33 +42,36 @@ export const selectContribution = ({ contributionId: id, contributionIsLoaded, c
         });
     }
     // this will create or set the selected contribution id in the statementBrowser (HERE SELECT)
-    dispatch({
-        type: type.STATEMENT_BROWSER_CREATE_CONTRIBUTION_OBJECT,
-        payload: {
-            id
-        }
-    });
-    dispatch(
-        selectResource({
-            increaseLevel: false,
-            resourceId: id,
-            label: contributionLabel,
-            resetLevel: false
+    Promise.resolve(
+        dispatch({
+            type: type.STATEMENT_BROWSER_CREATE_CONTRIBUTION_OBJECT,
+            payload: {
+                id
+            }
         })
-    );
-    dispatch({
-        type: type.SELECT_CONTRIBUTION,
-        payload: {
-            id
-        }
-    });
+    ).then(() => {
+        dispatch(
+            selectResource({
+                increaseLevel: false,
+                resourceId: id,
+                label: contributionLabel,
+                resetLevel: false
+            })
+        );
+        dispatch({
+            type: type.SELECT_CONTRIBUTION,
+            payload: {
+                id
+            }
+        });
 
-    // this will load the contribution data/history into the statementBrowser
-    dispatch({
-        type: type.STATEMENT_BROWSER_LOAD_CONTRIBUTION_HISTORY,
-        payload: {
-            id
-        }
+        // this will load the contribution data/history into the statementBrowser
+        dispatch({
+            type: type.STATEMENT_BROWSER_LOAD_CONTRIBUTION_HISTORY,
+            payload: {
+                id
+            }
+        });
     });
 };
 

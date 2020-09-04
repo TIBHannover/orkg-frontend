@@ -344,10 +344,7 @@ export default (state = initialState, action) => {
         case type.SELECT_RESOURCE: {
             const { payload } = action;
             const level = payload.increaseLevel ? state.level + 1 : state.level - 1;
-
-            // get statementBrowserBehaviour;
-            const isViewPaper = __getStatementBrowserBehaviour(state);
-            if (isViewPaper && state.contributions[state.selectedContributionId]) {
+            if (!state.initOnLocationChange && state.contributions[state.selectedContributionId]) {
                 // this wants to update the contribution object
                 const contribObj = state.contributions[state.selectedContributionId];
                 if (payload.resourceId === state.selectedContributionId) {
@@ -405,9 +402,8 @@ export default (state = initialState, action) => {
             newState = dotProp.set(newState, 'resourceHistory.allIds', ids => [...ids, resourceId]);
 
             // overwrite contribution history if needed
-            const isViewPaper = __getStatementBrowserBehaviour(newState);
             const contribObj = newState.contributions[newState.selectedContributionId];
-            if (isViewPaper && contribObj) {
+            if (!state.initOnLocationChange && contribObj) {
                 const isContributionResource = !!newState.contributions[resourceId];
 
                 if (!isContributionResource) {
@@ -427,8 +423,7 @@ export default (state = initialState, action) => {
             const { payload } = action;
             const ids = state.resourceHistory.allIds.slice(0, payload.historyIndex + 1); //TODO: it looks like historyIndex can be derived, so remove it from payload
 
-            const isViewPaper = __getStatementBrowserBehaviour(state);
-            if (isViewPaper && state.contributions[state.selectedContributionId]) {
+            if (!state.initOnLocationChange && state.contributions[state.selectedContributionId]) {
                 const contribObj = state.contributions[state.selectedContributionId];
                 contribObj.resourceHistory = {
                     byId: {
@@ -576,9 +571,24 @@ export default (state = initialState, action) => {
 
         /** -- Handling for creation of contribution objects**/
         case type.STATEMENT_BROWSER_CREATE_CONTRIBUTION_OBJECT: {
-            const newState = __createContributionObject(state, action.payload.id);
-            return { ...newState };
+            state.selectedContributionId = action.payload.id;
+            if (!state.contributions.hasOwnProperty(action.payload.id)) {
+                const initData = {
+                    selectedResource: '',
+                    selectedProperty: '',
+                    isFetchingStatements: false,
+                    level: 0,
+                    resourceHistory: {
+                        byId: {},
+                        allIds: []
+                    }
+                };
+                const updatedState = dotProp.set(state, `contributions.${action.payload.id}`, initData);
+                return { ...updatedState };
+            }
+            return { ...state };
         }
+
         case type.STATEMENT_BROWSER_LOAD_CONTRIBUTION_HISTORY: {
             const contribObj = state.contributions[action.payload.id];
             if (contribObj) {
@@ -596,30 +606,4 @@ export default (state = initialState, action) => {
             return state;
         }
     }
-};
-
-/** --- SOME HELPER FUNCTIONS --- **/
-
-const __createContributionObject = (state, id) => {
-    state.selectedContributionId = id;
-
-    if (!state.contributions.hasOwnProperty(id)) {
-        const initData = {
-            selectedResource: '',
-            selectedProperty: '',
-            isFetchingStatements: false,
-            level: 0,
-            resourceHistory: {
-                byId: {},
-                allIds: []
-            }
-        };
-        const updatedState = dotProp.set(state, `contributions.${id}`, initData);
-        return { ...updatedState };
-    }
-    return { ...state };
-};
-
-export const __getStatementBrowserBehaviour = state => {
-    return !state.openExistingResourcesInDialog && !state.propertiesAsLinks && !state.resourcesAsLinks;
 };

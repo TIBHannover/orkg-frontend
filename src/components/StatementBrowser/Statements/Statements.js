@@ -51,10 +51,6 @@ export default function Statements(props) {
             shared = props.resources.byId[props.selectedResource] ? props.resources.byId[props.selectedResource].shared : 0;
         }
 
-        // fail save
-        if (!props.resources.byId[props.selectedResource]) {
-            return <div />;
-        }
         return (
             <div>
                 {/*props.selectedResource && props.resources.byId[props.selectedResource].classes.length > 0 && (
