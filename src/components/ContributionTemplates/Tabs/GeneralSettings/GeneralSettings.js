@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
 import { setLabel, setPredicate, setClass, setResearchFields, setResearchProblems, setIsStrictTemplate } from 'actions/addTemplate';
 import { predicatesUrl, resourcesUrl, classesUrl, createPredicate, createClass } from 'network';
+import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
 import PropTypes from 'prop-types';
 import { CLASSES } from 'constants/graphSettings';
@@ -36,13 +37,11 @@ function GeneralSettings(props) {
         if (action.action === 'select-option') {
             props.setClass(selected);
         } else if (action.action === 'create-option') {
-            const result = await Confirm({
-                title: 'Are you sure you need a new class?',
-                message: 'Often there are existing classes that you can use as well. It is better to use existing classes than new ones.',
-                cancelColor: 'light'
+            const result = await ConfirmClass({
+                label: selected.label
             });
             if (result) {
-                const newClass = await createClass(selected.label);
+                const newClass = await createClass(selected.label, result.uri ? result.uri : null);
                 selected.id = newClass.id;
                 props.setClass(selected);
             }

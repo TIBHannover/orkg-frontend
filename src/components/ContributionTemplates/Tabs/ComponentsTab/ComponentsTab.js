@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Button, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
+import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import { setComponents } from 'actions/addTemplate';
 import { createPredicate, createClass } from 'network';
 import TemplateComponent from 'components/ContributionTemplates/TemplateComponent/TemplateComponent';
@@ -49,35 +50,25 @@ function ComponentsTab(props) {
 
     const handleClassOfPropertySelect = async (selected, action, index) => {
         if (action.action === 'create-option') {
-            const result = await Confirm({
-                title: 'Are you sure you need a new class?',
-                message: 'Often there are existing classes that you can use as well. It is better to use existing classes than new ones.',
-                cancelColor: 'light'
+            const result = await ConfirmClass({
+                label: selected.label
             });
             if (result) {
-                const newPredicate = await createClass(selected.label);
-                selected = { id: newPredicate.id, label: selected.label };
-
-                const templateComponents = props.components.map((item, j) => {
-                    if (j === index) {
-                        item.value = !selected ? null : selected;
-                        item.validationRules = {};
-                    }
-                    return item;
-                });
-                props.setComponents(templateComponents);
+                const newClass = await createClass(selected.label, result.uri ? result.uri : null);
+                selected = { id: newClass.id, label: selected.label };
+            } else {
+                return null;
             }
-        } else {
-            const templateComponents = props.components.map((item, j) => {
-                if (j === index) {
-                    item.value = !selected ? null : selected;
-                    item.validationRules = {};
-                }
-                return item;
-            });
-
-            props.setComponents(templateComponents);
         }
+        const templateComponents = props.components.map((item, j) => {
+            if (j === index) {
+                item.value = !selected ? null : selected;
+                item.validationRules = {};
+            }
+            return item;
+        });
+
+        props.setComponents(templateComponents);
     };
 
     const handleSelectNewProperty = ({ id, value: label }) => {

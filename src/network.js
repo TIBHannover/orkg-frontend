@@ -184,8 +184,8 @@ export const createLiteral = (label, datatype = MISC.DEFAULT_LITERAL_DATATYPE) =
     return submitPostRequest(literalsUrl, { 'Content-Type': 'application/json' }, { label: label, datatype: datatype });
 };
 
-export const createClass = label => {
-    return submitPostRequest(classesUrl, { 'Content-Type': 'application/json' }, { label: label });
+export const createClass = (label, uri = null) => {
+    return submitPostRequest(classesUrl, { 'Content-Type': 'application/json' }, { label: label, uri: uri });
 };
 
 export const createResourceStatement = (subjectId, predicateId, objectId) => {

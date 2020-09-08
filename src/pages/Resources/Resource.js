@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import { resetStatementBrowser } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/ConfirmationModal/ConfirmationModal';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
@@ -56,19 +56,20 @@ function Resource(props) {
 
     const handleClassSelect = async (selected, action) => {
         if (action.action === 'create-option') {
+            const foundIndex = selected.findIndex(x => x.__isNew__);
             const result = await Confirm({
-                title: 'Are you sure you need a new class?',
-                message: 'Often there are existing classes that you can use as well. It is better to use existing classes than new ones.',
-                cancelColor: 'light'
+                label: selected[foundIndex].label
             });
             if (result) {
                 const foundIndex = selected.findIndex(x => x.__isNew__);
-                const newClass = await createClass(selected[foundIndex].label);
+                const newClass = await createClass(result.label, result.uri ? result.uri : null);
                 selected[foundIndex] = newClass;
+            } else {
+                return null;
             }
         }
         const newClasses = !selected ? [] : selected;
-        // Reset the statement browser and rely on React attribute 'key' to reinilize the statmeent browser
+        // Reset the statement browser and rely on React attribute 'key' to reinitialize the statement browser
         // (When a key changes, React will create a new component instance rather than update the current one)
         props.resetStatementBrowser();
         setClasses(newClasses);
