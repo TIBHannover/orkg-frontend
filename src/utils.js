@@ -30,6 +30,29 @@ export function getArrayParamFromQueryString(locationSearch, param) {
     return values;
 }
 
+/**
+ * Parse value from the query string
+ *
+ * @param {String} locationSearch this.props.location.search
+ * @param {String} param parameter name
+ * @param {Boolean} boolean return false instead of null
+ * @return {String|Boolean} value
+ */
+
+export function getParamFromQueryString(locationSearch, param, boolean = false) {
+    const value = queryString.parse(locationSearch)[param];
+    if (!value) {
+        return boolean ? false : null;
+    }
+    if (typeof value === 'string' || value instanceof String) {
+        if (boolean && (value === 'false' || !value || !['true', '1'].includes(value))) {
+            return false;
+        }
+        return boolean ? true : value;
+    }
+    return value;
+}
+
 export function groupBy(array, group) {
     const hash = Object.create(null);
     const result = [];

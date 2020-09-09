@@ -1,22 +1,24 @@
 import React, { Component } from 'react';
 import { Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink, ButtonGroup } from 'reactstrap';
+import GeneralSettings from 'components/ContributionTemplates/Tabs/GeneralSettings/GeneralSettings';
+import TemplateEditorHeaderBar from 'components/ContributionTemplates/TemplateEditorHeaderBar';
+import ComponentsTab from 'components/ContributionTemplates/Tabs/ComponentsTab/ComponentsTab';
+import Format from 'components/ContributionTemplates/Tabs/Format/Format';
+import { StyledContainer } from 'components/ContributionTemplates/styled';
+import { setEditMode, loadTemplate, saveTemplate, setIsLoading, doneLoading, setClass } from 'actions/addTemplate';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { getParamFromQueryString } from 'utils';
+import styled, { withTheme } from 'styled-components';
+import VisibilitySensor from 'react-visibility-sensor';
+import { EditModeHeader, Title } from 'pages/ViewPaper';
+import { submitGetRequest, classesUrl } from 'network';
 import classnames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { EditModeHeader, Title } from 'pages/ViewPaper';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { setEditMode, loadTemplate, saveTemplate, setIsLoading, doneLoading } from 'actions/addTemplate';
-import { faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import styled, { withTheme } from 'styled-components';
 import ROUTES from 'constants/routes.js';
-import { StyledContainer } from '../../components/ContributionTemplates/styled';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
-import GeneralSettings from '../../components/ContributionTemplates/Tabs/GeneralSettings/GeneralSettings';
-import TemplateEditorHeaderBar from '../../components/ContributionTemplates/TemplateEditorHeaderBar';
-import VisibilitySensor from 'react-visibility-sensor';
-import ComponentsTab from '../../components/ContributionTemplates/Tabs/ComponentsTab/ComponentsTab';
-import Format from '../../components/ContributionTemplates/Tabs/Format/Format';
 
 const TabPaneStyled = styled(TabPane)`
     border: 1px solid #ced4da;
@@ -42,6 +44,7 @@ class ContributionTemplate extends Component {
         if (this.props.match.params.id) {
             this.props.loadTemplate(this.props.match.params.id);
         } else {
+            this.getDefaultClass();
             this.props.setEditMode(true);
         }
     }
@@ -54,6 +57,15 @@ class ContributionTemplate extends Component {
             this.props.loadTemplate(this.props.match.params.id);
         }
     }
+
+    getDefaultClass = () => {
+        const targetClass = getParamFromQueryString(this.props.location.search, 'classID');
+        if (targetClass) {
+            submitGetRequest(classesUrl + encodeURIComponent(targetClass)).then(classesData => {
+                this.props.setClass(classesData);
+            });
+        }
+    };
 
     toggleTab = tab => {
         this.setState({
@@ -169,6 +181,7 @@ class ContributionTemplate extends Component {
 }
 
 ContributionTemplate.propTypes = {
+    location: PropTypes.object.isRequired,
     match: PropTypes.shape({
         params: PropTypes.shape({
             id: PropTypes.string
@@ -186,7 +199,8 @@ ContributionTemplate.propTypes = {
     label: PropTypes.string.isRequired,
     doneLoading: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
-    template: PropTypes.object.isRequired
+    template: PropTypes.object.isRequired,
+    setClass: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -205,7 +219,8 @@ const mapDispatchToProps = dispatch => ({
     loadTemplate: data => dispatch(loadTemplate(data)),
     setIsLoading: () => dispatch(setIsLoading()),
     doneLoading: () => dispatch(doneLoading()),
-    saveTemplate: data => dispatch(saveTemplate(data))
+    saveTemplate: data => dispatch(saveTemplate(data)),
+    setClass: data => dispatch(setClass(data))
 });
 
 export default compose(

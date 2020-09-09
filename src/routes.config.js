@@ -13,7 +13,7 @@ import NotFound from 'pages/NotFound';
 import Papers from 'pages/Papers';
 import Comparisons from 'pages/Comparisons';
 import PredicateDetails from 'pages/Predicates/Predicate';
-import ClassDetails from 'pages/ClassDetails/ClassDetails';
+import ClassDetails from 'pages/Classes/ClassDetails';
 import Classes from 'pages/Classes/Classes';
 import Predicates from 'pages/Predicates/Predicates';
 import ContributionTemplates from 'pages/ContributionTemplates/ContributionTemplates';
