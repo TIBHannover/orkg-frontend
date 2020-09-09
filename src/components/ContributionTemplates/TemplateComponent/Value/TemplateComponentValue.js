@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { InputGroup, FormGroup, Label, Col, Input, FormText } from 'reactstrap';
 import { ValuesStyle } from 'components/StatementBrowser/styled';
 import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDatatypes';
-import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes.js';
 import { setComponents } from 'actions/addTemplate';
 import { connect } from 'react-redux';
 import { classesUrl } from 'network';
@@ -11,6 +13,7 @@ import ValidationRules from '../ValidationRules/ValidationRules';
 
 function TemplateComponentValue(props) {
     const [cardinality, setCaridinality] = useState(!props.minOccurs && !props.maxOccurs ? '0,*' : 'range');
+    const classAutocompleteRef = useRef(null);
 
     const onChange = event => {
         const templateComponents = props.components.map((item, j) => {
@@ -45,15 +48,23 @@ function TemplateComponentValue(props) {
                     <AutoComplete
                         requestUrl={classesUrl}
                         placeholder={props.enableEdit ? 'Select or type to enter a class' : 'No Class'}
-                        onItemSelected={(selected, action) => props.handleClassOfPropertySelect(selected, action, props.id)}
-                        onKeyUp={() => {}}
-                        allowCreate
+                        onChange={(selected, action) => {
+                            // blur the field allows to focus and open the menu again
+                            classAutocompleteRef.current && classAutocompleteRef.current.blur();
+                            props.handleClassOfPropertySelect(selected, action, props.id);
+                        }}
                         value={props.value}
+                        autoLoadOption={true}
+                        openMenuOnFocus={true}
+                        allowCreate={true}
                         isDisabled={!props.enableEdit}
-                        isClearable={true}
-                        defaultOptions={defaultDatatypes}
-                        cssClasses="form-control-sm"
                         copyValueButton={true}
+                        isClearable
+                        defaultOptions={defaultDatatypes}
+                        innerRef={classAutocompleteRef}
+                        linkButton={props.value && props.value.id ? reverse(ROUTES.CLASS, { id: props.value.id }) : ''}
+                        linkButtonTippy="Go to class page"
+                        cssClasses="form-control-sm"
                     />
                 </InputGroup>
                 <div className="mt-2">

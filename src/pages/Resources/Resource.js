@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Button, FormGroup, Label, FormText } from 'reactstrap';
 import { getResource, classesUrl, submitGetRequest, createClass, updateResourceClasses as updateResourceClassesNetwork } from 'network';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
-import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
 import InternalServerError from 'pages/InternalServerError';
 import SameAsStatements from '../SameAsStatements';
 import EditableHeader from 'components/EditableHeader';
@@ -29,6 +29,7 @@ function Resource(props) {
     const [classes, setClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
+    const classesAutocompleteRef = useRef(null);
 
     useEffect(() => {
         const findResource = async () => {
@@ -133,12 +134,21 @@ function Resource(props) {
                                     <FormGroup className="mb-4">
                                         <Label>Classes:</Label>
                                         <AutoComplete
-                                            allowCreate
                                             requestUrl={classesUrl}
-                                            onItemSelected={handleClassSelect}
-                                            cacheOptions
-                                            isMulti
+                                            onChange={(selected, action) => {
+                                                // blur the field allows to focus and open the menu again
+                                                classesAutocompleteRef.current && classesAutocompleteRef.current.blur();
+                                                handleClassSelect(selected, action);
+                                            }}
+                                            placeholder="No Classes"
                                             value={classes}
+                                            autoLoadOption={true}
+                                            openMenuOnFocus={true}
+                                            allowCreate={true}
+                                            isClearable
+                                            innerRef={classesAutocompleteRef}
+                                            isMulti
+                                            autoFocus={false}
                                         />
                                         {editMode && <FormText>Specify the classes of the resource.</FormText>}
                                     </FormGroup>

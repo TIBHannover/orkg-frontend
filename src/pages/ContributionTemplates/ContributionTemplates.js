@@ -3,7 +3,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { getResourcesByClass, resourcesUrl, getStatementsByObjectAndPredicate } from 'network';
-import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
 import TemplateCard from 'components/ContributionTemplates/TemplateCard';
 import { Container, Col, Row, FormGroup, Label, Form } from 'reactstrap';
 import { reverse } from 'named-urls';
@@ -133,12 +133,14 @@ export default class ContributionTemplates extends Component {
                                     <AutoComplete
                                         requestUrl={resourcesUrl}
                                         optionsClass={CLASSES.RESEARCH_FIELD}
-                                        onItemSelected={this.handleResearchFieldSelect}
                                         placeholder="Select or type to enter a research field"
-                                        autoFocus
-                                        isClearable
-                                        cacheOptions
+                                        onChange={this.handleResearchFieldSelect}
                                         value={this.state.filterReseachField}
+                                        autoLoadOption={true}
+                                        openMenuOnFocus={true}
+                                        allowCreate={false}
+                                        isClearable
+                                        autoFocus={false}
                                     />
                                 </FormGroup>
                             </Col>
@@ -148,12 +150,14 @@ export default class ContributionTemplates extends Component {
                                     <AutoComplete
                                         requestUrl={resourcesUrl}
                                         optionsClass={CLASSES.PROBLEM}
-                                        onItemSelected={this.handleResearchProblemSelect}
                                         placeholder="Select or type to enter a research problem"
-                                        autoFocus
-                                        isClearable
-                                        cacheOptions
+                                        onChange={this.handleResearchProblemSelect}
                                         value={this.state.filterResearchProblem}
+                                        autoLoadOption={true}
+                                        openMenuOnFocus={true}
+                                        allowCreate={false}
+                                        isClearable
+                                        autoFocus={false}
                                     />
                                 </FormGroup>
                             </Col>
