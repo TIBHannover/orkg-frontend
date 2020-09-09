@@ -65,6 +65,7 @@ function TemplateComponentValue(props) {
                         linkButton={props.value && props.value.id ? reverse(ROUTES.CLASS, { id: props.value.id }) : ''}
                         linkButtonTippy="Go to class page"
                         cssClasses="form-control-sm"
+                        autoFocus={false}
                     />
                 </InputGroup>
                 <div className="mt-2">

@@ -5,6 +5,7 @@ import { faClipboard, faLink } from '@fortawesome/free-solid-svg-icons';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { submitGetRequest, getResourcesByClass } from 'network';
 import { AsyncPaginateBase } from 'react-select-async-paginate';
+import { classesUrl } from 'network';
 import Creatable from 'react-select/creatable';
 import PropTypes from 'prop-types';
 import { components } from 'react-select';
@@ -14,6 +15,7 @@ import getExternalData from './3rdPartyRegistries/index';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import Tippy from '@tippy.js/react';
+import REGEX from 'constants/regex';
 import NativeListener from 'react-native-listener';
 import CustomOption from './CustomOption';
 
@@ -82,13 +84,31 @@ function Autocomplete(props) {
         if (props.optionsClass) {
             responseJson = await getResourcesByClass({ id: props.optionsClass, q: value.trim(), page: page, items: pageSize });
         } else {
-            responseJson = await submitGetRequest(
-                props.requestUrl +
-                    '?q=' +
-                    encodeURIComponent(value.trim()) +
-                    queryParams +
-                    (props.excludeClasses ? '&exclude=' + encodeURIComponent(props.excludeClasses) : '')
-            );
+            const isURI = new RegExp(REGEX.URL).test(value.trim());
+            if (props.requestUrl === classesUrl && isURI) {
+                // Lookup a class by uri
+                try {
+                    responseJson = await submitGetRequest(
+                        props.requestUrl +
+                            '?uri=' +
+                            encodeURIComponent(value.trim()) +
+                            queryParams +
+                            (props.excludeClasses ? '&exclude=' + encodeURIComponent(props.excludeClasses) : '')
+                    );
+                } catch (error) {
+                    // No matching class
+                    return [];
+                }
+                responseJson = responseJson ? [responseJson] : [];
+            } else {
+                responseJson = await submitGetRequest(
+                    props.requestUrl +
+                        '?q=' +
+                        encodeURIComponent(value.trim()) +
+                        queryParams +
+                        (props.excludeClasses ? '&exclude=' + encodeURIComponent(props.excludeClasses) : '')
+                );
+            }
         }
         return responseJson;
     };
@@ -154,6 +174,7 @@ function Autocomplete(props) {
                 options.push({
                     label: item.label,
                     id: item.id,
+                    ...(item.uri ? { uri: item.uri } : {}),
                     ...(item.shared ? { shared: item.shared } : {}),
                     ...(item.classes ? { classes: item.classes } : {}),
                     ...(item.description ? { description: item.description } : {})

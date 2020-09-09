@@ -5,6 +5,7 @@ import Tippy from '@tippy.js/react';
 import { components } from 'react-select';
 import styled from 'styled-components';
 import { truncate } from 'lodash';
+import { truncStringPortion } from 'utils';
 import { PREDICATES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 
@@ -42,6 +43,7 @@ export default function CustomOption(props) {
     const { innerProps, ...propsWithoutInnerProps } = props;
     const { onClick, ...newInnerProps } = innerProps;
     const truncatedDescription = truncate(props.data.description ? props.data.description : '', { length: MAXIMUM_DESCRIPTION_LENGTH });
+    const truncatedURI = truncStringPortion(props.data.uri ? props.data.uri : '', 15, 50, 3);
 
     return (
         <components.Option {...propsWithoutInnerProps} innerProps={newInnerProps}>
@@ -51,6 +53,13 @@ export default function CustomOption(props) {
                     {truncatedDescription && (
                         <div>
                             <small className="text-muted">{truncatedDescription}</small>
+                        </div>
+                    )}
+                    {truncatedURI && (
+                        <div>
+                            <i>
+                                <small className="text-muted">{truncatedURI}</small>
+                            </i>
                         </div>
                     )}
                 </span>
@@ -91,9 +100,11 @@ export default function CustomOption(props) {
                             </Tippy>
                         </div>
                     )}
-                    <span onClick={onClick} className="badge">
-                        {props.data.id}
-                    </span>
+                    {props.data.id && (
+                        <span onClick={onClick} className="badge">
+                            {props.data.id}
+                        </span>
+                    )}
                 </span>
             </StyledSelectOption>
         </components.Option>

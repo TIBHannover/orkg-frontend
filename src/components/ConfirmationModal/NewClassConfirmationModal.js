@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input, FormText } from 'reactstrap';
+import REGEX from 'constants/regex';
+import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
 function CreateClassModal(props) {
-    const [uri, setUri] = useState('');
+    const isURI = new RegExp(REGEX.URL).test(props.label.trim());
+    const [uri, setUri] = useState(props.uri ? props.uri : isURI ? props.label.trim() : '');
+    const [label, setLabel] = useState(isURI ? '' : props.label.trim());
 
     return (
         <Modal isOpen toggle={() => props.onClose(false)}>
@@ -12,7 +16,7 @@ function CreateClassModal(props) {
                 <p>Often there are existing classes that you can use as well. It is better to use existing classes than new ones.</p>
                 <FormGroup>
                     <Label for="labelInput">Label</Label>
-                    <Input disabled type="text" name="label" id="labelInput" value={props.label} />
+                    <Input disabled={!isURI} type="text" name="label" id="labelInput" value={label} onChange={e => setLabel(e.target.value)} />
                 </FormGroup>
                 <FormGroup>
                     <Label for="URIInput">URI</Label>
@@ -28,7 +32,16 @@ function CreateClassModal(props) {
                 </FormGroup>
             </ModalBody>
             <ModalFooter>
-                <Button color="primary" onClick={() => props.onClose({ label: props.label, uri: uri })}>
+                <Button
+                    color="primary"
+                    onClick={() => {
+                        if (label.trim() !== '') {
+                            props.onClose({ label: label, uri: uri });
+                        } else {
+                            toast.error('Please enter the label of the class');
+                        }
+                    }}
+                >
                     Create class
                 </Button>{' '}
                 <Button color="secondary" onClick={() => props.onClose(false)}>
@@ -41,7 +54,8 @@ function CreateClassModal(props) {
 
 CreateClassModal.propTypes = {
     onClose: PropTypes.func.isRequired,
-    label: PropTypes.string.isRequired
+    label: PropTypes.string.isRequired,
+    uri: PropTypes.string
 };
 
 export default CreateClassModal;
