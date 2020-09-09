@@ -3,11 +3,26 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Typography from '@material-ui/core/Typography';
-import { observatoriesUrl, submitGetRequest } from 'network';
+import { observatoriesUrl, submitGetRequest, getOrganization, getPapersCountByObservatoryId, getComparisonsCountByObservatoryId } from 'network';
 import { Container } from 'reactstrap';
 import ObservatoryCard from 'components/ObservatoryCard/ObservatoryCard';
+import { Col, Row } from 'reactstrap';
 import { withStyles } from '@material-ui/core/styles';
+
+const VerticalTabs = withStyles(theme => ({
+    flexContainer: {
+        flexDirection: 'column'
+    },
+    indicator: {
+        display: 'none'
+    }
+}))(Tabs);
+
+const MyTab = withStyles(theme => ({
+    selected: {
+        color: '#e86161'
+    }
+}))(Tab);
 
 class Observatories extends React.PureComponent {
     //state = { activeIndex: 0 };
@@ -17,7 +32,8 @@ class Observatories extends React.PureComponent {
         this.state = {
             observatories: [],
             isNextPageLoading: false,
-            activeIndex: 0
+            activeIndex: 0,
+            isLoadingOrganizations: false
         };
     }
 
@@ -30,7 +46,11 @@ class Observatories extends React.PureComponent {
         this.setState({ isNextPageLoading: true });
         submitGetRequest(observatoriesUrl)
             .then(observatories => {
-                const g = this.groupBy(observatories, 'researchField');
+                //console.log(observatories);
+                observatories = this.loadObservatoriesStat(observatories);
+                const updatedObservatories = this.loadOrganizations(observatories);
+                const g = this.groupBy(updatedObservatories, 'researchField');
+                //console.log(g);
                 if (observatories.length > 0) {
                     this.setState({
                         observatories: g,
@@ -56,6 +76,46 @@ class Observatories extends React.PureComponent {
         }, {});
     };
 
+    loadOrganizations = observatoriesData => {
+        this.setState({ isLoadingOrganizations: true });
+        Promise.all(
+            observatoriesData.map(o => {
+                const a = [];
+                o.organizations.map(or => {
+                    getOrganization(or.id).then(oe => {
+                        a.push(oe);
+                    });
+                });
+                o.organizations = a;
+            })
+        );
+        this.setState({
+            isLoadingOrganizations: false
+        });
+        return observatoriesData;
+    };
+
+    loadObservatoriesStat = observatoriesData => {
+        Promise.all(
+            observatoriesData.map(o => {
+                //o.organizations.map(or => {
+                getPapersCountByObservatoryId(o.id).then(obs => {
+                    o.papers = obs;
+                    //a.push(oe);
+                });
+                getComparisonsCountByObservatoryId(o.id).then(obs => {
+                    o.comparisons = obs;
+                    //a.push(oe);
+                });
+                //})
+            })
+        );
+        // this.setState({
+        //     isLoadingOrganizations: false
+        // });
+        return observatoriesData;
+    };
+
     handleChange = (_, activeIndex) => this.setState({ activeIndex });
     render() {
         const { activeIndex } = this.state;
@@ -64,40 +124,31 @@ class Observatories extends React.PureComponent {
                 <Container className="p-0">
                     <h1 className="h4 mt-4 mb-4">View all observatories </h1>
                 </Container>
-                <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
-                    {console.log(activeIndex)}
-                    <VerticalTabs value={activeIndex} onChange={this.handleChange}>
-                        {Object.keys(this.state.observatories).map((rf, key) => {
-                            return <MyTab key={`c${key}`} label={rf === 'null' || '' ? 'Others' : rf} />;
-                        })}
-                    </VerticalTabs>
-                    {/* <Container> */}
-                    <div className="mt-3 row justify-content-center">
-                        {Object.keys(this.state.observatories).map((rf, key) => {
-                            return (
-                                activeIndex === key && (
-                                    <>
-                                        {/* <div className="mt-3 row justify-content-center"> */}
-                                        {this.state.observatories[rf].map(observatory => {
-                                            //  return <TabContainer key={`c${key}`}>{observatory.name}</TabContainer>;
-                                            return <ObservatoryCard key={observatory.id} observatory={observatory} />;
-                                        })}
-                                        {/* </div> */}
-                                    </>
-                                )
-                            );
-                        })}
-                    </div>
-                    {/* </Container> */}
-                    {/* <VerticalTabs value={activeIndex} onChange={this.handleChange}>
-                    <MyTab label="item one" />
-                    <MyTab label="item two" />
-                    <MyTab label="item three" />
-                </VerticalTabs> */}
-
-                    {/* {activeIndex === 0 && <TabContainer>Item One</TabContainer>}
-                {activeIndex === 1 && <TabContainer>Item Two</TabContainer>}
-                {activeIndex === 2 && <TabContainer>Item Three</TabContainer>} */}
+                <Container style={{ maxWidth: 'calc(100% - 500px)' }} className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
+                    <Row>
+                        <Col md={4} sm={12}>
+                            <VerticalTabs value={activeIndex} onChange={this.handleChange}>
+                                {Object.keys(this.state.observatories).map((rf, key) => {
+                                    return <MyTab style={{ border: 'none' }} key={`c${key}`} label={rf === 'null' || '' ? 'Others' : rf} />;
+                                })}
+                            </VerticalTabs>
+                        </Col>
+                        <Col md={8} sm={12}>
+                            <div className="mt-3 row justify-content-center">
+                                {Object.keys(this.state.observatories).map((rf, key) => {
+                                    return (
+                                        activeIndex === key && (
+                                            <>
+                                                {this.state.observatories[rf].map(observatory => {
+                                                    return <ObservatoryCard key={observatory.id} observatory={observatory} />;
+                                                })}
+                                            </>
+                                        )
+                                    );
+                                })}
+                            </div>
+                        </Col>
+                    </Row>
                     {this.state.observatories.length === 0 && !this.state.isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">No observatories yet!</div>
                     )}
@@ -111,115 +162,5 @@ class Observatories extends React.PureComponent {
         );
     }
 }
-
-const VerticalTabs = withStyles(theme => ({
-    flexContainer: {
-        flexDirection: 'column'
-    },
-    indicator: {
-        display: 'none'
-    }
-}))(Tabs);
-
-const MyTab = withStyles(theme => ({
-    selected: {
-        color: 'tomato',
-        borderBottom: '2px solid tomato'
-    }
-}))(Tab);
-
-function TabContainer(props) {
-    return (
-        <Typography component="div" style={{ padding: 24 }}>
-            {/* {props.children} */}
-        </Typography>
-    );
-}
-
-// import React, { Component } from 'react';
-// import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-// import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-// import ObservatoryCard from 'components/ObservatoryCard/ObservatoryCard';
-// import { observatoriesUrl, submitGetRequest } from 'network';
-// import { Container } from 'reactstrap';
-
-// class Observatories extends Component {
-//     constructor(props) {
-//         super(props);
-
-//         this.state = {
-//             observatories: [],
-//             isNextPageLoading: false
-//         };
-//     }
-
-//     componentDidMount() {
-//         document.title = 'Observatories - ORKG';
-//         this.loadObservatories();
-//     }
-
-//     loadObservatories = () => {
-//         this.setState({ isNextPageLoading: true });
-//         submitGetRequest(observatoriesUrl)
-//             .then(observatories => {
-//                 const g = this.groupBy(observatories, 'researchField');
-//                 if (observatories.length > 0) {
-//                     this.setState({
-//                         observatories: g,
-//                         isNextPageLoading: false
-//                     });
-//                 } else {
-//                     this.setState({
-//                         isNextPageLoading: false
-//                     });
-//                 }
-//             })
-//             .catch(error => {
-//                 this.setState({
-//                     isNextPageLoading: false
-//                 });
-//             });
-//     };
-
-//     groupBy = (array, key) => {
-//         return array.reduce((result, currentValue) => {
-//             (result[currentValue[key]] = result[currentValue[key]] || []).push(currentValue);
-//             return result;
-//         }, {});
-//     };
-
-//     render() {
-//         return (
-//             <>
-//                 <Container className="p-0">
-//                     <h1 className="h4 mt-4 mb-4">View all observatories </h1>
-//                 </Container>
-//                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
-//                     {Object.keys(this.state.observatories).map(rf => {
-//                         return (
-//                             <>
-//                                 <h5>{rf === 'null' || '' ? 'Others' : rf}</h5>
-//                                 <div className="mt-3 row justify-content-center">
-//                                     {this.state.observatories[rf].map(observatory => {
-//                                         return <ObservatoryCard key={observatory.id} observatory={observatory} />;
-//                                     })}
-//                                 </div>
-//                             </>
-//                         );
-//                     })}
-
-//                     {this.state.observatories.length === 0 && !this.state.isNextPageLoading && (
-//                         <div className="text-center mt-4 mb-4">No observatories yet!</div>
-//                     )}
-//                     {this.state.isNextPageLoading && (
-//                         <div className="text-center mt-4 mb-4">
-//                             <Icon icon={faSpinner} spin /> Loading
-//                         </div>
-//                     )}
-//                 </Container>
-//             </>
-//         );
-//     }
-// }
 
 export default Observatories;
