@@ -22,7 +22,7 @@ function Predicate(props) {
             setIsLoading(true);
             try {
                 const responseJson = await getPredicate(props.match.params.id);
-                document.title = `${responseJson.label} - Predicate - ORKG`;
+                document.title = `${responseJson.label} - Property - ORKG`;
 
                 setLabel(responseJson.label);
                 setIsLoading(false);

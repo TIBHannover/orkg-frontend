@@ -270,7 +270,7 @@ class Header extends Component {
                                         </small>
                                     </DropdownItem>
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>
-                                        Predicates{' '}
+                                        Properties{' '}
                                         <small>
                                             <Badge color="info">Beta</Badge>
                                         </small>

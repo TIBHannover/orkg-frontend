@@ -236,7 +236,7 @@ class EditorComponent extends BaseEditorComponent {
                                 requestUrl={this.state.type === 'property' ? predicatesUrl : resourcesUrl}
                                 excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
                                 optionsClass={this.state.valueClass ? this.state.valueClass : undefined}
-                                placeholder={this.state.type === 'property' ? 'Enter a predicate' : 'Enter a resource'}
+                                placeholder={this.state.type === 'property' ? 'Enter a property' : 'Enter a resource'}
                                 onChange={async i => {
                                     let valueID;
                                     if (i.__isNew__ && this.state.type === 'property') {
