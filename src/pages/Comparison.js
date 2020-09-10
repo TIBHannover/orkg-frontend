@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPlus, faArrowsAltH, faLightbulb, faBezierCurve, faHistory } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faPlus, faLightbulb, faBezierCurve, faHistory, faWindowMaximize } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/ComparisonTable.js';
 import ExportToLatex from 'components/Comparison/ExportToLatex.js';
@@ -76,7 +76,9 @@ function Comparison(props) {
     const [fullWidth, setFullWidth] = useState(false);
     const [hideScrollHint, setHideScrollHint] = useState(cookies.seenShiftMouseWheelScroll ? cookies.seenShiftMouseWheelScroll : false);
 
+    const [viewDensity, setViewDensity] = useState('spacious');
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [dropdownDensityOpen, setDropdownDensityOpen] = useState(false);
     const [dropdownMethodOpen, setDropdownMethodOpen] = useState(false);
 
     const [showPropertiesDialog, setShowPropertiesDialog] = useState(false);
@@ -124,9 +126,27 @@ function Comparison(props) {
                 {contributionsList.length > 1 && !isLoadingComparisonResult && !isFailedLoadingComparisonResult && (
                     <div style={{ marginLeft: 'auto' }} className="flex-shrink-0 mt-4">
                         <ButtonGroup className="float-right mb-4 ml-1">
-                            <Button color="darkblue" size="sm" onClick={() => setFullWidth(fullWidth => !fullWidth)} style={{ marginRight: 3 }}>
-                                <Icon icon={faArrowsAltH} /> <span className="mr-2">Full width</span>
-                            </Button>
+                            <Dropdown group isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} style={{ marginRight: 3 }}>
+                                <DropdownToggle color="darkblue" size="sm">
+                                    <Icon icon={faWindowMaximize} /> <span className="mr-2">View</span>
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem onClick={() => setFullWidth(fullWidth => !fullWidth)}>
+                                        <span className="mr-2">Full width</span>
+                                    </DropdownItem>
+                                    <DropdownItem divider />
+                                    <DropdownItem header>View density</DropdownItem>
+                                    <DropdownItem active={viewDensity === 'spacious'} onClick={() => setViewDensity('spacious')}>
+                                        Spacious
+                                    </DropdownItem>
+                                    <DropdownItem active={viewDensity === 'normal'} onClick={() => setViewDensity('normal')}>
+                                        Normal
+                                    </DropdownItem>
+                                    <DropdownItem active={viewDensity === 'compact'} onClick={() => setViewDensity('compact')}>
+                                        Compact
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
                             <Button
                                 className="flex-shrink-0"
                                 color="darkblue"
@@ -298,6 +318,7 @@ function Comparison(props) {
                                         contributions={contributions}
                                         removeContribution={removeContribution}
                                         transpose={transpose}
+                                        viewDensity={viewDensity}
                                     />
                                 </div>
                             ) : (

@@ -47,10 +47,11 @@ export const ReactTableWrapper = styled.div`
     clear: both;
     position: relative;
     padding: 10px 0;
+    font-size: ${props => (props.smallerFontSize ? '0.95rem' : '1rem')};
 
     /*&.overflowing-left .rthfc-td-fixed,
     &.overflowing-left .rthfc-th-fixed {
-        box-shadow: 9px 0px 5px -5px #d9d9d9 !important;
+        box-shadow: 9px 0px 5px -5px  #d9d9d9 !important;
     }*/
 
     /*&.overflowing-right,*/
@@ -155,7 +156,7 @@ export const PropertiesInner = styled.div`
     background: ${props => (props.transpose ? '#E86161' : '#80869B')};
     height: 100%;
     color: #fff;
-    padding: 10px;
+    padding: ${props => props.cellPadding ?? 10}px 10px;
     border-bottom: ${props => (props.transpose ? '2px solid #fff!important' : '2px solid #8B91A5!important')};
     word-wrap: break-word;
     overflow-wrap: break-word;

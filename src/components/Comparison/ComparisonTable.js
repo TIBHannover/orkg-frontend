@@ -117,9 +117,19 @@ class ComparisonTable extends Component {
         });
 
         const customProps = { id: 'comparisonTable' };
+
+        let cellPadding = 10;
+        if (this.props.viewDensity === 'normal') {
+            cellPadding = 5;
+        } else if (this.props.viewDensity === 'compact') {
+            cellPadding = 1;
+        }
+
+        const smallerFontSize = this.props.viewDensity === 'compact';
+
         return (
             <>
-                <ReactTableWrapper className={scrollContainerClasses}>
+                <ReactTableWrapper className={scrollContainerClasses} smallerFontSize={smallerFontSize}>
                     <ScrollSync onSync={this.handleScrollCallback}>
                         <ReactTableFixedColumns
                             TheadComponent={component => {
@@ -195,7 +205,7 @@ class ComparisonTable extends Component {
                                     Cell: props =>
                                         !this.props.transpose ? (
                                             <Properties>
-                                                <PropertiesInner>
+                                                <PropertiesInner cellPadding={cellPadding}>
                                                     <ConditionalWrapper
                                                         condition={props.value.similar && props.value.similar.length > 0}
                                                         wrapper={children => (
@@ -269,7 +279,7 @@ class ComparisonTable extends Component {
                                                   //return d.values[index].length > 0 ? d.values[index][0].label : '';
                                                   return d.values[index];
                                               },
-                                              Cell: props => <TableCell data={props.value} />, // Custom cell components!
+                                              Cell: props => <TableCell data={props.value} viewDensity={this.props.viewDensity} />, // Custom cell components!
                                               width: 250
                                           };
                                       })
@@ -301,7 +311,7 @@ class ComparisonTable extends Component {
                                                       //return d.values[index].length > 0 ? d.values[index][0].label : '';
                                                       return d.values[index];
                                                   },
-                                                  Cell: props => <TableCell data={props.value} />, // Custom cell components!
+                                                  Cell: props => <TableCell data={props.value} viewDensity={this.props.viewDensity} />, // Custom cell components!
                                                   width: 250
                                               };
                                           }))
@@ -335,7 +345,8 @@ ComparisonTable.propTypes = {
     data: PropTypes.object.isRequired,
     properties: PropTypes.array.isRequired,
     removeContribution: PropTypes.func.isRequired,
-    transpose: PropTypes.bool.isRequired
+    transpose: PropTypes.bool.isRequired,
+    viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact'])
 };
 
 export default ComparisonTable;
