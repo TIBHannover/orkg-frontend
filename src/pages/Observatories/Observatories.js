@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +9,7 @@ import ObservatoryCard from 'components/ObservatoryCard/ObservatoryCard';
 import { Col, Row } from 'reactstrap';
 import { withStyles } from '@material-ui/core/styles';
 
-const VerticalTabs = withStyles(theme => ({
+const VerticalTabs = withStyles(() => ({
     flexContainer: {
         flexDirection: 'column'
     },
@@ -18,13 +18,13 @@ const VerticalTabs = withStyles(theme => ({
     }
 }))(Tabs);
 
-const MyTab = withStyles(theme => ({
+const MyTab = withStyles(() => ({
     selected: {
         color: '#e86161'
     }
 }))(Tab);
 
-class Observatories extends React.PureComponent {
+class Observatories extends Component {
     constructor(props) {
         super(props);
 
