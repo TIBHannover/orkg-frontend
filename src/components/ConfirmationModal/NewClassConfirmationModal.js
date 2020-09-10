@@ -36,7 +36,11 @@ function CreateClassModal(props) {
                     color="primary"
                     onClick={() => {
                         if (label.trim() !== '') {
-                            props.onClose({ label: label, uri: uri });
+                            if (uri && !new RegExp(REGEX.URL).test(uri.trim())) {
+                                toast.error('Please enter a valid URI of the class');
+                            } else {
+                                props.onClose({ label: label, uri: uri });
+                            }
                         } else {
                             toast.error('Please enter the label of the class');
                         }
