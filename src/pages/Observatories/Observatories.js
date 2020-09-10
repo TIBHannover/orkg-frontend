@@ -75,9 +75,9 @@ class Observatories extends Component {
 
     loadOrganizations = observatoriesData => {
         this.setState({ isLoadingOrganizations: true });
-        observatoriesData.map(o => {
+        observatoriesData.forEach(o => {
             const a = [];
-            o.organizations.map(or => {
+            o.organizations.forEach(or => {
                 getOrganization(or.id).then(oe => {
                     a.push(oe);
                 });
@@ -91,7 +91,7 @@ class Observatories extends Component {
     };
 
     loadObservatoriesStat = observatoriesData => {
-        observatoriesData.map(o => {
+        observatoriesData.forEach(o => {
             getPapersCountByObservatoryId(o.id).then(obs => {
                 o.papers = obs;
             });
