@@ -25,7 +25,6 @@ const MyTab = withStyles(theme => ({
 }))(Tab);
 
 class Observatories extends React.PureComponent {
-    //state = { activeIndex: 0 };
     constructor(props) {
         super(props);
 
@@ -46,11 +45,9 @@ class Observatories extends React.PureComponent {
         this.setState({ isNextPageLoading: true });
         submitGetRequest(observatoriesUrl)
             .then(observatories => {
-                //console.log(observatories);
                 observatories = this.loadObservatoriesStat(observatories);
                 const updatedObservatories = this.loadOrganizations(observatories);
                 const g = this.groupBy(updatedObservatories, 'researchField');
-                //console.log(g);
                 if (observatories.length > 0) {
                     this.setState({
                         observatories: g,
@@ -78,17 +75,15 @@ class Observatories extends React.PureComponent {
 
     loadOrganizations = observatoriesData => {
         this.setState({ isLoadingOrganizations: true });
-        Promise.all(
-            observatoriesData.map(o => {
-                const a = [];
-                o.organizations.map(or => {
-                    getOrganization(or.id).then(oe => {
-                        a.push(oe);
-                    });
+        observatoriesData.map(o => {
+            const a = [];
+            o.organizations.map(or => {
+                getOrganization(or.id).then(oe => {
+                    a.push(oe);
                 });
-                o.organizations = a;
-            })
-        );
+            });
+            o.organizations = a;
+        });
         this.setState({
             isLoadingOrganizations: false
         });
@@ -96,23 +91,14 @@ class Observatories extends React.PureComponent {
     };
 
     loadObservatoriesStat = observatoriesData => {
-        Promise.all(
-            observatoriesData.map(o => {
-                //o.organizations.map(or => {
-                getPapersCountByObservatoryId(o.id).then(obs => {
-                    o.papers = obs;
-                    //a.push(oe);
-                });
-                getComparisonsCountByObservatoryId(o.id).then(obs => {
-                    o.comparisons = obs;
-                    //a.push(oe);
-                });
-                //})
-            })
-        );
-        // this.setState({
-        //     isLoadingOrganizations: false
-        // });
+        observatoriesData.map(o => {
+            getPapersCountByObservatoryId(o.id).then(obs => {
+                o.papers = obs;
+            });
+            getComparisonsCountByObservatoryId(o.id).then(obs => {
+                o.comparisons = obs;
+            });
+        });
         return observatoriesData;
     };
 
