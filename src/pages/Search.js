@@ -74,8 +74,8 @@ class Search extends Component {
             [
                 7,
                 {
-                    label: 'Predicate',
-                    labelPlural: 'Predicates',
+                    label: 'Property',
+                    labelPlural: 'Properties',
                     class: 'predicate'
                 }
             ]
