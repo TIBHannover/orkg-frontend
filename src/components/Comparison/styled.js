@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Container } from 'reactstrap';
+import { Container, Button } from 'reactstrap';
 
 export const SubtitleSeparator = styled.div`
     background: ${props => props.theme.darkblue};
@@ -21,6 +21,20 @@ export const ComparisonTitle = styled.div`
 
 export const ContainerAnimated = styled(Container)`
     transition: 0.5s max-width;
+`;
+
+export const ComparisonTypeButton = styled(Button)`
+    img {
+        transition: 0.3s opacity;
+        opacity: 1;
+        width: 163px; // set width, so positioning is correct after opening dropdown menu
+    }
+    &:hover img {
+        opacity: 0.75;
+    }
+    &.active {
+        border: 2px solid;
+    }
 `;
 
 export const ScrollButton = styled.div`

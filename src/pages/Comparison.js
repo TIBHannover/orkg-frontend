@@ -17,7 +17,7 @@ import ComparisonMetaData from 'components/Comparison/ComparisonMetaData';
 import Share from 'components/Comparison/Share.js';
 import ComparisonVersions from 'components/Comparison/ComparisonVersions.js';
 import Publish from 'components/Comparison/Publish.js';
-import { ContainerAnimated } from 'components/Comparison/styled';
+import { ContainerAnimated, ComparisonTypeButton } from 'components/Comparison/styled';
 import useComparison from 'components/Comparison/hooks/useComparison';
 import ROUTES from 'constants/routes.js';
 import { useHistory, Link } from 'react-router-dom';
@@ -29,6 +29,8 @@ import Tippy from '@tippy.js/react';
 import { connect } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import PropTypes from 'prop-types';
+import ExactMatch from 'assets/img/comparison-exact-match.svg';
+import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
 
 function Comparison(props) {
     const [
@@ -104,6 +106,12 @@ function Comparison(props) {
     };
 
     const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 20px)' } : {};
+
+    const handleChangeType = type => {
+        setUrlNeedsToUpdate(true);
+        setComparisonType(type);
+        setDropdownMethodOpen(false);
+    };
 
     return (
         <div>
@@ -242,33 +250,33 @@ function Comparison(props) {
                     {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && (
                         <div className="p-0 d-flex align-items-start">
                             <h2 className="h4 mb-4 mt-4 flex-grow-1">{metaData.title ? metaData.title : 'Compare'}</h2>
+
                             <ButtonGroup className=" mb-4 mt-4  flex-shrink-0">
                                 <Dropdown group isOpen={dropdownMethodOpen} toggle={() => setDropdownMethodOpen(v => !v)}>
                                     <DropdownToggle color="lightblue" size="sm" className="rounded-right">
-                                        <span className="mr-2">Method: {comparisonType === 'path' ? 'Compare paths' : 'Flat and merge'}</span>{' '}
+                                        <span className="mr-2">Method: {comparisonType === 'path' ? 'Exact match' : 'Intelligent merge'}</span>{' '}
                                         <Icon icon={faBezierCurve} />
                                     </DropdownToggle>
-                                    <DropdownMenu>
-                                        <DropdownItem
-                                            onClick={() => {
-                                                setUrlNeedsToUpdate(true);
-                                                setComparisonType('merge');
-                                            }}
-                                        >
-                                            <Tippy content="Flat and merge comparison method">
-                                                <span> Flat and merge</span>
-                                            </Tippy>
-                                        </DropdownItem>
-                                        <DropdownItem
-                                            onClick={() => {
-                                                setUrlNeedsToUpdate(true);
-                                                setComparisonType('path');
-                                            }}
-                                        >
-                                            <Tippy content="Flat and merge comparison method">
-                                                <span>Compare paths</span>
-                                            </Tippy>
-                                        </DropdownItem>
+                                    <DropdownMenu right>
+                                        <div className="d-flex px-2">
+                                            <ComparisonTypeButton
+                                                color="link"
+                                                className="p-0 m-1"
+                                                onClick={() => handleChangeType('merge')}
+                                                active={comparisonType !== 'path'}
+                                            >
+                                                <img src={IntelligentMerge} alt="Intelligent merge example" />
+                                            </ComparisonTypeButton>
+
+                                            <ComparisonTypeButton
+                                                color="link"
+                                                className="p-0 m-1"
+                                                onClick={() => handleChangeType('path')}
+                                                active={comparisonType === 'path'}
+                                            >
+                                                <img src={ExactMatch} alt="Exact match example" />
+                                            </ComparisonTypeButton>
+                                        </div>
                                     </DropdownMenu>
                                 </Dropdown>
                             </ButtonGroup>
