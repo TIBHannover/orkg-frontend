@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 function ObservatoryCard(props) {
     return (
-        <div className="col-4 mb-3">
+        <div className="col-5 mb-3">
             {!props.observatory.logo && (
                 <Card className="h-100">
                     <CardBody className="d-flex align-self-center justify-content-center" style={{ flexDirection: 'column' }}>
@@ -16,6 +16,7 @@ function ObservatoryCard(props) {
                                 <span class="badge badge-lightblue"> {props.observatory.name}</span>
                             </Link>
                         </CardTitle>
+                        {console.log(props.observatory.organizations.length)}
                         {props.observatory.organizations.length > 0 && (
                             <CardText className="row justify-content-center text-muted">
                                 <small>
@@ -32,8 +33,8 @@ function ObservatoryCard(props) {
                                 <br />
                                 <br /> <small>By: {props.observatory.organizations.map(o => o.name).join(',')}</small>
                                 <small>
-                                    Papers: {props.observatory.papers} <br />
-                                    Comparisons: {props.observatory.comparisons}
+                                    Papers: {props.observatory.numPapers} <br />
+                                    Comparisons: {props.observatory.numComparisons}
                                 </small>
                             </CardText>
                         )}

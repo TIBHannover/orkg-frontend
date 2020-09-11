@@ -38,9 +38,10 @@ class Observatories extends Component {
         this.setState({ isNextPageLoading: true });
         submitGetRequest(observatoriesUrl)
             .then(async observatories => {
-                observatories = this.loadObservatoriesStat(observatories);
-                const updatedObservatories = await this.loadOrganizations(observatories);
-                const g = await this.groupBy(updatedObservatories, 'researchField');
+                console.log(observatories);
+                //observatories = this.loadObservatoriesStat(observatories);
+                observatories = await this.loadOrganizations(observatories);
+                const g = await this.groupBy(observatories, 'researchField');
                 if (observatories.length > 0) {
                     this.setState({
                         observatories: g,
@@ -66,11 +67,11 @@ class Observatories extends Component {
         }, {});
     };
 
-    loadOrganizations = observatoriesData => {
+    loadOrganizations = async observatoriesData => {
         this.setState({ isLoadingOrganizations: true });
-        observatoriesData.forEach(o => {
+        await observatoriesData.forEach(async o => {
             const a = [];
-            o.organizations.forEach(or => {
+            await o.organizations.forEach(or => {
                 getOrganization(or.id).then(oe => {
                     a.push(oe);
                 });
@@ -134,13 +135,12 @@ class Observatories extends Component {
                                 <TabContent activeTab={this.state.activeTab}>
                                     {Object.keys(this.state.observatories).map((rf, key) => {
                                         return (
-                                            <>
-                                                <TabPaneStyled tabId={key}>
-                                                    {this.state.observatories[rf].map(observatory => {
-                                                        return <ObservatoryCard key={observatory.id} observatory={observatory} />;
-                                                    })}
-                                                </TabPaneStyled>
-                                            </>
+                                            <TabPaneStyled tabId={key}>
+                                                {this.state.observatories[rf].map(observatory => {
+                                                    return <ObservatoryCard key={observatory.id} observatory={observatory} />;
+                                                })}
+                                            </TabPaneStyled>
+
                                             //)
                                         );
                                     })}
