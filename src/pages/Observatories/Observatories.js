@@ -1,28 +1,21 @@
 import React, { Component } from 'react';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { observatoriesUrl, submitGetRequest, getOrganization, getPapersCountByObservatoryId, getComparisonsCountByObservatoryId } from 'network';
 import { Container } from 'reactstrap';
 import ObservatoryCard from 'components/ObservatoryCard/ObservatoryCard';
 import { Col, Row } from 'reactstrap';
-import { withStyles } from '@material-ui/core/styles';
+import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import classnames from 'classnames';
+import styled from 'styled-components';
 
-const VerticalTabs = withStyles(() => ({
-    flexContainer: {
-        flexDirection: 'column'
-    },
-    indicator: {
-        display: 'none'
-    }
-}))(Tabs);
+const TabPaneStyled = styled(TabPane)`
+    border-top: 0;
+`;
 
-const MyTab = withStyles(() => ({
-    selected: {
-        color: '#e86161'
-    }
-}))(Tab);
+const NavItemStyled = styled(NavItem)`
+    cursor: pointer;
+`;
 
 class Observatories extends Component {
     constructor(props) {
@@ -31,7 +24,7 @@ class Observatories extends Component {
         this.state = {
             observatories: [],
             isNextPageLoading: false,
-            activeIndex: 0,
+            activeTab: 0,
             isLoadingOrganizations: false
         };
     }
@@ -44,10 +37,10 @@ class Observatories extends Component {
     loadObservatories = () => {
         this.setState({ isNextPageLoading: true });
         submitGetRequest(observatoriesUrl)
-            .then(observatories => {
+            .then(async observatories => {
                 observatories = this.loadObservatoriesStat(observatories);
-                const updatedObservatories = this.loadOrganizations(observatories);
-                const g = this.groupBy(updatedObservatories, 'researchField');
+                const updatedObservatories = await this.loadOrganizations(observatories);
+                const g = await this.groupBy(updatedObservatories, 'researchField');
                 if (observatories.length > 0) {
                     this.setState({
                         observatories: g,
@@ -66,7 +59,7 @@ class Observatories extends Component {
             });
     };
 
-    groupBy = (array, key) => {
+    groupBy = async (array, key) => {
         return array.reduce((result, currentValue) => {
             (result[currentValue[key]] = result[currentValue[key]] || []).push(currentValue);
             return result;
@@ -102,39 +95,60 @@ class Observatories extends Component {
         return observatoriesData;
     };
 
-    handleChange = (_, activeIndex) => this.setState({ activeIndex });
+    toggleTab = tab => {
+        this.setState({
+            activeTab: tab
+        });
+    };
+
     render() {
-        const { activeIndex } = this.state;
         return (
             <>
                 <Container className="p-0">
                     <h1 className="h4 mt-4 mb-4">View all observatories </h1>
                 </Container>
-                <Container style={{ maxWidth: 'calc(100% - 500px)' }} className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
+                <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
                     <Row>
                         <Col md={4} sm={12}>
-                            <VerticalTabs value={activeIndex} onChange={this.handleChange}>
+                            <Nav tabs className="flex-column">
                                 {Object.keys(this.state.observatories).map((rf, key) => {
-                                    return <MyTab style={{ border: 'none' }} key={`c${key}`} label={rf === 'null' || '' ? 'Others' : rf} />;
+                                    return (
+                                        <>
+                                            <NavItemStyled>
+                                                <NavLink
+                                                    className={classnames({ active: this.state.activeTab === key })}
+                                                    onClick={() => {
+                                                        this.toggleTab(key);
+                                                    }}
+                                                >
+                                                    {rf === 'null' || '' ? 'Others' : rf}
+                                                </NavLink>
+                                            </NavItemStyled>
+                                        </>
+                                    );
                                 })}
-                            </VerticalTabs>
+                            </Nav>
                         </Col>
                         <Col md={8} sm={12}>
                             <div className="mt-3 row justify-content-center">
-                                {Object.keys(this.state.observatories).map((rf, key) => {
-                                    return (
-                                        activeIndex === key && (
+                                <TabContent activeTab={this.state.activeTab}>
+                                    {Object.keys(this.state.observatories).map((rf, key) => {
+                                        return (
                                             <>
-                                                {this.state.observatories[rf].map(observatory => {
-                                                    return <ObservatoryCard key={observatory.id} observatory={observatory} />;
-                                                })}
+                                                <TabPaneStyled tabId={key}>
+                                                    {this.state.observatories[rf].map(observatory => {
+                                                        return <ObservatoryCard key={observatory.id} observatory={observatory} />;
+                                                    })}
+                                                </TabPaneStyled>
                                             </>
-                                        )
-                                    );
-                                })}
+                                            //)
+                                        );
+                                    })}
+                                </TabContent>
                             </div>
                         </Col>
                     </Row>
+
                     {this.state.observatories.length === 0 && !this.state.isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">No observatories yet!</div>
                     )}
