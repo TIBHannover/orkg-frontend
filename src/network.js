@@ -21,6 +21,7 @@ export const semanticScholarUrl = process.env.REACT_APP_SEMANTICSCHOLAR_URL;
 export const comparisonUrl = `${similaireServiceUrl}compare/`;
 export const similaireUrl = `${similaireServiceUrl}similar/`;
 export const authenticationUrl = process.env.REACT_APP_SERVER_URL;
+export const olsBaseUrl = process.env.REACT_APP_OLS_BASE_URL;
 
 /**
  * Sends simple GET request to the URL.

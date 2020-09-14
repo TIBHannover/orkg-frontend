@@ -193,6 +193,7 @@ export default class AddResource extends Component {
                                 innerRef={instance => (this.classesAutocompleteRef = instance)}
                                 isMulti
                                 autoFocus={false}
+                                ols={true}
                             />
                         )}
                         {this.state.loadingDefaultClasses && <div>Loading default classes</div>}

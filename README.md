@@ -43,6 +43,8 @@ The **environment variables** descriptions:
 | REACT_APP_GEONAMES_API_USERNAME    | ✅ Used     | ✅ Used    | Username to access [GeoNames](https://www.geonames.org/export/) API (20'000 credits daily limit per application -identified by this parameter-)                                                                                                                                                                                                                                                                                                                                                                                     |
 | REACT_APP_IS_TESTING_SERVER        | ✅ Used     | ✅ Used    | Used to show a top banner indicating that it a testing environment. Accepted values : true or false                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
+_PLEASE MAKE SURE YOU USE HTTPS INSTEAD OF HTTP URLS._
+
 ### Backend service
 
 In order to run the frontend, the backend needs to be running as well. Please refer to the [ORKG backend repository](https://gitlab.com/TIBHannover/orkg/orkg-backend) for instructions on how to run the backend. Easiest is to run the backend within a docker container.
