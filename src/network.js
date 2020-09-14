@@ -638,15 +638,15 @@ export const createOrganization = (organizationName, organizationLogo, createdBy
 };
 
 export const updateOrganizationName = (id, organizationName) => {
-    return submitPutRequest(`${organizationsUrl}updateName`, { 'Content-Type': 'application/json' }, { id, organizationName });
+    return submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/name`, { 'Content-Type': 'plain/text' }, organizationName);
 };
 
 export const updateOrganizationUrl = (id, url) => {
-    return submitPutRequest(`${organizationsUrl}updateUrl`, { 'Content-Type': 'application/json' }, { id, url });
+    return submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/url`, { 'Content-Type': 'plain/text' }, url);
 };
 
 export const updateOrganizationLogo = (id, organizationLogo) => {
-    return submitPutRequest(`${organizationsUrl}updateLogo`, { 'Content-Type': 'application/json' }, { id, organizationLogo });
+    return submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/logo`, { 'Content-Type': 'plain/text' }, organizationLogo);
 };
 
 export const getAllObservatoriesByOrganizationId = id => {
@@ -658,15 +658,16 @@ export const getObservatoryById = id => {
 };
 
 export const updateObservatoryName = (id, observatoryName) => {
-    return submitPutRequest(`${observatoriesUrl}updateName`, { 'Content-Type': 'application/json' }, { id, observatoryName });
+    console.log(observatoryName);
+    return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/name`, { 'Content-Type': 'plain/text' }, observatoryName);
 };
 
 export const updateObservatoryDescription = (id, description) => {
-    return submitPutRequest(`${observatoriesUrl}updateDescription`, { 'Content-Type': 'application/json' }, { id, description });
+    return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/description`, { 'Content-Type': 'plain/text' }, description);
 };
 
 export const updateObservatoryResearchField = (id, researchField) => {
-    return submitPutRequest(`${observatoriesUrl}updateResearchField`, { 'Content-Type': 'application/json' }, { id, researchField });
+    return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/researchField`, { 'Content-Type': 'plain/text' }, researchField);
 };
 
 export const getUsersByObservatoryId = id => {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { observatoriesUrl, submitGetRequest, getOrganization, getPapersCountByObservatoryId, getComparisonsCountByObservatoryId } from 'network';
+import { observatoriesUrl, submitGetRequest, getOrganization } from 'network';
 import { Container } from 'reactstrap';
 import ObservatoryCard from 'components/ObservatoryCard/ObservatoryCard';
 import { Col, Row } from 'reactstrap';
@@ -38,8 +38,6 @@ class Observatories extends Component {
         this.setState({ isNextPageLoading: true });
         submitGetRequest(observatoriesUrl)
             .then(async observatories => {
-                console.log(observatories);
-                //observatories = this.loadObservatoriesStat(observatories);
                 observatories = await this.loadOrganizations(observatories);
                 const g = await this.groupBy(observatories, 'researchField');
                 if (observatories.length > 0) {
@@ -71,8 +69,8 @@ class Observatories extends Component {
         this.setState({ isLoadingOrganizations: true });
         await observatoriesData.forEach(async o => {
             const a = [];
-            await o.organizations.forEach(or => {
-                getOrganization(or.id).then(oe => {
+            await o.organizations.forEach(async or => {
+                await getOrganization(or.id).then(oe => {
                     a.push(oe);
                 });
             });
@@ -80,18 +78,6 @@ class Observatories extends Component {
         });
         this.setState({
             isLoadingOrganizations: false
-        });
-        return observatoriesData;
-    };
-
-    loadObservatoriesStat = observatoriesData => {
-        observatoriesData.forEach(o => {
-            getPapersCountByObservatoryId(o.id).then(obs => {
-                o.papers = obs;
-            });
-            getComparisonsCountByObservatoryId(o.id).then(obs => {
-                o.comparisons = obs;
-            });
         });
         return observatoriesData;
     };
@@ -140,8 +126,6 @@ class Observatories extends Component {
                                                     return <ObservatoryCard key={observatory.id} observatory={observatory} />;
                                                 })}
                                             </TabPaneStyled>
-
-                                            //)
                                         );
                                     })}
                                 </TabContent>

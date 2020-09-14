@@ -30,7 +30,7 @@ class EditObservatory extends Component {
         }
 
         if (prevProps.researchField !== this.props.researchField) {
-            this.setState({ researchField: this.props.researchField });
+            this.setState({ researchField: { label: this.props.researchField } });
         }
     };
 
@@ -55,7 +55,7 @@ class EditObservatory extends Component {
             : this.setState({ isLoadingResearchField: true });
 
         if (this.state.isLoadingName && this.state.isLoadingDescription && this.state.isLoadingResearchField) {
-            window.location.reload(false);
+            window.location.reload();
         }
     };
 
