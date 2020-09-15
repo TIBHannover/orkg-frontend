@@ -44,64 +44,72 @@ class EditObservatory extends Component {
         const id = this.props.id;
         const researchField = this.state.researchField.label;
 
-        value !== this.props.label ? await this.updateObservatoryName(id, value) : this.setState({ isLoadingName: true });
+        let isSavedLabel = true;
+        let isSavedDescription = true;
+        let isSavedResearchField = true;
 
-        description !== this.props.description
-            ? await this.updateObservatoryDescription(id, description)
-            : this.setState({ isLoadingDescription: true });
+        if (value !== this.props.label) {
+            if (value.length !== 0) {
+                await this.updateObservatoryName(id, value);
+            } else {
+                toast.error(`Please enter an observatory name`);
+                isSavedLabel = false;
+            }
+        }
 
-        researchField !== this.props.researchField
-            ? await this.updateObservatoryResearchField(id, researchField)
-            : this.setState({ isLoadingResearchField: true });
+        if (description !== this.props.description) {
+            if (description.length !== 0) {
+                await this.updateObservatoryDescription(id, description);
+            } else {
+                toast.error(`Please enter an observatory description`);
+                isSavedDescription = false;
+            }
+        }
 
-        this.props.updateObservatoryMetadata(value, description, researchField);
+        if (researchField !== this.props.researchField) {
+            if (researchField.length !== 0) {
+                await this.updateObservatoryDescription(id, researchField);
+            } else {
+                toast.error(`Please enter an observatory research field`);
+                isSavedResearchField = false;
+            }
+        }
+
+        if (isSavedLabel && isSavedDescription && isSavedResearchField) {
+            this.props.updateObservatoryMetadata(value, description, researchField);
+        }
     };
 
     updateObservatoryName = async (id, name) => {
         this.setState({ isLoadingName: true });
-        if (name && name.length !== 0) {
-            try {
-                await updateObservatoryName(id, name);
-            } catch (error) {
-                this.setState({ isLoadingName: false });
-                console.error(error);
-                toast.error(`Error updating an observatory ${error.message}`);
-            }
-        } else {
-            toast.error(`Please enter an observatory name`);
+        try {
+            await updateObservatoryName(id, name);
+        } catch (error) {
             this.setState({ isLoadingName: false });
+            console.error(error);
+            toast.error(`Error updating an observatory ${error.message}`);
         }
     };
 
     updateObservatoryDescription = async (id, description) => {
         this.setState({ isLoadingDescription: true });
-        if (description && description.length !== 0) {
-            try {
-                await updateObservatoryDescription(id, description);
-            } catch (error) {
-                this.setState({ isLoadingDescription: false });
-                console.error(error);
-                toast.error(`Error updating an observatory ${error.message}`);
-            }
-        } else {
-            toast.error(`Please enter observatory description`);
+        try {
+            await updateObservatoryDescription(id, description);
+        } catch (error) {
             this.setState({ isLoadingDescription: false });
+            console.error(error);
+            toast.error(`Error updating an observatory ${error.message}`);
         }
     };
 
     updateObservatoryResearchField = async (id, researchField) => {
         this.setState({ isLoadingResearchField: true });
-        if (researchField && researchField.length !== 0) {
-            try {
-                await updateObservatoryResearchField(id, researchField);
-            } catch (error) {
-                this.setState({ isLoadingResearchField: false });
-                console.error(error);
-                toast.error(`Error updating an observatory ${error.message}`);
-            }
-        } else {
-            toast.error(`Please enter observatory research field`);
-            this.setState({ isLoadingDescription: false });
+        try {
+            await updateObservatoryResearchField(id, researchField);
+        } catch (error) {
+            this.setState({ isLoadingResearchField: false });
+            console.error(error);
+            toast.error(`Error updating an observatory ${error.message}`);
         }
     };
 
