@@ -9,8 +9,8 @@ function ObservatoryCard(props) {
     return (
         <div className="col-6 mb-3">
             {!props.observatory.logo && (
-                <Card className="h-100">
-                    <CardBody className="d-flex align-self-center justify-content-center" style={{ flexDirection: 'column' }}>
+                <Card className="h-100" style={{ minWidth: '175px' }}>
+                    <CardBody className="d-flex align-self-center justify-content-center card-body" style={{ flexDirection: 'column' }}>
                         <CardTitle className="align-self-center text-muted">
                             <Link to={reverse(ROUTES.OBSERVATORY, { id: props.observatory.id })}>
                                 <span class="badge badge-lightblue"> {props.observatory.name}</span>
@@ -18,7 +18,7 @@ function ObservatoryCard(props) {
                         </CardTitle>
                         {props.observatory.organizations.length > 0 && (
                             <CardText className="row justify-content-center text-muted">
-                                <small>
+                                <>
                                     {props.observatory.organizations.map(o => (
                                         <img
                                             className="box rounded"
@@ -28,9 +28,8 @@ function ObservatoryCard(props) {
                                             alt={`${o.name} logo`}
                                         />
                                     ))}{' '}
-                                </small>
-                                <small>By: {props.observatory.organizations.map(o => o.name).join(',')}</small>
-                                <br />
+                                    <small>By: {props.observatory.organizations.map(o => o.name).join(',')}</small>
+                                </>
                             </CardText>
                         )}
 
