@@ -67,6 +67,7 @@ class Observatories extends Component {
 
     loadOrganizations = async observatoriesData => {
         this.setState({ isLoadingOrganizations: true });
+
         await observatoriesData.forEach(async o => {
             const a = [];
             await o.organizations.forEach(async or => {

@@ -65,67 +65,76 @@ class EditOrganization extends Component {
         const url = this.state.url;
         const id = this.props.id;
 
-        value !== this.props.label ? await this.updateOgranizationName(id, value) : this.setState({ isLoadingName: true });
+        let isSavedLabel = true;
+        let isSavedImage = true;
+        let isSavedUrl = true;
 
-        url !== this.props.url ? await this.updateOgranizationUrl(id, url) : this.setState({ isLoadingUrl: true });
+        if (value !== this.props.label) {
+            if (value.length !== 0) {
+                await this.updateOgranizationName(id, value);
+            } else {
+                toast.error(`Please enter an organization name`);
+                isSavedLabel = false;
+            }
+        }
 
-        image !== this.props.previewSrc ? await this.updateOgranizationLogo(id, image[0]) : this.setState({ isLoadingimage: true });
+        if (url !== this.props.url) {
+            if (url.match(/[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gi)) {
+                await this.updateOgranizationUrl(id, url);
+            } else {
+                toast.error(`Please enter a vlaid url`);
+                isSavedUrl = false;
+            }
+        }
 
-        if (this.state.isLoadingName && this.state.isLoadingUrl && this.state.isLoadingLogo) {
-            window.location.reload(false);
+        if (image !== this.props.previewSrc) {
+            if (image.length !== 0) {
+                await this.updateOgranizationLogo(id, image[0]);
+            } else {
+                toast.error(`Please enter an organization image`);
+                isSavedImage = false;
+            }
+        }
+
+        if (isSavedLabel && isSavedUrl && isSavedImage) {
+            this.props.updateOrganizationMetadata(value, url, image);
         }
     };
 
     updateOgranizationName = async (id, name) => {
         this.setState({ isLoadingName: true });
-        if (name && name.length !== 0) {
-            try {
-                await updateOrganizationName(id, name);
-            } catch (error) {
-                this.setState({ isLoadingName: false });
-                console.error(error);
-                toast.error(`Error updating an organization ${error.message}`);
-            }
-        } else {
-            toast.error(`Please enter an organization name`);
+        try {
+            await updateOrganizationName(id, name);
+        } catch (error) {
             this.setState({ isLoadingName: false });
+            console.error(error);
+            toast.error(`Error updating an organization ${error.message}`);
         }
     };
 
     updateOgranizationUrl = async (id, url) => {
         this.setState({ isLoadingUrl: true });
-        if (url && url.match(/[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gi)) {
-            try {
-                await updateOrganizationUrl(id, url);
-            } catch (error) {
-                this.setState({ isLoadingUrl: false });
-                console.error(error);
-                toast.error(`Error updating an organization ${error.message}`);
-            }
-        } else {
-            toast.error(`Please enter a valid URL`);
+        try {
+            await updateOrganizationUrl(id, url);
+        } catch (error) {
             this.setState({ isLoadingUrl: false });
+            console.error(error);
+            toast.error(`Error updating an organization ${error.message}`);
         }
     };
 
     updateOgranizationLogo = async (id, image) => {
         this.setState({ isLoadingLogo: true });
-        if (image.length !== 0) {
-            try {
-                await updateOrganizationLogo(id, image);
-            } catch (error) {
-                this.setState({ isLoadingLogo: false });
-                console.error(error);
-                toast.error(`Error updating an organization ${error.message}`);
-            }
-        } else {
-            toast.error(`Please upload an organization logo`);
+        try {
+            await updateOrganizationLogo(id, image);
+        } catch (error) {
             this.setState({ isLoadingLogo: false });
+            console.error(error);
+            toast.error(`Error updating an organization ${error.message}`);
         }
     };
 
     render() {
-        const loading = this.state.editorState === 'loading';
         return (
             <>
                 <Modal isOpen={this.props.showDialog} toggle={this.props.toggle}>
@@ -151,7 +160,6 @@ class EditOrganization extends Component {
                                     type="text"
                                     name="url"
                                     id="OrganizationUrl"
-                                    disabled={loading}
                                     value={this.state.url}
                                     placeholder="https://www.example.com"
                                 />
@@ -184,7 +192,8 @@ EditOrganization.propTypes = {
     label: PropTypes.string.isRequired,
     id: PropTypes.string,
     url: PropTypes.string,
-    previewSrc: PropTypes.string
+    previewSrc: PropTypes.string,
+    updateOrganizationMetadata: PropTypes.func.isRequired
 };
 
 export default connect()(EditOrganization);

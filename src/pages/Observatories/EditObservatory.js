@@ -141,7 +141,7 @@ class EditObservatory extends Component {
                                     onItemSelected={async rf => {
                                         this.setState({ researchField: { ...rf, label: rf.value } });
                                     }}
-                                    value={this.state.researchField || ''}
+                                    value={this.state.researchField.label || ''}
                                     allowCreate={false}
                                     autoLoadOption={true}
                                 />

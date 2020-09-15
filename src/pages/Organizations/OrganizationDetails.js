@@ -130,6 +130,11 @@ class OrganizationDetails extends Component {
             });
     };
 
+    updateOrganizationMetadata = (label, url, logo) => {
+        this.setState({ label: label, url: url, logo: logo });
+        this.toggle('showEditDialog');
+    };
+
     toggle = type => {
         this.setState(prevState => ({
             [type]: !prevState[type]
@@ -270,6 +275,7 @@ class OrganizationDetails extends Component {
                     id={this.props.match.params.id}
                     url={this.state.url}
                     previewSrc={this.state.logo}
+                    updateOrganizationMetadata={this.updateOrganizationMetadata}
                 />
             </>
         );
