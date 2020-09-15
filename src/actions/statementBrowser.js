@@ -354,14 +354,19 @@ export function canAddProperty(state, resourceId) {
 export function canAddValue(state, resourceId, propertyId) {
     const property = state.statementBrowser.properties.byId[propertyId];
     const typeComponents = getComponentsByResourceIDAndPredicateID(state, resourceId, property.existingPredicateId);
-    if (typeComponents && typeComponents.length > 0 && typeComponents[0].maxOccurs) {
-        if (property.valueIds.length >= parseInt(typeComponents[0].maxOccurs)) {
+    if (typeComponents && typeComponents.length > 0) {
+        if (typeComponents[0].maxOccurs && property.valueIds.length >= parseInt(typeComponents[0].maxOccurs)) {
             return false;
         } else {
             return true;
         }
     } else {
-        return true;
+        if (property.maxOccurs && property.valueIds.length >= parseInt(property.maxOccurs)) {
+            // rules on the contribution level
+            return false;
+        } else {
+            return true;
+        }
     }
 }
 
@@ -376,10 +381,19 @@ export function canAddValue(state, resourceId, propertyId) {
 export function canDeleteProperty(state, resourceId, propertyId) {
     const property = state.statementBrowser.properties.byId[propertyId];
     const typeComponents = getComponentsByResourceIDAndPredicateID(state, resourceId, property.existingPredicateId);
-    if (typeComponents && typeComponents.length > 0 && typeComponents[0].minOccurs >= 1) {
-        return false;
+    if (typeComponents && typeComponents.length > 0) {
+        if (typeComponents[0].minOccurs >= 1) {
+            return false;
+        } else {
+            return true;
+        }
     } else {
-        return true;
+        if (property.minOccurs >= 1) {
+            // rules on the contribution level
+            return false;
+        } else {
+            return true;
+        }
     }
 }
 
@@ -624,7 +638,9 @@ export function fillResourceWithTemplate({ templateID, selectedResource, syncBac
                                 existingPredicateId: component.property.id,
                                 label: component.property.label,
                                 range: component.value ? component.value : null,
-                                validationRules: component.validationRules
+                                validationRules: component.validationRules,
+                                minOccurs: component.minOccurs,
+                                maxOccurs: component.maxOccurs
                             });
                         }
                         dispatch(prefillStatements({ statements, resourceId: selectedResource, syncBackend: syncBackend }));

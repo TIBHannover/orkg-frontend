@@ -180,6 +180,8 @@ export const prefillStatements = ({ statements, resourceId, syncBackend = false 
                 range: property.range ? property.range : null,
                 isTemplate: property.isTemplate ? property.isTemplate : false,
                 validationRules: property.validationRules ? property.validationRules : {},
+                minOccurs: property.minOccurs ? property.minOccurs : 0,
+                maxOccurs: property.maxOccurs ? property.maxOccurs : null,
                 isAnimated: property.isAnimated !== undefined ? property.isAnimated : false,
                 canDuplicate: property.canDuplicate ? true : false
             })
