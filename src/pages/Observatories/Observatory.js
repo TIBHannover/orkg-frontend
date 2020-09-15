@@ -23,7 +23,6 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { getPaperData, getComparisonData } from 'utils';
 import { find } from 'lodash';
-import { openAuthDialog } from 'actions/auth';
 import { connect } from 'react-redux';
 import EditObservatory from '../Observatories/EditObservatory';
 
@@ -179,6 +178,11 @@ class Observatory extends Component {
                 isLoadingOrganizations: false
             });
         });
+    };
+
+    updateObservatoryMetadata = (label, description, researchField) => {
+        this.setState({ label: label, description: description, researchField: researchField });
+        this.toggle('showEditDialog');
     };
 
     toggle = type => {
@@ -436,6 +440,7 @@ class Observatory extends Component {
                     id={this.props.match.params.id}
                     description={this.state.description}
                     researchField={this.state.researchField}
+                    updateObservatoryMetadata={this.updateObservatoryMetadata}
                 />
             </>
         );
@@ -444,10 +449,6 @@ class Observatory extends Component {
 
 const mapStateToProps = state => ({
     user: state.auth.user
-});
-
-const mapDispatchToProps = dispatch => ({
-    openAuthDialog: action => dispatch(openAuthDialog(action))
 });
 
 Observatory.propTypes = {
@@ -460,7 +461,4 @@ Observatory.propTypes = {
     user: PropTypes.object
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Observatory);
+export default connect(mapStateToProps)(Observatory);
