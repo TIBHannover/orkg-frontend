@@ -10,7 +10,7 @@ function ObservatoryCard(props) {
         <div className="col-6 mb-3">
             {!props.observatory.logo && (
                 <Card className="h-100" style={{ minWidth: '175px' }}>
-                    <CardBody className="d-flex align-self-center justify-content-center card-body" style={{ flexDirection: 'column' }}>
+                    <CardBody className="d-flex align-self-center justify-content-center" style={{ flexDirection: 'column' }}>
                         <CardTitle className="align-self-center text-muted">
                             <Link to={reverse(ROUTES.OBSERVATORY, { id: props.observatory.id })}>
                                 <span class="badge badge-lightblue"> {props.observatory.name}</span>

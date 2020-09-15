@@ -658,7 +658,6 @@ export const getObservatoryById = id => {
 };
 
 export const updateObservatoryName = (id, observatoryName) => {
-    console.log(observatoryName);
     return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/name`, { 'Content-Type': 'plain/text' }, observatoryName);
 };
 

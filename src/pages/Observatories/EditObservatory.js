@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup } from 'reactstrap';
-import { updateObservatoryName, updateObservatoryDescription, updateObservatoryResearchField } from 'network';
+import { updateObservatoryName, updateObservatoryDescription, updateObservatoryResearchField, resourcesUrl } from 'network';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
@@ -16,7 +16,7 @@ class EditObservatory extends Component {
             isLoadingName: true,
             isLoadingDescription: true,
             researchField: '',
-            isLoadindResearchField: true
+            isLoadingResearchField: true
         };
     }
 
@@ -43,7 +43,23 @@ class EditObservatory extends Component {
         const description = this.state.description;
         const id = this.props.id;
         const researchField = this.state.researchField.label;
+        this.updateObservatoryMetadata(value, description, id, researchField);
+        // value !== this.props.label ? await this.updateObservatoryName(id, value) : this.setState({ isLoadingName: true });
 
+        // description !== this.props.description
+        //     ? await this.updateObservatoryDescription(id, description)
+        //     : this.setState({ isLoadingDescription: true });
+
+        // researchField !== this.props.researchField
+        //     ? await this.updateObservatoryResearchField(id, researchField)
+        //     : this.setState({ isLoadingResearchField: true });
+
+        if (this.state.isLoadingName && this.state.isLoadingDescription && this.state.isLoadingResearchField) {
+            window.location.reload();
+        }
+    };
+
+    updateObservatoryMetadata = async (value, description, id, researchField) => {
         value !== this.props.label ? await this.updateObservatoryName(id, value) : this.setState({ isLoadingName: true });
 
         description !== this.props.description
@@ -53,10 +69,6 @@ class EditObservatory extends Component {
         researchField !== this.props.researchField
             ? await this.updateObservatoryResearchField(id, researchField)
             : this.setState({ isLoadingResearchField: true });
-
-        if (this.state.isLoadingName && this.state.isLoadingDescription && this.state.isLoadingResearchField) {
-            window.location.reload();
-        }
     };
 
     updateObservatoryName = async (id, name) => {
@@ -108,7 +120,6 @@ class EditObservatory extends Component {
     };
 
     render() {
-        const loading = this.state.editorState === 'loading';
         return (
             <>
                 <Modal size="lg" isOpen={this.props.showDialog} toggle={this.props.toggle}>
@@ -130,15 +141,15 @@ class EditObservatory extends Component {
                             <FormGroup>
                                 <Label for="ObservatoryResearchField">Observatory Research Field</Label>
                                 <AutoComplete
-                                    requestUrl=""
+                                    requestUrl={resourcesUrl}
                                     optionsClass="ResearchField"
                                     placeholder="Observatory research field"
                                     onItemSelected={async rf => {
                                         this.setState({ researchField: { ...rf, label: rf.value } });
                                     }}
-                                    cssClasses="form-control-sm"
                                     value={this.state.researchField || ''}
                                     allowCreate={false}
+                                    autoLoadOption={true}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -148,7 +159,6 @@ class EditObservatory extends Component {
                                     type="textarea"
                                     name="description"
                                     id="observatoryDescription"
-                                    disabled={loading}
                                     value={this.state.description}
                                     rows={4}
                                     placeholder="Observatory description"
