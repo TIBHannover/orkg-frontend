@@ -43,14 +43,7 @@ class EditObservatory extends Component {
         const description = this.state.description;
         const id = this.props.id;
         const researchField = this.state.researchField.label;
-        await this.updateObservatoryMetadata(value, description, id, researchField);
 
-        if (this.state.isLoadingName && this.state.isLoadingDescription && this.state.isLoadingResearchField) {
-            window.location.reload();
-        }
-    };
-
-    updateObservatoryMetadata = async (value, description, id, researchField) => {
         value !== this.props.label ? await this.updateObservatoryName(id, value) : this.setState({ isLoadingName: true });
 
         description !== this.props.description
@@ -60,6 +53,8 @@ class EditObservatory extends Component {
         researchField !== this.props.researchField
             ? await this.updateObservatoryResearchField(id, researchField)
             : this.setState({ isLoadingResearchField: true });
+
+        this.props.updateObservatoryMetadata(value, description, researchField);
     };
 
     updateObservatoryName = async (id, name) => {
@@ -176,7 +171,8 @@ EditObservatory.propTypes = {
     label: PropTypes.string.isRequired,
     id: PropTypes.string,
     description: PropTypes.string,
-    researchField: PropTypes.string
+    researchField: PropTypes.string,
+    updateObservatoryMetadata: PropTypes.func.isRequired
 };
 
 export default connect()(EditObservatory);
