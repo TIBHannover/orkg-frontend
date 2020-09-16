@@ -457,7 +457,6 @@ Observatory.propTypes = {
             id: PropTypes.string.isRequired
         }).isRequired
     }).isRequired,
-    openAuthDialog: PropTypes.func.isRequired,
     user: PropTypes.object
 };
 

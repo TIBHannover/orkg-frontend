@@ -5,7 +5,7 @@ import { observatoriesUrl, submitGetRequest, getOrganization } from 'network';
 import { Container } from 'reactstrap';
 import ObservatoryCard from 'components/ObservatoryCard/ObservatoryCard';
 import { Col, Row } from 'reactstrap';
-import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import { TabContent, TabPane, NavLink } from 'reactstrap';
 import classnames from 'classnames';
 import styled from 'styled-components';
 
@@ -13,8 +13,38 @@ const TabPaneStyled = styled(TabPane)`
     border-top: 0;
 `;
 
-const NavItemStyled = styled(NavItem)`
-    cursor: pointer;
+export const StyledResearchFieldWrapper = styled.div`
+    border-radius: ${props => props.theme.borderRadius};
+    border-width: ${props => props.theme.borderWidth};
+    border-color: ${props => props.theme.orkgPrimaryColor};
+    border-style: solid;
+    padding: 15px 30px;
+`;
+
+export const StyledResearchFieldList = styled.ul`
+    list-style: none;
+    padding: 0;
+    padding-top: 15px;
+
+    > li {
+        padding: 9px 10px 9px 15px;
+        margin-bottom: 5px;
+        transition: 0.3s background;
+        border-top-left-radius: ${props => props.theme.borderRadius};
+        border-bottom-left-radius: ${props => props.theme.borderRadius};
+        background: ${props => props.theme.ultraLightBlueDarker};
+        cursor: pointer !important;
+
+        > span {
+            cursor: pointer;
+        }
+
+        &.activeRF {
+            background: ${props => props.theme.orkgPrimaryColor};
+            color: #fff;
+            cursor: initial !important;
+        }
+    }
 `;
 
 class Observatories extends Component {
@@ -95,42 +125,43 @@ class Observatories extends Component {
                 <Container className="p-0">
                     <h1 className="h4 mt-4 mb-4">View all observatories </h1>
                 </Container>
-                <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
-                    <Row>
-                        <Col md={4} sm={12}>
-                            <Nav tabs className="flex-column">
+                <Container className="box rounded p-4 clearfix">
+                    <Row noGutters={true}>
+                        <Col md={3} sm={12}>
+                            <StyledResearchFieldList>
                                 {Object.keys(this.state.observatories).map((rf, key) => {
                                     return (
-                                        <>
-                                            <NavItemStyled>
-                                                <NavLink
-                                                    className={classnames({ active: this.state.activeTab === key })}
-                                                    onClick={() => {
-                                                        this.toggleTab(key);
-                                                    }}
-                                                >
-                                                    {rf === 'null' || '' ? 'Others' : rf}
-                                                </NavLink>
-                                            </NavItemStyled>
-                                        </>
+                                        <li key={`${rf}`} className={this.state.activeTab === key ? 'activeRF' : ''}>
+                                            <NavLink
+                                                className={classnames({ active: this.state.activeTab === key })}
+                                                onClick={() => {
+                                                    this.toggleTab(key);
+                                                }}
+                                            >
+                                                {rf === 'null' || '' ? 'Others' : rf}
+                                            </NavLink>
+                                        </li>
                                     );
                                 })}
-                            </Nav>
+                            </StyledResearchFieldList>
                         </Col>
-                        <Col md={8} sm={12}>
-                            <div className="mt-3 row justify-content-center">
+
+                        <Col md={9} sm={12} className="d-flex">
+                            <StyledResearchFieldWrapper className="flex-grow-1 justify-content-center">
                                 <TabContent activeTab={this.state.activeTab}>
                                     {Object.keys(this.state.observatories).map((rf, key) => {
                                         return (
-                                            <TabPaneStyled tabId={key}>
-                                                {this.state.observatories[rf].map(observatory => {
-                                                    return <ObservatoryCard key={observatory.id} observatory={observatory} />;
-                                                })}
+                                            <TabPaneStyled key={`rf${rf.id}-${key}`} tabId={key}>
+                                                <Row>
+                                                    {this.state.observatories[rf].map(observatory => {
+                                                        return <ObservatoryCard key={observatory.id} observatory={observatory} />;
+                                                    })}
+                                                </Row>
                                             </TabPaneStyled>
                                         );
                                     })}
                                 </TabContent>
-                            </div>
+                            </StyledResearchFieldWrapper>
                         </Col>
                     </Row>
 
