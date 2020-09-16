@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup } from 'reactstrap';
 import { updateOrganizationName, updateOrganizationUrl, updateOrganizationLogo } from 'network';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
@@ -16,9 +15,9 @@ class EditOrganization extends Component {
             url: '',
             organizationId: '',
             previewSrc: '',
-            isLoadingName: true,
-            isLoadingUrl: true,
-            isLoadingLogo: true
+            isLoadingName: false,
+            isLoadingUrl: false,
+            isLoadingLogo: false
         };
     }
 
@@ -65,46 +64,62 @@ class EditOrganization extends Component {
         const url = this.state.url;
         const id = this.props.id;
 
-        let isSavedLabel = true;
-        let isSavedImage = true;
-        let isSavedUrl = true;
+        let isUpdatedLabel = false;
+        let isUpdatedImage = false;
+        let isUpdatedUrl = false;
 
-        if (value !== this.props.label) {
-            if (value.length !== 0) {
-                await this.updateOgranizationName(id, value);
-            } else {
-                toast.error(`Please enter an organization name`);
-                isSavedLabel = false;
-            }
+        toast.dismiss();
+        const URL_REGEX = /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gi;
+
+        // validate label
+        if (value !== this.props.label && value.length === 0) {
+            toast.error(`Please enter an organization name`);
+            return false;
+        }
+        // validate url
+        if (url !== this.props.url && !url.match(URL_REGEX)) {
+            toast.error(`Please enter a valid organization url`);
+            return false;
+        }
+        // validate image
+        if (image !== this.props.previewSrc && image.length === 0) {
+            toast.error(`Please enter an organization image`);
+            return false;
         }
 
-        if (url !== this.props.url) {
-            if (url.match(/[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gi)) {
-                await this.updateOgranizationUrl(id, url);
-            } else {
-                toast.error(`Please enter a vlaid url`);
-                isSavedUrl = false;
-            }
+        if (value !== this.props.label && value.length !== 0) {
+            await this.updateOrganizationName(id, value);
+            isUpdatedLabel = true;
         }
 
-        if (image !== this.props.previewSrc) {
-            if (image.length !== 0) {
-                await this.updateOgranizationLogo(id, image[0]);
-            } else {
-                toast.error(`Please enter an organization image`);
-                isSavedImage = false;
-            }
+        if (url !== this.props.url && url.match(URL_REGEX)) {
+            await this.updateOrganizationUrl(id, url);
+            isUpdatedUrl = true;
         }
 
-        if (isSavedLabel && isSavedUrl && isSavedImage) {
-            this.props.updateOrganizationMetadata(value, url, image);
+        if (image !== this.props.previewSrc && image.length !== 0) {
+            await this.updateOrganizationLogo(id, image[0]);
+            isUpdatedImage = true;
+        }
+
+        if (isUpdatedLabel || isUpdatedUrl || isUpdatedImage) {
+            toast.success(`Organization updated successfully`);
+            this.props.updateOrganizationMetadata(
+                value,
+                url,
+                image !== this.props.previewSrc && image.length !== 0 ? image[0] : this.props.previewSrc
+            );
+            this.props.toggle();
+        } else {
+            this.props.toggle();
         }
     };
 
-    updateOgranizationName = async (id, name) => {
+    updateOrganizationName = async (id, name) => {
         this.setState({ isLoadingName: true });
         try {
             await updateOrganizationName(id, name);
+            this.setState({ isLoadingName: false });
         } catch (error) {
             this.setState({ isLoadingName: false });
             console.error(error);
@@ -112,10 +127,11 @@ class EditOrganization extends Component {
         }
     };
 
-    updateOgranizationUrl = async (id, url) => {
+    updateOrganizationUrl = async (id, url) => {
         this.setState({ isLoadingUrl: true });
         try {
             await updateOrganizationUrl(id, url);
+            this.setState({ isLoadingUrl: false });
         } catch (error) {
             this.setState({ isLoadingUrl: false });
             console.error(error);
@@ -123,10 +139,11 @@ class EditOrganization extends Component {
         }
     };
 
-    updateOgranizationLogo = async (id, image) => {
+    updateOrganizationLogo = async (id, image) => {
         this.setState({ isLoadingLogo: true });
         try {
             await updateOrganizationLogo(id, image);
+            this.setState({ isLoadingLogo: false });
         } catch (error) {
             this.setState({ isLoadingLogo: false });
             console.error(error);
@@ -135,6 +152,8 @@ class EditOrganization extends Component {
     };
 
     render() {
+        const isLoading = this.state.isLoadingName || this.state.isLoadingUrl || this.state.isLoadingLogo;
+
         return (
             <>
                 <Modal isOpen={this.props.showDialog} toggle={this.props.toggle}>
@@ -151,6 +170,7 @@ class EditOrganization extends Component {
                                     id="ResourceLabel"
                                     value={this.state.label}
                                     placeholder="Organization Name"
+                                    disabled={isLoading}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -161,6 +181,7 @@ class EditOrganization extends Component {
                                     name="url"
                                     id="OrganizationUrl"
                                     value={this.state.url}
+                                    disabled={isLoading}
                                     placeholder="https://www.example.com"
                                 />
                             </FormGroup>
@@ -170,14 +191,14 @@ class EditOrganization extends Component {
                             <FormGroup>
                                 <Label>Logo</Label>
                                 <br />
-                                <Input type="file" onChange={this.handlePreview} />
+                                <Input disabled={isLoading} type="file" onChange={this.handlePreview} />
                             </FormGroup>
                         </>
                     </ModalBody>
                     <ModalFooter>
                         <div className="text-align-center mt-2">
-                            <Button color="primary" disabled={this.state.isLoading} onClick={this.handleSubmit}>
-                                {this.state.isLoading && <span className="fa fa-spinner fa-spin" />} Save
+                            <Button color="primary" disabled={isLoading} onClick={this.handleSubmit}>
+                                {isLoading && <span className="fa fa-spinner fa-spin" />} Save
                             </Button>
                         </div>
                     </ModalFooter>
@@ -196,4 +217,4 @@ EditOrganization.propTypes = {
     updateOrganizationMetadata: PropTypes.func.isRequired
 };
 
-export default connect()(EditOrganization);
+export default EditOrganization;

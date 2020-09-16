@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { toast } from 'react-toastify';
-import { updateUserRole, createOrganization } from '../../network';
+import { updateUserRole, createOrganization } from 'network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { openAuthDialog } from '../../actions/auth';
+import { openAuthDialog } from 'actions/auth';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
-import ROUTES from '../../constants/routes';
+import ROUTES from 'constants/routes';
 
 class AddOrganization extends Component {
     constructor(props) {

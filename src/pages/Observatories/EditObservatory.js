@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup } from 'reactstrap';
 import { updateObservatoryName, updateObservatoryDescription, updateObservatoryResearchField, resourcesUrl } from 'network';
-import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
@@ -183,4 +182,4 @@ EditObservatory.propTypes = {
     updateObservatoryMetadata: PropTypes.func.isRequired
 };
 
-export default connect()(EditObservatory);
+export default EditObservatory;
