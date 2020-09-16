@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createObservatory } from 'network';
+import { createObservatory, resourcesUrl, getOrganization } from 'network';
 import { Redirect } from 'react-router-dom';
 import { Container, Button, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { toast } from 'react-toastify';
@@ -21,8 +21,13 @@ class AddObservatory extends Component {
             value: '',
             description: '',
             observatoryId: '',
-            researchField: ''
+            researchField: '',
+            organizationName: ''
         };
+    }
+
+    componentDidMount() {
+        this.getOrganization(this.props.match.params.id);
     }
 
     createNewObservatory = async () => {
@@ -56,6 +61,15 @@ class AddObservatory extends Component {
         });
     };
 
+    getOrganization = id => {
+        getOrganization(id).then(organization => {
+            document.title = `${organization.name} - ORKG`;
+            this.setState({
+                organizationName: organization.name
+            });
+        });
+    };
+
     render() {
         const loading = this.state.editorState === 'loading';
         if (this.state.redirect) {
@@ -69,56 +83,64 @@ class AddObservatory extends Component {
         }
 
         return (
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5">
-                {this.props.user ? (
-                    <div className="pl-3 pr-3 pt-2">
-                        {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
-                        <FormGroup>
-                            <Label for="ObservatoryLabel">Observatory name</Label>
-                            <Input
-                                onChange={this.handleChange}
-                                type="text"
-                                name="value"
-                                id="ObservatoryLabel"
-                                disabled={loading}
-                                placeholder="Observatory name"
-                            />
-                            <br />
-                            <Label for="ObservatoryResearchField">Research Field</Label>
-                            <AutoComplete
-                                requestUrl=""
-                                optionsClass="ResearchField"
-                                placeholder="Observatory research field"
-                                onItemSelected={async rf => {
-                                    this.setState({ researchField: { ...rf, label: rf.value } });
-                                }}
-                                cssClasses="form-control-sm"
-                                value={this.state.researchField}
-                                allowCreate={false}
-                            />
-                            <br />
-                            <Label for="ObservatoryDescription">Observatory description</Label>
-                            <Input
-                                onChange={this.handleChange}
-                                type="textarea"
-                                name="description"
-                                id="ObservatoryDescription"
-                                disabled={loading}
-                                placeholder="Observatory description"
-                            />
-                        </FormGroup>
-                        <Button color="primary" onClick={this.createNewObservatory} outline className="mt-4 mb-2" block disabled={loading}>
-                            {!loading ? 'Create Observatory' : <span>Loading</span>}
-                        </Button>
-                    </div>
-                ) : (
-                    <>
-                        <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog('signin')}>
-                            <Icon className="mr-1" icon={faUser} /> Sign in to create an observatory
-                        </Button>
-                    </>
-                )}
-            </Container>
+            <>
+                <Container className="d-flex align-items-center">
+                    <h3 className="h4 my-4 flex-grow-1">Create an Observatory in {this.state.organizationName}</h3>
+                </Container>
+
+                <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+                    {this.props.user ? (
+                        <div className="pl-3 pr-3 pt-2">
+                            {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
+                            <FormGroup>
+                                <Label for="ObservatoryLabel">Observatory name</Label>
+                                <Input
+                                    onChange={this.handleChange}
+                                    type="text"
+                                    name="value"
+                                    id="ObservatoryLabel"
+                                    disabled={loading}
+                                    placeholder="Observatory name"
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="ObservatoryResearchField">Research Field</Label>
+                                <AutoComplete
+                                    requestUrl={resourcesUrl}
+                                    optionsClass="ResearchField"
+                                    placeholder="Observatory research field"
+                                    onItemSelected={async rf => {
+                                        this.setState({ researchField: { ...rf, label: rf.value } });
+                                    }}
+                                    value={this.state.researchField}
+                                    allowCreate={false}
+                                    autoLoadOption={true}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="ObservatoryDescription">Observatory description</Label>
+                                <Input
+                                    onChange={this.handleChange}
+                                    type="textarea"
+                                    name="description"
+                                    id="ObservatoryDescription"
+                                    disabled={loading}
+                                    placeholder="Observatory description"
+                                />
+                            </FormGroup>
+                            <Button color="primary" onClick={this.createNewObservatory} outline className="mt-4 mb-2" block disabled={loading}>
+                                {!loading ? 'Create Observatory' : <span>Loading</span>}
+                            </Button>
+                        </div>
+                    ) : (
+                        <>
+                            <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog('signin')}>
+                                <Icon className="mr-1" icon={faUser} /> Sign in to create an observatory
+                            </Button>
+                        </>
+                    )}
+                </Container>
+            </>
         );
     }
 }
