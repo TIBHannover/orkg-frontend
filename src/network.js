@@ -65,7 +65,7 @@ export const submitGetRequest = (url, headers, send_token = false) => {
     });
 };
 
-const submitPostRequest = (url, headers, data, jsonStringify = true, send_token = true) => {
+export const submitPostRequest = (url, headers, data, jsonStringify = true, send_token = true) => {
     if (!url) {
         throw new Error('Cannot submit POST request. URL is null or undefined.');
     }
