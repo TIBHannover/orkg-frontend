@@ -15,7 +15,7 @@ const Item = styled.div`
 `;
 
 const ItemInner = styled.div`
-    padding: 10px 5px;
+    padding: ${props => props.cellPadding}px 5px;
     border-left: 2px solid #cfcbcb;
     border-right: 2px solid #cfcbcb;
     border-bottom: 2px solid #edebeb;
@@ -55,10 +55,16 @@ class TableCell extends Component {
     };
 
     render() {
+        let cellPadding = 10;
+        if (this.props.viewDensity === 'normal') {
+            cellPadding = 5;
+        } else if (this.props.viewDensity === 'compact') {
+            cellPadding = 1;
+        }
         return (
             <>
                 <Item>
-                    <ItemInner>
+                    <ItemInner cellPadding={cellPadding}>
                         {this.props.data.map((date, index) =>
                             Object.keys(date).length > 0 ? (
                                 date.type === 'resource' ? (
@@ -109,7 +115,8 @@ class TableCell extends Component {
 }
 
 TableCell.propTypes = {
-    data: PropTypes.array.isRequired
+    data: PropTypes.array.isRequired,
+    viewDensity: PropTypes.oneOf(['spacious', 'normal', 'compact'])
 };
 
 export default TableCell;
