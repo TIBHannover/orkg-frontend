@@ -75,7 +75,7 @@ function Comparison(props) {
     const [cookies, setCookie] = useCookies();
     const history = useHistory();
 
-    const [fullWidth, setFullWidth] = useState(false);
+    const [fullWidth, setFullWidth] = useState(cookies.useFullWidthForComparisonTable === 'true' ? cookies.useFullWidthForComparisonTable : false);
     const [hideScrollHint, setHideScrollHint] = useState(cookies.seenShiftMouseWheelScroll ? cookies.seenShiftMouseWheelScroll : false);
 
     const [viewDensity, setViewDensity] = useState('spacious');
@@ -98,13 +98,17 @@ function Comparison(props) {
         history.goBack();
     };
 
-    /**
-     * Is case of an error the user can go to the previous link in history
-     */
     const onDismissShiftMouseWheelScroll = () => {
         // dismiss function for the alert thingy!;
         setCookie('seenShiftMouseWheelScroll', true, { path: process.env.PUBLIC_URL, maxAge: 315360000 }); // << TEN YEARS
         setHideScrollHint(true);
+    };
+
+    const handleFullWidth = () => {
+        setFullWidth(v => {
+            setCookie('useFullWidthForComparisonTable', !v, { path: process.env.PUBLIC_URL, maxAge: 315360000 }); // << TEN YEARS
+            return !v;
+        });
     };
 
     const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 20px)' } : {};
@@ -139,8 +143,8 @@ function Comparison(props) {
                                     <Icon icon={faWindowMaximize} /> <span className="mr-2">View</span>
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                    <DropdownItem onClick={() => setFullWidth(fullWidth => !fullWidth)}>
-                                        <span className="mr-2">Full width</span>
+                                    <DropdownItem onClick={handleFullWidth}>
+                                        <span className="mr-2">{fullWidth ? 'Reduced width' : 'Full width'}</span>
                                     </DropdownItem>
                                     <DropdownItem divider />
                                     <DropdownItem header>View density</DropdownItem>
