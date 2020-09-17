@@ -78,7 +78,7 @@ function Comparison(props) {
     const [fullWidth, setFullWidth] = useState(cookies.useFullWidthForComparisonTable === 'true' ? cookies.useFullWidthForComparisonTable : false);
     const [hideScrollHint, setHideScrollHint] = useState(cookies.seenShiftMouseWheelScroll ? cookies.seenShiftMouseWheelScroll : false);
 
-    const [viewDensity, setViewDensity] = useState('spacious');
+    const [viewDensity, setViewDensity] = useState(cookies.viewDensityComparisonTable ? cookies.viewDensityComparisonTable : 'spacious');
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [dropdownDensityOpen, setDropdownDensityOpen] = useState(false);
     const [dropdownMethodOpen, setDropdownMethodOpen] = useState(false);
@@ -109,6 +109,11 @@ function Comparison(props) {
             setCookie('useFullWidthForComparisonTable', !v, { path: process.env.PUBLIC_URL, maxAge: 315360000 }); // << TEN YEARS
             return !v;
         });
+    };
+
+    const handleViewDensity = density => {
+        setCookie('viewDensityComparisonTable', density, { path: process.env.PUBLIC_URL, maxAge: 315360000 }); // << TEN YEARS
+        setViewDensity(density);
     };
 
     const containerStyle = fullWidth ? { maxWidth: 'calc(100% - 20px)' } : {};
@@ -148,13 +153,13 @@ function Comparison(props) {
                                     </DropdownItem>
                                     <DropdownItem divider />
                                     <DropdownItem header>View density</DropdownItem>
-                                    <DropdownItem active={viewDensity === 'spacious'} onClick={() => setViewDensity('spacious')}>
+                                    <DropdownItem active={viewDensity === 'spacious'} onClick={() => handleViewDensity('spacious')}>
                                         Spacious
                                     </DropdownItem>
-                                    <DropdownItem active={viewDensity === 'normal'} onClick={() => setViewDensity('normal')}>
+                                    <DropdownItem active={viewDensity === 'normal'} onClick={() => handleViewDensity('normal')}>
                                         Normal
                                     </DropdownItem>
-                                    <DropdownItem active={viewDensity === 'compact'} onClick={() => setViewDensity('compact')}>
+                                    <DropdownItem active={viewDensity === 'compact'} onClick={() => handleViewDensity('compact')}>
                                         Compact
                                     </DropdownItem>
                                 </DropdownMenu>
