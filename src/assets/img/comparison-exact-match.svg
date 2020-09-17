@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="163" height="139" viewBox="0 0 163 139">
   <g id="Exact_match" data-name="Exact match" transform="translate(-1304 -326)">
     <rect id="Rectangle_3" data-name="Rectangle 3" width="163" height="139" rx="5" transform="translate(1304 326)" fill="#e9ebf2"/>
-    <text id="Exact_match-2" data-name="Exact match" transform="translate(1338 451)" font-size="17" font-family="HelveticaNeue, Helvetica Neue"><tspan x="0" y="0">Exact match</tspan></text>
+    <text id="Exact_match-2" data-name="Exact match" transform="translate(1338 451)" font-size="15" font-family="HelveticaNeue, Helvetica Neue"><tspan x="0" y="0">Exact match</tspan></text>
     <rect id="Rectangle_10" data-name="Rectangle 10" width="141" height="18" rx="4" transform="translate(1315 339)" fill="rgba(128,134,155,0.49)"/>
     <text id="Property" transform="translate(1320 352)" fill="#fff" font-size="11" font-family="HelveticaNeue-Medium, Helvetica Neue" font-weight="500"><tspan x="0" y="0">Property</tspan></text>
     <rect id="Rectangle_12" data-name="Rectangle 12" width="141" height="18" rx="4" transform="translate(1315 361)" fill="#80869b"/>
