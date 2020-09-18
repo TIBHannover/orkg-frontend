@@ -73,7 +73,7 @@ function ExportToLatex(props) {
                 if (i > 0) {
                     const con = {};
                     contribution.forEach((item, j) => {
-                        if (this.state.replaceTitles && j === 0) {
+                        if (replaceTitles && j === 0) {
                             item = `\\textbf{\\cite{${props.contributions[i - 1].paperId}}}`;
                         }
                         con[`\\textit{${props.data[0][j]}}`] = item !== 'undefined' ? item : '-';
