@@ -182,7 +182,6 @@ class Observatory extends Component {
 
     updateObservatoryMetadata = (label, description, researchField) => {
         this.setState({ label: label, description: description, researchField: researchField });
-        this.toggle('showEditDialog');
     };
 
     toggle = type => {

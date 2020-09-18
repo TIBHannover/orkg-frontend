@@ -12,10 +12,11 @@ class EditObservatory extends Component {
         this.state = {
             label: '',
             description: '',
-            isLoadingName: true,
-            isLoadingDescription: true,
+            isLoadingName: false,
+            isLoadingDescription: false,
             researchField: '',
-            isLoadingResearchField: true
+            isLoadingResearchField: false,
+            isLoading: false
         };
     }
 
@@ -43,39 +44,48 @@ class EditObservatory extends Component {
         const id = this.props.id;
         const researchField = this.state.researchField.label;
 
-        let isSavedLabel = true;
-        let isSavedDescription = true;
-        let isSavedResearchField = true;
+        let isUpdatedLabel = true;
+        let isUpdatedDescription = true;
+        let isUpdatedResearchField = true;
 
-        if (value !== this.props.label) {
-            if (value.length !== 0) {
-                await this.updateObservatoryName(id, value);
-            } else {
-                toast.error(`Please enter an observatory name`);
-                isSavedLabel = false;
-            }
+        toast.dismiss();
+
+        if (value !== this.props.label && value.length === 0) {
+            toast.error(`Please enter an observatory name`);
+            return false;
         }
 
-        if (description !== this.props.description) {
-            if (description.length !== 0) {
-                await this.updateObservatoryDescription(id, description);
-            } else {
-                toast.error(`Please enter an observatory description`);
-                isSavedDescription = false;
-            }
+        if (description !== this.props.description && description.length == 0) {
+            toast.error(`Please enter an observatory description`);
+            return false;
         }
 
-        if (researchField !== this.props.researchField) {
-            if (researchField.length !== 0) {
-                await this.updateObservatoryDescription(id, researchField);
-            } else {
-                toast.error(`Please enter an observatory research field`);
-                isSavedResearchField = false;
-            }
+        if (researchField !== this.props.researchField && researchField.length === 0) {
+            toast.error(`Please enter an observatory research field`);
+            return false;
         }
 
-        if (isSavedLabel && isSavedDescription && isSavedResearchField) {
+        if (value !== this.props.label && value.length !== 0) {
+            await this.updateObservatoryName(id, value);
+            isUpdatedLabel = true;
+        }
+
+        if (description !== this.props.description && description.length !== 0) {
+            await this.updateObservatoryDescription(id, description);
+            isUpdatedDescription = true;
+        }
+
+        if (researchField !== this.props.researchField && researchField.length !== 0) {
+            await this.updateObservatoryResearchField(id, researchField);
+            isUpdatedResearchField = true;
+        }
+
+        if (isUpdatedLabel || isUpdatedDescription || isUpdatedResearchField) {
+            toast.success(`Observatory updated successfully`);
             this.props.updateObservatoryMetadata(value, description, researchField);
+            this.props.toggle();
+        } else {
+            this.props.toggle();
         }
     };
 
@@ -83,6 +93,7 @@ class EditObservatory extends Component {
         this.setState({ isLoadingName: true });
         try {
             await updateObservatoryName(id, name);
+            this.setState({ isLoadingName: false });
         } catch (error) {
             this.setState({ isLoadingName: false });
             console.error(error);
@@ -94,6 +105,7 @@ class EditObservatory extends Component {
         this.setState({ isLoadingDescription: true });
         try {
             await updateObservatoryDescription(id, description);
+            this.setState({ isLoadingDescription: false });
         } catch (error) {
             this.setState({ isLoadingDescription: false });
             console.error(error);
@@ -105,6 +117,7 @@ class EditObservatory extends Component {
         this.setState({ isLoadingResearchField: true });
         try {
             await updateObservatoryResearchField(id, researchField);
+            this.setState({ isLoadingResearchField: false });
         } catch (error) {
             this.setState({ isLoadingResearchField: false });
             console.error(error);
@@ -113,6 +126,7 @@ class EditObservatory extends Component {
     };
 
     render() {
+        const isLoading = this.state.isLoadingName || this.state.isLoadingDescription || this.state.isLoadingResearchField;
         return (
             <>
                 <Modal size="lg" isOpen={this.props.showDialog} toggle={this.props.toggle}>
@@ -129,6 +143,7 @@ class EditObservatory extends Component {
                                     id="ObservatoryName"
                                     value={this.state.label}
                                     placeholder="Observatory Name"
+                                    disabled={isLoading}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -140,9 +155,10 @@ class EditObservatory extends Component {
                                     onItemSelected={async rf => {
                                         this.setState({ researchField: { ...rf, label: rf.value } });
                                     }}
-                                    value={this.state.researchField.label || ''}
+                                    value={this.state.researchField || ''}
                                     allowCreate={false}
                                     autoLoadOption={true}
+                                    isDisabled={true}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -155,6 +171,7 @@ class EditObservatory extends Component {
                                     value={this.state.description}
                                     rows={4}
                                     placeholder="Observatory description"
+                                    disabled={isLoading}
                                 />
                             </FormGroup>
                         </>
@@ -162,7 +179,7 @@ class EditObservatory extends Component {
                     <ModalFooter>
                         <div className="text-align-center mt-2">
                             <Button color="primary" disabled={this.state.isLoading} onClick={this.handleSubmit}>
-                                {this.state.isLoading && <span className="fa fa-spinner fa-spin" />} Save
+                                {isLoading && <span className="fa fa-spinner fa-spin" />} Save
                             </Button>
                         </div>
                     </ModalFooter>
