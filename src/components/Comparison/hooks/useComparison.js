@@ -98,7 +98,6 @@ function useComparison() {
      * if the app runs under orkg.org/orkg it will set orkg.org/orkg as public URL
      */
     const updateComparisonPublicURL = () => {
-        console.log('Updating the public URL');
         const newURL = `${window.location.protocol}//${window.location.host}${window.location.pathname
             .replace(reverse(ROUTES.COMPARISON, { comparisonId: comparisonId }), '')
             .replace(/\/$/, '')}`;
@@ -111,7 +110,6 @@ function useComparison() {
      * @param {String} cId comparison ID
      */
     const loadComparisonMetaData = useCallback(cId => {
-        console.log('LOAD Comparison meta data is called');
         if (cId) {
             setIsLoadingMetaData(true);
             // Get the comparison resource
@@ -205,7 +203,6 @@ function useComparison() {
      * @param {Array[Object]} creators Creators
      */
     const loadAuthorsORCID = async creators => {
-        console.log('loadAuthorsORCID is called');
         return Promise.all(
             creators.map(author => getStatementsBySubjectAndPredicate({ subjectId: author.id, predicateId: PREDICATES.HAS_ORCID }))
         ).then(authorsORCID => {
@@ -228,7 +225,6 @@ function useComparison() {
      * @param {String} created_by user ID
      */
     const loadCreatedBy = created_by => {
-        console.log('loadCreatedBy is called');
         // Get Provenance data
         if (created_by && created_by !== '00000000-0000-0000-0000-000000000000') {
             getUserInformationById(created_by).then(creator => {
@@ -246,7 +242,6 @@ function useComparison() {
      * @param {String} organization_id organization ID
      */
     const loadProvenanceInfos = (observatory_id, organization_id) => {
-        console.log('loadProvenanceInfos is called');
         if (observatory_id && observatory_id !== '00000000-0000-0000-0000-000000000000') {
             getObservatoryAndOrganizationInformation(observatory_id, organization_id).then(observatory => {
                 setProvenance(observatory);
@@ -263,7 +258,6 @@ function useComparison() {
      * @return {Array} list of properties extended and sorted
      */
     const extendAndSortProperties = comparisonData => {
-        console.log('extendAndSortProperties is called');
         // if there are properties in the query string
         if (predicatesList.length > 0) {
             // Create an extended version of propertyIds (ADD the IDs of similar properties)
@@ -308,7 +302,6 @@ function useComparison() {
      * Call the comparison service to get the comparison result
      */
     const getComparisonResult = () => {
-        console.log('getComparisonResult is called');
         setIsLoadingComparisonResult(true);
         getComparison({ contributionIds: contributionsList, type: comparisonType, response_hash: responseHash, save_response: false })
             .then(comparisonData => {
@@ -349,22 +342,20 @@ function useComparison() {
      * @param {String} id Property id to toggle
      */
     const toggleProperty = id => {
-        console.log('toggleProperty is called');
         const newProperties = properties.map(property => (property.id === id ? { ...property, active: !property.active } : property));
-        setUrlNeedsToUpdate(true);
         setProperties(newProperties);
         setPredicatesList(activatedPropertiesToList(newProperties));
+        setUrlNeedsToUpdate(true);
     };
 
     /**
      * Update the order of properties
      */
     const onSortPropertiesEnd = ({ oldIndex, newIndex }) => {
-        console.log('onSortPropertiesEnd is called');
         const newProperties = arrayMove(properties, oldIndex, newIndex);
-        setUrlNeedsToUpdate(true);
         setProperties(newProperties);
         setPredicatesList(activatedPropertiesToList(newProperties));
+        setUrlNeedsToUpdate(true);
     };
 
     /**
@@ -373,14 +364,13 @@ function useComparison() {
      * @param {String} contributionId Contribution id to remove
      */
     const removeContribution = contributionId => {
-        console.log('removeContribution is called');
-        setUrlNeedsToUpdate(true);
         setResponseHash(null);
         setContributionsList(
             remove(contributionsList, function(n) {
                 return n !== contributionId;
             })
         );
+        setUrlNeedsToUpdate(true);
     };
 
     /**
@@ -389,7 +379,6 @@ function useComparison() {
      * @param {Array[String]} newContributionIds Contribution ids to add
      */
     const addContributions = newContributionIds => {
-        console.log('addContributions is called');
         setUrlNeedsToUpdate(true);
         setResponseHash(null);
         setContributionsList(contributionsList.concat(newContributionIds));
@@ -400,7 +389,6 @@ function useComparison() {
      *
      */
     const toggleTranspose = () => {
-        console.log('toggleTranspose is called');
         setUrlNeedsToUpdate(true);
         setTranspose(transpose => !transpose);
     };
@@ -409,7 +397,6 @@ function useComparison() {
      * Get ordered list of selected properties
      */
     const activatedPropertiesToList = useCallback(propertiesData => {
-        console.log('activatedPropertiesToList is called');
         const activeProperties = [];
         propertiesData.forEach((property, index) => {
             if (property.active) {
@@ -423,7 +410,6 @@ function useComparison() {
      * Update the URL
      */
     const generateUrl = () => {
-        console.log('generateUrl is called');
         const params = queryString.stringify(
             {
                 contributions: contributionsList.join(','),
@@ -446,7 +432,6 @@ function useComparison() {
      * Create a tabular data of the comparison
      */
     const generateMatrixOfComparison = () => {
-        console.log('generateMatrixOfComparison is called');
         const header = ['Title'];
 
         for (const property of properties) {
@@ -477,7 +462,6 @@ function useComparison() {
     };
 
     useEffect(() => {
-        console.log('USE EFFECT: INITIALIZE COMPARISON');
         if (comparisonId !== undefined) {
             loadComparisonMetaData(comparisonId);
         } else {
@@ -499,7 +483,6 @@ function useComparison() {
      *  2/ Comparison type changed
      */
     useEffect(() => {
-        console.log('USE EFFECT: Update comparison');
         if (contributionsList.length > 0) {
             getComparisonResult();
         }
@@ -513,7 +496,6 @@ function useComparison() {
      *  3/ Comparison type change
      */
     useEffect(() => {
-        console.log('USE EFFECT: UPDATE URL');
         if (urlNeedsToUpdate) {
             generateUrl();
             if (metaData.id) {
