@@ -153,6 +153,17 @@ export const ReactTableWrapper = styled.div`
             height: 0;
         }
     }
+    .ReactTable .rt-tr:hover .rt-td > div > div {
+        background: ${props => props.theme.ultraLightBlue};
+    }
+    .ReactTable .rt-tr:hover .rthfc-td-fixed-left > .columnProperty > div {
+        color: #4f4f4f;
+        background: ${props => props.theme.ultraLightBlueDarker};
+    }
+    .ReactTable .rt-tr:hover .rthfc-td-fixed-left > .columnContribution > div:first-child {
+        color: #e86161;
+        background: #d77171;
+    }
 `;
 
 export const Properties = styled.div`

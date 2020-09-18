@@ -204,7 +204,7 @@ class ComparisonTable extends Component {
                                     fixed: 'left',
                                     Cell: props =>
                                         !this.props.transpose ? (
-                                            <Properties>
+                                            <Properties className="columnProperty">
                                                 <PropertiesInner cellPadding={cellPadding}>
                                                     <ConditionalWrapper
                                                         condition={props.value.similar && props.value.similar.length > 0}
@@ -222,7 +222,7 @@ class ComparisonTable extends Component {
                                                 </PropertiesInner>
                                             </Properties>
                                         ) : (
-                                            <Properties>
+                                            <Properties className="columnContribution">
                                                 <PropertiesInner transpose={this.props.transpose}>
                                                     <Link
                                                         to={reverse(ROUTES.VIEW_PAPER, {
