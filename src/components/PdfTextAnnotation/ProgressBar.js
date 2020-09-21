@@ -50,7 +50,7 @@ const ProgressBar = () => {
 
     return (
         <Tippy content={completionTooltip} placement="bottom">
-            <div className="mb-5">
+            <div className="mb-4">
                 Completion {percentageTotal}%
                 <Progress color="success" value={percentageTotal} />
             </div>

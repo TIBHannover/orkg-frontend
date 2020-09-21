@@ -7,6 +7,8 @@ import { Button } from 'reactstrap';
 import AnnotationCategory from 'components/PdfTextAnnotation/AnnotationCategory';
 import Completion from 'components/PdfTextAnnotation/ProgressBar';
 import Save from './Save';
+import SmartSentenceDetection from './SmartSentenceDetection';
+import PropTypes from 'prop-types';
 
 const SideBarStyled = styled.div`
     height: calc(100vh - 73px);
@@ -44,6 +46,8 @@ const SideBar = props => {
 
             <Completion />
 
+            <SmartSentenceDetection pdfViewer={props.pdfViewer} />
+
             {recommendedClasses.map(annotationClass => (
                 <AnnotationCategory annotationClass={annotationClass} hideEmpty={false} key={annotationClass.iri} />
             ))}
@@ -61,6 +65,14 @@ const SideBar = props => {
             <Save isOpen={saveModalIsOpen} toggle={toggleSaveModal} />
         </SideBarStyled>
     );
+};
+
+SideBar.propTypes = {
+    pdfViewer: PropTypes.object
+};
+
+SideBar.defaultProps = {
+    pdfViewer: null
 };
 
 export default SideBar;
