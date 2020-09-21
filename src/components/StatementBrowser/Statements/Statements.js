@@ -57,7 +57,7 @@ export default function Statements(props) {
                                 if (!property.isTemplate) {
                                     return (
                                         <StatementItem
-                                            key={'statement-' + index}
+                                            key={`statement-p${propertyId}r${props.selectedResource}`}
                                             id={propertyId}
                                             property={property}
                                             predicateLabel={property.label}
@@ -70,11 +70,11 @@ export default function Statements(props) {
                                         />
                                     );
                                 } else {
-                                    return property.valueIds.map((valueId, index) => {
+                                    return property.valueIds.map(valueId => {
                                         const value = props.values.byId[valueId];
                                         return (
                                             <ContributionTemplate
-                                                key={`template-${index}-${valueId}`}
+                                                key={`template-v${valueId}`}
                                                 id={valueId}
                                                 value={value}
                                                 propertyId={propertyId}
