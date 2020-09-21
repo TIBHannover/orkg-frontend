@@ -16,9 +16,9 @@ const Item = styled.div`
 
 const ItemInner = styled.div`
     padding: ${props => props.cellPadding}px 5px;
-    border-left: 2px solid #cfcbcb;
-    border-right: 2px solid #cfcbcb;
-    border-bottom: 2px solid #edebeb;
+    border-left: 2px solid #d5dae4;
+    border-right: 2px solid #d5dae4;
+    border-bottom: 2px solid #e7eaf1;
     text-align: center;
     height: 100%;
     word-wrap: break-word;

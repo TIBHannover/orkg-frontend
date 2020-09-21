@@ -145,7 +145,7 @@ function Comparison(props) {
                         <ButtonGroup className="float-right mb-4 ml-1">
                             <Dropdown group isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} style={{ marginRight: 3 }}>
                                 <DropdownToggle color="darkblue" size="sm">
-                                    <Icon icon={faWindowMaximize} /> <span className="mr-2">View</span>
+                                    <Icon icon={faWindowMaximize} className="mr-1" /> <span className="mr-1">View</span>
                                 </DropdownToggle>
                                 <DropdownMenu>
                                     <DropdownItem onClick={handleFullWidth}>

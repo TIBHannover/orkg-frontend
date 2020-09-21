@@ -140,7 +140,7 @@ export const ReactTableWrapper = styled.div`
         overflow: auto;
     }
     .ReactTable .rt-tbody .rt-tr-group:last-child .rt-td > div div:first-child {
-        border-bottom: 2px solid #cfcbcb !important;
+        border-bottom: 2px solid #d5dae4 !important;
         border-radius: 0 0 11px 11px !important;
     }
     .ReactTable .disable-scrollbars {
@@ -154,11 +154,10 @@ export const ReactTableWrapper = styled.div`
         }
     }
     .ReactTable .rt-tr:hover .rt-td > div > div {
-        background: ${props => props.theme.ultraLightBlue};
+        background: #e7eaf1;
     }
     .ReactTable .rt-tr:hover .rthfc-td-fixed-left > .columnProperty > div {
-        color: #4f4f4f;
-        background: ${props => props.theme.ultraLightBlueDarker};
+        background: #8b91a5;
     }
     .ReactTable .rt-tr:hover .rthfc-td-fixed-left > .columnContribution > div:first-child {
         color: #e86161;
