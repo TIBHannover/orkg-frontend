@@ -1,6 +1,8 @@
 import * as type from '../actions/types';
 import dotProp from 'dot-prop-immutable';
 import { MISC } from 'constants/graphSettings';
+import { match } from 'path-to-regexp';
+import ROUTES from 'constants/routes';
 
 const initialState = {
     selectedResource: '',
@@ -10,6 +12,8 @@ const initialState = {
     openExistingResourcesInDialog: false,
     propertiesAsLinks: false,
     resourcesAsLinks: false,
+    initOnLocationChange: true,
+    keyToKeepStateOnLocationChange: null,
     resources: {
         byId: {},
         allIds: []
@@ -27,7 +31,10 @@ const initialState = {
         allIds: []
     },
     templates: {},
-    classes: {}
+    classes: {},
+    // adding contribution object plus selected contributionId;
+    contributions: {},
+    selectedContributionId: ''
 };
 
 export default (state = initialState, action) => {
@@ -340,6 +347,24 @@ export default (state = initialState, action) => {
         case type.SELECT_RESOURCE: {
             const { payload } = action;
             const level = payload.increaseLevel ? state.level + 1 : state.level - 1;
+            if (!state.initOnLocationChange && state.contributions[state.selectedContributionId]) {
+                // this wants to update the contribution object
+                const contribObj = state.contributions[state.selectedContributionId];
+                if (payload.resourceId === state.selectedContributionId) {
+                    if (contribObj.selectedResource === '') {
+                        // there is no selected data yet;
+                        contribObj.selectedResource = payload.resourceId;
+                        contribObj.level = level > 0 ? level : 0;
+                    }
+                } else {
+                    // check if this resource exists in the contribution data ;
+                    const isContributionResource = !!state.contributions[payload.resourceId];
+                    if (!isContributionResource) {
+                        contribObj.selectedResource = payload.resourceId;
+                        contribObj.level = level > 0 ? level : 0;
+                    }
+                }
+            }
 
             return {
                 ...state,
@@ -379,12 +404,41 @@ export default (state = initialState, action) => {
 
             newState = dotProp.set(newState, 'resourceHistory.allIds', ids => [...ids, resourceId]);
 
-            return newState;
+            // overwrite contribution history if needed
+            const contribObj = newState.contributions[newState.selectedContributionId];
+            if (!state.initOnLocationChange && contribObj) {
+                const isContributionResource = !!newState.contributions[resourceId];
+
+                if (!isContributionResource) {
+                    contribObj.resourceHistory = newState.resourceHistory;
+                } else {
+                    if (contribObj.resourceHistory.allIds.length === 0) {
+                        // will ignore history updates if there is already some data;
+                        contribObj.resourceHistory = newState.resourceHistory;
+                    }
+                }
+            }
+
+            return { ...newState };
         }
 
         case type.GOTO_RESOURCE_HISTORY: {
             const { payload } = action;
             const ids = state.resourceHistory.allIds.slice(0, payload.historyIndex + 1); //TODO: it looks like historyIndex can be derived, so remove it from payload
+
+            if (!state.initOnLocationChange && state.contributions[state.selectedContributionId]) {
+                const contribObj = state.contributions[state.selectedContributionId];
+                contribObj.resourceHistory = {
+                    byId: {
+                        ...state.resourceHistory.byId // TODO: remove the history item from byId object (not really necessary, but it is cleaner)
+                    },
+                    allIds: ids
+                };
+                contribObj.level = payload.historyIndex;
+                contribObj.selectedResource = payload.id;
+                contribObj.selectedProperty = state.resourceHistory.byId[payload.id].selectedProperty;
+                state.contributions[state.selectedContributionId] = contribObj;
+            }
 
             return {
                 ...state,
@@ -410,7 +464,9 @@ export default (state = initialState, action) => {
                         ? payload.openExistingResourcesInDialog
                         : state.openExistingResourcesInDialog,
                 propertiesAsLinks: typeof payload.propertiesAsLinks === 'boolean' ? payload.propertiesAsLinks : state.propertiesAsLinks,
-                resourcesAsLinks: typeof payload.resourcesAsLinks === 'boolean' ? payload.resourcesAsLinks : state.resourcesAsLinks
+                resourcesAsLinks: typeof payload.resourcesAsLinks === 'boolean' ? payload.resourcesAsLinks : state.resourcesAsLinks,
+                initOnLocationChange: typeof payload.initOnLocationChange === 'boolean' ? payload.initOnLocationChange : state.initOnLocationChange,
+                keyToKeepStateOnLocationChange: payload.keyToKeepStateOnLocationChange ? payload.keyToKeepStateOnLocationChange : null
             };
         }
 
@@ -469,6 +525,16 @@ export default (state = initialState, action) => {
                 ...newState
             };
         }
+        case type.STATEMENT_BROWSER_UPDATE_CONTRIBUTION_LABEL: {
+            const newLabel = action.payload.label;
+            const contribId = action.payload.id;
+
+            let newState = dotProp.set(state, `resources.byId.${contribId}.label`, newLabel);
+            newState = dotProp.set(newState, `resourceHistory.byId.${contribId}.label`, newLabel);
+            return {
+                ...newState
+            };
+        }
 
         case type.DONE_FETCHING_STATEMENTS: {
             return {
@@ -478,16 +544,65 @@ export default (state = initialState, action) => {
         }
 
         case type.RESET_STATEMENT_BROWSER: {
-            return {
-                ...initialState
-            };
+            return initialState;
         }
 
         case '@@router/LOCATION_CHANGE': {
             //from connected-react-router, reset the wizard when the page is changed
-            return {
-                ...initialState
-            };
+            const matchViewPaper = match(ROUTES.VIEW_PAPER);
+            const contributionChange = matchViewPaper(action.payload.location.pathname);
+
+            let newState;
+            if (!state.initOnLocationChange && state.keyToKeepStateOnLocationChange === contributionChange?.params?.resourceId) {
+                newState = {
+                    ...state,
+                    // returns current state but resets some variables :
+                    selectedResource: '',
+                    selectedProperty: '',
+                    level: 0,
+                    isFetchingStatements: false,
+                    resourceHistory: {
+                        byId: {},
+                        allIds: []
+                    }
+                };
+            } else {
+                newState = initialState;
+            }
+            return { ...newState };
+        }
+
+        /** -- Handling for creation of contribution objects**/
+        case type.STATEMENT_BROWSER_CREATE_CONTRIBUTION_OBJECT: {
+            state.selectedContributionId = action.payload.id;
+            if (!state.contributions.hasOwnProperty(action.payload.id)) {
+                const initData = {
+                    selectedResource: '',
+                    selectedProperty: '',
+                    isFetchingStatements: false,
+                    level: 0,
+                    resourceHistory: {
+                        byId: {},
+                        allIds: []
+                    }
+                };
+                const updatedState = dotProp.set(state, `contributions.${action.payload.id}`, initData);
+                return { ...updatedState };
+            }
+            return { ...state };
+        }
+
+        case type.STATEMENT_BROWSER_LOAD_CONTRIBUTION_HISTORY: {
+            const contribObj = state.contributions[action.payload.id];
+            if (contribObj) {
+                state.selectedResource = contribObj.selectedResource;
+                state.selectedProperty = contribObj.selectedProperty;
+                state.isFetchingStatements = contribObj.isFetchingStatements;
+                state.level = contribObj.level;
+                state.resourceHistory = contribObj.resourceHistory;
+            }
+
+            return { ...state };
         }
 
         default: {

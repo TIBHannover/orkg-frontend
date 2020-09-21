@@ -30,7 +30,14 @@ export default function Statements(props) {
             props.updateSettings({
                 openExistingResourcesInDialog: props.openExistingResourcesInDialog,
                 propertiesAsLinks: props.propertiesAsLinks,
-                resourcesAsLinks: props.resourcesAsLinks
+                resourcesAsLinks: props.resourcesAsLinks,
+                initOnLocationChange: props.initOnLocationChange,
+                keyToKeepStateOnLocationChange: props.keyToKeepStateOnLocationChange
+            });
+        } else {
+            props.updateSettings({
+                initOnLocationChange: props.initOnLocationChange,
+                keyToKeepStateOnLocationChange: props.keyToKeepStateOnLocationChange
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -40,8 +47,8 @@ export default function Statements(props) {
         let propertyIds = [];
         let shared = 1;
         if (Object.keys(props.resources.byId).length !== 0 && props.selectedResource) {
-            propertyIds = props.resources.byId[props.selectedResource].propertyIds;
-            shared = props.resources.byId[props.selectedResource].shared;
+            propertyIds = props.resources.byId[props.selectedResource] ? props.resources.byId[props.selectedResource].propertyIds : [];
+            shared = props.resources.byId[props.selectedResource] ? props.resources.byId[props.selectedResource].shared : 0;
         }
 
         return (
@@ -160,7 +167,9 @@ Statements.propTypes = {
     newStore: PropTypes.bool,
     templatesFound: PropTypes.bool,
     propertiesAsLinks: PropTypes.bool,
-    resourcesAsLinks: PropTypes.bool
+    resourcesAsLinks: PropTypes.bool,
+    initOnLocationChange: PropTypes.bool.isRequired,
+    keyToKeepStateOnLocationChange: PropTypes.string
 };
 
 Statements.defaultProps = {
@@ -172,6 +181,8 @@ Statements.defaultProps = {
     templatesFound: false,
     propertiesAsLinks: false,
     resourcesAsLinks: false,
+    initOnLocationChange: true,
+    keyToKeepStateOnLocationChange: null,
     rootNodeType: 'resource',
     level: 1
 };
