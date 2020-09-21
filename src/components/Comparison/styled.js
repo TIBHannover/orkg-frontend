@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Container } from 'reactstrap';
+import { Container, Button } from 'reactstrap';
 
 export const SubtitleSeparator = styled.div`
     background: ${props => props.theme.darkblue};
@@ -21,6 +21,20 @@ export const ComparisonTitle = styled.div`
 
 export const ContainerAnimated = styled(Container)`
     transition: 0.5s max-width;
+`;
+
+export const ComparisonTypeButton = styled(Button)`
+    img {
+        transition: 0.3s opacity;
+        opacity: 1;
+        width: 163px; // set width, so positioning is correct after opening dropdown menu
+    }
+    &:hover img {
+        opacity: 0.75;
+    }
+    &.active {
+        border: 2px solid;
+    }
 `;
 
 export const ScrollButton = styled.div`
@@ -47,10 +61,11 @@ export const ReactTableWrapper = styled.div`
     clear: both;
     position: relative;
     padding: 10px 0;
+    font-size: ${props => (props.smallerFontSize ? '0.95rem' : '1rem')};
 
     /*&.overflowing-left .rthfc-td-fixed,
     &.overflowing-left .rthfc-th-fixed {
-        box-shadow: 9px 0px 5px -5px #d9d9d9 !important;
+        box-shadow: 9px 0px 5px -5px  #d9d9d9 !important;
     }*/
 
     /*&.overflowing-right,*/
@@ -125,7 +140,7 @@ export const ReactTableWrapper = styled.div`
         overflow: auto;
     }
     .ReactTable .rt-tbody .rt-tr-group:last-child .rt-td > div div:first-child {
-        border-bottom: 2px solid #cfcbcb !important;
+        border-bottom: 2px solid #d5dae4 !important;
         border-radius: 0 0 11px 11px !important;
     }
     .ReactTable .disable-scrollbars {
@@ -137,6 +152,16 @@ export const ReactTableWrapper = styled.div`
             width: 0;
             height: 0;
         }
+    }
+    .ReactTable .rt-tr:hover .rt-td > div > div {
+        background: #e7eaf1;
+    }
+    .ReactTable .rt-tr:hover .rthfc-td-fixed-left > .columnProperty > div {
+        background: #8b91a5;
+    }
+    .ReactTable .rt-tr:hover .rthfc-td-fixed-left > .columnContribution > div:first-child {
+        color: #e86161;
+        background: #d77171;
     }
 `;
 
@@ -155,7 +180,7 @@ export const PropertiesInner = styled.div`
     background: ${props => (props.transpose ? '#E86161' : '#80869B')};
     height: 100%;
     color: #fff;
-    padding: 10px;
+    padding: ${props => props.cellPadding ?? 10}px 10px;
     border-bottom: ${props => (props.transpose ? '2px solid #fff!important' : '2px solid #8B91A5!important')};
     word-wrap: break-word;
     overflow-wrap: break-word;

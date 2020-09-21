@@ -73,7 +73,7 @@ class SimilarContributions extends Component {
                     <CardsContainer>
                         {this.props.similaireContributions.map((contribution, index) => {
                             return (
-                                <CardWrapper md={4} className="mt-2 justify-content-center">
+                                <CardWrapper key={`sim${index}`} md={4} className="mt-2 justify-content-center">
                                     <Card
                                         key={`s${contribution.contributionId}`}
                                         to={reverse(ROUTES.VIEW_PAPER, {

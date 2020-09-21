@@ -8,8 +8,8 @@ import queryString from 'query-string';
 import ContentLoader from 'react-content-loader';
 import { getResourcesByClass, getAllPredicates, getAllResources } from 'network';
 import ROUTES from 'constants/routes.js';
-import Results from '../components/Search/Results';
-import Filters from '../components/Search/Filters';
+import Results from 'components/Search/Results';
+import Filters from 'components/Search/Filters';
 import { toast } from 'react-toastify';
 import { CLASSES } from 'constants/graphSettings';
 
@@ -211,7 +211,7 @@ class Search extends Component {
     };
 
     getTypesFromUrl = () => {
-        let types = queryString.parse(this.props.location.search, { arrayFormat: 'comma' }).types;
+        let types = queryString.parse(decodeURIComponent(this.props.location.search), { arrayFormat: 'comma' }).types;
 
         if (!types) {
             return [];
