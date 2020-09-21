@@ -712,3 +712,14 @@ export const getAuthorsByResearchProblemId = ({ id, page = 1, items = 9999 }) =>
     const params = queryString.stringify({ page: page, items: items });
     return submitGetRequest(`${problemsUrl}${encodeURIComponent(id)}/authors?${params}`);
 };
+
+export const classifySentence = ({ sentence, labels }) => {
+    const headers = { 'Content-Type': 'application/json' };
+
+    const data = {
+        sentence,
+        labels
+    };
+
+    return submitPutRequest(`${annotationServiceUrl}classifySentence/`, headers, data);
+};

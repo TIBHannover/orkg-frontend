@@ -1,117 +1,48 @@
-import { useCallback } from 'react';
-import { WordTokenizer } from 'natural';
-import { uniq } from 'lodash';
+import { useCallback, useState } from 'react';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
+import { classifySentence } from 'network';
 
-// A hook to demonstrate the use of smart suggestions, when sufficient training data is available, a modal will be trained
+const SCORE_THRESHOLD = 0.05;
+
 const useSuggestions = () => {
-    const { findByType } = useOntology();
-
-    const classesMatchWords = [
-        {
-            iri: 'Acknowledgements',
-            matchWords: ['thank']
-        },
-        {
-            iri: 'Background',
-            matchWords: ['currently', 'despite', 'remains', 'background']
-        },
-        {
-            iri: 'Conclusion',
-            matchWords: ['conclude', 'conclusion ', 'end', 'presented']
-        },
-        {
-            iri: 'Contribution',
-            matchWords: ['contribution', 'present', 'introduce']
-        },
-        {
-            iri: 'Data',
-            matchWords: ['data']
-        },
-        {
-            iri: 'DatasetDescription',
-            matchWords: ['dataset']
-        },
-        {
-            iri: 'Discussion',
-            matchWords: ['concluded', 'indicates', 'findings']
-        },
-        {
-            iri: 'Evaluation',
-            matchWords: ['evaluation', 'participants']
-        },
-        {
-            iri: 'FutureWork',
-            matchWords: ['future', 'furthermore', 'plan']
-        },
-        {
-            iri: 'Introduction',
-            matchWords: ['nowadays', 'current']
-        },
-        {
-            iri: 'Materials',
-            matchWords: ['material']
-        },
-        {
-            iri: 'Methods',
-            matchWords: ['method']
-        },
-        {
-            iri: 'Model',
-            matchWords: ['model']
-        },
-        {
-            iri: 'Motivation',
-            matchWords: ['motivation', 'motivate']
-        },
-        {
-            iri: 'ProblemStatement',
-            matchWords: ['problem', 'issue', 'challenge']
-        },
-        {
-            iri: 'RelatedWork',
-            matchWords: ['related', 'literature', 'example', 'such as', 'initiative']
-        },
-        {
-            iri: 'Results',
-            matchWords: ['result', 'results']
-        },
-        {
-            iri: 'Scenario',
-            matchWords: ['case']
-        }
-    ];
+    const { classes, findByLabel } = useOntology();
+    const [isLoading, setIsLoading] = useState(false);
+    const [sentence, setSentence] = useState('');
+    const [suggestedClasses, setSuggestedClasses] = useState([]);
 
     const getSuggestedClasses = useCallback(
-        text => {
-            const tokenizer = new WordTokenizer();
-            const words = tokenizer.tokenize(text);
-
-            let suggestedClassTypes = [];
-            for (const classMatch of classesMatchWords) {
-                for (const word of words) {
-                    const foundWord = classMatch.matchWords.indexOf(word) !== -1;
-                    if (foundWord) {
-                        suggestedClassTypes.push(classMatch.iri);
-                    }
-                }
-            }
-            suggestedClassTypes = uniq(suggestedClassTypes);
-
-            const suggestedClasses = [];
-            for (const suggestedClassType of suggestedClassTypes) {
-                suggestedClasses.push(findByType(suggestedClassType));
+        async _sentence => {
+            if (isLoading || _sentence === sentence) {
+                return;
             }
 
-            // only return max 4 results
-            suggestedClasses.slice(0, 4);
+            setIsLoading(true);
+            setSentence(_sentence);
 
-            return suggestedClasses;
+            const labels = classes.filter(_class => _class.suggestedProperty).map(_class => _class.label);
+            classifySentence({
+                sentence: _sentence,
+                labels
+            }).then(result => {
+                let _suggestedClasses = result.labels
+                    .filter((_, index) => {
+                        return result.scores[index] > SCORE_THRESHOLD;
+                    })
+                    .map((label, index) => {
+                        return findByLabel(label);
+                    });
+
+                // only return max 5 results
+                _suggestedClasses = _suggestedClasses.slice(0, 5);
+
+                setSuggestedClasses(_suggestedClasses);
+                setIsLoading(false);
+            });
         },
-        [classesMatchWords, findByType]
+        [classes, isLoading, sentence, findByLabel]
     );
 
-    return { getSuggestedClasses };
+    return { getSuggestedClasses, isLoading, suggestedClasses };
 };
 
 export default useSuggestions;
