@@ -43,9 +43,13 @@ const StyledLoadMoreButton = styled.div`
 function ContributionComparisons(props) {
     const [comparisons, isLoadingComparisons, hasNextPage, isLastPageReached, loadMoreComparisons] = useContributionComparison(props.contributionId);
 
+    if (comparisons.length === 0 && !isLoadingComparisons) {
+        return null;
+    }
+
     return (
         <div>
-            <Title>Linked comparisons</Title>
+            <Title>Comparisons</Title>
 
             <Container className="mt-3 p-0">
                 {comparisons.length > 0 && (
@@ -63,7 +67,6 @@ function ContributionComparisons(props) {
                         })}
                     </div>
                 )}
-                {comparisons.length === 0 && !isLoadingComparisons && <Alert color="light">This contribution is not used in comparisons yet!</Alert>}
                 {!isLoadingComparisons && hasNextPage && (
                     <StyledLoadMoreButton className="text-right action">
                         <span className="btn btn-link btn-sm" onClick={!isLoadingComparisons ? loadMoreComparisons : undefined}>
