@@ -69,7 +69,7 @@ class Observatories extends Component {
         submitGetRequest(observatoriesUrl)
             .then(async observatories => {
                 observatories = await this.loadOrganizations(observatories);
-                const g = await this.groupBy(observatories, 'researchField');
+                const g = await this.groupBy(observatories, 'research_field');
                 if (observatories.length > 0) {
                     this.setState({
                         observatories: g,

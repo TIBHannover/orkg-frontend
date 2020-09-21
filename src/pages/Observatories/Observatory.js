@@ -79,7 +79,7 @@ class Observatory extends Component {
                     label: observatory.name,
                     description: observatory.description,
                     isLoading: false,
-                    researchField: observatory.researchField
+                    researchField: observatory.research_field
                 });
                 this.loadOrganizations(observatory.organizations);
             })
