@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
 import useSuggestions from 'components/PdfTextAnnotation/hooks/useSuggestions';
-import { upperFirst } from 'lodash';
+import { upperFirst, isString } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippy.js/react';
@@ -80,6 +80,12 @@ const AnnotationTooltipNew = props => {
             return;
         }
         const valueType = value ?? type.value;
+
+        // replace double white spaces that could occur when copying text from PDFs
+        if (isString(content.text)) {
+            content.text = content.text.replace(/\s+/g, ' ').trim();
+        }
+
         handleAnnotate({ content, position, type: valueType });
         hideTipAndSelection();
     };

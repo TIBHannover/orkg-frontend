@@ -23,21 +23,26 @@ const useSuggestions = () => {
             classifySentence({
                 sentence: _sentence,
                 labels
-            }).then(result => {
-                let _suggestedClasses = result.labels
-                    .filter((_, index) => {
-                        return result.scores[index] > SCORE_THRESHOLD;
-                    })
-                    .map((label, index) => {
-                        return findByLabel(label);
-                    });
+            })
+                .then(result => {
+                    let _suggestedClasses = result.labels
+                        .filter((_, index) => {
+                            return result.scores[index] > SCORE_THRESHOLD;
+                        })
+                        .map((label, index) => {
+                            return findByLabel(label);
+                        });
 
-                // only return max 5 results
-                _suggestedClasses = _suggestedClasses.slice(0, 5);
+                    // only return max 5 results
+                    _suggestedClasses = _suggestedClasses.slice(0, 5);
 
-                setSuggestedClasses(_suggestedClasses);
-                setIsLoading(false);
-            });
+                    setSuggestedClasses(_suggestedClasses);
+                    setIsLoading(false);
+                })
+                .catch(e => {
+                    setSuggestedClasses([]);
+                    setIsLoading(false);
+                });
         },
         [classes, isLoading, sentence, findByLabel]
     );
