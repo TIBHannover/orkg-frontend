@@ -10,9 +10,11 @@ import { filter } from 'lodash';
 import PropTypes from 'prop-types';
 import useDeleteAnnotation from 'components/PdfTextAnnotation/hooks/useDeleteAnnotation';
 import useEditAnnotation from 'components/PdfTextAnnotation/hooks/useEditAnnotation';
-import { SentenceTokenizer } from 'natural';
-//var tokenizer = require('sbd');
 import tokenizer from 'sbd';
+
+const DEFAULT_HIGHLIGHT_COLOR = '#FFE28F';
+const MAX_SENTENCES_PER_ANNOTATION = 2;
+
 const Container = styled.div`
     width: 100%;
     margin-top: 20px;
@@ -60,8 +62,6 @@ const updateHash = highlight => {
 };
 
 const AnnotationCategory = props => {
-    const DEFAULT_HIGHLIGHT_COLOR = '#FFE28F';
-    const MAX_SENTENCES_PER_ANNOTATION = 2;
     const { annotationClass } = props;
     const annotations = useSelector(state => state.pdfTextAnnotation.annotations);
     const annotationsFiltered = filter(annotations, { type: annotationClass.iri });
@@ -99,7 +99,6 @@ const AnnotationCategory = props => {
                 </Tippy>
             </h2>
             {annotationsFiltered.map(annotation => {
-                //const tokenizer = new SentenceTokenizer();
                 const sentences = tokenizer.sentences(annotation.content.text);
                 const sentenceAmount = sentences.length;
                 const hasTooManySentences = sentenceAmount > MAX_SENTENCES_PER_ANNOTATION;
