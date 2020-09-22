@@ -34,6 +34,33 @@ export const changeZoom = zoom => dispatch => {
     });
 };
 
+export const setSummaryFetched = summaryFetched => dispatch => {
+    dispatch({
+        type: type.PDF_TEXT_ANNOTATION_SET_SUMMARY_FETCHED,
+        payload: {
+            summaryFetched
+        }
+    });
+};
+
+export const setShowHighlights = showHighlights => dispatch => {
+    dispatch({
+        type: type.PDF_TEXT_ANNOTATION_SET_SHOW_HIGHLIGHTS,
+        payload: {
+            showHighlights
+        }
+    });
+};
+
+export const setPdfViewer = pdfViewer => dispatch => {
+    dispatch({
+        type: type.PDF_TEXT_ANNOTATION_SET_PDF_VIEWER,
+        payload: {
+            pdfViewer
+        }
+    });
+};
+
 const toBase64 = file =>
     new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -56,5 +83,11 @@ export const uploadPdf = files => async dispatch => {
             pdf: pdf,
             encodedPdf: encodedPdf
         }
+    });
+};
+
+export const discardChanges = () => dispatch => {
+    dispatch({
+        type: type.PDF_TEXT_ANNOTATION_RESET
     });
 };

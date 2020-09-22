@@ -6,8 +6,9 @@ import { CustomInput } from 'reactstrap';
 import Tippy from '@tippy.js/react';
 import { submitPostRequest } from 'network';
 import { SentenceTokenizer } from 'natural';
-import PropTypes from 'prop-types';
 import { createGlobalStyle } from 'styled-components';
+import { useSelector, useDispatch } from 'react-redux';
+import { setShowHighlights as setShowHighlightsAction, setSummaryFetched as setSummaryFetchedAction } from 'actions/pdfTextAnnotation';
 
 const ANNOTATION_RATIO = 0.08;
 const PROCESSING_SECONDS_PER_PAGE = 15;
@@ -50,10 +51,13 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const SmartSentenceDetection = props => {
-    const { pdfViewer } = props;
     const [isLoading, setIsLoading] = useState(false);
-    const [showHighlights, setShowHighlights] = useState(false);
-    const [summaryFetched, setSummaryFetched] = useState(false);
+    const showHighlights = useSelector(state => state.pdfTextAnnotation.showHighlights);
+    const summaryFetched = useSelector(state => state.pdfTextAnnotation.summaryFetched);
+    const pdfViewer = useSelector(state => state.pdfTextAnnotation.pdfViewer);
+    const pdf = useSelector(state => state.pdfTextAnnotation.pdf);
+    const dispatch = useDispatch();
+    const setShowHighlights = useCallback(show => dispatch(setShowHighlightsAction(show)), [dispatch]);
 
     /**
      * Selects text between beginNode and endNode
@@ -142,6 +146,13 @@ const SmartSentenceDetection = props => {
 
     // effect runs when the highlights should be loaded (when the PDF is ready)
     useEffect(() => {
+        // don't continue if is fetched already, or if the viewer isn't ready yet
+        if (summaryFetched || !pdfViewer || isLoading || !pdf) {
+            return;
+        }
+
+        const setSummaryFetched = fetched => dispatch(setSummaryFetchedAction(fetched));
+
         const getAllText = () => {
             const maxPages = pdfViewer.pagesCount;
             const countPromises = []; // collecting all page promises
@@ -170,11 +181,6 @@ const SmartSentenceDetection = props => {
         };
 
         const highlightText = () => {
-            // don't continue if is fetched already, or if the viewer isn't ready yet
-            if (summaryFetched || !pdfViewer || isLoading) {
-                return;
-            }
-
             setIsLoading(true);
             setShowHighlights(true);
 
@@ -205,7 +211,7 @@ const SmartSentenceDetection = props => {
         };
 
         highlightText();
-    }, [pdfViewer, summaryFetched, isLoading]);
+    }, [pdfViewer, showHighlights, summaryFetched, isLoading, pdf, setShowHighlights, dispatch]);
 
     return (
         <Container className="mb-5" isLoading={isLoading} estimatedLoadingTime={PROCESSING_SECONDS_PER_PAGE}>
@@ -219,7 +225,7 @@ const SmartSentenceDetection = props => {
                     id="enableSentenceDetection"
                     onChange={e => setShowHighlights(e.target.checked)}
                     checked={showHighlights}
-                    disabled={!pdfViewer}
+                    disabled={!pdf}
                 />
             ) : (
                 <Icon icon={faSpinner} spin />
@@ -228,14 +234,6 @@ const SmartSentenceDetection = props => {
             <GlobalStyle showHighlights={showHighlights} />
         </Container>
     );
-};
-
-SmartSentenceDetection.propTypes = {
-    pdfViewer: PropTypes.object
-};
-
-SmartSentenceDetection.defaultProps = {
-    pdfViewer: null
 };
 
 export default SmartSentenceDetection;

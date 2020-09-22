@@ -4,7 +4,10 @@ const initialState = {
     annotations: [],
     pdf: null,
     encodedPdf: null,
-    zoom: 1.2
+    zoom: 1.2,
+    showHighlights: false,
+    summaryFetched: false,
+    pdfViewer: null
 };
 
 export default (state = initialState, action) => {
@@ -65,6 +68,37 @@ export default (state = initialState, action) => {
                 ...state,
                 zoom: payload.zoom
             };
+        }
+
+        case type.PDF_TEXT_ANNOTATION_SET_SHOW_HIGHLIGHTS: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                showHighlights: payload.showHighlights
+            };
+        }
+
+        case type.PDF_TEXT_ANNOTATION_SET_SUMMARY_FETCHED: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                summaryFetched: payload.summaryFetched
+            };
+        }
+
+        case type.PDF_TEXT_ANNOTATION_SET_PDF_VIEWER: {
+            const { payload } = action;
+
+            return {
+                ...state,
+                pdfViewer: payload.pdfViewer
+            };
+        }
+
+        case type.PDF_TEXT_ANNOTATION_RESET: {
+            return initialState;
         }
 
         default: {
