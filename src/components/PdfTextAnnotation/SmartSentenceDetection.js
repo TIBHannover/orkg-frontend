@@ -4,7 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { CustomInput } from 'reactstrap';
 import Tippy from '@tippy.js/react';
-import { submitPostRequest } from 'network';
+import { summarizeText } from 'network';
 import { SentenceTokenizer } from 'natural';
 import { createGlobalStyle } from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
@@ -184,30 +184,32 @@ const SmartSentenceDetection = props => {
             setIsLoading(true);
             setShowHighlights(true);
 
-            getAllText().then(async text => {
-                const summary = await submitPostRequest(
-                    `http://localhost:5001/summarize?ratio=${ANNOTATION_RATIO}`,
-                    {
-                        'Content-Type': 'text/plain'
-                    },
-                    text,
-                    false
-                );
+            getAllText()
+                .then(async text => {
+                    return summarizeText({
+                        text,
+                        ratio: ANNOTATION_RATIO
+                    });
+                })
+                .then(({ summary }) => {
+                    const tokenizer = new SentenceTokenizer();
+                    const summarySentences = tokenizer.tokenize(summary);
 
-                const tokenizer = new SentenceTokenizer();
-                const summarySentences = tokenizer.tokenize(summary.summary);
+                    pdfViewer.findController.executeCommand('find', {
+                        query: summarySentences,
+                        caseSensitive: false,
+                        highlightAll: true,
+                        findPrevious: true,
+                        phraseSearch: true
+                    });
 
-                pdfViewer.findController.executeCommand('find', {
-                    query: summarySentences,
-                    caseSensitive: false,
-                    highlightAll: true,
-                    findPrevious: true,
-                    phraseSearch: true
+                    setSummaryFetched(true);
+                    setIsLoading(false);
+                })
+                .catch(e => {
+                    setSummaryFetched(false);
+                    setIsLoading(false);
                 });
-
-                setSummaryFetched(true);
-                setIsLoading(false);
-            });
         };
 
         highlightText();

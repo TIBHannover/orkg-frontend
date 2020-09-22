@@ -723,3 +723,11 @@ export const classifySentence = ({ sentence, labels }) => {
 
     return submitPutRequest(`${annotationServiceUrl}classifySentence/`, headers, data);
 };
+
+export const summarizeText = ({ text, ratio }) => {
+    const headers = {
+        'Content-Type': 'text/plain'
+    };
+
+    return submitPostRequest(`${annotationServiceUrl}summarizeText/?ratio=${ratio}`, headers, text, false);
+};
