@@ -5,10 +5,12 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { CustomInput } from 'reactstrap';
 import Tippy from '@tippy.js/react';
 import { summarizeText } from 'network';
-import { SentenceTokenizer } from 'natural';
+import tokenizer from 'sbd';
 import { createGlobalStyle } from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { setShowHighlights as setShowHighlightsAction, setSummaryFetched as setSummaryFetchedAction } from 'actions/pdfTextAnnotation';
+import { toast } from 'react-toastify';
+import { isString } from 'lodash';
 
 const ANNOTATION_RATIO = 0.08;
 const PROCESSING_SECONDS_PER_PAGE = 15;
@@ -52,6 +54,7 @@ const GlobalStyle = createGlobalStyle`
 
 const SmartSentenceDetection = props => {
     const [isLoading, setIsLoading] = useState(false);
+    const [fetchFailed, setFetchFailed] = useState(false);
     const showHighlights = useSelector(state => state.pdfTextAnnotation.showHighlights);
     const summaryFetched = useSelector(state => state.pdfTextAnnotation.summaryFetched);
     const pdfViewer = useSelector(state => state.pdfTextAnnotation.pdfViewer);
@@ -183,17 +186,35 @@ const SmartSentenceDetection = props => {
         const highlightText = () => {
             setIsLoading(true);
             setShowHighlights(true);
+            setFetchFailed(false);
 
             getAllText()
                 .then(async text => {
-                    return summarizeText({
+                    const summary = await summarizeText({
                         text,
                         ratio: ANNOTATION_RATIO
                     });
+
+                    return {
+                        summary: summary.summary,
+                        fullText: text
+                    };
                 })
-                .then(({ summary }) => {
-                    const tokenizer = new SentenceTokenizer();
-                    const summarySentences = tokenizer.tokenize(summary);
+                .then(({ summary, fullText }) => {
+                    const summarySentences = tokenizer.sentences(summary, {
+                        preserve_whitespace: true
+                    });
+                    // a dirty trick to ensure the title of the paper is not highlighted
+                    // the summarizer often includes the title as part of the summary because it is considered important
+                    if (
+                        summarySentences.length > 0 &&
+                        isString(summarySentences[0]) &&
+                        isString(fullText) &&
+                        summarySentences[0].substring(0, 20) === fullText.substring(0, 20)
+                    ) {
+                        // remove the first sentence
+                        summarySentences.shift();
+                    }
 
                     pdfViewer.findController.executeCommand('find', {
                         query: summarySentences,
@@ -205,10 +226,14 @@ const SmartSentenceDetection = props => {
 
                     setSummaryFetched(true);
                     setIsLoading(false);
+                    setFetchFailed(false);
                 })
                 .catch(e => {
-                    setSummaryFetched(false);
+                    toast.error('Smart sentence detection could not be performed and is therefore disabled');
+                    setFetchFailed(true);
+                    setSummaryFetched(true);
                     setIsLoading(false);
+                    console.log(e);
                 });
         };
 
@@ -226,8 +251,8 @@ const SmartSentenceDetection = props => {
                     type="switch"
                     id="enableSentenceDetection"
                     onChange={e => setShowHighlights(e.target.checked)}
-                    checked={showHighlights}
-                    disabled={!pdf}
+                    checked={showHighlights && !fetchFailed}
+                    disabled={!pdf || fetchFailed}
                 />
             ) : (
                 <Icon icon={faSpinner} spin />

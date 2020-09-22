@@ -29,7 +29,7 @@ const HeartsAreRed = styled.div`
     }
 `;
 
-const SideBar = props => {
+const SideBar = () => {
     const { recommendedClasses, nonRecommendedClasses } = useOntology();
     const [saveModalIsOpen, setSaveModalIsOpen] = useState(false);
     const [saveDropdownIsOpen, setSaveDropdownIsOpen] = useState(false);

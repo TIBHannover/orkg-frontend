@@ -11,7 +11,8 @@ import PropTypes from 'prop-types';
 import useDeleteAnnotation from 'components/PdfTextAnnotation/hooks/useDeleteAnnotation';
 import useEditAnnotation from 'components/PdfTextAnnotation/hooks/useEditAnnotation';
 import { SentenceTokenizer } from 'natural';
-
+//var tokenizer = require('sbd');
+import tokenizer from 'sbd';
 const Container = styled.div`
     width: 100%;
     margin-top: 20px;
@@ -44,6 +45,14 @@ const Quote = styled(Icon)`
 const SentenceWarning = styled(Icon)`
     font-size: 28px;
     padding-right: 6px;
+    animation: blink 1s linear;
+    animation-iteration-count: 5;
+
+    @keyframes blink {
+        50% {
+            opacity: 0;
+        }
+    }
 `;
 
 const updateHash = highlight => {
@@ -90,8 +99,8 @@ const AnnotationCategory = props => {
                 </Tippy>
             </h2>
             {annotationsFiltered.map(annotation => {
-                const tokenizer = new SentenceTokenizer();
-                const sentences = tokenizer.tokenize(annotation.content.text);
+                //const tokenizer = new SentenceTokenizer();
+                const sentences = tokenizer.sentences(annotation.content.text);
                 const sentenceAmount = sentences.length;
                 const hasTooManySentences = sentenceAmount > MAX_SENTENCES_PER_ANNOTATION;
 
