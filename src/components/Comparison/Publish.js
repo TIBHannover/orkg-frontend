@@ -23,9 +23,7 @@ import {
     getComparison,
     createResourceStatement,
     generateDOIForComparison,
-    literalsUrl,
-    submitGetRequest,
-    getStatementsByObject,
+    getStatementsByPredicateAndLiteral,
     resourcesUrl
 } from 'network';
 import Tooltip from 'components/Utils/Tooltip';
@@ -109,11 +107,15 @@ function Publish(props) {
             if (author.orcid) {
                 // Create author with ORCID
                 // check if there's an author resource
-                const responseJson = await submitGetRequest(literalsUrl + '?q=' + encodeURIComponent(author.orcid) + '&exact=true');
+                const responseJson = await getStatementsByPredicateAndLiteral({
+                    predicateId: PREDICATES.HAS_ORCID,
+                    literal: author.orcid,
+                    subjectClass: CLASSES.AUTHOR,
+                    items: 1
+                });
                 if (responseJson.length > 0) {
                     // Author resource exists
-                    let authorResource = await getStatementsByObject({ id: responseJson[0].id });
-                    authorResource = authorResource.find(s => s.predicate.id === PREDICATES.HAS_ORCID);
+                    const authorResource = responseJson[0];
                     const authorStatement = await createResourceStatement(resourceId, PREDICATES.HAS_AUTHOR, authorResource.subject.id);
                     authors.statementId = authorStatement.id;
                     authors.id = authorResource.subject.id;
