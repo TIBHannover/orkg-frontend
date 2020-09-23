@@ -10,13 +10,13 @@ const useOntology = () => {
             recommendedProperty: false,
             suggestedProperty: false
         },
-        {
+        /*{
             label: 'author contribution',
             iri: 'AuthorContribution',
             comment: 'A description of the roles played by an author in the publication.',
             recommendedProperty: false,
             suggestedProperty: false
-        },
+        },*/
         {
             label: 'background',
             iri: 'Background',
@@ -25,7 +25,7 @@ const useOntology = () => {
             recommendedProperty: false,
             suggestedProperty: true
         },
-        {
+        /*{
             label: 'bibliographic reference',
             iri: 'BibliographicReference',
             comment:
@@ -39,7 +39,7 @@ const useOntology = () => {
             comment: 'Information describing a person and his or her life history and contributions.',
             recommendedProperty: false,
             suggestedProperty: false
-        },
+        },*/
         {
             label: 'caption',
             iri: 'Caption',
@@ -78,14 +78,14 @@ const useOntology = () => {
             recommendedProperty: false,
             suggestedProperty: true
         },
-        {
+        /*{
             label: 'dedication',
             iri: 'Dedication',
             comment:
                 'Text in which the author names the person or people for whom he/she has written the document, or to whose memory it is dedicated.',
             recommendedProperty: false,
             suggestedProperty: false
-        },
+        },*/
         {
             label: 'discussion',
             iri: 'Discussion',
@@ -191,13 +191,13 @@ const useOntology = () => {
             recommendedProperty: false,
             suggestedProperty: false
         },
-        {
+        /*{
             label: 'reference',
             iri: 'Reference',
             comment: 'A reference to a specific part of the document, or to another publication.',
             recommendedProperty: false,
             suggestedProperty: false
-        },
+        },*/
         {
             label: 'related work',
             iri: 'RelatedWork',

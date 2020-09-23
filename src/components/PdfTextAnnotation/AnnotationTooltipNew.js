@@ -19,6 +19,7 @@ const Container = styled.div`
     border-radius: 6px;
     color: #fff;
     width: 430px;
+    box-shadow: 0px 0px 5px 2px #c9c9c9;
 `;
 
 const StyledSelectOption = styled.div`

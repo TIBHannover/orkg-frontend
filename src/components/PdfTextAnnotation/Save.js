@@ -15,7 +15,7 @@ import {
     InputGroup
 } from 'reactstrap';
 import { saveFullPaper, createResource, createLiteral, createLiteralStatement } from 'network';
-import { PREDICATES, MISC } from 'constants/graphSettings';
+import { CLASSES, PREDICATES, MISC } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
@@ -60,18 +60,18 @@ const Save = props => {
         const contributionStatements = {};
 
         for (const annotation of annotations) {
-            const resource = await createResource(annotation.type, [annotation.type]); // ,'http://purl.org/dc/terms/' +
+            const resource = await createResource(annotation.type, [annotation.type, CLASSES.SENTENCE]); // ,'http://purl.org/dc/terms/' +
             const annotationLiteral = await createLiteral(annotation.content.text); // ,'http://purl.org/dc/terms/' +
             createLiteralStatement(resource.id, PREDICATES.HAS_CONTENT, annotationLiteral.id);
 
-            if (!(PREDICATES.HAS_PART in contributionStatements)) {
-                contributionStatements[PREDICATES.HAS_PART] = [
+            if (!(PREDICATES.CONTAINS in contributionStatements)) {
+                contributionStatements[PREDICATES.CONTAINS] = [
                     {
                         '@id': resource.id
                     }
                 ];
             } else {
-                contributionStatements[PREDICATES.HAS_PART].push({
+                contributionStatements[PREDICATES.CONTAINS].push({
                     '@id': resource.id
                 });
             }

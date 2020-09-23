@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 import { isString } from 'lodash';
 
 const ANNOTATION_RATIO = 0.08;
-const PROCESSING_SECONDS_PER_PAGE = 15;
+const PROCESSING_SECONDS_PER_PAGE = 10;
 
 const Container = styled.div`
     // for showing a loading progress estimator background
@@ -240,8 +240,10 @@ const SmartSentenceDetection = props => {
         highlightText();
     }, [pdfViewer, showHighlights, summaryFetched, isLoading, pdf, setShowHighlights, dispatch]);
 
+    const estimatedLoadingTime = pdfViewer && pdfViewer.pagesCount ? PROCESSING_SECONDS_PER_PAGE * pdfViewer.pagesCount : PROCESSING_SECONDS_PER_PAGE;
+
     return (
-        <Container className="mb-5" isLoading={isLoading} estimatedLoadingTime={PROCESSING_SECONDS_PER_PAGE}>
+        <Container className="mb-5" isLoading={isLoading} estimatedLoadingTime={estimatedLoadingTime}>
             <Tippy content="Automatically highlight sentences that are potentially useful for annotation" placement="bottom">
                 <span>Smart sentence detection</span>
             </Tippy>
