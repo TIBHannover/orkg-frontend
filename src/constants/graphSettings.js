@@ -37,7 +37,11 @@ export const PREDICATES = {
     TEMPLATE_LABEL_FORMAT: 'TemplateLabelFormat',
     HAS_PART: 'HasPart',
     HAS_CONTENT: 'hasContent',
-    CONTAINS: 'contains'
+    CONTAINS: 'contains',
+    COMPARE_CONTRIBUTION: 'compareContribution',
+    HAS_PROPERTY: 'hasProperty',
+    HAS_PREVIOUS_VERSION: 'hasPreviousVersion',
+    HAS_SUBJECT: 'hasSubject'
 };
 
 export const CLASSES = {

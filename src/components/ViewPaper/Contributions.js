@@ -12,6 +12,7 @@ import SimilarContributions from './SimilarContributions';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProblemInput';
 import ContributionItemList from 'components/AddPaper/Contributions/ContributionItemList';
+import ContributionComparisons from 'components/ViewPaper/ContirbutionComparisons/ContributionComparisons';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
@@ -88,11 +89,16 @@ class Contributions extends Component {
 
     handleSelectContribution = contributionId => {
         this.setState({ loading: true, isSimilaireContributionsLoading: true });
-        const contributionIsLoaded = this.props.resources.byId[contributionId] ? true : false;
-        this.props.selectContribution({
-            contributionId,
-            contributionIsLoaded
-        });
+        const contributionIsLoaded = !!this.props.resources.byId[contributionId];
+        // get the contribution label
+        const contributionResource = this.props.contributions.find(c => c.id === this.props.selectedContribution);
+        if (contributionResource) {
+            this.props.selectContribution({
+                contributionId,
+                contributionIsLoaded,
+                contributionLabel: contributionResource.label
+            });
+        }
         getSimilaireContribution(this.state.selectedContribution)
             .then(similaireContributions => {
                 const similaireContributionsData = similaireContributions.map(paper => {
@@ -152,7 +158,12 @@ class Contributions extends Component {
 
         let shared = 1;
         if (Object.keys(this.props.resources.byId).length !== 0 && (this.props.selectedResource || selectedContributionId)) {
-            shared = this.props.resources.byId[this.props.selectedResource ? this.props.selectedResource : selectedContributionId].shared;
+            const resourceObj = this.props.resources.byId[this.props.selectedResource ? this.props.selectedResource : selectedContributionId];
+            if (resourceObj) {
+                shared = resourceObj.shared;
+            } else {
+                shared = 0;
+            }
         }
 
         return (
@@ -289,11 +300,13 @@ class Contributions extends Component {
                                                     syncBackend={this.props.enableEdit}
                                                     openExistingResourcesInDialog={false}
                                                     templatesFound={false}
+                                                    initOnLocationChange={false}
+                                                    keyToKeepStateOnLocationChange={this.props.paperId}
                                                 />
                                             )}
                                         </FormGroup>
 
-                                        <FormGroup>
+                                        <div>
                                             <Title>Similar contributions</Title>
                                             {this.state.isSimilaireContributionsLoading && (
                                                 <div>
@@ -336,7 +349,9 @@ class Contributions extends Component {
                                                     </span>
                                                 </Link>
                                             )}
-                                        </FormGroup>
+                                        </div>
+
+                                        {selectedContributionId && <ContributionComparisons contributionId={selectedContributionId} />}
                                     </Form>
                                 </StyledHorizontalContribution>
                             </AnimationContainer>
@@ -388,7 +403,6 @@ const mapStateToProps = (state, ownProps) => {
         ),
         ...(researchProblems.length > 0 ? researchProblems.map(c => c.id) : [])
     ];
-
     return {
         researchProblemsIds: researchProblemsIds,
         researchProblems: researchProblems,

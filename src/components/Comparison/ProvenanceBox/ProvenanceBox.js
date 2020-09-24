@@ -1,133 +1,96 @@
-import React, { Component } from 'react';
-import { getResource, getObservatoryAndOrganizationInformation, getUserInformationById } from 'network';
-import { StyledItemProvenanceBox, AnimationContainer, ProvenanceBoxTabs, ErrorMessage, SidebarStyledBox } from './styled';
-import moment from 'moment';
+import React from 'react';
+import { Row, Card, CardBody, CardTitle } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
-class ProvenanceBox extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            observatoryInfo: {},
-            isLoading: false
-        };
-    }
+const StyledOrganizationCard = styled.div`
+    border: 0;
+    .logoContainer {
+        padding: 1rem;
+        position: relative;
+        display: block;
 
-    componentDidMount() {
-        this.loadObservatory();
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.resourceId !== prevProps.resourceId) {
-            this.loadObservatory();
+        &::before {
+            // for aspect ratio
+            content: '';
+            display: block;
+            padding-bottom: 150px;
+        }
+        img {
+            position: absolute;
+            max-width: 100%;
+            max-height: 150px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        &:active,
+        &:focus {
+            outline: 0;
+            border: none;
+            -moz-outline-style: none;
         }
     }
+`;
 
-    loadObservatory = () => {
-        this.setState({ isLoading: true });
-        if (this.props.resourceId) {
-            getResource(this.props.resourceId)
-                .then(comparisonResource => {
-                    console.log(comparisonResource);
-
-                    if (
-                        comparisonResource.observatory_id &&
-                        comparisonResource.observatory_id !== '00000000-0000-0000-0000-000000000000' &&
-                        comparisonResource.created_by &&
-                        comparisonResource.created_by !== '00000000-0000-0000-0000-000000000000'
-                    ) {
-                        const observatory = getObservatoryAndOrganizationInformation(
-                            comparisonResource.observatory_id,
-                            comparisonResource.organization_id
-                        );
-                        const creator = getUserInformationById(comparisonResource.created_by);
-                        Promise.all([observatory, creator]).then(data => {
-                            this.setState({
-                                observatoryInfo: {
-                                    ...data[0],
-                                    created_at: comparisonResource.created_at,
-                                    created_by: data[1],
-                                    extraction_method: comparisonResource.extraction_method
-                                },
-                                isLoading: false
-                            });
-                        });
-                    }
-                })
-                .catch(error => {
-                    this.setState({
-                        isLoading: false
-                    });
-                });
-        }
-    };
-
-    render() {
-        return (
-            <>
-                {!this.state.isLoading && this.state.observatoryInfo.created_by && (
-                    <div className="col-md-12 ">
+function ProvenanceBox(props) {
+    return (
+        <div className="container box rounded-lg mt-4">
+            <Row>
+                <div className="col-8 d-flex align-items-center ">
+                    <div className="pt-4 pb-4 pl-4 pr-4">
+                        {props.provenance && (
+                            <>
+                                <p>Observatory:</p>
+                                <h4 className="mb-3">
+                                    <Link to={reverse(ROUTES.OBSERVATORY, { id: props.provenance.id })}>{props.provenance.name}</Link>
+                                </h4>
+                            </>
+                        )}
+                        <i>Added by</i>
                         <br />
-                        <br />
-                        <SidebarStyledBox
-                            className="box rounded-lg"
-                            style={{ minHeight: 430, width: 240, backgroundColor: '#f8f9fb', float: 'right' }}
-                        >
-                            <ProvenanceBoxTabs className="clearfix d-flex">
-                                <div id="div1" className="h6 tab">
-                                    <span style={{ textAlign: 'center', fontWeight: 'bold', marginLeft: 73 }}>Provenance</span>
-                                    <br />
-                                    <br />
-                                    <AnimationContainer classNames="fadeIn">
-                                        <div>
-                                            <ul className="list-group">
-                                                <StyledItemProvenanceBox>
-                                                    <b>{this.state.observatoryInfo.name}</b>
-                                                    <br />
-                                                    <Link to={reverse(ROUTES.ORGANIZATION, { id: this.state.observatoryInfo.organization.id })}>
-                                                        <img
-                                                            style={{ marginTop: 8, marginBottom: 8, maxWidth: '80%', height: 'auto' }}
-                                                            class="mx-auto d-block"
-                                                            src={this.state.observatoryInfo.organization.logo}
-                                                            alt=""
-                                                        />
-                                                    </Link>
-                                                </StyledItemProvenanceBox>
-
-                                                <StyledItemProvenanceBox>
-                                                    <b>DATE ADDED</b>
-                                                    <br />
-                                                    {moment(this.state.observatoryInfo.created_at).format('DD MMM YYYY')}
-                                                </StyledItemProvenanceBox>
-
-                                                <StyledItemProvenanceBox>
-                                                    <b>ADDED BY</b>
-                                                    <br />
-                                                    <Link to={reverse(ROUTES.USER_PROFILE, { userId: this.state.observatoryInfo.created_by.id })}>
-                                                        {this.state.observatoryInfo.created_by.display_name}
-                                                    </Link>
-                                                </StyledItemProvenanceBox>
-                                            </ul>
-                                        </div>
-                                    </AnimationContainer>
-                                </div>
-                            </ProvenanceBoxTabs>
-                            {this.state.observatoryInfo.extraction_method === 'AUTOMATIC' && (
-                                <ErrorMessage className="alert-server">The data has been partially imported automatically.</ErrorMessage>
+                        <Link to={reverse(ROUTES.USER_PROFILE, { userId: props.creator.id })}>{props.creator.display_name}</Link>
+                    </div>
+                </div>
+                {props.provenance && (
+                    <div className="col-4">
+                        <div className={!props.provenance.organization.logo ? 'm-4' : ''}>
+                            {props.provenance.organization.logo && (
+                                <StyledOrganizationCard className="card h-100">
+                                    <Link className="logoContainer" to={reverse(ROUTES.ORGANIZATION, { id: props.provenance.organization.id })}>
+                                        <img
+                                            className="mx-auto p-2"
+                                            src={props.provenance.organization.logo}
+                                            alt={`${props.provenance.organization.name} logo`}
+                                        />
+                                    </Link>
+                                </StyledOrganizationCard>
                             )}
-                        </SidebarStyledBox>
+                            {!props.provenance.organization.logo && (
+                                <Card className="h-100">
+                                    <CardBody className="d-flex">
+                                        <CardTitle className="align-self-center text-center flex-grow-1">
+                                            <Link to={reverse(ROUTES.ORGANIZATION, { id: props.provenance.organization.id })}>
+                                                {props.provenance.organization.name}
+                                            </Link>
+                                        </CardTitle>
+                                    </CardBody>
+                                </Card>
+                            )}
+                        </div>
                     </div>
                 )}
-            </>
-        );
-    }
+            </Row>
+        </div>
+    );
 }
 
 ProvenanceBox.propTypes = {
-    resourceId: PropTypes.string.isRequired
+    provenance: PropTypes.object,
+    creator: PropTypes.object
 };
 
 export default ProvenanceBox;

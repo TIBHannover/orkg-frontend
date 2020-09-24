@@ -22,12 +22,16 @@ const PaperCardStyled = styled.div`
     &.selected .options {
         display: block;
     }
+
+    &:last-child {
+        border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
+    }
 `;
 
 class ComparisonCard extends Component {
     render() {
         return (
-            <PaperCardStyled className="list-group-item list-group-item-action ">
+            <PaperCardStyled rounded={this.props.rounded} className="list-group-item list-group-item-action ">
                 <Row>
                     <Col sm={12}>
                         <Link to={reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparison.id })}>
@@ -64,7 +68,8 @@ ComparisonCard.propTypes = {
         url: PropTypes.string,
         reference: PropTypes.string,
         created_at: PropTypes.string
-    }).isRequired
+    }).isRequired,
+    rounded: PropTypes.string
 };
 
 export default ComparisonCard;
