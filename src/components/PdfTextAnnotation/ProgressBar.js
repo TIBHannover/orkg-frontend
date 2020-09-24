@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 import { upperFirst, filter, meanBy } from 'lodash';
 import { Progress } from 'reactstrap';
 
+const RECOMMENDED_ANNOTATION_AMOUNT = 2;
+
 const ProgressBar = () => {
     const { recommendedClasses } = useOntology();
     const annotations = useSelector(state => state.pdfTextAnnotation.annotations);
@@ -12,7 +14,7 @@ const ProgressBar = () => {
     const classesWithCompletion = recommendedClasses.map(_class => {
         const annotationsFiltered = filter(annotations, { type: _class.iri });
         const amount = annotationsFiltered.length;
-        const percentage = amount >= 3 ? 100 : Math.round(100 * (amount / 3));
+        const percentage = amount >= RECOMMENDED_ANNOTATION_AMOUNT ? 100 : Math.round(100 * (amount / RECOMMENDED_ANNOTATION_AMOUNT));
 
         return {
             label: _class.label,
@@ -32,7 +34,7 @@ const ProgressBar = () => {
                     {classesWithCompletion.map((_class, index) => (
                         <tr key={_class.label}>
                             <td>
-                                {upperFirst(_class.label)} ({_class.amount}/3)
+                                {upperFirst(_class.label)} ({_class.amount}/{RECOMMENDED_ANNOTATION_AMOUNT})
                             </td>
                             <td className="text-right">{_class.percentage}%</td>
                         </tr>

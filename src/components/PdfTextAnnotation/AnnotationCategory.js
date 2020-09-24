@@ -92,9 +92,9 @@ const AnnotationCategory = props => {
                         {upperFirst(annotationClass.label)} <QuestionIcon icon={faQuestionCircle} />
                     </span>
                 </Tippy>
-                <Tippy content="Is is recommended to have maximum 3 annotated sentences per type">
+                <Tippy content="It is recommended to have maximum 3 annotated sentences per type">
                     <AnnotationAmount>
-                        {amount > 3 ? <Icon icon={faExclamationTriangle} /> : ''} {amount}/3 annotations
+                        {amount > 3 ? <Icon icon={faExclamationTriangle} /> : ''} {amount} annotation{amount !== 1 ? 's' : ''}
                     </AnnotationAmount>
                 </Tippy>
             </h2>
