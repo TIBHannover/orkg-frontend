@@ -626,6 +626,8 @@ function getResearchField(paperStatements) {
     let researchField = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD);
     if (researchField.length > 0) {
         researchField = { ...researchField[0].object, statementId: researchField[0].id };
+    } else {
+        researchField = {};
     }
     return researchField;
 }
@@ -659,7 +661,7 @@ function getDOI(paperStatements) {
             doi = doi.substring(doi.indexOf('10.'));
         }
     } else {
-        doi = null;
+        doi = '';
     }
     return [doi, doiResourceId];
 }

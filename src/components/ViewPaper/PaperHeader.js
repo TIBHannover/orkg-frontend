@@ -30,7 +30,7 @@ class PaperHeader extends Component {
                 ) : (
                     ''
                 )}
-                {this.props.viewPaper.researchField && (
+                {this.props.viewPaper.researchField && this.props.viewPaper.researchField.id && (
                     <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.props.viewPaper.researchField.id })}>
                         <span className="badge badge-lightblue mr-2 mb-2">
                             <Icon icon={faBars} className="text-primary" /> {this.props.viewPaper.researchField.label}
