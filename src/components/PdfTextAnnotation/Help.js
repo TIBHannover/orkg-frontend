@@ -26,12 +26,12 @@ const Help = props => {
             content: (
                 <>
                     <p>
-                        A warm welcome at the <strong>ORKG paper annotator</strong>! In this help tour, we will explain the most important features of
-                        the annotator tool.
+                        A warm welcome at the <strong>ORKG paper annotator</strong>! In this help tour, we will explain the key features of the
+                        annotator tool.
                     </p>
                     <p>
                         The goal is to select the <strong>most important sentences</strong> within your paper. Afterwards you can annotate the
-                        sentence by selecting the type of the sentence.
+                        sentence by selecting the type.
                     </p>
                     <p>Let's have a look at some of the features. Click the arrow below.</p>
                 </>
@@ -47,7 +47,7 @@ const Help = props => {
                         sufficiently annotated your paper.
                     </p>
                     <p>
-                        The completion is only a suggestion, you can annotate less or more sentences then suggested. So in the end, it is up to you!
+                        The completion is only a suggestion, you can annotate less or more sentences than suggested. So in the end, it is up to you!
                     </p>
                 </>
             ),
@@ -61,7 +61,7 @@ const Help = props => {
                         The Smart Sentence Detection will automatically highlight sentences within your paper that could potentially be interesting.{' '}
                     </p>
                     <p>
-                        Suggestions within your paper will be highlighted with a light blue color, like this: <br />
+                        Suggestions within your paper will be highlighted with a light blue color like this: <br />
                         <span style={{ background: '#d2d5df' }}>Lorum Ipsum Dolor Sit Amet</span>
                         <br />
                     </p>
@@ -85,8 +85,8 @@ const Help = props => {
                 <>
                     <p>Here, the five most important annotation types are listed. In total, there are 25 types you can use to annotate a sentence.</p>
                     <p>
-                        We recommend that you annotate a maximum of 3 sentences for each of the recommended types. But again: this is a suggestion,
-                        please annotate the types that are relevant according to your judgement.
+                        We recommend that you annotate a maximum of <strong>3 sentences</strong> for each of the recommended types. But again: this is
+                        a suggestion, please annotate the types that are relevant according to your judgement.
                     </p>
                     <p>If you annotate one of the other 20 types, they will automatically appear at the bottom of this list.</p>
                 </>
