@@ -68,7 +68,13 @@ const SmartSentenceDetection = props => {
     const selectText = useCallback((beginNode, endNode) => {
         const sel = window.getSelection();
         const range = document.createRange();
-        const endOffset = endNode.childNodes.length;
+        const endOffset = endNode && endNode.childNodes ? endNode.childNodes.length : 0;
+
+        // if something went wrong with detecting the begin and end, don't select text at all
+        if (!beginNode || !endNode) {
+            return;
+        }
+
         range.setStart(beginNode, 0);
         range.setEnd(endNode, endOffset);
         sel.removeAllRanges();
@@ -84,13 +90,14 @@ const SmartSentenceDetection = props => {
     const getFullSentences = useCallback(() => {
         const highlights = document.getElementsByClassName('highlight');
         const sentences = [];
-        let sentenceIndex = 0;
+        let sentenceIndex = -1;
 
         for (const highlight of highlights) {
             if (highlight.classList.contains('begin')) {
                 sentences.push({
                     begin: highlight
                 });
+                sentenceIndex++;
             } else if (highlight.classList.contains('middle')) {
                 if (!sentences[sentenceIndex].middle) {
                     sentences[sentenceIndex].middle = [];
@@ -98,7 +105,6 @@ const SmartSentenceDetection = props => {
                 sentences[sentenceIndex].middle.push(highlight);
             } else if (highlight.classList.contains('end')) {
                 sentences[sentenceIndex].end = highlight;
-                sentenceIndex++;
             }
         }
 
@@ -126,6 +132,14 @@ const SmartSentenceDetection = props => {
                 if (sentence.begin === e.target || sentence.end === e.target || (sentence.middle && sentence.middle.includes(e.target))) {
                     beginNode = sentence.begin;
                     endNode = sentence.end;
+
+                    // sometimes there is no endNode for a select, then take the last node from the middle
+                    if (!endNode) {
+                        const lastMiddleItem = sentence.middle && sentence.middle.length > 0 ? sentence.middle.slice(-1)[0] : null;
+                        // fallback there are also no middle node, the end is the same as the beginning
+                        endNode = lastMiddleItem || beginNode;
+                    }
+                    break;
                 }
             }
 
