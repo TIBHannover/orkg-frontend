@@ -243,7 +243,7 @@ const SmartSentenceDetection = props => {
     const estimatedLoadingTime = pdfViewer && pdfViewer.pagesCount ? PROCESSING_SECONDS_PER_PAGE * pdfViewer.pagesCount : PROCESSING_SECONDS_PER_PAGE;
 
     return (
-        <Container className="mb-5" isLoading={isLoading} estimatedLoadingTime={estimatedLoadingTime}>
+        <Container className="mb-5" isLoading={isLoading} estimatedLoadingTime={estimatedLoadingTime} id="smart-sentence-detection">
             <Tippy content="Automatically highlight sentences that are potentially useful for annotation" placement="bottom">
                 <span>Smart sentence detection</span>
             </Tippy>

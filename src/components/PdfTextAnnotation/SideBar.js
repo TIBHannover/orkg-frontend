@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faHeart, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faTrash, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import AnnotationCategory from 'components/PdfTextAnnotation/AnnotationCategory';
 import Completion from 'components/PdfTextAnnotation/ProgressBar';
 import Save from './Save';
 import SmartSentenceDetection from './SmartSentenceDetection';
 import { discardChanges } from 'actions/pdfTextAnnotation';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import Help from './Help';
 
 const SideBarStyled = styled.div`
     height: calc(100vh - 73px);
@@ -33,6 +34,8 @@ const SideBar = () => {
     const { recommendedClasses, nonRecommendedClasses } = useOntology();
     const [saveModalIsOpen, setSaveModalIsOpen] = useState(false);
     const [saveDropdownIsOpen, setSaveDropdownIsOpen] = useState(false);
+    const [helpIsOpen, setHelpIsOpen] = useState(false);
+    const pdfViewer = useSelector(state => state.pdfTextAnnotation.pdfViewer);
     const dispatch = useDispatch();
 
     const toggleSaveModal = () => {
@@ -45,17 +48,29 @@ const SideBar = () => {
         }
     };
 
+    // ensure the help tour is opened automatically only the first time the pdfViewer is initialized
+    useEffect(() => {
+        if (!pdfViewer) {
+            return;
+        }
+        setHelpIsOpen(true);
+    }, [pdfViewer]);
+
     return (
         <SideBarStyled>
             <div className="d-flex justify-content-between align-items-center">
                 <h1 className="h4 mt-4 mb-4">Paper annotator</h1>
 
-                <ButtonDropdown isOpen={saveDropdownIsOpen} toggle={() => setSaveDropdownIsOpen(!saveDropdownIsOpen)}>
+                <ButtonDropdown isOpen={saveDropdownIsOpen} toggle={() => setSaveDropdownIsOpen(!saveDropdownIsOpen)} id="save-annotations">
                     <Button id="caret" color="primary" onClick={toggleSaveModal}>
                         Save
                     </Button>
                     <DropdownToggle caret color="primary" className="pl-1 pr-2" />
                     <DropdownMenu>
+                        <DropdownItem onClick={() => setHelpIsOpen(true)}>
+                            <Icon icon={faQuestionCircle} className="mr-2 text-secondary" />
+                            Start help tour
+                        </DropdownItem>
                         <DropdownItem onClick={handleDiscardChanges}>
                             <Icon icon={faTrash} className="mr-2 text-secondary" />
                             Discard changes
@@ -68,9 +83,11 @@ const SideBar = () => {
 
             <SmartSentenceDetection />
 
-            {recommendedClasses.map(annotationClass => (
-                <AnnotationCategory annotationClass={annotationClass} hideEmpty={false} key={annotationClass.iri} />
-            ))}
+            <div id="annotation-categories">
+                {recommendedClasses.map(annotationClass => (
+                    <AnnotationCategory annotationClass={annotationClass} hideEmpty={false} key={annotationClass.iri} />
+                ))}
+            </div>
 
             <hr />
 
@@ -81,6 +98,8 @@ const SideBar = () => {
             <HeartsAreRed className="text-center pt-3">
                 Made with <Icon icon={faHeart} /> in Hannover
             </HeartsAreRed>
+
+            <Help isOpen={helpIsOpen} setIsOpen={setHelpIsOpen} />
 
             <Save isOpen={saveModalIsOpen} toggle={toggleSaveModal} />
         </SideBarStyled>
