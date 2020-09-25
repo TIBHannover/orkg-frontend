@@ -5,7 +5,6 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { CustomInput } from 'reactstrap';
 import Tippy from '@tippy.js/react';
 import { summarizeText } from 'network';
-import tokenizer from 'sbd';
 import { createGlobalStyle } from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { setShowHighlights as setShowHighlightsAction, setSummaryFetched as setSummaryFetchedAction } from 'actions/pdfTextAnnotation';
@@ -168,6 +167,27 @@ const SmartSentenceDetection = props => {
             return;
         }
 
+        /**
+         * from natural package, it is not possible to correctly load the dependency (not a problem anyway since it's quite large)
+         * so copied from: https://github.com/NaturalNode/natural/blob/master/lib/natural/tokenizers/sentence_tokenizer.js
+         */
+        const tokenizeSentence = text => {
+            try {
+                const tokens = text.match(
+                    // eslint-disable-next-line no-useless-escape
+                    /(?<=\s+|^)[\"\'\‘\“\'\"\[\(\{\⟨](.*?[.?!])(\s[.?!])*[\"\'\’\”\'\"\]\)\}\⟩](?=\s+|$)|(?<=\s+|^)\S(.*?[.?!])(\s[.?!])*(?=\s+|$)/g
+                );
+
+                if (!tokens) {
+                    return [text];
+                }
+
+                return tokens.map(s => s.trim());
+            } catch (e) {
+                return [text];
+            }
+        };
+
         const setSummaryFetched = fetched => dispatch(setSummaryFetchedAction(fetched));
 
         const getAllText = () => {
@@ -215,9 +235,8 @@ const SmartSentenceDetection = props => {
                     };
                 })
                 .then(({ summary, fullText }) => {
-                    const summarySentences = tokenizer.sentences(summary, {
-                        preserve_whitespace: true
-                    });
+                    let summarySentences = tokenizeSentence(summary);
+
                     // a dirty trick to ensure the title of the paper is not highlighted
                     // the summarizer often includes the title as part of the summary because it is considered important
                     if (
@@ -229,6 +248,9 @@ const SmartSentenceDetection = props => {
                         // remove the first sentence
                         summarySentences.shift();
                     }
+
+                    // ensure to empty strings are not part of the search query (PDF.js bug will crash the browser)
+                    summarySentences = summarySentences.filter(item => item.length);
 
                     pdfViewer.findController.executeCommand('find', {
                         query: summarySentences,
