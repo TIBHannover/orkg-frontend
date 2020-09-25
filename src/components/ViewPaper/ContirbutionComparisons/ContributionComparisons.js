@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Alert } from 'reactstrap';
+import { Container } from 'reactstrap';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import useContributionComparison from './hooks/useContributionComparison';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

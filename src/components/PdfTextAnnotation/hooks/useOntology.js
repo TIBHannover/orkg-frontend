@@ -23,7 +23,8 @@ const useOntology = () => {
             comment:
                 'Presentation of information that is essential for understanding the situation or problem that is the subject of the publication. In a journal article, the background is usually part of the Introduction, but may be present as separated section.            ',
             recommendedProperty: true,
-            suggestedProperty: true
+            suggestedProperty: true,
+            color: '#F6ABAB'
         },
         /*{
             label: 'bibliographic reference',
@@ -143,7 +144,6 @@ const useOntology = () => {
             comment:
                 "A description in a research paper documenting the specialized materials used in the work described. This description is often combined with a description of the methods used, in a section entitled 'Methods and Materials', 'Experimental' or a related term.",
             recommendedProperty: false,
-            color: '#F6ABAB',
             suggestedProperty: true
         },
         {
