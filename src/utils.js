@@ -3,6 +3,7 @@ import queryString from 'query-string';
 import { flattenDepth, uniq } from 'lodash';
 import rdf from 'rdf';
 import { PREDICATES } from 'constants/graphSettings';
+import { isString } from 'lodash';
 
 export function hashCode(s) {
     return s.split('').reduce((a, b) => {
@@ -543,6 +544,62 @@ export function getPublicationYear(paperStatements) {
     return [publicationYear, publicationYearResourceId];
 }
 
+// TODO: could be part of a 'parseDoi' hook when the add paper wizard is refactored to support hooks
+export const parseCiteResult = paper => {
+    let paperTitle = '',
+        paperAuthors = [],
+        paperPublicationMonth = '',
+        paperPublicationYear = '',
+        doi = '',
+        publishedIn = '';
+
+    try {
+        const { title, subtitle, author, issued, DOI, 'container-title': containerTitle } = paper.data[0];
+
+        paperTitle = title;
+        if (subtitle && subtitle.length > 0) {
+            // include the subtitle
+            paperTitle = `${paperTitle}: ${subtitle[0]}`;
+        }
+        if (author) {
+            paperAuthors = author.map(author => {
+                let fullname = [author.given, author.family].join(' ').trim();
+                if (!fullname) {
+                    fullname = author.literal ? author.literal : '';
+                }
+                return {
+                    label: fullname,
+                    id: fullname,
+                    orcid: author.ORCID ? author.ORCID : ''
+                };
+            });
+        }
+        const [year, month] = issued['date-parts'][0];
+
+        if (month) {
+            paperPublicationMonth = month;
+        }
+        if (year) {
+            paperPublicationYear = year;
+        }
+        doi = DOI ? DOI : '';
+        if (containerTitle && isString(containerTitle)) {
+            publishedIn = containerTitle;
+        }
+    } catch (e) {
+        console.log('Error setting paper data: ', e);
+    }
+
+    return {
+        paperTitle,
+        paperAuthors,
+        paperPublicationMonth,
+        paperPublicationYear,
+        doi,
+        publishedIn
+    };
+};
+
 function getURL(paperStatements) {
     let url = paperStatements.filter(statement => statement.predicate.id === PREDICATES.URL);
     let urlResourceId = 0;
@@ -572,6 +629,8 @@ function getResearchField(paperStatements) {
     let researchField = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD);
     if (researchField.length > 0) {
         researchField = { ...researchField[0].object, statementId: researchField[0].id };
+    } else {
+        researchField = {};
     }
     return researchField;
 }
@@ -605,7 +664,7 @@ function getDOI(paperStatements) {
             doi = doi.substring(doi.indexOf('10.'));
         }
     } else {
-        doi = null;
+        doi = '';
     }
     return [doi, doiResourceId];
 }

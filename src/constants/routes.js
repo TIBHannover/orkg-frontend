@@ -40,5 +40,6 @@ export default {
     STATS: '/stats',
     CHANGELOG: '/changelog',
     FEATURED_COMPARISONS: '/featured-comparisons',
+    PDF_TEXT_ANNOTATION: '/pdf-text-annotation',
     PDF_ANNOTATION: '/pdf-annotation'
 };

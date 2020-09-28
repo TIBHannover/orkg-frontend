@@ -14,7 +14,7 @@ import ROUTES from 'constants/routes';
 
 const StyledBody = styled.div`
     display: flex;
-    min-height: 100vh;
+    min-height: calc(100vh - 30px);
     flex-direction: column;
     padding-top: 73px;
     margin-top: 30px;
@@ -74,7 +74,7 @@ CloseToastButton.propTypes = {
 
 export default function DefaultLayout(props) {
     const location = useLocation();
-    const showFooter = location.pathname !== ROUTES.PDF_ANNOTATION;
+    const showFooter = location.pathname !== ROUTES.PDF_TEXT_ANNOTATION && location.pathname !== ROUTES.PDF_ANNOTATION;
     const [cookies, setCookie] = useCookies(['cookieInfoDismissed']);
     const [visible, setVisible] = useState(!Boolean(cookies.cookieInfoDismissed));
 

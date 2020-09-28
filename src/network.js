@@ -67,7 +67,7 @@ export const submitGetRequest = (url, headers, send_token = false) => {
     });
 };
 
-const submitPostRequest = (url, headers, data, jsonStringify = true, send_token = true) => {
+export const submitPostRequest = (url, headers, data, jsonStringify = true, send_token = true) => {
     if (!url) {
         throw new Error('Cannot submit POST request. URL is null or undefined.');
     }
@@ -109,7 +109,7 @@ const submitPostRequest = (url, headers, data, jsonStringify = true, send_token 
     });
 };
 
-const submitPutRequest = (url, headers, data) => {
+const submitPutRequest = (url, headers, data, jsonStringify = true) => {
     if (!url) {
         throw new Error('Cannot submit PUT request. URL is null or undefined.');
     }
@@ -121,8 +121,12 @@ const submitPutRequest = (url, headers, data) => {
         myHeaders.append('Authorization', `Bearer ${token}`);
     }
 
+    if (jsonStringify) {
+        data = JSON.stringify(data);
+    }
+
     return new Promise((resolve, reject) => {
-        fetch(url, { method: 'PUT', headers: myHeaders, body: JSON.stringify(data) })
+        fetch(url, { method: 'PUT', headers: myHeaders, body: data })
             .then(response => {
                 if (!response.ok) {
                     const json = response.json();
@@ -776,4 +780,25 @@ export const getContributorsByResearchProblemId = ({ id, page = 1, items = 9999 
 export const getAuthorsByResearchProblemId = ({ id, page = 1, items = 9999 }) => {
     const params = queryString.stringify({ page: page, items: items });
     return submitGetRequest(`${problemsUrl}${encodeURIComponent(id)}/authors?${params}`);
+};
+
+export const classifySentence = ({ sentence, labels }) => {
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+
+    const data = {
+        sentence,
+        labels
+    };
+
+    return submitPutRequest(`${annotationServiceUrl}classifySentence/`, headers, data);
+};
+
+export const summarizeText = ({ text, ratio }) => {
+    const headers = {
+        'Content-Type': 'text/plain'
+    };
+
+    return submitPutRequest(`${annotationServiceUrl}summarizeText/?ratio=${ratio}`, headers, text, false);
 };
