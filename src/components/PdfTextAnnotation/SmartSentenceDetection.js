@@ -174,18 +174,17 @@ const SmartSentenceDetection = props => {
         const tokenizeSentence = text => {
             try {
                 let sentenceSplitterRegex = '';
+                // prevent error in older browsers, that don't support lookbehinds (https://stackoverflow.com/a/50011952)
+                // see if the regex parses, otherwise use alternative (less sophisticated) regex
                 try {
                     // eslint-disable-next-line no-useless-escape
                     // prettier-ignore
                     sentenceSplitterRegex = RegExp("(?<=\\s+|^)[\\\"\\'\\‘\\“\\'\\\"\\[\\(\\{\\⟨](.*?[.?!])(\\s[.?!])*[\\\"\\'\\’\\”\\'\\\"\\]\\)\\}\\⟩](?=\\s+|$)|(?<=\\s+|^)\\S(.*?[.?!])(\\s[.?!])*(?=\\s+|$)", "g");
                 } catch (e) {
                     // eslint-disable-next-line no-useless-escape
-                    sentenceSplitterRegex = RegExp(/([\"\'\‘\“\'\"\[\(\{\⟨][^\.\?\!]+[\.\?\!][\"\'\’\”\'\"\]\)\}\⟩]|[^\.\?\!]+[\.\?\!\s]*)/g);
+                    sentenceSplitterRegex = /([\"\'\‘\“\'\"\[\(\{\⟨][^\.\?\!]+[\.\?\!][\"\'\’\”\'\"\]\)\}\⟩]|[^\.\?\!]+[\.\?\!\s]*)/g;
                 }
-                console.log('sentenceSplitterRegex', sentenceSplitterRegex);
                 const tokens = text.match(sentenceSplitterRegex);
-
-                console.log('tokens', tokens);
 
                 if (!tokens) {
                     return [text];
