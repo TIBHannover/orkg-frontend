@@ -3,6 +3,32 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.18](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.17.1...V0.18) - 2020-09-28
+
+### Merged
+
+- feat: Pdf annotation text [`#366`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/366)
+- feat(Comparison): New method, assign DOI, simple versioning, provenance box, UI enhancement [`#333`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/333)
+- ui: Add cookie banner [`#358`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/358)
+- feat: Statement Browser Extensions [`#354`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/354)
+- fix: Filter out deleted papers from Browse by research field [`#356`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/356)
+- fix: Use a unique key to render StatementItem [`#357`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/357)
+- fix: Number of occurrences in contribution level [`#364`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/364)
+- fix: Make the resource link visible in the breadcrumbs if the label is long [`#361`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/361)
+- style: replace 'predicate' with 'property' throughout the UI [`#360`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/360)
+
+### Fixed
+
+- Merge branch '243-comparison-refactoring' into 'master' [`#315`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/315)
+- Merge branch '307-cookie-banner' into 'master' [`#307`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/307)
+- Merge branch '298-statement-browser-extensions' into 'master' [`#298`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/298)
+- Merge branch '303-filter-out-deleted-papers-from-browse-by-research-field' into 'master' [`#303`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/303)
+- Merge branch '304-using-templates-in-existing-contributions' into 'master' [`#304`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/304)
+- Merge branch '314-number-of-occurrences-rules-doesn-t-work-on-contribution-level' into 'master' [`#314`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/314)
+- Merge branch '312-resource-link-is-not-visible-in-the-breadcrumbs-if-the-label-is-long' into 'master' [`#312`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/312)
+- Merge branch '310-use-term-property-throughout-the-ui-for-consistency' into 'master' [`#310`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/310)
+
+---
 ## [0.17.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.17...V0.17.1) - 2020-08-21
 
 ### Merged
