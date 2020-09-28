@@ -173,10 +173,19 @@ const SmartSentenceDetection = props => {
          */
         const tokenizeSentence = text => {
             try {
-                const tokens = text.match(
+                let sentenceSplitterRegex = '';
+                try {
                     // eslint-disable-next-line no-useless-escape
-                    /(?<=\s+|^)[\"\'\‘\“\'\"\[\(\{\⟨](.*?[.?!])(\s[.?!])*[\"\'\’\”\'\"\]\)\}\⟩](?=\s+|$)|(?<=\s+|^)\S(.*?[.?!])(\s[.?!])*(?=\s+|$)/g
-                );
+                    // prettier-ignore
+                    sentenceSplitterRegex = RegExp("(?<=\\s+|^)[\\\"\\'\\‘\\“\\'\\\"\\[\\(\\{\\⟨](.*?[.?!])(\\s[.?!])*[\\\"\\'\\’\\”\\'\\\"\\]\\)\\}\\⟩](?=\\s+|$)|(?<=\\s+|^)\\S(.*?[.?!])(\\s[.?!])*(?=\\s+|$)", "g");
+                } catch (e) {
+                    // eslint-disable-next-line no-useless-escape
+                    sentenceSplitterRegex = RegExp(/([\"\'\‘\“\'\"\[\(\{\⟨][^\.\?\!]+[\.\?\!][\"\'\’\”\'\"\]\)\}\⟩]|[^\.\?\!]+[\.\?\!\s]*)/g);
+                }
+                console.log('sentenceSplitterRegex', sentenceSplitterRegex);
+                const tokens = text.match(sentenceSplitterRegex);
+
+                console.log('tokens', tokens);
 
                 if (!tokens) {
                     return [text];
