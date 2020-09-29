@@ -120,6 +120,7 @@ function Comparison(props) {
 
     const handleChangeType = type => {
         setUrlNeedsToUpdate(true);
+        setResponseHash(null);
         setComparisonType(type);
         setDropdownMethodOpen(false);
     };
