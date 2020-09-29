@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import { setComponents } from 'actions/addTemplate';
-import { createPredicate, createClass } from 'network';
+import { createPredicate } from 'network';
 import TemplateComponent from 'components/ContributionTemplates/TemplateComponent/TemplateComponent';
 import AddPropertyTemplate from 'components/StatementBrowser/AddProperty/AddPropertyTemplate';
 import update from 'immutability-helper';
@@ -50,12 +50,11 @@ function ComponentsTab(props) {
 
     const handleClassOfPropertySelect = async (selected, action, index) => {
         if (action.action === 'create-option') {
-            const result = await ConfirmClass({
+            const newClass = await ConfirmClass({
                 label: selected.label
             });
-            if (result) {
-                const newClass = await createClass(selected.label, result.uri ? result.uri : null);
-                selected = { id: newClass.id, label: selected.label };
+            if (newClass) {
+                selected = { id: newClass.id, label: newClass.label };
             } else {
                 return null;
             }

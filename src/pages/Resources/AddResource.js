@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
-import { createLiteralStatement, createResource, crossrefUrl, submitGetRequest, createLiteral, classesUrl, createClass } from 'network';
+import { createLiteralStatement, createResource, crossrefUrl, submitGetRequest, createLiteral, classesUrl } from 'network';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { Redirect } from 'react-router-dom';
@@ -84,12 +84,11 @@ export default class AddResource extends Component {
     handleClassSelect = async (selected, { action }) => {
         if (action === 'create-option') {
             const foundIndex = selected.findIndex(x => x.__isNew__);
-            const result = await ConfirmClass({
+            const newClass = await ConfirmClass({
                 label: selected[foundIndex].label
             });
-            if (result) {
+            if (newClass) {
                 const foundIndex = selected.findIndex(x => x.__isNew__);
-                const newClass = await createClass(result.label, result.uri ? result.uri : null);
                 selected[foundIndex] = newClass;
                 this.setState({ classes: selected });
             } else {

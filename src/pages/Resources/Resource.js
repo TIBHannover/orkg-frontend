@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, Button, FormGroup, Label, FormText } from 'reactstrap';
-import { getResource, classesUrl, submitGetRequest, createClass, updateResourceClasses as updateResourceClassesNetwork } from 'network';
+import { getResource, classesUrl, submitGetRequest, updateResourceClasses as updateResourceClassesNetwork } from 'network';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
@@ -58,12 +58,11 @@ function Resource(props) {
     const handleClassSelect = async (selected, action) => {
         if (action.action === 'create-option') {
             const foundIndex = selected.findIndex(x => x.__isNew__);
-            const result = await Confirm({
+            const newClass = await Confirm({
                 label: selected[foundIndex].label
             });
-            if (result) {
+            if (newClass) {
                 const foundIndex = selected.findIndex(x => x.__isNew__);
-                const newClass = await createClass(result.label, result.uri ? result.uri : null);
                 selected[foundIndex] = newClass;
             } else {
                 return null;
