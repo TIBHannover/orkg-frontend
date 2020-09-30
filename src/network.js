@@ -637,16 +637,16 @@ export const createOrganization = (organizationName, organizationLogo, createdBy
     return submitPostRequest(organizationsUrl, { 'Content-Type': 'application/json' }, { organizationName, organizationLogo, createdBy, url });
 };
 
-export const updateOrganizationName = (id, updateValue) => {
-    return submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/name`, { 'Content-Type': 'application/json' }, { updateValue });
+export const updateOrganizationName = (id, value) => {
+    return submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/name`, { 'Content-Type': 'application/json' }, { value });
 };
 
-export const updateOrganizationUrl = (id, updateValue) => {
-    return submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/url`, { 'Content-Type': 'application/json' }, { updateValue });
+export const updateOrganizationUrl = (id, value) => {
+    return submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/url`, { 'Content-Type': 'application/json' }, { value });
 };
 
-export const updateOrganizationLogo = (id, updateValue) => {
-    return submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/logo`, { 'Content-Type': 'application/json' }, { updateValue });
+export const updateOrganizationLogo = (id, value) => {
+    return submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/logo`, { 'Content-Type': 'application/json' }, { value });
 };
 
 export const getAllObservatoriesByOrganizationId = id => {
@@ -657,16 +657,16 @@ export const getObservatoryById = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/`);
 };
 
-export const updateObservatoryName = (id, updateValue) => {
-    return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/name`, { 'Content-Type': 'application/json' }, { updateValue });
+export const updateObservatoryName = (id, value) => {
+    return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/name`, { 'Content-Type': 'application/json' }, { value });
 };
 
-export const updateObservatoryDescription = (id, updateValue) => {
-    return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/description`, { 'Content-Type': 'application/json' }, { updateValue });
+export const updateObservatoryDescription = (id, value) => {
+    return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/description`, { 'Content-Type': 'application/json' }, { value });
 };
 
-export const updateObservatoryResearchField = (id, updateValue) => {
-    return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/research_field`, { 'Content-Type': 'application/json' }, { updateValue });
+export const updateObservatoryResearchField = (id, value) => {
+    return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/research_field`, { 'Content-Type': 'application/json' }, { value });
 };
 
 export const getUsersByObservatoryId = id => {
