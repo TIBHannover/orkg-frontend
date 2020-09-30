@@ -3,6 +3,19 @@
 All notable changes to the ORKG will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.18.2](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.18.1...V0.18.2) - 2020-09-30
+
+### Merged
+
+- fix: Disable add a reference button when the comparison is published without a DOI [`#370`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/370)
+- fix: overlapping buttons pdf text annotator [`#371`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/371)
+
+### Fixed
+
+- Merge branch '319-disable-add-a-reference-button-when-the-comparison-is-published-without-a-doi' into 'master' [`#319`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/319)
+- Merge branch '320-issue-overlapping-buttons-pdf-text-editor' into 'master' [`#320`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/320)
+
+---
 ## [0.18.1](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.18...V0.18.1) - 2020-09-29
 
 ### Merged
@@ -47,25 +60,21 @@ All notable changes to the ORKG will be documented in this file. The format is b
 
 - style(Observatory): change design to three column layout [`#352`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/352)
 - fix: Loading the template of predicates and Geonames CORS issues [`#351`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/351)
+
+### Fixed
+
+- Merge branch '296-loading-the-template-of-predicates-and-geoname-cors-issues' into 'master' [`#296`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/296)
+
+---
+## [0.17](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.16...V0.17) - 2020-08-19
+
+### Merged
+
 - fix: AddValue Template addes two items [`#350`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/350)
 - feat(Homepage): show trending research problems [`#342`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/342)
 - fix: "Add filtering of deleted papers on profile page" [`#339`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/339)
 - fix: Showing formatted label while showing a Pulse indicator [`#349`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/349)
 - fix: Change Predicate class ID constant [`#348`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/348)
-
-### Fixed
-
-- Merge branch '296-loading-the-template-of-predicates-and-geoname-cors-issues' into 'master' [`#296`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/296)
-- Merge branch '295-addvalue-template-addes-two-items' into 'master' [`#295`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/295)
-- Merge branch '244-add-filtering-of-deleted-papers-on-profile-page' into 'master' [`#244`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/244)
-- Merge branch '294-case-fatality-rate-value' into 'master' [`#294`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/294)
-- Merge branch '288-handle-backend-response-for-reserved-class-ids' into 'master' [`#288`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/288)
-
----
-## [0.17](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.16...V0.17) - 2020-08-18
-
-### Merged
-
 - Autocomplete improvements [`#346`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/346)
 - fix:  Prevent Scrolling on contribution selection change (ViewPaper) [`#341`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/341)
 - fix: editing issue with Edge [`#347`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/347)
@@ -80,6 +89,10 @@ All notable changes to the ORKG will be documented in this file. The format is b
 
 ### Fixed
 
+- Merge branch '295-addvalue-template-addes-two-items' into 'master' [`#295`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/295)
+- Merge branch '244-add-filtering-of-deleted-papers-on-profile-page' into 'master' [`#244`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/244)
+- Merge branch '294-case-fatality-rate-value' into 'master' [`#294`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/294)
+- Merge branch '288-handle-backend-response-for-reserved-class-ids' into 'master' [`#288`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/288)
 - Merge branch 'Autocomplete' into 'master' [`#201`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/201)
 - Merge branch '289-prevent-scrolling-on-contribution-selection-change-viewpaper' into 'master' [`#289`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/289)
 - Merge branch '293-problem-with-editing-papers-while-opening-orkg-web-page-in-different-browsers' into 'master' [`#293`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/293)
@@ -301,7 +314,7 @@ All notable changes to the ORKG will be documented in this file. The format is b
 - Fixes #185. Published comparison url [`#185`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/issues/185)
 
 ---
-## [0.9](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.8...V0.9) - 2020-04-24
+## [0.9](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.8...V0.9) - 2020-05-05
 
 ### Merged
 
@@ -386,8 +399,6 @@ All notable changes to the ORKG will be documented in this file. The format is b
 ### Commits
 
 - Fix datacube vocabulary tabular view [`1e770d8`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/1e770d8a25143736794893550ea3d869c1efed5a)
-- Include public widget file [`3f119d8`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/3f119d86126a764d8951ab648c0f1af0bdbe6f0a)
-- Fix problem with fetching classes [`fa6223c`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/fa6223cd715f7b30283c46459705d184aab6c8a7)
 ---
 ## [0.6](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.8...V0.6) - 2020-03-10
 
@@ -478,7 +489,6 @@ All notable changes to the ORKG will be documented in this file. The format is b
 ### Commits
 
 - fix(Comparison): Export as RDF [`c6abbd6`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/c6abbd667fac2bcb441360dac68925ff12bd1674)
-- Update changelog [`fc46dbd`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/fc46dbd30c79d7a0ad6af8ef5c8e0ca9b658c61c)
 - fix(Comparison): Comparison url [`27f3e7b`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/commit/27f3e7b7966de5fb28bdb197919a3fd5e49015de)
 ---
 ## [0.5.4](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.5.3...V0.5.4) - 2020-01-17
