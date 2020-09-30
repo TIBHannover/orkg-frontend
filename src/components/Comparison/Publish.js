@@ -385,29 +385,31 @@ function Publish(props) {
                                                 value={x}
                                                 onChange={e => handleReferenceChange(e, i)}
                                             />
-                                            <InputGroupAddon addonType="append">
-                                                {references.length !== 1 && (
-                                                    <Button
-                                                        color="light"
-                                                        onClick={() => handleRemoveReferenceClick(i)}
-                                                        className="pl-3 pr-3"
-                                                        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                                                    >
-                                                        <Icon icon={faTrash} />
-                                                    </Button>
-                                                )}
-                                                {references.length - 1 === i && (
-                                                    <Button
-                                                        color="secondary"
-                                                        onClick={() => setReferences([...references, ''])}
-                                                        className="pl-3 pr-3"
-                                                        outline
-                                                        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                                                    >
-                                                        <Icon icon={faPlus} />
-                                                    </Button>
-                                                )}
-                                            </InputGroupAddon>
+                                            {!Boolean(props.comparisonId) && (
+                                                <InputGroupAddon addonType="append">
+                                                    {references.length !== 1 && (
+                                                        <Button
+                                                            color="light"
+                                                            onClick={() => handleRemoveReferenceClick(i)}
+                                                            className="pl-3 pr-3"
+                                                            style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                                                        >
+                                                            <Icon icon={faTrash} />
+                                                        </Button>
+                                                    )}
+                                                    {references.length - 1 === i && (
+                                                        <Button
+                                                            color="secondary"
+                                                            onClick={() => setReferences([...references, ''])}
+                                                            className="pl-3 pr-3"
+                                                            outline
+                                                            style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                                                        >
+                                                            <Icon icon={faPlus} />
+                                                        </Button>
+                                                    )}
+                                                </InputGroupAddon>
+                                            )}
                                         </InputGroup>
                                     );
                                 })}
