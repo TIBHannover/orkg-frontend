@@ -7,7 +7,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSearchPlus, faSearchMinus } from '@fortawesome/free-solid-svg-icons';
 
 const Container = styled.div`
-    right: 20px;
+    right: 105px;
     bottom: 20px;
     position: absolute;
     z-index: 5;
