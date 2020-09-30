@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { observatoriesUrl, submitGetRequest, getOrganization } from 'network';
+import { observatoriesUrl, submitGetRequest, organizationsUrl } from 'network';
 import { Container } from 'reactstrap';
 import ObservatoryCard from 'components/ObservatoryCard/ObservatoryCard';
 import { Col, Row } from 'reactstrap';
@@ -65,27 +65,7 @@ class Observatories extends Component {
     }
 
     loadObservatories = () => {
-        this.setState({ isNextPageLoading: true });
-        submitGetRequest(observatoriesUrl)
-            .then(async observatories => {
-                observatories = await this.loadOrganizations(observatories);
-                const g = await this.groupBy(observatories, 'research_field');
-                if (observatories.length > 0) {
-                    this.setState({
-                        observatories: g,
-                        isNextPageLoading: false
-                    });
-                } else {
-                    this.setState({
-                        isNextPageLoading: false
-                    });
-                }
-            })
-            .catch(error => {
-                this.setState({
-                    isNextPageLoading: false
-                });
-            });
+        this.loadOrganizations();
     };
 
     groupBy = async (array, key) => {
@@ -95,22 +75,38 @@ class Observatories extends Component {
         }, {});
     };
 
-    loadOrganizations = async observatoriesData => {
-        this.setState({ isLoadingOrganizations: true });
+    loadOrganizations = () => {
+        this.setState({ isNextPageLoading: true });
+        const observatories = submitGetRequest(`${observatoriesUrl}`);
+        const obsStats = submitGetRequest(`${observatoriesUrl}stats/observatories`);
+        const organizations = submitGetRequest(`${organizationsUrl}`);
 
-        await observatoriesData.forEach(async o => {
-            const a = [];
-            await o.organizations.forEach(async or => {
-                await getOrganization(or.id).then(oe => {
-                    a.push(oe);
-                });
+        Promise.all([observatories, obsStats, organizations]).then(async data => {
+            const observatoriesData = [];
+            for (const observatory of data[0]) {
+                const obsresource = data[1].find(el => el.observatory_id === observatory.id);
+                if (obsresource) {
+                    observatory.numPapers = obsresource.resources;
+                    observatory.numComparisons = obsresource.comparisons;
+                } else {
+                    observatory.numPapers = 0;
+                    observatory.numComparisons = 0;
+                }
+
+                for (let i = 0; i < observatory.organizations.length; i++) {
+                    const org = data[2].find(o1 => o1.id === observatory.organizations[i].id);
+                    observatory.organizations[i] = org;
+                }
+                observatoriesData.push(observatory);
+            }
+
+            const g = await this.groupBy(observatoriesData, 'research_field');
+
+            this.setState({
+                observatories: g,
+                isNextPageLoading: false
             });
-            o.organizations = a;
         });
-        this.setState({
-            isLoadingOrganizations: false
-        });
-        return observatoriesData;
     };
 
     toggleTab = tab => {
@@ -126,45 +122,46 @@ class Observatories extends Component {
                     <h1 className="h4 mt-4 mb-4">View all observatories </h1>
                 </Container>
                 <Container className="box rounded p-4 clearfix">
-                    <Row noGutters={true}>
-                        <Col md={3} sm={12}>
-                            <StyledResearchFieldList>
-                                {Object.keys(this.state.observatories).map((rf, key) => {
-                                    return (
-                                        <li key={`${rf}`} className={this.state.activeTab === key ? 'activeRF' : ''}>
-                                            <NavLink
-                                                className={classnames({ active: this.state.activeTab === key })}
-                                                onClick={() => {
-                                                    this.toggleTab(key);
-                                                }}
-                                            >
-                                                {rf === 'null' || '' ? 'Others' : rf}
-                                            </NavLink>
-                                        </li>
-                                    );
-                                })}
-                            </StyledResearchFieldList>
-                        </Col>
-
-                        <Col md={9} sm={12} className="d-flex">
-                            <StyledResearchFieldWrapper className="flex-grow-1 justify-content-center">
-                                <TabContent activeTab={this.state.activeTab}>
+                    {this.state.observatories && (
+                        <Row noGutters={true}>
+                            <Col md={3} sm={12}>
+                                <StyledResearchFieldList>
                                     {Object.keys(this.state.observatories).map((rf, key) => {
                                         return (
-                                            <TabPaneStyled key={`rf${rf.id}-${key}`} tabId={key}>
-                                                <Row>
-                                                    {this.state.observatories[rf].map(observatory => {
-                                                        return <ObservatoryCard key={observatory.id} observatory={observatory} />;
-                                                    })}
-                                                </Row>
-                                            </TabPaneStyled>
+                                            <li key={`${rf}`} className={this.state.activeTab === key ? 'activeRF' : ''}>
+                                                <NavLink
+                                                    className={classnames({ active: this.state.activeTab === key })}
+                                                    onClick={() => {
+                                                        this.toggleTab(key);
+                                                    }}
+                                                >
+                                                    {rf === 'null' || '' ? 'Others' : rf}
+                                                </NavLink>
+                                            </li>
                                         );
                                     })}
-                                </TabContent>
-                            </StyledResearchFieldWrapper>
-                        </Col>
-                    </Row>
+                                </StyledResearchFieldList>
+                            </Col>
 
+                            <Col md={9} sm={12} className="d-flex">
+                                <StyledResearchFieldWrapper className="flex-grow-1 justify-content-center">
+                                    <TabContent activeTab={this.state.activeTab}>
+                                        {Object.keys(this.state.observatories).map((rf, key) => {
+                                            return (
+                                                <TabPaneStyled key={`rf${rf.id}-${key}`} tabId={key}>
+                                                    <Row>
+                                                        {this.state.observatories[rf].map(observatory => {
+                                                            return <ObservatoryCard key={observatory.id} observatory={observatory} />;
+                                                        })}
+                                                    </Row>
+                                                </TabPaneStyled>
+                                            );
+                                        })}
+                                    </TabContent>
+                                </StyledResearchFieldWrapper>
+                            </Col>
+                        </Row>
+                    )}
                     {this.state.observatories.length === 0 && !this.state.isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">No observatories yet!</div>
                     )}

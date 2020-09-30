@@ -55,7 +55,7 @@ class EditObservatory extends Component {
             return false;
         }
 
-        if (description !== this.props.description && description.length == 0) {
+        if (description !== this.props.description && description.length === 0) {
             toast.error(`Please enter an observatory description`);
             return false;
         }

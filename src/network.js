@@ -689,8 +689,8 @@ export const getProblemsByObservatoryId = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/problems`);
 };
 
-export const getPapersCountByObservatoryId = id => {
-    return submitGetRequest(`${statsUrl}${encodeURIComponent(id)}/observatoryPapersCount`);
+export const getObservatoriesStats = id => {
+    return submitGetRequest(`${observatoriesUrl}stats/observatories`);
 };
 
 export const getComparisonsCountByObservatoryId = id => {
