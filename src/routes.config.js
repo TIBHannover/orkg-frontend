@@ -38,6 +38,7 @@ import UserProfile from 'pages/UserProfile';
 import FeaturedComparisons from 'pages/FeaturedComparisons';
 import PdfTextAnnotation from 'pages/PdfTextAnnotation';
 import PdfAnnotation from 'pages/PdfAnnotation';
+import ExportData from 'pages/ExportData';
 import { reverse } from 'named-urls';
 
 const routes = [
@@ -228,6 +229,10 @@ const routes = [
     {
         path: ROUTES.PDF_ANNOTATION,
         component: PdfAnnotation
+    },
+    {
+        path: ROUTES.EXPORT_DATA,
+        component: ExportData
     },
     /* Don't add routes below this line */
     {

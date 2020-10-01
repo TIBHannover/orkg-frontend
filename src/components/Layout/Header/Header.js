@@ -320,6 +320,10 @@ class Header extends Component {
                                             <Badge color="info">Beta</Badge>
                                         </small>
                                     </DropdownItem>
+                                    <DropdownItem divider />
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.EXPORT_DATA}>
+                                        Export Data{' '}
+                                    </DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledButtonDropdown>
                         </Nav>
