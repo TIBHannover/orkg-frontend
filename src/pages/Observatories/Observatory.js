@@ -81,7 +81,7 @@ class Observatory extends Component {
                     isLoading: false,
                     researchField: observatory.research_field
                 });
-                this.loadOrganizations(observatory.organizations);
+                this.loadOrganizations(observatory.organization_ids);
             })
             .catch(error => {
                 this.setState({ error: error, isLoading: false });
@@ -172,7 +172,7 @@ class Observatory extends Component {
 
     loadOrganizations = organizationsData => {
         this.setState({ isLoadingOrganizations: true });
-        Promise.all(organizationsData.map(o => getOrganization(o.id))).then(data => {
+        Promise.all(organizationsData.map(o => getOrganization(o))).then(data => {
             this.setState({
                 organizationsList: data,
                 isLoadingOrganizations: false
