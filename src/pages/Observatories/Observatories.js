@@ -93,9 +93,9 @@ class Observatories extends Component {
                     observatory.numComparisons = 0;
                 }
 
-                for (let i = 0; i < observatory.organizations.length; i++) {
-                    const org = data[2].find(o1 => o1.id === observatory.organizations[i].id);
-                    observatory.organizations[i] = org;
+                for (let i = 0; i < observatory.organization_ids.length; i++) {
+                    const org = data[2].find(o1 => o1.id === observatory.organization_ids[i]);
+                    observatory.organization_ids[i] = org;
                 }
                 observatoriesData.push(observatory);
             }

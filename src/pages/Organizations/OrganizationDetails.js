@@ -83,7 +83,7 @@ class OrganizationDetails extends Component {
                 document.title = `${responseJson.name} - Organization - ORKG`;
                 this.setState({
                     label: responseJson.name,
-                    url: responseJson.url,
+                    url: responseJson.homepage,
                     logo: responseJson.logo,
                     isLoading: false,
                     createdBy: responseJson.created_by

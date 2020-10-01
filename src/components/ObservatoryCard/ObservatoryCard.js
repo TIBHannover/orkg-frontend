@@ -24,7 +24,7 @@ function ObservatoryCard(props) {
             {!props.observatory.logo && (
                 <Card className="h-100">
                     <CardBody>
-                        {props.observatory.organizations.map(o => (
+                        {props.observatory.organization_ids.map(o => (
                             <img key={`imageLogo${o.id}`} height="50px" src={o.logo} alt={`${o.name} logo`} />
                         ))}{' '}
                         <div className="mt-2">
