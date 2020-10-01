@@ -53,7 +53,7 @@ class AddObservatory extends Component {
         const description = this.state.description;
         const researchField = this.state.researchField.label;
 
-        if (value && value.length !== 0 && description && description.length !== 0 && researchField && researchField !== 0) {
+        if (value && value.length !== 0 && description && description.length !== 0 && researchField) {
             try {
                 const observatory = await createObservatory(value, this.props.match.params.id, description, researchField);
                 this.navigateToObservatory(observatory.id);
@@ -105,7 +105,6 @@ class AddObservatory extends Component {
                         <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
                             {this.props.user ? (
                                 <div className="pl-3 pr-3 pt-2">
-                                    {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
                                     <FormGroup>
                                         <Label for="ObservatoryLabel">Observatory name</Label>
                                         <Input
@@ -129,6 +128,7 @@ class AddObservatory extends Component {
                                             value={this.state.researchField}
                                             allowCreate={false}
                                             autoLoadOption={true}
+                                            isDisabled={loading}
                                         />
                                     </FormGroup>
                                     <FormGroup>
