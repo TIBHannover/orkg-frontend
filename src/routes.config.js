@@ -27,7 +27,7 @@ import Organizations from 'pages/Organizations/Organizations';
 import Observatories from 'pages/Observatories/Observatories';
 import OrganizationDetails from 'pages/Organizations/OrganizationDetails';
 import AddOrganization from 'pages/Organizations/AddOrganization';
-import AddObservatory from 'pages/AddObservatory';
+import AddObservatory from 'pages/Observatories/AddObservatory';
 import Observatory from 'pages/Observatories/Observatory';
 import OrganizationObservatories from 'pages/Observatories/OrganizationObservatories';
 import SearchResults from 'pages/Search';

@@ -186,7 +186,7 @@ class EditOrganization extends Component {
                                 />
                             </FormGroup>
                             <div>
-                                <img src={this.state.previewSrc} style={{ width: '20%', height: '20%' }} className="Avatar" alt="" />
+                                <img src={this.state.previewSrc} style={{ width: '20%', height: '20%' }} alt="organization logo" />
                             </div>
                             <FormGroup>
                                 <Label>Logo</Label>
