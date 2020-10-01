@@ -182,7 +182,7 @@ export default (state = initialState, action) => {
                     byId: {
                         [payload.id]: {
                             id: payload.id,
-                            label: `Contribution ${state.contributions.allIds.length + 1}`,
+                            label: payload.label,
                             researchProblems: [],
                             resourceId: payload.resourceId
                         }

@@ -23,7 +23,7 @@ export default class Predicates extends Component {
     }
 
     componentDidMount() {
-        document.title = 'Predicates - ORKG';
+        document.title = 'Properties - ORKG';
 
         this.loadMorePredicates();
     }
@@ -57,7 +57,7 @@ export default class Predicates extends Component {
         return (
             <>
                 <Container className="p-0">
-                    <h1 className="h4 mt-4 mb-4">View all predicates</h1>
+                    <h1 className="h4 mt-4 mb-4">View all properties</h1>
                 </Container>
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
                     {this.state.predicates.length > 0 && (
@@ -72,7 +72,7 @@ export default class Predicates extends Component {
                         </div>
                     )}
                     {this.state.predicates.length === 0 && !this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">No Predicates</div>
+                        <div className="text-center mt-4 mb-4">No properties</div>
                     )}
                     {this.state.isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">
@@ -85,7 +85,7 @@ export default class Predicates extends Component {
                             className="list-group-item list-group-item-action text-center mt-2"
                             onClick={!this.state.isNextPageLoading ? this.loadMorePredicates : undefined}
                         >
-                            Load more predicates
+                            Load more properties
                         </div>
                     )}
                     {!this.state.hasNextPage && this.state.isLastPageReached && (

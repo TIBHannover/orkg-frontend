@@ -20,7 +20,7 @@ export default function ProvenanceBox(props) {
                     <div>
                         <ul className="list-group">
                             <StyledItemProvenanceBox>
-                                <b>{props.observatoryInfo.name}</b>
+                                <b style={{ textTransform: 'uppercase' }}>{props.observatoryInfo.name}</b>
                                 <br />
                                 <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.id })}>
                                     <img

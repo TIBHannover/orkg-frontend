@@ -87,7 +87,10 @@ export default function AddValueTemplate(props) {
 
     const validateValue = () => {
         if (props.valueClass && ['Date', 'Number', 'String'].includes(props.valueClass.id)) {
-            let component = props.components[0];
+            let component;
+            if (props.components && props.components.length > 0) {
+                component = props.components[0];
+            }
             if (!component) {
                 component = {
                     value: props.valueClass,
@@ -104,10 +107,12 @@ export default function AddValueTemplate(props) {
             } else {
                 setInputValue(value);
                 setFormFeedback(null);
+                setIsValid(true);
                 return value;
             }
         } else {
             setFormFeedback(null);
+            setIsValid(true);
             return inputValue;
         }
     };

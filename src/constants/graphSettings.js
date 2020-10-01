@@ -34,7 +34,14 @@ export const PREDICATES = {
     TEMPLATE_COMPONENT_OCCURRENCE_MIN: 'TemplateComponentOccurrenceMin',
     TEMPLATE_COMPONENT_ORDER: 'TemplateComponentOrder',
     TEMPLATE_STRICT: 'TemplateStrict',
-    TEMPLATE_LABEL_FORMAT: 'TemplateLabelFormat'
+    TEMPLATE_LABEL_FORMAT: 'TemplateLabelFormat',
+    HAS_PART: 'HasPart',
+    HAS_CONTENT: 'hasContent',
+    CONTAINS: 'contains',
+    COMPARE_CONTRIBUTION: 'compareContribution',
+    HAS_PROPERTY: 'hasProperty',
+    HAS_PREVIOUS_VERSION: 'hasPreviousVersion',
+    HAS_SUBJECT: 'hasSubject'
 };
 
 export const CLASSES = {
@@ -53,7 +60,8 @@ export const CLASSES = {
     CONTRIBUTION_TEMPLATE: 'ContributionTemplate',
     PREDICATE: 'Predicates',
     QB_DATASET_CLASS: 'QBDataset',
-    LOCATION: 'DCLocation'
+    LOCATION: 'DCLocation',
+    SENTENCE: 'Sentence'
 };
 
 export const MISC = {

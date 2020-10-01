@@ -104,6 +104,15 @@ class EditPaperDialog extends Component {
         // research field
         if (this.state.researchField && this.state.researchField.statementId && this.state.researchField.id) {
             await updateStatement(this.state.researchField.statementId, { object_id: this.state.researchField.id });
+        } else if (this.state.researchField && !this.state.researchField.statementId && this.state.researchField.id) {
+            const statement = await createResourceStatement(
+                this.props.viewPaper.paperResourceId,
+                PREDICATES.HAS_RESEARCH_FIELD,
+                this.state.researchField.id
+            );
+            this.setState({
+                researchField: { ...this.state.researchField, statementId: statement.id }
+            });
         }
 
         //publication month

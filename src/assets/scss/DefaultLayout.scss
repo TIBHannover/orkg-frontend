@@ -107,6 +107,9 @@ body {
     }
 }
 
+.page {
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.13);
+}
 #page-container {
     //overwrite styles of returned pdf
     position: initial !important;

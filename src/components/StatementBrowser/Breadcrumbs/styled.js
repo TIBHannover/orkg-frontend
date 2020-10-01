@@ -22,6 +22,7 @@ export const BreadcrumbItem = styled.li`
     max-width: 55px;
     cursor: pointer;
     transition: max-width 0.5s;
+    position: relative;
 
     &:hover {
         max-width: 100%;
@@ -42,6 +43,14 @@ export const BreadcrumbItem = styled.li`
 
     &:not(:first-child) {
         margin-left: -15px;
+    }
+
+    .resourceLink {
+        position: absolute;
+        right: 0;
+        padding-right: 4px;
+        padding-left: 4px;
+        background-color: #e86161;
     }
 `;
 

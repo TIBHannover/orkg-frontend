@@ -23,7 +23,11 @@ class Contribution extends Component {
     render() {
         let shared = 1;
         if (Object.keys(this.props.resources.byId).length !== 0 && (this.props.selectedResource || this.props.resourceId)) {
-            shared = this.props.resources.byId[this.props.selectedResource ? this.props.selectedResource : this.props.resourceId].shared;
+            if (this.props.resources.byId[this.props.selectedResource ? this.props.selectedResource : this.props.resourceId]) {
+                shared = this.props.resources.byId[this.props.selectedResource ? this.props.selectedResource : this.props.resourceId].shared;
+            } else {
+                shared = 0;
+            }
         }
 
         return (
@@ -64,6 +68,7 @@ class Contribution extends Component {
                                 syncBackend={false}
                                 openExistingResourcesInDialog={false}
                                 initialResourceId={this.props.resourceId}
+                                initialResourceLabel={this.props.resourceLabel}
                                 templatesFound={false}
                             />
                         </FormGroup>
@@ -80,6 +85,7 @@ Contribution.propTypes = {
     researchProblems: PropTypes.array.isRequired,
     selectedResearchField: PropTypes.string.isRequired,
     selectedResource: PropTypes.string,
+    resourceLabel: PropTypes.string,
     openTour: PropTypes.func.isRequired,
     resourceId: PropTypes.string,
     resources: PropTypes.object.isRequired
@@ -88,6 +94,7 @@ Contribution.propTypes = {
 const mapStateToProps = (state, ownProps) => {
     return {
         resourceId: state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].resourceId : null,
+        resourceLabel: state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].label : null,
         researchProblems: getReseachProblemsOfContribution(
             state,
             state.addPaper.contributions.byId[ownProps.id] ? state.addPaper.contributions.byId[ownProps.id].resourceId : null

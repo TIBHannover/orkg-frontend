@@ -230,6 +230,7 @@ export default function AddContribution(props) {
                     className="float-right"
                     onClick={() => {
                         props.addContributions(selectedContributions);
+                        setSelectedContributions([]);
                         props.toggle();
                     }}
                 >

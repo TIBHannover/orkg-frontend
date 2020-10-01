@@ -53,7 +53,7 @@ export default function Breadcrumbs(props) {
 
                             {props.resourceHistory.allIds.length === index + 1 && !props.openExistingResourcesInDialog && existingResourceId && (
                                 <Tippy content="Go to resource page">
-                                    <Link className="ml-2" to={reverse(ROUTES.RESOURCE, { id: props.selectedResource })}>
+                                    <Link className="ml-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: props.selectedResource })}>
                                         <Icon icon={faLink} color="#fff" />
                                     </Link>
                                 </Tippy>
