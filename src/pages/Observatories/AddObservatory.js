@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, FormGroup, Input, Label, Alert } from 'reactstrap';
+import { Container, Button, FormGroup, Input, Label } from 'reactstrap';
 import { createObservatory, resourcesUrl, getOrganization } from 'network';
 import NotFound from 'pages/NotFound';
 import InternalServerError from 'pages/InternalServerError';

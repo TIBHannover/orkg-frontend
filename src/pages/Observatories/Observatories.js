@@ -122,7 +122,7 @@ class Observatories extends Component {
                     <h1 className="h4 mt-4 mb-4">View all observatories </h1>
                 </Container>
                 <Container className="box rounded p-4 clearfix">
-                    {this.state.observatories && (
+                    {this.state.observatories && Object.keys(this.state.observatories).length > 0 && (
                         <Row noGutters={true}>
                             <Col md={3} sm={12}>
                                 <StyledResearchFieldList>
@@ -162,7 +162,7 @@ class Observatories extends Component {
                             </Col>
                         </Row>
                     )}
-                    {this.state.observatories.length === 0 && !this.state.isNextPageLoading && (
+                    {Object.keys(this.state.observatories).length === 0 && !this.state.isNextPageLoading && (
                         <div className="text-center mt-4 mb-4">No observatories yet!</div>
                     )}
                     {this.state.isNextPageLoading && (
