@@ -214,6 +214,10 @@ class Observatory extends Component {
                                 </Button>
                             )}
                             {this.state.description}
+                            <br />
+                            <div className="flex-grow-1">
+                                <small>Research field: {this.state.researchField}</small>
+                            </div>
                         </Container>
 
                         <Container>

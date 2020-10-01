@@ -15,8 +15,7 @@ class EditObservatory extends Component {
             isLoadingName: false,
             isLoadingDescription: false,
             researchField: '',
-            isLoadingResearchField: false,
-            isLoading: false
+            isLoadingResearchField: false
         };
     }
 
@@ -158,7 +157,7 @@ class EditObservatory extends Component {
                                     value={this.state.researchField || ''}
                                     allowCreate={false}
                                     autoLoadOption={true}
-                                    isDisabled={true}
+                                    isDisabled={isLoading}
                                 />
                             </FormGroup>
                             <FormGroup>
@@ -178,7 +177,7 @@ class EditObservatory extends Component {
                     </ModalBody>
                     <ModalFooter>
                         <div className="text-align-center mt-2">
-                            <Button color="primary" disabled={this.state.isLoading} onClick={this.handleSubmit}>
+                            <Button color="primary" disabled={isLoading} onClick={this.handleSubmit}>
                                 {isLoading && <span className="fa fa-spinner fa-spin" />} Save
                             </Button>
                         </div>
