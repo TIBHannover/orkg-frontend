@@ -101,7 +101,7 @@ class Observatories extends Component {
             }
 
             const g = await this.groupBy(observatoriesData, 'research_field');
-
+            g['All Observatories'] = observatoriesData;
             this.setState({
                 observatories: g,
                 isNextPageLoading: false
@@ -126,37 +126,41 @@ class Observatories extends Component {
                         <Row noGutters={true}>
                             <Col md={3} sm={12}>
                                 <StyledResearchFieldList>
-                                    {Object.keys(this.state.observatories).map((rf, key) => {
-                                        return (
-                                            <li key={`${rf}`} className={this.state.activeTab === key ? 'activeRF' : ''}>
-                                                <NavLink
-                                                    className={classnames({ active: this.state.activeTab === key })}
-                                                    onClick={() => {
-                                                        this.toggleTab(key);
-                                                    }}
-                                                >
-                                                    {rf === 'null' || '' ? 'Others' : rf}
-                                                </NavLink>
-                                            </li>
-                                        );
-                                    })}
+                                    {Object.keys(this.state.observatories)
+                                        .reverse()
+                                        .map((rf, key) => {
+                                            return (
+                                                <li key={`${rf}`} className={this.state.activeTab === key ? 'activeRF' : ''}>
+                                                    <NavLink
+                                                        className={classnames({ active: this.state.activeTab === key })}
+                                                        onClick={() => {
+                                                            this.toggleTab(key);
+                                                        }}
+                                                    >
+                                                        {rf === 'null' || '' ? 'Others' : rf}
+                                                    </NavLink>
+                                                </li>
+                                            );
+                                        })}
                                 </StyledResearchFieldList>
                             </Col>
 
                             <Col md={9} sm={12} className="d-flex">
                                 <StyledResearchFieldWrapper className="flex-grow-1 justify-content-center">
                                     <TabContent activeTab={this.state.activeTab}>
-                                        {Object.keys(this.state.observatories).map((rf, key) => {
-                                            return (
-                                                <TabPaneStyled key={`rf${rf.id}-${key}`} tabId={key}>
-                                                    <Row>
-                                                        {this.state.observatories[rf].map(observatory => {
-                                                            return <ObservatoryCard key={observatory.id} observatory={observatory} />;
-                                                        })}
-                                                    </Row>
-                                                </TabPaneStyled>
-                                            );
-                                        })}
+                                        {Object.keys(this.state.observatories)
+                                            .reverse()
+                                            .map((rf, key) => {
+                                                return (
+                                                    <TabPaneStyled key={`rf${rf.id}-${key}`} tabId={key}>
+                                                        <Row>
+                                                            {this.state.observatories[rf].map(observatory => {
+                                                                return <ObservatoryCard key={observatory.id} observatory={observatory} />;
+                                                            })}
+                                                        </Row>
+                                                    </TabPaneStyled>
+                                                );
+                                            })}
                                     </TabContent>
                                 </StyledResearchFieldWrapper>
                             </Col>
