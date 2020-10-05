@@ -52,15 +52,15 @@ function CreateClassModal(props) {
                         invalid={Boolean(get_error_message(errors, 'uri'))}
                     />
                     {Boolean(get_error_message(errors, 'uri')) && <FormFeedback>{get_error_message(errors, 'uri')}</FormFeedback>}
-                    <FormText color="muted">Please provide the url of the class if you are using a class defined in an external ontology</FormText>
+                    <FormText color="muted">Please provide the URI of the class if you are using a class defined in an external ontology</FormText>
                 </FormGroup>
             </ModalBody>
             <ModalFooter>
+                <Button color="light" onClick={() => props.onClose(false)}>
+                    Cancel
+                </Button>
                 <Button color="primary" onClick={handleConfirm}>
                     Create class
-                </Button>{' '}
-                <Button color="secondary" onClick={() => props.onClose(false)}>
-                    Cancel
                 </Button>
             </ModalFooter>
         </Modal>
