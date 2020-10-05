@@ -294,7 +294,7 @@ class Header extends Component {
 
                             <UncontrolledButtonDropdown nav inNavbar>
                                 <DropdownToggle nav className="ml-2">
-                                    More <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
+                                    About <FontAwesomeIcon style={{ marginTop: '4px' }} icon={faChevronDown} pull="right" />
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     <DropdownItem
