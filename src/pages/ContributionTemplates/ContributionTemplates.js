@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
+import { Container, Col, Row, FormGroup, Label, Form, Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-import { getResourcesByClass, resourcesUrl, getStatementsByObjectAndPredicate } from 'network';
-import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
+import { getResourcesByClass, resourcesUrl, getStatementsByObjectAndPredicate, classesUrl } from 'network';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
 import TemplateCard from 'components/ContributionTemplates/TemplateCard';
-import { Container, Col, Row, FormGroup, Label, Form } from 'reactstrap';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
@@ -23,7 +23,9 @@ export default class ContributionTemplates extends Component {
             page: 1,
             isLastPageReached: false,
             filterReseachField: null,
-            filterResearchProblem: null
+            filterResearchProblem: null,
+            filterClass: null,
+            filterLabel: ''
         };
     }
 
@@ -34,7 +36,12 @@ export default class ContributionTemplates extends Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (prevState.filterReseachField !== this.state.filterReseachField || prevState.filterResearchProblem !== this.state.filterResearchProblem) {
+        if (
+            prevState.filterReseachField !== this.state.filterReseachField ||
+            prevState.filterResearchProblem !== this.state.filterResearchProblem ||
+            prevState.filterClass !== this.state.filterClass ||
+            prevState.filterLabel !== this.state.filterLabel
+        ) {
             this.setState({ contributionTemplates: [], isNextPageLoading: false, hasNextPage: false, page: 1, isLastPageReached: false }, () =>
                 this.loadMoreContributionTemplates()
             );
@@ -66,14 +73,36 @@ export default class ContributionTemplates extends Component {
     handleResearchFieldSelect = selected => {
         this.setState({
             filterReseachField: !selected ? null : selected,
-            filterResearchProblem: null
+            filterResearchProblem: null,
+            filterClass: null,
+            filterLabel: ''
         });
     };
 
     handleResearchProblemSelect = selected => {
         this.setState({
             filterResearchProblem: !selected ? null : selected,
-            filterReseachField: null
+            filterReseachField: null,
+            filterClass: null,
+            filterLabel: ''
+        });
+    };
+
+    handleClassSelect = selected => {
+        this.setState({
+            filterResearchProblem: null,
+            filterReseachField: null,
+            filterClass: !selected ? null : selected,
+            filterLabel: ''
+        });
+    };
+
+    handleLabelFilter = e => {
+        this.setState({
+            filterResearchProblem: null,
+            filterReseachField: null,
+            filterClass: null,
+            filterLabel: e.target.value
         });
     };
 
@@ -84,10 +113,13 @@ export default class ContributionTemplates extends Component {
             templates = this.getTemplatesOfResourceId(this.state.filterReseachField.id, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD);
         } else if (this.state.filterResearchProblem) {
             templates = this.getTemplatesOfResourceId(this.state.filterResearchProblem.id, PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM);
+        } else if (this.state.filterClass) {
+            templates = this.getTemplatesOfResourceId(this.state.filterClass.id, PREDICATES.TEMPLATE_OF_CLASS);
         } else {
             templates = getResourcesByClass({
                 id: CLASSES.CONTRIBUTION_TEMPLATE,
                 page: this.state.page,
+                q: this.state.filterLabel,
                 items: this.pageSize,
                 sortBy: 'created_at',
                 desc: true
@@ -120,6 +152,7 @@ export default class ContributionTemplates extends Component {
                 </Container>
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
                     <div className="clearfix">
+                        You can use one of this filters to get the related template.
                         <Link className="float-right mb-2 mt-2 clearfix" to={reverse(ROUTES.CONTRIBUTION_TEMPLATE)}>
                             <span className="fa fa-plus" /> Create new template
                         </Link>
@@ -133,12 +166,14 @@ export default class ContributionTemplates extends Component {
                                     <AutoComplete
                                         requestUrl={resourcesUrl}
                                         optionsClass={CLASSES.RESEARCH_FIELD}
-                                        onItemSelected={this.handleResearchFieldSelect}
                                         placeholder="Select or type to enter a research field"
-                                        autoFocus
-                                        isClearable
-                                        cacheOptions
+                                        onChange={this.handleResearchFieldSelect}
                                         value={this.state.filterReseachField}
+                                        autoLoadOption={true}
+                                        openMenuOnFocus={true}
+                                        allowCreate={false}
+                                        isClearable
+                                        autoFocus={false}
                                     />
                                 </FormGroup>
                             </Col>
@@ -148,12 +183,38 @@ export default class ContributionTemplates extends Component {
                                     <AutoComplete
                                         requestUrl={resourcesUrl}
                                         optionsClass={CLASSES.PROBLEM}
-                                        onItemSelected={this.handleResearchProblemSelect}
                                         placeholder="Select or type to enter a research problem"
-                                        autoFocus
-                                        isClearable
-                                        cacheOptions
+                                        onChange={this.handleResearchProblemSelect}
                                         value={this.state.filterResearchProblem}
+                                        autoLoadOption={true}
+                                        openMenuOnFocus={true}
+                                        allowCreate={false}
+                                        isClearable
+                                        autoFocus={false}
+                                    />
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Row form>
+                            <Col md={6}>
+                                <FormGroup>
+                                    <Label for="filterLabel">Filter by Label</Label>
+                                    <Input value={this.state.filterLabel} type="text" name="filterLabel" onChange={this.handleLabelFilter} />
+                                </FormGroup>
+                            </Col>
+                            <Col md={6}>
+                                <FormGroup>
+                                    <Label for="examplePassword">Filter by class</Label>
+                                    <AutoComplete
+                                        requestUrl={classesUrl}
+                                        placeholder="Select or type to enter a class"
+                                        onChange={this.handleClassSelect}
+                                        value={this.state.filterClass}
+                                        autoLoadOption={true}
+                                        openMenuOnFocus={true}
+                                        allowCreate={false}
+                                        isClearable
+                                        autoFocus={false}
                                     />
                                 </FormGroup>
                             </Col>

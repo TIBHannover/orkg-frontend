@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Button, FormGroup, Label, FormText } from 'reactstrap';
-import { getResource, classesUrl, submitGetRequest, createClass, updateResourceClasses as updateResourceClassesNetwork } from 'network';
+import { getResource, classesUrl, submitGetRequest, updateResourceClasses as updateResourceClassesNetwork } from 'network';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
-import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
 import InternalServerError from 'pages/InternalServerError';
 import SameAsStatements from '../SameAsStatements';
 import EditableHeader from 'components/EditableHeader';
@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import { resetStatementBrowser } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import Confirm from 'reactstrap-confirm';
+import Confirm from 'components/ConfirmationModal/ConfirmationModal';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
@@ -29,6 +29,7 @@ function Resource(props) {
     const [classes, setClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
+    const classesAutocompleteRef = useRef(null);
 
     useEffect(() => {
         const findResource = async () => {
@@ -56,19 +57,19 @@ function Resource(props) {
 
     const handleClassSelect = async (selected, action) => {
         if (action.action === 'create-option') {
-            const result = await Confirm({
-                title: 'Are you sure you need a new class?',
-                message: 'Often there are existing classes that you can use as well. It is better to use existing classes than new ones.',
-                cancelColor: 'light'
+            const foundIndex = selected.findIndex(x => x.__isNew__);
+            const newClass = await Confirm({
+                label: selected[foundIndex].label
             });
-            if (result) {
+            if (newClass) {
                 const foundIndex = selected.findIndex(x => x.__isNew__);
-                const newClass = await createClass(selected[foundIndex].label);
                 selected[foundIndex] = newClass;
+            } else {
+                return null;
             }
         }
         const newClasses = !selected ? [] : selected;
-        // Reset the statement browser and rely on React attribute 'key' to reinilize the statmeent browser
+        // Reset the statement browser and rely on React attribute 'key' to reinitialize the statement browser
         // (When a key changes, React will create a new component instance rather than update the current one)
         props.resetStatementBrowser();
         setClasses(newClasses);
@@ -132,12 +133,21 @@ function Resource(props) {
                                     <FormGroup className="mb-4">
                                         <Label>Classes:</Label>
                                         <AutoComplete
-                                            allowCreate
                                             requestUrl={classesUrl}
-                                            onItemSelected={handleClassSelect}
-                                            cacheOptions
-                                            isMulti
+                                            onChange={(selected, action) => {
+                                                // blur the field allows to focus and open the menu again
+                                                classesAutocompleteRef.current && classesAutocompleteRef.current.blur();
+                                                handleClassSelect(selected, action);
+                                            }}
+                                            placeholder="No Classes"
                                             value={classes}
+                                            autoLoadOption={true}
+                                            openMenuOnFocus={true}
+                                            allowCreate={true}
+                                            isClearable
+                                            innerRef={classesAutocompleteRef}
+                                            isMulti
+                                            autoFocus={false}
                                         />
                                         {editMode && <FormText>Specify the classes of the resource.</FormText>}
                                     </FormGroup>

@@ -1,12 +1,21 @@
 import React, { useState, useCallback } from 'react';
+import { InputGroup, InputGroupAddon, Button } from 'reactstrap';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faClipboard, faLink } from '@fortawesome/free-solid-svg-icons';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { submitGetRequest, getResourcesByClass } from 'network';
 import { AsyncPaginateBase } from 'react-select-async-paginate';
+import { classesUrl } from 'network';
 import Creatable from 'react-select/creatable';
 import PropTypes from 'prop-types';
 import { components } from 'react-select';
 import { compareOption } from 'utils';
 import styled, { withTheme } from 'styled-components';
 import getExternalData from './3rdPartyRegistries/index';
+import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import Tippy from '@tippy.js/react';
+import REGEX from 'constants/regex';
 import NativeListener from 'react-native-listener';
 import CustomOption from './CustomOption';
 
@@ -22,7 +31,7 @@ export const StyledAutoCompleteInputFormControl = styled.div`
 `;
 
 function Autocomplete(props) {
-    const [inputValue, setInputValue] = useState(typeof props.value !== 'object' ? props.value : props.value.label);
+    const [inputValue, setInputValue] = useState(typeof props.value !== 'object' || props.value === null ? props.value : props.value.label);
     const [menuIsOpen, setMenuIsOpen] = useState(false);
 
     // Pagination params
@@ -75,13 +84,31 @@ function Autocomplete(props) {
         if (props.optionsClass) {
             responseJson = await getResourcesByClass({ id: props.optionsClass, q: value.trim(), page: page, items: pageSize });
         } else {
-            responseJson = await submitGetRequest(
-                props.requestUrl +
-                    '?q=' +
-                    encodeURIComponent(value.trim()) +
-                    queryParams +
-                    (props.excludeClasses ? '&exclude=' + encodeURIComponent(props.excludeClasses) : '')
-            );
+            const isURI = new RegExp(REGEX.URL).test(value.trim());
+            if (props.requestUrl === classesUrl && isURI) {
+                // Lookup a class by uri
+                try {
+                    responseJson = await submitGetRequest(
+                        props.requestUrl +
+                            '?uri=' +
+                            encodeURIComponent(value.trim()) +
+                            queryParams +
+                            (props.excludeClasses ? '&exclude=' + encodeURIComponent(props.excludeClasses) : '')
+                    );
+                } catch (error) {
+                    // No matching class
+                    return [];
+                }
+                responseJson = responseJson ? [responseJson] : [];
+            } else {
+                responseJson = await submitGetRequest(
+                    props.requestUrl +
+                        '?q=' +
+                        encodeURIComponent(value.trim()) +
+                        queryParams +
+                        (props.excludeClasses ? '&exclude=' + encodeURIComponent(props.excludeClasses) : '')
+                );
+            }
         }
         return responseJson;
     };
@@ -147,6 +174,7 @@ function Autocomplete(props) {
                 options.push({
                     label: item.label,
                     id: item.id,
+                    ...(item.uri ? { uri: item.uri } : {}),
                     ...(item.shared ? { shared: item.shared } : {}),
                     ...(item.classes ? { classes: item.classes } : {}),
                     ...(item.description ? { description: item.description } : {})
@@ -235,6 +263,17 @@ function Autocomplete(props) {
         return inputValue; //https://github.com/JedWatson/react-select/issues/3189#issuecomment-597973958
     };
 
+    /**
+     * Handle click on copy to clipboard button
+     *
+     */
+    const handleCopyClick = () => {
+        if (navigator.clipboard && props.value && props.value.label) {
+            navigator.clipboard.writeText(props.value.label);
+            toast.success('Value copied');
+        }
+    };
+
     const Control = useCallback(innerProps => {
         if (props.eventListener) {
             return (
@@ -319,7 +358,14 @@ function Autocomplete(props) {
             ...provided,
             cursor: 'pointer',
             '&>div:last-of-type': {
+                // openMenu buttons
                 ...(props.cssClasses && props.cssClasses.includes('form-control-sm') ? { padding: '4px !important' } : {})
+            },
+            '&>div:nth-last-of-type(2)': {
+                // clear button
+                ...(props.cssClasses && props.cssClasses.includes('form-control-sm') && !props.isDisabled && props.isClearable
+                    ? { padding: '4px !important' }
+                    : {})
             }
         }),
         menu: provided => ({
@@ -330,6 +376,18 @@ function Autocomplete(props) {
             ...provided,
             cursor: 'pointer',
             whiteSpace: 'normal'
+        }),
+        input: provided => ({
+            ...provided, // custom style to fix when the input field doesn't get the full width
+            display: 'flex',
+            flex: '1',
+            '& > div': {
+                flex: '1',
+                display: 'flex !important'
+            },
+            '& input': {
+                flex: '1'
+            }
         })
     };
 
@@ -337,48 +395,87 @@ function Autocomplete(props) {
     const Select = props.allowCreate ? Creatable : undefined;
 
     return (
-        <StyledAutoCompleteInputFormControl className={`form-control ${props.cssClasses ? props.cssClasses : 'default'}`}>
-            <AsyncPaginateBase
-                SelectComponent={Select}
-                value={props.value}
-                loadOptions={loadOptions}
-                additional={defaultAdditional}
-                noOptionsMessage={noResults}
-                onChange={props.onChange ? props.onChange : handleChange}
-                onInputChange={handleInputChange}
-                inputValue={inputValue || ''}
-                styles={customStyles}
-                placeholder={props.placeholder}
-                autoFocus
-                cacheOptions
-                defaultOptions={props.defaultOptions ?? true}
-                openMenuOnFocus={props.openMenuOnFocus}
-                onBlur={props.onBlur}
-                onKeyDown={props.onKeyDown}
-                selectRef={props.innerRef}
-                components={{ Option: Option, Control: Control, DropdownIndicator: DropdownIndicator }}
-                menuIsOpen={menuIsOpen}
-                onMenuOpen={() => setMenuIsOpen(true)}
-                onMenuClose={() => setMenuIsOpen(false)}
-                getOptionLabel={({ label }) => label}
-                getOptionValue={({ id }) => id}
-                isValidNewOption={(inputValue, selectValue, selectOptions) => {
-                    if (props.handleCreateExistingLabel) {
-                        // to disable the create button
-                        props.handleCreateExistingLabel(inputValue, selectOptions);
+        <ConditionalWrapper
+            condition={props.copyValueButton}
+            wrapper={children => (
+                <InputGroup size="sm">
+                    {children}
+                    {props.value && props.value.id && (
+                        <InputGroupAddon addonType="append">
+                            <Button disabled={!props.value || !props.value.label} onClick={handleCopyClick} outline>
+                                <Tippy content="Copy the label to clipboard">
+                                    <span>
+                                        <Icon icon={faClipboard} size="sm" />
+                                    </span>
+                                </Tippy>
+                            </Button>
+                            {props.linkButton && (
+                                <Link target="_blank" to={props.linkButton} className="btn btn-sm btn-outline-secondary align-items-center d-flex">
+                                    <Tippy content={props.linkButtonTippy}>
+                                        <span>
+                                            <Icon icon={faLink} size="sm" />
+                                        </span>
+                                    </Tippy>
+                                </Link>
+                            )}
+                        </InputGroupAddon>
+                    )}
+                </InputGroup>
+            )}
+        >
+            <StyledAutoCompleteInputFormControl className={`form-control ${props.cssClasses ? props.cssClasses : 'default'}`}>
+                <AsyncPaginateBase
+                    SelectComponent={Select}
+                    value={props.value}
+                    loadOptions={loadOptions}
+                    additional={defaultAdditional}
+                    noOptionsMessage={noResults}
+                    onChange={
+                        props.onChange
+                            ? (select, action) => {
+                                  props.onChange(select, action);
+                                  setInputValue('');
+                              }
+                            : handleChange
                     }
-                    if (!props.allowCreate) {
-                        return false;
-                    } else {
-                        return !(
-                            !inputValue ||
-                            selectValue.some(option => compareOption(inputValue, option)) ||
-                            selectOptions.some(option => compareOption(inputValue, option))
-                        );
-                    }
-                }}
-            />
-        </StyledAutoCompleteInputFormControl>
+                    onInputChange={handleInputChange}
+                    inputValue={inputValue || ''}
+                    styles={customStyles}
+                    placeholder={props.placeholder}
+                    autoFocus={props.autoFocus}
+                    cacheOptions
+                    defaultOptions={props.defaultOptions ?? true}
+                    openMenuOnFocus={props.openMenuOnFocus}
+                    onBlur={props.onBlur}
+                    onKeyDown={props.onKeyDown}
+                    selectRef={props.innerRef}
+                    components={{ Option: Option, Control: Control, DropdownIndicator: DropdownIndicator }}
+                    menuIsOpen={menuIsOpen}
+                    onMenuOpen={() => setMenuIsOpen(true)}
+                    onMenuClose={() => setMenuIsOpen(false)}
+                    getOptionLabel={({ label }) => label}
+                    getOptionValue={({ id }) => id}
+                    isClearable={props.isClearable}
+                    isDisabled={props.isDisabled}
+                    isMulti={props.isMulti}
+                    isValidNewOption={(inputValue, selectValue, selectOptions) => {
+                        if (props.handleCreateExistingLabel) {
+                            // to disable the create button
+                            props.handleCreateExistingLabel(inputValue, selectOptions);
+                        }
+                        if (!props.allowCreate) {
+                            return false;
+                        } else {
+                            return !(
+                                !inputValue ||
+                                selectValue.some(option => compareOption(inputValue, option)) ||
+                                selectOptions.some(option => compareOption(inputValue, option))
+                            );
+                        }
+                    }}
+                />
+            </StyledAutoCompleteInputFormControl>
+        </ConditionalWrapper>
     );
 }
 
@@ -398,19 +495,32 @@ Autocomplete.propTypes = {
     disableBorderRadiusRight: PropTypes.bool,
     disableBorderRadiusLeft: PropTypes.bool,
     onInput: PropTypes.func,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.array]),
     cssClasses: PropTypes.string,
     theme: PropTypes.object.isRequired,
-    innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })]),
+    innerRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })]),
     autoLoadOption: PropTypes.bool, // Used to loadOptions by default
     openMenuOnFocus: PropTypes.bool, // whether the menu is opened when the Select is focused
     eventListener: PropTypes.bool, // Used to capture the events in handsontable
-    handleCreateExistingLabel: PropTypes.func
+    handleCreateExistingLabel: PropTypes.func,
+    isClearable: PropTypes.bool,
+    isDisabled: PropTypes.bool,
+    copyValueButton: PropTypes.bool,
+    linkButton: PropTypes.string,
+    linkButtonTippy: PropTypes.string,
+    isMulti: PropTypes.bool,
+    autoFocus: PropTypes.bool
 };
 
 Autocomplete.defaultProps = {
     cssClasses: '',
     eventListener: false,
-    openMenuOnFocus: false
+    openMenuOnFocus: false,
+    isClearable: false,
+    isDisabled: false,
+    copyValueButton: false,
+    linkButton: null,
+    isMulti: false,
+    autoFocus: true
 };
 export default withTheme(Autocomplete);

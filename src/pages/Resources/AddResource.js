@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { createLiteralStatement, createResource, crossrefUrl, submitGetRequest, createLiteral, classesUrl } from 'network';
-import { Redirect } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
+import { createLiteralStatement, createResource, crossrefUrl, submitGetRequest, createLiteral, classesUrl } from 'network';
+import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
+import { Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { getAllClasses } from 'network';
-import Select from 'react-select';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import { PREDICATES } from 'constants/graphSettings';
@@ -16,6 +16,7 @@ export default class AddResource extends Component {
         super(props);
 
         this.doi = null;
+        this.classesAutocompleteRef = React.createRef();
         this.state = {
             redirect: false,
             value: '',
@@ -30,7 +31,6 @@ export default class AddResource extends Component {
 
     componentDidMount = () => {
         this.getDefaultClass();
-        this.getClasses();
     };
 
     getDefaultClass = async () => {
@@ -46,12 +46,6 @@ export default class AddResource extends Component {
                     this.setState({ loadingDefaultClasses: true });
                 });
         }
-    };
-
-    getClasses = () => {
-        getAllClasses({}).then(classes => {
-            this.setState({ classesOptions: classes });
-        });
     };
 
     setEditorState = editorState => {
@@ -87,8 +81,22 @@ export default class AddResource extends Component {
         this.setState({ [event.target.name]: event.target.value.trim() });
     };
 
-    handleClassesChange = classesArray => {
-        this.setState({ classes: classesArray });
+    handleClassSelect = async (selected, { action }) => {
+        if (action === 'create-option') {
+            const foundIndex = selected.findIndex(x => x.__isNew__);
+            const newClass = await ConfirmClass({
+                label: selected[foundIndex].label
+            });
+            if (newClass) {
+                const foundIndex = selected.findIndex(x => x.__isNew__);
+                selected[foundIndex] = newClass;
+                this.setState({ classes: selected });
+            } else {
+                return null;
+            }
+        } else {
+            this.setState({ classes: selected });
+        }
     };
 
     handleKeyUp = async event => {
@@ -168,14 +176,22 @@ export default class AddResource extends Component {
                     <FormGroup>
                         <Label for="Classes">Classes</Label>
                         {!this.state.loadingDefaultClasses && (
-                            <Select
-                                isClearable
-                                isMulti
+                            <AutoComplete
+                                requestUrl={classesUrl}
+                                onChange={(selected, action) => {
+                                    // blur the field allows to focus and open the menu again
+                                    this.classesAutocompleteRef.current && this.classesAutocompleteRef.current.blur();
+                                    this.handleClassSelect(selected, action);
+                                }}
+                                placeholder="Select or type to enter a class"
                                 value={this.state.classes}
-                                onChange={this.handleClassesChange}
-                                options={this.state.classesOptions}
-                                getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
-                                getOptionValue={({ id }) => id}
+                                autoLoadOption={true}
+                                openMenuOnFocus={true}
+                                allowCreate={true}
+                                isClearable
+                                innerRef={instance => (this.classesAutocompleteRef = instance)}
+                                isMulti
+                                autoFocus={false}
                             />
                         )}
                         {this.state.loadingDefaultClasses && <div>Loading default classes</div>}

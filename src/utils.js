@@ -503,14 +503,15 @@ export const similarPropertiesByLabel = (propertyLabel, propertyData) => {
 /**
  * Compare input value to select options
  * Builtins https://github.com/JedWatson/react-select/blob/d2a820efc70835adf864169eebc76947783a15e2/packages/react-select/src/Creatable.js
- * @param {String} propertyLabel property label
- * @param {Array} propertyData property comparison data
+ * @param {String} inputValue candidate label
+ * @param {Object} option option
  */
 export const compareOption = (inputValue = '', option) => {
     const candidate = String(inputValue).toLowerCase();
     const optionValue = String(option.value).toLowerCase();
     const optionLabel = String(option.label).toLowerCase();
-    return optionValue === candidate || optionLabel === candidate;
+    const optionURI = String(option.uri).toLowerCase();
+    return optionValue === candidate || optionLabel === candidate || optionURI === candidate;
 };
 
 /** Helper Functions to increase structure, readability and reuse **/
@@ -688,4 +689,31 @@ function getOrder(paperStatements) {
         order = Infinity;
     }
     return order;
+}
+
+/**
+ * Truncating middle portion of a string
+ *
+ * @param {String} str string
+ * @param {Number} firstCharCount first Char Count
+ * @param {Number} endCharCount end Char count
+ * @param {Number} dotCount dotCount
+ * @return {Array} the list of values
+ */
+export function truncStringPortion(str, firstCharCount = str.length, endCharCount = 0, dotCount = 3) {
+    if (str === null) {
+        return '';
+    }
+    if (
+        (firstCharCount === 0 && endCharCount === 0) ||
+        firstCharCount >= str.length ||
+        endCharCount >= str.length ||
+        firstCharCount + endCharCount >= str.length
+    ) {
+        return str;
+    } else if (endCharCount === 0) {
+        return str.slice(0, firstCharCount) + '.'.repeat(dotCount);
+    } else {
+        return str.slice(0, firstCharCount) + '.'.repeat(dotCount) + str.slice(str.length - endCharCount);
+    }
 }

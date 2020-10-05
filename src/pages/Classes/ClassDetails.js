@@ -110,7 +110,12 @@ function ClassDetails(props) {
                                         {template ? (
                                             <Link to={reverse(ROUTES.CONTRIBUTION_TEMPLATE, { id: template.id })}>{template.label}</Link>
                                         ) : (
-                                            <i>Not Defined</i>
+                                            <i>
+                                                Not Defined{' '}
+                                                <Link to={`${reverse(ROUTES.CONTRIBUTION_TEMPLATE)}?classID=${props.match.params.id}`}>
+                                                    Create a template
+                                                </Link>
+                                            </i>
                                         )}
                                     </td>
                                 </tr>
