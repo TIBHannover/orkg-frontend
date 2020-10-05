@@ -27,9 +27,10 @@ function ObservatoryCard(props) {
                         {props.observatory.organization_ids.map(o => (
                             <span style={{ marginLeft: '10px' }}>
                                 <img
+                                    className="justify-content-center"
                                     style={{ marginTop: '10px', border: '1px', padding: '2px' }}
                                     key={`imageLogo${o.id}`}
-                                    height="40px"
+                                    height="45px"
                                     src={o.logo}
                                     alt={`${o.name} logo`}
                                 />
