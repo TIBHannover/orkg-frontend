@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container } from 'reactstrap';
+import { Container, Button } from 'reactstrap';
 
 class ExportData extends Component {
     componentDidMount = () => {
@@ -16,12 +16,20 @@ class ExportData extends Component {
                     <h2>RDF Dump</h2>
 
                     <p className="mt-4">
-                        You can download the RDF Dump of Open Research Knowledge Graph from the following link :<br />{' '}
+                        You can download the Open Research Knowledge Graph RDF Dump in N-Triples format below
+                        <br />{' '}
                     </p>
                     <p className="mt-1">
-                        <a href="https://orkg.org/orkg/api/rdf/dump" target="_blank" rel="noopener noreferrer">
-                            https://orkg.org/orkg/api/rdf/dump
-                        </a>
+                        <Button
+                            color="secondary"
+                            className="mr-3 pl-4 pr-4 flex-shrink-0"
+                            tag="a"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href="https://orkg.org/orkg/api/rdf/dump"
+                        >
+                            Download RDF dump
+                        </Button>
                     </p>
                 </Container>
             </div>
