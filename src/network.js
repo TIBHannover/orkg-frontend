@@ -337,6 +337,17 @@ export const getStatementsByObjectAndPredicate = ({ objectId, predicateId, page 
     return submitGetRequest(`${statementsUrl}object/${objectId}/predicate/${predicateId}/?${params}`);
 };
 
+export const getStatementsByPredicateAndLiteral = ({ predicateId, literal, subjectClass = null, items = 9999 }) => {
+    const params = queryString.stringify(
+        { items: items, subjectClass: subjectClass },
+        {
+            skipNull: true,
+            skipEmptyString: true
+        }
+    );
+    return submitGetRequest(`${statementsUrl}predicate/${predicateId}/literal/${literal}/?${params}`);
+};
+
 /**
  * Get comparison result
  *

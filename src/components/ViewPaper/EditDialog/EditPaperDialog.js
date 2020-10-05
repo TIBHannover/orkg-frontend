@@ -5,15 +5,13 @@ import {
     updateLiteral,
     createLiteral as createLiteralAPI,
     createLiteralStatement,
-    submitGetRequest,
-    literalsUrl,
-    getStatementsByObject,
     createResourceStatement,
     createResource,
     deleteStatementsByIds,
     deleteStatementById,
     updateStatement,
-    getStatementsBySubjectAndPredicate
+    getStatementsBySubjectAndPredicate,
+    getStatementsByPredicateAndLiteral
 } from 'network';
 import { connect } from 'react-redux';
 import EditItem from './EditItem';
@@ -216,11 +214,15 @@ class EditPaperDialog extends Component {
             if (author.orcid) {
                 // Create author with ORCID
                 // check if there's an author resource
-                const responseJson = await submitGetRequest(literalsUrl + '?q=' + encodeURIComponent(author.orcid) + '&exact=true');
+                const responseJson = await getStatementsByPredicateAndLiteral({
+                    predicateId: PREDICATES.HAS_ORCID,
+                    literal: author.orcid,
+                    subjectClass: CLASSES.AUTHOR,
+                    items: 1
+                });
                 if (responseJson.length > 0) {
                     // Author resource exists
-                    let authorResource = await getStatementsByObject({ id: responseJson[0].id });
-                    authorResource = authorResource.find(s => s.predicate.id === PREDICATES.HAS_ORCID);
+                    const authorResource = responseJson[0];
                     const authorStatement = await createResourceStatement(
                         this.props.viewPaper.paperResourceId,
                         PREDICATES.HAS_AUTHOR,

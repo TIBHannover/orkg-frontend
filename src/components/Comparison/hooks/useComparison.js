@@ -210,7 +210,7 @@ function useComparison() {
             for (const author of creators) {
                 const orcid = flattenDepth(authorsORCID, 2).find(a => a !== undefined && a.subject.id === author.id);
                 if (orcid) {
-                    authorsArray.push({ orcid: orcid.label, label: author.label, id: author.id });
+                    authorsArray.push({ orcid: orcid.object.label, label: author.label, id: author.id });
                 } else {
                     authorsArray.push({ orcid: '', label: author.label, id: author.id });
                 }
