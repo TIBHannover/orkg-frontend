@@ -101,7 +101,7 @@ class Observatories extends Component {
             }
 
             const g = await this.groupBy(observatoriesData, 'research_field');
-            g['Observatories List'] = observatoriesData;
+            g['All research fields'] = observatoriesData;
             this.setState({
                 observatories: g,
                 isNextPageLoading: false
