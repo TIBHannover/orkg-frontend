@@ -125,6 +125,7 @@ function GeneralSettings(props) {
                     copyValueButton={true}
                     isClearable
                     innerRef={classAutocompleteRef}
+                    autoFocus={false}
                     linkButton={props.class && props.class.id ? reverse(ROUTES.CLASS, { id: props.class.id }) : ''}
                     linkButtonTippy="Go to class page"
                 />
@@ -150,6 +151,7 @@ function GeneralSettings(props) {
                             openMenuOnFocus={true}
                             allowCreate={true}
                             isDisabled={!props.editMode}
+                            autoFocus={false}
                             isClearable
                             innerRef={predicateAutocompleteRef}
                         />
@@ -169,6 +171,7 @@ function GeneralSettings(props) {
                             value={props.researchFields}
                             autoLoadOption={true}
                             openMenuOnFocus={true}
+                            autoFocus={false}
                             allowCreate={false}
                             isDisabled={!props.editMode}
                             isClearable
@@ -186,6 +189,7 @@ function GeneralSettings(props) {
                             value={props.researchProblems}
                             autoLoadOption={true}
                             openMenuOnFocus={true}
+                            autoFocus={false}
                             allowCreate={false}
                             isDisabled={!props.editMode}
                             isClearable

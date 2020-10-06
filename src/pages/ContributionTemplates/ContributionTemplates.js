@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Col, Row, FormGroup, Label, Form, Input } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { getResourcesByClass, resourcesUrl, getStatementsByObjectAndPredicate, classesUrl } from 'network';
@@ -153,9 +154,9 @@ export default class ContributionTemplates extends Component {
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
                     <div className="clearfix">
                         You can use one of this filters to get the related template.
-                        <Link className="float-right mb-2 mt-2 clearfix" to={reverse(ROUTES.CONTRIBUTION_TEMPLATE)}>
+                        <RequireAuthentication component={Link} className="float-right mb-2 mt-2 clearfix" to={reverse(ROUTES.CONTRIBUTION_TEMPLATE)}>
                             <span className="fa fa-plus" /> Create new template
-                        </Link>
+                        </RequireAuthentication>
                     </div>
 
                     <Form className="mb-3">
