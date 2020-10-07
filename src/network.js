@@ -706,6 +706,10 @@ export const createObservatory = (observatoryName, organizationId, description) 
     return submitPostRequest(observatoriesUrl, { 'Content-Type': 'application/json' }, { observatoryName, organizationId, description });
 };
 
+export const addPapertoObservatory = (observatoryId, organizationId, id) => {
+    return submitPutRequest(`${resourcesUrl}${id}/addObservatory`, { 'Content-Type': 'application/json' }, { observatoryId, organizationId });
+};
+
 export const getContributorsByResourceId = id => {
     return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/contributors`).then(contributors => {
         const c = contributors.map(contributor => {

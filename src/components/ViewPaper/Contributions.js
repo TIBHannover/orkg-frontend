@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
-import { Alert, Col, Container, Form, FormGroup, Row, Button } from 'reactstrap';
-import { getResource, getSimilaireContribution, deleteStatementById, createResource, createResourceStatement } from 'network';
+import { Alert, Col, Container, Form, FormGroup, Row, Button, InputGroupAddon, InputGroup, Input } from 'reactstrap';
+import {
+    getResource,
+    getSimilaireContribution,
+    deleteStatementById,
+    createResource,
+    createResourceStatement,
+    observatoriesUrl,
+    submitGetRequest,
+    organizationsUrl,
+    addPapertoObservatory
+} from 'network';
 import AddToComparison from './AddToComparison';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ContentLoader from 'react-content-loader';
@@ -72,8 +82,16 @@ class Contributions extends Component {
             similaireContributions: [],
             isSimilaireContributionsLoading: true,
             isSimilaireContributionsFailedLoading: false,
-            label: ''
+            label: '',
+            observatories: [],
+            organizationId: '',
+            observatoryId: '',
+            isLoadingObservatory: false
         };
+    }
+
+    componentDidMount() {
+        this.loadObservatories();
     }
 
     componentDidUpdate = prevProps => {
@@ -84,6 +102,55 @@ class Contributions extends Component {
             this.setState({ selectedContribution: this.props.selectedContribution }, () => {
                 this.handleSelectContribution(this.state.selectedContribution);
             });
+        }
+    };
+
+    loadObservatories = () => {
+        this.setState({ isLoadingObservatory: true });
+        const observatories = submitGetRequest(`${observatoriesUrl}`);
+        const organizations = submitGetRequest(`${organizationsUrl}`);
+
+        Promise.all([observatories, organizations])
+            .then(async data => {
+                const items = [];
+                items.push(<option value="">Select an observatory</option>);
+                for (const observatory of data[0]) {
+                    for (let i = 0; i < observatory.organization_ids.length; i++) {
+                        const org = data[1].find(o1 => o1.id === observatory.organization_ids[i]);
+                        items.push(
+                            <option value={org.id + ';' + observatory.id}>
+                                {'Organization: ' + org.name + ' , Observatory: ' + observatory.name}
+                            </option>
+                        );
+                    }
+                }
+                this.setState({
+                    observatories: items,
+                    isLoadingObservatory: false
+                });
+            })
+            .catch(e => {
+                this.setState({
+                    isLoadingObservatory: false
+                });
+            });
+    };
+
+    handleInputChange = async event => {
+        const Ids = await event.target.value.split(';');
+        this.setState({ organizationId: Ids[0], observatoryId: Ids[1] });
+    };
+
+    handleSubmit = async e => {
+        e.preventDefault();
+
+        if (this.state.organizationId.length > 0 && this.state.observatoryId.length > 0) {
+            addPapertoObservatory(this.state.observatoryId, this.state.organizationId, this.props.paperId).then(l => {
+                toast.success(`Observatory added to paper successfully`);
+                this.props.getObservatoryInfo();
+            });
+        } else {
+            toast.error(`Please select an observatory`);
         }
     };
 
@@ -352,6 +419,28 @@ class Contributions extends Component {
                                         </div>
 
                                         {selectedContributionId && <ContributionComparisons contributionId={selectedContributionId} />}
+                                        {this.state.observatories.length > 0 && isEmpty(this.props.observatoryInfo) && (
+                                            <>
+                                                {' '}
+                                                <br />
+                                                <Title style={{ marginTop: 0 }}>Add to an Observatory</Title>
+                                                <InputGroup>
+                                                    <Input
+                                                        type="select"
+                                                        onChange={this.handleInputChange}
+                                                        name="observatoryInfo"
+                                                        aria-label="Select an observatory"
+                                                    >
+                                                        <>{this.state.observatories}</>
+                                                    </Input>
+                                                    <InputGroupAddon addonType="append">
+                                                        <Button variant="outline-secondary" onClick={this.handleSubmit}>
+                                                            Add
+                                                        </Button>
+                                                    </InputGroupAddon>
+                                                </InputGroup>
+                                            </>
+                                        )}
                                     </Form>
                                 </StyledHorizontalContribution>
                             </AnimationContainer>
@@ -384,7 +473,8 @@ Contributions.propTypes = {
     observatoryInfo: PropTypes.object,
     contributors: PropTypes.array,
     researchField: PropTypes.object.isRequired,
-    selectedResource: PropTypes.string
+    selectedResource: PropTypes.string,
+    getObservatoryInfo: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {

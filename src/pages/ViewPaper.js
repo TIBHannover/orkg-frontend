@@ -60,7 +60,10 @@ class ViewPaper extends Component {
         editMode: false,
         observatoryInfo: {},
         contributors: [],
-        showHeaderBar: false
+        showHeaderBar: false,
+        isLoadingObservatory: false,
+        failedLoading: false,
+        observatories: []
     };
 
     componentDidMount() {
@@ -92,7 +95,6 @@ class ViewPaper extends Component {
     loadPaperData = () => {
         this.setState({ loading: true });
         const resourceId = this.props.match.params.resourceId;
-
         this.props.resetStatementBrowser();
         getResource(resourceId)
             .then(paperResource => {
@@ -181,6 +183,17 @@ class ViewPaper extends Component {
             await deleteStatementById(statementId);
             toast.success('Contribution deleted successfully');
         }
+    };
+
+    getObservatoryInfo = () => {
+        const resourceId = this.props.match.params.resourceId;
+        getResource(resourceId)
+            .then(paperResource => {
+                this.processObservatoryInformation(paperResource, resourceId);
+            })
+            .catch(error => {
+                this.setState({ loading: false, loading_failed: true });
+            });
     };
 
     /** PROCESSING HELPER :  Helper functions to increase code readability**/
@@ -368,6 +381,7 @@ class ViewPaper extends Component {
                                         toggleDeleteContribution={this.toggleDeleteContribution}
                                         observatoryInfo={this.state.observatoryInfo}
                                         contributors={this.state.contributors}
+                                        getObservatoryInfo={this.getObservatoryInfo}
                                     />
 
                                     <ComparisonPopup />
