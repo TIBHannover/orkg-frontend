@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getUserInformation, updateUserInformation } from '../../network';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { updateAuth } from '../../actions/auth';
 import { get_error_message } from 'utils';
@@ -108,6 +108,15 @@ class GeneralSettings extends Component {
                         placeholder="Email address"
                         disabled
                     />
+                </FormGroup>
+                <FormGroup>
+                    <Label for="Email">Avatar Picture</Label>
+                    <p>
+                        We use Gravatar, a service that associates an avatar image with your primary email address.
+                        <a href="https://en.gravatar.com/" target="_blank" rel="noopener noreferrer">
+                            Change your avatar image at gravatar.com <Icon size="sm" icon={faExternalLinkAlt} />
+                        </a>
+                    </p>
                 </FormGroup>
                 {/*
                 <FormGroup>
