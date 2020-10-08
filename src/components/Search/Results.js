@@ -65,15 +65,15 @@ const Results = props => {
                 break;
             }
             case 'resource': {
-                link = '/resource/' + resourceId; //TODO: replace this with a better resource view
+                link = reverse(ROUTES.RESOURCE, { id: resourceId });
                 break;
             }
             case 'predicate': {
-                link = '/predicate/' + resourceId; // TODO: replace with better predicate view
+                link = reverse(ROUTES.PREDICATE, { id: resourceId });
                 break;
             }
             default: {
-                link = '';
+                link = reverse(ROUTES.RESOURCE, { id: resourceId });
                 break;
             }
         }
