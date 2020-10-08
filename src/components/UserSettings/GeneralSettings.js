@@ -113,7 +113,7 @@ class GeneralSettings extends Component {
                     <Label for="Email">Avatar Picture</Label>
                     <p>
                         We use Gravatar, a service that associates an avatar image with your primary email address.
-                        <a href="https://en.gravatar.com/" target="_blank" rel="noopener noreferrer">
+                        <a className="ml-1" href="https://en.gravatar.com/" target="_blank" rel="noopener noreferrer">
                             Change your avatar image at gravatar.com <Icon size="sm" icon={faExternalLinkAlt} />
                         </a>
                     </p>
