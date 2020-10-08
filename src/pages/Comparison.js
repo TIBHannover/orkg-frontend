@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPlus, faLightbulb, faBezierCurve, faHistory, faWindowMaximize } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faPlus, faLightbulb, faBezierCurve, faHistory, faWindowMaximize, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
 import ComparisonTable from 'components/Comparison/ComparisonTable.js';
 import ExportToLatex from 'components/Comparison/ExportToLatex.js';
@@ -31,6 +31,7 @@ import { useCookies } from 'react-cookie';
 import PropTypes from 'prop-types';
 import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
+import AddVisualizationModal from '../components/Comparison/AddVisualizationModal';
 
 function Comparison(props) {
     const [
@@ -90,7 +91,7 @@ function Comparison(props) {
     const [showAddContribution, setShowAddContribution] = useState(false);
     const [showComparisonVersions, setShowComparisonVersions] = useState(false);
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
-
+    const [showVisualizationModal, setShowVisualizationModal] = useState(false);
     /**
      * Is case of an error the user can go to the previous link in history
      */
@@ -144,6 +145,16 @@ function Comparison(props) {
                 {contributionsList.length > 1 && !isLoadingComparisonResult && !isFailedLoadingComparisonResult && (
                     <div style={{ marginLeft: 'auto' }} className="flex-shrink-0 mt-4">
                         <ButtonGroup className="float-right mb-4 ml-1">
+                            <Button
+                                color="darkblue"
+                                size="sm"
+                                onClick={() => {
+                                    setShowVisualizationModal(!showVisualizationModal);
+                                }}
+                                style={{ marginRight: 3 }}
+                            >
+                                <Icon icon={faChartBar} /> <span className="mr-2">Add Visualization</span>
+                            </Button>
                             <Dropdown group isOpen={dropdownDensityOpen} toggle={() => setDropdownDensityOpen(v => !v)} style={{ marginRight: 3 }}>
                                 <DropdownToggle color="darkblue" size="sm">
                                     <Icon icon={faWindowMaximize} className="mr-1" /> <span className="mr-1">View</span>
@@ -448,6 +459,27 @@ function Comparison(props) {
                 DOI={metaData?.doi}
                 comparisonId={metaData?.id}
             />
+            {!isLoadingComparisonResult && !isFailedLoadingComparisonResult && (
+                <AddVisualizationModal
+                    toggle={() => setShowVisualizationModal(v => !v)}
+                    showDialog={showVisualizationModal}
+                    // Some data we track as input for the new data model TODO Check what we need
+                    initialdata={{
+                        metaData,
+                        contributions,
+                        properties,
+                        data,
+                        matrixData,
+                        authors,
+                        errors,
+                        transpose,
+                        comparisonType,
+                        responseHash,
+                        contributionsList,
+                        predicatesList
+                    }}
+                />
+            )}
         </div>
     );
 }
