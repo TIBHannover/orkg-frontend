@@ -65,7 +65,7 @@ class Search extends Component {
             }
         ];
 
-        this.orkg_classes = [CLASSES.CONTRIBUTION, CLASSES.PAPER, CLASSES.PROBLEM, CLASSES.AUTHOR, CLASSES.COMPARISON, CLASSES.VENUE];
+        this.ignored_classes = [CLASSES.CONTRIBUTION];
 
         const selectedFilters = getArrayParamFromQueryString(decodeURIComponent(this.props.location.search), 'types');
 
@@ -167,7 +167,10 @@ class Search extends Component {
                 sortBy: 'id',
                 desc: true,
                 q: searchQuery,
-                exclude: this.orkg_classes.join(',')
+                exclude: this.defaultsFilters
+                    .map(df => df.id)
+                    .concat(this.ignored_classes)
+                    .join(',')
             });
         } else {
             request = getResourcesByClass({
