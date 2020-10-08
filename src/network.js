@@ -674,12 +674,36 @@ export const createOrganization = (organizationName, organizationLogo, createdBy
     return submitPostRequest(organizationsUrl, { 'Content-Type': 'application/json' }, { organizationName, organizationLogo, createdBy, url });
 };
 
+export const updateOrganizationName = (id, value) => {
+    return submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/name`, { 'Content-Type': 'application/json' }, { value });
+};
+
+export const updateOrganizationUrl = (id, value) => {
+    return submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/url`, { 'Content-Type': 'application/json' }, { value });
+};
+
+export const updateOrganizationLogo = (id, value) => {
+    return submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/logo`, { 'Content-Type': 'application/json' }, { value });
+};
+
 export const getAllObservatoriesByOrganizationId = id => {
     return submitGetRequest(`${organizationsUrl}${encodeURIComponent(id)}/observatories`);
 };
 
 export const getObservatoryById = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/`);
+};
+
+export const updateObservatoryName = (id, value) => {
+    return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/name`, { 'Content-Type': 'application/json' }, { value });
+};
+
+export const updateObservatoryDescription = (id, value) => {
+    return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/description`, { 'Content-Type': 'application/json' }, { value });
+};
+
+export const updateObservatoryResearchField = (id, value) => {
+    return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/research_field`, { 'Content-Type': 'application/json' }, { value });
 };
 
 export const getUsersByObservatoryId = id => {
@@ -702,8 +726,20 @@ export const getProblemsByObservatoryId = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/problems`);
 };
 
-export const createObservatory = (observatoryName, organizationId, description) => {
-    return submitPostRequest(observatoriesUrl, { 'Content-Type': 'application/json' }, { observatoryName, organizationId, description });
+export const getObservatoriesStats = id => {
+    return submitGetRequest(`${observatoriesUrl}stats/observatories`);
+};
+
+export const getComparisonsCountByObservatoryId = id => {
+    return submitGetRequest(`${statsUrl}${encodeURIComponent(id)}/observatoryComparisonsCount`);
+};
+
+export const createObservatory = (observatoryName, organizationId, description, researchField) => {
+    return submitPostRequest(
+        observatoriesUrl,
+        { 'Content-Type': 'application/json' },
+        { observatoryName, organizationId, description, researchField }
+    );
 };
 
 export const getContributorsByResourceId = id => {
