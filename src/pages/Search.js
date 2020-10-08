@@ -49,6 +49,11 @@ class Search extends Component {
                 id: CLASSES.VENUE
             },
             {
+                label: 'Template',
+                labelPlural: 'Templates',
+                id: CLASSES.CONTRIBUTION_TEMPLATE
+            },
+            {
                 label: 'Resource',
                 labelPlural: 'Resources',
                 id: 'resource'
