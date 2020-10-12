@@ -246,7 +246,7 @@ class Search extends Component {
     };
 
     render() {
-        const allFilters = !this.isLoading() ? unionBy(this.defaultsFilters, this.state.selectedFilters, 'id') : [];
+        const allFilters = unionBy(this.defaultsFilters, this.state.selectedFilters, 'id');
         return (
             <div>
                 <Container className="p-0">
@@ -291,30 +291,29 @@ class Search extends Component {
                                     <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
                                 ) : (
                                     <div>
-                                        {!this.isLoading() &&
-                                            allFilters.map(filter => {
-                                                if (
-                                                    this.state.selectedFilters.length === 0 ||
-                                                    (this.state.selectedFilters.length > 0 &&
-                                                        this.state.selectedFilters.map(c => c && c.id).includes(filter.id))
-                                                ) {
-                                                    return (
-                                                        <div key={`filter-result${filter.id}`}>
-                                                            <Results
-                                                                loading={this.state.isNextPageLoading[filter.id] || false}
-                                                                hasNextPage={this.state.hasNextPage[filter.id] || false}
-                                                                loadMore={() => this.loadMoreResults(this.state.value, filter.id)}
-                                                                items={this.state.results[filter.id] || []}
-                                                                label={filter.label}
-                                                                class={filter.id}
-                                                                showNoResultsMessage={this.state.selectedFilters.map(c => c.id).includes(filter.id)}
-                                                            />
-                                                        </div>
-                                                    );
-                                                } else {
-                                                    return null;
-                                                }
-                                            })}
+                                        {allFilters.map(filter => {
+                                            if (
+                                                this.state.selectedFilters.length === 0 ||
+                                                (this.state.selectedFilters.length > 0 &&
+                                                    this.state.selectedFilters.map(c => c && c.id).includes(filter.id))
+                                            ) {
+                                                return (
+                                                    <div key={`filter-result${filter.id}`}>
+                                                        <Results
+                                                            loading={this.state.isNextPageLoading[filter.id] || false}
+                                                            hasNextPage={this.state.hasNextPage[filter.id] || false}
+                                                            loadMore={() => this.loadMoreResults(this.state.value, filter.id)}
+                                                            items={this.state.results[filter.id] || []}
+                                                            label={filter.label || filter.id}
+                                                            class={filter.id}
+                                                            showNoResultsMessage={this.state.selectedFilters.map(c => c.id).includes(filter.id)}
+                                                        />
+                                                    </div>
+                                                );
+                                            } else {
+                                                return null;
+                                            }
+                                        })}
                                     </div>
                                 )}
                             </div>
