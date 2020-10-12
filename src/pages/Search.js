@@ -67,7 +67,9 @@ class Search extends Component {
 
         this.ignored_classes = [CLASSES.CONTRIBUTION];
 
-        const selectedFilters = getArrayParamFromQueryString(decodeURIComponent(this.props.location.search), 'types');
+        const selectedFiltersStrings = getArrayParamFromQueryString(decodeURIComponent(this.props.location.search), 'types');
+        // ensure the array format is accepted by the autocomplete component
+        const selectedFilters = selectedFiltersStrings.map(filter => ({ id: filter }));
 
         let results;
         if (selectedFilters && selectedFilters.length > 0) {
@@ -208,6 +210,11 @@ class Search extends Component {
     };
 
     toggleFilter = async filterClass => {
+        // if current filters are empty and filters should be applied, don't do anything
+        if (!this.state.selectedFilters.length && !filterClass) {
+            return;
+        }
+
         let selectedFilters = [];
 
         if (filterClass === null) {
@@ -218,15 +225,7 @@ class Search extends Component {
                 const index = this.state.selectedFilters.map(sf => sf.id).indexOf(filterClass.id);
                 selectedFilters = dotProp.delete(this.state.selectedFilters, index);
             } else {
-                // make sure to filter out the onces that are not in default filters
-                const countNotDefault = this.state.selectedFilters.filter(s => !this.defaultsFilters.map(df => df.id).includes(s.id));
-                if (countNotDefault.length !== 1) {
-                    selectedFilters = this.state.selectedFilters.filter(s => this.defaultsFilters.map(df => df.id).includes(s.id));
-                } else {
-                    selectedFilters = this.state.selectedFilters;
-                }
-                // add the filter
-                selectedFilters = [...selectedFilters, filterClass];
+                selectedFilters = [...this.state.selectedFilters, filterClass];
             }
         }
 

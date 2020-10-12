@@ -50,7 +50,7 @@ const Filters = props => {
             </InputGroup>
             <hr className="mt-4 mb-3" />
 
-            <Label>Type</Label>
+            <Label>Filter by type</Label>
 
             {props.defaultsFilters.map(filter => (
                 <CustomInput
@@ -64,11 +64,16 @@ const Filters = props => {
             ))}
             <br />
             <Label>Other filters</Label>
-
             <AutoComplete
                 requestUrl={classesUrl}
-                onChange={(selected, action) => {
-                    props.toggleFilter(selected);
+                onChange={(_, action) => {
+                    if (action.action === 'select-option') {
+                        props.toggleFilter(action.option);
+                    } else if (action.action === 'remove-value') {
+                        props.toggleFilter(action.removedValue);
+                    } else if (action.action === 'clear') {
+                        props.toggleFilter(null);
+                    }
                 }}
                 placeholder="Select a filter"
                 value={props.selectedFilters.filter(sf => !props.defaultsFilters.map(df => df.id).includes(sf.id))}
@@ -76,7 +81,7 @@ const Filters = props => {
                 openMenuOnFocus={true}
                 allowCreate={false}
                 isClearable
-                isMulti={false}
+                isMulti={true}
                 autoFocus={false}
             />
         </Form>
@@ -85,7 +90,7 @@ const Filters = props => {
 
 Filters.propTypes = {
     value: PropTypes.string.isRequired,
-    defaultsFilters: PropTypes.object,
+    defaultsFilters: PropTypes.array.isRequired,
     selectedFilters: PropTypes.array.isRequired,
     handleInputChange: PropTypes.func.isRequired,
     toggleFilter: PropTypes.func.isRequired,
