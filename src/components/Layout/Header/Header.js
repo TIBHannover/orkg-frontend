@@ -308,6 +308,15 @@ class Header extends Component {
                                     <DropdownItem tag="a" target="_blank" rel="noopener noreferrer" href="https://projects.tib.eu/orkg/">
                                         Project <Icon size="sm" icon={faExternalLinkAlt} />
                                     </DropdownItem>
+                                    <DropdownItem
+                                        tag="a"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home"
+                                    >
+                                        Documentation <Icon size="sm" icon={faExternalLinkAlt} />
+                                    </DropdownItem>
+                                    <DropdownItem divider />
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES}>
                                         Observatories{' '}
                                         <small>
@@ -322,7 +331,7 @@ class Header extends Component {
                                     </DropdownItem>
                                     <DropdownItem divider />
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.EXPORT_DATA}>
-                                        Export Data{' '}
+                                        Export data{' '}
                                     </DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledButtonDropdown>
