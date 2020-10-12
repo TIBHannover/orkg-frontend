@@ -3,6 +3,7 @@ import { Alert, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import PropTypes from 'prop-types';
 import image from 'assets/img/help/template1.png';
 import image2 from 'assets/img/help/template2.png';
+import image3 from 'assets/img/help/template3.png';
 import styled from 'styled-components';
 
 const Image = styled.img`
@@ -124,8 +125,15 @@ const HelpModal = props => {
                 <p>
                     <i>{'{Number_of_rooms}'}</i> rooms in <i>{'{Location}'}</i> <i>{'({Building_start_Date})'}</i>{' '}
                 </p>
+                <div className="text-center">
+                    <Image src={image3} alt="Formatted label of home template" style={{ height: 250 }} />
+                </div>
                 <p>And if house instance of 3 rooms build in 12/12/2012 and located in Berlin it will appear in the user interface as :</p>
                 <p>3 rooms in Berlin (12/12/2012)</p>
+                <hr />
+                <p>
+                    After adding all needed properties and configuration for the data structure, click the <i>Save</i> button to save the template.
+                </p>
             </ModalBody>
         </Modal>
     );
