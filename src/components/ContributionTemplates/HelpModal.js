@@ -2,6 +2,7 @@ import React from 'react';
 import { Alert, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import PropTypes from 'prop-types';
 import image from 'assets/img/help/template1.png';
+import image2 from 'assets/img/help/template2.png';
 import styled from 'styled-components';
 
 const Image = styled.img`
@@ -104,6 +105,9 @@ const HelpModal = props => {
                     </ul>
                     We can go further and define more properties and we can also define a template for the type Company (i.e., nested templates).
                 </p>
+                <div className="text-center">
+                    <Image src={image2} alt="Property Number of rooms" style={{ height: 150 }} />
+                </div>
                 <ul>
                     <li>
                         <b>Strict</b>: Whether we allow users of the template to add additional properties. In our case, we might keep it disabled

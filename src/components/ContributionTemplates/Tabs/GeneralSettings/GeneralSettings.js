@@ -112,7 +112,7 @@ function GeneralSettings(props) {
                         <Label>Property</Label>
                         <AutoComplete
                             requestUrl={predicatesUrl}
-                            placeholder={props.editMode ? 'Select or type to enter a property' : 'No Properties'}
+                            placeholder={props.editMode ? 'Select or type to enter a property' : 'No Property'}
                             onChange={handlePropertySelect}
                             value={props.predicate}
                             autoLoadOption={true}
