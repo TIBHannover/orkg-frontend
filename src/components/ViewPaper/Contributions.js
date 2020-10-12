@@ -145,7 +145,7 @@ class Contributions extends Component {
         e.preventDefault();
 
         if (this.state.organizationId.length > 0 && this.state.observatoryId.length > 0) {
-            addPapertoObservatory(this.state.observatoryId, this.state.organizationId, this.props.paperId).then(l => {
+            await addPapertoObservatory(this.state.observatoryId, this.state.organizationId, this.props.paperId).then(l => {
                 toast.success(`Observatory added to paper successfully`);
                 this.props.getObservatoryInfo();
             });
@@ -419,10 +419,12 @@ class Contributions extends Component {
                                         </div>
 
                                         {selectedContributionId && <ContributionComparisons contributionId={selectedContributionId} />}
-                                        {this.state.observatories.length > 0 && isEmpty(this.props.observatoryInfo) && (
+
+                                        {this.props.user && this.state.observatories.length > 0 && isEmpty(this.props.observatoryInfo) && (
                                             <>
                                                 {' '}
                                                 <br />
+                                                {console.log(this.props.user)}
                                                 <Title style={{ marginTop: 0 }}>Add to an Observatory</Title>
                                                 <InputGroup>
                                                     <Input
@@ -474,7 +476,8 @@ Contributions.propTypes = {
     contributors: PropTypes.array,
     researchField: PropTypes.object.isRequired,
     selectedResource: PropTypes.string,
-    getObservatoryInfo: PropTypes.func.isRequired
+    getObservatoryInfo: PropTypes.func.isRequired,
+    user: PropTypes.object
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -498,7 +501,8 @@ const mapStateToProps = (state, ownProps) => {
         researchProblems: researchProblems,
         selectedResource: state.statementBrowser.selectedResource,
         resources: state.statementBrowser.resources,
-        researchField: state.viewPaper.researchField
+        researchField: state.viewPaper.researchField,
+        user: state.auth.user
     };
 };
 
