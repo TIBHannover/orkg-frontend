@@ -424,7 +424,6 @@ class Contributions extends Component {
                                             <>
                                                 {' '}
                                                 <br />
-                                                {console.log(this.props.user)}
                                                 <Title style={{ marginTop: 0 }}>Add to an Observatory</Title>
                                                 <InputGroup>
                                                     <Input
