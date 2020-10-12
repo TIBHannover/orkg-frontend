@@ -36,12 +36,12 @@ const Unauthorized = () => {
                 <div className="container">
                     <div className="row justify-content-center">
                         <div className="col-md-12 text-center">
-                            <Icon icon={faLock} className="text-primary mt-3 mb-3" style={{ fontSize: 25 }} />
+                            <Icon icon={faLock} className="text-primary mt-3 mb-3" style={{ fontSize: 45 }} />
                             {user ? (
                                 <div className="mb-4 lead">You need to be signed in to use this functionality</div>
                             ) : (
                                 <>
-                                    <div className="mb-4 lead">You need to sign in to continue.</div>
+                                    <h2 className="mb-4 h4">You need to sign in to continue</h2>
                                     <Button color="primary" className="mr-3" onClick={handleSignIn}>
                                         Sign in
                                     </Button>
@@ -49,7 +49,7 @@ const Unauthorized = () => {
                             )}
                             <Link to={ROUTES.HOME}>
                                 <Button color="primary" outline className="mr-3">
-                                    Back to home
+                                    Go to home
                                 </Button>
                             </Link>
                             <div className="mt-4">
@@ -62,9 +62,8 @@ const Unauthorized = () => {
                                     }}
                                     onClick={handleSignUp}
                                 >
-                                    Join ORKG now
+                                    Create an account
                                 </span>
-                                . It's free!
                             </div>
                         </div>
                     </div>
