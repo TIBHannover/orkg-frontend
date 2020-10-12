@@ -6,7 +6,10 @@ import {
     getComparison,
     getStatementsBySubjectAndPredicate,
     getStatementsByObjectAndPredicate,
-    getUserInformationById
+    getUserInformationById,
+    observatoriesUrl,
+    submitGetRequest,
+    organizationsUrl
 } from 'network';
 import {
     extendPropertyIds,
@@ -70,6 +73,7 @@ function useComparison() {
     const [hasNextVersions, setHasNextVersions] = useState([]);
     const [createdBy, setCreatedBy] = useState(null);
     const [provenance, setProvenance] = useState(null);
+    const [observatories, setObservatories] = useState(null);
 
     // urls
     const [urlNeedsToUpdate, setUrlNeedsToUpdate] = useState(false);
@@ -179,6 +183,7 @@ function useComparison() {
                     // Get Provenance data
                     loadCreatedBy(comparisonResource.created_by);
                     loadProvenanceInfos(comparisonResource.observatory_id, comparisonResource.organization_id);
+                    loadObservatories();
                 })
                 .catch(error => {
                     let errorMessage = null;
@@ -249,6 +254,31 @@ function useComparison() {
         } else {
             setProvenance(null);
         }
+    };
+
+    /**
+     * Load observatories if comparison is not added to any observatory yet
+     */
+    const loadObservatories = () => {
+        const observatories = submitGetRequest(`${observatoriesUrl}`);
+        const organizations = submitGetRequest(`${organizationsUrl}`);
+
+        Promise.all([observatories, organizations]).then(async data => {
+            const items = [];
+            items.push('');
+            for (const observatory of data[0]) {
+                for (let i = 0; i < observatory.organization_ids.length; i++) {
+                    const org = data[1].find(o1 => o1.id === observatory.organization_ids[i]);
+                    const a = [];
+                    a.observatory_id = observatory.id;
+                    a.organization_id = org.id;
+                    a.observatory_name = observatory.name;
+                    a.organization_name = org.name;
+                    items.push(a);
+                }
+            }
+            setObservatories(items);
+        });
     };
 
     /**
@@ -559,7 +589,8 @@ function useComparison() {
         setShortLink,
         setAuthors,
         loadCreatedBy,
-        loadProvenanceInfos
+        loadProvenanceInfos,
+        observatories
     ];
 }
 export default useComparison;
