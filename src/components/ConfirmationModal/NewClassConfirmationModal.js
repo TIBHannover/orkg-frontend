@@ -1,13 +1,35 @@
 import React, { useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input, FormText, FormFeedback } from 'reactstrap';
+import { createClass } from 'network';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import { get_error_message } from 'utils';
 
 function CreateClassModal(props) {
     const isURI = new RegExp(REGEX.URL).test(props.label.trim());
     const [uri, setUri] = useState(props.uri ? props.uri : isURI ? props.label.trim() : '');
     const [label, setLabel] = useState(isURI ? '' : props.label.trim());
+    const [errors, setErrors] = useState(null);
+
+    const handleConfirm = async () => {
+        setErrors(null);
+        if (label.trim() !== '') {
+            if (uri && !new RegExp(REGEX.URL).test(uri.trim())) {
+                toast.error('Please enter a valid URI of the class');
+            } else {
+                try {
+                    const newClass = await createClass(label, uri ? uri : null);
+                    props.onClose(newClass);
+                    setErrors(null);
+                } catch (error) {
+                    setErrors(error);
+                }
+            }
+        } else {
+            toast.error('Please enter the label of the class');
+        }
+    };
 
     return (
         <Modal isOpen toggle={() => props.onClose(false)}>
@@ -27,29 +49,18 @@ function CreateClassModal(props) {
                         value={uri}
                         placeholder="Enter the URI of the class"
                         onChange={e => setUri(e.target.value)}
+                        invalid={Boolean(get_error_message(errors, 'uri'))}
                     />
-                    <FormText color="muted">Please provide the url of the class if you are using a class defined in an external ontology</FormText>
+                    {Boolean(get_error_message(errors, 'uri')) && <FormFeedback>{get_error_message(errors, 'uri')}</FormFeedback>}
+                    <FormText color="muted">Please provide the URI of the class if you are using a class defined in an external ontology</FormText>
                 </FormGroup>
             </ModalBody>
             <ModalFooter>
-                <Button
-                    color="primary"
-                    onClick={() => {
-                        if (label.trim() !== '') {
-                            if (uri && !new RegExp(REGEX.URL).test(uri.trim())) {
-                                toast.error('Please enter a valid URI of the class');
-                            } else {
-                                props.onClose({ label: label, uri: uri });
-                            }
-                        } else {
-                            toast.error('Please enter the label of the class');
-                        }
-                    }}
-                >
-                    Create class
-                </Button>{' '}
-                <Button color="secondary" onClick={() => props.onClose(false)}>
+                <Button color="light" onClick={() => props.onClose(false)}>
                     Cancel
+                </Button>
+                <Button color="primary" onClick={handleConfirm}>
+                    Create class
                 </Button>
             </ModalFooter>
         </Modal>

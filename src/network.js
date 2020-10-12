@@ -6,12 +6,14 @@ import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
 export const url = `${process.env.REACT_APP_SERVER_URL}api/`;
 export const similaireServiceUrl = process.env.REACT_APP_SIMILARITY_SERVICE_URL;
 export const annotationServiceUrl = process.env.REACT_APP_ANNOTATION_SERVICE_URL;
+export const dataciteServiceUrl = process.env.REACT_APP_DATACITE_URL;
 export const resourcesUrl = `${url}resources/`;
 export const organizationsUrl = `${url}organizations/`;
 export const observatoriesUrl = `${url}observatories/`;
 export const problemsUrl = `${url}problems/`;
 export const predicatesUrl = `${url}predicates/`;
 export const userUrl = `${url}user/`;
+export const doisUrl = `${url}dois/`;
 export const statementsUrl = `${url}statements/`;
 export const literalsUrl = `${url}literals/`;
 export const classesUrl = `${url}classes/`;
@@ -20,6 +22,7 @@ export const crossrefUrl = process.env.REACT_APP_CROSSREF_URL;
 export const semanticScholarUrl = process.env.REACT_APP_SEMANTICSCHOLAR_URL;
 export const comparisonUrl = `${similaireServiceUrl}compare/`;
 export const similaireUrl = `${similaireServiceUrl}similar/`;
+export const dataciteUrl = `${dataciteServiceUrl}`;
 export const authenticationUrl = process.env.REACT_APP_SERVER_URL;
 export const olsBaseUrl = process.env.REACT_APP_OLS_BASE_URL;
 
@@ -30,9 +33,7 @@ export const submitGetRequest = (url, headers, send_token = false) => {
     if (!url) {
         throw new Error('Cannot submit GET request. URL is null or undefined.');
     }
-
     const myHeaders = headers ? new Headers(headers) : {};
-
     if (send_token) {
         const cookies = new Cookies();
         const token = cookies.get('token') ? cookies.get('token') : null;
@@ -55,6 +56,7 @@ export const submitGetRequest = (url, headers, send_token = false) => {
                     });
                 } else {
                     const json = response.json();
+                    //console.log(json);
                     if (json.then) {
                         json.then(resolve).catch(reject);
                     } else {
@@ -66,7 +68,7 @@ export const submitGetRequest = (url, headers, send_token = false) => {
     });
 };
 
-const submitPostRequest = (url, headers, data, jsonStringify = true, send_token = true) => {
+export const submitPostRequest = (url, headers, data, jsonStringify = true, send_token = true) => {
     if (!url) {
         throw new Error('Cannot submit POST request. URL is null or undefined.');
     }
@@ -108,7 +110,7 @@ const submitPostRequest = (url, headers, data, jsonStringify = true, send_token 
     });
 };
 
-const submitPutRequest = (url, headers, data) => {
+const submitPutRequest = (url, headers, data, jsonStringify = true) => {
     if (!url) {
         throw new Error('Cannot submit PUT request. URL is null or undefined.');
     }
@@ -120,8 +122,12 @@ const submitPutRequest = (url, headers, data) => {
         myHeaders.append('Authorization', `Bearer ${token}`);
     }
 
+    if (jsonStringify) {
+        data = JSON.stringify(data);
+    }
+
     return new Promise((resolve, reject) => {
-        fetch(url, { method: 'PUT', headers: myHeaders, body: JSON.stringify(data) })
+        fetch(url, { method: 'PUT', headers: myHeaders, body: data })
             .then(response => {
                 if (!response.ok) {
                     const json = response.json();
@@ -332,8 +338,39 @@ export const getStatementsByObjectAndPredicate = ({ objectId, predicateId, page 
     return submitGetRequest(`${statementsUrl}object/${objectId}/predicate/${predicateId}/?${params}`);
 };
 
-export const getComparison = ({ contributionIds = [], save_response = false }) => {
-    return submitGetRequest(`${comparisonUrl}?contributions=${contributionIds.join()}&save_response=${save_response}`);
+export const getStatementsByPredicateAndLiteral = ({ predicateId, literal, subjectClass = null, items = 9999 }) => {
+    const params = queryString.stringify(
+        { items: items, subjectClass: subjectClass },
+        {
+            skipNull: true,
+            skipEmptyString: true
+        }
+    );
+    return submitGetRequest(`${statementsUrl}predicate/${predicateId}/literal/${literal}/?${params}`);
+};
+
+/**
+ * Get comparison result
+ *
+ * @param {Array[String]} contributionIds Contribution id
+ * @param {String} type Method used to compare (path | merge)
+ * @param {String} response_hash Response hash
+ * @param {Boolean} save_response To return a response hash and save a copy of the result
+ */
+export const getComparison = ({ contributionIds = [], type = null, response_hash = null, save_response = false }) => {
+    const params = queryString.stringify(
+        {
+            contributions: contributionIds.join(','),
+            response_hash: response_hash,
+            type: type,
+            save_response: save_response
+        },
+        {
+            skipNull: true,
+            skipEmptyString: true
+        }
+    );
+    return submitGetRequest(`${comparisonUrl}?${params}`);
 };
 
 export const getSimilaireContribution = id => {
@@ -689,7 +726,7 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
         return getOrganization(organizationId).then(orgResponse => {
             return {
                 id: observatoryId,
-                name: obsResponse.name.toUpperCase(),
+                name: obsResponse.name,
                 organization: {
                     id: organizationId,
                     name: orgResponse.name,
@@ -697,6 +734,49 @@ export const getObservatoryAndOrganizationInformation = (observatoryId, organiza
                 }
             };
         });
+    });
+};
+
+export const generateDOIForComparison = (comparison_id, title, subject, description, related_resources, authors, url) => {
+    return submitPostRequest(
+        doisUrl,
+        { 'Content-Type': 'application/json' },
+        { comparison_id, title, subject, description, related_resources, authors, url }
+    );
+};
+
+export const getComparisonDataByDOI = id => {
+    return submitGetRequest(`${process.env.REACT_APP_DATACITE_URL}/${process.env.REACT_APP_DATACITE_DOI_PREFIX}/${encodeURIComponent(id)}`);
+};
+
+export const getCitationByDOI = (DOI, style = '', header = 'text/x-bibliography') => {
+    let headers = '';
+    headers = { Accept: `${header}` };
+    const myHeaders = headers ? new Headers(headers) : {};
+    const url = `${process.env.REACT_APP_DATACITE_URL}/${DOI}?style=${style}`;
+
+    return new Promise((resolve, reject) => {
+        fetch(url, {
+            method: 'GET',
+            headers: myHeaders
+        })
+            .then(response => {
+                if (!response.ok) {
+                    reject({
+                        error: new Error(`Error response. (${response.status}) ${response.statusText}`),
+                        statusCode: response.status,
+                        statusText: response.statusText
+                    });
+                } else {
+                    const text = response.text();
+                    if (text.then) {
+                        text.then(resolve).catch(reject);
+                    } else {
+                        return resolve(text);
+                    }
+                }
+            })
+            .catch(reject);
     });
 };
 
@@ -712,4 +792,25 @@ export const getContributorsByResearchProblemId = ({ id, page = 1, items = 9999 
 export const getAuthorsByResearchProblemId = ({ id, page = 1, items = 9999 }) => {
     const params = queryString.stringify({ page: page, items: items });
     return submitGetRequest(`${problemsUrl}${encodeURIComponent(id)}/authors?${params}`);
+};
+
+export const classifySentence = ({ sentence, labels }) => {
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+
+    const data = {
+        sentence,
+        labels
+    };
+
+    return submitPutRequest(`${annotationServiceUrl}classifySentence/`, headers, data);
+};
+
+export const summarizeText = ({ text, ratio }) => {
+    const headers = {
+        'Content-Type': 'text/plain'
+    };
+
+    return submitPutRequest(`${annotationServiceUrl}summarizeText/?ratio=${ratio}`, headers, text, false);
 };

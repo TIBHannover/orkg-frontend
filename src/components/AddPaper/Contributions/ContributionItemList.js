@@ -76,7 +76,10 @@ class ContributionItemList extends Component {
                 className={this.props.isSelected ? 'activeContribution' : ''}
                 onClick={
                     !this.props.paperId
-                        ? () => (this.props.handleSelectContribution ? this.props.handleSelectContribution(this.props.contribution.id) : undefined)
+                        ? () =>
+                              this.props.handleSelectContribution && !this.state.isEditing
+                                  ? this.props.handleSelectContribution(this.props.contribution.id)
+                                  : undefined
                         : undefined
                 }
             >

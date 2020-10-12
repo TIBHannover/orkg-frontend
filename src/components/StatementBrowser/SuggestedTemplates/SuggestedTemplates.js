@@ -36,18 +36,21 @@ export default function SuggestedTemplates(props) {
      */
     useEffect(() => {
         setLoadingFieldTemplates({ isLoading: true, failed: false });
-
-        getParentResearchFields(props.researchField).then(parents => {
-            Promise.all([...parents.map(rf => getTemplatesOfResourceId(rf.id, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD))])
-                .then(templates => {
-                    setFieldTemplates(templates.flat());
-                    setLoadingFieldTemplates({ isLoading: false, failed: false });
-                })
-                .catch(e => {
-                    setFieldTemplates([]);
-                    setLoadingFieldTemplates({ isLoading: false, failed: true });
-                });
-        });
+        if (props.researchField) {
+            getParentResearchFields(props.researchField).then(parents => {
+                Promise.all([...parents.map(rf => getTemplatesOfResourceId(rf.id, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD))])
+                    .then(templates => {
+                        setFieldTemplates(templates.flat());
+                        setLoadingFieldTemplates({ isLoading: false, failed: false });
+                    })
+                    .catch(e => {
+                        setFieldTemplates([]);
+                        setLoadingFieldTemplates({ isLoading: false, failed: true });
+                    });
+            });
+        } else {
+            setLoadingFieldTemplates({ isLoading: false, failed: false });
+        }
     }, [props.researchField, getTemplatesOfResourceId]);
 
     /**
@@ -129,7 +132,7 @@ export default function SuggestedTemplates(props) {
 SuggestedTemplates.propTypes = {
     syncBackend: PropTypes.bool.isRequired,
     researchProblems: PropTypes.array.isRequired,
-    researchField: PropTypes.string.isRequired,
+    researchField: PropTypes.string,
     selectedResource: PropTypes.string.isRequired,
     disabled: PropTypes.bool.isRequired
 };

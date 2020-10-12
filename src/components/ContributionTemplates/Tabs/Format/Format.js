@@ -23,7 +23,7 @@ function Format(props) {
                         id="switchHasLabelFormat"
                         type="switch"
                         name="customSwitch"
-                        label="Show formated text instead of resource label"
+                        label="Show formatted text instead of resource label"
                         disabled={!props.editMode}
                     />
                 </div>
@@ -40,7 +40,7 @@ function Format(props) {
                             <FormText>
                                 Use the reference of property IDs bellow to get each property placeholder.
                                 <br />
-                                The formated text result will replace each {'{P…}'} placeholder in the string with its corresponding value.
+                                The formatted text result will replace each {'{P…}'} placeholder in the string with its corresponding value.
                                 <br />
                                 e.g:{' '}
                                 <i>

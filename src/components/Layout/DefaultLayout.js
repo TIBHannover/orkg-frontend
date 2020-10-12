@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import 'assets/scss/DefaultLayout.scss';
 import { ToastContainer, Slide } from 'react-toastify';
+import { Alert, Button } from 'reactstrap';
+import { useCookies } from 'react-cookie';
 import Header from 'components/Layout/Header/Header';
 import Footer from 'components/Layout/Footer';
 import PropTypes from 'prop-types';
@@ -12,7 +14,7 @@ import ROUTES from 'constants/routes';
 
 const StyledBody = styled.div`
     display: flex;
-    min-height: 100vh;
+    min-height: calc(100vh - 30px);
     flex-direction: column;
     padding-top: 73px;
     margin-top: 30px;
@@ -24,6 +26,34 @@ const StyledAppContent = styled.div`
 
 const StyledFooter = styled.div`
     flex-shrink: 0;
+`;
+
+const StyledAlertCookie = styled(Alert)`
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin: 0 !important;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    border-radius: 0;
+    transform: translateY(100%);
+    transition: all 300ms ease-out;
+    background: #202226;
+    border: 0;
+    color: #fff;
+
+    &.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0%);
+        transition-delay: 1000ms;
+    }
+
+    & a {
+        text-decoration: underline;
+    }
 `;
 
 function CloseToastButton({ closeToast }) {
@@ -44,7 +74,14 @@ CloseToastButton.propTypes = {
 
 export default function DefaultLayout(props) {
     const location = useLocation();
-    const showFooter = location.pathname !== ROUTES.PDF_ANNOTATION;
+    const showFooter = location.pathname !== ROUTES.PDF_TEXT_ANNOTATION && location.pathname !== ROUTES.PDF_ANNOTATION;
+    const [cookies, setCookie] = useCookies(['cookieInfoDismissed']);
+    const [visible, setVisible] = useState(!Boolean(cookies.cookieInfoDismissed));
+
+    const onDismissCookieInfo = () => {
+        setCookie('cookieInfoDismissed', true, { path: process.env.PUBLIC_URL, maxAge: 365 * 24 * 60 * 60 * 1000 });
+        setVisible(false);
+    };
 
     return (
         <StyledBody className="body">
@@ -63,6 +100,15 @@ export default function DefaultLayout(props) {
                     <Footer />
                 </StyledFooter>
             )}
+            <StyledAlertCookie color="info" isOpen={visible} className="d-flex justify-content-center align-items-center">
+                This website uses cookies to ensure you get the best experience on our website. By using this site, you agree to this use.
+                <a href="https://projects.tib.eu/orkg/data-protection/" target="_blank" rel="noopener noreferrer" className="mx-2">
+                    More Info
+                </a>
+                <Button onClick={onDismissCookieInfo} color="primary" className="btn-sm mx-2">
+                    OK
+                </Button>
+            </StyledAlertCookie>
         </StyledBody>
     );
 }

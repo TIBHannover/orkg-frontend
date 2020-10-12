@@ -74,7 +74,7 @@ const ObjectStatements = props => {
                             <thead>
                                 <tr>
                                     <th width="33%">Subject</th>
-                                    <th width="33%">Predicate</th>
+                                    <th width="33%">Property</th>
                                     <th width="33%">Object</th>
                                 </tr>
                             </thead>

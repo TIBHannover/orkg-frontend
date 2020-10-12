@@ -3,7 +3,7 @@ import { FormGroup, Label, FormText, Input, CustomInput } from 'reactstrap';
 import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
 import { setLabel, setPredicate, setClass, setResearchFields, setResearchProblems, setIsStrictTemplate } from 'actions/addTemplate';
-import { predicatesUrl, resourcesUrl, classesUrl, createPredicate, createClass } from 'network';
+import { predicatesUrl, resourcesUrl, classesUrl, createPredicate } from 'network';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
@@ -45,11 +45,10 @@ function GeneralSettings(props) {
         if (action === 'select-option') {
             props.setClass(selected);
         } else if (action === 'create-option') {
-            const result = await ConfirmClass({
+            const newClass = await ConfirmClass({
                 label: selected.label
             });
-            if (result) {
-                const newClass = await createClass(selected.label, result.uri ? result.uri : null);
+            if (newClass) {
                 selected.id = newClass.id;
                 props.setClass(selected);
             }

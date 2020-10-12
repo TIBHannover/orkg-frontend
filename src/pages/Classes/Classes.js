@@ -11,7 +11,7 @@ export default class Classes extends Component {
     constructor(props) {
         super(props);
 
-        this.pageSize = 999; // Update this values when the pagination is supported on classes
+        this.pageSize = 25;
 
         this.state = {
             classes: [],
