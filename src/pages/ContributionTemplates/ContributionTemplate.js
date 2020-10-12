@@ -4,15 +4,17 @@ import GeneralSettings from 'components/ContributionTemplates/Tabs/GeneralSettin
 import TemplateEditorHeaderBar from 'components/ContributionTemplates/TemplateEditorHeaderBar';
 import ComponentsTab from 'components/ContributionTemplates/Tabs/ComponentsTab/ComponentsTab';
 import Format from 'components/ContributionTemplates/Tabs/Format/Format';
+import HelpModal from 'components/ContributionTemplates/HelpModal';
 import { StyledContainer } from 'components/ContributionTemplates/styled';
 import { setEditMode, loadTemplate, saveTemplate, setIsLoading, doneLoading, setClass } from 'actions/addTemplate';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faSpinner, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { getParamFromQueryString } from 'utils';
 import styled, { withTheme } from 'styled-components';
 import VisibilitySensor from 'react-visibility-sensor';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
 import { submitGetRequest, classesUrl } from 'network';
+import Tippy from '@tippy.js/react';
 import classnames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -36,7 +38,8 @@ class ContributionTemplate extends Component {
         this.state = {
             activeTab: '1',
             error: null,
-            showHeaderBar: false
+            showHeaderBar: false,
+            helpModalOpen: false
         };
     }
 
@@ -79,10 +82,32 @@ class ContributionTemplate extends Component {
         });
     };
 
+    toggle = type => {
+        this.setState(prevState => ({
+            [type]: !prevState[type]
+        }));
+    };
+
     render() {
         return (
             <StyledContainer className="clearfix">
-                <h1 className="h4 mt-4 mb-4 flex-grow-1">{!this.props.match.params.id ? 'Create new template' : 'Template'}</h1>
+                <div className="mt-4 mb-4 d-flex">
+                    <h1 className="h4">{!this.props.match.params.id ? 'Create new template' : 'Template'}</h1>
+                    <Tippy content="Open help popup">
+                        <span className="ml-3">
+                            <Button
+                                color="link"
+                                outline
+                                size="sm"
+                                style={{ fontSize: 22, lineHeight: 1 }}
+                                className="p-0"
+                                onClick={() => this.toggle('helpModalOpen')}
+                            >
+                                <Icon icon={faQuestionCircle} />
+                            </Button>
+                        </span>
+                    </Tippy>
+                </div>
                 {this.state.showHeaderBar && <TemplateEditorHeaderBar id={this.props.match.params.id} />}
                 {(this.props.editMode || this.props.isSaving) && (
                     <EditModeHeader className="box rounded-top">
@@ -175,6 +200,7 @@ class ContributionTemplate extends Component {
                         </TabContent>
                     </div>
                 </div>
+                <HelpModal isOpen={this.state.helpModalOpen} toggle={() => this.toggle('helpModalOpen')} />
             </StyledContainer>
         );
     }
