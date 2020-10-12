@@ -89,13 +89,13 @@ class EditPaperDialog extends Component {
         if (!this.state.title) {
             toast.error('Please enter the title of this paper');
             this.setState({ isLoading: false });
-            return null;
+            return;
         }
         // Validate URL
         if (this.state.url && !new RegExp(REGEX.URL).test(this.state.url.trim())) {
             toast.error(`Please enter a valid paper URL`);
             this.setState({ isLoading: false });
-            return null;
+            return;
         }
 
         //title
