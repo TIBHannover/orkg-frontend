@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, ButtonGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faProjectDiagram, faPen, faTimes, faFile } from '@fortawesome/free-solid-svg-icons';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import PropTypes from 'prop-types';
 
 function PaperMenuBar(props) {
@@ -18,9 +19,16 @@ function PaperMenuBar(props) {
                 </Button>
 
                 {!props.editMode ? (
-                    <Button className="flex-shrink-0" style={{ marginLeft: 1 }} color="darkblue" size="sm" onClick={() => props.toggle('editMode')}>
+                    <RequireAuthentication
+                        component={Button}
+                        className="flex-shrink-0"
+                        style={{ marginLeft: 1 }}
+                        color="darkblue"
+                        size="sm"
+                        onClick={() => props.toggle('editMode')}
+                    >
                         <Icon icon={faPen} /> Edit
-                    </Button>
+                    </RequireAuthentication>
                 ) : (
                     <Button
                         className="flex-shrink-0"

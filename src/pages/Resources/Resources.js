@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import ShortRecord from '../../components/ShortRecord/ShortRecord';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { getAllResources } from '../../network';
+import { getAllResources } from 'network';
 import { Container } from 'reactstrap';
-import ROUTES from '../../constants/routes';
+import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 
 export default class Resources extends Component {
@@ -63,9 +64,9 @@ export default class Resources extends Component {
                 </Container>
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
                     <div className="clearfix">
-                        <Link className="float-right mb-2 mt-2 clearfix" to={ROUTES.ADD_RESOURCE}>
+                        <RequireAuthentication component={Link} className="float-right mb-2 mt-2 clearfix" to={ROUTES.ADD_RESOURCE}>
                             <span className="fa fa-plus" /> Create new resource
-                        </Link>
+                        </RequireAuthentication>
                     </div>
                     {this.state.resources.length > 0 && (
                         <div>
