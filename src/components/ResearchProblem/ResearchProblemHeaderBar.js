@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import useHeaderBar from './hooks/useHeaderBar';
 import { HeaderAnimationContainer, PageHeaderBarContainer } from './styled';
@@ -16,9 +17,15 @@ function ResearchProblemHeaderBar(props) {
                     <PageHeaderBarContainer>
                         <Container className="d-flex align-items-center py-2">
                             <div className="title">{props.title}</div>
-                            <Button size="sm" color="darkblue" className="float-right" onClick={() => props.toggleEdit()}>
+                            <RequireAuthentication
+                                component={Button}
+                                size="sm"
+                                color="darkblue"
+                                className="float-right"
+                                onClick={() => props.toggleEdit()}
+                            >
                                 <Icon icon={faPen} /> Edit
-                            </Button>
+                            </RequireAuthentication>
                         </Container>
                     </PageHeaderBarContainer>
                 </HeaderAnimationContainer>
@@ -26,9 +33,9 @@ function ResearchProblemHeaderBar(props) {
             <VisibilitySensor onChange={handleShowHeaderBar}>
                 <Container className="d-flex align-items-center">
                     <h1 className="h4 mt-4 mb-4 flex-grow-1">Research problem</h1>
-                    <Button size="sm" color="darkblue" className="float-right" onClick={() => props.toggleEdit()}>
+                    <RequireAuthentication component={Button} size="sm" color="darkblue" className="float-right" onClick={() => props.toggleEdit()}>
                         <Icon icon={faPen} /> Edit
-                    </Button>
+                    </RequireAuthentication>
                 </Container>
             </VisibilitySensor>
         </div>

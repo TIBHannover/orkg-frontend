@@ -388,6 +388,10 @@ function Autocomplete(props) {
             '& input': {
                 flex: '1'
             }
+        }),
+        multiValueRemove: provided => ({
+            ...provided,
+            cursor: 'pointer'
         })
     };
 

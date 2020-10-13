@@ -4,7 +4,6 @@ import TableSelect from 'components/PdfAnnotation/TableSelect';
 import styled from 'styled-components';
 import DragUpload from 'components/PdfAnnotation/DragUpload';
 import { useSelector } from 'react-redux';
-import Unauthorized from 'pages/Unauthorized';
 
 const PdfContainer = styled.div`
     display: flex;
@@ -23,7 +22,6 @@ const PdfAnnotation = () => {
     const pdf = useSelector(state => state.pdfAnnotation.pdf);
     const pages = useSelector(state => state.pdfAnnotation.pages);
     const styles = useSelector(state => state.pdfAnnotation.styles);
-    const user = useSelector(state => state.auth.user);
 
     const handleZoomChange = zoom => {
         if (zoom) {
@@ -54,9 +52,6 @@ const PdfAnnotation = () => {
 
     const zoomContainerStyle = { transform: 'scale(' + zoom + ')' };
 
-    if (!user) {
-        return <Unauthorized />;
-    }
     return (
         <div style={{ paddingTop: 20 }}>
             <Toolbar changeZoom={handleZoomChange} zoom={zoom} />

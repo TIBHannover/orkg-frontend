@@ -13,6 +13,8 @@ import {
     getStatementsBySubjectAndPredicate,
     getStatementsByPredicateAndLiteral
 } from 'network';
+import REGEX from 'constants/regex';
+import { toast } from 'react-toastify';
 import { connect } from 'react-redux';
 import EditItem from './EditItem';
 import { loadPaper } from 'actions/viewPaper';
@@ -82,6 +84,19 @@ class EditPaperDialog extends Component {
             isLoading: true
         });
         const loadPaper = {};
+
+        // Validate title
+        if (!this.state.title) {
+            toast.error('Please enter the title of this paper');
+            this.setState({ isLoading: false });
+            return;
+        }
+        // Validate URL
+        if (this.state.url && !new RegExp(REGEX.URL).test(this.state.url.trim())) {
+            toast.error(`Please enter a valid paper URL`);
+            this.setState({ isLoading: false });
+            return;
+        }
 
         //title
         updateResource(this.props.viewPaper.paperResourceId, this.state.title);

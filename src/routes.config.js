@@ -27,7 +27,7 @@ import Organizations from 'pages/Organizations/Organizations';
 import Observatories from 'pages/Observatories/Observatories';
 import OrganizationDetails from 'pages/Organizations/OrganizationDetails';
 import AddOrganization from 'pages/Organizations/AddOrganization';
-import AddObservatory from 'pages/AddObservatory';
+import AddObservatory from 'pages/Observatories/AddObservatory';
 import Observatory from 'pages/Observatories/Observatory';
 import OrganizationObservatories from 'pages/Observatories/OrganizationObservatories';
 import SearchResults from 'pages/Search';
@@ -39,6 +39,7 @@ import FeaturedComparisons from 'pages/FeaturedComparisons';
 import PdfTextAnnotation from 'pages/PdfTextAnnotation';
 import PdfAnnotation from 'pages/PdfAnnotation';
 import ExportData from 'pages/ExportData';
+import requireAuthentication from 'requireAuthentication';
 import { reverse } from 'named-urls';
 
 const routes = [
@@ -55,7 +56,7 @@ const routes = [
     {
         path: ROUTES.ADD_RESOURCE,
         exact: true,
-        component: AddResource
+        component: requireAuthentication(AddResource)
     },
     {
         path: ROUTES.PREDICATES,
@@ -80,7 +81,7 @@ const routes = [
     {
         path: ROUTES.USER_SETTINGS,
         exact: true,
-        component: UserSettings
+        component: requireAuthentication(UserSettings)
     },
     {
         path: ROUTES.USER_PROFILE,
@@ -90,7 +91,7 @@ const routes = [
     {
         path: ROUTES.ADD_PAPER.GENERAL_DATA,
         exact: true,
-        component: AddPaper
+        component: requireAuthentication(AddPaper)
     },
     {
         /* TODO: slug for the paper title */
@@ -200,12 +201,12 @@ const routes = [
     {
         path: ROUTES.ADD_ORGANIZATION,
         exact: true,
-        component: AddOrganization
+        component: requireAuthentication(AddOrganization)
     },
     {
         path: ROUTES.ADD_OBSERVATORY,
         exact: true,
-        component: AddObservatory
+        component: requireAuthentication(AddObservatory)
     },
     {
         path: ROUTES.OBSERVATORY,
@@ -228,7 +229,7 @@ const routes = [
     },
     {
         path: ROUTES.PDF_ANNOTATION,
-        component: PdfAnnotation
+        component: requireAuthentication(PdfAnnotation)
     },
     {
         path: ROUTES.EXPORT_DATA,
