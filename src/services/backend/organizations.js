@@ -1,5 +1,5 @@
 import { url } from 'constants/misc';
-import { submitGetRequest, submitPostRequest } from 'network';
+import { submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 
 export const organizationsUrl = `${url}organizations/`;
 
@@ -13,6 +13,18 @@ export const getOrganization = id => {
 
 export const createOrganization = (organizationName, organizationLogo, createdBy, url) => {
     return submitPostRequest(organizationsUrl, { 'Content-Type': 'application/json' }, { organizationName, organizationLogo, createdBy, url });
+};
+
+export const updateOrganizationName = (id, value) => {
+    return submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/name`, { 'Content-Type': 'application/json' }, { value });
+};
+
+export const updateOrganizationUrl = (id, value) => {
+    return submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/url`, { 'Content-Type': 'application/json' }, { value });
+};
+
+export const updateOrganizationLogo = (id, value) => {
+    return submitPutRequest(`${organizationsUrl}${encodeURIComponent(id)}/logo`, { 'Content-Type': 'application/json' }, { value });
 };
 
 export const getAllObservatoriesByOrganizationId = id => {

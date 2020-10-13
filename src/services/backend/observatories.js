@@ -1,11 +1,23 @@
 import { url } from 'constants/misc';
-import { submitGetRequest, submitPostRequest } from 'network';
+import { submitGetRequest, submitPostRequest, submitPutRequest } from 'network';
 import { getOrganization } from 'services/backend/organizations';
 
 export const observatoriesUrl = `${url}observatories/`;
 
 export const getObservatoryById = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/`);
+};
+
+export const updateObservatoryName = (id, value) => {
+    return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/name`, { 'Content-Type': 'application/json' }, { value });
+};
+
+export const updateObservatoryDescription = (id, value) => {
+    return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/description`, { 'Content-Type': 'application/json' }, { value });
+};
+
+export const updateObservatoryResearchField = (id, value) => {
+    return submitPutRequest(`${observatoriesUrl}${encodeURIComponent(id)}/research_field`, { 'Content-Type': 'application/json' }, { value });
 };
 
 export const getUsersByObservatoryId = id => {
@@ -24,8 +36,16 @@ export const getProblemsByObservatoryId = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/problems`);
 };
 
-export const createObservatory = (observatoryName, organizationId, description) => {
-    return submitPostRequest(observatoriesUrl, { 'Content-Type': 'application/json' }, { observatoryName, organizationId, description });
+export const getObservatoriesStats = id => {
+    return submitGetRequest(`${observatoriesUrl}stats/observatories`);
+};
+
+export const createObservatory = (observatoryName, organizationId, description, researchField) => {
+    return submitPostRequest(
+        observatoriesUrl,
+        { 'Content-Type': 'application/json' },
+        { observatoryName, organizationId, description, researchField }
+    );
 };
 
 export const getObservatoryAndOrganizationInformation = (observatoryId, organizationId) => {

@@ -9,6 +9,8 @@ import {
     getStatementsBySubjectAndPredicate,
     getStatementsByPredicateAndLiteral
 } from 'services/backend/statements';
+import REGEX from 'constants/regex';
+import { toast } from 'react-toastify';
 import { updateLiteral, createLiteral as createLiteralApi } from 'services/backend/literals';
 import { updateResource, createResource } from 'services/backend/resources';
 import { connect } from 'react-redux';
@@ -80,6 +82,19 @@ class EditPaperDialog extends Component {
             isLoading: true
         });
         const loadPaper = {};
+
+        // Validate title
+        if (!this.state.title) {
+            toast.error('Please enter the title of this paper');
+            this.setState({ isLoading: false });
+            return;
+        }
+        // Validate URL
+        if (this.state.url && !new RegExp(REGEX.URL).test(this.state.url.trim())) {
+            toast.error(`Please enter a valid paper URL`);
+            this.setState({ isLoading: false });
+            return;
+        }
 
         //title
         updateResource(this.props.viewPaper.paperResourceId, this.state.title);

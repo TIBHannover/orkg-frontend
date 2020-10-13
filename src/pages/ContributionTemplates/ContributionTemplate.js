@@ -3,6 +3,8 @@ import { Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink, ButtonGro
 import GeneralSettings from 'components/ContributionTemplates/Tabs/GeneralSettings/GeneralSettings';
 import TemplateEditorHeaderBar from 'components/ContributionTemplates/TemplateEditorHeaderBar';
 import ComponentsTab from 'components/ContributionTemplates/Tabs/ComponentsTab/ComponentsTab';
+import Unauthorized from 'pages/Unauthorized';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import Format from 'components/ContributionTemplates/Tabs/Format/Format';
 import { StyledContainer } from 'components/ContributionTemplates/styled';
 import { setEditMode, loadTemplate, saveTemplate, setIsLoading, doneLoading, setClass } from 'actions/addTemplate';
@@ -81,6 +83,10 @@ class ContributionTemplate extends Component {
     };
 
     render() {
+        if (!this.props.user && !this.props.match.params.id) {
+            return <Unauthorized />;
+        }
+
         return (
             <StyledContainer className="clearfix">
                 <h1 className="h4 mt-4 mb-4 flex-grow-1">{!this.props.match.params.id ? 'Create new template' : 'Template'}</h1>
@@ -107,9 +113,15 @@ class ContributionTemplate extends Component {
                         {!this.props.editMode ? (
                             <h3 className="pb-2 mb-3" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                 {this.props.label}
-                                <Button className="float-right" color="darkblue" size="sm" onClick={() => this.props.setEditMode(true)}>
+                                <RequireAuthentication
+                                    component={Button}
+                                    className="float-right"
+                                    color="darkblue"
+                                    size="sm"
+                                    onClick={() => this.props.setEditMode(true)}
+                                >
                                     <Icon icon={faPen} /> Edit
-                                </Button>
+                                </RequireAuthentication>
                             </h3>
                         ) : (
                             ''
@@ -201,11 +213,13 @@ ContributionTemplate.propTypes = {
     doneLoading: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     template: PropTypes.object.isRequired,
-    setClass: PropTypes.func.isRequired
+    setClass: PropTypes.func.isRequired,
+    user: PropTypes.object
 };
 
 const mapStateToProps = state => {
     return {
+        user: state.auth.user,
         editMode: state.addTemplate.editMode,
         isLoading: state.addTemplate.isLoading,
         isSaving: state.addTemplate.isSaving,

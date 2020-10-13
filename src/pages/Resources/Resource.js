@@ -11,6 +11,7 @@ import InternalServerError from 'pages/InternalServerError';
 import SameAsStatements from '../SameAsStatements';
 import EditableHeader from 'components/EditableHeader';
 import ObjectStatements from 'components/ObjectStatements/ObjectStatements';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import NotFound from 'pages/NotFound';
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -110,9 +111,15 @@ function Resource(props) {
                                                 <small>No label</small>
                                             </i>
                                         )}
-                                        <Button className="float-right" color="darkblue" size="sm" onClick={() => setEditMode(v => !v)}>
+                                        <RequireAuthentication
+                                            component={Button}
+                                            className="float-right"
+                                            color="darkblue"
+                                            size="sm"
+                                            onClick={() => setEditMode(v => !v)}
+                                        >
                                             <Icon icon={faPen} /> Edit
-                                        </Button>
+                                        </RequireAuthentication>
                                     </h3>
                                     {classes.length > 0 && (
                                         <span style={{ fontSize: '90%' }}>

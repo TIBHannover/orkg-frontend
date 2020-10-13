@@ -3,6 +3,7 @@ import { Container, Button } from 'reactstrap';
 import { getPredicate } from 'services/backend/predicates';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import InternalServerError from 'pages/InternalServerError';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import NotFound from 'pages/NotFound';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
@@ -61,9 +62,17 @@ function Predicate(props) {
                                             <small>No label</small>
                                         </i>
                                     )}
-                                    <Button className="float-right" color="darkblue" size="sm" onClick={() => setEditMode(v => !v)}>
-                                        <Icon icon={faPen} /> Edit
-                                    </Button>
+                                    {!editMode && (
+                                        <RequireAuthentication
+                                            component={Button}
+                                            className="float-right"
+                                            color="darkblue"
+                                            size="sm"
+                                            onClick={() => setEditMode(v => !v)}
+                                        >
+                                            <Icon icon={faPen} /> Edit
+                                        </RequireAuthentication>
+                                    )}
                                 </h3>
                             </div>
                         </div>

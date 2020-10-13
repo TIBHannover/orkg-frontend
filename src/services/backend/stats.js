@@ -10,3 +10,7 @@ export const getStats = () => {
 export const getResearchFieldsStats = () => {
     return submitGetRequest(`${statsUrl}fields`);
 };
+
+export const getComparisonsCountByObservatoryId = id => {
+    return submitGetRequest(`${statsUrl}${encodeURIComponent(id)}/observatoryComparisonsCount`);
+};
