@@ -12,7 +12,7 @@ export const BreadcrumbList = styled.ul`
 export const BreadcrumbItem = styled.li`
     border-radius: 6px;
     background: #f7f7f7;
-    padding: 4px 40px 4px 10px;
+    padding: 4px 30px 4px 10px;
     border: 2px solid #e86161;
     font-size: 87%;
     white-space: nowrap;
