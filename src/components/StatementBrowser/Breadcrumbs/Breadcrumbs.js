@@ -4,6 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faLink, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
+import { truncate } from 'lodash';
 import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
 import Tippy from '@tippy.js/react';
@@ -38,19 +39,24 @@ export default function Breadcrumbs(props) {
                         Object.keys(props.resources.byId).length !== 0 && props.selectedResource
                             ? props.resources.byId[props.selectedResource].existingResourceId
                             : null;
+
+                    const propertyLabel = truncate(item.propertyLabel ? item.propertyLabel : '', { length: 25 });
+                    const resourceLabel = truncate(item.label ? item.label : '', { length: 30 });
+
                     return (
                         <BreadcrumbItem
                             key={index}
                             onClick={() => (props.resourceHistory.allIds.length !== index + 1 ? handleOnClick(item.id, index) : undefined)}
                         >
-                            {item.propertyLabel ? (
-                                <>
-                                    <i>{item.propertyLabel}</i> <Icon icon={faArrowRight} /> {item.label}
-                                </>
-                            ) : (
-                                item.label
-                            )}
-
+                            <div title={`${item.propertyLabel ? `${item.propertyLabel} → ` : ''}${item.label}`}>
+                                {item.propertyLabel ? (
+                                    <>
+                                        <i>{propertyLabel}</i> <Icon icon={faArrowRight} /> {resourceLabel}
+                                    </>
+                                ) : (
+                                    resourceLabel
+                                )}
+                            </div>
                             {props.resourceHistory.allIds.length === index + 1 && !props.openExistingResourcesInDialog && existingResourceId && (
                                 <Tippy content="Go to resource page">
                                     <Link className="ml-2 resourceLink" to={reverse(ROUTES.RESOURCE, { id: props.selectedResource })}>
