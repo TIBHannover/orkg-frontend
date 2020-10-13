@@ -5,10 +5,11 @@ import { faClipboard, faLink, faAtom } from '@fortawesome/free-solid-svg-icons';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import OntologiesModal from './OntologiesModal';
 import { submitGetRequest, getResourcesByClass } from 'network';
-import { AsyncPaginateBase, wrapMenuList } from 'react-select-async-paginate';
+import { AsyncPaginateBase } from 'react-select-async-paginate';
 import { classesUrl, olsBaseUrl, createClass } from 'network';
 import Creatable from 'react-select/creatable';
 import PropTypes from 'prop-types';
+import { truncate } from 'lodash';
 import { components } from 'react-select';
 import { compareOption } from 'utils';
 import styled, { withTheme } from 'styled-components';
@@ -32,7 +33,13 @@ export const StyledAutoCompleteInputFormControl = styled.div`
 `;
 
 export const StyledMenuListHeader = styled.div`
-    background-color: ${props => props.theme.ultraLightBlueDarker} !important;
+    background-color: #f3f5f9 !important;
+    border-bottom: 1px solid #f3f5f9;
+    color: #5b6987;
+    border-radius: 0 0 8px 8px;
+    font-size: 12px;
+    line-height: 12px;
+    cursor: default;
 `;
 
 function Autocomplete(props) {
@@ -499,34 +506,70 @@ function Autocomplete(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const MenuList = useCallback(
+    const Menu = useCallback(
         ({ children, ...innerProps }) => {
             return (
-                <components.MenuList {...innerProps} style={props.ols ? { paddingTop: '0 !important' } : undefined}>
+                <components.Menu {...innerProps}>
+                    <div>{children}</div>
                     {props.ols && (
-                        <StyledMenuListHeader className="p-1 clearfix">
-                            {props.requestUrl !== olsBaseUrl && (
-                                <Button className="float-right" onClick={() => setOntologySelectorIsOpen(v => !v)} size="sm">
-                                    <Tippy
-                                        content={
-                                            selectedOntologies.length > 0 ? `${selectedOntologies.length} ontologies selected` : 'Select an ontology'
-                                        }
+                        <StyledMenuListHeader className=" align-items-center p-1 d-flex clearfix">
+                            <div className=" flex-grow-1 justify-content-end">
+                                {inputValue && props.allowCreate && (
+                                    <Button
+                                        outline
+                                        color="info"
+                                        onClick={() => {
+                                            if (props.onNewItemSelected) {
+                                                props.onNewItemSelected(inputValue);
+                                            } else {
+                                                props.onChange(
+                                                    props.isMulti ? [...props.value, { label: inputValue, __isNew__: true }] : { label: inputValue },
+                                                    { action: 'create-option' }
+                                                );
+                                                setInputValue('');
+                                            }
+                                        }}
+                                        size="sm"
                                     >
-                                        <span>
-                                            <Icon color={selectedOntologies.length > 0 ? props.theme.primary : undefined} icon={faAtom} size="sm" />{' '}
-                                            Ontologies
-                                        </span>
-                                    </Tippy>
-                                </Button>
+                                        Create "{truncate(inputValue, { length: 15 })}"
+                                    </Button>
+                                )}
+                            </div>
+                            {props.requestUrl !== olsBaseUrl && (
+                                <>
+                                    <Button
+                                        outline
+                                        color="info"
+                                        className="justify-content-end"
+                                        onClick={() => setOntologySelectorIsOpen(v => !v)}
+                                        size="sm"
+                                    >
+                                        <Tippy
+                                            content={
+                                                selectedOntologies.length > 0
+                                                    ? `${selectedOntologies.length} ontologies selected`
+                                                    : 'Select an ontology'
+                                            }
+                                        >
+                                            <span>
+                                                <Icon
+                                                    color={selectedOntologies.length > 0 ? props.theme.primary : undefined}
+                                                    icon={faAtom}
+                                                    size="sm"
+                                                />{' '}
+                                                <b>Ontologies</b>
+                                            </span>
+                                        </Tippy>
+                                    </Button>
+                                </>
                             )}
                         </StyledMenuListHeader>
                     )}
-                    {children}
-                </components.MenuList>
+                </components.Menu>
             );
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [selectedOntologies.map(o => o.id).join(',')]
+        [selectedOntologies.map(o => o.id).join(','), inputValue]
     );
 
     const Option = useCallback(({ children, ...innerProps }) => {
@@ -590,10 +633,6 @@ function Autocomplete(props) {
             ...provided,
             zIndex: 10
         }),
-        menuList: provided => ({
-            ...provided,
-            ...(props.ols ? { paddingTop: '0' } : {})
-        }),
         option: provided => ({
             ...provided,
             cursor: 'pointer',
@@ -618,7 +657,7 @@ function Autocomplete(props) {
     };
 
     // Creatable with adding new options : https://codesandbox.io/s/6pznz
-    const Select = props.allowCreate ? Creatable : undefined;
+    const Select = props.allowCreate && !props.ols ? Creatable : undefined;
 
     return (
         <ConditionalWrapper
@@ -683,7 +722,12 @@ function Autocomplete(props) {
                     onBlur={props.onBlur}
                     onKeyDown={props.onKeyDown}
                     selectRef={props.innerRef}
-                    components={{ Option: Option, Control: Control, DropdownIndicator: DropdownIndicator, MenuList: wrapMenuList(MenuList) }}
+                    components={{
+                        Option: Option,
+                        Menu: Menu,
+                        Control: Control,
+                        DropdownIndicator: DropdownIndicator
+                    }}
                     menuIsOpen={menuIsOpen}
                     onMenuOpen={() => setMenuIsOpen(true)}
                     onMenuClose={() => setMenuIsOpen(false)}

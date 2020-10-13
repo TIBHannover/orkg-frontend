@@ -62,7 +62,6 @@ export default function AddPropertyTemplate(props) {
                                 onBlur={() => {
                                     //props.handleHideAddProperty();
                                 }}
-                                ols={true}
                                 inputGroup={false}
                             />
                             <InputGroupAddon addonType="append">
