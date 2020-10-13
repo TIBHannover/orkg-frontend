@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Table, ButtonGroup, Button } from 'reactstrap';
-import { classesUrl, submitGetRequest, getStatementsByObjectAndPredicate } from 'network';
+import { submitGetRequest } from 'network';
+import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { classesUrl } from 'services/backend/classes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faFileCsv } from '@fortawesome/free-solid-svg-icons';
 import ClassInstances from 'components/ClassInstances/ClassInstances';

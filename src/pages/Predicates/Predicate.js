@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Button } from 'reactstrap';
-import { getPredicate } from 'network';
+import { getPredicate } from 'services/backend/predicates';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import InternalServerError from 'pages/InternalServerError';
 import NotFound from 'pages/NotFound';

@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import rangy from 'rangy';
 import { compose } from 'redux';
-import { predicatesUrl, submitGetRequest } from '../../../network';
+import { submitGetRequest } from '../../../network';
+import { predicatesUrl } from 'services/backend/predicates';
 import { connect } from 'react-redux';
 import AnnotationTootip from './AnnotationTootip';
 

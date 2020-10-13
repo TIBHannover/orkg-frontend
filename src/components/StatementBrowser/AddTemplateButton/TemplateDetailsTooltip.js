@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getTemplateById } from 'network';
+import { getTemplateById } from 'services/backend/statements';
 
 export default class TemplateDetailsTooltip extends Component {
     constructor(props) {

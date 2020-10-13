@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
-import { createLiteralStatement, createResource, crossrefUrl, submitGetRequest, createLiteral, classesUrl } from 'network';
+import { crossrefUrl, submitGetRequest } from 'network';
+import { createLiteralStatement } from 'services/backend/statements';
+import { classesUrl } from 'services/backend/classes';
+import { createLiteral } from 'services/backend/literals';
+import { createResource } from 'services/backend/resources';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { Redirect } from 'react-router-dom';

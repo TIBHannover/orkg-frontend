@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faFire, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { problemsUrl, submitGetRequest } from 'network';
+import { submitGetRequest } from 'network';
+import { problemsUrl } from 'services/backend/problems';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 

@@ -1,4 +1,3 @@
-import * as network from '../network';
 import * as type from './types.js';
 import { guid } from '../utils';
 import { mergeWith, isArray, uniqBy } from 'lodash';
@@ -10,6 +9,11 @@ import {
     loadStatementBrowserData,
     updateContributionLabel as updateContributionLabelInSB
 } from './statementBrowser';
+import { createResource as createResourceApi } from 'services/backend/resources';
+import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';
+import { saveFullPaper } from 'services/backend/misc';
+import { createLiteral } from 'services/backend/literals';
+import { createPredicate } from 'services/backend/predicates';
 import { toast } from 'react-toastify';
 import { PREDICATES, MISC } from 'constants/graphSettings';
 
@@ -223,21 +227,21 @@ export const prefillStatements = ({ statements, resourceId, syncBackend = false 
             const predicate = getState().statementBrowser.properties.byId[value.propertyId];
             if (value.existingResourceId) {
                 // The value exist in the database
-                newStatement = await network.createResourceStatement(resourceId, predicate.existingPredicateId, value.existingResourceId);
+                newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, value.existingResourceId);
             } else {
                 // The value doesn't exist in the database
                 switch (value.type) {
                     case 'object':
-                        newObject = await network.createResource(value.label, value.classes ? value.classes : []);
-                        newStatement = await network.createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
+                        newObject = await createResourceApi(value.label, value.classes ? value.classes : []);
+                        newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
                         break;
                     case 'property':
-                        newObject = await network.createPredicate(value.label);
-                        newStatement = await network.createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
+                        newObject = await createPredicate(value.label);
+                        newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
                         break;
                     default:
-                        newObject = await network.createLiteral(value.label, value.datatype);
-                        newStatement = await network.createLiteralStatement(resourceId, predicate.existingPredicateId, newObject.id);
+                        newObject = await createLiteral(value.label, value.datatype);
+                        newStatement = await createLiteralStatement(resourceId, predicate.existingPredicateId, newObject.id);
                 }
             }
         }
@@ -423,7 +427,7 @@ export const saveAddPaper = data => {
         };
 
         try {
-            const paper = await network.saveFullPaper(paperObj);
+            const paper = await saveFullPaper(paperObj);
             dispatch({
                 type: type.SAVE_ADD_PAPER,
                 id: paper.id

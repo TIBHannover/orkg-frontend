@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getStatementsByObject, getStatementsBySubject } from 'network';
+import { getStatementsByObject, getStatementsBySubject } from 'services/backend/statements';
 import { useParams } from 'react-router-dom';
 import { getPaperData } from 'utils';
 import { CLASSES } from 'constants/graphSettings';

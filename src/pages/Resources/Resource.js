@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, Button, FormGroup, Label, FormText } from 'reactstrap';
-import { getResource, classesUrl, submitGetRequest, updateResourceClasses as updateResourceClassesNetwork } from 'network';
+import { submitGetRequest } from 'network';
+import { classesUrl } from 'services/backend/classes';
+import { updateResourceClasses as updateResourceClassesNetwork } from 'services/backend/resources';
+import { getResource } from 'services/backend/resources';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
 import AutoComplete from 'components/Autocomplete/Autocomplete';

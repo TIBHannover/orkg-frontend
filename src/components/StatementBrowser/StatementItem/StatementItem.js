@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { getResource, predicatesUrl, submitGetRequest, updateStatement, createPredicate, deleteStatementById } from 'network';
+import { submitGetRequest } from 'network';
+import { updateStatement, deleteStatementById } from 'services/backend/statements';
+import { createPredicate, predicatesUrl } from 'services/backend/predicates';
+import { getResource } from 'services/backend/resources';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import StatementItemTemplate from './StatementItemTemplate';

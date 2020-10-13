@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Alert, Col, Container, Form, FormGroup, Row, Button } from 'reactstrap';
-import { getResource, getSimilaireContribution, deleteStatementById, createResource, createResourceStatement } from 'network';
+import { deleteStatementById, createResourceStatement } from 'services/backend/statements';
+import { getResource } from 'services/backend/resources';
+import { createResource } from 'services/backend/resources';
+import { getSimilarContribution } from 'services/similarity/index';
 import AddToComparison from './AddToComparison';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ContentLoader from 'react-content-loader';
@@ -99,7 +102,7 @@ class Contributions extends Component {
                 contributionLabel: contributionResource.label
             });
         }
-        getSimilaireContribution(this.state.selectedContribution)
+        getSimilarContribution(this.state.selectedContribution)
             .then(similaireContributions => {
                 const similaireContributionsData = similaireContributions.map(paper => {
                     // Fetch the data of each paper

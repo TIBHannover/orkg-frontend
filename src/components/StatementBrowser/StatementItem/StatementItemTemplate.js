@@ -7,7 +7,7 @@ import ValueItem from 'components/StatementBrowser/ValueItem/ValueItemContainer'
 import AddValue from 'components/StatementBrowser/AddValue/AddValueContainer';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
-import { predicatesUrl } from 'network';
+import { predicatesUrl } from 'services/backend/predicates';
 import defaultProperties from 'components/StatementBrowser/AddProperty/helpers/defaultProperties';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';

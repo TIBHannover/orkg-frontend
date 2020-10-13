@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { getUserInformationById } from 'network';
+import { getUserInformationById } from 'services/backend/users';
 import Items from '../components/UserProfile/Items';
 import NotFound from 'pages/NotFound';
 import { useSelector } from 'react-redux';

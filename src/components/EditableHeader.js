@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Input, Button } from 'reactstrap';
-import { updateResource } from '../network';
+import { updateResource } from 'services/backend/resources';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';

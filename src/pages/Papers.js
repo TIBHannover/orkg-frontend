@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { getResourcesByClass, getStatementsBySubjects } from '../network';
+import { getStatementsBySubjects } from 'services/backend/statements';
+import { getResourcesByClass } from 'services/backend/classes';
 import { Container } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';

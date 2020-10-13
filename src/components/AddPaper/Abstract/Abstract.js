@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
-import { semanticScholarUrl, submitGetRequest, getAnnotations } from '../../../network';
+import { semanticScholarUrl, submitGetRequest } from '../../../network';
+import { getAnnotations } from 'services/annotation/index';
 import { connect } from 'react-redux';
 import {
     updateAbstract,

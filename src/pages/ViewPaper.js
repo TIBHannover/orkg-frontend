@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
 import { Container, Alert, UncontrolledAlert } from 'reactstrap';
-import {
-    getObservatoryAndOrganizationInformation,
-    getContributorsByResourceId,
-    getUserInformationById,
-    getStatementsBySubject,
-    getResource,
-    updateResource,
-    createResource,
-    createResourceStatement,
-    deleteStatementById
-} from 'network';
+import { getStatementsBySubject, createResourceStatement, deleteStatementById } from 'services/backend/statements';
+import { getUserInformationById } from 'services/backend/users';
+import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
+import { getContributorsByResourceId } from 'services/backend/resources';
+import { getResource } from 'services/backend/resources';
+import { updateResource, createResource } from 'services/backend/resources';
 import { connect } from 'react-redux';
 import NotFound from '../pages/NotFound';
 import ContentLoader from 'react-content-loader';

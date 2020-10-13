@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getStatementsBySubject, getStatementsBySubjects } from '../../../network';
+import { getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
 import { connect } from 'react-redux';
 import * as PropTypes from 'prop-types';
 // import Graph from 'react-graph-vis';

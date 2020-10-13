@@ -1,9 +1,12 @@
 import * as type from './types.js';
 import { guid } from 'utils';
-import * as network from 'network';
 import { prefillStatements } from './addPaper';
 import { orderBy, uniq, isEqual } from 'lodash';
 import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
+import { getResource } from 'services/backend/resources';
+import { getPredicate } from 'services/backend/predicates';
+import { getStatementsBySubject, getTemplateById, getTemplatesByClass } from 'services/backend/statements';
+import { createResource as createResourceApi } from 'services/backend/resources';
 
 export const updateSettings = data => dispatch => {
     dispatch({
@@ -597,7 +600,7 @@ export function fetchTemplateIfNeeded(templateID) {
                 type: type.IS_FETCHING_TEMPLATE_DATA,
                 templateID
             });
-            return network.getTemplateById(templateID).then(template => {
+            return getTemplateById(templateID).then(template => {
                 // Add template to the global state
                 dispatch({
                     type: type.DONE_FETCHING_TEMPLATE_DATA,
@@ -661,7 +664,7 @@ export function fillResourceWithTemplate({ templateID, selectedResource, syncBac
                         canDuplicate: true
                     });
                     if (syncBackend) {
-                        newObject = await network.createResource(template.label, template.class ? [template.class.id] : []);
+                        newObject = await createResourceApi(template.label, template.class ? [template.class.id] : []);
                     }
                     statements['values'].push({
                         valueId: vID,
@@ -725,7 +728,7 @@ export function fetchTemplatesofClassIfNeeded(classID) {
                 type: type.IS_FETCHING_TEMPLATES_OF_CLASS,
                 classID
             });
-            return network.getTemplatesByClass(classID).then(async templateIds => {
+            return getTemplatesByClass(classID).then(async templateIds => {
                 dispatch({
                     type: type.DONE_FETCHING_TEMPLATES_OF_CLASS,
                     classID
@@ -846,15 +849,15 @@ export const fetchStatementsForResource = data => {
             });
             let subject;
             if (rootNodeType === 'predicate') {
-                subject = network.getPredicate(existingResourceId);
+                subject = getPredicate(existingResourceId);
             } else {
-                subject = network.getResource(existingResourceId);
+                subject = getResource(existingResourceId);
             }
 
             return subject.then(response => {
                 let promises;
                 // fetch the statements
-                const resourceStatementsPromise = network.getStatementsBySubject({ id: existingResourceId }).then(response => {
+                const resourceStatementsPromise = getStatementsBySubject({ id: existingResourceId }).then(response => {
                     resourceStatements = response;
                     return Promise.resolve();
                 });

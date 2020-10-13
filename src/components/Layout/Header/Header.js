@@ -31,7 +31,7 @@ import Authentication from 'components/Authentication/Authentication';
 import SearchForm from './SearchForm';
 import { openAuthDialog, updateAuth, resetAuth } from 'actions/auth';
 import { Redirect } from 'react-router-dom';
-import { getUserInformation } from 'network';
+import { getUserInformation } from 'services/backend/users';
 import greetingTime from 'greeting-time';
 import styled, { createGlobalStyle } from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { submitGetRequest, getResourcesByClass } from 'network';
+import { submitGetRequest } from 'network';
+import { getResourcesByClass } from 'services/backend/classes';
 import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';

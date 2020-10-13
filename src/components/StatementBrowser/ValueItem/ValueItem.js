@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import RDFDataCube from 'components/RDFDataCube/RDFDataCube';
-import {
-    deleteStatementById,
-    updateLiteral,
-    submitGetRequest,
-    resourcesUrl,
-    updateStatement,
-    createResource as createResourceAPICall,
-    updateResource
-} from 'network';
+import { submitGetRequest } from 'network';
+import { updateStatement, deleteStatementById } from 'services/backend/statements';
+import { createResource as createResourceAPICall, updateResource, resourcesUrl } from 'services/backend/resources';
+import { updateLiteral } from 'services/backend/literals';
 import { toast } from 'react-toastify';
 import { guid } from 'utils';
 import { uniq } from 'lodash';

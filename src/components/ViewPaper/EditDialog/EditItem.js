@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import moment from 'moment';
 import { range } from 'utils';
 import { truncate } from 'lodash';
-import { resourcesUrl } from 'network';
+import { resourcesUrl } from 'services/backend/resources';
 import PropTypes from 'prop-types';
 import { CLASSES } from 'constants/graphSettings';
 
