@@ -34,7 +34,7 @@ export default {
     VENUE_PAGE: '/venue/:venueId',
     AUTHOR_PAGE: '/author/:authorId',
     LICENSE: '/license',
-    DATA_PROTECTION: '/DataProtection',
+    DATA_PROTECTION: '/data-protection',
     /* Legacy routes, only used for debugging now */
     SEARCH: '/search/:searchTerm?',
     TPDL: '/tpdl',
