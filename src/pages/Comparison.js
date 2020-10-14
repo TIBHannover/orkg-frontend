@@ -184,6 +184,14 @@ function Comparison(props) {
         }
     };
 
+    const requireAuthentication = () => {
+        if (props.user && props.user.role === 'ROLE_ADMIN') {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
     return (
         <div>
             <ContainerAnimated className="d-flex align-items-center">
@@ -426,7 +434,7 @@ function Comparison(props) {
                     )}
                 </div>
 
-                {props.user && observatories && isEmpty(provenance) && (
+                {requireAuthentication() && observatories && isEmpty(provenance) && (
                     <>
                         {' '}
                         <br />

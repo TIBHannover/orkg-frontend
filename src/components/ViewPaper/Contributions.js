@@ -33,6 +33,7 @@ import styled from 'styled-components';
 import { StyledHorizontalContributionsList, StyledHorizontalContribution } from '../AddPaper/Contributions/styled';
 import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import SuggestedTemplates from 'components/StatementBrowser/SuggestedTemplates/SuggestedTemplates';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
@@ -218,6 +219,14 @@ class Contributions extends Component {
             problemsArray,
             contributionId: this.state.selectedContribution
         });
+    };
+
+    requireAuthentication = () => {
+        if (this.props.user && this.props.user.role === 'ROLE_ADMIN') {
+            return true;
+        } else {
+            return false;
+        }
     };
 
     render() {
@@ -419,8 +428,7 @@ class Contributions extends Component {
                                         </div>
 
                                         {selectedContributionId && <ContributionComparisons contributionId={selectedContributionId} />}
-
-                                        {this.props.user && this.state.observatories.length > 0 && isEmpty(this.props.observatoryInfo) && (
+                                        {this.requireAuthentication() && this.state.observatories.length > 0 && isEmpty(this.props.observatoryInfo) && (
                                             <>
                                                 {' '}
                                                 <br />
