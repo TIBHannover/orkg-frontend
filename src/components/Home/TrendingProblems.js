@@ -40,7 +40,7 @@ const List = styled.ul`
     li.item-3,
     li.item-4 {
         font-size: 100%;
-        height: 30px;
+        min-height: 30px;
 
         a {
             color: ${props => props.theme.darkblue}!important;
