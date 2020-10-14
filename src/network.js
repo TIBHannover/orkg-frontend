@@ -746,6 +746,16 @@ export const addPapertoObservatory = (observatoryId, organizationId, id) => {
     return submitPutRequest(`${resourcesUrl}${id}/addObservatory`, { 'Content-Type': 'application/json' }, { observatoryId, organizationId });
 };
 
+export const addObservatoryResearchProblem = (observatoryId, organizationId, label) => {
+    const classes = [];
+    classes.push(CLASSES.PROBLEM);
+    return submitPostRequest(
+        `${resourcesUrl}observatory/${observatoryId}/organization/${organizationId}/researchProblem`,
+        { 'Content-Type': 'application/json' },
+        { label, classes }
+    );
+};
+
 export const getContributorsByResourceId = id => {
     return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/contributors`).then(contributors => {
         const c = contributors.map(contributor => {

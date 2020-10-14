@@ -175,7 +175,7 @@ function Comparison(props) {
 
         if (organizationId.length > 0 && observatoryId.length > 0) {
             await addPapertoObservatory(observatoryId, organizationId, metaData?.id).then(async response => {
-                toast.success(`Observatory added to paper successfully`);
+                toast.success(`Observatory added to comparison successfully`);
                 await loadCreatedBy(response.created_by);
                 loadProvenanceInfos(response.observatory_id, response.organization_id);
             });
@@ -431,7 +431,7 @@ function Comparison(props) {
                         {' '}
                         <br />
                         <Title style={{ marginTop: 0 }}>Add to an Observatory</Title>
-                        <InputGroup>
+                        <InputGroup style={{ width: '75%' }}>
                             <Input type="select" onChange={handleInputChange} name="observatoryInfo" aria-label="Select an observatory">
                                 <>
                                     {observatories.map((o, key) => {

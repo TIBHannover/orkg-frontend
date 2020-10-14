@@ -25,6 +25,7 @@ import { getPaperData, getComparisonData } from 'utils';
 import { find } from 'lodash';
 import { connect } from 'react-redux';
 import EditObservatory from '../Observatories/EditObservatory';
+import EditResearchProblem from '../Observatories/EditResearchProblem';
 
 class Observatory extends Component {
     constructor(props) {
@@ -48,7 +49,8 @@ class Observatory extends Component {
             papersList: [],
             organizationsList: [],
             comparisonsList: [],
-            showEditDialog: false
+            showEditDialog: false,
+            showEditResearchProblemDialog: false
         };
     }
 
@@ -156,6 +158,10 @@ class Observatory extends Component {
             });
     };
 
+    updateObservatoryResearchProblem = () => {
+        this.loadProblems();
+    };
+
     loadContributors = () => {
         this.setState({ isLoadingContributors: true });
         getUsersByObservatoryId(this.props.match.params.id)
@@ -225,6 +231,16 @@ class Observatory extends Component {
                                 <Col md={4} sm={12} style={{ minHeight: '300px' }} className="d-flex px-0 pr-3">
                                     <div className="box rounded-lg p-4 flex-grow-1">
                                         <h5>Research Problems</h5>
+                                        {this.props.user && (
+                                            <Button
+                                                color="darkblue"
+                                                size="sm"
+                                                style={{ float: 'right', marginTop: '-33px' }}
+                                                onClick={() => this.toggle('showEditResearchProblemDialog')}
+                                            >
+                                                <Icon icon={faPen} /> Add
+                                            </Button>
+                                        )}
                                         {!this.state.isLoadingProblems ? (
                                             <div className="mb-4 mt-2">
                                                 {this.state.problemsList.length > 0 ? (
@@ -444,6 +460,14 @@ class Observatory extends Component {
                     description={this.state.description}
                     researchField={this.state.researchField}
                     updateObservatoryMetadata={this.updateObservatoryMetadata}
+                />
+
+                <EditResearchProblem
+                    showDialog={this.state.showEditResearchProblemDialog}
+                    toggle={() => this.toggle('showEditResearchProblemDialog')}
+                    id={this.props.match.params.id}
+                    organizationId={this.state.organizationsList.length > 0 ? this.state.organizationsList[0]['id'] : ''}
+                    updateObservatoryResearchProblem={this.updateObservatoryResearchProblem}
                 />
             </>
         );
