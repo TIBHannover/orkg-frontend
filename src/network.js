@@ -1,7 +1,8 @@
 import { Cookies } from 'react-cookie';
-export const url = `${process.env.REACT_APP_SERVER_URL}api/`;
-export const crossrefUrl = process.env.REACT_APP_CROSSREF_URL;
-export const semanticScholarUrl = process.env.REACT_APP_SEMANTICSCHOLAR_URL;
+import env from '@beam-australia/react-env';
+export const url = `${env('SERVER_URL')}api/`;
+export const crossrefUrl = env('CROSSREF_URL');
+export const semanticScholarUrl = env('SEMANTICSCHOLAR_URL');
 
 export const submitGetRequest = (url, headers, send_token = false) => {
     if (!url) {

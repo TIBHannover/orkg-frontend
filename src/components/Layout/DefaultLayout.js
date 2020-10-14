@@ -11,6 +11,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import ROUTES from 'constants/routes';
+import env from '@beam-australia/react-env';
 
 const StyledBody = styled.div`
     display: flex;
@@ -79,7 +80,7 @@ export default function DefaultLayout(props) {
     const [visible, setVisible] = useState(!Boolean(cookies.cookieInfoDismissed));
 
     const onDismissCookieInfo = () => {
-        setCookie('cookieInfoDismissed', true, { path: process.env.PUBLIC_URL, maxAge: 365 * 24 * 60 * 60 * 1000 });
+        setCookie('cookieInfoDismissed', true, { path: env('PUBLIC_URL'), maxAge: 365 * 24 * 60 * 60 * 1000 });
         setVisible(false);
     };
 

@@ -106,6 +106,7 @@
         "wordsninja": "^1.0.0"
     },
     "scripts": {
+        "prestart": "react-env",
         "start": "react-app-rewired start",
         "build": "react-app-rewired build",
         "test": "react-app-rewired test --env=jsdom",
@@ -116,6 +117,7 @@
         "version": "auto-changelog && git add CHANGELOG.md"
     },
     "devDependencies": {
+        "@beam-australia/react-env": "^2.1.2",
         "auto-changelog": "^1.16.2",
         "babel-preset-env": "^1.7.0",
         "customize-cra": "^1.0.0",

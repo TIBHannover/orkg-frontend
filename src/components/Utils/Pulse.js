@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Tippy from '@tippy.js/react';
 import { withCookies, Cookies } from 'react-cookie';
+import env from '@beam-australia/react-env';
 
 class Pulse extends Component {
     constructor(props) {
@@ -19,7 +20,7 @@ class Pulse extends Component {
     handleClick = e => {
         this.tippy.disable();
         this.setState({ active: false });
-        this.props.cookies.set('showedValueHelp', true, { path: process.env.PUBLIC_URL, maxAge: 604800 });
+        this.props.cookies.set('showedValueHelp', true, { path: env('PUBLIC_URL'), maxAge: 604800 });
         if (this.props.onClose) {
             this.props.onClose();
         }

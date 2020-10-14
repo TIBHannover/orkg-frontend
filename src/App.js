@@ -12,6 +12,7 @@ import { detect } from 'detect-browser';
 import ScrollToTop from './components/ScrollToTop';
 import MetaTags from 'react-meta-tags';
 import { Alert } from 'reactstrap';
+import env from '@beam-australia/react-env';
 
 class App extends Component {
     constructor(props) {
@@ -41,7 +42,7 @@ class App extends Component {
                                 for the best experience
                             </Alert>
                         )}
-                        {process.env.REACT_APP_IS_TESTING_SERVER === 'true' && (
+                        {env('IS_TESTING_SERVER') === 'true' && (
                             <>
                                 <MetaTags>
                                     <meta name="robots" content="noindex" /> {/* make sure search engines are not indexing our test server */}

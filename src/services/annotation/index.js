@@ -4,8 +4,9 @@
  */
 
 import { submitPostRequest, submitPutRequest } from 'network';
+import env from '@beam-australia/react-env';
 
-export const annotationServiceUrl = process.env.REACT_APP_ANNOTATION_SERVICE_URL;
+export const annotationServiceUrl = env('ANNOTATION_SERVICE_URL');
 
 export const getAnnotations = abstract => {
     return submitPostRequest(`${annotationServiceUrl}annotator/`, { 'Content-Type': 'application/json' }, { text2annotate: abstract });
