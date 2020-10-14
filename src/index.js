@@ -10,12 +10,29 @@ import configureStore, { history } from './store';
 import rootReducer from './reducers/rootReducer';
 import { CookiesProvider } from 'react-cookie';
 import { ThemeProvider } from 'styled-components';
+import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 // Extract Sass variables into a JS object
 // eslint-disable-next-line import/no-webpack-loader-syntax
 const theme = require('sass-extract-loader?{plugins: ["sass-extract-js"]}!./assets/scss/ThemeVariables.scss');
+
+const matomoInstance =
+    process.env.REACT_APP_MATOMO_TRACKER === 'true'
+        ? createInstance({
+              urlBase: 'https://www.orkg.org/',
+              siteId: process.env.REACT_APP_MATOMO_TRACKER_SITE_ID,
+              trackerUrl: `${process.env.REACT_APP_MATOMO_TRACKER_URL}matomo.php`,
+              srcUrl: `${process.env.REACT_APP_MATOMO_TRACKER_URL}matomo.js`,
+              disabled: false,
+              linkTracking: true,
+              trackPageView: true,
+              configurations: {
+                  disableCookies: true
+              }
+          })
+        : undefined;
 
 const store = configureStore();
 const render = () => {
@@ -24,7 +41,9 @@ const render = () => {
             <CookiesProvider>
                 <Provider store={store}>
                     <ThemeProvider theme={theme}>
-                        <App history={history} />
+                        <MatomoProvider value={matomoInstance}>
+                            <App history={history} />
+                        </MatomoProvider>
                     </ThemeProvider>
                 </Provider>
             </CookiesProvider>
