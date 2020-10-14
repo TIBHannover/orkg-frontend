@@ -6,20 +6,12 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 export default function DataProtection() {
     document.title = 'Data protection - Open Research Knowledge Graph';
 
-    const iframe = () => {
-        return {
-            __html:
-                '<iframe style="border: 0; height: 150px; width: 100%;" src="https://support.tib.eu/piwik/index.php?module=CoreAdminHome&amp;action=optOut&amp;language=en&amp;backgroundColor=ffffff&amp;fontColor=&amp;fontSize=14px&amp;fontFamily=%22Helvetica%20Neue%22%2CHelvetica%2CArial%2Csans-serif"></iframe>'
-        };
-    };
-
     return (
         <div>
             <Container className="p-0">
                 <h1 className="h4 mt-4 mb-4">Data protection</h1>
             </Container>
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
-                <h2>Data protection</h2>
                 <p className="mt-4">
                     You can read the Open Research Knowledge Graph Data protection by following the link below
                     <br />{' '}
@@ -36,15 +28,19 @@ export default function DataProtection() {
                         Data protection <Icon size="sm" icon={faExternalLinkAlt} />
                     </Button>
                 </p>
-                <h3>Use of web analysis tools</h3>
+                <h2 className="h3">Use of web analysis tools</h2>
                 <p>
                     The ORKG uses the open source web analytics service Matomo (matomo.org) to analyse usage data in order to optimise this online
                     offer. Cookies are used to enable a statistical analysis of the use of this website by its visitors as well as the display of
                     usage-related content. There is no other use, merging with other data or disclosure to third parties.
                 </p>
-                <h5>Matomo-Opt-Out </h5>
+                <h3 className="h5">Matomo-Opt-Out </h3>
                 <p>The information generated with Matomo about the use of this website is processed and stored exclusively with the TIB.</p>
-                <div dangerouslySetInnerHTML={iframe()} />
+                <iframe
+                    title="Matomo opt-out"
+                    style={{ border: 0, height: 150, width: '100%' }}
+                    src="https://support.tib.eu/piwik/index.php?module=CoreAdminHome&amp;action=optOut&amp;language=en&amp;backgroundColor=ffffff&amp;fontColor=&amp;fontSize=14px&amp;fontFamily=%22Helvetica%20Neue%22%2CHelvetica%2CArial%2Csans-serif"
+                />
                 <p>
                     In this case, an opt-out cookie is placed in the browser of the data subject, which prevents Matomo from storing usage data. When
                     the cookies are deleted, the Matomo opt-out cookie is also deleted. Such objection (opt-out) must be redeclared when visiting the
