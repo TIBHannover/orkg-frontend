@@ -10,10 +10,10 @@ ENV NODE_OPTIONS --max-old-space-size=8192
 COPY package.json package-lock.json ./
 
 # NOTE: opencollective is not required but leads to warnings if missing
-RUN npm install react-scripts@3.4.1 react-app-rewired@2.1.6 opencollective -g
+RUN npm install react-scripts@3.4.1 opencollective -g
 
-# install the dependencies (exclude dev dependencies by using --only=production)
-RUN npm ci --only=production
+# install the dependencies
+RUN npm ci 
 
 COPY . ./
 
