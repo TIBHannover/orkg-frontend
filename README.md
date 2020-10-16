@@ -1,6 +1,7 @@
 # ORKG frontend
 
 This is the repository for the frontend of the Open Research Knowledge Grapph (ORKG), which is running live at: https://orkg.org.
+Detailed user documentation can be found in the Wiki at: https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home
 
 ## Frontend installation
 
