@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { crossrefUrl, submitGetRequest } from 'network';
 import { createLiteralStatement } from 'services/backend/statements';
-import { classesUrl } from 'services/backend/classes';
+import { classesUrl, getClassById } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
@@ -41,7 +41,7 @@ export default class AddResource extends Component {
         const classes = getArrayParamFromQueryString(this.props.location.search, 'classes');
         if (classes && classes.length > 0) {
             this.setState({ loadingDefaultClasses: true });
-            const fetchDefaultClasses = classes.map(c => submitGetRequest(classesUrl + encodeURIComponent(c)));
+            const fetchDefaultClasses = classes.map(c => getClassById(c));
             Promise.all(fetchDefaultClasses)
                 .then(classesData => {
                     this.setState({ loadingDefaultClasses: false, classes: classesData });
