@@ -90,7 +90,7 @@ export default function DataProtection() {
                     violates or will violate the Terms of Use, these Special Conditions or other legal obligations also in the future.
                 </p>
                 <p>
-                    2.8 TIB will terminate accounts at the request of the user in textform at any time and without undue delay. All personal data in
+                    2.8 TIB will terminate accounts at the request of the user in text form at any time and without undue delay. All personal data in
                     the user profile will be deleted without undue delay. Content created by users remains published as long as the TIB does not
                     delete this content or the user does not request its deletion, whereupon the TIB complies with the request.
                 </p>
@@ -163,7 +163,7 @@ export default function DataProtection() {
                     .
                 </p>
                 <p>
-                    5.3 The TIBassumes no liability that the service and its content are always uninterrupted, unchanged and available in full, as
+                    5.3 The TIB assumes no liability that the service and its content are always uninterrupted, unchanged and available in full, as
                     well as being up-to-date and free from errors of an editorial or technical nature. No liability is accepted for damage caused by
                     trusting the content of the platform or its use.
                 </p>
