@@ -11,7 +11,7 @@ const Image = styled.img`
     top: 0;
     left: 0;
     width: 100%;
-    height: auto%;
+    height: auto;
     border: 0;
 `;
 
@@ -19,7 +19,7 @@ class ImageAsFigure extends Component {
     constructor(props) {
         super(props);
         // eslint-disable-next-line no-useless-escape
-        this.expressionImage = new RegExp(/^(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|svg))/i);
+        this.expressionImage = new RegExp(/^(https):(\/\/[^"']*\.(?:png|jpg|jpeg|gif|svg))/i);
     }
 
     render() {
@@ -34,7 +34,7 @@ class ImageAsFigure extends Component {
             return (
                 <ImageContainer>
                     {/*add flow image link*/}
-                    <a href={labelToText.indexOf('://') === -1 ? 'http://' + labelToText : labelToText} target="_blank" rel="noopener noreferrer">
+                    <a href={labelToText.indexOf('://') === -1 ? 'https://' + labelToText : labelToText} target="_blank" rel="noopener noreferrer">
                         <Image title="Figure" scrolling="no" src={labelToText} allowFullScreen />
                     </a>
                 </ImageContainer>
