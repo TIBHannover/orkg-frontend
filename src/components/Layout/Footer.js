@@ -84,6 +84,9 @@ const Footer = () => (
                                 <Link to={ROUTES.DATA_PROTECTION}>Data protection</Link>
                             </li>
                             <li>
+                                <Link to={ROUTES.TERMS_OF_USE}>Terms of use</Link>
+                            </li>
+                            <li>
                                 <a href="https://projects.tib.eu/orkg/imprint/" target="_blank" rel="noopener noreferrer">
                                     Imprint
                                 </a>

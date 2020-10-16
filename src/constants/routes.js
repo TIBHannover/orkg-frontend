@@ -35,6 +35,7 @@ export default {
     AUTHOR_PAGE: '/author/:authorId',
     LICENSE: '/license',
     DATA_PROTECTION: '/data-protection',
+    TERMS_OF_USE: '/terms-of-use',
     /* Legacy routes, only used for debugging now */
     SEARCH: '/search/:searchTerm?',
     TPDL: '/tpdl',
