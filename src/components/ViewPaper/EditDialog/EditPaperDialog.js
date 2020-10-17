@@ -9,10 +9,10 @@ import {
     getStatementsBySubjectAndPredicate,
     getStatementsByPredicateAndLiteral
 } from 'services/backend/statements';
-import REGEX from 'constants/regex';
-import { toast } from 'react-toastify';
 import { updateLiteral, createLiteral as createLiteralApi } from 'services/backend/literals';
 import { updateResource, createResource } from 'services/backend/resources';
+import REGEX from 'constants/regex';
+import { toast } from 'react-toastify';
 import { connect } from 'react-redux';
 import EditItem from './EditItem';
 import { loadPaper } from 'actions/viewPaper';
