@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Table, ButtonGroup, Button } from 'reactstrap';
-import { submitGetRequest } from 'network';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
-import { classesUrl } from 'services/backend/classes';
+import { getClassById } from 'services/backend/classes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faFileCsv } from '@fortawesome/free-solid-svg-icons';
 import ClassInstances from 'components/ClassInstances/ClassInstances';
@@ -31,7 +30,7 @@ function ClassDetails(props) {
         const findClass = async () => {
             setIsLoading(true);
             try {
-                const responseJson = await submitGetRequest(classesUrl + encodeURIComponent(props.match.params.id));
+                const responseJson = await getClassById(props.match.params.id);
                 document.title = `${responseJson.label} - Class - ORKG`;
                 // Get the template of the class
                 getStatementsByObjectAndPredicate({

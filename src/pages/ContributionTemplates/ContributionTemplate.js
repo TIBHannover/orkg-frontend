@@ -14,8 +14,7 @@ import { getParamFromQueryString } from 'utils';
 import styled, { withTheme } from 'styled-components';
 import VisibilitySensor from 'react-visibility-sensor';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
-import { submitGetRequest } from 'network';
-import { classesUrl } from 'services/backend/classes';
+import { getClassById } from 'services/backend/classes';
 import classnames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -64,7 +63,7 @@ class ContributionTemplate extends Component {
     getDefaultClass = () => {
         const targetClass = getParamFromQueryString(this.props.location.search, 'classID');
         if (targetClass) {
-            submitGetRequest(classesUrl + encodeURIComponent(targetClass)).then(classesData => {
+            getClassById(targetClass).then(classesData => {
                 this.props.setClass(classesData);
             });
         }
