@@ -132,7 +132,6 @@ StatementItemTemplate.propTypes = {
     selectedProperty: PropTypes.string,
     isLastItem: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
-    loadOptions: PropTypes.func.isRequired,
     predicateLabel: PropTypes.string.isRequired,
     values: PropTypes.object.isRequired,
     syncBackend: PropTypes.bool.isRequired,
