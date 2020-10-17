@@ -4,6 +4,10 @@ import { getOrganization } from 'services/backend/organizations';
 
 export const observatoriesUrl = `${url}observatories/`;
 
+export const getAllObservatories = () => {
+    return submitGetRequest(`${observatoriesUrl}`);
+};
+
 export const getObservatoryById = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/`);
 };
