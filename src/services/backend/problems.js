@@ -17,3 +17,7 @@ export const getAuthorsByResearchProblemId = ({ id, page = 1, items = 9999 }) =>
     const params = queryString.stringify({ page: page, items: items });
     return submitGetRequest(`${problemsUrl}${encodeURIComponent(id)}/authors?${params}`);
 };
+
+export const getTopResearchProblems = () => {
+    return submitGetRequest(`${problemsUrl}top`);
+};

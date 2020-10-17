@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import rangy from 'rangy';
 import { compose } from 'redux';
-import { submitGetRequest } from '../../../network';
+import { submitGetRequest } from 'network';
 import { predicatesUrl } from 'services/backend/predicates';
 import { connect } from 'react-redux';
 import AnnotationTootip from './AnnotationTootip';
 
-import { createAnnotation, updateAnnotationClass, removeAnnotation, validateAnnotation } from '../../../actions/addPaper';
+import { createAnnotation, updateAnnotationClass, removeAnnotation, validateAnnotation } from 'actions/addPaper';
 
 function getAllIndexes(arr, val) {
     const indexes = [];
