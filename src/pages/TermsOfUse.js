@@ -92,7 +92,7 @@ export default function DataProtection() {
                 <p>
                     2.8 TIB will terminate accounts at the request of the user in text form at any time and without undue delay. All personal data in
                     the user profile will be deleted without undue delay. Content created by users remains published as long as the TIB does not
-                    delete this content or the user does not request its deletion, whereupon the TIB complies with the request.
+                    delete this content or the user does not request its deletion, whereupon the TIB will anonymise this content.
                 </p>
                 <h3>3. ORKG</h3>
                 <p>3.1 Anyone can view and use ORKG content. Registered Users can create and modify content.</p>
