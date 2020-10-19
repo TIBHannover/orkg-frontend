@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import SelfVisDataModel from '../../libs/selfVisModel/SelfVisDataModel';
 // import styled from 'styled-components';
 
 // TODO: investigate performance, somehow it takes way to long to render the modal (like 800ms) -- oO --
@@ -8,7 +9,6 @@ import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 export default class AddVisualizationModal extends Component {
     constructor(props) {
         super(props);
-
         this.initializedData = props.initialData;
     }
 
@@ -34,7 +34,11 @@ export default class AddVisualizationModal extends Component {
     };
 
     onLoadModal = () => {
-        console.log('On load modal function called');
+        // check if we need to run the parser
+        const mmr = new SelfVisDataModel(); // this is a singleton
+        mmr.integrateInputData(this.props.initialData);
+        console.log('---- prepared --- ');
+
         // this.parseComparisionData();
         // // reset the selection data ;
         // this.setState({ tabSelected: 0, mappedData: undefined, mappedTableData: undefined });

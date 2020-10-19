@@ -464,17 +464,12 @@ function Comparison(props) {
                     toggle={() => setShowVisualizationModal(v => !v)}
                     showDialog={showVisualizationModal}
                     // Some data we track as input for the new data model TODO Check what we need
-                    initialdata={{
+                    initialData={{
                         metaData,
                         contributions,
                         properties,
                         data,
-                        matrixData,
-                        authors,
-                        errors,
-                        transpose,
-                        comparisonType,
-                        responseHash,
+                        authors, // do we need this? maybe to add a new author who creates the comparison
                         contributionsList,
                         predicatesList
                     }}
