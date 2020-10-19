@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Label, FormGroup } from 'reactstrap';
-import { addObservatoryResearchProblem, deleteStatementById, addPapertoObservatory } from 'network';
+import { addResourceToObservatory, addObservatoryResearchProblem } from 'services/backend/resources';
+import { deleteStatementById } from 'services/backend/statements';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProblemInput';
@@ -40,7 +41,7 @@ class EditResearchProblem extends Component {
     addObservatoryResearchProblem = async (id, name, organizationId) => {
         this.setState({ isLoadingName: true });
         try {
-            await addPapertoObservatory(id, organizationId, name);
+            await addResourceToObservatory(id, organizationId, name);
             this.setState({ isLoadingName: false });
         } catch (error) {
             this.setState({ isLoadingName: false });

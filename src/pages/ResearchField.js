@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Container, Button, Card, CardText, CardBody, CardHeader, CardFooter } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { getStatementsByObjectAndPredicate, getResource, getStatementsBySubjects } from '../network';
+import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
+import { getResource } from 'services/backend/resources';
 import { reverse } from 'named-urls';
-import ROUTES from '../constants/routes.js';
-import PaperCard from '../components/PaperCard/PaperCard';
+import ROUTES from 'constants/routes.js';
+import PaperCard from 'components/PaperCard/PaperCard';
 import { getPaperData } from 'utils';
 import { find } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

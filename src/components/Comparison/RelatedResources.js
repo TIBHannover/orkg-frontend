@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getStatementsBySubject } from 'network';
+import { getStatementsBySubject } from 'services/backend/statements';
 import { Card, CardImg, CardText, CardBody, CardTitle, Button, CardColumns } from 'reactstrap';
 import { PREDICATES } from 'constants/graphSettings';
 

@@ -31,6 +31,7 @@ import ComparisonVersions from 'components/Comparison/ComparisonVersions.js';
 import Publish from 'components/Comparison/Publish.js';
 import { ContainerAnimated, ComparisonTypeButton } from 'components/Comparison/styled';
 import useComparison from 'components/Comparison/hooks/useComparison';
+import { addResourceToObservatory } from 'services/backend/resources';
 import ROUTES from 'constants/routes.js';
 import { useHistory, Link } from 'react-router-dom';
 import { openAuthDialog } from 'actions/auth';
@@ -43,7 +44,6 @@ import { useCookies } from 'react-cookie';
 import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { addPapertoObservatory } from 'network';
 import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
 import styled from 'styled-components';
@@ -174,7 +174,7 @@ function Comparison(props) {
         console.log(organizationId + '-' + observatoryId);
 
         if (organizationId.length > 0 && observatoryId.length > 0) {
-            await addPapertoObservatory(observatoryId, organizationId, metaData?.id).then(async response => {
+            await addResourceToObservatory(observatoryId, organizationId, metaData?.id).then(async response => {
                 toast.success(`Observatory added to comparison successfully`);
                 await loadCreatedBy(response.created_by);
                 loadProvenanceInfos(response.observatory_id, response.organization_id);

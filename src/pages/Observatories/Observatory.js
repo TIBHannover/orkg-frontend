@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Container, Modal, ModalBody, ModalHeader, Button } from 'reactstrap';
 import { Col, Row } from 'reactstrap';
+import { getStatementsBySubjects } from 'services/backend/statements';
+import { getOrganization } from 'services/backend/organizations';
 import {
+    getObservatoryById,
     getUsersByObservatoryId,
-    getOrganization,
     getResourcesByObservatoryId,
     getComparisonsByObservatoryId,
-    getProblemsByObservatoryId,
-    getObservatoryById,
-    getStatementsBySubjects
-} from 'network';
+    getProblemsByObservatoryId
+} from 'services/backend/observatories';
 import InternalServerError from 'pages/InternalServerError';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PaperCard from 'components/PaperCard/PaperCard';

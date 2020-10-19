@@ -1,16 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-import {
-    getResource,
-    getStatementsBySubject,
-    getObservatoryAndOrganizationInformation,
-    getComparison,
-    getStatementsBySubjectAndPredicate,
-    getStatementsByObjectAndPredicate,
-    getUserInformationById,
-    observatoriesUrl,
-    submitGetRequest,
-    organizationsUrl
-} from 'network';
+import { getStatementsBySubject, getStatementsBySubjectAndPredicate, getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { getUserInformationById } from 'services/backend/users';
+import { getObservatoryAndOrganizationInformation, getAllObservatories } from 'services/backend/observatories';
+import { getAllOrganizations } from 'services/backend/organizations';
+import { getResource } from 'services/backend/resources';
+import { getComparison } from 'services/similarity/index';
 import {
     extendPropertyIds,
     similarPropertiesByLabel,
@@ -260,8 +254,8 @@ function useComparison() {
      * Load observatories if comparison is not added to any observatory yet
      */
     const loadObservatories = () => {
-        const observatories = submitGetRequest(`${observatoriesUrl}`);
-        const organizations = submitGetRequest(`${organizationsUrl}`);
+        const observatories = getAllObservatories();
+        const organizations = getAllOrganizations();
 
         Promise.all([observatories, organizations]).then(async data => {
             const items = [];

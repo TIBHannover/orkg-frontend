@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getResource, getStatementsBySubject, getStatementsByObjectAndPredicate } from 'network';
+import { getStatementsBySubject, getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { getResource } from 'services/backend/resources';
 import { useParams } from 'react-router-dom';
 import { filterObjectOfStatementsByPredicate } from 'utils';
 import { PREDICATES } from 'constants/graphSettings';

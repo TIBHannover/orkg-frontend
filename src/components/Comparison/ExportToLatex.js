@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink } from 'reactstrap';
-import { createShortLink, getStatementsBySubject, getComparison } from 'network';
+import { getStatementsBySubject } from 'services/backend/statements';
+import { createShortLink, getComparison } from 'services/similarity/index';
 import Cite from 'citation-js';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CustomInput } from 'reactstrap';

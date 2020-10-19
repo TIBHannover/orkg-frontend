@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
 import { Alert, Col, Container, Form, FormGroup, Row, Button, InputGroupAddon, InputGroup, Input } from 'reactstrap';
-import {
-    getResource,
-    getSimilaireContribution,
-    deleteStatementById,
-    createResource,
-    createResourceStatement,
-    observatoriesUrl,
-    submitGetRequest,
-    organizationsUrl,
-    addPapertoObservatory
-} from 'network';
+import { deleteStatementById, createResourceStatement } from 'services/backend/statements';
+import { getResource, addResourceToObservatory } from 'services/backend/resources';
+import { createResource } from 'services/backend/resources';
+import { getAllObservatories } from 'services/backend/observatories';
+import { getAllOrganizations } from 'services/backend/organizations';
+import { getSimilarContribution } from 'services/similarity/index';
 import AddToComparison from './AddToComparison';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ContentLoader from 'react-content-loader';
@@ -33,7 +28,6 @@ import styled from 'styled-components';
 import { StyledHorizontalContributionsList, StyledHorizontalContribution } from '../AddPaper/Contributions/styled';
 import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import SuggestedTemplates from 'components/StatementBrowser/SuggestedTemplates/SuggestedTemplates';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
@@ -108,8 +102,8 @@ class Contributions extends Component {
 
     loadObservatories = () => {
         this.setState({ isLoadingObservatory: true });
-        const observatories = submitGetRequest(`${observatoriesUrl}`);
-        const organizations = submitGetRequest(`${organizationsUrl}`);
+        const observatories = getAllObservatories();
+        const organizations = getAllOrganizations();
 
         Promise.all([observatories, organizations])
             .then(async data => {
@@ -146,7 +140,7 @@ class Contributions extends Component {
         e.preventDefault();
 
         if (this.state.organizationId.length > 0 && this.state.observatoryId.length > 0) {
-            await addPapertoObservatory(this.state.observatoryId, this.state.organizationId, this.props.paperId).then(l => {
+            await addResourceToObservatory(this.state.observatoryId, this.state.organizationId, this.props.paperId).then(l => {
                 toast.success(`Observatory added to paper successfully`);
                 this.props.getObservatoryInfo();
             });
@@ -167,7 +161,7 @@ class Contributions extends Component {
                 contributionLabel: contributionResource.label
             });
         }
-        getSimilaireContribution(this.state.selectedContribution)
+        getSimilarContribution(this.state.selectedContribution)
             .then(similaireContributions => {
                 const similaireContributionsData = similaireContributions.map(paper => {
                     // Fetch the data of each paper

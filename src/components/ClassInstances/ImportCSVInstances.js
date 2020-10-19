@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { createResource, createLiteral, createLiteralStatement } from 'network';
+import { createLiteralStatement } from 'services/backend/statements';
+import { createLiteral } from 'services/backend/literals';
+import { createResource } from 'services/backend/resources';
 import { PREDICATES } from 'constants/graphSettings';
 import CSVReader from 'react-csv-reader';
 import { toast } from 'react-toastify';

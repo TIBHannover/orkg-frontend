@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getResource, predicatesUrl, submitGetRequest, updateStatement, createPredicate, deleteStatementById } from 'network';
+import { updateStatement, deleteStatementById } from 'services/backend/statements';
+import { createPredicate } from 'services/backend/predicates';
+import { getResource } from 'services/backend/resources';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import StatementItemTemplate from './StatementItemTemplate';
@@ -7,7 +9,7 @@ import { guid } from 'utils';
 
 export default function StatementItem(props) {
     const [predicateLabel, setPredicateLabel] = useState(props.predicateLabel);
-    const maxResults = 15;
+
     useEffect(() => {
         const getPredicateLabel = () => {
             if (props.predicateLabel.match(new RegExp('^R[0-9]*$'))) {
@@ -82,61 +84,6 @@ export default function StatementItem(props) {
         props.doneSavingProperty({ id: props.id });
     };
 
-    const IdMatch = async (value, responseJson) => {
-        if (value.startsWith('#')) {
-            const valueWithoutHashtag = value.substr(1);
-
-            if (valueWithoutHashtag.length > 0) {
-                let responseJsonExact;
-
-                try {
-                    responseJsonExact = await submitGetRequest(predicatesUrl + encodeURIComponent(valueWithoutHashtag));
-                } catch (err) {
-                    responseJsonExact = null;
-                }
-
-                if (responseJsonExact) {
-                    responseJson.unshift(responseJsonExact);
-                }
-            }
-        }
-
-        return responseJson;
-    };
-
-    const loadOptions = async value => {
-        try {
-            let queryParams = '';
-
-            if (value.startsWith('"') && value.endsWith('"') && value.length > 2) {
-                value = value.substring(1, value.length - 1);
-                queryParams = '&exact=true';
-            }
-
-            let responseJson = await submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(value) + queryParams);
-            responseJson = await IdMatch(value, responseJson);
-
-            if (responseJson.length > maxResults) {
-                responseJson = responseJson.slice(0, maxResults);
-            }
-
-            const options = [];
-
-            responseJson.map(item =>
-                options.push({
-                    label: item.label,
-                    id: item.id
-                })
-            );
-
-            return options;
-        } catch (err) {
-            console.error(err);
-
-            return [];
-        }
-    };
-
     return (
         <StatementItemTemplate
             property={props.property}
@@ -144,7 +91,6 @@ export default function StatementItem(props) {
             selectedProperty={props.selectedProperty}
             isLastItem={props.isLastItem}
             enableEdit={props.enableEdit}
-            loadOptions={loadOptions}
             predicateLabel={predicateLabel}
             values={props.values}
             syncBackend={props.syncBackend}

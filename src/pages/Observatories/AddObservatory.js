@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Container, Button, FormGroup, Input, Label } from 'reactstrap';
-import { createObservatory, resourcesUrl, getOrganization } from 'network';
+import { resourcesUrl } from 'services/backend/resources';
+import { getOrganization } from 'services/backend/organizations';
+import { createObservatory } from 'services/backend/observatories';
 import NotFound from 'pages/NotFound';
 import InternalServerError from 'pages/InternalServerError';
 import AutoComplete from 'components/Autocomplete/Autocomplete';

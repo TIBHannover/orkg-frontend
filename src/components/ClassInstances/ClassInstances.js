@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { getResourcesByClass } from 'network';
+import { getResourcesByClass } from 'services/backend/classes';
 import { Button, Table, Collapse, Input, FormGroup, Label, Form } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
