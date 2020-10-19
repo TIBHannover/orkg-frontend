@@ -41,6 +41,7 @@ import FeaturedComparisons from 'pages/FeaturedComparisons';
 import PdfTextAnnotation from 'pages/PdfTextAnnotation';
 import PdfAnnotation from 'pages/PdfAnnotation';
 import ExportData from 'pages/ExportData';
+import Contribution from 'pages/Contribution';
 import requireAuthentication from 'requireAuthentication';
 import { reverse } from 'named-urls';
 
@@ -240,6 +241,10 @@ const routes = [
     {
         path: ROUTES.PDF_ANNOTATION,
         component: requireAuthentication(PdfAnnotation)
+    },
+    {
+        path: ROUTES.CONTRIBUTION,
+        component: Contribution
     },
     {
         path: ROUTES.EXPORT_DATA,

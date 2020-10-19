@@ -306,7 +306,12 @@ class ViewPaper extends Component {
                         <VisibilitySensor onChange={this.handleShowHeaderBar}>
                             <Container className="d-flex align-items-center">
                                 <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
-                                <PaperMenuBar editMode={this.state.editMode} paperLink={paperLink} toggle={this.toggle} />
+                                <PaperMenuBar
+                                    editMode={this.state.editMode}
+                                    paperLink={paperLink}
+                                    toggle={this.toggle}
+                                    id={this.props.match.params.resourceId}
+                                />
                             </Container>
                         </VisibilitySensor>
 
