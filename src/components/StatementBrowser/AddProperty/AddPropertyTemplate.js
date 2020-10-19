@@ -1,5 +1,5 @@
 import React from 'react';
-import { predicatesUrl } from 'network';
+import { predicatesUrl } from 'services/backend/predicates';
 import { InputGroupAddon, Button, InputGroup } from 'reactstrap';
 import { AddPropertyStyle, AddPropertyContentStyle, AddPropertyFormStyle, StyledButton } from 'components/StatementBrowser/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

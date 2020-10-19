@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createPredicate } from 'network';
+import { createPredicate } from 'services/backend/predicates';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import AddPropertyTemplate from './AddPropertyTemplate';
 

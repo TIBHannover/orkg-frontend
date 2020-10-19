@@ -1,30 +1,22 @@
 import React, { useState } from 'react';
 import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
 import RDFDataCube from 'components/RDFDataCube/RDFDataCube';
-import {
-    deleteStatementById,
-    updateLiteral,
-    submitGetRequest,
-    resourcesUrl,
-    updateStatement,
-    createResource as createResourceAPICall,
-    updateResource
-} from 'network';
+import { updateStatement, deleteStatementById } from 'services/backend/statements';
+import { createResource as createResourceAPICall, updateResource } from 'services/backend/resources';
+import { updateLiteral } from 'services/backend/literals';
 import { toast } from 'react-toastify';
 import { guid } from 'utils';
 import { uniq } from 'lodash';
 import format from 'string-format';
 import ValueItemTemplate from './ValueItemTemplate';
 import PropTypes from 'prop-types';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { PREDICATES } from 'constants/graphSettings';
 
 export default function ValueItem(props) {
     const [modal, setModal] = useState(false);
     const [modalDataset, setModalDataset] = useState(false);
     const [dialogResourceId, setDialogResourceId] = useState(null);
     const [dialogResourceLabel, setDialogResourceLabel] = useState(null);
-
-    const maxResults = 15;
 
     const commitChangeLabel = async draftLabel => {
         // Check if the user changed the label
@@ -174,70 +166,6 @@ export default function ValueItem(props) {
         setDialogResourceLabel(resource.label);
     };
 
-    const IdMatch = async (value, responseJson) => {
-        if (value.startsWith('#')) {
-            const valueWithoutHashtag = value.substr(1);
-
-            if (valueWithoutHashtag.length > 0) {
-                let responseJsonExact;
-
-                try {
-                    responseJsonExact = await submitGetRequest(resourcesUrl + encodeURIComponent(valueWithoutHashtag));
-                } catch (err) {
-                    responseJsonExact = null;
-                }
-
-                if (responseJsonExact) {
-                    responseJson.unshift(responseJsonExact);
-                }
-            }
-        }
-
-        return responseJson;
-    };
-
-    const loadOptions = async value => {
-        try {
-            let queryParams = '';
-
-            if (value.startsWith('"') && value.endsWith('"') && value.length > 2) {
-                value = value.substring(1, value.length - 1);
-                queryParams = '&exact=true';
-            }
-
-            let responseJson = await submitGetRequest(
-                resourcesUrl +
-                    '?q=' +
-                    encodeURIComponent(value) +
-                    queryParams +
-                    `&exclude=${encodeURIComponent(CLASSES.CONTRIBUTION + ',' + CLASSES.PROBLEM)}`
-            );
-            responseJson = await IdMatch(value, responseJson);
-
-            if (responseJson.length > maxResults) {
-                responseJson = responseJson.slice(0, maxResults);
-            }
-
-            const options = [];
-
-            responseJson.map(item =>
-                options.push({
-                    label: item.label,
-                    id: item.id,
-                    classes: item.classes,
-                    shared: item.shared,
-                    type: 'object'
-                })
-            );
-
-            return options;
-        } catch (err) {
-            console.error(err);
-
-            return [];
-        }
-    };
-
     const resource = props.resources.byId[props.value.resourceId];
     const value = props.values.byId[props.id];
 
@@ -322,7 +250,6 @@ export default function ValueItem(props) {
                 predicate={props.properties.byId[props.propertyId]}
                 handleOnClick={handleOnClick}
                 inline={props.inline}
-                loadOptions={loadOptions}
                 handleChangeResource={handleChangeResource}
                 toggleEditValue={props.toggleEditValue}
                 commitChangeLabel={commitChangeLabel}

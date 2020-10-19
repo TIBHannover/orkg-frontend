@@ -180,7 +180,6 @@ ValueItemTemplate.propTypes = {
     inline: PropTypes.bool.isRequired,
     showHelp: PropTypes.bool,
     enableEdit: PropTypes.bool.isRequired,
-    loadOptions: PropTypes.func.isRequired,
     getLabel: PropTypes.func.isRequired,
     predicate: PropTypes.object.isRequired,
 

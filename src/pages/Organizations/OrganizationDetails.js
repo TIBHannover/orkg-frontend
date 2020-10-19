@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, NavLink, Button, Card, CardTitle } from 'reactstrap';
-import { getOrganization, getUsersByOrganizationId, getAllObservatoriesByOrganizationId } from 'network';
+import { getUsersByOrganizationId, getAllObservatoriesByOrganizationId, getOrganization } from 'services/backend/organizations';
 import InternalServerError from 'pages/InternalServerError';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

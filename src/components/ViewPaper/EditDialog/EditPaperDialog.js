@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ListGroup } from 'reactstrap';
 import {
-    updateResource,
-    updateLiteral,
-    createLiteral as createLiteralAPI,
     createLiteralStatement,
     createResourceStatement,
-    createResource,
     deleteStatementsByIds,
     deleteStatementById,
     updateStatement,
     getStatementsBySubjectAndPredicate,
     getStatementsByPredicateAndLiteral
-} from 'network';
+} from 'services/backend/statements';
+import { updateLiteral, createLiteral as createLiteralApi } from 'services/backend/literals';
+import { updateResource, createResource } from 'services/backend/resources';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
 import { connect } from 'react-redux';
@@ -199,7 +197,7 @@ class EditPaperDialog extends Component {
     };
 
     createNewLiteral = async (resourceId, predicateId, label) => {
-        const newLiteral = await createLiteralAPI(label);
+        const newLiteral = await createLiteralApi(label);
         const statement = await createLiteralStatement(resourceId, predicateId, newLiteral.id);
 
         return {
@@ -251,7 +249,7 @@ class EditPaperDialog extends Component {
                     // Author resource doesn't exist
                     // Create resource author
                     const authorResource = await createResource(author.label, [CLASSES.AUTHOR]);
-                    const createLiteral = await createLiteralAPI(author.orcid);
+                    const createLiteral = await createLiteralApi(author.orcid);
                     await createLiteralStatement(authorResource.id, PREDICATES.HAS_ORCID, createLiteral.id);
                     const authorStatement = await createResourceStatement(
                         this.props.viewPaper.paperResourceId,
@@ -265,7 +263,7 @@ class EditPaperDialog extends Component {
                 }
             } else {
                 // Author resource doesn't exist
-                const newLiteral = await createLiteralAPI(author.label);
+                const newLiteral = await createLiteralApi(author.label);
                 // Create literal of author
                 const authorStatement = await createLiteralStatement(this.props.viewPaper.paperResourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
                 authors[i].statementId = authorStatement.id;

@@ -7,7 +7,8 @@ import { readString } from 'react-papaparse';
 import { useSelector, useDispatch } from 'react-redux';
 import { zip, omit, isString } from 'lodash';
 import { PREDICATES, MISC } from 'constants/graphSettings';
-import { saveFullPaper, getStatementsBySubject } from 'network';
+import { getStatementsBySubject } from 'services/backend/statements';
+import { saveFullPaper } from 'services/backend/misc';
 
 function useExtractionModal(props) {
     const [loading, setLoading] = useState(false);

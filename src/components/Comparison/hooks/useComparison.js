@@ -1,13 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import {
-    getResource,
-    getStatementsBySubject,
-    getObservatoryAndOrganizationInformation,
-    getComparison,
-    getStatementsBySubjectAndPredicate,
-    getStatementsByObjectAndPredicate,
-    getUserInformationById
-} from 'network';
+import { getStatementsBySubject, getStatementsBySubjectAndPredicate, getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { getUserInformationById } from 'services/backend/users';
+import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
+import { getResource } from 'services/backend/resources';
+import { getComparison } from 'services/similarity/index';
 import {
     extendPropertyIds,
     similarPropertiesByLabel,

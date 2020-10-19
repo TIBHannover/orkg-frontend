@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
-import { semanticScholarUrl, submitGetRequest, getAnnotations } from '../../../network';
+import { semanticScholarUrl, submitGetRequest } from 'network';
+import { getAnnotations } from 'services/annotation/index';
 import { connect } from 'react-redux';
 import {
     updateAbstract,
@@ -12,7 +13,7 @@ import {
     clearAnnotations,
     toggleAbstractDialog,
     setAbstractDialogView
-} from '../../../actions/addPaper';
+} from 'actions/addPaper';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faThList, faMagic } from '@fortawesome/free-solid-svg-icons';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
@@ -23,7 +24,7 @@ import AbstractAnnotatorView from './AbstractAnnotatorView';
 import AbstractRangesList from './AbstractRangesList';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
-import { guid } from '../../../utils';
+import { guid } from 'utils';
 import toArray from 'lodash/toArray';
 
 const AnimationContainer = styled(CSSTransition)`
