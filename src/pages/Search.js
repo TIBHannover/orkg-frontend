@@ -4,12 +4,15 @@ import { withRouter } from 'react-router-dom'; // to access the history object
 import { reverse } from 'named-urls';
 import dotProp from 'dot-prop-immutable';
 import PropTypes from 'prop-types';
-import queryString from 'query-string';
 import ContentLoader from 'react-content-loader';
-import { getResourcesByClass, getAllPredicates, getAllResources } from 'network';
+import { getResourcesByClass, getClassById } from 'services/backend/classes';
+import { getAllResources } from 'services/backend/resources';
+import { getAllPredicates } from 'services/backend/predicates';
 import ROUTES from 'constants/routes.js';
 import Results from 'components/Search/Results';
 import Filters from 'components/Search/Filters';
+import { getArrayParamFromQueryString } from 'utils';
+import { unionBy } from 'lodash';
 import { toast } from 'react-toastify';
 import { CLASSES } from 'constants/graphSettings';
 
@@ -21,75 +24,68 @@ class Search extends Component {
 
         this.itemsPerFilter = 10;
 
-        // use a map so we have an ordered object
-        this.filters = new Map([
-            [
-                1,
-                {
-                    label: 'Paper',
-                    labelPlural: 'Papers',
-                    class: CLASSES.PAPER
-                }
-            ],
-            [
-                2,
-                {
-                    label: 'Research Problem',
-                    labelPlural: 'Research Problems',
-                    class: CLASSES.PROBLEM
-                }
-            ],
-            [
-                3,
-                {
-                    label: 'Author',
-                    labelPlural: 'Authors',
-                    class: CLASSES.AUTHOR
-                }
-            ],
-            [
-                4,
-                {
-                    label: 'Comparison',
-                    labelPlural: 'Comparisons',
-                    class: CLASSES.COMPARISON
-                }
-            ],
-            [
-                5,
-                {
-                    label: 'Venue',
-                    labelPlural: 'Venues',
-                    class: CLASSES.VENUE
-                }
-            ],
-            [
-                6,
-                {
-                    label: 'Resource',
-                    labelPlural: 'Resources',
-                    class: 'resource'
-                }
-            ],
-            [
-                7,
-                {
-                    label: 'Property',
-                    labelPlural: 'Properties',
-                    class: 'predicate'
-                }
-            ]
-        ]);
+        this.defaultsFilters = [
+            {
+                label: 'Paper',
+                labelPlural: 'Papers',
+                id: CLASSES.PAPER
+            },
+            {
+                label: 'Research Problem',
+                labelPlural: 'Research Problems',
+                id: CLASSES.PROBLEM
+            },
+            {
+                label: 'Author',
+                labelPlural: 'Authors',
+                id: CLASSES.AUTHOR
+            },
+            {
+                label: 'Comparison',
+                labelPlural: 'Comparisons',
+                id: CLASSES.COMPARISON
+            },
+            {
+                label: 'Venue',
+                labelPlural: 'Venues',
+                id: CLASSES.VENUE
+            },
+            {
+                label: 'Template',
+                labelPlural: 'Templates',
+                id: CLASSES.CONTRIBUTION_TEMPLATE
+            },
+            {
+                label: 'Resource',
+                labelPlural: 'Resources',
+                id: 'resource'
+            },
+            {
+                label: 'Property',
+                labelPlural: 'Properties',
+                id: 'predicate'
+            }
+        ];
 
-        this.orkg_classes = [CLASSES.CONTRIBUTION, CLASSES.PAPER, CLASSES.PROBLEM, CLASSES.AUTHOR, CLASSES.COMPARISON, CLASSES.VENUE];
+        this.ignored_classes = [CLASSES.CONTRIBUTION];
 
-        const selectedFilters = this.getTypesFromUrl();
+        const selectedFiltersStrings = getArrayParamFromQueryString(decodeURIComponent(this.props.location.search), 'types');
+        // ensure the array format is accepted by the autocomplete component
+        const selectedFilters = selectedFiltersStrings.map(filter => ({ id: filter }));
+
+        let results;
+        if (selectedFilters && selectedFilters.length > 0) {
+            results = { ...selectedFilters.map(f => ({ [f]: [] })) };
+        } else {
+            results = { ...this.defaultsFilters.map(f => ({ [f.id]: [] })) };
+        }
 
         this.state = {
             value,
-            selectedFilters,
-            results: { ...Object.keys(this.filters).map(f => ({ [this.filters[f].class]: [] })) },
+            selectedFilters: selectedFilters ? selectedFilters : this.defaultsFilters,
+            results,
             isNextPageLoading: {},
+            loadingFilterClasses: true,
             hasNextPage: {},
             currentPage: {},
             isLastPageReached: {}
@@ -99,13 +95,11 @@ class Search extends Component {
     componentDidMount() {
         document.title = 'Search - ORKG';
         if (this.state.value) {
-            for (const filter of this.filters) {
-                this.loadMoreResults(this.state.value, filter[1].class);
-            }
+            this.getResultsForFilters();
         }
     }
 
-    componentDidUpdate = prevProps => {
+    componentDidUpdate = (prevProps, prevState) => {
         if (this.props.match.params.searchTerm !== prevProps.match.params.searchTerm && this.props.match.params.searchTerm) {
             this.setState(
                 {
@@ -117,16 +111,43 @@ class Search extends Component {
                     isLastPageReached: {}
                 },
                 () => {
-                    for (const filter of this.filters) {
-                        this.loadMoreResults(this.state.value, filter[1].class);
-                    }
+                    this.getResultsForFilters();
                 }
             );
         }
     };
 
+    getResultsForFilters = () => {
+        this.setState({ loadingFilterClasses: true });
+        const selectedFilters = getArrayParamFromQueryString(decodeURIComponent(this.props.location.search), 'types');
+        if (!selectedFilters || selectedFilters.length === 0) {
+            this.setState({ loadingFilterClasses: false });
+            for (const filter of this.defaultsFilters) {
+                if (!this.state.results[filter.id]) {
+                    this.loadMoreResults(this.state.value, filter.id);
+                }
+            }
+        } else {
+            const classesCalls = selectedFilters.map(classID => {
+                if (this.defaultsFilters.map(df => df.id).includes(classID)) {
+                    return this.defaultsFilters.find(df => df.id === classID);
+                }
+                return getClassById(classID);
+            });
+            return Promise.all(classesCalls).then(classes => {
+                this.setState({ loadingFilterClasses: false, selectedFilters: classes }, () => {
+                    for (const filter of selectedFilters) {
+                        if (!this.state.results[filter]) {
+                            this.loadMoreResults(this.state.value, filter);
+                        }
+                    }
+                });
+            });
+        }
+    };
+
     isLoading = () => {
-        return Object.keys(this.state.isNextPageLoading).some(v => this.state.isNextPageLoading[v] === true);
+        return Object.keys(this.state.isNextPageLoading).some(v => this.state.isNextPageLoading[v] === true) || this.state.loadingFilterClasses;
     };
 
     loadMoreResults = (searchQuery, filter_type) => {
@@ -135,16 +156,7 @@ class Search extends Component {
         }
         this.setState({ isNextPageLoading: { ...this.state.isNextPageLoading, [filter_type]: true } });
         let request;
-        if (this.orkg_classes.includes(filter_type)) {
-            request = getResourcesByClass({
-                page: this.state.currentPage[filter_type] || 1,
-                items: this.itemsPerFilter,
-                sortBy: 'id',
-                desc: true,
-                q: searchQuery,
-                id: filter_type
-            });
-        } else if (filter_type === 'predicate') {
+        if (filter_type === 'predicate') {
             request = getAllPredicates({
                 page: this.state.currentPage['predicate'] || 1,
                 items: this.itemsPerFilter,
@@ -152,14 +164,26 @@ class Search extends Component {
                 desc: true,
                 q: searchQuery
             });
-        } else {
+        } else if (filter_type === 'resource') {
             request = getAllResources({
                 page: this.state.currentPage['resource'] || 1,
                 items: this.itemsPerFilter,
                 sortBy: 'id',
                 desc: true,
                 q: searchQuery,
-                exclude: this.orkg_classes.join(',')
+                exclude: this.defaultsFilters
+                    .map(df => df.id)
+                    .concat(this.ignored_classes)
+                    .join(',')
+            });
+        } else {
+            request = getResourcesByClass({
+                page: this.state.currentPage[filter_type] || 1,
+                items: this.itemsPerFilter,
+                sortBy: 'id',
+                desc: true,
+                q: searchQuery,
+                id: filter_type
             });
         }
         request
@@ -187,21 +211,34 @@ class Search extends Component {
             });
     };
 
-    toggleFilter = filterClass => {
-        let selectedFilters = [];
-
-        if (this.state.selectedFilters.includes(filterClass)) {
-            const index = this.state.selectedFilters.indexOf(filterClass);
-            selectedFilters = dotProp.delete(this.state.selectedFilters, index);
-        } else {
-            selectedFilters = [...this.state.selectedFilters, filterClass];
+    toggleFilter = async filterClass => {
+        // if current filters are empty and filters should be applied, don't do anything
+        if (!this.state.selectedFilters.length && !filterClass) {
+            return;
         }
 
-        this.props.history.push(reverse(ROUTES.SEARCH, { searchTerm: this.state.value }) + '?types=' + selectedFilters.join(','));
+        let selectedFilters = [];
+
+        if (filterClass === null) {
+            selectedFilters = this.state.selectedFilters.filter(s => this.defaultsFilters.map(df => df.id).includes(s.id));
+        } else {
+            if (this.state.selectedFilters.map(sf => sf.id).includes(filterClass.id)) {
+                // remove the filter
+                const index = this.state.selectedFilters.map(sf => sf.id).indexOf(filterClass.id);
+                selectedFilters = dotProp.delete(this.state.selectedFilters, index);
+            } else {
+                selectedFilters = [...this.state.selectedFilters, filterClass];
+            }
+        }
+
+        await this.props.history.push(
+            reverse(ROUTES.SEARCH, { searchTerm: this.state.value }) + '?types=' + selectedFilters.map(sf => sf.id).join(',')
+        );
 
         this.setState({
             selectedFilters
         });
+        this.getResultsForFilters();
     };
 
     handleInputChange = e => {
@@ -210,23 +247,8 @@ class Search extends Component {
         });
     };
 
-    getTypesFromUrl = () => {
-        let types = queryString.parse(decodeURIComponent(this.props.location.search), { arrayFormat: 'comma' }).types;
-
-        if (!types) {
-            return [];
-        }
-
-        if (typeof types === 'string' || types instanceof String) {
-            return [parseInt(types)];
-        }
-
-        types = types.map(n => parseInt(n));
-
-        return types;
-    };
-
     render() {
+        const allFilters = unionBy(this.defaultsFilters, this.state.selectedFilters, 'id');
         return (
             <div>
                 <Container className="p-0">
@@ -239,7 +261,7 @@ class Search extends Component {
                                 <Filters
                                     loading={this.isLoading()}
                                     value={this.state.value || ''}
-                                    filters={this.filters}
+                                    defaultsFilters={this.defaultsFilters}
                                     selectedFilters={this.state.selectedFilters}
                                     handleInputChange={this.handleInputChange}
                                     toggleFilter={this.toggleFilter}
@@ -271,22 +293,22 @@ class Search extends Component {
                                     <div className="text-center mt-4 mb-4">There are no results, please try a different search term</div>
                                 ) : (
                                     <div>
-                                        {[...this.filters.keys()].map(filterIndex => {
-                                            const filter = this.filters.get(filterIndex);
+                                        {allFilters.map(filter => {
                                             if (
                                                 this.state.selectedFilters.length === 0 ||
-                                                (this.state.selectedFilters.length > 0 && this.state.selectedFilters.includes(filterIndex))
+                                                (this.state.selectedFilters.length > 0 &&
+                                                    this.state.selectedFilters.map(c => c && c.id).includes(filter.id))
                                             ) {
                                                 return (
-                                                    <div key={`filter${filterIndex}`}>
+                                                    <div key={`filter-result${filter.id}`}>
                                                         <Results
-                                                            loading={this.state.isNextPageLoading[filter.class] || false}
-                                                            hasNextPage={this.state.hasNextPage[filter.class] || false}
-                                                            loadMore={() => this.loadMoreResults(this.state.value, filter.class)}
-                                                            items={this.state.results[filter.class] || []}
-                                                            label={filter.label}
-                                                            class={filter.class}
-                                                            showNoResultsMessage={this.state.selectedFilters.includes(filterIndex)}
+                                                            loading={this.state.isNextPageLoading[filter.id] || false}
+                                                            hasNextPage={this.state.hasNextPage[filter.id] || false}
+                                                            loadMore={() => this.loadMoreResults(this.state.value, filter.id)}
+                                                            items={this.state.results[filter.id] || []}
+                                                            label={filter.label || filter.id}
+                                                            class={filter.id}
+                                                            showNoResultsMessage={this.state.selectedFilters.map(c => c.id).includes(filter.id)}
                                                         />
                                                     </div>
                                                 );

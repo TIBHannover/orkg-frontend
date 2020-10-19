@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Table, ButtonGroup, Button } from 'reactstrap';
-import { classesUrl, submitGetRequest, getStatementsByObjectAndPredicate } from 'network';
+import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { getClassById } from 'services/backend/classes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faFileCsv } from '@fortawesome/free-solid-svg-icons';
 import ClassInstances from 'components/ClassInstances/ClassInstances';
 import ImportCSVInstances from 'components/ClassInstances/ImportCSVInstances';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import InternalServerError from 'pages/InternalServerError';
 import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
@@ -28,7 +30,7 @@ function ClassDetails(props) {
         const findClass = async () => {
             setIsLoading(true);
             try {
-                const responseJson = await submitGetRequest(classesUrl + encodeURIComponent(props.match.params.id));
+                const responseJson = await getClassById(props.match.params.id);
                 document.title = `${responseJson.label} - Class - ORKG`;
                 // Get the template of the class
                 getStatementsByObjectAndPredicate({
@@ -79,15 +81,21 @@ function ClassDetails(props) {
                                         </i>
                                     )}
                                     <ButtonGroup className="float-right mb-4 ml-1">
-                                        <Link
+                                        <RequireAuthentication
+                                            component={Link}
                                             to={`${ROUTES.ADD_RESOURCE}?classes=${props.match.params.id}`}
                                             className="float-right btn btn-darkblue flex-shrink-0 btn-sm"
                                         >
                                             <Icon icon={faPlus} /> Add resource
-                                        </Link>
-                                        <Button size="sm" color="darkblue" onClick={() => setModalImportIsOpen(true)}>
+                                        </RequireAuthentication>
+                                        <RequireAuthentication
+                                            component={Button}
+                                            size="sm"
+                                            color="darkblue"
+                                            onClick={() => setModalImportIsOpen(true)}
+                                        >
                                             <Icon icon={faFileCsv} /> Import Instances
-                                        </Button>
+                                        </RequireAuthentication>
                                     </ButtonGroup>
                                 </h3>
                             </div>

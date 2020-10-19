@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ContentLoader from 'react-content-loader';
-import { getStatementsByObjectAndPredicate, getParentResearchFields } from 'network';
+import { getStatementsByObjectAndPredicate, getParentResearchFields } from 'services/backend/statements';
 import Tooltip from 'components/Utils/Tooltip';
 import AddTemplateButton from 'components/StatementBrowser/AddTemplateButton/AddTemplateButton';
 import { flattenDepth, uniqBy } from 'lodash';

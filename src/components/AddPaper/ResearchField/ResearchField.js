@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Card, ListGroup, ListGroupItem, CardDeck } from 'reactstrap';
-import { getStatementsBySubject } from 'network';
+import { getStatementsBySubject } from 'services/backend/statements';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';

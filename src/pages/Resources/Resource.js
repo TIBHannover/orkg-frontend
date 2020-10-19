@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, Button, FormGroup, Label, FormText } from 'reactstrap';
-import { getResource, classesUrl, submitGetRequest, updateResourceClasses as updateResourceClassesNetwork } from 'network';
+import { classesUrl, getClassById } from 'services/backend/classes';
+import { updateResourceClasses as updateResourceClassesNetwork } from 'services/backend/resources';
+import { getResource } from 'services/backend/resources';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
@@ -8,6 +10,7 @@ import InternalServerError from 'pages/InternalServerError';
 import SameAsStatements from '../SameAsStatements';
 import EditableHeader from 'components/EditableHeader';
 import ObjectStatements from 'components/ObjectStatements/ObjectStatements';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import NotFound from 'pages/NotFound';
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -37,7 +40,7 @@ function Resource(props) {
             getResource(props.match.params.id)
                 .then(responseJson => {
                     document.title = `${responseJson.label} - Resource - ORKG`;
-                    const classesCalls = responseJson.classes.map(classResource => submitGetRequest(`${classesUrl}${classResource}`));
+                    const classesCalls = responseJson.classes.map(classResource => getClassById(classResource));
                     Promise.all(classesCalls).then(classes => {
                         classes = orderBy(classes, [classLabel => classLabel.label.toLowerCase()], ['asc']);
                         setLabel(responseJson.label);
@@ -107,9 +110,15 @@ function Resource(props) {
                                                 <small>No label</small>
                                             </i>
                                         )}
-                                        <Button className="float-right" color="darkblue" size="sm" onClick={() => setEditMode(v => !v)}>
+                                        <RequireAuthentication
+                                            component={Button}
+                                            className="float-right"
+                                            color="darkblue"
+                                            size="sm"
+                                            onClick={() => setEditMode(v => !v)}
+                                        >
                                             <Icon icon={faPen} /> Edit
-                                        </Button>
+                                        </RequireAuthentication>
                                     </h3>
                                     {classes.length > 0 && (
                                         <span style={{ fontSize: '90%' }}>

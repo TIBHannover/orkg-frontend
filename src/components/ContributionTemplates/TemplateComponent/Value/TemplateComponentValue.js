@@ -7,7 +7,7 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { setComponents } from 'actions/addTemplate';
 import { connect } from 'react-redux';
-import { classesUrl } from 'network';
+import { classesUrl } from 'services/backend/classes';
 import PropTypes from 'prop-types';
 import ValidationRules from '../ValidationRules/ValidationRules';
 

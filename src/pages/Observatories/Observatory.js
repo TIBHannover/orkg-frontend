@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Container, Modal, ModalBody, ModalHeader, Button } from 'reactstrap';
 import { Col, Row } from 'reactstrap';
+import { getStatementsBySubjects } from 'services/backend/statements';
+import { getOrganization } from 'services/backend/organizations';
 import {
+    getObservatoryById,
     getUsersByObservatoryId,
-    getOrganization,
     getResourcesByObservatoryId,
     getComparisonsByObservatoryId,
-    getProblemsByObservatoryId,
-    getObservatoryById,
-    getStatementsBySubjects
-} from 'network';
+    getProblemsByObservatoryId
+} from 'services/backend/observatories';
 import InternalServerError from 'pages/InternalServerError';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PaperCard from 'components/PaperCard/PaperCard';
@@ -19,8 +19,12 @@ import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { getPaperData, getComparisonData } from 'utils';
 import { find } from 'lodash';
+import { connect } from 'react-redux';
+import EditObservatory from '../Observatories/EditObservatory';
 
 class Observatory extends Component {
     constructor(props) {
@@ -30,6 +34,7 @@ class Observatory extends Component {
             error: null,
             label: '',
             description: '',
+            researchField: '',
             isContributorsModalOpen: false,
             isLoading: false,
             isLoadingContributors: false,
@@ -42,7 +47,8 @@ class Observatory extends Component {
             activeTab: 1,
             papersList: [],
             organizationsList: [],
-            comparisonsList: []
+            comparisonsList: [],
+            showEditDialog: false
         };
     }
 
@@ -72,9 +78,10 @@ class Observatory extends Component {
                 this.setState({
                     label: observatory.name,
                     description: observatory.description,
-                    isLoading: false
+                    isLoading: false,
+                    researchField: observatory.research_field
                 });
-                this.loadOrganizations(observatory.organizations);
+                this.loadOrganizations(observatory.organization_ids);
             })
             .catch(error => {
                 this.setState({ error: error, isLoading: false });
@@ -165,12 +172,16 @@ class Observatory extends Component {
 
     loadOrganizations = organizationsData => {
         this.setState({ isLoadingOrganizations: true });
-        Promise.all(organizationsData.map(o => getOrganization(o.id))).then(data => {
+        Promise.all(organizationsData.map(o => getOrganization(o))).then(data => {
             this.setState({
                 organizationsList: data,
                 isLoadingOrganizations: false
             });
         });
+    };
+
+    updateObservatoryMetadata = (label, description, researchField) => {
+        this.setState({ label: label, description: description, researchField: researchField });
     };
 
     toggle = type => {
@@ -192,7 +203,21 @@ class Observatory extends Component {
 
                         <Container className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
                             <h3>{this.state.label}</h3>
+                            {this.props.user && (
+                                <Button
+                                    color="darkblue"
+                                    size="sm"
+                                    style={{ float: 'right', marginTop: '-40px' }}
+                                    onClick={() => this.toggle('showEditDialog')}
+                                >
+                                    <Icon icon={faPen} /> Edit
+                                </Button>
+                            )}
                             {this.state.description}
+                            <br />
+                            <div className="flex-grow-1">
+                                <small>Research field: {this.state.researchField}</small>
+                            </div>
                         </Container>
 
                         <Container>
@@ -250,7 +275,7 @@ class Observatory extends Component {
                                                                         <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.id })}>
                                                                             <img
                                                                                 style={{ marginTop: 12 }}
-                                                                                height="70"
+                                                                                height="50"
                                                                                 src={organization.logo}
                                                                                 alt={`${organization.name} logo`}
                                                                             />
@@ -411,17 +436,31 @@ class Observatory extends Component {
                         </Container>
                     </>
                 )}
+                <EditObservatory
+                    showDialog={this.state.showEditDialog}
+                    toggle={() => this.toggle('showEditDialog')}
+                    label={this.state.label}
+                    id={this.props.match.params.id}
+                    description={this.state.description}
+                    researchField={this.state.researchField}
+                    updateObservatoryMetadata={this.updateObservatoryMetadata}
+                />
             </>
         );
     };
 }
+
+const mapStateToProps = state => ({
+    user: state.auth.user
+});
 
 Observatory.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
             id: PropTypes.string.isRequired
         }).isRequired
-    }).isRequired
+    }).isRequired,
+    user: PropTypes.object
 };
 
-export default Observatory;
+export default connect(mapStateToProps)(Observatory);

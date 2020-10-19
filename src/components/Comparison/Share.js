@@ -6,7 +6,7 @@ import ROUTES from 'constants/routes.js';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { createShortLink, getComparison } from 'network';
+import { createShortLink, getComparison } from 'services/similarity/index';
 import { toast } from 'react-toastify';
 
 function Share(props) {

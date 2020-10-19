@@ -3,9 +3,9 @@ import { InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard, faLink } from '@fortawesome/free-solid-svg-icons';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import { submitGetRequest, getResourcesByClass } from 'network';
+import { submitGetRequest } from 'network';
+import { getResourcesByClass, classesUrl } from 'services/backend/classes';
 import { AsyncPaginateBase } from 'react-select-async-paginate';
-import { classesUrl } from 'network';
 import Creatable from 'react-select/creatable';
 import PropTypes from 'prop-types';
 import { components } from 'react-select';
@@ -388,6 +388,10 @@ function Autocomplete(props) {
             '& input': {
                 flex: '1'
             }
+        }),
+        multiValueRemove: provided => ({
+            ...provided,
+            cursor: 'pointer'
         })
     };
 

@@ -1,13 +1,19 @@
 import { Form, FormGroup, Label, Input, Button, Alert, FormFeedback } from 'reactstrap';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getUserInformation, updateUserInformation } from '../../network';
+import { getUserInformation, updateUserInformation } from 'services/backend/users';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import { updateAuth } from '../../actions/auth';
+import { updateAuth } from 'actions/auth';
 import { get_error_message } from 'utils';
 import { toast } from 'react-toastify';
+import Gravatar from 'react-gravatar';
+import styled from 'styled-components';
+
+const StyledGravatar = styled(Gravatar)`
+    border: 3px solid ${props => props.theme.avatarBorderColor};
+`;
 
 class GeneralSettings extends Component {
     constructor(props) {
@@ -108,6 +114,18 @@ class GeneralSettings extends Component {
                         placeholder="Email address"
                         disabled
                     />
+                </FormGroup>
+                <FormGroup>
+                    <Label for="Email">Avatar picture</Label>
+                    <Alert color="info" className="d-flex align-items-center">
+                        <StyledGravatar className="rounded-circle mr-3" email={this.state.email} size={40} />
+                        <p className="m-0">
+                            We use Gravatar, a service that associates an avatar image with your primary email address.
+                            <a className="ml-1" href="https://en.gravatar.com/" target="_blank" rel="noopener noreferrer">
+                                Change your avatar image at gravatar.com <Icon size="sm" icon={faExternalLinkAlt} />
+                            </a>
+                        </p>
+                    </Alert>
                 </FormGroup>
                 {/*
                 <FormGroup>

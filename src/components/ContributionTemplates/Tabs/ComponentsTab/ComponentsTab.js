@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import { setComponents, setIsStrictTemplate } from 'actions/addTemplate';
-import { createPredicate } from 'network';
+import { createPredicate } from 'services/backend/predicates';
 import TemplateComponent from 'components/ContributionTemplates/TemplateComponent/TemplateComponent';
 import AddPropertyTemplate from 'components/StatementBrowser/AddProperty/AddPropertyTemplate';
 import update from 'immutability-helper';

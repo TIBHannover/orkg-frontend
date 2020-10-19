@@ -3,6 +3,8 @@ import { Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink, ButtonGro
 import GeneralSettings from 'components/ContributionTemplates/Tabs/GeneralSettings/GeneralSettings';
 import TemplateEditorHeaderBar from 'components/ContributionTemplates/TemplateEditorHeaderBar';
 import ComponentsTab from 'components/ContributionTemplates/Tabs/ComponentsTab/ComponentsTab';
+import Unauthorized from 'pages/Unauthorized';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import Format from 'components/ContributionTemplates/Tabs/Format/Format';
 import HelpModal from 'components/ContributionTemplates/HelpModal';
 import { StyledContainer } from 'components/ContributionTemplates/styled';
@@ -13,8 +15,8 @@ import { getParamFromQueryString } from 'utils';
 import styled, { withTheme } from 'styled-components';
 import VisibilitySensor from 'react-visibility-sensor';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
-import { submitGetRequest, classesUrl } from 'network';
 import Tippy from '@tippy.js/react';
+import { getClassById } from 'services/backend/classes';
 import classnames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -64,7 +66,7 @@ class ContributionTemplate extends Component {
     getDefaultClass = () => {
         const targetClass = getParamFromQueryString(this.props.location.search, 'classID');
         if (targetClass) {
-            submitGetRequest(classesUrl + encodeURIComponent(targetClass)).then(classesData => {
+            getClassById(targetClass).then(classesData => {
                 this.props.setClass(classesData);
             });
         }
@@ -89,6 +91,10 @@ class ContributionTemplate extends Component {
     };
 
     render() {
+        if (!this.props.user && !this.props.match.params.id) {
+            return <Unauthorized />;
+        }
+
         return (
             <StyledContainer className="clearfix">
                 <div className="mt-4 mb-4 d-flex">
@@ -131,9 +137,15 @@ class ContributionTemplate extends Component {
                         {!this.props.editMode ? (
                             <h3 className="pb-2 mb-3" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                 {this.props.label}
-                                <Button className="float-right" color="darkblue" size="sm" onClick={() => this.props.setEditMode(true)}>
+                                <RequireAuthentication
+                                    component={Button}
+                                    className="float-right"
+                                    color="darkblue"
+                                    size="sm"
+                                    onClick={() => this.props.setEditMode(true)}
+                                >
                                     <Icon icon={faPen} /> Edit
-                                </Button>
+                                </RequireAuthentication>
                             </h3>
                         ) : (
                             ''
@@ -226,11 +238,13 @@ ContributionTemplate.propTypes = {
     doneLoading: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     template: PropTypes.object.isRequired,
-    setClass: PropTypes.func.isRequired
+    setClass: PropTypes.func.isRequired,
+    user: PropTypes.object
 };
 
 const mapStateToProps = state => {
     return {
+        user: state.auth.user,
         editMode: state.addTemplate.editMode,
         isLoading: state.addTemplate.isLoading,
         isSaving: state.addTemplate.isSaving,

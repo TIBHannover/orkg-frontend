@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, FormGroup, Input, Label, ListGroup, ListGroupItem, InputGroup } from 'reactstrap';
-import { getResourcesByClass, getStatementsBySubjectAndPredicate } from 'network';
+import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+import { getResourcesByClass } from 'services/backend/classes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import ContentLoader from 'react-content-loader';

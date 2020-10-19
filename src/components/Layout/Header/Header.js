@@ -19,6 +19,7 @@ import {
     Badge
 } from 'reactstrap';
 import { Link, NavLink as RouterNavLink } from 'react-router-dom';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { ReactComponent as Logo } from 'assets/img/logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faUser } from '@fortawesome/free-solid-svg-icons';
@@ -31,7 +32,7 @@ import Authentication from 'components/Authentication/Authentication';
 import SearchForm from './SearchForm';
 import { openAuthDialog, updateAuth, resetAuth } from 'actions/auth';
 import { Redirect } from 'react-router-dom';
-import { getUserInformation } from 'network';
+import { getUserInformation } from 'services/backend/users';
 import greetingTime from 'greeting-time';
 import styled, { createGlobalStyle } from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -308,6 +309,15 @@ class Header extends Component {
                                     <DropdownItem tag="a" target="_blank" rel="noopener noreferrer" href="https://projects.tib.eu/orkg/">
                                         Project <Icon size="sm" icon={faExternalLinkAlt} />
                                     </DropdownItem>
+                                    <DropdownItem
+                                        tag="a"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home"
+                                    >
+                                        Documentation <Icon size="sm" icon={faExternalLinkAlt} />
+                                    </DropdownItem>
+                                    <DropdownItem divider />
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES}>
                                         Observatories{' '}
                                         <small>
@@ -322,7 +332,7 @@ class Header extends Component {
                                     </DropdownItem>
                                     <DropdownItem divider />
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.EXPORT_DATA}>
-                                        Export Data{' '}
+                                        Export data{' '}
                                     </DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledButtonDropdown>
@@ -330,9 +340,15 @@ class Header extends Component {
 
                         <SearchForm placeholder="Search..." />
 
-                        <Button color="primary" className="mr-3 pl-4 pr-4 flex-shrink-0" tag={Link} to={ROUTES.ADD_PAPER.GENERAL_DATA}>
+                        <RequireAuthentication
+                            component={Button}
+                            color="primary"
+                            className="mr-3 pl-4 pr-4 flex-shrink-0"
+                            tag={Link}
+                            to={ROUTES.ADD_PAPER.GENERAL_DATA}
+                        >
                             Add paper
-                        </Button>
+                        </RequireAuthentication>
 
                         {this.props.user !== null && (
                             <div>

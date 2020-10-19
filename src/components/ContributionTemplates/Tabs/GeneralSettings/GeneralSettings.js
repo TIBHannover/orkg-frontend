@@ -3,7 +3,9 @@ import { FormGroup, Label, FormText, Input } from 'reactstrap';
 import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
 import { setLabel, setPredicate, setClass, setResearchFields, setResearchProblems, setIsStrictTemplate } from 'actions/addTemplate';
-import { predicatesUrl, resourcesUrl, classesUrl, createPredicate } from 'network';
+import { classesUrl } from 'services/backend/classes';
+import { createPredicate, predicatesUrl } from 'services/backend/predicates';
+import { resourcesUrl } from 'services/backend/resources';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
@@ -94,6 +96,7 @@ function GeneralSettings(props) {
                     copyValueButton={true}
                     isClearable
                     innerRef={classAutocompleteRef}
+                    autoFocus={false}
                     linkButton={props.class && props.class.id ? reverse(ROUTES.CLASS, { id: props.class.id }) : ''}
                     linkButtonTippy="Go to class page"
                 />
@@ -119,6 +122,7 @@ function GeneralSettings(props) {
                             openMenuOnFocus={true}
                             allowCreate={true}
                             isDisabled={!props.editMode}
+                            autoFocus={false}
                             isClearable
                             innerRef={predicateAutocompleteRef}
                         />
@@ -138,6 +142,7 @@ function GeneralSettings(props) {
                             value={props.researchFields}
                             autoLoadOption={true}
                             openMenuOnFocus={true}
+                            autoFocus={false}
                             allowCreate={false}
                             isDisabled={!props.editMode}
                             isClearable
@@ -155,6 +160,7 @@ function GeneralSettings(props) {
                             value={props.researchProblems}
                             autoLoadOption={true}
                             openMenuOnFocus={true}
+                            autoFocus={false}
                             allowCreate={false}
                             isDisabled={!props.editMode}
                             isClearable

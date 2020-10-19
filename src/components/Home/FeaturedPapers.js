@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import ROUTES from '../../constants/routes.js';
-import { getResourcesByClass, getStatementsBySubjects } from '../../network';
+import ROUTES from 'constants/routes.js';
+import { getStatementsBySubjects } from 'services/backend/statements';
+import { getResourcesByClass } from 'services/backend/classes';
 import { getPaperData, sortMethod } from 'utils';
 import { find } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
