@@ -19,17 +19,12 @@ const HelpModal = props => {
             <ModalBody>
                 <Alert color="warning">This is a beta feature, this functionality might be unstable</Alert>
                 <p>
-                    In order to make the research contributions that address the same research problem conform to the same data structure, we
-                    introduced the templates feature. It allows users to quickly add some structure to their research contribution data and can help
-                    illustrate what kind of data is needed to make the paper comparable to other state of the art research.
+                    Templates define a structure for research contributions addressing the same research problem. It allows to quickly add structure
+                    to contribution data and illustrates the data structure required to make the contribution comparable to other contributions.
                 </p>
                 <p>
-                    This template editor is used to define data structures and save some time for users. You can imagine it as we are creating a
-                    "fill-in-the-blank"{' '}
-                    <a href="https://simple.wikipedia.org/wiki/Document" target="_blank" rel="noopener noreferrer">
-                        form
-                    </a>{' '}
-                    that can be completed by users while they add their papers to ORKG.
+                    The template editor is used to define data structures and could help saving time when creating a contribution. Once the structure
+                    is defined, the user only has to fill out the blanks to add a contribution.
                 </p>
                 <p>
                     In this guide we will follow a template use case in the engineering research field, where we want to define a template for
@@ -51,7 +46,7 @@ const HelpModal = props => {
                     <Image src={image} alt="Template editor tabs" style={{ height: 50 }} />
                 </div>
                 <hr />
-                <h4 className="mt-4">1- Description Tab:</h4>
+                <h4 className="mt-4">1. Description Tab</h4>
                 <p>
                     Here we specify general information about the template:
                     <ul>
@@ -66,11 +61,11 @@ const HelpModal = props => {
 
                         <li>
                             <b>Property</b>: is used to link the contribution resource to the template instance. Remember that we are defining a graph
-                            structure and that will be an arc that goes from the contribution resource to the template instance. And this property
-                            will be used as a label of that arc.
+                            structure and that will be an edge (or link) that goes from the contribution resource to the template instance. And this
+                            property will be used as a label of that edge.
                             <br />
                             <Alert className="mt-2" color="info">
-                                if you want to link each property of this template directly to the contribution resource you can use ‘Has
+                                If you want to link each property of this template directly to the contribution resource you can use ‘Has
                                 contribution’ property in this field.
                             </Alert>
                         </li>
@@ -82,7 +77,7 @@ const HelpModal = props => {
                     </ul>
                 </p>
                 <hr />
-                <h4 className="mt-4">2 - Properties Tab:</h4>
+                <h4 className="mt-4">2. Properties Tab</h4>
                 <p>
                     Here we specify the input fields that users need to feel out, We can specify the accepted values and the cardinality for each
                     field.
@@ -116,7 +111,7 @@ const HelpModal = props => {
                     </li>
                 </ul>
                 <hr />
-                <h4 className="mt-4">3 - Format Tab:</h4>
+                <h4 className="mt-4">3. Format Tab</h4>
                 <p>
                     Some templates don’t require you to enter a label for its instances, and this feature allows you to generate a label based on its
                     description. In our case, we don’t need the user to type a name for each house he wants to define. For that, we can activate the

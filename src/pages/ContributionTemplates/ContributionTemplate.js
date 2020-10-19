@@ -92,7 +92,7 @@ class ContributionTemplate extends Component {
         return (
             <StyledContainer className="clearfix">
                 <div className="mt-4 mb-4 d-flex">
-                    <h1 className="h4">{!this.props.match.params.id ? 'Create new template' : 'Template'}</h1>
+                    <h1 className="h4 m-0">{!this.props.match.params.id ? 'Create new template' : 'Template'}</h1>
                     <Tippy content="Open help popup">
                         <span className="ml-3">
                             <Button
