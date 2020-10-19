@@ -31,76 +31,70 @@ const HelpModal = props => {
                     describing a House, using some of its properties like the number of rooms, building start date, location, and the electricity
                     provider company.
                 </p>
-                <p>
-                    Creating a template is a process that is grounded in this three questions:
-                    <ul>
-                        <li>What are the use cases of the template?</li>
-                        <li>What are the properties of the term that you want to define?</li>
-                        <li>
-                            How do we call its <abbr title="A resource that uses the template">instance</abbr>?
-                        </li>
-                    </ul>
-                    Each of these questions has its own tab respectively: Description, Properties, Format.
-                </p>
+                <p>Creating a template is a process that is grounded in this three questions:</p>
+                <ul>
+                    <li>What are the use cases of the template?</li>
+                    <li>What are the properties of the term that you want to define?</li>
+                    <li>
+                        How to display the template <abbr title="A resource that uses the template">instance</abbr> label?
+                    </li>
+                </ul>
+                <p>Each of these questions has its own tab respectively: Description, Properties, Format.</p>
                 <div className="text-center">
                     <Image src={image} alt="Template editor tabs" style={{ height: 50 }} />
                 </div>
                 <hr />
                 <h4 className="mt-4">1. Description Tab</h4>
-                <p>
-                    Here we specify general information about the template:
-                    <ul>
-                        <li>
-                            <b>Name</b>: the label that helps users to recognize the template. In our example, we call it “House”.
-                        </li>
+                <p>Here we specify general information about the template:</p>
+                <ul>
+                    <li>
+                        <b>Name</b>: the label that helps users to recognize the template. In our example, we call it “House”.
+                    </li>
 
-                        <li>
-                            <b>Target Class</b>: we specify that all instances of this template will be an instance of this class and they must be
-                            validated with the same structure. If not specified, a class is generated automatically.
-                        </li>
+                    <li>
+                        <b>Target Class</b>: we specify that all instances of this template will be an instance of this class and they must be
+                        validated with the same structure. If not specified, a class is generated automatically.
+                    </li>
 
-                        <li>
-                            <b>Property</b>: is used to link the contribution resource to the template instance. Remember that we are defining a graph
-                            structure and that will be an edge (or link) that goes from the contribution resource to the template instance. And this
-                            property will be used as a label of that edge.
-                            <br />
-                            <Alert className="mt-2" color="info">
-                                If you want to link each property of this template directly to the contribution resource you can use ‘Has
-                                contribution’ property in this field.
-                            </Alert>
-                        </li>
+                    <li>
+                        <b>Property</b>: is used to link the contribution resource to the template instance. Remember that we are defining a graph
+                        structure and that will be an edge (or link) that goes from the contribution resource to the template instance. And this
+                        property will be used as a label of that edge.
+                        <br />
+                        <Alert className="mt-2" color="info">
+                            If you want to link each property of this template directly to the contribution resource you can use ‘Has contribution’
+                            property in this field.
+                        </Alert>
+                    </li>
 
-                        <li>
-                            <b>Research fields and Research Problem</b>: specify the research fields or the research problem where this template can
-                            be useful.
-                        </li>
-                    </ul>
-                </p>
+                    <li>
+                        <b>Research fields and Research Problem</b>: specify the research fields or the research problem where this template can be
+                        useful.
+                    </li>
+                </ul>
                 <hr />
                 <h4 className="mt-4">2. Properties Tab</h4>
                 <p>
                     Here we specify the input fields that users need to feel out, We can specify the accepted values and the cardinality for each
                     field.
                 </p>
-                <p>
-                    For our example, we are going to add these properties and we assume that all the cardinalities are Exactly one:
-                    <ul>
-                        <li>
-                            <em>Number of rooms</em> of type <b>Number</b>
-                        </li>
-                        <li>
-                            <em>Building start date</em> of type <b>Date</b>
-                        </li>
-                        <li>
-                            <em>Location</em> of type <b>dc:Location</b> (Using this type, ORKG will automatically suggest locations from GeoNames
-                            service for this input field)
-                        </li>
-                        <li>
-                            <em>Electricity provider </em> of type <b>Company</b>
-                        </li>
-                    </ul>
-                    We can go further and define more properties and we can also define a template for the type Company (i.e., nested templates).
-                </p>
+                <p>For our example, we are going to add these properties and we assume that all the cardinalities are Exactly one:</p>
+                <ul>
+                    <li>
+                        <em>Number of rooms</em> of type <b>Number</b>
+                    </li>
+                    <li>
+                        <em>Building start date</em> of type <b>Date</b>
+                    </li>
+                    <li>
+                        <em>Location</em> of type <b>dc:Location</b> (Using this type, ORKG will automatically suggest locations from GeoNames service
+                        for this input field)
+                    </li>
+                    <li>
+                        <em>Electricity provider </em> of type <b>Company</b>
+                    </li>
+                </ul>
+                <p>We can go further and define more properties and we can also define a template for the type Company (i.e., nested templates).</p>
                 <div className="text-center">
                     <Image src={image2} alt="Property Number of rooms" style={{ height: 150 }} />
                 </div>
