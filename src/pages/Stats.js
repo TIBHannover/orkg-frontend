@@ -4,7 +4,7 @@ import { faStream, faBars, faHeading, faTag } from '@fortawesome/free-solid-svg-
 import ColoredStatsBox from 'components/Stats/ColoredStatsBox';
 import InlineStatsBox from 'components/Stats/InlineStatsBox';
 import { toast } from 'react-toastify';
-import { getStats } from '../network';
+import { getStats } from 'services/backend/stats';
 
 class Stats extends Component {
     constructor(props) {

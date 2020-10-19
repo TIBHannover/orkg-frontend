@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { getStatementsBySubjects } from 'network';
+import { getStatementsBySubjects } from 'services/backend/statements';
 import { Card, CardImg, CardColumns } from 'reactstrap';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';

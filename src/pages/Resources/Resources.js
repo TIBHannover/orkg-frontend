@@ -4,7 +4,7 @@ import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { getAllResources } from 'network';
+import { getAllResources } from 'services/backend/resources';
 import { Container } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';

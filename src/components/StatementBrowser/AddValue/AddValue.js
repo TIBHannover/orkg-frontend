@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { createResourceStatement, createResource, createLiteral, createLiteralStatement, createPredicate } from 'network';
+import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';
+import { createLiteral } from 'services/backend/literals';
+import { createPredicate } from 'services/backend/predicates';
+import { createResource } from 'services/backend/resources';
 import AddValueTemplate from './AddValueTemplate';
 import { guid } from 'utils';
 import PropTypes from 'prop-types';

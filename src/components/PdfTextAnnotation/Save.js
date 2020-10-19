@@ -14,7 +14,10 @@ import {
     InputGroupAddon,
     InputGroup
 } from 'reactstrap';
-import { saveFullPaper, createResource, createLiteral, createLiteralStatement } from 'network';
+import { createLiteralStatement } from 'services/backend/statements';
+import { saveFullPaper } from 'services/backend/misc';
+import { createLiteral } from 'services/backend/literals';
+import { createResource } from 'services/backend/resources';
 import { CLASSES, PREDICATES, MISC } from 'constants/graphSettings';
 import ROUTES from 'constants/routes.js';
 import { Link } from 'react-router-dom';

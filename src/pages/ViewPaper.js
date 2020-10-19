@@ -1,26 +1,19 @@
 import React, { Component } from 'react';
 import { Container, Alert, UncontrolledAlert } from 'reactstrap';
-import {
-    getObservatoryAndOrganizationInformation,
-    getContributorsByResourceId,
-    getUserInformationById,
-    getStatementsBySubject,
-    getResource,
-    updateResource,
-    createResource,
-    createResourceStatement,
-    deleteStatementById
-} from 'network';
+import { getStatementsBySubject, createResourceStatement, deleteStatementById } from 'services/backend/statements';
+import { getUserInformationById } from 'services/backend/users';
+import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
+import { getResource, updateResource, createResource, getContributorsByResourceId } from 'services/backend/resources';
 import { connect } from 'react-redux';
-import NotFound from '../pages/NotFound';
+import NotFound from 'pages/NotFound';
 import ContentLoader from 'react-content-loader';
-import Contributions from '../components/ViewPaper/Contributions';
+import Contributions from 'components/ViewPaper/Contributions';
 import PropTypes from 'prop-types';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import PaperHeader from '../components/ViewPaper/PaperHeader';
+import PaperHeader from 'components/ViewPaper/PaperHeader';
 import { resetStatementBrowser, updateContributionLabel } from 'actions/statementBrowser';
 import { loadPaper, selectContribution, setPaperAuthors } from 'actions/viewPaper';
-import GizmoGraphViewModal from '../components/ViewPaper/GraphView/GizmoGraphViewModal';
+import GizmoGraphViewModal from 'components/ViewPaper/GraphView/GizmoGraphViewModal';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
 import Confirm from 'reactstrap-confirm';
@@ -28,7 +21,7 @@ import VisibilitySensor from 'react-visibility-sensor';
 import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
 import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
-import SharePaper from '../components/ViewPaper/SharePaper';
+import SharePaper from 'components/ViewPaper/SharePaper';
 import { getPaperData_ViewPaper } from 'utils';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Container, Button, Card, CardText, CardBody, CardHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { getStatementsByObject, getResource, getStatementsBySubjects } from 'network';
+import { getStatementsByObject, getStatementsBySubjects } from 'services/backend/statements';
+import { getResource } from 'services/backend/resources';
 import ROUTES from 'constants/routes.js';
-import PaperCard from '../components/PaperCard/PaperCard';
+import PaperCard from 'components/PaperCard/PaperCard';
 import { getPaperData } from 'utils';
 import { find } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

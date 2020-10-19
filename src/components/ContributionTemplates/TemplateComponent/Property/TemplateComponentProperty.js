@@ -7,7 +7,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowsAlt } from '@fortawesome/free-solid-svg-icons';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import { predicatesUrl } from 'network';
+import { predicatesUrl } from 'services/backend/predicates';
 import classNames from 'classnames';
 import styled from 'styled-components';
 

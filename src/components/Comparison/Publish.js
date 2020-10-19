@@ -16,16 +16,11 @@ import {
 import { toast } from 'react-toastify';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
-import {
-    createResource,
-    createLiteralStatement,
-    createLiteral,
-    getComparison,
-    createResourceStatement,
-    generateDOIForComparison,
-    getStatementsByPredicateAndLiteral,
-    resourcesUrl
-} from 'network';
+import { createLiteralStatement, createResourceStatement, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
+import { generateDOIForComparison } from 'services/backend/misc';
+import { createLiteral } from 'services/backend/literals';
+import { createResource, resourcesUrl } from 'services/backend/resources';
+import { getComparison } from 'services/similarity/index';
 import Tooltip from 'components/Utils/Tooltip';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 import AuthorsInput from 'components/Utils/AuthorsInput';
