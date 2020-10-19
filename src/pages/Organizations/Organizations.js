@@ -3,7 +3,7 @@ import { Container, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faUser } from '@fortawesome/free-solid-svg-icons';
 import OrganizationCard from 'components/OrganizationCard/OrganizationCard';
-import { getAllOrganizations } from 'network';
+import { getAllOrganizations } from 'services/backend/organizations';
 import { openAuthDialog } from 'actions/auth';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faFire, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { problemsUrl, submitGetRequest } from 'network';
+import { getTopResearchProblems } from 'services/backend/problems';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 
@@ -40,7 +40,7 @@ const List = styled.ul`
     li.item-3,
     li.item-4 {
         font-size: 100%;
-        height: 30px;
+        min-height: 30px;
 
         a {
             color: ${props => props.theme.darkblue}!important;
@@ -55,7 +55,7 @@ const TrendingProblems = props => {
 
     useEffect(() => {
         const getProblems = () => {
-            submitGetRequest(`${problemsUrl}top`)
+            getTopResearchProblems()
                 .then(problemsList => {
                     setProblems(problemsList);
                     setIsLoading(false);

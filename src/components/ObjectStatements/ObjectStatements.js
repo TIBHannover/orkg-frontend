@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { getStatementsByObject } from 'network';
+import { getStatementsByObject } from 'services/backend/statements';
 import { Button, Table, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';

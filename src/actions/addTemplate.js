@@ -1,15 +1,9 @@
 import * as type from './types.js';
-import {
-    getClassOfTemplate,
-    createResource,
-    updateResource,
-    deleteStatementsByIds,
-    createResourceStatement,
-    getTemplateById,
-    createLiteral,
-    createClass,
-    getTemplatesByClass
-} from 'network';
+import { deleteStatementsByIds, createResourceStatement, getTemplateById, getTemplatesByClass } from 'services/backend/statements';
+import { getClassOfTemplate } from 'services/backend/classes';
+import { createLiteral } from 'services/backend/literals';
+import { createClass } from 'services/backend/classes';
+import { createResource, updateResource } from 'services/backend/resources';
 import { toast } from 'react-toastify';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 

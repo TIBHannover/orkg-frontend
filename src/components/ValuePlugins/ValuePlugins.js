@@ -5,6 +5,7 @@ import Link from './Link/Link';
 import Latex from './Latex/Latex';
 import Video from './Video/Video';
 import Doi from './Doi/Doi';
+import ImageAsFigure from './Images/ImagesAsFiguers';
 
 class ValuePlugins extends Component {
     render() {
@@ -15,7 +16,9 @@ class ValuePlugins extends Component {
                     <Doi type={this.props.type}>
                         <Link type={this.props.type}>
                             <Video type={this.props.type} options={this.props.options}>
-                                {this.props.children}
+                                <ImageAsFigure type={this.props.type} options={this.props.options}>
+                                    {this.props.children}
+                                </ImageAsFigure>
                             </Video>
                         </Link>
                     </Doi>

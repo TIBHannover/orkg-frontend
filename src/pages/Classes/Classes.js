@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { getAllClasses } from 'network';
+import { getAllClasses } from 'services/backend/classes';
 import { Container } from 'reactstrap';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';

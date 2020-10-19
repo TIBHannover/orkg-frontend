@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getStatementsBySubjects, getStatementsByObjectAndPredicate } from 'network';
+import { getStatementsBySubjects, getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { getComparisonData } from 'utils';
 import { find } from 'lodash';

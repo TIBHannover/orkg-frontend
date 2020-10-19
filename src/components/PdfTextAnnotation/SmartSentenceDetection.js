@@ -4,7 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { CustomInput } from 'reactstrap';
 import Tippy from '@tippy.js/react';
-import { summarizeText } from 'network';
+import { summarizeText } from 'services/annotation/index';
 import { createGlobalStyle } from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { setShowHighlights as setShowHighlightsAction, setSummaryFetched as setSummaryFetchedAction } from 'actions/pdfTextAnnotation';

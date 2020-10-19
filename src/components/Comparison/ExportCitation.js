@@ -1,6 +1,6 @@
 import { Button, Input, Modal, ModalBody, ModalHeader, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import React, { Component } from 'react';
-import { getCitationByDOI } from 'network';
+import { getCitationByDOI } from 'services/datacite/index';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';

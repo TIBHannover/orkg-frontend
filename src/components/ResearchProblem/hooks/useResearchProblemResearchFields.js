@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getResearchFieldsByResearchProblemId } from 'network';
+import { getResearchFieldsByResearchProblemId } from 'services/backend/problems';
 import { useParams } from 'react-router-dom';
 
 function useResearchProblemResearchFields() {

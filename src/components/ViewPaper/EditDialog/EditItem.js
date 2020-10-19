@@ -1,13 +1,13 @@
 import React from 'react';
 import { Collapse, Input } from 'reactstrap';
 import AuthorsInput from 'components/Utils/AuthorsInput';
-import AutoComplete from 'components/Utils/AutoComplete';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { StyledStatementItem, StyledListGroupOpen } from './styled';
 import classNames from 'classnames';
 import moment from 'moment';
 import { range } from 'utils';
 import { truncate } from 'lodash';
-import { resourcesUrl } from 'network';
+import { resourcesUrl } from 'services/backend/resources';
 import PropTypes from 'prop-types';
 import { CLASSES } from 'constants/graphSettings';
 
@@ -64,7 +64,7 @@ const EditItem = props => {
                 allowCreate
                 requestUrl={resourcesUrl}
                 optionsClass={CLASSES.VENUE}
-                onItemSelected={props.onChange}
+                onChange={props.onChange}
                 placeholder="Select or type to enter a venue"
                 autoFocus
                 cacheOptions
@@ -79,7 +79,7 @@ const EditItem = props => {
                 allowCreate={false}
                 requestUrl={resourcesUrl}
                 optionsClass={CLASSES.RESEARCH_FIELD}
-                onItemSelected={props.onChange}
+                onChange={props.onChange}
                 placeholder="Select a research field"
                 autoFocus
                 cacheOptions

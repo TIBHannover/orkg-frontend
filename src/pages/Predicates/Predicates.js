@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import ShortRecord from '../../components/ShortRecord/ShortRecord';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { getAllPredicates } from '../../network';
+import { getAllPredicates } from 'services/backend/predicates';
 import { Container } from 'reactstrap';
 import { reverse } from 'named-urls';
-import ROUTES from '../../constants/routes';
+import ROUTES from 'constants/routes';
 
 export default class Predicates extends Component {
     constructor(props) {
