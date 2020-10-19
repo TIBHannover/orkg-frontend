@@ -5,10 +5,9 @@ import { reverse } from 'named-urls';
 import dotProp from 'dot-prop-immutable';
 import PropTypes from 'prop-types';
 import ContentLoader from 'react-content-loader';
-import { getResourcesByClass, classesUrl } from 'services/backend/classes';
+import { getResourcesByClass, getClassById } from 'services/backend/classes';
 import { getAllResources } from 'services/backend/resources';
 import { getAllPredicates } from 'services/backend/predicates';
-import { submitGetRequest } from 'network';
 import ROUTES from 'constants/routes.js';
 import Results from 'components/Search/Results';
 import Filters from 'components/Search/Filters';
@@ -133,7 +132,7 @@ class Search extends Component {
                 if (this.defaultsFilters.map(df => df.id).includes(classID)) {
                     return this.defaultsFilters.find(df => df.id === classID);
                 }
-                return submitGetRequest(`${classesUrl}${classID}`);
+                return getClassById(classID);
             });
             return Promise.all(classesCalls).then(classes => {
                 this.setState({ loadingFilterClasses: false, selectedFilters: classes }, () => {

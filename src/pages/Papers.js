@@ -4,7 +4,7 @@ import { getResourcesByClass } from 'services/backend/classes';
 import { Container } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import PaperCardDynamic from './../components/PaperCard/PaperCardDynamic';
+import PaperCardDynamic from 'components/PaperCard/PaperCardDynamic';
 import { CLASSES } from 'constants/graphSettings';
 
 export default class Papers extends Component {

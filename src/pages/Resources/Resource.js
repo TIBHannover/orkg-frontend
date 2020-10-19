@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, Button, FormGroup, Label, FormText } from 'reactstrap';
-import { submitGetRequest } from 'network';
-import { classesUrl } from 'services/backend/classes';
+import { classesUrl, getClassById } from 'services/backend/classes';
 import { updateResourceClasses as updateResourceClassesNetwork } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
@@ -41,7 +40,7 @@ function Resource(props) {
             getResource(props.match.params.id)
                 .then(responseJson => {
                     document.title = `${responseJson.label} - Resource - ORKG`;
-                    const classesCalls = responseJson.classes.map(classResource => submitGetRequest(`${classesUrl}${classResource}`));
+                    const classesCalls = responseJson.classes.map(classResource => getClassById(classResource));
                     Promise.all(classesCalls).then(classes => {
                         classes = orderBy(classes, [classLabel => classLabel.label.toLowerCase()], ['asc']);
                         setLabel(responseJson.label);

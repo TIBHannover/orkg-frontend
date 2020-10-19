@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import rangy from 'rangy';
 import { compose } from 'redux';
-import { submitGetRequest } from '../../../network';
-import { predicatesUrl } from 'services/backend/predicates';
 import { connect } from 'react-redux';
-import AnnotationTootip from './AnnotationTootip';
+import AnnotationTooltip from './AnnotationTooltip';
 
-import { createAnnotation, updateAnnotationClass, removeAnnotation, validateAnnotation } from '../../../actions/addPaper';
+import { createAnnotation, updateAnnotationClass, removeAnnotation, validateAnnotation } from 'actions/addPaper';
 
 function getAllIndexes(arr, val) {
     const indexes = [];
@@ -38,72 +36,6 @@ class AbstractAnnotator extends Component {
         this.annotatorRef.current.removeEventListener('mouseup', this.handleMouseUp);
     }
 
-    IdMatch = async (value, responseJson) => {
-        if (value.startsWith('#')) {
-            const valueWithoutHashtag = value.substr(1);
-
-            if (valueWithoutHashtag.length > 0) {
-                let responseJsonExact;
-
-                try {
-                    responseJsonExact = await submitGetRequest(predicatesUrl + encodeURIComponent(valueWithoutHashtag));
-                } catch (err) {
-                    responseJsonExact = null;
-                }
-
-                if (responseJsonExact) {
-                    responseJson.unshift(responseJsonExact);
-                }
-            }
-        }
-
-        return responseJson;
-    };
-
-    loadOptions = async value => {
-        try {
-            if (value === '' || value.trim() === '') {
-                return this.props.classOptions;
-            }
-
-            let queryParams = '';
-
-            if (value.startsWith('"') && value.endsWith('"') && value.length > 2) {
-                value = value.substring(1, value.length - 1);
-                queryParams = '&exact=true';
-            }
-
-            let responseJson = await submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(value) + queryParams);
-            responseJson = await this.IdMatch(value, responseJson);
-
-            if (this.state.defaultOptions && this.state.defaultOptions.length > 0) {
-                let newProperties = this.state.defaultOptions;
-                newProperties = newProperties.filter(({ label }) => label.includes(value)); // ensure the label of the new property contains the search value
-
-                responseJson.unshift(...newProperties);
-            }
-
-            if (responseJson.length > this.maxResults) {
-                responseJson = responseJson.slice(0, this.maxResults);
-            }
-
-            const options = [];
-
-            responseJson.map(item =>
-                options.push({
-                    label: item.label,
-                    id: item.id
-                })
-            );
-
-            return options;
-        } catch (err) {
-            console.error(err);
-
-            return [];
-        }
-    };
-
     renderCharNode = charIndex => {
         return (
             <span key={`c${charIndex}`} data-position={charIndex}>
@@ -123,8 +55,7 @@ class AbstractAnnotator extends Component {
 
     tooltipRenderer = (lettersNode, range) => {
         return (
-            <AnnotationTootip
-                loadOptions={this.loadOptions}
+            <AnnotationTooltip
                 key={`${range.id}`}
                 range={range}
                 lettersNode={lettersNode}

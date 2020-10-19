@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import ObservatoryCard from 'components/ObservatoryCard/ObservatoryCard';
-import { submitGetRequest } from 'network';
-import { observatoriesUrl } from 'services/backend/observatories';
-import { organizationsUrl } from 'services/backend/organizations';
+import { getAllObservatories, getObservatoriesStats } from 'services/backend/observatories';
+import { getAllOrganizations } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { Container } from 'reactstrap';
 import { Col, Row } from 'reactstrap';
@@ -75,9 +74,9 @@ class Observatories extends Component {
 
     loadObservatories = () => {
         this.setState({ isNextPageLoading: true });
-        const observatories = submitGetRequest(`${observatoriesUrl}`);
-        const obsStats = submitGetRequest(`${observatoriesUrl}stats/observatories`);
-        const organizations = submitGetRequest(`${organizationsUrl}`);
+        const observatories = getAllObservatories();
+        const obsStats = getObservatoriesStats();
+        const organizations = getAllOrganizations();
 
         Promise.all([observatories, obsStats, organizations])
             .then(async data => {

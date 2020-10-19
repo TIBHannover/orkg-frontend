@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import ROUTES from '../../constants/routes.js';
+import ROUTES from 'constants/routes.js';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/classes';
 import { getPaperData } from 'utils';

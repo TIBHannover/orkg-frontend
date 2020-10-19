@@ -1,14 +1,14 @@
 import React from 'react';
 import { Container, Row, Col, Badge } from 'reactstrap';
-import ROUTES from '../../constants/routes';
+import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
-import { ReactComponent as Logo } from './../../assets/img/vertical_logo.svg';
-import TIB_LOGO from './../../assets/img/poweredby/TIB_Logo_EN.png';
-import LUH_LOGO from './../../assets/img/poweredby/LUH.png';
-import L3S_LOGO from './../../assets/img/poweredby/L3S.png';
-import INFAI_LOGO from './../../assets/img/poweredby/infAI.png';
+import { ReactComponent as Logo } from 'assets/img/vertical_logo.svg';
+import TIB_LOGO from 'assets/img/poweredby/TIB_Logo_EN.png';
+import LUH_LOGO from 'assets/img/poweredby/LUH.png';
+import L3S_LOGO from 'assets/img/poweredby/L3S.png';
+import INFAI_LOGO from 'assets/img/poweredby/infAI.png';
 import styled from 'styled-components';
 
 const FooterWrapper = styled.div`
@@ -81,9 +81,10 @@ const Footer = () => (
                                 </a>
                             </li>
                             <li>
-                                <a href="https://projects.tib.eu/orkg/data-protection/" target="_blank" rel="noopener noreferrer">
-                                    Data protection
-                                </a>
+                                <Link to={ROUTES.DATA_PROTECTION}>Data protection</Link>
+                            </li>
+                            <li>
+                                <Link to={ROUTES.TERMS_OF_USE}>Terms of use</Link>
                             </li>
                             <li>
                                 <a href="https://projects.tib.eu/orkg/imprint/" target="_blank" rel="noopener noreferrer">

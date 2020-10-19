@@ -4,6 +4,10 @@ import queryString from 'query-string';
 
 export const classesUrl = `${url}classes/`;
 
+export const getClassById = id => {
+    return submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/`);
+};
+
 export const createClass = (label, uri = null) => {
     return submitPostRequest(classesUrl, { 'Content-Type': 'application/json' }, { label: label, uri: uri });
 };

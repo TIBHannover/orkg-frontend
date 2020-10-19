@@ -5,7 +5,7 @@ import { getUserInformation, updateUserInformation } from 'services/backend/user
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import { updateAuth } from '../../actions/auth';
+import { updateAuth } from 'actions/auth';
 import { get_error_message } from 'utils';
 import { toast } from 'react-toastify';
 import Gravatar from 'react-gravatar';

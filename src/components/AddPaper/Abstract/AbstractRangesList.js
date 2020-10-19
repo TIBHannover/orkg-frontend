@@ -4,14 +4,13 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { updateAnnotationClass, removeAnnotation, toggleEditAnnotation } from '../../../actions/addPaper';
+import { updateAnnotationClass, removeAnnotation, toggleEditAnnotation } from 'actions/addPaper';
 import Tippy from '@tippy.js/react';
-import { submitGetRequest } from '../../../network';
 import { predicatesUrl } from 'services/backend/predicates';
-import AsyncCreatableSelect from 'react-select/async-creatable';
 import capitalize from 'capitalize';
 import styled, { withTheme } from 'styled-components';
 import { StyledStatementItem } from '../Contributions/styled';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
 import toArray from 'lodash/toArray';
 import { compose } from 'redux';
 
@@ -50,28 +49,6 @@ class AbstractRangesList extends Component {
         this.setState({ defaultOptions: this.props.classOptions });
     }
 
-    IdMatch = async (value, responseJson) => {
-        if (value.startsWith('#')) {
-            const valueWithoutHashtag = value.substr(1);
-
-            if (valueWithoutHashtag.length > 0) {
-                let responseJsonExact;
-
-                try {
-                    responseJsonExact = await submitGetRequest(predicatesUrl + encodeURIComponent(valueWithoutHashtag));
-                } catch (err) {
-                    responseJsonExact = null;
-                }
-
-                if (responseJsonExact) {
-                    responseJson.unshift(responseJsonExact);
-                }
-            }
-        }
-
-        return responseJson;
-    };
-
     handleChangeAnnotationClass = (selectedOption, { action }, range) => {
         if (action === 'select-option') {
             this.props.updateAnnotationClass({ range, selectedOption });
@@ -83,50 +60,6 @@ class AbstractRangesList extends Component {
             this.props.updateAnnotationClass({ range, selectedOption: newOption });
         } else if (action === 'clear') {
             this.props.removeAnnotation(range);
-        }
-    };
-
-    loadOptions = async value => {
-        try {
-            if (!value || value === '' || value.trim() === '') {
-                return this.props.classOptions;
-            }
-
-            let queryParams = '';
-
-            if (value.startsWith('"') && value.endsWith('"') && value.length > 2) {
-                value = value.substring(1, value.length - 1);
-                queryParams = '&exact=true';
-            }
-
-            let responseJson = await submitGetRequest(predicatesUrl + '?q=' + encodeURIComponent(value) + queryParams);
-            responseJson = await this.IdMatch(value, responseJson);
-
-            if (this.props.classOptions && this.props.classOptions.length > 0) {
-                let newProperties = this.props.classOptions;
-                newProperties = newProperties.filter(({ label }) => label.includes(value)); // ensure the label of the new property contains the search value
-
-                responseJson.unshift(...newProperties);
-            }
-
-            if (responseJson.length > this.maxResults) {
-                responseJson = responseJson.slice(0, this.maxResults);
-            }
-
-            const options = [];
-
-            responseJson.map(item =>
-                options.push({
-                    label: item.label,
-                    id: item.id
-                })
-            );
-
-            return options;
-        } catch (err) {
-            console.error(err);
-
-            return [];
         }
     };
 
@@ -164,26 +97,27 @@ class AbstractRangesList extends Component {
                                                 </RangeItemOption>
                                             </>
                                         ) : (
-                                            <AsyncCreatableSelect
-                                                loadOptions={this.loadOptions}
+                                            <AutoComplete
+                                                requestUrl={predicatesUrl}
+                                                defaultOptions={this.props.classOptions}
+                                                placeholder="Select or type to enter a property"
+                                                onChange={(e, a) => {
+                                                    this.handleChangeAnnotationClass(e, a, range);
+                                                    this.props.toggleEditAnnotation(range.id);
+                                                }}
                                                 value={{
-                                                    label: range.class.label ? range.class.label : 'Select or type something...',
+                                                    label: range.class.label ? range.class.label : '',
                                                     id: range.class.id,
                                                     certainty: range.certainty,
                                                     range_id: range.id,
                                                     isEditing: range.isEditing
                                                 }}
-                                                getOptionLabel={({ label }) => label}
-                                                getOptionValue={({ id }) => id}
-                                                onChange={(e, a) => {
-                                                    this.handleChangeAnnotationClass(e, a, range);
-                                                    this.props.toggleEditAnnotation(range.id);
-                                                }}
                                                 key={value => value}
-                                                cacheOptions
-                                                defaultOptions={true}
                                                 isClearable
-                                                openMenuOnClick={false}
+                                                openMenuOnFocus={true}
+                                                autoLoadOption={true}
+                                                allowCreate={true}
+                                                autoFocus={false}
                                             />
                                         )}
                                     </div>

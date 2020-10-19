@@ -12,7 +12,7 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap
 import flattenDeep from 'lodash/flattenDeep';
 
 // moving GraphVis here in order to maintain the layouts and status related stuff;
-import GraphVis from '../../../libs/gizmo/GraphVis';
+import GraphVis from 'libs/gizmo/GraphVis';
 import SearchAutoComplete from './SearchAutoComplete';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 

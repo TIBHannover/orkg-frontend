@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { getStatementsByObject, getStatementsBySubjects } from 'services/backend/statements';
 import { getResource } from 'services/backend/resources';
 import ROUTES from 'constants/routes.js';
-import PaperCard from '../components/PaperCard/PaperCard';
+import PaperCard from 'components/PaperCard/PaperCard';
 import { getPaperData } from 'utils';
 import { find } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';

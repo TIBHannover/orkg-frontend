@@ -5,6 +5,7 @@ import routes from './routes.config';
 import DefaultLayout from './components/Layout/DefaultLayout';
 import './assets/scss/CustomBootstrap.scss';
 import 'react-toastify/dist/ReactToastify.css';
+import { MatomoContext } from '@datapunt/matomo-tracker-react';
 import { ConnectedRouter } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import { withCookies } from 'react-cookie';
@@ -28,6 +29,23 @@ class App extends Component {
             this.state.showBrowserWarning = true;
         }
     }
+
+    componentDidMount() {
+        const matomoTracker = this.context;
+        // Listen for changes to the current location.
+        this.unlisten = this.props.history.listen((location, action) => {
+            setTimeout(function() {
+                matomoTracker && matomoTracker.trackPageView();
+            }, 1000);
+        });
+    }
+
+    componentWillUnmount() {
+        // Unlisten when the component lifecycle ends.
+        this.unlisten();
+    }
+
+    static contextType = MatomoContext;
 
     render() {
         const alertStyle = { borderRadius: '0', marginTop: '-30px', marginBottom: '30px' };

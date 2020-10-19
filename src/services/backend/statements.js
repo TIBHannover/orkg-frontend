@@ -243,8 +243,12 @@ export const getParentResearchFields = (researchFieldId, parents = []) => {
             objectId: researchFieldId,
             predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD
         }).then(parentResearchField => {
-            parents.push(parentResearchField[0].object);
-            return getParentResearchFields(parentResearchField[0].subject.id, parents);
+            if (parentResearchField && parentResearchField[0]) {
+                parents.push(parentResearchField[0].object);
+                return getParentResearchFields(parentResearchField[0].subject.id, parents);
+            } else {
+                return Promise.resolve(parents);
+            }
         });
     }
 };

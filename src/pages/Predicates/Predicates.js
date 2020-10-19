@@ -5,7 +5,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getAllPredicates } from 'services/backend/predicates';
 import { Container } from 'reactstrap';
 import { reverse } from 'named-urls';
-import ROUTES from '../../constants/routes';
+import ROUTES from 'constants/routes';
 
 export default class Predicates extends Component {
     constructor(props) {
