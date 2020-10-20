@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, FormGroup, Input, Label, Alert, FormFeedback } from 'reactstrap';
+import { Button, Form, FormGroup, Input, Label, Alert, FormFeedback, CustomInput } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { toggleAuthDialog, updateAuth } from 'actions/auth';
@@ -38,7 +38,7 @@ class SignUp extends Component {
 
     handleCheckBoxChange = e => {
         this.setState({
-            [e.target.name]: e.target.checked
+            [e.target.id]: e.target.checked
         });
     };
 
@@ -160,33 +160,43 @@ class SignUp extends Component {
                             <FormFeedback>{get_error_message(this.state.errors, 'matching_password')}</FormFeedback>
                         )}
                     </FormGroup>
-                    <FormGroup check>
-                        <Label check>
-                            <Input
-                                type="checkbox"
-                                name="termsConditionIsChecked"
-                                onChange={this.handleCheckBoxChange}
-                                checked={this.state.termsConditionIsChecked}
-                            />{' '}
-                            <span className="text-danger">*</span> I accept the <Link to={ROUTES.TERMS_OF_USE}>Special Conditions ORKG</Link>.
-                        </Label>
+                    <FormGroup className="mb-0" style={{ fontSize: '90%' }}>
+                        <CustomInput
+                            type="checkbox"
+                            id="termsConditionIsChecked"
+                            onChange={this.handleCheckBoxChange}
+                            checked={this.state.termsConditionIsChecked}
+                            label={
+                                <>
+                                    I accept the{' '}
+                                    <Link to={ROUTES.TERMS_OF_USE} target="_blank">
+                                        Special Conditions ORKG
+                                    </Link>
+                                </>
+                            }
+                        />
                     </FormGroup>
-                    <FormGroup check>
-                        <Label check>
-                            <Input
-                                type="checkbox"
-                                name="dataProtectionIsChecked"
-                                onChange={this.handleCheckBoxChange}
-                                checked={this.state.dataProtectionIsChecked}
-                            />{' '}
-                            <span className="text-danger">*</span> I agree to the processing of my personal data provided here by Technische
-                            Informationsbibliothek (TIB). In accordance with the
-                            <Link to={ROUTES.DATA_PROTECTION}> data protection declaration</Link> as well as the{' '}
-                            <a href="https://tib.eu/infoblatt-datenschutz" target="_blank" rel="noopener noreferrer">
-                                info sheet data protection <Icon size="sm" icon={faExternalLinkAlt} />
-                            </a>
-                            , the data is processed exclusively by TIB in order to provide services of our platform.
-                        </Label>
+                    <FormGroup style={{ fontSize: '90%' }}>
+                        <CustomInput
+                            type="checkbox"
+                            id="dataProtectionIsChecked"
+                            onChange={this.handleCheckBoxChange}
+                            checked={this.state.dataProtectionIsChecked}
+                            label={
+                                <>
+                                    I agree to the processing of my personal data provided here by Technische Informationsbibliothek (TIB). In
+                                    accordance with the{' '}
+                                    <Link to={ROUTES.DATA_PROTECTION} target="_blank">
+                                        data protection declaration
+                                    </Link>{' '}
+                                    as well as the{' '}
+                                    <a href="https://tib.eu/infoblatt-datenschutz" target="_blank" rel="noopener noreferrer">
+                                        info sheet data protection <Icon size="sm" icon={faExternalLinkAlt} />
+                                    </a>
+                                    , the data is processed exclusively by TIB in order to provide services of our platform.
+                                </>
+                            }
+                        />
                     </FormGroup>
                     <Button
                         type="submit"
