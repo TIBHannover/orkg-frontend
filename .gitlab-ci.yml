@@ -7,6 +7,7 @@ include:
   - remote: https://gitlab.com/TIBHannover/gitlab-ci-templates/raw/master/templates/Docker.gitlab-ci.yml
   - remote: https://gitlab.com/TIBHannover/gitlab-ci-templates/raw/master/templates/Docker-Release.gitlab-ci.yml
   - template: Container-Scanning.gitlab-ci.yml
+  - template: Dependency-Scanning.gitlab-ci.yml
 
 container_scanning:
   variables:
