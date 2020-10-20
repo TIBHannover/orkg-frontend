@@ -44,7 +44,7 @@ class SignUp extends Component {
 
     signUp = async e => {
         e.preventDefault();
-        const { email, password, matching_password, name } = this.state;
+        const { email, password, matching_password, name, termsConditionIsChecked, dataProtectionIsChecked } = this.state;
 
         this.setState({
             loading: true,
@@ -53,42 +53,46 @@ class SignUp extends Component {
 
         let userToken;
         let token_expires_in;
-        registerWithEmailAndPassword(email, password, matching_password, name)
-            .then(() => {
-                signInWithEmailAndPassword(email, password)
-                    .then(token => {
-                        userToken = token.access_token;
-                        cookies.set('token', token.access_token, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
-                        token_expires_in = new Date(Date.now() + token.expires_in * 1000);
-                        cookies.set('token_expires_in', token_expires_in.toUTCString(), { path: env('PUBLIC_URL'), maxAge: token.expires_in });
-                        return getUserInformation();
-                        //window.location.reload();
-                    })
-                    .then(userData => {
-                        this.props.updateAuth({
-                            user: {
-                                displayName: userData.display_name,
-                                id: userData.id,
-                                token: userToken,
-                                email: userData.email,
-                                tokenExpire: token_expires_in
-                            }
+        if (termsConditionIsChecked && dataProtectionIsChecked) {
+            registerWithEmailAndPassword(email, password, matching_password, name)
+                .then(() => {
+                    signInWithEmailAndPassword(email, password)
+                        .then(token => {
+                            userToken = token.access_token;
+                            cookies.set('token', token.access_token, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
+                            token_expires_in = new Date(Date.now() + token.expires_in * 1000);
+                            cookies.set('token_expires_in', token_expires_in.toUTCString(), { path: env('PUBLIC_URL'), maxAge: token.expires_in });
+                            return getUserInformation();
+                            //window.location.reload();
+                        })
+                        .then(userData => {
+                            this.props.updateAuth({
+                                user: {
+                                    displayName: userData.display_name,
+                                    id: userData.id,
+                                    token: userToken,
+                                    email: userData.email,
+                                    tokenExpire: token_expires_in
+                                }
+                            });
+                            this.props.toggleAuthDialog();
+                            this.setState({ loading: false, errors: null });
+                        })
+                        .catch(e => {
+                            cookies.remove('token');
+                            cookies.remove('token_expires_in');
+                            this.setState({ loading: false, errors: { message: 'Something went wrong, please try again' } });
                         });
-                        this.props.toggleAuthDialog();
-                        this.setState({ loading: false, errors: null });
-                    })
-                    .catch(e => {
-                        cookies.remove('token');
-                        cookies.remove('token_expires_in');
-                        this.setState({ loading: false, errors: 'Something went wrong, please try again' });
+                })
+                .catch(e => {
+                    this.setState({
+                        loading: false,
+                        errors: e
                     });
-            })
-            .catch(e => {
-                this.setState({
-                    loading: false,
-                    errors: e
                 });
-            });
+        } else {
+            this.setState({ loading: false, errors: { message: 'The Special Conditions and the data processing by TIB have to be accepted.' } });
+        }
     };
 
     render() {
