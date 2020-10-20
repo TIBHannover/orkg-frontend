@@ -2,6 +2,7 @@ import * as type from '../actions/types';
 import merge from 'lodash/merge';
 import dotProp from 'dot-prop-immutable';
 import { Cookies } from 'react-cookie';
+import env from '@beam-australia/react-env';
 
 const initialState = {
     isTourOpen: false,
@@ -93,7 +94,7 @@ export default (state = initialState, action) => {
                     isTourOpen: false
                 };
             } else {
-                cookies.set('taketourClosed', true, { path: process.env.PUBLIC_URL, maxAge: 604800 });
+                cookies.set('taketourClosed', true, { path: env('PUBLIC_URL'), maxAge: 604800 });
                 return {
                     ...state,
                     isTourOpen: false

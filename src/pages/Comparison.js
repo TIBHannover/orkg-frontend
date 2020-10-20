@@ -33,6 +33,7 @@ import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
 import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
+import env from '@beam-australia/react-env';
 
 function Comparison(props) {
     const [
@@ -102,19 +103,19 @@ function Comparison(props) {
 
     const onDismissShiftMouseWheelScroll = () => {
         // dismiss function for the alert thingy!;
-        setCookie('seenShiftMouseWheelScroll', true, { path: process.env.PUBLIC_URL, maxAge: 315360000 }); // << TEN YEARS
+        setCookie('seenShiftMouseWheelScroll', true, { path: env('PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
         setHideScrollHint(true);
     };
 
     const handleFullWidth = () => {
         setFullWidth(v => {
-            setCookie('useFullWidthForComparisonTable', !v, { path: process.env.PUBLIC_URL, maxAge: 315360000 }); // << TEN YEARS
+            setCookie('useFullWidthForComparisonTable', !v, { path: env('PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
             return !v;
         });
     };
 
     const handleViewDensity = density => {
-        setCookie('viewDensityComparisonTable', density, { path: process.env.PUBLIC_URL, maxAge: 315360000 }); // << TEN YEARS
+        setCookie('viewDensityComparisonTable', density, { path: env('PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
         setViewDensity(density);
     };
 

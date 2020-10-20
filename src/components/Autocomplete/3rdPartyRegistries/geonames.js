@@ -1,4 +1,5 @@
 import { PREDICATES } from 'constants/graphSettings';
+import env from '@beam-australia/react-env';
 
 /**
  * Fetch 10 autocomplete options from geonames.org API
@@ -9,11 +10,7 @@ import { PREDICATES } from 'constants/graphSettings';
  */
 export default async function getGeonames(value, options) {
     let responseXML = await fetch(
-        process.env.REACT_APP_GEONAMES_API_SEARCH_URL +
-            '?q=' +
-            encodeURIComponent(value.trim()) +
-            '&maxRows=10&type=rdf&username=' +
-            process.env.REACT_APP_GEONAMES_API_USERNAME
+        env('GEONAMES_API_SEARCH_URL') + '?q=' + encodeURIComponent(value.trim()) + '&maxRows=10&type=rdf&username=' + env('GEONAMES_API_USERNAME')
     );
     const data = await responseXML.text();
     responseXML = new window.DOMParser().parseFromString(data, 'text/xml'); // parse as xml

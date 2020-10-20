@@ -1,1 +1,3 @@
-export const url = `${process.env.REACT_APP_SERVER_URL}api/`;
+import env from '@beam-australia/react-env';
+
+export const url = `${env('SERVER_URL')}api/`;
