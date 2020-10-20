@@ -6,7 +6,7 @@ import { toggleAuthDialog, updateAuth } from 'actions/auth';
 import { Link } from 'react-router-dom';
 import { registerWithEmailAndPassword, signInWithEmailAndPassword, getUserInformation } from 'services/backend/users';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { get_error_message } from 'utils';
 import ROUTES from 'constants/routes';
 import { Cookies } from 'react-cookie';
