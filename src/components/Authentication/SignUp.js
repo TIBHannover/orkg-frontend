@@ -147,7 +147,7 @@ class SignUp extends Component {
                         )}
                     </FormGroup>
                     <FormGroup>
-                        <Label for="Password">Confirm Password</Label>
+                        <Label for="matching_password">Confirm Password</Label>
                         <Input
                             onChange={this.handleInputChange}
                             value={this.state.matching_password}
