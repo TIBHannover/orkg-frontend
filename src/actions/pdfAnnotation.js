@@ -2,6 +2,7 @@ import * as type from './types.js';
 import { guid } from '../utils';
 import { parse } from 'node-html-parser';
 import { toast } from 'react-toastify';
+import env from '@beam-australia/react-env';
 
 export const selectTool = tool => dispatch => {
     dispatch({
@@ -115,7 +116,7 @@ export const convertPdf = ({ files }) => dispatch => {
     const form = new FormData();
     form.append('pdf', pdf);
 
-    fetch(process.env.REACT_APP_ANNOTATION_SERVICE_URL + 'convertPdf/', {
+    fetch(env('ANNOTATION_SERVICE_URL') + 'convertPdf/', {
         method: 'POST',
         body: form
     })
@@ -163,7 +164,7 @@ export const parsePdf = ({ pdf }) => dispatch => {
     const form = new FormData();
     form.append('input', pdf);
 
-    fetch(process.env.REACT_APP_GROBID_URL + 'api/processFulltextDocument', {
+    fetch(env('GROBID_URL') + 'api/processFulltextDocument', {
         method: 'POST',
         body: form
     })
