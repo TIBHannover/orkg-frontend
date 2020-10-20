@@ -1,13 +1,14 @@
-import { Button, Form, FormGroup, Input, Label, Alert, FormFeedback } from 'reactstrap';
 import React, { Component } from 'react';
-
+import { Button, Form, FormGroup, Input, Label, Alert, FormFeedback } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { toggleAuthDialog, updateAuth } from 'actions/auth';
+import { Link } from 'react-router-dom';
 import { registerWithEmailAndPassword, signInWithEmailAndPassword, getUserInformation } from 'services/backend/users';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { get_error_message } from 'utils';
+import ROUTES from 'constants/routes';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 
@@ -23,13 +24,21 @@ class SignUp extends Component {
             password: '',
             matching_password: '',
             loading: false,
-            errors: null
+            errors: null,
+            termsConditionIsChecked: false,
+            dataProtectionIsChecked: false
         };
     }
 
     handleInputChange = e => {
         this.setState({
             [e.target.name]: e.target.value
+        });
+    };
+
+    handleCheckBoxChange = e => {
+        this.setState({
+            [e.target.name]: e.target.checked
         });
     };
 
@@ -147,10 +156,41 @@ class SignUp extends Component {
                             <FormFeedback>{get_error_message(this.state.errors, 'matching_password')}</FormFeedback>
                         )}
                     </FormGroup>
-                    <p style={{ fontStyle: 'italic' }}>
-                        By signing up you agree that any data you add to the service has a CC0 (Public Domain) license
-                    </p>
-                    <Button type="submit" color="primary" className="mt-4 mb-2" block disabled={this.state.loading}>
+                    <FormGroup check>
+                        <Label check>
+                            <Input
+                                type="checkbox"
+                                name="termsConditionIsChecked"
+                                onChange={this.handleCheckBoxChange}
+                                checked={this.state.termsConditionIsChecked}
+                            />{' '}
+                            <span className="text-danger">*</span> I accept the <Link to={ROUTES.TERMS_OF_USE}>Special Conditions ORKG</Link>.
+                        </Label>
+                    </FormGroup>
+                    <FormGroup check>
+                        <Label check>
+                            <Input
+                                type="checkbox"
+                                name="dataProtectionIsChecked"
+                                onChange={this.handleCheckBoxChange}
+                                checked={this.state.dataProtectionIsChecked}
+                            />{' '}
+                            <span className="text-danger">*</span> I agree to the processing of my personal data provided here by Technische
+                            Informationsbibliothek (TIB). In accordance with the
+                            <Link to={ROUTES.DATA_PROTECTION}> data protection declaration</Link> as well as the{' '}
+                            <a href="https://tib.eu/infoblatt-datenschutz" target="_blank" rel="noopener noreferrer">
+                                info sheet data protection <Icon size="sm" icon={faExternalLinkAlt} />
+                            </a>
+                            , the data is processed exclusively by TIB in order to provide services of our platform.
+                        </Label>
+                    </FormGroup>
+                    <Button
+                        type="submit"
+                        color="primary"
+                        className="mt-4 mb-2"
+                        block
+                        disabled={this.state.loading || !this.state.dataProtectionIsChecked || !this.state.termsConditionIsChecked}
+                    >
                         {!this.state.loading ? (
                             'Sign up'
                         ) : (
