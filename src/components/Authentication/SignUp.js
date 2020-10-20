@@ -11,6 +11,7 @@ import { get_error_message } from 'utils';
 import ROUTES from 'constants/routes';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
+import InfoSheet from 'assets/pdf/infosheet-data-protection.pdf';
 
 const cookies = new Cookies();
 
@@ -190,8 +191,8 @@ class SignUp extends Component {
                                         data protection declaration
                                     </Link>{' '}
                                     as well as the{' '}
-                                    <a href="https://tib.eu/infoblatt-datenschutz" target="_blank" rel="noopener noreferrer">
-                                        info sheet data protection <Icon size="sm" icon={faExternalLinkAlt} />
+                                    <a href={InfoSheet} target="_blank" rel="noopener noreferrer">
+                                        info sheet data protection
                                     </a>
                                     , the data is processed exclusively by TIB in order to provide services of our platform.
                                 </>
