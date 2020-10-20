@@ -9,6 +9,7 @@ import { zip, omit, isString } from 'lodash';
 import { PREDICATES, MISC } from 'constants/graphSettings';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { saveFullPaper } from 'services/backend/misc';
+import env from '@beam-australia/react-env';
 
 function useExtractionModal(props) {
     const [loading, setLoading] = useState(false);
@@ -45,7 +46,7 @@ function useExtractionModal(props) {
         form.append('region', pxToPoint(y) + ',' + pxToPoint(x) + ',' + pxToPoint(y + h) + ',' + pxToPoint(x + w));
         form.append('page_number', props.pageNumber);
 
-        fetch(process.env.REACT_APP_ANNOTATION_SERVICE_URL + 'extractTable/', {
+        fetch(env('ANNOTATION_SERVICE_URL') + 'extractTable/', {
             method: 'POST',
             body: form
         })
