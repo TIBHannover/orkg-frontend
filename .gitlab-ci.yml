@@ -7,7 +7,7 @@ include:
   - remote: https://gitlab.com/TIBHannover/gitlab-ci-templates/raw/master/templates/Docker-Release.gitlab-ci.yml
   - template: Container-Scanning.gitlab-ci.yml
 
-container_scanning:
-  variables:
+#container_scanning:
+#  variables:
     # Change image name to match our repository naming convention
-    CI_APPLICATION_REPOSITORY: $CI_REGISTRY_IMAGE
+#    CI_APPLICATION_REPOSITORY: $CI_REGISTRY_IMAGE
