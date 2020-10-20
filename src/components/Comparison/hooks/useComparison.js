@@ -75,7 +75,7 @@ function useComparison() {
 
     // comparison config
     const [transpose, setTranspose] = useState(false);
-    const [comparisonType, setComparisonType] = useState(null);
+    const [comparisonType, setComparisonType] = useState('merge');
     const [responseHash, setResponseHash] = useState(null);
     const [contributionsList, setContributionsList] = useState([]);
     const [predicatesList, setPredicatesList] = useState([]);
@@ -152,7 +152,7 @@ function useComparison() {
                         const url = filterObjectOfStatementsByPredicate(statements, PREDICATES.URL, true);
                         if (url) {
                             setResponseHash(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'response_hash'));
-                            setComparisonType(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'type'));
+                            setComparisonType(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'type') ?? 'merge');
                             setTranspose(getParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'transpose', true));
                             setPredicatesList(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'properties'));
                             setContributionsList(getArrayParamFromQueryString(url?.label.substring(url?.label.indexOf('?')), 'contributions'));
@@ -464,7 +464,7 @@ function useComparison() {
             // Update browser title
             document.title = 'Comparison - ORKG';
             setResponseHash(getParamFromQueryString(location.search, 'response_hash'));
-            setComparisonType(getParamFromQueryString(location.search, 'type'));
+            setComparisonType(getParamFromQueryString(location.search, 'type') ?? 'merge');
             setTranspose(getParamFromQueryString(location.search, 'transpose', true));
             setContributionsList(getArrayParamFromQueryString(location.search, 'contributions'));
             setPredicatesList(getArrayParamFromQueryString(location.search, 'properties'));
