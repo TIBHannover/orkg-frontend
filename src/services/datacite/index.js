@@ -1,14 +1,15 @@
 import { submitGetRequest } from 'network';
+import env from '@beam-australia/react-env';
 
 export const getComparisonDataByDOI = id => {
-    return submitGetRequest(`${process.env.REACT_APP_DATACITE_URL}/${process.env.REACT_APP_DATACITE_DOI_PREFIX}/${encodeURIComponent(id)}`);
+    return submitGetRequest(`${env('DATACITE_URL')}/${env('DATACITE_DOI_PREFIX')}/${encodeURIComponent(id)}`);
 };
 
 export const getCitationByDOI = (DOI, style = '', header = 'text/x-bibliography') => {
     let headers = '';
     headers = { Accept: `${header}` };
     const myHeaders = headers ? new Headers(headers) : {};
-    const url = `${process.env.REACT_APP_DATACITE_URL}/${DOI}?style=${style}`;
+    const url = `${env('DATACITE_URL')}/${DOI}?style=${style}`;
 
     return new Promise((resolve, reject) => {
         fetch(url, {

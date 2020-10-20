@@ -5,8 +5,9 @@
 
 import { submitPostRequest, submitGetRequest } from 'network';
 import queryString from 'query-string';
+import env from '@beam-australia/react-env';
 
-export const similarityServiceUrl = process.env.REACT_APP_SIMILARITY_SERVICE_URL;
+export const similarityServiceUrl = env('SIMILARITY_SERVICE_URL');
 export const comparisonUrl = `${similarityServiceUrl}compare/`;
 export const similarityUrl = `${similarityServiceUrl}similar/`;
 

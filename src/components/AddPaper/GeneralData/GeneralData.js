@@ -42,6 +42,7 @@ import { getPaperByDOI } from 'services/backend/misc';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import ExistingDoiModal from './ExistingDoiModal';
 import { parseCiteResult } from 'utils';
+import env from '@beam-australia/react-env';
 
 const Container = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -287,7 +288,7 @@ class GeneralData extends Component {
     };
 
     handleSkipTour = () => {
-        this.props.cookies.set('taketour', 'skip', { path: process.env.PUBLIC_URL, maxAge: 604800 });
+        this.props.cookies.set('taketour', 'skip', { path: env('PUBLIC_URL'), maxAge: 604800 });
         this.toggle('isFirstVisit');
         if (this.props.cookies.get('taketourClosed')) {
             this.props.closeTour();
@@ -298,7 +299,7 @@ class GeneralData extends Component {
     };
 
     takeTour = () => {
-        this.props.cookies.set('taketour', 'take', { path: process.env.PUBLIC_URL, maxAge: 604800 });
+        this.props.cookies.set('taketour', 'take', { path: env('PUBLIC_URL'), maxAge: 604800 });
         this.toggle('isFirstVisit');
         this.props.openTour();
     };

@@ -7,6 +7,8 @@ import { signInWithEmailAndPassword, getUserInformation } from 'services/backend
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Cookies } from 'react-cookie';
+import env from '@beam-australia/react-env';
+
 const cookies = new Cookies();
 
 class SignIn extends Component {
@@ -37,9 +39,9 @@ class SignIn extends Component {
         signInWithEmailAndPassword(this.state.email, this.state.password)
             .then(token => {
                 userToken = token.access_token;
-                cookies.set('token', token.access_token, { path: process.env.PUBLIC_URL, maxAge: token.expires_in });
+                cookies.set('token', token.access_token, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
                 token_expires_in = new Date(Date.now() + token.expires_in * 1000);
-                cookies.set('token_expires_in', token_expires_in.toUTCString(), { path: process.env.PUBLIC_URL, maxAge: token.expires_in });
+                cookies.set('token_expires_in', token_expires_in.toUTCString(), { path: env('PUBLIC_URL'), maxAge: token.expires_in });
                 //window.location.reload();
                 return getUserInformation();
             })
