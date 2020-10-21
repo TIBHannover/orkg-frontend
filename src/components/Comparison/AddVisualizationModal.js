@@ -6,6 +6,8 @@ import SelfVisDataModel from '../../libs/selfVisModel/SelfVisDataModel';
 
 // TODO: investigate performance, somehow it takes way to long to render the modal (like 800ms) -- oO --
 
+import CellSelector from '../../libs/selfVisModel/RenderingComponents/CellSelector';
+
 export default class AddVisualizationModal extends Component {
     constructor(props) {
         super(props);
@@ -45,6 +47,7 @@ export default class AddVisualizationModal extends Component {
     };
 
     render() {
+        const processStep = 0;
         return (
             <Modal
                 isOpen={this.props.showDialog}
@@ -52,6 +55,7 @@ export default class AddVisualizationModal extends Component {
                 size="lg"
                 onOpened={() => {
                     this.onLoadModal();
+                    this.setState({ loadedModel: true });
                 }}
                 style={{ maxWidth: '90%', marginBottom: 0 }}
             >
@@ -62,7 +66,12 @@ export default class AddVisualizationModal extends Component {
                         <div style={{ flexDirection: 'row', display: 'flex', flexGrow: '1' }}>SOME TABS?</div>
                     </div>
                 </ModalHeader>
-                <ModalBody style={{ padding: '0', minHeight: '100px', height: this.state.windowHeight }}>The Body of the modal</ModalBody>
+                <ModalBody style={{ padding: '0', minHeight: '100px', height: this.state.windowHeight }}>
+                    {/*  Should render different views based on the current step in the process*/}
+                    {/*    For Now we render the selection Table */}
+                    {processStep === 0 && <CellSelector isLoading={!this.state.loadedModel} />}
+                    {/*    We should have a next button with some tippy  */}
+                </ModalBody>
             </Modal>
         );
     }

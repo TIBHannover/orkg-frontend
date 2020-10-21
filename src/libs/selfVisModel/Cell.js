@@ -36,6 +36,11 @@ export default class Cell {
         this.label = 'EMPTY';
         this.positionContribAnchor = -1;
         this.positionPropertyAnchor = -1;
+
+        // a cell entry in orkg is an array of objects (typically it should be singular)
+        // but it can happen that we have multiple values in one cell
+        // this flag allows us to check for that
+        this.multiDimensionalCell = false;
     }
 
     setFlagByName = name => {
@@ -66,6 +71,23 @@ export default class Cell {
             this.propertyAnchor = data;
             this.positionPropertyAnchor = index;
             this.label = data.label;
+        }
+    };
+
+    initializeCellValueFromData = (data, rowIndex, colIndex) => {
+        if (this.valueAnchorFlag === true) {
+            this.valueAnchor = data; // << data is an array holding dataItems;
+            if (data.length !== 1) {
+                this.multiDimensionalCell = true;
+            }
+            this.positionPropertyAnchor = rowIndex;
+            this.positionContribAnchor = colIndex;
+            if (!this.multiDimensionalCell) {
+                this.label = data[0].label;
+                this.pathAnchor = data[0].path;
+            } else {
+                this.label = 'MULTI DIMENSIONAL CELLS ARE NOT SUPPORTED';
+            }
         }
     };
 }

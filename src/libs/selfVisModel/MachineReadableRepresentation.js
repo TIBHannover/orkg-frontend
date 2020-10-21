@@ -16,16 +16,17 @@ export default class MachineReadableRepresentation {
 
         this.createContributionAnchors(this.mrrModel);
         this.createPropertyAnchors(this.mrrModel);
+        this.createDataItemAnchors(this.mrrModel);
 
         // NEXT STEPS:
-        // parese the dataAnchors
+        // parse the dataAnchors
         // which create a label and we should be add functions to get rows and cols
         // we use a single linear array to store the cell values
         // cells will have a row and column index
         // add function : getRow(index) => filters all cells with this index
         // add function : getCol(index) => filters all cells with this index
 
-        // this function declaration is a bit shade, but lets simply use it
+        // this function declaration is a bit shady, but lets simply use it
         // NO: this should be handled by the model tho the data!!!!
         this.mrrModel.getRow = function(index) {
             console.log(index, 'IT WORKS', this.propertyAnchors);
@@ -34,7 +35,10 @@ export default class MachineReadableRepresentation {
         console.log('-----------------\n\n-------------------');
         console.log(this.mrrModel);
         console.log('^^^^ THE OUTPUT MODEL ^^^');
-        this.mrrModel.getRow(123);
+        console.log('all contributions for a property', this.getCol(0));
+        console.log('all properties for a contribution', this.getRow(0));
+        console.log('An Item', this.getItem(1, 1));
+        console.log('----------------------------');
     };
 
     getResult = () => {
@@ -42,11 +46,25 @@ export default class MachineReadableRepresentation {
     };
 
     getRow = index => {
-        console.log('HERE GET THE ROWS');
+        // we use the notation, that the row describes the cell values related to the contribution anchors
+        // so it will return all values for a "property" relating to all contributions
+        return this.mrrModel.dataItems.filter(item => item.positionContribAnchor === index);
     };
 
     getCol = index => {
-        console.log('HERE GET THE COLS');
+        // we use the notation, that the row describes the cell values related to the property anchors
+        // so it will return all values for a "contribution" relating to all properties
+        return this.mrrModel.dataItems.filter(item => item.positionPropertyAnchor === index);
+    };
+    getItem = (rowIndex, colIndex) => {
+        const itemsArray = this.mrrModel.dataItems.filter(
+            item => item.positionPropertyAnchor === colIndex && item.positionContribAnchor === rowIndex
+        );
+        if (itemsArray.length === 1) {
+            return itemsArray[0];
+        } else {
+            return null; //<< ERROR
+        }
     };
 
     getPropertyAnchors = () => {
@@ -57,6 +75,30 @@ export default class MachineReadableRepresentation {
         // gives us the header information for the rendering
         return this.mrrModel.contributionAnchors;
     };
+    getDataItems = () => {
+        return this.mrrModel.dataItems;
+    };
+
+    createDataItemAnchors(model) {
+        this.mrrModel.dataItems = [];
+
+        // linear storing the items;
+        // got through the propertyAnchors;
+        model.propertyAnchors.forEach((property, rowIndex) => {
+            console.log(rowIndex, property.propertyAnchor.id);
+            // get it from the input data;
+            const thatData = this.inputDataAsJsonObject.data[property.propertyAnchor.id];
+            if (thatData) {
+                thatData.forEach((cell, colIndex) => {
+                    // create a cell
+                    const dataCell = new Cell();
+                    dataCell.setFlagByName('value');
+                    dataCell.initializeCellValueFromData(cell, rowIndex, colIndex);
+                    model.dataItems.push(dataCell);
+                });
+            }
+        });
+    }
 
     createContributionAnchors(model) {
         // go through the input data and create the anchors for the contributions (add AnchorId)
