@@ -19,7 +19,6 @@ class EditResearchProblem extends Component {
         const id = this.props.id;
         const organizationId = this.props.organizationId;
         const label = this.state.label;
-        console.log(label.id);
         if (label.id) {
             await this.createObservatoryResearchProblem(id, label.id, organizationId);
         }
