@@ -50,8 +50,8 @@ export const getContributorsByResourceId = id => {
     });
 };
 
-export const addResourceToObservatory = (observatoryId, organizationId, id) => {
-    return submitPutRequest(`${resourcesUrl}${id}/addObservatory`, { 'Content-Type': 'application/json' }, { observatoryId, organizationId });
+export const addResourceToObservatory = (observatory_id, organization_id, id) => {
+    return submitPutRequest(`${resourcesUrl}${id}/observatory`, { 'Content-Type': 'application/json' }, { observatory_id, organization_id });
 };
 
 export const addObservatoryResearchProblem = (observatoryId, organizationId, label) => {

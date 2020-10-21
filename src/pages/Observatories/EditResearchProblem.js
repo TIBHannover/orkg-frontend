@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Label, FormGroup } from 'reactstrap';
-import { addResourceToObservatory, addObservatoryResearchProblem } from 'services/backend/resources';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, FormGroup } from 'reactstrap';
+import { addResourceToObservatory } from 'services/backend/resources';
 import { deleteStatementById } from 'services/backend/statements';
 import { toast } from 'react-toastify';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
+import { resourcesUrl } from 'services/backend/resources';
 import PropTypes from 'prop-types';
 import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProblemInput';
 
@@ -10,47 +12,39 @@ class EditResearchProblem extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            label: [],
-            isLoadingName: false
+            label: '',
+            isLoadingProblem: false
         };
     }
 
-    componentDidUpdate = prevProps => {};
-
-    handleResearchProblemsChange = async (problemsArray, a) => {
+    handleSubmit = async e => {
         const id = this.props.id;
         const organizationId = this.props.organizationId;
-        if (a.action === 'select-option') {
-            this.setState({ label: problemsArray });
-            await this.addObservatoryResearchProblem(id, a.option.id, organizationId);
-
-            toast.success('Research problem added successfully');
-        } else if (a.action === 'create-option') {
-            await addObservatoryResearchProblem(id, organizationId, a.createdOptionLabel).then(a => {
-                this.setState({ label: a });
-                toast.success('Research problem added successfully');
-            });
-        } else if (a.action === 'remove-value') {
-            await deleteStatementById(a.removedValue.statementId);
-            toast.success('Research problem deleted successfully');
+        const label = this.state.label;
+        console.log(label.id);
+        if (label.id) {
+            await this.createObservatoryResearchProblem(id, label.id, organizationId);
         }
-        this.props.updateObservatoryResearchProblem();
-        this.props.toggle();
     };
 
-    addObservatoryResearchProblem = async (id, name, organizationId) => {
-        this.setState({ isLoadingName: true });
+    createObservatoryResearchProblem = async (id, name, organizationId) => {
+        this.setState({ isLoadingProblem: true });
         try {
-            await addResourceToObservatory(id, organizationId, name);
-            this.setState({ isLoadingName: false });
+            await addResourceToObservatory(id, organizationId, name).then(a => {
+                toast.success('Research problem added successfully');
+                this.props.updateObservatoryResearchProblem();
+                this.props.toggle();
+            });
+            this.setState({ isLoadingProblem: false });
         } catch (error) {
-            this.setState({ isLoadingName: false });
+            this.setState({ isLoadingProblem: false });
             console.error(error);
             toast.error(`Error updating an observatory ${error.message}`);
         }
     };
 
     render() {
+        const isLoading = this.state.isLoadingProblem;
         return (
             <>
                 <Modal size="lg" isOpen={this.props.showDialog} toggle={this.props.toggle}>
@@ -59,12 +53,28 @@ class EditResearchProblem extends Component {
                         <>
                             {' '}
                             <FormGroup>
-                                <Label for="ResearchProblem">Title</Label>
-                                <ResearchProblemInput handler={this.handleResearchProblemsChange} value={this.state.label} />
+                                <Label for="ResearchProblem">Research Problem</Label>
+                                <AutoComplete
+                                    requestUrl={resourcesUrl}
+                                    optionsClass="Problem"
+                                    placeholder="Research Problem"
+                                    onItemSelected={async rf => {
+                                        this.setState({ label: { ...rf, label: rf.value } });
+                                    }}
+                                    value={this.state.label || ''}
+                                    allowCreate={false}
+                                    autoLoadOption={true}
+                                />
                             </FormGroup>
                         </>
                     </ModalBody>
-                    <ModalFooter />
+                    <ModalFooter>
+                        <div className="text-align-center mt-2">
+                            <Button color="primary" disabled={isLoading} onClick={this.handleSubmit}>
+                                {isLoading && <span className="fa fa-spinner fa-spin" />} Save
+                            </Button>
+                        </div>
+                    </ModalFooter>
                 </Modal>
             </>
         );

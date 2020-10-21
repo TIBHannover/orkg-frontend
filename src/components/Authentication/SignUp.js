@@ -62,7 +62,8 @@ class SignUp extends Component {
                                 id: userData.id,
                                 token: userToken,
                                 email: userData.email,
-                                tokenExpire: token_expires_in
+                                tokenExpire: token_expires_in,
+                                role: userData.roles[0].name
                             }
                         });
                         this.props.toggleAuthDialog();

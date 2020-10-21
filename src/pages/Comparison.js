@@ -164,7 +164,6 @@ function Comparison(props) {
         const value = event.target.value;
         if (value !== '') {
             const Ids = await event.target.value.split(';');
-            console.log(Ids);
             setOrganizationId(Ids[0]);
             setObservatoryId(Ids[1]);
         }
@@ -172,7 +171,6 @@ function Comparison(props) {
 
     const handleSubmit = async e => {
         e.preventDefault();
-        console.log(organizationId + '-' + observatoryId);
 
         if (organizationId.length > 0 && observatoryId.length > 0) {
             await addResourceToObservatory(observatoryId, organizationId, metaData?.id).then(async response => {
