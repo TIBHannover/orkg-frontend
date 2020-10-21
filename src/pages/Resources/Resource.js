@@ -142,7 +142,7 @@ function Resource(props) {
                                             </RequireAuthentication>
                                         ) : (
                                             <Button className="float-right" color="darkblue" size="sm" disabled={true}>
-                                                <Tippy content="This resource can not be edited because it has a published DOI.">
+                                                <Tippy hideOnClick={false} content="This resource can not be edited because it has a published DOI.">
                                                     <span>Edit</span>
                                                 </Tippy>
                                             </Button>
