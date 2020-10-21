@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Container, Alert, UncontrolledAlert } from 'reactstrap';
+import { Container, Alert, UncontrolledAlert, Button, InputGroupAddon, InputGroup, Input } from 'reactstrap';
 import { getStatementsBySubject, createResourceStatement, deleteStatementById } from 'services/backend/statements';
 import { getUserInformationById } from 'services/backend/users';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
-import { getResource, updateResource, createResource, getContributorsByResourceId } from 'services/backend/resources';
+import { getAllObservatories } from 'services/backend/observatories';
+import { getAllOrganizations } from 'services/backend/organizations';
+import { getResource, updateResource, createResource, getContributorsByResourceId, addResourceToObservatory } from 'services/backend/resources';
 import { connect } from 'react-redux';
 import NotFound from 'pages/NotFound';
 import ContentLoader from 'react-content-loader';
@@ -24,6 +26,7 @@ import styled from 'styled-components';
 import SharePaper from 'components/ViewPaper/SharePaper';
 import { getPaperData_ViewPaper } from 'utils';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { isEmpty } from 'lodash';
 
 export const EditModeHeader = styled(Container)`
     background-color: #80869b !important;
@@ -56,11 +59,16 @@ class ViewPaper extends Component {
         showHeaderBar: false,
         isLoadingObservatory: false,
         failedLoading: false,
-        observatories: []
+        observatories: [],
+        organizationId: '',
+        observatoryId: ''
     };
 
     componentDidMount() {
         this.loadPaperData();
+        if (isEmpty(this.state.observatoryInfo) && this.requireAuthentication()) {
+            this.loadObservatories();
+        }
     }
 
     componentDidUpdate = prevProps => {
@@ -83,6 +91,63 @@ class ViewPaper extends Component {
         this.setState({
             showHeaderBar: !isVisible
         });
+    };
+
+    loadObservatories = () => {
+        this.setState({ isLoadingObservatory: true });
+        const observatories = getAllObservatories();
+        const organizations = getAllOrganizations();
+
+        Promise.all([observatories, organizations])
+            .then(async data => {
+                const items = [];
+                items.push(<option value="">Select an observatory</option>);
+                for (const observatory of data[0]) {
+                    for (let i = 0; i < observatory.organization_ids.length; i++) {
+                        const org = data[1].find(o1 => o1.id === observatory.organization_ids[i]);
+                        items.push(
+                            <option value={org.id + ';' + observatory.id}>
+                                {'Organization: ' + org.name + ' , Observatory: ' + observatory.name}
+                            </option>
+                        );
+                    }
+                }
+                this.setState({
+                    observatories: items,
+                    isLoadingObservatory: false
+                });
+            })
+            .catch(e => {
+                this.setState({
+                    isLoadingObservatory: false
+                });
+            });
+    };
+
+    requireAuthentication = () => {
+        if (this.props.user && this.props.user.role === 'ROLE_ADMIN') {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    handleSubmit = async e => {
+        e.preventDefault();
+
+        if (this.state.organizationId.length > 0 && this.state.observatoryId.length > 0) {
+            await addResourceToObservatory(this.state.observatoryId, this.state.organizationId, this.props.match.params.resourceId).then(l => {
+                toast.success(`Observatory added to paper successfully`);
+                this.getObservatoryInfo();
+            });
+        } else {
+            toast.error(`Please select an observatory`);
+        }
+    };
+
+    handleInputChange = async event => {
+        const Ids = await event.target.value.split(';');
+        this.setState({ organizationId: Ids[0], observatoryId: Ids[1] });
     };
 
     loadPaperData = () => {
@@ -374,7 +439,6 @@ class ViewPaper extends Component {
                                         toggleDeleteContribution={this.toggleDeleteContribution}
                                         observatoryInfo={this.state.observatoryInfo}
                                         contributors={this.state.contributors}
-                                        getObservatoryInfo={this.getObservatoryInfo}
                                     />
 
                                     <ComparisonPopup />
@@ -386,6 +450,30 @@ class ViewPaper extends Component {
                                     <Alert color="danger">Failed to load contributions.</Alert>
                                 </>
                             )}
+                            <>
+                                {this.requireAuthentication() && this.state.observatories.length > 0 && isEmpty(this.state.observatoryInfo) && (
+                                    <>
+                                        {' '}
+                                        <br />
+                                        <Title style={{ marginTop: 0 }}>Add to an Observatory</Title>
+                                        <InputGroup style={{ width: '75%' }}>
+                                            <Input
+                                                type="select"
+                                                onChange={this.handleInputChange}
+                                                name="observatoryInfo"
+                                                aria-label="Select an observatory"
+                                            >
+                                                <>{this.state.observatories}</>
+                                            </Input>
+                                            <InputGroupAddon addonType="append">
+                                                <Button variant="outline-secondary" onClick={this.handleSubmit}>
+                                                    Add
+                                                </Button>
+                                            </InputGroupAddon>
+                                        </InputGroup>
+                                    </>
+                                )}
+                            </>
                         </Container>
                     </>
                 )}
@@ -413,11 +501,13 @@ ViewPaper.propTypes = {
     location: PropTypes.object.isRequired,
     viewPaper: PropTypes.object.isRequired,
     loadPaper: PropTypes.func.isRequired,
-    setPaperAuthors: PropTypes.func.isRequired
+    setPaperAuthors: PropTypes.func.isRequired,
+    user: PropTypes.object
 };
 
 const mapStateToProps = state => ({
-    viewPaper: state.viewPaper
+    viewPaper: state.viewPaper,
+    user: state.auth.user
 });
 
 const mapDispatchToProps = dispatch => ({
