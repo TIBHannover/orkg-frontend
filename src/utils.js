@@ -149,7 +149,7 @@ export const get_error_message = (errors, field = null) => {
         return null;
     }
     if (field === null) {
-        return Boolean(errors.message) ? capitalize(errors.message) : null;
+        return Boolean(errors.message) ? errors.message : null;
     }
     const field_error = errors.errors ? errors.errors.find(e => e.field === field) : null;
     return field_error ? capitalize(field_error.message) : null;
