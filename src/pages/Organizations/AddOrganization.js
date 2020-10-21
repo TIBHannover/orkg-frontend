@@ -41,7 +41,6 @@ class AddOrganization extends Component {
                     try {
                         const responseJson = await createOrganization(value, image[0], this.props.user.id, url);
                         const organizationId = responseJson.id;
-                        await updateUserRole();
                         this.navigateToOrganization(organizationId);
                     } catch (error) {
                         this.setState({ editorState: 'edit' });
