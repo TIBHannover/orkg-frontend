@@ -154,6 +154,7 @@ function Resource(props) {
                 return DEDICATED_PAGE_LINKS[_class.id];
             }
         }
+        return;
     }, [classes]);
 
     const dedicatedLink = getDedicatedLink();
