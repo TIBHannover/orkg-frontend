@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, FormGroup } from 'reactstrap';
 import { addResourceToObservatory } from 'services/backend/resources';
-import { deleteStatementById } from 'services/backend/statements';
 import { toast } from 'react-toastify';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { resourcesUrl } from 'services/backend/resources';
 import PropTypes from 'prop-types';
-import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProblemInput';
 
 class EditResearchProblem extends Component {
     constructor(props) {
