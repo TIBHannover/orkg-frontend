@@ -300,6 +300,7 @@ class ViewPaper extends Component {
                                 paperLink={paperLink}
                                 editMode={this.state.editMode}
                                 toggle={this.toggle}
+                                id={this.props.match.params.resourceId}
                                 paperTitle={this.props.viewPaper.title}
                             />
                         )}
