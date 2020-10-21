@@ -92,7 +92,7 @@ const ObjectStatements = props => {
                                 ))}
                                 {!isLoading && hasNextPage && (
                                     <tr style={{ cursor: 'pointer' }} className="text-center" onClick={handleLoadMore}>
-                                        <td colspan="3">View more object statements</td>
+                                        <td colSpan="3">View more object statements</td>
                                     </tr>
                                 )}
                             </tbody>

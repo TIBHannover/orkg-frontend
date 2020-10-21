@@ -30,10 +30,11 @@ function ResearchProblem(props) {
     const prevEditMode = usePrevious({ editMode });
     const [contributions, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchProblemPapers();
     const [researchFields, isLoadingResearchFields] = useResearchProblemResearchFields();
+    const { researchProblemId } = props.match.params;
 
     useEffect(() => {
         if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
-            loadResearchProblemData(props.match.params.researchProblemId);
+            loadResearchProblemData(researchProblemId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editMode]);
@@ -52,13 +53,13 @@ function ResearchProblem(props) {
                         <StatementBrowserDialog
                             show={editMode}
                             toggleModal={() => setEditMode(v => !v)}
-                            resourceId={props.match.params.researchProblemId}
+                            resourceId={researchProblemId}
                             resourceLabel={researchProblemData.label}
                             enableEdit={true}
                             syncBackend={true}
                         />
                     )}
-                    <ResearchProblemHeaderBar toggleEdit={() => setEditMode(v => !v)} title={researchProblemData.label} />
+                    <ResearchProblemHeaderBar toggleEdit={() => setEditMode(v => !v)} title={researchProblemData.label} id={researchProblemId} />
                     <Container className="p-0">
                         <div className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
                             <h3>{researchProblemData && researchProblemData.label}</h3>
