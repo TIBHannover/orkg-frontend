@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { FormGroup, Label, FormText, Input, CustomInput } from 'reactstrap';
+import { FormGroup, Label, FormText, Input } from 'reactstrap';
 import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
 import { setLabel, setPredicate, setClass, setResearchFields, setResearchProblems, setIsStrictTemplate } from 'actions/addTemplate';
@@ -74,9 +74,6 @@ function GeneralSettings(props) {
         props.setIsClassDescription(event.target.checked);
     };
     */
-    const handleSwitchIsStrictTemplate = event => {
-        props.setIsStrictTemplate(event.target.checked);
-    };
 
     return (
         <div className="p-4">
@@ -84,37 +81,9 @@ function GeneralSettings(props) {
                 <Label>Name of template</Label>
                 <Input innerRef={inputRef} value={props.label} onChange={handleChangeLabel} disabled={!props.editMode} />
             </FormGroup>
-            <FormGroup>
-                <div>
-                    <CustomInput
-                        onChange={handleSwitchIsStrictTemplate}
-                        checked={props.isStrictTemplate}
-                        id="switchIsStrictTemplate"
-                        type="switch"
-                        name="customSwitch"
-                        label="This template is strict (users cannot add additional properties themselves)"
-                        disabled={!props.editMode}
-                    />
-                </div>
-            </FormGroup>
-            {/*
-            <FormGroup>
-                <div>
-                    <CustomInput
-                        onChange={handleSwitchIsDescription}
-                        checked={props.isClassDescription}
-                        id="switchIsClassDescription"
-                        type="switch"
-                        name="customSwitch"
-                        label="This template is a class description"
-                        disabled={!props.editMode}
-                    />
-                </div>
-            </FormGroup>
-             */}
 
             <FormGroup className="mb-4">
-                <Label>Class</Label>
+                <Label>Target class</Label>
                 <AutoComplete
                     requestUrl={classesUrl}
                     placeholder={props.editMode ? 'Select or type to enter a class' : 'No Classes'}
@@ -146,7 +115,7 @@ function GeneralSettings(props) {
                         <Label>Property</Label>
                         <AutoComplete
                             requestUrl={predicatesUrl}
-                            placeholder={props.editMode ? 'Select or type to enter a property' : 'No Properties'}
+                            placeholder={props.editMode ? 'Select or type to enter a property' : 'No Property'}
                             onChange={handlePropertySelect}
                             value={props.predicate}
                             autoLoadOption={true}

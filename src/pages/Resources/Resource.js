@@ -3,6 +3,7 @@ import { Container, Button, FormGroup, Label, FormText, ButtonGroup } from 'reac
 import { classesUrl, getClassById } from 'services/backend/classes';
 import { updateResourceClasses as updateResourceClassesNetwork } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
+import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
@@ -15,16 +16,17 @@ import NotFound from 'pages/NotFound';
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
+import Tippy from '@tippy.js/react';
 import ROUTES from 'constants/routes.js';
 import { connect } from 'react-redux';
 import { resetStatementBrowser } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Confirm from 'components/ConfirmationModal/ConfirmationModal';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
-import { CLASSES } from 'constants/graphSettings';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -75,6 +77,7 @@ function Resource(props) {
     const [classes, setClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
+    const [canEdit, setCanEdit] = useState(false);
     const classesAutocompleteRef = useRef(null);
 
     useEffect(() => {
@@ -84,12 +87,28 @@ function Resource(props) {
                 .then(responseJson => {
                     document.title = `${responseJson.label} - Resource - ORKG`;
                     const classesCalls = responseJson.classes.map(classResource => getClassById(classResource));
-                    Promise.all(classesCalls).then(classes => {
-                        classes = orderBy(classes, [classLabel => classLabel.label.toLowerCase()], ['asc']);
-                        setLabel(responseJson.label);
-                        setClasses(classes);
-                        setIsLoading(false);
-                    });
+                    Promise.all(classesCalls)
+                        .then(classes => {
+                            classes = orderBy(classes, [classLabel => classLabel.label.toLowerCase()], ['asc']);
+                            setLabel(responseJson.label);
+                            setClasses(classes);
+                        })
+                        .then(() => {
+                            if (responseJson.classes.includes(CLASSES.COMPARISON)) {
+                                getStatementsBySubjectAndPredicate({ subjectId: props.match.params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
+                                    if (st.length > 0) {
+                                        setIsLoading(false);
+                                        setCanEdit(false);
+                                    } else {
+                                        setIsLoading(false);
+                                        setCanEdit(true);
+                                    }
+                                });
+                            } else {
+                                setIsLoading(false);
+                                setCanEdit(true);
+                            }
+                        });
                 })
                 .catch(err => {
                     console.error(err);
@@ -159,25 +178,33 @@ function Resource(props) {
                                     <Icon icon={faExternalLinkAlt} className="mr-1" /> {dedicatedLink.label} view
                                 </Button>
                             )}
-                            {!editMode ? (
-                                <RequireAuthentication
-                                    component={Button}
-                                    className="float-right"
-                                    color="darkblue"
-                                    size="sm"
-                                    onClick={() => setEditMode(v => !v)}
-                                >
-                                    <Icon icon={faPen} /> Edit
-                                </RequireAuthentication>
+                            {canEdit ? (
+                                !editMode ? (
+                                    <RequireAuthentication
+                                        component={Button}
+                                        className="float-right"
+                                        color="darkblue"
+                                        size="sm"
+                                        onClick={() => setEditMode(v => !v)}
+                                    >
+                                        <Icon icon={faPen} /> Edit
+                                    </RequireAuthentication>
+                                ) : (
+                                    <Button className="flex-shrink-0" color="darkblueDarker" size="sm" onClick={() => setEditMode(v => !v)}>
+                                        <Icon icon={faTimes} /> Stop editing
+                                    </Button>
+                                )
                             ) : (
-                                <Button className="flex-shrink-0" color="darkblueDarker" size="sm" onClick={() => setEditMode(v => !v)}>
-                                    <Icon icon={faTimes} /> Stop editing
+                                <Button className="float-right" color="darkblue" size="sm" disabled={true}>
+                                    <Tippy content="This resource can not be edited because it has a published DOI.">
+                                        <span>Edit</span>
+                                    </Tippy>
                                 </Button>
                             )}
                         </ButtonGroup>
                     </Container>
 
-                    {editMode && (
+                    {editMode && canEdit && (
                         <EditModeHeader className="box rounded-top">
                             <Title>
                                 Edit mode <span className="pl-2">Every change you make is automatically saved</span>
@@ -186,7 +213,7 @@ function Resource(props) {
                     )}
                     <Container className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
                         <div className="mb-2">
-                            {!editMode ? (
+                            {!editMode || !canEdit ? (
                                 <div className="pb-2 mb-3">
                                     <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                         {label || (
@@ -243,7 +270,7 @@ function Resource(props) {
                         <div className="clearfix">
                             <StatementBrowser
                                 key={`SB${classes.map(c => c.id).join(',')}`}
-                                enableEdit={editMode}
+                                enableEdit={editMode && canEdit}
                                 syncBackend={editMode}
                                 openExistingResourcesInDialog={false}
                                 initialResourceId={props.match.params.id}

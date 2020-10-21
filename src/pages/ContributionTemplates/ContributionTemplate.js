@@ -21,14 +21,16 @@ import ComponentsTab from 'components/ContributionTemplates/Tabs/ComponentsTab/C
 import Unauthorized from 'pages/Unauthorized';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import Format from 'components/ContributionTemplates/Tabs/Format/Format';
+import HelpModal from 'components/ContributionTemplates/HelpModal';
 import { StyledContainer } from 'components/ContributionTemplates/styled';
 import { setEditMode, loadTemplate, saveTemplate, setIsLoading, doneLoading, setClass } from 'actions/addTemplate';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faSpinner, faEllipsisV, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faSpinner, faQuestionCircle, faEllipsisV, faSave } from '@fortawesome/free-solid-svg-icons';
 import { getParamFromQueryString } from 'utils';
 import styled, { withTheme } from 'styled-components';
 import VisibilitySensor from 'react-visibility-sensor';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
+import Tippy from '@tippy.js/react';
 import { getClassById } from 'services/backend/classes';
 import classnames from 'classnames';
 import { compose } from 'redux';
@@ -55,7 +57,8 @@ class ContributionTemplate extends Component {
             activeTab: '1',
             error: null,
             showHeaderBar: false,
-            menuOpen: false
+            menuOpen: false,
+            helpModalOpen: false
         };
     }
 
@@ -98,6 +101,12 @@ class ContributionTemplate extends Component {
         });
     };
 
+    toggle = type => {
+        this.setState(prevState => ({
+            [type]: !prevState[type]
+        }));
+    };
+
     render() {
         if (!this.props.user && !this.props.match.params.id) {
             return <Unauthorized />;
@@ -106,9 +115,24 @@ class ContributionTemplate extends Component {
         return (
             <>
                 <Container className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">{!this.props.match.params.id ? 'Create new template' : 'Template'}</h1>
-
-                    <ButtonGroup>
+                    <div className="mt-4 mb-4 d-flex flex-grow-1">
+                        <h1 className="h4 m-0">{!this.props.match.params.id ? 'Create new template' : 'Template'}</h1>
+                        <Tippy content="Open help popup">
+                            <span className="ml-3">
+                                <Button
+                                    color="link"
+                                    outline
+                                    size="sm"
+                                    style={{ fontSize: 22, lineHeight: 1 }}
+                                    className="p-0"
+                                    onClick={() => this.toggle('helpModalOpen')}
+                                >
+                                    <Icon icon={faQuestionCircle} />
+                                </Button>
+                            </span>
+                        </Tippy>
+                    </div>
+                    <ButtonGroup className="flex-shrink-0">
                         {!this.props.editMode && !this.props.isSaving ? (
                             <RequireAuthentication component={Button} color="darkblue" size="sm" onClick={() => this.props.setEditMode(true)}>
                                 <Icon icon={faPen} /> Edit
@@ -122,8 +146,8 @@ class ContributionTemplate extends Component {
                                 onClick={() => this.props.saveTemplate(this.props.template)}
                             >
                                 {this.props.isSaving && <Icon icon={faSpinner} spin />}
-                                {this.props.editMode && <Icon icon={faTimes} />}
-                                {!this.props.isSaving ? ' Stop editing' : ' Saving'}
+                                {this.props.editMode && <Icon icon={faSave} />}
+                                {!this.props.isSaving ? ' Save' : ' Saving'}
                             </Button>
                         )}
                         <ButtonDropdown
@@ -226,6 +250,7 @@ class ContributionTemplate extends Component {
                             </TabContent>
                         </div>
                     </div>
+                    <HelpModal isOpen={this.state.helpModalOpen} toggle={() => this.toggle('helpModalOpen')} />
                 </StyledContainer>
             </>
         );

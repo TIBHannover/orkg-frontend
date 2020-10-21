@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faSpinner, faSave } from '@fortawesome/free-solid-svg-icons';
 import { Title } from 'pages/ViewPaper';
 import { CSSTransition } from 'react-transition-group';
 
@@ -54,6 +54,7 @@ function TemplateEditorHeaderBar(props) {
                                 onClick={() => props.saveTemplate(props.template)}
                             >
                                 {props.isSaving && <Icon icon={faSpinner} spin />}
+                                {props.editMode && <Icon icon={faSave} />}
                                 {!props.isSaving ? ' Save' : ' Saving'}
                             </Button>
                         </ButtonGroup>
