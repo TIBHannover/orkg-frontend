@@ -141,11 +141,13 @@ function Resource(props) {
                                                 <Icon icon={faPen} /> Edit
                                             </RequireAuthentication>
                                         ) : (
-                                            <Button className="float-right" color="darkblue" size="sm" disabled={true}>
-                                                <Tippy hideOnClick={false} content="This resource can not be edited because it has a published DOI.">
-                                                    <span>Edit</span>
-                                                </Tippy>
-                                            </Button>
+                                            <Tippy hideOnClick={false} content="This resource can not be edited because it has a published DOI.">
+                                                <div className="float-right">
+                                                    <Button color="darkblue" size="sm" disabled={true}>
+                                                        <Icon icon={faPen} /> <span>Edit</span>
+                                                    </Button>
+                                                </div>
+                                            </Tippy>
                                         )}
                                     </h3>
                                     {classes.length > 0 && (
