@@ -16,7 +16,7 @@ import {
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
-import { remove, flattenDepth } from 'lodash';
+import { flattenDepth } from 'lodash';
 import arrayMove from 'array-move';
 import ROUTES from 'constants/routes.js';
 import queryString from 'query-string';
@@ -302,14 +302,13 @@ function useComparison() {
         getComparison({ contributionIds: contributionsList, type: comparisonType, response_hash: responseHash, save_response: false })
             .then(comparisonData => {
                 // mocking function to allow for deletion of contributions via the url
-                //const contributions = [];
-                //for (let i = 0; i < comparisonData.contributions.length; i++) {
-                //    const contribution = comparisonData.contributions[i];
-
-                //    if (contributionsList.includes(contribution.id)) {
-                //        contributions.push(contribution);
-                //    }
-                //}
+                comparisonData.contributions.forEach((contribution, index) => {
+                    if (!contributionsList.includes(contribution.id)) {
+                        comparisonData.contributions[index].active = false;
+                    } else {
+                        comparisonData.contributions[index].active = true;
+                    }
+                });
 
                 comparisonData.properties = extendAndSortProperties(comparisonData);
 
@@ -360,12 +359,11 @@ function useComparison() {
      * @param {String} contributionId Contribution id to remove
      */
     const removeContribution = contributionId => {
-        setResponseHash(null);
-        setContributionsList(
-            remove(contributionsList, function(n) {
-                return n !== contributionId;
-            })
-        );
+        const newContributions = contributions.map(contribution => {
+            return contribution.id === contributionId ? { ...contribution, active: !contribution.active } : contribution;
+        });
+        setContributionsList(activatedContributionsToList(newContributions));
+        setContributions(newContributions);
         setUrlNeedsToUpdate(true);
     };
 
@@ -400,6 +398,19 @@ function useComparison() {
             }
         });
         return activeProperties;
+    }, []);
+
+    /**
+     * Get ordered list of selected contributions
+     */
+    const activatedContributionsToList = useCallback(contributionsData => {
+        const activeContributions = [];
+        contributionsData.forEach((contribution, index) => {
+            if (contribution.active) {
+                activeContributions.push(contribution.id);
+            }
+        });
+        return activeContributions;
     }, []);
 
     /**
@@ -440,19 +451,21 @@ function useComparison() {
 
         for (let i = 0; i < contributions.length; i++) {
             const contribution = contributions[i];
-            const row = [contribution.title];
+            if (contribution.active) {
+                const row = [contribution.title];
 
-            for (const property of properties) {
-                if (property.active) {
-                    let value = '';
-                    if (data[property.id]) {
-                        // separate labels with comma
-                        value = data[property.id][i].map(entry => entry.label).join(', ');
-                        row.push(value);
+                for (const property of properties) {
+                    if (property.active) {
+                        let value = '';
+                        if (data[property.id]) {
+                            // separate labels with comma
+                            value = data[property.id][i].map(entry => entry.label).join(', ');
+                            row.push(value);
+                        }
                     }
                 }
+                rows.push(row);
             }
-            rows.push(row);
         }
         setMatrixData([header, ...rows]);
     };
@@ -479,7 +492,7 @@ function useComparison() {
      *  2/ Comparison type changed
      */
     useEffect(() => {
-        if (contributionsList.length > 0) {
+        if (contributionsList.length > 0 && !contributionsList.every(id => contributions.map(c => c.id).includes(id))) {
             getComparisonResult();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

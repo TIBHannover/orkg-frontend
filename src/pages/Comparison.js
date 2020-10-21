@@ -425,7 +425,7 @@ function Comparison(props) {
 
             <ExportToLatex
                 data={matrixData}
-                contributions={contributions}
+                contributions={contributions.filter(c => c.active)}
                 properties={properties}
                 showDialog={showLatexDialog}
                 toggle={() => setShowLatexDialog(v => !v)}
