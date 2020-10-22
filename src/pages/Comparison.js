@@ -1,17 +1,5 @@
 import React, { useState } from 'react';
-import {
-    Alert,
-    Dropdown,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Button,
-    ButtonGroup,
-    Badge,
-    InputGroupAddon,
-    InputGroup,
-    Input
-} from 'reactstrap';
+import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge, InputGroupAddon, InputGroup } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faPlus, faLightbulb, faBezierCurve, faHistory, faWindowMaximize } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
@@ -48,6 +36,7 @@ import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
 import styled from 'styled-components';
 import env from '@beam-australia/react-env';
+import AutoCompleteObservatory from 'components/AutocompleteObservatory/AutocompleteObservatory';
 
 const Title = styled.div`
     font-size: 18px;
@@ -100,8 +89,7 @@ function Comparison(props) {
         setShortLink,
         setAuthors,
         loadCreatedBy,
-        loadProvenanceInfos,
-        observatories
+        loadProvenanceInfos
     ] = useComparison({});
 
     const [cookies, setCookie] = useCookies();
@@ -161,9 +149,9 @@ function Comparison(props) {
     };
 
     const handleInputChange = async event => {
-        const value = event.target.value;
+        const value = event.value;
         if (value !== '') {
-            const Ids = await event.target.value.split(';');
+            const Ids = await value.split(';');
             setOrganizationId(Ids[0]);
             setObservatoryId(Ids[1]);
         }
@@ -433,29 +421,13 @@ function Comparison(props) {
                     )}
                 </div>
 
-                {requireAuthentication() && observatories && isEmpty(provenance) && (
+                {requireAuthentication() && isEmpty(provenance) && (
                     <>
                         {' '}
                         <br />
-                        <Title style={{ marginTop: 0 }}>Add to an Observatory</Title>
-                        <InputGroup style={{ width: '75%' }}>
-                            <Input type="select" onChange={handleInputChange} name="observatoryInfo" aria-label="Select an observatory">
-                                <>
-                                    {observatories.map((o, key) => {
-                                        return (
-                                            <>
-                                                {key === 0 ? (
-                                                    <option value="" />
-                                                ) : (
-                                                    <option value={o.organization_id + ';' + o.observatory_id}>
-                                                        {'Organization: ' + o.organization_name + ' , Observatory: ' + o.observatory_name}
-                                                    </option>
-                                                )}
-                                            </>
-                                        );
-                                    })}
-                                </>
-                            </Input>
+                        <Title style={{ marginLeft: '10px' }}>Add to an Observatory</Title>
+                        <InputGroup>
+                            <AutoCompleteObservatory onChange={handleInputChange} />
                             <InputGroupAddon addonType="append">
                                 <Button variant="outline-secondary" onClick={handleSubmit}>
                                     Add

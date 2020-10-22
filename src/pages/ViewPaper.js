@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { Container, Alert, UncontrolledAlert, Button, InputGroupAddon, InputGroup, Input } from 'reactstrap';
+import { Container, Alert, UncontrolledAlert, Button, InputGroupAddon, InputGroup } from 'reactstrap';
 import { getStatementsBySubject, createResourceStatement, deleteStatementById } from 'services/backend/statements';
 import { getUserInformationById } from 'services/backend/users';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
-import { getAllObservatories } from 'services/backend/observatories';
-import { getAllOrganizations } from 'services/backend/organizations';
 import { getResource, updateResource, createResource, getContributorsByResourceId, addResourceToObservatory } from 'services/backend/resources';
 import { connect } from 'react-redux';
 import NotFound from 'pages/NotFound';
@@ -27,6 +25,7 @@ import SharePaper from 'components/ViewPaper/SharePaper';
 import { getPaperData_ViewPaper } from 'utils';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 import { isEmpty } from 'lodash';
+import AutoCompleteObservatory from 'components/AutocompleteObservatory/AutocompleteObservatory';
 
 export const EditModeHeader = styled(Container)`
     background-color: #80869b !important;
@@ -66,9 +65,6 @@ class ViewPaper extends Component {
 
     componentDidMount() {
         this.loadPaperData();
-        if (isEmpty(this.state.observatoryInfo) && this.requireAuthentication()) {
-            this.loadObservatories();
-        }
     }
 
     componentDidUpdate = prevProps => {
@@ -93,37 +89,6 @@ class ViewPaper extends Component {
         });
     };
 
-    loadObservatories = () => {
-        this.setState({ isLoadingObservatory: true });
-        const observatories = getAllObservatories();
-        const organizations = getAllOrganizations();
-
-        Promise.all([observatories, organizations])
-            .then(async data => {
-                const items = [];
-                items.push(<option value="">Select an observatory</option>);
-                for (const observatory of data[0]) {
-                    for (let i = 0; i < observatory.organization_ids.length; i++) {
-                        const org = data[1].find(o1 => o1.id === observatory.organization_ids[i]);
-                        items.push(
-                            <option value={org.id + ';' + observatory.id}>
-                                {'Organization: ' + org.name + ' , Observatory: ' + observatory.name}
-                            </option>
-                        );
-                    }
-                }
-                this.setState({
-                    observatories: items,
-                    isLoadingObservatory: false
-                });
-            })
-            .catch(e => {
-                this.setState({
-                    isLoadingObservatory: false
-                });
-            });
-    };
-
     requireAuthentication = () => {
         if (this.props.user && this.props.user.role === 'ROLE_ADMIN') {
             return true;
@@ -146,7 +111,7 @@ class ViewPaper extends Component {
     };
 
     handleInputChange = async event => {
-        const Ids = await event.target.value.split(';');
+        const Ids = await event.value.split(';');
         this.setState({ organizationId: Ids[0], observatoryId: Ids[1] });
     };
 
@@ -451,20 +416,13 @@ class ViewPaper extends Component {
                                 </>
                             )}
                             <>
-                                {this.requireAuthentication() && this.state.observatories.length > 0 && isEmpty(this.state.observatoryInfo) && (
+                                {this.requireAuthentication() && isEmpty(this.state.observatoryInfo) && (
                                     <>
                                         {' '}
                                         <br />
-                                        <Title style={{ marginTop: 0 }}>Add to an Observatory</Title>
-                                        <InputGroup style={{ width: '75%' }}>
-                                            <Input
-                                                type="select"
-                                                onChange={this.handleInputChange}
-                                                name="observatoryInfo"
-                                                aria-label="Select an observatory"
-                                            >
-                                                <>{this.state.observatories}</>
-                                            </Input>
+                                        <Title style={{ marginLeft: '10px' }}>Add to an Observatory</Title>
+                                        <InputGroup>
+                                            <AutoCompleteObservatory onChange={this.handleInputChange} />
                                             <InputGroupAddon addonType="append">
                                                 <Button variant="outline-secondary" onClick={this.handleSubmit}>
                                                     Add
