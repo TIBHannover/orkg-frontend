@@ -5,6 +5,22 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.20](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.19...V0.20) - 2020-10-21
+
+### Changes
+
+- fix: create env.js on build (run react-env on build) [`#401`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/401)
+- legal: new paragraph in terms of use [`#400`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/400)
+- feat: Disable edit button on resource page for published comparisons with DOI [`#397`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/397)
+- legal: Accept terms checkboxes during registration [`#398`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/398)
+- ux: Add template help modal [`#381`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/381)
+- Runtime env variables and Docker compose support [`#393`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/393)
+- legal: update terms of use [`#395`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/395)
+- refactor: introduce services folder for structuring network requests [`#385`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/385)
+- feat: Figures as links [`#384`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/384)
+- feat: add terms of use page [`#394`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/394)
+
+---
 ## [0.19](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.18.2...V0.19) - 2020-10-14
 
 ### Changes

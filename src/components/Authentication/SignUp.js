@@ -1,15 +1,17 @@
-import { Button, Form, FormGroup, Input, Label, Alert, FormFeedback } from 'reactstrap';
 import React, { Component } from 'react';
-
+import { Button, Form, FormGroup, Input, Label, Alert, FormFeedback, CustomInput } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { toggleAuthDialog, updateAuth } from 'actions/auth';
+import { Link } from 'react-router-dom';
 import { registerWithEmailAndPassword, signInWithEmailAndPassword, getUserInformation } from 'services/backend/users';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { get_error_message } from 'utils';
+import ROUTES from 'constants/routes';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
+import InfoSheet from 'assets/pdf/infosheet-data-protection.pdf';
 
 const cookies = new Cookies();
 
@@ -23,7 +25,9 @@ class SignUp extends Component {
             password: '',
             matching_password: '',
             loading: false,
-            errors: null
+            errors: null,
+            termsConditionIsChecked: false,
+            dataProtectionIsChecked: false
         };
     }
 
@@ -33,9 +37,15 @@ class SignUp extends Component {
         });
     };
 
+    handleCheckBoxChange = e => {
+        this.setState({
+            [e.target.id]: e.target.checked
+        });
+    };
+
     signUp = async e => {
         e.preventDefault();
-        const { email, password, matching_password, name } = this.state;
+        const { email, password, matching_password, name, termsConditionIsChecked, dataProtectionIsChecked } = this.state;
 
         this.setState({
             loading: true,
@@ -44,43 +54,47 @@ class SignUp extends Component {
 
         let userToken;
         let token_expires_in;
-        registerWithEmailAndPassword(email, password, matching_password, name)
-            .then(() => {
-                signInWithEmailAndPassword(email, password)
-                    .then(token => {
-                        userToken = token.access_token;
-                        cookies.set('token', token.access_token, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
-                        token_expires_in = new Date(Date.now() + token.expires_in * 1000);
-                        cookies.set('token_expires_in', token_expires_in.toUTCString(), { path: env('PUBLIC_URL'), maxAge: token.expires_in });
-                        return getUserInformation();
-                        //window.location.reload();
-                    })
-                    .then(userData => {
-                        this.props.updateAuth({
-                            user: {
-                                displayName: userData.display_name,
-                                id: userData.id,
-                                token: userToken,
-                                email: userData.email,
-                                tokenExpire: token_expires_in,
-                                isCurationAllowed: userData.is_curation_allowed
-                            }
+        if (termsConditionIsChecked && dataProtectionIsChecked) {
+            registerWithEmailAndPassword(email, password, matching_password, name)
+                .then(() => {
+                    signInWithEmailAndPassword(email, password)
+                        .then(token => {
+                            userToken = token.access_token;
+                            cookies.set('token', token.access_token, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
+                            token_expires_in = new Date(Date.now() + token.expires_in * 1000);
+                            cookies.set('token_expires_in', token_expires_in.toUTCString(), { path: env('PUBLIC_URL'), maxAge: token.expires_in });
+                            return getUserInformation();
+                            //window.location.reload();
+                        })
+                        .then(userData => {
+                            this.props.updateAuth({
+                                user: {
+                                    displayName: userData.display_name,
+                                    id: userData.id,
+                                    token: userToken,
+                                    email: userData.email,
+                                    tokenExpire: token_expires_in,
+                                    isCurationAllowed: userData.is_curation_allowed
+                                }
+                            });
+                            this.props.toggleAuthDialog();
+                            this.setState({ loading: false, errors: null });
+                        })
+                        .catch(e => {
+                            cookies.remove('token');
+                            cookies.remove('token_expires_in');
+                            this.setState({ loading: false, errors: { message: 'Something went wrong, please try again' } });
                         });
-                        this.props.toggleAuthDialog();
-                        this.setState({ loading: false, errors: null });
-                    })
-                    .catch(e => {
-                        cookies.remove('token');
-                        cookies.remove('token_expires_in');
-                        this.setState({ loading: false, errors: 'Something went wrong, please try again' });
+                })
+                .catch(e => {
+                    this.setState({
+                        loading: false,
+                        errors: e
                     });
-            })
-            .catch(e => {
-                this.setState({
-                    loading: false,
-                    errors: e
                 });
-            });
+        } else {
+            this.setState({ loading: false, errors: { message: 'The Special Conditions and the data processing by TIB have to be accepted.' } });
+        }
     };
 
     render() {
@@ -134,7 +148,7 @@ class SignUp extends Component {
                         )}
                     </FormGroup>
                     <FormGroup>
-                        <Label for="Password">Confirm Password</Label>
+                        <Label for="matching_password">Confirm Password</Label>
                         <Input
                             onChange={this.handleInputChange}
                             value={this.state.matching_password}
@@ -148,10 +162,51 @@ class SignUp extends Component {
                             <FormFeedback>{get_error_message(this.state.errors, 'matching_password')}</FormFeedback>
                         )}
                     </FormGroup>
-                    <p style={{ fontStyle: 'italic' }}>
-                        By signing up you agree that any data you add to the service has a CC0 (Public Domain) license
-                    </p>
-                    <Button type="submit" color="primary" className="mt-4 mb-2" block disabled={this.state.loading}>
+                    <FormGroup className="mb-0" style={{ fontSize: '90%' }}>
+                        <CustomInput
+                            type="checkbox"
+                            id="termsConditionIsChecked"
+                            onChange={this.handleCheckBoxChange}
+                            checked={this.state.termsConditionIsChecked}
+                            label={
+                                <>
+                                    I accept the{' '}
+                                    <Link to={ROUTES.TERMS_OF_USE} target="_blank">
+                                        Special Conditions ORKG
+                                    </Link>
+                                </>
+                            }
+                        />
+                    </FormGroup>
+                    <FormGroup style={{ fontSize: '90%' }}>
+                        <CustomInput
+                            type="checkbox"
+                            id="dataProtectionIsChecked"
+                            onChange={this.handleCheckBoxChange}
+                            checked={this.state.dataProtectionIsChecked}
+                            label={
+                                <>
+                                    I agree to the processing of my personal data provided here by Technische Informationsbibliothek (TIB). In
+                                    accordance with the{' '}
+                                    <Link to={ROUTES.DATA_PROTECTION} target="_blank">
+                                        data protection declaration
+                                    </Link>{' '}
+                                    as well as the{' '}
+                                    <a href={InfoSheet} target="_blank" rel="noopener noreferrer">
+                                        info sheet data protection
+                                    </a>
+                                    , the data is processed exclusively by TIB in order to provide services of our platform.
+                                </>
+                            }
+                        />
+                    </FormGroup>
+                    <Button
+                        type="submit"
+                        color="primary"
+                        className="mt-4 mb-2"
+                        block
+                        disabled={this.state.loading || !this.state.dataProtectionIsChecked || !this.state.termsConditionIsChecked}
+                    >
                         {!this.state.loading ? (
                             'Sign up'
                         ) : (

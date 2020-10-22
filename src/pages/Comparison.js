@@ -35,6 +35,8 @@ import { toast } from 'react-toastify';
 import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
 import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
+import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
 import AutoCompleteObservatory from 'components/AutocompleteObservatory/AutocompleteObservatory';
 
@@ -232,7 +234,7 @@ function Comparison(props) {
                                 <DropdownToggle color="darkblue" size="sm" className="rounded-right">
                                     <span className="mr-2">More</span> <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
-                                <DropdownMenu>
+                                <DropdownMenu right>
                                     <DropdownItem header>Customize</DropdownItem>
                                     <DropdownItem onClick={() => setShowPropertiesDialog(v => !v)}>Select properties</DropdownItem>
                                     <DropdownItem onClick={() => toggleTranspose(v => !v)}>Transpose table</DropdownItem>
@@ -297,6 +299,10 @@ function Comparison(props) {
                                             </DropdownItem>
                                         </>
                                     )}
+                                    <DropdownItem divider />
+                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: metaData?.id })}>
+                                        View resource
+                                    </DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </ButtonGroup>

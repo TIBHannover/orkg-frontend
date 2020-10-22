@@ -25,6 +25,7 @@ export default {
         GENERAL_DATA: '/add-paper'
     },
     VIEW_PAPER: '/paper/:resourceId/:contributionId?',
+    CONTRIBUTION: '/contribution/:id',
     COMPARISON_SHORTLINK: '/c/:shortCode',
     COMPARISON: '/comparison/:comparisonId?',
     PAPERS: '/papers',

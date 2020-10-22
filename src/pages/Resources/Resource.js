@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Container, Button, FormGroup, Label, FormText } from 'reactstrap';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Container, Button, FormGroup, Label, FormText, ButtonGroup } from 'reactstrap';
 import { classesUrl, getClassById } from 'services/backend/classes';
 import { updateResourceClasses as updateResourceClassesNetwork } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
+import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import { EditModeHeader, Title } from 'pages/ViewPaper';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
@@ -15,16 +16,60 @@ import NotFound from 'pages/NotFound';
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
+import Tippy from '@tippy.js/react';
 import ROUTES from 'constants/routes.js';
 import { connect } from 'react-redux';
 import { resetStatementBrowser } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { faExternalLinkAlt, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Confirm from 'components/ConfirmationModal/ConfirmationModal';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
 
+const DEDICATED_PAGE_LINKS = {
+    [CLASSES.PAPER]: {
+        label: 'Paper',
+        route: ROUTES.VIEW_PAPER,
+        routeParams: 'resourceId'
+    },
+    [CLASSES.PROBLEM]: {
+        label: 'Research problem',
+        route: ROUTES.RESEARCH_PROBLEM,
+        routeParams: 'researchProblemId'
+    },
+    [CLASSES.COMPARISON]: {
+        label: 'Comparison',
+        route: ROUTES.COMPARISON,
+        routeParams: 'comparisonId'
+    },
+    [CLASSES.AUTHOR]: {
+        label: 'Author',
+        route: ROUTES.AUTHOR_PAGE,
+        routeParams: 'authorId'
+    },
+    [CLASSES.RESEARCH_FIELD]: {
+        label: 'Research field',
+        route: ROUTES.RESEARCH_FIELD,
+        routeParams: 'researchFieldId'
+    },
+    [CLASSES.VENUE]: {
+        label: 'Venue',
+        route: ROUTES.VENUE_PAGE,
+        routeParams: 'venueId'
+    },
+    [CLASSES.CONTRIBUTION_TEMPLATE]: {
+        label: 'Template',
+        route: ROUTES.CONTRIBUTION_TEMPLATE,
+        routeParams: 'id'
+    },
+    [CLASSES.CONTRIBUTION]: {
+        label: 'Contribution',
+        route: ROUTES.CONTRIBUTION,
+        routeParams: 'id'
+    }
+};
 function Resource(props) {
     const location = useLocation();
     const [error, setError] = useState(null);
@@ -32,6 +77,7 @@ function Resource(props) {
     const [classes, setClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
+    const [canEdit, setCanEdit] = useState(false);
     const classesAutocompleteRef = useRef(null);
 
     useEffect(() => {
@@ -41,12 +87,28 @@ function Resource(props) {
                 .then(responseJson => {
                     document.title = `${responseJson.label} - Resource - ORKG`;
                     const classesCalls = responseJson.classes.map(classResource => getClassById(classResource));
-                    Promise.all(classesCalls).then(classes => {
-                        classes = orderBy(classes, [classLabel => classLabel.label.toLowerCase()], ['asc']);
-                        setLabel(responseJson.label);
-                        setClasses(classes);
-                        setIsLoading(false);
-                    });
+                    Promise.all(classesCalls)
+                        .then(classes => {
+                            classes = orderBy(classes, [classLabel => classLabel.label.toLowerCase()], ['asc']);
+                            setLabel(responseJson.label);
+                            setClasses(classes);
+                        })
+                        .then(() => {
+                            if (responseJson.classes.includes(CLASSES.COMPARISON)) {
+                                getStatementsBySubjectAndPredicate({ subjectId: props.match.params.id, predicateId: PREDICATES.HAS_DOI }).then(st => {
+                                    if (st.length > 0) {
+                                        setIsLoading(false);
+                                        setCanEdit(false);
+                                    } else {
+                                        setIsLoading(false);
+                                        setCanEdit(true);
+                                    }
+                                });
+                            } else {
+                                setIsLoading(false);
+                                setCanEdit(true);
+                            }
+                        });
                 })
                 .catch(err => {
                     console.error(err);
@@ -84,25 +146,75 @@ function Resource(props) {
         setLabel(event.value);
     };
 
+    const getDedicatedLink = useCallback(() => {
+        for (const _class of classes) {
+            if (_class.id in DEDICATED_PAGE_LINKS) {
+                // only for a link for the first class occurrence (to prevent problems when a
+                // resource has multiple classes form the list), so return
+                return DEDICATED_PAGE_LINKS[_class.id];
+            }
+        }
+        return;
+    }, [classes]);
+
+    const dedicatedLink = getDedicatedLink();
+
     return (
         <>
             {isLoading && <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5 clearfix">Loading ...</Container>}
             {!isLoading && error && <>{error.statusCode === 404 ? <NotFound /> : <InternalServerError />}</>}
             {!isLoading && !error && (
-                <Container className="mt-5 clearfix">
-                    {editMode && (
+                <>
+                    <Container className="d-flex align-items-center">
+                        <h1 className="h4 mt-4 mb-4 flex-grow-1">Resource view</h1>
+                        <ButtonGroup className="flex-shrink-0">
+                            {dedicatedLink && (
+                                <Button
+                                    color="darkblue"
+                                    size="sm"
+                                    tag={Link}
+                                    to={reverse(dedicatedLink.route, { [dedicatedLink.routeParams]: props.match.params.id })}
+                                    style={{ marginRight: 2 }}
+                                >
+                                    <Icon icon={faExternalLinkAlt} className="mr-1" /> {dedicatedLink.label} view
+                                </Button>
+                            )}
+                            {canEdit ? (
+                                !editMode ? (
+                                    <RequireAuthentication
+                                        component={Button}
+                                        className="float-right"
+                                        color="darkblue"
+                                        size="sm"
+                                        onClick={() => setEditMode(v => !v)}
+                                    >
+                                        <Icon icon={faPen} /> Edit
+                                    </RequireAuthentication>
+                                ) : (
+                                    <Button className="flex-shrink-0" color="darkblueDarker" size="sm" onClick={() => setEditMode(v => !v)}>
+                                        <Icon icon={faTimes} /> Stop editing
+                                    </Button>
+                                )
+                            ) : (
+                                <Button className="float-right" color="darkblue" size="sm" disabled={true}>
+                                    <Tippy content="This resource can not be edited because it has a published DOI.">
+                                        <span>Edit</span>
+                                    </Tippy>
+                                </Button>
+                            )}
+                        </ButtonGroup>
+                    </Container>
+
+                    {editMode && canEdit && (
                         <EditModeHeader className="box rounded-top">
                             <Title>
                                 Edit mode <span className="pl-2">Every change you make is automatically saved</span>
                             </Title>
-                            <Button className="float-left" style={{ marginLeft: 1 }} color="light" size="sm" onClick={() => setEditMode(v => !v)}>
-                                Stop editing
-                            </Button>
                         </EditModeHeader>
                     )}
-                    <div className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
+                    <Container className={`box clearfix pt-4 pb-4 pl-5 pr-5 ${editMode ? 'rounded-bottom' : 'rounded'}`}>
                         <div className="mb-2">
-                            {!editMode ? (
+                            {!editMode || !canEdit ? (
                                 <div className="pb-2 mb-3">
                                     <h3 className="" style={{ overflowWrap: 'break-word', wordBreak: 'break-all' }}>
                                         {label || (
@@ -110,15 +222,6 @@ function Resource(props) {
                                                 <small>No label</small>
                                             </i>
                                         )}
-                                        <RequireAuthentication
-                                            component={Button}
-                                            className="float-right"
-                                            color="darkblue"
-                                            size="sm"
-                                            onClick={() => setEditMode(v => !v)}
-                                        >
-                                            <Icon icon={faPen} /> Edit
-                                        </RequireAuthentication>
                                     </h3>
                                     {classes.length > 0 && (
                                         <span style={{ fontSize: '90%' }}>
@@ -168,7 +271,7 @@ function Resource(props) {
                         <div className="clearfix">
                             <StatementBrowser
                                 key={`SB${classes.map(c => c.id).join(',')}`}
-                                enableEdit={editMode}
+                                enableEdit={editMode && canEdit}
                                 syncBackend={editMode}
                                 openExistingResourcesInDialog={false}
                                 initialResourceId={props.match.params.id}
@@ -181,8 +284,8 @@ function Resource(props) {
                             <SameAsStatements />
                         </div>
                         <ObjectStatements resourceId={props.match.params.id} />
-                    </div>
-                </Container>
+                    </Container>
+                </>
             )}
         </>
     );
