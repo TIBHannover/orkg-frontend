@@ -90,7 +90,7 @@ class ViewPaper extends Component {
     };
 
     requireAuthentication = () => {
-        if (this.props.user && this.props.user.role === 'ROLE_ADMIN') {
+        if (this.props.user && this.props.user.isCurationAllowed) {
             return true;
         } else {
             return false;
@@ -421,7 +421,7 @@ class ViewPaper extends Component {
                                 </>
                             )}
                             <>
-                                {this.requireAuthentication() && isEmpty(this.state.observatoryInfo) && (
+                                {this.state.editMode && this.requireAuthentication() && isEmpty(this.state.observatoryInfo) && (
                                     <>
                                         {' '}
                                         <br />

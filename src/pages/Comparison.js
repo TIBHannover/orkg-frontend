@@ -174,7 +174,7 @@ function Comparison(props) {
     };
 
     const requireAuthentication = () => {
-        if (props.user && props.user.role === 'ROLE_ADMIN') {
+        if (props.user && props.user.isCurationAllowed) {
             return true;
         } else {
             return false;
