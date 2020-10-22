@@ -1,242 +1,106 @@
-import React, { Component } from 'react';
-import {
-    Container,
-    Button,
-    Card,
-    CardText,
-    CardBody,
-    CardHeader,
-    CardFooter,
-    ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem
-} from 'reactstrap';
-import { Link } from 'react-router-dom';
-import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
-import { getResource } from 'services/backend/resources';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
-import PaperCard from 'components/PaperCard/PaperCard';
-import { getPaperData } from 'utils';
-import { find } from 'lodash';
+import React, { useState } from 'react';
+import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import useResearchField from 'components/ResearchField/hooks/useResearchField';
+import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { reverse } from 'named-urls';
 import { NavLink } from 'react-router-dom';
+import PaperCard from 'components/PaperCard/PaperCard';
+import ROUTES from 'constants/routes';
 
-class ResearchField extends Component {
-    constructor(props) {
-        super(props);
+function ResearchField(props) {
+    const [researchFieldData, isLoading, isFailedLoading] = useResearchField();
+    const [papers, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchFieldPapers();
+    const [menuOpen, setMenuOpen] = useState(false);
+    const { researchFieldId } = props.match.params;
 
-        this.pageSize = 25;
+    return (
+        <div>
+            {isLoading && (
+                <div className="text-center mt-4 mb-4">
+                    <Icon icon={faSpinner} spin /> Loading
+                </div>
+            )}
+            {!isLoading && isFailedLoading && <div className="text-center mt-4 mb-4">Failed loading the resource</div>}
+            {!isLoading && !isFailedLoading && (
+                <div>
+                    <Container className="d-flex align-items-center">
+                        <h1 className="h4 mt-4 mb-4 flex-grow-1">Research field</h1>
 
-        this.state = {
-            loading: true,
-            isNextPageLoading: false,
-            hasNextPage: false,
-            page: 1,
-            researchField: null,
-            papers: [],
-            parentResearchField: null,
-            isLastPageReached: false,
-            menuOpen: false
-        };
-    }
+                        <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
+                            <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                <Icon icon={faEllipsisV} />
+                            </DropdownToggle>
+                            <DropdownMenu right>
+                                <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: researchFieldId })}>
+                                    View resource
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </ButtonDropdown>
+                    </Container>
+                    <Container className="p-0">
+                        <div className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
+                            <h3>{researchFieldData && researchFieldData.label}</h3>
+                        </div>
+                    </Container>
 
-    componentDidMount() {
-        this.loadResearchFieldData();
-        this.loadMorePapers();
-    }
-
-    componentDidUpdate = prevProps => {
-        if (this.props.match.params.researchFieldId !== prevProps.match.params.researchFieldId) {
-            this.setState({
-                loading: true,
-                isNextPageLoading: false,
-                hasNextPage: false,
-                page: 1,
-                researchField: null,
-                papers: [],
-                parentResearchField: null,
-                isLastPageReached: false
-            });
-            this.loadResearchFieldData();
-            this.loadMorePapers();
-        }
-    };
-
-    loadResearchFieldData = () => {
-        // Get the research field
-        getResource(this.props.match.params.researchFieldId).then(result => {
-            this.setState({ researchField: result, papers: [], loading: false }, () => {
-                document.title = `${this.state.researchField.label} - ORKG`;
-            });
-        });
-    };
-
-    loadMorePapers = () => {
-        this.setState({ isNextPageLoading: true });
-        // Get the statements that contains the research field as an object
-        getStatementsByObjectAndPredicate({
-            objectId: this.props.match.params.researchFieldId,
-            predicateId: PREDICATES.HAS_RESEARCH_FIELD,
-            page: this.state.page,
-            items: this.pageSize,
-            sortBy: 'created_at',
-            desc: true
-        }).then(result => {
-            // Papers
-            if (result.length > 0) {
-                const parentResearchField = result.find(statement => statement.predicate.id === 'P36');
-                // Fetch the data of each paper
-                getStatementsBySubjects({
-                    ids: result
-                        .filter(paper => paper.subject.classes.includes(CLASSES.PAPER))
-                        .filter(statement => statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD)
-                        .map(p => p.subject.id)
-                })
-                    .then(papersStatements => {
-                        const papers = papersStatements.map(paperStatements => {
-                            const paperSubject = find(result.map(p => p.subject), { id: paperStatements.id });
-                            return getPaperData(
-                                paperStatements.id,
-                                paperSubject && paperSubject.label ? paperSubject.label : 'No Title',
-                                paperStatements.statements
-                            );
-                        });
-                        this.setState({
-                            papers: [...this.state.papers, ...papers],
-                            parentResearchField: parentResearchField,
-                            isNextPageLoading: false,
-                            hasNextPage: papers.length < this.pageSize || papers.length === 0 ? false : true,
-                            page: this.state.page + 1
-                        });
-                    })
-                    .catch(error => {
-                        this.setState({
-                            isNextPageLoading: false,
-                            hasNextPage: false,
-                            isLastPageReached: true
-                        });
-                        console.log(error);
-                    });
-            } else {
-                this.setState({
-                    isNextPageLoading: false,
-                    hasNextPage: false,
-                    isLastPageReached: true
-                });
-            }
-        });
-    };
-
-    render() {
-        return (
-            <>
-                {this.state.loading && (
-                    <div className="text-center mt-4 mb-4">
-                        <Icon icon={faSpinner} spin /> Loading
-                    </div>
-                )}
-                {!this.state.loading && (
-                    <div>
-                        <Container className="d-flex align-items-center">
-                            <h1 className="h4 mt-4 mb-4 flex-grow-1">Research field</h1>
-
-                            <ButtonDropdown
-                                isOpen={this.state.menuOpen}
-                                toggle={() =>
-                                    this.setState(prevState => ({
-                                        menuOpen: !prevState.menuOpen
-                                    }))
-                                }
-                                nav
-                                inNavbar
+                    <Container className="p-0">
+                        <h1 className="h4 mt-4 mb-4 flex-grow-1">Papers</h1>
+                    </Container>
+                    <Container className="p-0">
+                        {papers.length > 0 && (
+                            <div>
+                                {papers.map(paper => {
+                                    return (
+                                        paper && (
+                                            <PaperCard
+                                                paper={{
+                                                    id: paper.id,
+                                                    title: paper.label,
+                                                    ...paper
+                                                }}
+                                                key={`pc${paper.id}`}
+                                            />
+                                        )
+                                    );
+                                })}
+                            </div>
+                        )}
+                        {papers.length === 0 && !isLoadingPapers && (
+                            <div className="box rounded-lg p-5 text-center mt-4 mb-4">
+                                There are no papers for this research field, yet.
+                                <br />
+                                <br />
+                                <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
+                                    <Button size="sm" color="primary " className="mr-3">
+                                        Add paper
+                                    </Button>
+                                </Link>
+                            </div>
+                        )}
+                        {isLoadingPapers && (
+                            <div className="text-center mt-4 mb-4">
+                                <Icon icon={faSpinner} spin /> Loading
+                            </div>
+                        )}
+                        {!isLoadingPapers && hasNextPage && (
+                            <div
+                                style={{ cursor: 'pointer' }}
+                                className="list-group-item list-group-item-action text-center mt-2"
+                                onClick={!isLoadingPapers ? loadMorePapers : undefined}
                             >
-                                <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
-                                    <Icon icon={faEllipsisV} />
-                                </DropdownToggle>
-                                <DropdownMenu right>
-                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.researchFieldId })}>
-                                        View resource
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </ButtonDropdown>
-                        </Container>
-                        <Container className="p-0">
-                            <Card>
-                                <CardHeader>
-                                    {/* TODO: Show the total number of papers when number of items is provided with the paginated result
-                                        <div className="float-right"><b>{this.state.papers.length}</b> Papers</div>
-                                    */}
-                                    <h3 className="h4 mt-4 mb-4">{this.state.researchField && this.state.researchField.label}</h3>
-                                </CardHeader>
-                                <CardBody>
-                                    <CardText>
-                                        List of papers in <i>{this.state.researchField && this.state.researchField.label}</i> research field
-                                    </CardText>
-                                </CardBody>
-                                {this.state.parentResearchField && (
-                                    <CardFooter>
-                                        Parent research field:
-                                        <Link
-                                            className="ml-2"
-                                            to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.parentResearchField.subject.id })}
-                                        >
-                                            {this.state.parentResearchField.subject.label}
-                                        </Link>
-                                    </CardFooter>
-                                )}
-                            </Card>
-                        </Container>
-                        <br />
-                        <Container className="p-0">
-                            {this.state.papers.length > 0 && (
-                                <div>
-                                    {this.state.papers.map(resource => {
-                                        return <PaperCard paper={{ title: resource.label, ...resource }} key={`pc${resource.id}`} />;
-                                    })}
-                                </div>
-                            )}
-                            {this.state.papers.length === 0 && !this.state.isNextPageLoading && (
-                                <div className="text-center mt-4 mb-4">
-                                    There are no articles for this research field, yet.
-                                    <br />
-                                    Start the graphing in ORKG by sharing a paper.
-                                    <br />
-                                    <br />
-                                    <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
-                                        <Button size="sm" color="primary " className="mr-3">
-                                            Share paper
-                                        </Button>
-                                    </Link>
-                                </div>
-                            )}
-                            {this.state.isNextPageLoading && (
-                                <div className="text-center mt-4 mb-4">
-                                    <Icon icon={faSpinner} spin /> Loading
-                                </div>
-                            )}
-                            {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                                <div
-                                    style={{ cursor: 'pointer' }}
-                                    className="list-group-item list-group-item-action text-center mt-2"
-                                    onClick={!this.state.isNextPageLoading ? this.loadMorePapers : undefined}
-                                >
-                                    Load more papers
-                                </div>
-                            )}
-                            {!this.state.hasNextPage && this.state.isLastPageReached && (
-                                <div className="text-center mt-3">You have reached the last page.</div>
-                            )}
-                        </Container>
-                    </div>
-                )}
-            </>
-        );
-    }
+                                Load more papers
+                            </div>
+                        )}
+                        {!hasNextPage && isLastPageReached && <div className="text-center mt-3">You have reached the last page.</div>}
+                    </Container>
+                </div>
+            )}
+        </div>
+    );
 }
 
 ResearchField.propTypes = {

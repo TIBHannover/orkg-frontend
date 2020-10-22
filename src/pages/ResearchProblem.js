@@ -185,15 +185,13 @@ function ResearchProblem(props) {
                             </div>
                         )}
                         {contributions.length === 0 && !isLoadingPapers && (
-                            <div className="text-center mt-4 mb-4">
+                            <div className="box rounded-lg p-5 text-center mt-4 mb-4">
                                 There are no papers for this research problem, yet.
-                                <br />
-                                Start the graphing in ORKG by sharing a paper.
                                 <br />
                                 <br />
                                 <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
                                     <Button size="sm" color="primary " className="mr-3">
-                                        Share paper
+                                        Add paper
                                     </Button>
                                 </Link>
                             </div>
