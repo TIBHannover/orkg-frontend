@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Container, Row, Col, Button, Badge } from 'reactstrap';
+import { Container, Row, Col, Button, Badge, Card, CardBody, CardFooter } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
 import ResearchProblemHeaderBar from 'components/ResearchProblem/ResearchProblemHeaderBar';
 import useResearchProblem from 'components/ResearchProblem/hooks/useResearchProblem';
 import useResearchProblemPapers from 'components/ResearchProblem/hooks/useResearchProblemPapers';
@@ -25,7 +25,7 @@ function usePrevious(value) {
 }
 
 function ResearchProblem(props) {
-    const [researchProblemData, isLoading, isFailedLoading, loadResearchProblemData] = useResearchProblem();
+    const [researchProblemData, parentResearchProblems, isLoading, isFailedLoading, loadResearchProblemData] = useResearchProblem();
     const [editMode, setEditMode] = useState(false);
     const prevEditMode = usePrevious({ editMode });
     const [contributions, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchProblemPapers();
@@ -61,15 +61,33 @@ function ResearchProblem(props) {
                     )}
                     <ResearchProblemHeaderBar toggleEdit={() => setEditMode(v => !v)} title={researchProblemData.label} id={researchProblemId} />
                     <Container className="p-0">
-                        <div className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
-                            <h3>{researchProblemData && researchProblemData.label}</h3>
-                            {researchProblemData.description && <div className="mb-4">{researchProblemData.description}</div>}
-                            {researchProblemData.sameAs && (
-                                <ExternalDescription
-                                    query={researchProblemData.sameAs ? researchProblemData.sameAs.label : researchProblemData.label}
-                                />
+                        <Card>
+                            <CardBody>
+                                <h3 className="mt-4 mb-4">{researchProblemData && researchProblemData.label}</h3>
+                                {researchProblemData.description && <div className="mb-4">{researchProblemData.description}</div>}
+                                {researchProblemData.sameAs && (
+                                    <ExternalDescription
+                                        query={researchProblemData.sameAs ? researchProblemData.sameAs.label : researchProblemData.label}
+                                    />
+                                )}
+                            </CardBody>
+
+                            {parentResearchProblems.length > 0 && (
+                                <CardFooter>
+                                    {parentResearchProblems.map((field, index) => (
+                                        <span key={field.id}>
+                                            {index !== parentResearchProblems.length - 1 ? (
+                                                <Link to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: field.id })}>{field.label}</Link>
+                                            ) : (
+                                                field.label
+                                            )}
+                                            {index !== parentResearchProblems.length - 1 && <Icon className="ml-2 mr-2" icon={faAngleDoubleRight} />}
+                                        </span>
+                                    ))}
+                                </CardFooter>
                             )}
-                        </div>
+                        </Card>
+
                         <Row className="mt-3">
                             <Col md="4" className="d-flex">
                                 <div className="box rounded-lg p-4 flex-grow-1">

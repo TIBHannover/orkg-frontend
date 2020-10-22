@@ -254,6 +254,32 @@ export const getParentResearchFields = (researchFieldId, parents = []) => {
 };
 
 /**
+ * Get Parents of research problems
+ *
+ * @param {String} researchProblemId research problem Id
+ */
+export const getParentResearchProblems = (researchProblemId, parents = []) => {
+    if (parents.length > 5) {
+        return Promise.resolve(parents);
+    } else {
+        return getStatementsByObjectAndPredicate({
+            objectId: researchProblemId,
+            predicateId: PREDICATES.SUB_PROBLEM
+        }).then(parentResearchProblem => {
+            if (parentResearchProblem && parentResearchProblem[0]) {
+                if (parents.length === 0) {
+                    parents.push(parentResearchProblem[0].object);
+                }
+                parents.push(parentResearchProblem[0].subject);
+                return getParentResearchProblems(parentResearchProblem[0].subject.id, parents);
+            } else {
+                return Promise.resolve(parents);
+            }
+        });
+    }
+};
+
+/**
  * Get Template by Class
  *
  * @param {String} classID class ID
