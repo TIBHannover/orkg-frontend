@@ -173,7 +173,7 @@ class Header extends Component {
                             token: token,
                             tokenExpire: token_expires_in,
                             email: userData.email,
-                            role: userData.roles[0].name
+                            isCurationAllowed: userData.is_curation_allowed
                         }
                     });
                 })

@@ -53,7 +53,7 @@ class SignIn extends Component {
                         token: userToken,
                         email: userData.email,
                         tokenExpire: token_expires_in,
-                        role: userData.roles[0].name
+                        isCurationAllowed: userData.is_curation_allowed
                     }
                 });
                 this.props.toggleAuthDialog();
