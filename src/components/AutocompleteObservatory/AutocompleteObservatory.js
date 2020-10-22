@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-
+import React from 'react';
 import AsyncSelect from 'react-select/async';
 import { getAllObservatories } from 'services/backend/observatories';
 import { getAllOrganizations } from 'services/backend/organizations';
@@ -19,16 +18,8 @@ export const StyledAutoCompleteInputFormControl = styled.div`
     margin-left: 10px;
 `;
 
-class AutocompleteObservatory extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            inputValue: ''
-        };
-    }
-
-    loadOptions = () => {
+function AutocompleteObservatory(props) {
+    const loadOptions = () => {
         const observatories = getAllObservatories();
         const organizations = getAllOrganizations();
 
@@ -47,13 +38,11 @@ class AutocompleteObservatory extends Component {
         });
     };
 
-    render() {
-        return (
-            <StyledAutoCompleteInputFormControl>
-                <AsyncSelect cacheOptions loadOptions={this.loadOptions} defaultOptions onChange={this.props.onChange} />
-            </StyledAutoCompleteInputFormControl>
-        );
-    }
+    return (
+        <StyledAutoCompleteInputFormControl>
+            <AsyncSelect cacheOptions loadOptions={loadOptions} defaultOptions onChange={props.onChange} />
+        </StyledAutoCompleteInputFormControl>
+    );
 }
 
 AutocompleteObservatory.propTypes = {
