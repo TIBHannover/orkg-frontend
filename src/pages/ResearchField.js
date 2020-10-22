@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Card, CardBody, CardFooter } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faEllipsisV, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
 import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
 import { Link } from 'react-router-dom';
@@ -12,7 +12,7 @@ import PaperCard from 'components/PaperCard/PaperCard';
 import ROUTES from 'constants/routes';
 
 function ResearchField(props) {
-    const [researchFieldData, isLoading, isFailedLoading] = useResearchField();
+    const [researchFieldData, parentResearchFields, isLoading, isFailedLoading] = useResearchField();
     const [papers, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchFieldPapers();
     const [menuOpen, setMenuOpen] = useState(false);
     const { researchFieldId } = props.match.params;
@@ -42,9 +42,26 @@ function ResearchField(props) {
                         </ButtonDropdown>
                     </Container>
                     <Container className="p-0">
-                        <div className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
-                            <h3>{researchFieldData && researchFieldData.label}</h3>
-                        </div>
+                        <Card>
+                            <CardBody>
+                                <h3 className="mt-4 mb-4">{researchFieldData && researchFieldData.label}</h3>
+                            </CardBody>
+
+                            <CardFooter>
+                                {parentResearchFields.map((field, index) => (
+                                    <span key={field.id}>
+                                        {index !== parentResearchFields.length - 1 ? (
+                                            <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id })}>
+                                                {index === 0 ? 'Main' : field.label}
+                                            </Link>
+                                        ) : (
+                                            field.label
+                                        )}
+                                        {index !== parentResearchFields.length - 1 && <Icon className="ml-2 mr-2" icon={faAngleDoubleRight} />}
+                                    </span>
+                                ))}
+                            </CardFooter>
+                        </Card>
                     </Container>
 
                     <Container className="p-0">

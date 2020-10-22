@@ -29,7 +29,7 @@ function useResearchFieldPapers() {
             }).then(result => {
                 // Papers
                 if (result.length > 0) {
-                    const parentResearchField = result.find(statement => statement.predicate.id === PREDICATES.HAS_SUB_RESEARCH_FIELD);
+                    // const parentResearchField = result.find(statement => statement.predicate.id === PREDICATES.HAS_SUB_RESEARCH_FIELD);
                     // Fetch the data of each paper
                     getStatementsBySubjects({
                         ids: result
