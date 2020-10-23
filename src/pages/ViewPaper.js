@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Container, Alert, UncontrolledAlert, Button, InputGroupAddon, InputGroup } from 'reactstrap';
+import { Container, Alert, UncontrolledAlert } from 'reactstrap';
 import { getStatementsBySubject, createResourceStatement, deleteStatementById } from 'services/backend/statements';
 import { getUserInformationById } from 'services/backend/users';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
-import { getResource, updateResource, createResource, getContributorsByResourceId, addResourceToObservatory } from 'services/backend/resources';
+import { getResource, updateResource, createResource, getContributorsByResourceId } from 'services/backend/resources';
 import { connect } from 'react-redux';
 import NotFound from 'pages/NotFound';
 import ContentLoader from 'react-content-loader';
@@ -24,8 +24,6 @@ import styled from 'styled-components';
 import SharePaper from 'components/ViewPaper/SharePaper';
 import { getPaperData_ViewPaper } from 'utils';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
-import { isEmpty } from 'lodash';
-import AutoCompleteObservatory from 'components/AutocompleteObservatory/AutocompleteObservatory';
 
 export const EditModeHeader = styled(Container)`
     background-color: #80869b !important;
@@ -87,32 +85,6 @@ class ViewPaper extends Component {
         this.setState({
             showHeaderBar: !isVisible
         });
-    };
-
-    requireAuthentication = () => {
-        if (this.props.user && this.props.user.isCurationAllowed) {
-            return true;
-        } else {
-            return false;
-        }
-    };
-
-    handleSubmit = async e => {
-        e.preventDefault();
-
-        if (this.state.organizationId.length > 0 && this.state.observatoryId.length > 0) {
-            await addResourceToObservatory(this.state.observatoryId, this.state.organizationId, this.props.match.params.resourceId).then(l => {
-                toast.success(`Observatory added to paper successfully`);
-                this.getObservatoryInfo();
-            });
-        } else {
-            toast.error(`Please select an observatory`);
-        }
-    };
-
-    handleInputChange = async event => {
-        const Ids = await event.value.split(';');
-        this.setState({ organizationId: Ids[0], observatoryId: Ids[1] });
     };
 
     loadPaperData = () => {
@@ -409,6 +381,7 @@ class ViewPaper extends Component {
                                         toggleDeleteContribution={this.toggleDeleteContribution}
                                         observatoryInfo={this.state.observatoryInfo}
                                         contributors={this.state.contributors}
+                                        changeObservatory={this.getObservatoryInfo}
                                     />
 
                                     <ComparisonPopup />
@@ -420,23 +393,6 @@ class ViewPaper extends Component {
                                     <Alert color="danger">Failed to load contributions.</Alert>
                                 </>
                             )}
-                            <>
-                                {this.state.editMode && this.requireAuthentication() && isEmpty(this.state.observatoryInfo) && (
-                                    <>
-                                        {' '}
-                                        <br />
-                                        <Title style={{ marginLeft: '10px' }}>Add to an Observatory</Title>
-                                        <InputGroup>
-                                            <AutoCompleteObservatory onChange={this.handleInputChange} />
-                                            <InputGroupAddon addonType="append">
-                                                <Button variant="outline-secondary" onClick={this.handleSubmit}>
-                                                    Add
-                                                </Button>
-                                            </InputGroupAddon>
-                                        </InputGroup>
-                                    </>
-                                )}
-                            </>
                         </Container>
                     </>
                 )}
