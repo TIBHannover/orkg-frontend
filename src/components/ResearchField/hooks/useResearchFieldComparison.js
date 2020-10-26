@@ -38,12 +38,12 @@ function useResearchFieldComparison() {
                             .map(p => p.subject.id)
                     })
                         .then(comparisonsStatements => {
-                            const comparisons = comparisonsStatements.map(paperStatements => {
-                                const resourceSubject = find(result.map(p => p.subject), { id: paperStatements.id });
+                            const comparisons = comparisonsStatements.map(comparisonStatements => {
+                                const resourceSubject = find(result.map(p => p.subject), { id: comparisonStatements.id });
                                 return getComparisonData(
-                                    comparisonsStatements.id,
-                                    comparisonsStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
-                                    comparisonsStatements.statements
+                                    comparisonStatements.id,
+                                    comparisonStatements && resourceSubject.label ? resourceSubject.label : 'No Title',
+                                    comparisonStatements.statements
                                 );
                             });
 
