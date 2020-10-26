@@ -1,6 +1,5 @@
 import { submitPostRequest, submitPutRequest, submitGetRequest } from 'network';
 import { getUserInformationById } from 'services/backend/users';
-import { CLASSES } from 'constants/graphSettings';
 import queryString from 'query-string';
 import { orderBy } from 'lodash';
 import { url } from 'constants/misc';

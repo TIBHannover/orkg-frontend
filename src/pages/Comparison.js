@@ -32,7 +32,6 @@ import { useCookies } from 'react-cookie';
 import PropTypes from 'prop-types';
 import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
-import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
