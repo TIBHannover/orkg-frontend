@@ -1,9 +1,29 @@
 import React, { useState } from 'react';
-import { Container, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Card, CardBody, CardFooter } from 'reactstrap';
+import {
+    Container,
+    Button,
+    ButtonDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+    Card,
+    CardBody,
+    CardFooter,
+    Row,
+    Col,
+    Badge,
+    Modal,
+    ModalBody,
+    ModalHeader,
+    ListGroup,
+    ListGroupItem
+} from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faEllipsisV, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
 import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
+import useResearchFieldComparison from 'components/ResearchField/hooks/useResearchFieldComparison';
+import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
@@ -12,10 +32,16 @@ import PaperCard from 'components/PaperCard/PaperCard';
 import ROUTES from 'constants/routes';
 
 function ResearchField(props) {
-    const [researchFieldData, parentResearchFields, isLoading, isFailedLoading] = useResearchField();
+    const [researchFieldData, parentResearchFields, subResearchFields, isLoading, isFailedLoading] = useResearchField();
     const [papers, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchFieldPapers();
+    const [comparisons, isLoadingComparisons, hasNextPageComparison, isLastPageReachedComparison, loadMoreComparisons] = useResearchFieldComparison();
     const [menuOpen, setMenuOpen] = useState(false);
     const { researchFieldId } = props.match.params;
+
+    const [isSubResearchFieldsModalOpen, setIsSubResearchFieldsModalOpen] = useState(false);
+
+    const [researchProblems] = useState([]);
+    const [isLoadingResearchProblems] = useState(false);
 
     return (
         <div>
@@ -62,6 +88,155 @@ function ResearchField(props) {
                                 ))}
                             </CardFooter>
                         </Card>
+
+                        <Row className="mt-3">
+                            <Col md="4" className="d-flex">
+                                <div className="box rounded-lg p-4 flex-grow-1">
+                                    <h5>Sub-research fields</h5>
+                                    {subResearchFields && subResearchFields.length > 0 && (
+                                        <>
+                                            {subResearchFields.slice(0, 5).map(subRF => (
+                                                <div key={`subrp${subRF.id}`}>
+                                                    <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: subRF.id })}>
+                                                        {subRF.label}{' '}
+                                                        <small>
+                                                            <Badge className="ml-1" color="info" pill>
+                                                                {subRF.numPapers}
+                                                            </Badge>
+                                                        </small>
+                                                    </Link>
+                                                </div>
+                                            ))}
+                                        </>
+                                    )}
+                                    {subResearchFields.length > 5 && (
+                                        <>
+                                            <Button
+                                                onClick={() => setIsSubResearchFieldsModalOpen(v => !v)}
+                                                className="mt-1 mb-2 mr-3 float-right clearfix p-0"
+                                                color="link"
+                                            >
+                                                <small>+ See more</small>
+                                            </Button>
+                                        </>
+                                    )}
+                                    {subResearchFields.length > 3 && (
+                                        <Modal
+                                            isOpen={isSubResearchFieldsModalOpen}
+                                            toggle={() => setIsSubResearchFieldsModalOpen(v => !v)}
+                                            size="lg"
+                                        >
+                                            <ModalHeader toggle={() => setIsSubResearchFieldsModalOpen(v => !v)}>
+                                                Sub-research fields of {researchFieldData && researchFieldData.label}{' '}
+                                            </ModalHeader>
+                                            <ModalBody>
+                                                <div className="pl-3 pr-3">
+                                                    <ListGroup>
+                                                        {subResearchFields.map(subRF => (
+                                                            <ListGroupItem key={`subrf${subRF.id}`} className="justify-content-between">
+                                                                <Link
+                                                                    onClick={() => setIsSubResearchFieldsModalOpen(false)}
+                                                                    to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: subRF.id })}
+                                                                >
+                                                                    {subRF.label}
+                                                                    <small>
+                                                                        <Badge className="ml-1" color="info" pill>
+                                                                            {subRF.numPapers}
+                                                                        </Badge>
+                                                                    </small>
+                                                                </Link>
+                                                            </ListGroupItem>
+                                                        ))}
+                                                    </ListGroup>
+                                                </div>
+                                            </ModalBody>
+                                        </Modal>
+                                    )}
+                                    {subResearchFields && subResearchFields.length === 0 && <>No sub research fields.</>}
+                                </div>
+                            </Col>
+                            <Col md="4" className="d-flex">
+                                <div className="box rounded-lg p-4 flex-grow-1">
+                                    <h5>Research problems</h5>
+                                    <div>
+                                        <small className="text-muted">
+                                            Research problems of <i>papers</i> that are addressing this field
+                                        </small>
+                                    </div>
+                                    {!isLoadingResearchProblems ? (
+                                        <div className="mb-4 mt-4">
+                                            {researchProblems.length > 0 ? (
+                                                <ul className="pl-1">
+                                                    {researchProblems.map(researchProblem => {
+                                                        return (
+                                                            <li key={`rf${researchProblem.field.id}`}>
+                                                                <Link
+                                                                    to={reverse(ROUTES.RESEARCH_FIELD, {
+                                                                        researchFieldId: researchProblem.field.id
+                                                                    })}
+                                                                >
+                                                                    {researchProblem.field.label}
+                                                                    <small>
+                                                                        <Badge className="ml-1" color="info" pill>
+                                                                            {researchProblem.freq}
+                                                                        </Badge>
+                                                                    </small>
+                                                                </Link>
+                                                            </li>
+                                                        );
+                                                    })}
+                                                </ul>
+                                            ) : (
+                                                <div className="text-center mt-4 mb-4">No research problems</div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center mt-4 mb-4">Loading research problems ...</div>
+                                    )}
+                                </div>
+                            </Col>
+                            <Col md="4" className="d-flex">
+                                <div className="box rounded-lg p-4 flex-grow-1">
+                                    <h5>Observatories</h5>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Container>
+
+                    <Container className="p-0">
+                        <h1 className="h4 mt-4 mb-4 flex-grow-1">Comparisons</h1>
+                    </Container>
+                    <Container className="p-0">
+                        {comparisons.length > 0 && (
+                            <div>
+                                {comparisons.map(comparison => {
+                                    return comparison && <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} />;
+                                })}
+                            </div>
+                        )}
+                        {comparisons.length === 0 && !isLoadingComparisons && (
+                            <div className="box rounded-lg p-5 text-center mt-4 mb-4">
+                                There are no published comparisons for this research field, yet.
+                                <br />
+                            </div>
+                        )}
+                        {isLoadingComparisons && (
+                            <div className="text-center mt-4 mb-4">
+                                <Icon icon={faSpinner} spin /> Loading
+                            </div>
+                        )}
+                        {!isLoadingComparisons && hasNextPageComparison && (
+                            <div
+                                style={{ cursor: 'pointer' }}
+                                className="list-group-item list-group-item-action text-center mt-2"
+                                onClick={!isLoadingComparisons ? loadMoreComparisons : undefined}
+                            >
+                                Load more comparisons
+                            </div>
+                        )}
+                        {!hasNextPageComparison && isLastPageReachedComparison && (
+                            <div className="text-center mt-3">You have reached the last page.</div>
+                        )}
                     </Container>
 
                     <Container className="p-0">
