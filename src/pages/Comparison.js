@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge, InputGroupAddon, InputGroup } from 'reactstrap';
+import { Alert, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Button, ButtonGroup, Badge } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faPlus, faLightbulb, faBezierCurve, faHistory, faWindowMaximize } from '@fortawesome/free-solid-svg-icons';
 import ComparisonLoadingComponent from 'components/Comparison/ComparisonLoadingComponent';
@@ -19,7 +19,7 @@ import ComparisonVersions from 'components/Comparison/ComparisonVersions.js';
 import Publish from 'components/Comparison/Publish.js';
 import { ContainerAnimated, ComparisonTypeButton } from 'components/Comparison/styled';
 import useComparison from 'components/Comparison/hooks/useComparison';
-import { addResourceToObservatory } from 'services/backend/resources';
+import { getResource } from 'services/backend/resources';
 import ROUTES from 'constants/routes.js';
 import { useHistory, Link } from 'react-router-dom';
 import { openAuthDialog } from 'actions/auth';
@@ -29,30 +29,13 @@ import { generateRdfDataVocabularyFile } from 'utils';
 import Tippy from '@tippy.js/react';
 import { connect } from 'react-redux';
 import { useCookies } from 'react-cookie';
-import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
 import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
-import AutoCompleteObservatory from 'components/AutocompleteObservatory/AutocompleteObservatory';
-
-const Title = styled.div`
-    font-size: 18px;
-    font-weight: 500;
-    margin-top: 30px;
-    margin-bottom: 5px;
-
-    a {
-        margin-left: 15px;
-        span {
-            font-size: 80%;
-        }
-    }
-`;
 
 function Comparison(props) {
     const [
@@ -113,9 +96,6 @@ function Comparison(props) {
     const [showComparisonVersions, setShowComparisonVersions] = useState(false);
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
 
-    const [observatoryId, setObservatoryId] = useState(false);
-    const [organizationId, setOrganizationId] = useState(false);
-
     /**
      * Is case of an error the user can go to the previous link in history
      */
@@ -150,35 +130,12 @@ function Comparison(props) {
         setDropdownMethodOpen(false);
     };
 
-    const handleInputChange = async event => {
-        const value = event.value;
-        if (value !== '') {
-            const Ids = await value.split(';');
-            setOrganizationId(Ids[0]);
-            setObservatoryId(Ids[1]);
-        }
-    };
-
-    const handleSubmit = async e => {
-        e.preventDefault();
-
-        if (organizationId.length > 0 && observatoryId.length > 0) {
-            await addResourceToObservatory(observatoryId, organizationId, metaData?.id).then(async response => {
-                toast.success(`Observatory added to comparison successfully`);
-                await loadCreatedBy(response.created_by);
-                loadProvenanceInfos(response.observatory_id, response.organization_id);
-            });
-        } else {
-            toast.error(`Please select an observatory`);
-        }
-    };
-
-    const requireAuthentication = () => {
-        if (props.user && props.user.isCurationAllowed) {
-            return true;
-        } else {
-            return false;
-        }
+    const getObservatoryInfo = () => {
+        const resourceId = metaData.id;
+        getResource(resourceId).then(async comparisonResource => {
+            await loadCreatedBy(comparisonResource.created_by);
+            loadProvenanceInfos(comparisonResource.observatory_id, comparisonResource.organization_id);
+        });
     };
 
     return (
@@ -426,25 +383,11 @@ function Comparison(props) {
                         </div>
                     )}
                 </div>
-
-                {requireAuthentication() && isEmpty(provenance) && (
-                    <>
-                        {' '}
-                        <br />
-                        <Title style={{ marginLeft: '10px' }}>Add to an Observatory</Title>
-                        <InputGroup>
-                            <AutoCompleteObservatory onChange={handleInputChange} />
-                            <InputGroupAddon addonType="append">
-                                <Button variant="outline-secondary" onClick={handleSubmit}>
-                                    Add
-                                </Button>
-                            </InputGroupAddon>
-                        </InputGroup>
-                    </>
-                )}
             </ContainerAnimated>
 
-            {metaData.id && ((isObject(createdBy) && createdBy.id) || provenance) && <ProvenanceBox creator={createdBy} provenance={provenance} />}
+            {metaData.id && ((isObject(createdBy) && createdBy.id) || provenance) && (
+                <ProvenanceBox creator={createdBy} provenance={provenance} changeObservatory={getObservatoryInfo} resourceId={metaData.id} />
+            )}
 
             <SelectProperties
                 properties={properties}

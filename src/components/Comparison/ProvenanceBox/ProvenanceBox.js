@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Row, Card, CardBody, CardTitle } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { isEmpty } from 'lodash';
+import { Button } from 'reactstrap';
+import { useSelector } from 'react-redux';
+import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 
 const StyledOrganizationCard = styled.div`
     border: 0;
@@ -37,6 +41,8 @@ const StyledOrganizationCard = styled.div`
 `;
 
 function ProvenanceBox(props) {
+    const [showAssignObservatory, setShowAssignObservatory] = useState(false);
+    const user = useSelector(state => state.auth.user);
     return (
         <div className="container box rounded-lg mt-4">
             <Row>
@@ -50,9 +56,19 @@ function ProvenanceBox(props) {
                                 </h4>
                             </>
                         )}
-                        <i>Added by</i>
-                        <br />
-                        <Link to={reverse(ROUTES.USER_PROFILE, { userId: props.creator.id })}>{props.creator.display_name}</Link>
+                        {props.creator.id && (
+                            <>
+                                <i>Added by</i>
+                                <br />
+                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: props.creator.id })}>{props.creator.display_name}</Link>
+                            </>
+                        )}
+                        <br /> <br />
+                        {isEmpty(props.provenance) && user && user.isCurationAllowed && (
+                            <Button size="sm" outline onClick={() => setShowAssignObservatory(true)}>
+                                Assign to observatory
+                            </Button>
+                        )}
                     </div>
                 </div>
                 {props.provenance && (
@@ -83,6 +99,13 @@ function ProvenanceBox(props) {
                         </div>
                     </div>
                 )}
+
+                <ObservatoryModal
+                    callBack={props.changeObservatory}
+                    showDialog={showAssignObservatory}
+                    resourceId={props.resourceId}
+                    toggle={() => setShowAssignObservatory(v => !v)}
+                />
             </Row>
         </div>
     );
@@ -90,7 +113,9 @@ function ProvenanceBox(props) {
 
 ProvenanceBox.propTypes = {
     provenance: PropTypes.object,
-    creator: PropTypes.object
+    creator: PropTypes.object,
+    changeObservatory: PropTypes.func,
+    resourceId: PropTypes.object
 };
 
 export default ProvenanceBox;

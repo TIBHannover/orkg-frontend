@@ -53,13 +53,3 @@ export const getContributorsByResourceId = id => {
 export const addResourceToObservatory = (observatory_id, organization_id, id) => {
     return submitPutRequest(`${resourcesUrl}${id}/observatory`, { 'Content-Type': 'application/json' }, { observatory_id, organization_id });
 };
-
-export const addObservatoryResearchProblem = (observatoryId, organizationId, label) => {
-    const classes = [];
-    classes.push(CLASSES.PROBLEM);
-    return submitPostRequest(
-        `${resourcesUrl}observatory/${observatoryId}/organization/${organizationId}/researchProblem`,
-        { 'Content-Type': 'application/json' },
-        { label, classes }
-    );
-};
