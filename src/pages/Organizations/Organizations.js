@@ -50,7 +50,7 @@ class Organizations extends Component {
     render() {
         return (
             <>
-                <Container className="p-0">
+                <Container>
                     <h1 className="h4 mt-4 mb-4">View all organizations </h1>
                 </Container>
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">

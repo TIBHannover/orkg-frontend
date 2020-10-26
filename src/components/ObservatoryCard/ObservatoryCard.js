@@ -25,7 +25,7 @@ function ObservatoryCard(props) {
                 <Card className="h-100">
                     <CardBody>
                         {props.observatory.organization_ids.map(o => (
-                            <span style={{ marginLeft: '10px' }}>
+                            <span key={o.id} style={{ marginLeft: '10px' }}>
                                 <img
                                     className="justify-content-center"
                                     style={{ marginTop: '10px', border: '1px', padding: '2px' }}

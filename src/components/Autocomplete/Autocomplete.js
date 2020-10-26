@@ -462,6 +462,7 @@ function Autocomplete(props) {
                     isClearable={props.isClearable}
                     isDisabled={props.isDisabled}
                     isMulti={props.isMulti}
+                    inputId={props.inputId}
                     isValidNewOption={(inputValue, selectValue, selectOptions) => {
                         if (props.handleCreateExistingLabel) {
                             // to disable the create button
@@ -513,7 +514,9 @@ Autocomplete.propTypes = {
     linkButton: PropTypes.string,
     linkButtonTippy: PropTypes.string,
     isMulti: PropTypes.bool,
-    autoFocus: PropTypes.bool
+    autoFocus: PropTypes.bool,
+    ariaLabelledBy: PropTypes.string,
+    inputId: PropTypes.string
 };
 
 Autocomplete.defaultProps = {
@@ -525,6 +528,7 @@ Autocomplete.defaultProps = {
     copyValueButton: false,
     linkButton: null,
     isMulti: false,
-    autoFocus: true
+    autoFocus: true,
+    inputId: null
 };
 export default withTheme(Autocomplete);
