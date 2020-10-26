@@ -23,7 +23,61 @@ export default class CellSelector extends Component {
     createPropertyHeaders = () => {};
     createContributionHeaders = () => {};
     createComparisonDataMatrix = () => {};
-    createTable = () => {};
+    createTable = () => {
+        console.log('TODO:', 'Create the table , 1 frame then data matrix ');
+        // we have a rootItem which is a split between properties and contributions
+
+        /* [root] [property], [property]
+          cId  [ value 0,0] value [1,0]...]
+          cId  [ value 0,1] value [1,1]...] 
+      
+       */
+
+        // we need some meta information to create the frame
+        // basic Idea create a matrix which has +1 entries from the data dimensions (in x and in y direct)
+
+        // this rendering matrix will be then populated by the corresponding items;
+
+        const renderingDimX = this.selfVisModel.mrrModel.propertyAnchors.length + 1;
+        const renderingDimY = this.selfVisModel.mrrModel.contributionAnchors.length + 1;
+        console.log('Rendering Matrix dimensions ', renderingDimX, renderingDimY);
+
+        // we do render it as a row and cells
+        const itemsToRender = [];
+        // why do we dont want to use a tr/ td/ th table renderer? >> some idea about table interactions
+        // draggable cols and row
+
+        // test
+        for (let i = 0; i < renderingDimY; i++) {
+            // renders row;
+            const rowArray = [];
+
+            for (let j = 0; j < renderingDimX; j++) {
+                // renders the cell
+                if (i === 0 && j === 0) {
+                    rowArray.push(<div>MetaNode</div>);
+                }
+                if (i === 0 && j !== 0) {
+                    rowArray.push(<div>PropertyHeader</div>);
+                }
+                if (i !== 0 && j === 0) {
+                    rowArray.push(<div>ContributionHeader</div>);
+                }
+                if (i !== 0 && j !== 0) {
+                    rowArray.push(
+                        <div>
+                            VALUE {j - 1}, {i - 1}
+                        </div>
+                    );
+                }
+            }
+            console.log(rowArray);
+            itemsToRender.push(<div style={{ display: 'flex' }}>{rowArray}</div>);
+        }
+
+        return itemsToRender;
+        // we will use a similar styles as done in the table renderer of the comparison.
+    };
 
     /** Cell interactions for single entries or rows & cols or full **/
     setSelectionFlagInData = (row, col) => {

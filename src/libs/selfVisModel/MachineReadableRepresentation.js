@@ -67,17 +67,17 @@ export default class MachineReadableRepresentation {
         }
     };
 
-    getPropertyAnchors = () => {
-        // gives us the header information for the rendering
-        return this.mrrModel.propertyAnchors;
-    };
-    getContributionAnchors = () => {
-        // gives us the header information for the rendering
-        return this.mrrModel.contributionAnchors;
-    };
-    getDataItems = () => {
-        return this.mrrModel.dataItems;
-    };
+    // getPropertyAnchors = () => {
+    //     // gives us the header information for the rendering
+    //     return this.mrrModel.propertyAnchors;
+    // };
+    // getContributionAnchors = () => {
+    //     // gives us the header information for the rendering
+    //     return this.mrrModel.contributionAnchors;
+    // };
+    // getDataItems = () => {
+    //     return this.mrrModel.dataItems;
+    // };
 
     createDataItemAnchors(model) {
         this.mrrModel.dataItems = [];
