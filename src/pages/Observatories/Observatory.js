@@ -14,18 +14,19 @@ import InternalServerError from 'pages/InternalServerError';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
+import EditObservatory from '../Observatories/EditObservatory';
+import AddResearchProblem from './AddResearchProblem';
 import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { getPaperData, getComparisonData } from 'utils';
 import { find } from 'lodash';
+import capitalize from 'capitalize';
 import { connect } from 'react-redux';
-import EditObservatory from '../Observatories/EditObservatory';
-import EditResearchProblem from '../Observatories/EditResearchProblem';
 
 class Observatory extends Component {
     constructor(props) {
@@ -50,7 +51,7 @@ class Observatory extends Component {
             organizationsList: [],
             comparisonsList: [],
             showEditDialog: false,
-            showEditResearchProblemDialog: false
+            showAddResearchProblemDialog: false
         };
     }
 
@@ -233,12 +234,12 @@ class Observatory extends Component {
                                         <h5>Research Problems</h5>
                                         {this.props.user && (
                                             <Button
-                                                color="darkblue"
+                                                outline
                                                 size="sm"
                                                 style={{ float: 'right', marginTop: '-33px' }}
-                                                onClick={() => this.toggle('showEditResearchProblemDialog')}
+                                                onClick={() => this.toggle('showAddResearchProblemDialog')}
                                             >
-                                                <Icon icon={faPen} /> Add
+                                                <Icon icon={faPlus} /> Add
                                             </Button>
                                         )}
                                         {!this.state.isLoadingProblems ? (
@@ -252,7 +253,7 @@ class Observatory extends Component {
                                                                         <Link
                                                                             to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}
                                                                         >
-                                                                            {problem.label}
+                                                                            {capitalize(problem.label)}
                                                                         </Link>
                                                                     </li>
                                                                 );
@@ -462,9 +463,9 @@ class Observatory extends Component {
                     updateObservatoryMetadata={this.updateObservatoryMetadata}
                 />
 
-                <EditResearchProblem
-                    showDialog={this.state.showEditResearchProblemDialog}
-                    toggle={() => this.toggle('showEditResearchProblemDialog')}
+                <AddResearchProblem
+                    showDialog={this.state.showAddResearchProblemDialog}
+                    toggle={() => this.toggle('showAddResearchProblemDialog')}
                     id={this.props.match.params.id}
                     organizationId={this.state.organizationsList.length > 0 ? this.state.organizationsList[0]['id'] : ''}
                     updateObservatoryResearchProblem={this.updateObservatoryResearchProblem}

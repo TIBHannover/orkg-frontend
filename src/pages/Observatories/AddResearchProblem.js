@@ -5,12 +5,13 @@ import { toast } from 'react-toastify';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { resourcesUrl } from 'services/backend/resources';
 import PropTypes from 'prop-types';
+import { CLASSES } from 'constants/graphSettings';
 
-class EditResearchProblem extends Component {
+class AddResearchProblem extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            label: '',
+            problem: null,
             isLoadingProblem: false
         };
     }
@@ -18,19 +19,21 @@ class EditResearchProblem extends Component {
     handleSubmit = async e => {
         const id = this.props.id;
         const organizationId = this.props.organizationId;
-        const label = this.state.label;
-        if (label.id) {
-            await this.createObservatoryResearchProblem(id, label.id, organizationId);
+        if (this.state.problem && this.state.problem.id) {
+            await this.createObservatoryResearchProblem(id, this.state.problem.id, organizationId);
+        } else {
+            toast.error(`Please select a research problem`);
         }
     };
 
-    createObservatoryResearchProblem = async (id, name, organizationId) => {
+    createObservatoryResearchProblem = async (id, problemId, organizationId) => {
         this.setState({ isLoadingProblem: true });
         try {
-            await addResourceToObservatory(id, organizationId, name).then(a => {
+            await addResourceToObservatory(id, organizationId, problemId).then(a => {
                 toast.success('Research problem added successfully');
                 this.props.updateObservatoryResearchProblem();
                 this.props.toggle();
+                this.setState({ problem: null });
             });
             this.setState({ isLoadingProblem: false });
         } catch (error) {
@@ -45,20 +48,20 @@ class EditResearchProblem extends Component {
         return (
             <>
                 <Modal size="lg" isOpen={this.props.showDialog} toggle={this.props.toggle}>
-                    <ModalHeader toggle={this.props.toggle}>Add Research Problem</ModalHeader>
+                    <ModalHeader toggle={this.props.toggle}>Add research problem</ModalHeader>
                     <ModalBody>
                         <>
                             {' '}
                             <FormGroup>
-                                <Label for="ResearchProblem">Research Problem</Label>
+                                <Label for="ResearchProblem">Research problem</Label>
                                 <AutoComplete
                                     requestUrl={resourcesUrl}
-                                    optionsClass="Problem"
-                                    placeholder="Research Problem"
-                                    onItemSelected={async rf => {
-                                        this.setState({ label: { ...rf, label: rf.value } });
+                                    optionsClass={CLASSES.PROBLEM}
+                                    placeholder="Select a research problem"
+                                    onItemSelected={async rp => {
+                                        this.setState({ problem: { ...rp, label: rp.value } });
                                     }}
-                                    value={this.state.label || ''}
+                                    value={this.state.problem || ''}
                                     allowCreate={false}
                                     autoLoadOption={true}
                                 />
@@ -78,7 +81,7 @@ class EditResearchProblem extends Component {
     }
 }
 
-EditResearchProblem.propTypes = {
+AddResearchProblem.propTypes = {
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
     id: PropTypes.string,
@@ -86,4 +89,4 @@ EditResearchProblem.propTypes = {
     updateObservatoryResearchProblem: PropTypes.func.isRequired
 };
 
-export default EditResearchProblem;
+export default AddResearchProblem;
