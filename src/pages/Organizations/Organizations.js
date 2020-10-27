@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Container, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faUser, faPlus } from '@fortawesome/free-solid-svg-icons';
 import OrganizationCard from 'components/OrganizationCard/OrganizationCard';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { getAllOrganizations } from 'services/backend/organizations';
 import { openAuthDialog } from 'actions/auth';
 import { Link } from 'react-router-dom';
@@ -50,24 +51,19 @@ class Organizations extends Component {
     render() {
         return (
             <>
-                <Container>
-                    <h1 className="h4 mt-4 mb-4">View all organizations </h1>
+                <Container className="d-flex align-items-center">
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all organizations </h1>
+                    <RequireAuthentication
+                        component={Link}
+                        color="darkblue"
+                        size="sm"
+                        className="btn btn-darkblue btn-sm flex-shrink-0"
+                        to={ROUTES.ADD_ORGANIZATION}
+                    >
+                        <Icon icon={faPlus} /> Create new organization
+                    </RequireAuthentication>
                 </Container>
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
-                    <div className="clearfix">
-                        {this.props.user !== null && (
-                            <Link className="float-right mb-2 mt-2 clearfix" to={ROUTES.ADD_ORGANIZATION}>
-                                <span className="fa fa-plus" /> Create new organization
-                            </Link>
-                        )}
-
-                        {!this.props.user && (
-                            <Button color="link" className="p-0 float-right mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog('signin')}>
-                                <Icon className="mr-1" icon={faUser} /> Sign in to create an organization
-                            </Button>
-                        )}
-                    </div>
-
                     {this.state.organizations.length > 0 && (
                         <div className="mt-3 row justify-content-center">
                             {this.state.organizations.map(organization => {
