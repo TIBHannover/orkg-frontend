@@ -65,7 +65,7 @@ function ProvenanceBox(props) {
                                 </h4>
                             </>
                         )}
-                        {props.creator.id && (
+                        {props.creator && props.creator.id && (
                             <>
                                 <i>Added by</i>
                                 <br />
@@ -124,7 +124,7 @@ ProvenanceBox.propTypes = {
     provenance: PropTypes.object,
     creator: PropTypes.object,
     changeObservatory: PropTypes.func,
-    resourceId: PropTypes.object
+    resourceId: PropTypes.string
 };
 
 export default ProvenanceBox;
