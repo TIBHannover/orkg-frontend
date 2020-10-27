@@ -515,7 +515,6 @@ Autocomplete.propTypes = {
     linkButtonTippy: PropTypes.string,
     isMulti: PropTypes.bool,
     autoFocus: PropTypes.bool,
-    ariaLabelledBy: PropTypes.string,
     inputId: PropTypes.string
 };
 

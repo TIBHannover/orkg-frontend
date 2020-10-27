@@ -272,6 +272,9 @@ class Header extends Component {
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>
                                         Properties
                                     </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.CLASSES}>
+                                        Classes
+                                    </DropdownItem>
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.CONTRIBUTION_TEMPLATES}>
                                         Templates
                                     </DropdownItem>
