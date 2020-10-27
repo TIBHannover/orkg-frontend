@@ -127,7 +127,7 @@ class ContributionTemplate extends Component {
                                     className="p-0"
                                     onClick={() => this.toggle('helpModalOpen')}
                                 >
-                                    <Icon icon={faQuestionCircle} />
+                                    <Icon icon={faQuestionCircle} className="text-darkblue" />
                                 </Button>
                             </span>
                         </Tippy>
@@ -150,29 +150,31 @@ class ContributionTemplate extends Component {
                                 {!this.props.isSaving ? ' Save' : ' Saving'}
                             </Button>
                         )}
-                        <ButtonDropdown
-                            className="flex-shrink-0"
-                            isOpen={this.state.menuOpen}
-                            toggle={() =>
-                                this.setState(prevState => ({
-                                    menuOpen: !prevState.menuOpen
-                                }))
-                            }
-                            nav
-                            inNavbar
-                        >
-                            <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
-                                <Icon icon={faEllipsisV} />
-                            </DropdownToggle>
-                            <DropdownMenu right>
-                                <DropdownItem tag={RouterNavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.id })}>
-                                    View resource
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </ButtonDropdown>
+                        {this.props.match.params.id && (
+                            <ButtonDropdown
+                                className="flex-shrink-0"
+                                isOpen={this.state.menuOpen}
+                                toggle={() =>
+                                    this.setState(prevState => ({
+                                        menuOpen: !prevState.menuOpen
+                                    }))
+                                }
+                                nav
+                                inNavbar
+                            >
+                                <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                    <Icon icon={faEllipsisV} />
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                    <DropdownItem tag={RouterNavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.id })}>
+                                        View resource
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </ButtonDropdown>
+                        )}
                     </ButtonGroup>
                 </Container>
-                <StyledContainer>
+                <StyledContainer className="p-0">
                     {this.state.showHeaderBar && <TemplateEditorHeaderBar id={this.props.match.params.id} />}
                     {(this.props.editMode || this.props.isSaving) && (
                         <EditModeHeader className="box rounded-top">

@@ -264,23 +264,19 @@ class Header extends Component {
                                     </DropdownItem>
 
                                     <DropdownItem divider />
+                                    <DropdownItem header>Advanced tools</DropdownItem>
+
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>
-                                        Resources{' '}
-                                        <small>
-                                            <Badge color="info">Beta</Badge>
-                                        </small>
+                                        Resources
                                     </DropdownItem>
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>
-                                        Properties{' '}
-                                        <small>
-                                            <Badge color="info">Beta</Badge>
-                                        </small>
+                                        Properties
+                                    </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.CLASSES}>
+                                        Classes
                                     </DropdownItem>
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.CONTRIBUTION_TEMPLATES}>
-                                        Templates{' '}
-                                        <small>
-                                            <Badge color="info">Beta</Badge>
-                                        </small>
+                                        Templates
                                     </DropdownItem>
                                     {/*
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.PDF_TEXT_ANNOTATION}>
