@@ -185,11 +185,11 @@ class EditOrganization extends Component {
                                     placeholder="https://www.example.com"
                                 />
                             </FormGroup>
-                            <div>
-                                <img src={this.state.previewSrc} style={{ width: '20%', height: '20%' }} alt="organization logo" />
-                            </div>
                             <FormGroup>
                                 <Label>Logo</Label>
+                                <div>
+                                    <img src={this.state.previewSrc} style={{ width: '20%', height: '20%' }} alt="Organization logo" />
+                                </div>
                                 <br />
                                 <Input disabled={isLoading} type="file" onChange={this.handlePreview} />
                             </FormGroup>
