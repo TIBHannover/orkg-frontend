@@ -19,10 +19,11 @@ import {
     ListGroupItem
 } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faEllipsisV, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faEllipsisV, faAngleDoubleRight, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
 import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
 import useResearchFieldComparison from 'components/ResearchField/hooks/useResearchFieldComparison';
+import useResearchFieldProblems from 'components/ResearchField/hooks/useResearchFieldProblems';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -35,13 +36,19 @@ function ResearchField(props) {
     const [researchFieldData, parentResearchFields, subResearchFields, isLoading, isFailedLoading] = useResearchField();
     const [papers, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchFieldPapers();
     const [comparisons, isLoadingComparisons, hasNextPageComparison, isLastPageReachedComparison, loadMoreComparisons] = useResearchFieldComparison();
+    const [
+        researchProblems,
+        isLoadingResearchProblems,
+        hasNextPageProblems,
+        isLastPageReachedProblems,
+        currentPageProblems,
+        loadMoreProblems
+    ] = useResearchFieldProblems();
     const [menuOpen, setMenuOpen] = useState(false);
     const { researchFieldId } = props.match.params;
 
     const [isSubResearchFieldsModalOpen, setIsSubResearchFieldsModalOpen] = useState(false);
-
-    const [researchProblems] = useState([]);
-    const [isLoadingResearchProblems] = useState(false);
+    const [isProblemsModalOpen, setIsProblemsModalOpen] = useState(false);
 
     return (
         <div>
@@ -94,9 +101,9 @@ function ResearchField(props) {
                                 <div className="box rounded-lg p-4 flex-grow-1">
                                     <h5>Sub-research fields</h5>
                                     {subResearchFields && subResearchFields.length > 0 && (
-                                        <>
+                                        <ul className="pl-1 pt-2">
                                             {subResearchFields.slice(0, 5).map(subRF => (
-                                                <div key={`subrp${subRF.id}`}>
+                                                <li key={`subrp${subRF.id}`}>
                                                     <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: subRF.id })}>
                                                         {subRF.label}{' '}
                                                         <small>
@@ -105,9 +112,9 @@ function ResearchField(props) {
                                                             </Badge>
                                                         </small>
                                                     </Link>
-                                                </div>
+                                                </li>
                                             ))}
-                                        </>
+                                        </ul>
                                     )}
                                     {subResearchFields.length > 5 && (
                                         <>
@@ -163,35 +170,87 @@ function ResearchField(props) {
                                             Research problems of <i>papers</i> that are addressing this field
                                         </small>
                                     </div>
-                                    {!isLoadingResearchProblems ? (
-                                        <div className="mb-4 mt-4">
-                                            {researchProblems.length > 0 ? (
-                                                <ul className="pl-1">
-                                                    {researchProblems.map(researchProblem => {
-                                                        return (
-                                                            <li key={`rf${researchProblem.field.id}`}>
+                                    <>
+                                        {researchProblems && researchProblems.length > 0 && (
+                                            <ul className="pl-1 pt-2">
+                                                {researchProblems.slice(0, 5).map(researchProblem => (
+                                                    <li key={`rp${researchProblem.problem.id}`}>
+                                                        <Link
+                                                            to={reverse(ROUTES.RESEARCH_PROBLEM, {
+                                                                researchProblemId: researchProblem.problem.id
+                                                            })}
+                                                        >
+                                                            {researchProblem.problem.label}
+                                                            <small>
+                                                                <Badge className="ml-1" color="info" pill>
+                                                                    {researchProblem.papers}
+                                                                </Badge>
+                                                            </small>
+                                                        </Link>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                        {researchProblems.length > 5 && (
+                                            <>
+                                                <Button
+                                                    onClick={() => setIsProblemsModalOpen(v => !v)}
+                                                    className="mt-1 mb-2 mr-3 float-right clearfix p-0"
+                                                    color="link"
+                                                >
+                                                    <small>+ See more</small>
+                                                </Button>
+                                            </>
+                                        )}
+                                        {researchProblems.length > 5 && (
+                                            <Modal isOpen={isProblemsModalOpen} toggle={() => setIsProblemsModalOpen(v => !v)} size="lg">
+                                                <ModalHeader toggle={() => setIsProblemsModalOpen(v => !v)}>
+                                                    Research problems of {researchFieldData && researchFieldData.label}{' '}
+                                                </ModalHeader>
+                                                <ModalBody>
+                                                    <ListGroup>
+                                                        {researchProblems.map(researchProblem => (
+                                                            <ListGroupItem key={`rp${researchProblem.id}`} className="justify-content-between">
                                                                 <Link
-                                                                    to={reverse(ROUTES.RESEARCH_FIELD, {
-                                                                        researchFieldId: researchProblem.field.id
+                                                                    to={reverse(ROUTES.RESEARCH_PROBLEM, {
+                                                                        researchProblemId: researchProblem.problem.id
                                                                     })}
                                                                 >
-                                                                    {researchProblem.field.label}
+                                                                    {researchProblem.problem.label}
                                                                     <small>
                                                                         <Badge className="ml-1" color="info" pill>
-                                                                            {researchProblem.freq}
+                                                                            {researchProblem.papers}
                                                                         </Badge>
                                                                     </small>
                                                                 </Link>
-                                                            </li>
-                                                        );
-                                                    })}
-                                                </ul>
-                                            ) : (
-                                                <div className="text-center mt-4 mb-4">No research problems</div>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <div className="text-center mt-4 mb-4">Loading research problems ...</div>
+                                                            </ListGroupItem>
+                                                        ))}
+
+                                                        {hasNextPageProblems && (
+                                                            <ListGroupItem
+                                                                style={{ cursor: 'pointer' }}
+                                                                className="text-center"
+                                                                action
+                                                                onClick={!isLoadingResearchProblems ? loadMoreProblems : undefined}
+                                                            >
+                                                                <Icon icon={faAngleDoubleDown} /> Load more research problems
+                                                            </ListGroupItem>
+                                                        )}
+                                                        {!hasNextPageProblems && isLastPageReachedProblems && (
+                                                            <ListGroupItem tag="div" className="text-center">
+                                                                You have reached the last page.
+                                                            </ListGroupItem>
+                                                        )}
+                                                    </ListGroup>
+                                                </ModalBody>
+                                            </Modal>
+                                        )}
+                                        {researchProblems && researchProblems.length === 0 && <>No sub research problems.</>}
+                                    </>
+                                    {isLoadingResearchProblems && currentPageProblems === 1 && (
+                                        <ListGroupItem tag="div" className="text-center">
+                                            Loading research problems ...
+                                        </ListGroupItem>
                                     )}
                                 </div>
                             </Col>
