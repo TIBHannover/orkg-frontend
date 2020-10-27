@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Row, Card, CardBody, CardTitle } from 'reactstrap';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
+import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
@@ -8,7 +11,6 @@ import styled from 'styled-components';
 import { isEmpty } from 'lodash';
 import { Button } from 'reactstrap';
 import { useSelector } from 'react-redux';
-import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 
 const StyledOrganizationCard = styled.div`
     border: 0;
@@ -50,7 +52,14 @@ function ProvenanceBox(props) {
                     <div className="pt-4 pb-4 pl-4 pr-4">
                         {props.provenance && (
                             <>
-                                <p>Observatory:</p>
+                                <p>
+                                    Observatory:{' '}
+                                    {user && user.isCurationAllowed && (
+                                        <Button size="sm" onClick={() => setShowAssignObservatory(true)} color="link">
+                                            <Icon icon={faPen} /> Edit
+                                        </Button>
+                                    )}
+                                </p>
                                 <h4 className="mb-3">
                                     <Link to={reverse(ROUTES.OBSERVATORY, { id: props.provenance.id })}>{props.provenance.name}</Link>
                                 </h4>
