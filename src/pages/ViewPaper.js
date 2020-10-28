@@ -23,7 +23,7 @@ import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
 import SharePaper from 'components/ViewPaper/SharePaper';
 import { getPaperData_ViewPaper } from 'utils';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 
 export const EditModeHeader = styled(Container)`
     background-color: #80869b !important;
@@ -195,9 +195,9 @@ class ViewPaper extends Component {
     processObservatoryInformation(paperResource, resourceId) {
         if (
             paperResource.observatory_id &&
-            paperResource.observatory_id !== '00000000-0000-0000-0000-000000000000' &&
+            paperResource.observatory_id !== MISC.UNKNOWN_ID &&
             paperResource.created_by &&
-            paperResource.created_by !== '00000000-0000-0000-0000-000000000000'
+            paperResource.created_by !== MISC.UNKNOWN_ID
         ) {
             const observatory = getObservatoryAndOrganizationInformation(paperResource.observatory_id, paperResource.organization_id);
             const creator = getUserInformationById(paperResource.created_by);
