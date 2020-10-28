@@ -12,6 +12,7 @@ import ROUTES from 'constants/routes.js';
 import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
+import { MISC } from 'constants/graphSettings';
 
 export default function ProvenanceBox(props) {
     const [showAssignObservatory, setShowAssignObservatory] = useState(false);
@@ -20,112 +21,106 @@ export default function ProvenanceBox(props) {
 
     const [activeTab, setActiveTab] = useState(1);
     if (!isEmpty(props.observatoryInfo)) {
-        switch (activeTab) {
-            case 1:
-            default:
-                rightSidebar = (
-                    <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        <div>
-                            <ul className="list-group">
-                                <StyledItemProvenanceBox>
-                                    <b style={{ textTransform: 'uppercase' }}>{props.observatoryInfo.name}</b>
-                                    <br />
-                                    <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.id })}>
-                                        <img
-                                            style={{ marginTop: 8, marginBottom: 8, maxWidth: '80%', height: 'auto' }}
-                                            className="mx-auto d-block"
-                                            src={props.observatoryInfo.organization.logo}
-                                            alt=""
-                                        />
-                                    </Link>
-                                    {/* <p> */}
-                                    {/* <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.id })}> */}
-                                    {/* {props.observatoryInfo.organization.name} */}
-                                    {/* </Link> */}
-                                    {/* </p> */}
-                                </StyledItemProvenanceBox>
+        if (activeTab === 1) {
+            rightSidebar = (
+                <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+                    <div>
+                        <ul className="list-group">
+                            <StyledItemProvenanceBox>
+                                <b style={{ textTransform: 'uppercase' }}>{props.observatoryInfo.name}</b>
+                                <br />
+                                <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.id })}>
+                                    <img
+                                        style={{ marginTop: 8, marginBottom: 8, maxWidth: '80%', height: 'auto' }}
+                                        className="mx-auto d-block"
+                                        src={props.observatoryInfo.organization.logo}
+                                        alt=""
+                                    />
+                                </Link>
+                                {/* <p> */}
+                                {/* <Link to={reverse(ROUTES.ORGANIZATION, { id: props.observatoryInfo.organization.id })}> */}
+                                {/* {props.observatoryInfo.organization.name} */}
+                                {/* </Link> */}
+                                {/* </p> */}
+                            </StyledItemProvenanceBox>
 
-                                <StyledItemProvenanceBox>
-                                    <b>DATE ADDED</b>
-                                    <br />
-                                    {moment(props.observatoryInfo.created_at).format('DD MMM YYYY')}
-                                </StyledItemProvenanceBox>
+                            <StyledItemProvenanceBox>
+                                <b>DATE ADDED</b>
+                                <br />
+                                {moment(props.observatoryInfo.created_at).format('DD MMM YYYY')}
+                            </StyledItemProvenanceBox>
 
-                                <StyledItemProvenanceBox>
-                                    <b>ADDED BY</b>
-                                    <br />
-                                    <Link to={reverse(ROUTES.USER_PROFILE, { userId: props.observatoryInfo.created_by.id })}>
-                                        {props.observatoryInfo.created_by.display_name}
-                                    </Link>
-                                </StyledItemProvenanceBox>
-                                <StyledItemProvenanceBox>
-                                    <b>CONTRIBUTORS</b>
-                                    {props.contributors &&
-                                        props.contributors.map((contributor, index) => {
-                                            return (
-                                                <div key={`cntbrs-${index}`}>
-                                                    {contributor.created_by.display_name !== 'Unknown' && (
-                                                        <span>
-                                                            <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.created_by.id })}>
-                                                                {contributor.created_by.display_name}
-                                                            </Link>
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
-                                </StyledItemProvenanceBox>
-                            </ul>
-                            {user && user.isCurationAllowed && (
-                                <Button size="sm" className="float-right" onClick={() => setShowAssignObservatory(true)} color="link">
-                                    <Icon icon={faPen} /> Edit
-                                </Button>
-                            )}
-                        </div>
-                    </AnimationContainer>
-                );
-                break;
-            case 2:
-                rightSidebar = (
-                    <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        <div>
-                            <div className="pt-3 pb-3 pl-3 pr-3">
+                            <StyledItemProvenanceBox>
+                                <b>ADDED BY</b>
+                                <br />
+                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: props.observatoryInfo.created_by.id })}>
+                                    {props.observatoryInfo.created_by.display_name}
+                                </Link>
+                            </StyledItemProvenanceBox>
+                            <StyledItemProvenanceBox>
+                                <b>CONTRIBUTORS</b>
                                 {props.contributors &&
-                                    props.contributors.map((contributor, index) => {
-                                        return (
-                                            <StyledActivity key={`prov-${index}`} className="pl-3 pb-3">
-                                                <div className="time">{moment(contributor.createdAt).format('DD MMM YYYY')}</div>
-                                                <div>
-                                                    {contributor.created_by.display_name === props.observatoryInfo.created_by.display_name && (
-                                                        <>
-                                                            Added by{' '}
+                                    props.contributors.map((contributor, index) => (
+                                        <div key={`cntbrs-${contributor.id}`}>
+                                            {contributor.created_by.display_name !== 'Unknown' && (
+                                                <span>
+                                                    <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.created_by.id })}>
+                                                        {contributor.created_by.display_name}
+                                                    </Link>
+                                                </span>
+                                            )}
+                                        </div>
+                                    ))}
+                            </StyledItemProvenanceBox>
+                        </ul>
+                        {user && user.isCurationAllowed && (
+                            <Button size="sm" className="float-right" onClick={() => setShowAssignObservatory(true)} color="link">
+                                <Icon icon={faPen} /> Edit
+                            </Button>
+                        )}
+                    </div>
+                </AnimationContainer>
+            );
+        } else {
+            rightSidebar = (
+                <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
+                    <div>
+                        <div className="pt-3 pb-3 pl-3 pr-3">
+                            {props.contributors &&
+                                props.contributors.map((contributor, index) => {
+                                    return (
+                                        <StyledActivity key={`prov-${contributor.id}`} className="pl-3 pb-3">
+                                            <div className="time">{moment(contributor.createdAt).format('DD MMM YYYY')}</div>
+                                            <div>
+                                                {contributor.created_by.display_name === props.observatoryInfo.created_by.display_name && (
+                                                    <>
+                                                        Added by{' '}
+                                                        <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.created_by.id })}>
+                                                            <b>{contributor.created_by.display_name}</b>
+                                                        </Link>
+                                                    </>
+                                                )}
+
+                                                {contributor.created_by.display_name !== props.observatoryInfo.created_by.display_name && (
+                                                    <>
+                                                        Updated by{' '}
+                                                        {contributor.created_by.id !== MISC.ANONYMOUS_USER_ID ? (
                                                             <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.created_by.id })}>
                                                                 <b>{contributor.created_by.display_name}</b>
                                                             </Link>
-                                                        </>
-                                                    )}
-
-                                                    {contributor.created_by.display_name !== props.observatoryInfo.created_by.display_name && (
-                                                        <>
-                                                            Updated by{' '}
-                                                            {contributor.created_by.id !== '00000000-0000-0000-0000-000000000000' ? (
-                                                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.created_by.id })}>
-                                                                    <b>{contributor.created_by.display_name}</b>
-                                                                </Link>
-                                                            ) : (
-                                                                <b>{contributor.created_by.display_name}</b>
-                                                            )}
-                                                        </>
-                                                    )}
-                                                </div>
-                                            </StyledActivity>
-                                        );
-                                    })}
-                            </div>
+                                                        ) : (
+                                                            <b>{contributor.created_by.display_name}</b>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </div>
+                                        </StyledActivity>
+                                    );
+                                })}
                         </div>
-                    </AnimationContainer>
-                );
-                break;
+                    </div>
+                </AnimationContainer>
+            );
         }
     }
 

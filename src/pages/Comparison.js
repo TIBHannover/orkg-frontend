@@ -129,12 +129,11 @@ function Comparison(props) {
         setDropdownMethodOpen(false);
     };
 
-    const getObservatoryInfo = () => {
+    const getObservatoryInfo = async () => {
         const resourceId = metaData.id;
-        getResource(resourceId).then(async comparisonResource => {
-            await loadCreatedBy(comparisonResource.created_by);
-            loadProvenanceInfos(comparisonResource.observatory_id, comparisonResource.organization_id);
-        });
+        const comparisonResource = await getResource(resourceId);
+        await loadCreatedBy(comparisonResource.created_by);
+        loadProvenanceInfos(comparisonResource.observatory_id, comparisonResource.organization_id);
     };
 
     return (

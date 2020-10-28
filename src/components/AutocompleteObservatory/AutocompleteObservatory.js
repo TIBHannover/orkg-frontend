@@ -8,11 +8,11 @@ function AutocompleteObservatory(props) {
     const [options, setOptions] = useState([]);
 
     useEffect(() => {
-        const loadOptions = async () => {
+        const loadOptions = () => {
             const observatories = getAllObservatories();
             const organizations = getAllOrganizations();
 
-            return Promise.all([observatories, organizations]).then(async data => {
+            return Promise.all([observatories, organizations]).then(data => {
                 const items = [];
 
                 for (const observatory of data[0]) {
