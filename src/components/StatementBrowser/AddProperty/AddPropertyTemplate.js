@@ -60,8 +60,9 @@ export default function AddPropertyTemplate(props) {
                                 allowCreate
                                 defaultOptions={defaultProperties}
                                 onBlur={() => {
-                                    props.handleHideAddProperty();
+                                    //props.handleHideAddProperty();
                                 }}
+                                inputGroup={false}
                             />
                             <InputGroupAddon addonType="append">
                                 <StyledButton outline onClick={() => props.handleHideAddProperty()}>

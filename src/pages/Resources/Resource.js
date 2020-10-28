@@ -260,6 +260,7 @@ function Resource(props) {
                                             innerRef={classesAutocompleteRef}
                                             isMulti
                                             autoFocus={false}
+                                            ols={true}
                                         />
                                         {editMode && <FormText>Specify the classes of the resource.</FormText>}
                                     </FormGroup>
