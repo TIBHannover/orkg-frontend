@@ -167,59 +167,63 @@ export default class AddResource extends Component {
         }
 
         return (
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5">
-                <Form className="pl-3 pr-3 pt-2">
-                    {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
-                    <FormGroup>
-                        <Label for="ResourceLabel">Resource title or DOI</Label>
-                        <Input
-                            onChange={this.handleChange}
-                            onKeyUp={this.handleKeyUp}
-                            type="text"
-                            name="value"
-                            id="ResourceLabel"
-                            disabled={loading}
-                            placeholder="Resource title or DOI"
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="Classes">Classes</Label>
-                        {!this.state.loadingDefaultClasses && (
-                            <AutoComplete
-                                requestUrl={classesUrl}
-                                onChange={(selected, action) => {
-                                    // blur the field allows to focus and open the menu again
-                                    this.classesAutocompleteRef.current && this.classesAutocompleteRef.current.blur();
-                                    this.handleClassSelect(selected, action);
-                                }}
-                                placeholder="Select or type to enter a class"
-                                value={this.state.classes}
-                                autoLoadOption={true}
-                                openMenuOnFocus={true}
-                                allowCreate={true}
-                                isClearable
-                                innerRef={instance => (this.classesAutocompleteRef = instance)}
-                                isMulti
-                                autoFocus={false}
-                                ols={true}
+            <>
+                <Container className="d-flex align-items-center">
+                    <h1 className="h4 mt-4 mb-4">Create resources</h1>
+                </Container>
+                <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+                    <Form className="pl-3 pr-3 pt-2">
+                        {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
+                        <FormGroup>
+                            <Label for="ResourceLabel">Resource title or DOI</Label>
+                            <Input
+                                onChange={this.handleChange}
+                                onKeyUp={this.handleKeyUp}
+                                type="text"
+                                name="value"
+                                id="ResourceLabel"
+                                disabled={loading}
+                                placeholder="Resource title or DOI"
                             />
-                        )}
-                        {this.state.loadingDefaultClasses && <div>Loading default classes</div>}
-                    </FormGroup>
-                    <Button
-                        color="primary"
-                        onClick={() => {
-                            this.handleAdd();
-                        }}
-                        outline
-                        className="mt-4 mb-2"
-                        block
-                        disabled={loading}
-                    >
-                        {!loading ? 'Create Resource' : <span>Loading</span>}
-                    </Button>
-                </Form>
-            </Container>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="Classes">Classes</Label>
+                            {!this.state.loadingDefaultClasses && (
+                                <AutoComplete
+                                    requestUrl={classesUrl}
+                                    onChange={(selected, action) => {
+                                        // blur the field allows to focus and open the menu again
+                                        this.classesAutocompleteRef.current && this.classesAutocompleteRef.current.blur();
+                                        this.handleClassSelect(selected, action);
+                                    }}
+                                    placeholder="Select or type to enter a class"
+                                    value={this.state.classes}
+                                    autoLoadOption={true}
+                                    openMenuOnFocus={true}
+                                    allowCreate={true}
+                                    isClearable
+                                    innerRef={instance => (this.classesAutocompleteRef = instance)}
+                                    isMulti
+                                    autoFocus={false}
+                                    ols={true}
+                                    inputId="select-classes"
+                                />
+                            )}
+                            {this.state.loadingDefaultClasses && <div>Loading default classes</div>}
+                        </FormGroup>
+                        <Button
+                            color="primary"
+                            onClick={() => {
+                                this.handleAdd();
+                            }}
+                            className="mt-3 mb-2"
+                            disabled={loading}
+                        >
+                            {!loading ? 'Create Resource' : <span>Loading</span>}
+                        </Button>
+                    </Form>
+                </Container>
+            </>
         );
     }
 }

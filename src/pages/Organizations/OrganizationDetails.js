@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import Dotdotdot from 'react-dotdotdot';
 import ROUTES from 'constants/routes';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import EditOrganization from '../Organizations/EditOrganization';
+import EditOrganization from 'components/Organization/EditOrganization';
 import { reverse } from 'named-urls';
 
 const StyledOrganizationHeader = styled.div`

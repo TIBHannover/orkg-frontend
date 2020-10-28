@@ -9,7 +9,6 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ContentLoader from 'react-content-loader';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { isEmpty } from 'lodash';
 import ROUTES from 'constants/routes';
 import SimilarContributions from './SimilarContributions';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
@@ -75,7 +74,11 @@ class Contributions extends Component {
             similaireContributions: [],
             isSimilaireContributionsLoading: true,
             isSimilaireContributionsFailedLoading: false,
-            label: ''
+            label: '',
+            observatories: [],
+            organizationId: '',
+            observatoryId: '',
+            isLoadingObservatory: false
         };
     }
 
@@ -359,9 +362,12 @@ class Contributions extends Component {
                                 </StyledHorizontalContribution>
                             </AnimationContainer>
                         </TransitionGroup>
-                        {!isEmpty(this.props.observatoryInfo) && (
-                            <ProvenanceBox contributors={this.props.contributors} observatoryInfo={this.props.observatoryInfo} />
-                        )}
+                        <ProvenanceBox
+                            resourceId={this.props.paperId}
+                            contributors={this.props.contributors}
+                            observatoryInfo={this.props.observatoryInfo}
+                            changeObservatory={this.props.changeObservatory}
+                        />
                     </Row>
                 </Container>
             </div>
@@ -387,7 +393,8 @@ Contributions.propTypes = {
     observatoryInfo: PropTypes.object,
     contributors: PropTypes.array,
     researchField: PropTypes.object.isRequired,
-    selectedResource: PropTypes.string
+    selectedResource: PropTypes.string,
+    changeObservatory: PropTypes.func
 };
 
 const mapStateToProps = (state, ownProps) => {

@@ -736,6 +736,7 @@ function Autocomplete(props) {
                     isClearable={props.isClearable}
                     isDisabled={props.isDisabled}
                     isMulti={props.isMulti}
+                    inputId={props.inputId}
                     isValidNewOption={(inputValue, selectValue, selectOptions) => {
                         if (props.handleCreateExistingLabel) {
                             // to disable the create button
@@ -789,7 +790,8 @@ Autocomplete.propTypes = {
     isMulti: PropTypes.bool,
     autoFocus: PropTypes.bool,
     ols: PropTypes.bool,
-    inputGroup: PropTypes.bool
+    inputGroup: PropTypes.bool,
+    inputId: PropTypes.string
 };
 
 Autocomplete.defaultProps = {
@@ -803,6 +805,7 @@ Autocomplete.defaultProps = {
     isMulti: false,
     autoFocus: true,
     ols: false,
-    inputGroup: true
+    inputGroup: true,
+    inputId: null
 };
 export default withTheme(Autocomplete);

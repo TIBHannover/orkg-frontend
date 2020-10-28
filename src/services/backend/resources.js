@@ -1,5 +1,6 @@
 import { submitPostRequest, submitPutRequest, submitGetRequest } from 'network';
 import { getUserInformationById } from 'services/backend/users';
+import { MISC } from 'constants/graphSettings';
 import queryString from 'query-string';
 import { orderBy } from 'lodash';
 import { url } from 'constants/misc';
@@ -38,13 +39,19 @@ export const getAllResources = ({ page = 1, items = 9999, sortBy = 'created_at',
 export const getContributorsByResourceId = id => {
     return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/contributors`).then(contributors => {
         const c = contributors.map(contributor => {
-            if (contributor.createdBy === '00000000-0000-0000-0000-000000000000') {
-                return { ...contributor, created_by: { id: '00000000-0000-0000-0000-000000000000', display_name: 'Unknown' } };
+            if (contributor.createdBy === MISC.UNKNOWN_ID) {
+                return { ...contributor, created_by: { id: MISC.UNKNOWN_ID, display_name: 'Unknown' } };
             } else {
-                return getUserInformationById(contributor.createdBy).then(user => ({ ...contributor, created_by: user }));
+                return getUserInformationById(contributor.createdBy)
+                    .then(user => ({ ...contributor, created_by: user }))
+                    .catch(() => ({ ...contributor, created_by: { id: MISC.UNKNOWN_ID, display_name: 'Unknown' } }));
             }
         });
         // Order the contribution timeline because it's not ordered in the result
         return Promise.all(c).then(rc => orderBy(rc, ['created_at'], ['desc']));
     });
+};
+
+export const addResourceToObservatory = (observatory_id, organization_id, id) => {
+    return submitPutRequest(`${resourcesUrl}${id}/observatory`, { 'Content-Type': 'application/json' }, { observatory_id, organization_id });
 };

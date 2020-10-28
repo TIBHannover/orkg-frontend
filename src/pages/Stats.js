@@ -35,7 +35,7 @@ class Stats extends Component {
     render() {
         return (
             <div>
-                <Container className="p-0">
+                <Container>
                     <h1 className="h4 mt-4 mb-4">General statistics</h1>
                 </Container>
 
@@ -75,7 +75,7 @@ class Stats extends Component {
                     </Row>
                 </Container>
 
-                <Container className="p-0">
+                <Container>
                     <h1 className="h4 mt-4 mb-4">Technical values</h1>
                 </Container>
 
