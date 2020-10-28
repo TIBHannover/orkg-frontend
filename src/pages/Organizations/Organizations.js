@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Container, Button } from 'reactstrap';
+import { Container } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faUser, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faPlus } from '@fortawesome/free-solid-svg-icons';
 import OrganizationCard from 'components/OrganizationCard/OrganizationCard';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { getAllOrganizations } from 'services/backend/organizations';

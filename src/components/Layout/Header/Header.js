@@ -298,7 +298,7 @@ class Header extends Component {
                                         tag="a"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        href="https://projects.tib.eu/orkg/project/documentation/"
+                                        href="https://projects.tib.eu/orkg/documentation/"
                                     >
                                         Features <Icon size="sm" icon={faExternalLinkAlt} />
                                     </DropdownItem>
