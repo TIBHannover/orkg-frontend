@@ -19,6 +19,7 @@ import ComparisonVersions from 'components/Comparison/ComparisonVersions.js';
 import Publish from 'components/Comparison/Publish.js';
 import { ContainerAnimated, ComparisonTypeButton } from 'components/Comparison/styled';
 import useComparison from 'components/Comparison/hooks/useComparison';
+import { getResource } from 'services/backend/resources';
 import ROUTES from 'constants/routes.js';
 import { useHistory, Link } from 'react-router-dom';
 import { openAuthDialog } from 'actions/auth';
@@ -126,6 +127,13 @@ function Comparison(props) {
         setResponseHash(null);
         setComparisonType(type);
         setDropdownMethodOpen(false);
+    };
+
+    const getObservatoryInfo = async () => {
+        const resourceId = metaData.id;
+        const comparisonResource = await getResource(resourceId);
+        await loadCreatedBy(comparisonResource.created_by);
+        loadProvenanceInfos(comparisonResource.observatory_id, comparisonResource.organization_id);
     };
 
     return (
@@ -375,7 +383,9 @@ function Comparison(props) {
                 </div>
             </ContainerAnimated>
 
-            {metaData.id && ((isObject(createdBy) && createdBy.id) || provenance) && <ProvenanceBox creator={createdBy} provenance={provenance} />}
+            {metaData.id && ((isObject(createdBy) && createdBy.id) || provenance) && (
+                <ProvenanceBox creator={createdBy} provenance={provenance} changeObservatory={getObservatoryInfo} resourceId={metaData.id} />
+            )}
 
             <SelectProperties
                 properties={properties}

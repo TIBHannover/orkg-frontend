@@ -172,7 +172,8 @@ class Header extends Component {
                             id: userData.id,
                             token: token,
                             tokenExpire: token_expires_in,
-                            email: userData.email
+                            email: userData.email,
+                            isCurationAllowed: userData.is_curation_allowed
                         }
                     });
                 })

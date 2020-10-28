@@ -36,10 +36,6 @@ export const updateUserPassword = ({ current_password, new_password, new_matchin
     return submitPutRequest(`${userUrl}password/`, headers, data);
 };
 
-export const updateUserRole = () => {
-    return submitPutRequest(`${userUrl}role/`);
-};
-
 export const signInWithEmailAndPassword = async (email, password) => {
     // because of the spring oauth implementation, these calls don't send json
     const headers = {
