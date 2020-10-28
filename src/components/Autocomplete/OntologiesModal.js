@@ -9,8 +9,8 @@ function OntologiesModal(props) {
         <Modal isOpen={props.showDialog} toggle={props.toggle}>
             <ModalHeader toggle={props.toggle}>Select ontology</ModalHeader>
             <ModalBody>
-                Please select ontologies from the form bellow:
-                <div className="m-3">
+                Please select ontologies from the list below:
+                <div className="my-3">
                     <AutoComplete
                         requestUrl={olsBaseUrl}
                         onChange={(selected, action) => {

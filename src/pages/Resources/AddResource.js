@@ -187,7 +187,7 @@ export default class AddResource extends Component {
                             />
                         </FormGroup>
                         <FormGroup>
-                            <Label for="Classes">Classes</Label>
+                            <Label for="select-classes">Classes</Label>
                             {!this.state.loadingDefaultClasses && (
                                 <AutoComplete
                                     requestUrl={classesUrl}

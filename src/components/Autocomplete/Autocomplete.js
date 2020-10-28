@@ -557,7 +557,7 @@ function Autocomplete(props) {
                                                     icon={faAtom}
                                                     size="sm"
                                                 />{' '}
-                                                <b>Ontologies</b>
+                                                Ontologies
                                             </span>
                                         </Tippy>
                                     </Button>
