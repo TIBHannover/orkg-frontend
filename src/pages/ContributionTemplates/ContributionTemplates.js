@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Container, Col, Row, FormGroup, Label, Form, Input } from 'reactstrap';
+import { Container, Col, Row, FormGroup, Label, Form, Input, ListGroup, ListGroupItem } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDoubleDown, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { classesUrl } from 'services/backend/classes';
@@ -151,17 +151,19 @@ export default class ContributionTemplates extends Component {
     render() {
         return (
             <>
-                <Container className="p-0">
-                    <h1 className="h4 mt-4 mb-4">View all contribution templates</h1>
+                <Container className="d-flex align-items-center">
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all contribution templates</h1>
+                    <RequireAuthentication
+                        component={Link}
+                        color="darkblue"
+                        size="sm"
+                        className="btn btn-darkblue btn-sm flex-shrink-0"
+                        to={reverse(ROUTES.CONTRIBUTION_TEMPLATE)}
+                    >
+                        <Icon icon={faPlus} /> Create template
+                    </RequireAuthentication>
                 </Container>
-                <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
-                    <div className="clearfix">
-                        You can use one of this filters to get the related template.
-                        <RequireAuthentication component={Link} className="float-right mb-2 mt-2 clearfix" to={reverse(ROUTES.CONTRIBUTION_TEMPLATE)}>
-                            <span className="fa fa-plus" /> Create new template
-                        </RequireAuthentication>
-                    </div>
-
+                <Container className="box rounded pt-4 pb-2 pl-5 pr-5 clearfix">
                     <Form className="mb-3">
                         <Row form>
                             <Col md={6}>
@@ -224,33 +226,42 @@ export default class ContributionTemplates extends Component {
                             </Col>
                         </Row>
                     </Form>
-                    {this.state.contributionTemplates.length > 0 && (
-                        <div>
-                            {this.state.contributionTemplates.map(contributionTemplate => {
-                                return <TemplateCard key={contributionTemplate.id} template={contributionTemplate} />;
-                            })}
-                        </div>
-                    )}
-                    {this.state.contributionTemplates.length === 0 && !this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">No contribution templates</div>
-                    )}
-                    {this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">
-                            <Icon icon={faSpinner} spin /> Loading
-                        </div>
-                    )}
-                    {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                        <div
-                            style={{ cursor: 'pointer' }}
-                            className="list-group-item list-group-item-action text-center mt-2"
-                            onClick={!this.state.isNextPageLoading ? this.loadMoreContributionTemplates : undefined}
-                        >
-                            Load more contribution templates
-                        </div>
-                    )}
-                    {!this.state.hasNextPage && this.state.isLastPageReached && (
-                        <div className="text-center mt-3">You have reached the last page.</div>
-                    )}
+                </Container>
+                <Container className="p-0 mt-4">
+                    <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
+                        {this.state.contributionTemplates.length > 0 && (
+                            <div>
+                                {this.state.contributionTemplates.map(contributionTemplate => {
+                                    return <TemplateCard key={contributionTemplate.id} template={contributionTemplate} />;
+                                })}
+                            </div>
+                        )}
+                        {this.state.contributionTemplates.length === 0 && !this.state.isNextPageLoading && (
+                            <ListGroupItem tag="div" className="text-center">
+                                No contribution templates
+                            </ListGroupItem>
+                        )}
+                        {this.state.isNextPageLoading && (
+                            <ListGroupItem tag="div" className="text-center">
+                                <Icon icon={faSpinner} spin /> Loading
+                            </ListGroupItem>
+                        )}
+                        {!this.state.isNextPageLoading && this.state.hasNextPage && (
+                            <ListGroupItem
+                                style={{ cursor: 'pointer' }}
+                                className="text-center"
+                                action
+                                onClick={!this.state.isNextPageLoading ? this.loadMoreContributionTemplates : undefined}
+                            >
+                                <Icon icon={faAngleDoubleDown} /> Load more templates
+                            </ListGroupItem>
+                        )}
+                        {!this.state.hasNextPage && this.state.isLastPageReached && (
+                            <ListGroupItem tag="div" className="text-center">
+                                You have reached the last page.
+                            </ListGroupItem>
+                        )}
+                    </ListGroup>
                 </Container>
             </>
         );

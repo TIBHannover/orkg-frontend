@@ -329,7 +329,7 @@ export default function AddValueTemplate(props) {
                                 }}
                             >
                                 {disabledCreate ? (
-                                    <Tippy content="Please use the existing research problem that has this label." arrow={true}>
+                                    <Tippy hideOnClick={false} content="Please use the existing research problem that has this label." arrow={true}>
                                         <span>Create</span>
                                     </Tippy>
                                 ) : (
