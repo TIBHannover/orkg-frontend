@@ -42,7 +42,9 @@ export const getContributorsByResourceId = id => {
             if (contributor.createdBy === MISC.UNKNOWN_ID) {
                 return { ...contributor, created_by: { id: MISC.UNKNOWN_ID, display_name: 'Unknown' } };
             } else {
-                return getUserInformationById(contributor.createdBy).then(user => ({ ...contributor, created_by: user }));
+                return getUserInformationById(contributor.createdBy)
+                    .then(user => ({ ...contributor, created_by: user }))
+                    .catch(() => ({ ...contributor, created_by: { id: MISC.UNKNOWN_ID, display_name: 'Unknown' } }));
             }
         });
         // Order the contribution timeline because it's not ordered in the result

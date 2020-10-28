@@ -118,7 +118,7 @@ export default function ProvenanceBox(props) {
                                                                 props.observatoryInfo.created_by.display_name && (
                                                                 <>
                                                                     Updated by{' '}
-                                                                    {contributor.created_by.id !== MISC.ANONYMOUS_USER_ID ? (
+                                                                    {contributor.created_by.id !== MISC.UNKNOWN_ID ? (
                                                                         <Link
                                                                             to={reverse(ROUTES.USER_PROFILE, { userId: contributor.created_by.id })}
                                                                         >
