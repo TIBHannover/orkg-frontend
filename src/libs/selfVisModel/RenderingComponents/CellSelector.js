@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
 // import Selection from '@simonwep/selection-js';
 import SelfVisDataMode from '../SelfVisDataModel';
+import CellRenderer from './CellRenderer';
 
 export default class CellSelector extends Component {
     constructor(props) {
@@ -48,30 +49,31 @@ export default class CellSelector extends Component {
         // draggable cols and row
 
         // test
-        for (let i = 0; i < renderingDimY; i++) {
+        for (let i = -1; i < renderingDimY; i++) {
             // renders row;
             const rowArray = [];
 
-            for (let j = 0; j < renderingDimX; j++) {
+            for (let j = -1; j < renderingDimX; j++) {
                 // renders the cell
+                const keyVal = 'key_cellId' + i + j;
                 if (i === 0 && j === 0) {
-                    rowArray.push(<div>MetaNode</div>);
-                }
-                if (i === 0 && j !== 0) {
-                    rowArray.push(<div>PropertyHeader</div>);
-                }
-                if (i !== 0 && j === 0) {
-                    rowArray.push(<div>ContributionHeader</div>);
-                }
-                if (i !== 0 && j !== 0) {
                     rowArray.push(
-                        <div>
-                            VALUE {j - 1}, {i - 1}
-                        </div>
+                        <CellRenderer key={keyVal} type="metaNode" data={null}>
+                            MetaNode
+                        </CellRenderer>
                     );
                 }
+                if (i === 0 && j !== 0) {
+                    rowArray.push(<CellRenderer key={keyVal} type="property" data={this.selfVisModel.mrrModel.propertyAnchors[j - 1]} />);
+                }
+                if (i !== 0 && j === 0) {
+                    rowArray.push(<CellRenderer key={keyVal} type="contribution" data={this.selfVisModel.mrrModel.contributionAnchors[i - 1]} />);
+                }
+                if (i !== 0 && j !== 0) {
+                    rowArray.push(<CellRenderer key={keyVal} type="value" data={this.selfVisModel.modelAccess.getItem(i - 1, j - 1)} />);
+                }
             }
-            console.log(rowArray);
+
             itemsToRender.push(<div style={{ display: 'flex' }}>{rowArray}</div>);
         }
 
@@ -107,9 +109,10 @@ export default class CellSelector extends Component {
 
     /** component rendering entrance point **/
     render() {
+        console.log(this.selfVisModel.mrrModel);
         return (
-            <div className="tableSelectionAreaRoot">
-                Selection Table Root
+            <div className="tableSelectionAreaRoot" style={{ height: '90% ', overflow: 'auto' }}>
+                Select cells for visualization and map to types.
                 <div>{this.props.isLoading ? <div>Loading...</div> : <div>{this.createTable()} </div>}</div>
             </div>
         );

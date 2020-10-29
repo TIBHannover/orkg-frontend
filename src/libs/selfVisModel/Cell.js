@@ -88,6 +88,9 @@ export default class Cell {
             } else {
                 this.label = 'MULTI DIMENSIONAL CELLS ARE NOT SUPPORTED';
             }
+            if (!this.label) {
+                this.label = 'EMPTY CELL';
+            }
         }
     };
 }

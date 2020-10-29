@@ -68,6 +68,7 @@ export default class SelfVisDataMode {
         parser.execute();
         this.mrrModel = parser.getResult();
         console.log(this.mrrModel);
+        this.modelAccess = parser;
         // modularize the parser as a class
     };
 }
