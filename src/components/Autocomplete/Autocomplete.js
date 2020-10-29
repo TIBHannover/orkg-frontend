@@ -329,7 +329,7 @@ function Autocomplete(props) {
             }
 
             if (!hasMore && !pageOLS) {
-                hasMore = true;
+                hasMore = !props.ols ? hasMore : true;
                 return {
                     options,
                     hasMore,
