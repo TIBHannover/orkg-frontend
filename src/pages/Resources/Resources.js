@@ -3,9 +3,9 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { getAllResources } from 'services/backend/resources';
-import { Container } from 'reactstrap';
+import { Container, ListGroup, ListGroupItem } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 
@@ -59,44 +59,57 @@ export default class Resources extends Component {
     render() {
         return (
             <>
-                <Container className="p-0">
-                    <h1 className="h4 mt-4 mb-4">View all resources</h1>
+                <Container className="d-flex align-items-center">
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all resources</h1>
+                    <RequireAuthentication
+                        component={Link}
+                        color="darkblue"
+                        size="sm"
+                        className="btn btn-darkblue btn-sm flex-shrink-0"
+                        to={ROUTES.ADD_RESOURCE}
+                    >
+                        <Icon icon={faPlus} /> Create resource
+                    </RequireAuthentication>
                 </Container>
-                <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
-                    <div className="clearfix">
-                        <RequireAuthentication component={Link} className="float-right mb-2 mt-2 clearfix" to={ROUTES.ADD_RESOURCE}>
-                            <span className="fa fa-plus" /> Create new resource
-                        </RequireAuthentication>
-                    </div>
-                    {this.state.resources.length > 0 && (
-                        <div>
-                            {this.state.resources.map(resource => {
-                                return (
-                                    <ShortRecord key={resource.id} header={resource.label} href={reverse(ROUTES.RESOURCE, { id: resource.id })}>
-                                        {resource.id}
-                                    </ShortRecord>
-                                );
-                            })}
-                        </div>
-                    )}
-                    {this.state.resources.length === 0 && !this.state.isNextPageLoading && <div className="text-center mt-4 mb-4">No Resources</div>}
-                    {this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">
-                            <Icon icon={faSpinner} spin /> Loading
-                        </div>
-                    )}
-                    {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                        <div
-                            style={{ cursor: 'pointer' }}
-                            className="list-group-item list-group-item-action text-center mt-2"
-                            onClick={!this.state.isNextPageLoading ? this.loadMoreResources : undefined}
-                        >
-                            Load more resources
-                        </div>
-                    )}
-                    {!this.state.hasNextPage && this.state.isLastPageReached && (
-                        <div className="text-center mt-3">You have reached the last page.</div>
-                    )}
+                <Container className="p-0">
+                    <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
+                        {this.state.resources.length > 0 && (
+                            <div>
+                                {this.state.resources.map(resource => {
+                                    return (
+                                        <ShortRecord key={resource.id} header={resource.label} href={reverse(ROUTES.RESOURCE, { id: resource.id })}>
+                                            {resource.id}
+                                        </ShortRecord>
+                                    );
+                                })}
+                            </div>
+                        )}
+                        {this.state.resources.length === 0 && !this.state.isNextPageLoading && (
+                            <ListGroupItem tag="div" className="text-center">
+                                No Resources
+                            </ListGroupItem>
+                        )}
+                        {this.state.isNextPageLoading && (
+                            <ListGroupItem tag="div" className="text-center">
+                                <Icon icon={faSpinner} spin /> Loading
+                            </ListGroupItem>
+                        )}
+                        {!this.state.isNextPageLoading && this.state.hasNextPage && (
+                            <ListGroupItem
+                                style={{ cursor: 'pointer' }}
+                                className="text-center"
+                                action
+                                onClick={!this.state.isNextPageLoading ? this.loadMoreResources : undefined}
+                            >
+                                <Icon icon={faAngleDoubleDown} /> Load more resources
+                            </ListGroupItem>
+                        )}
+                        {!this.state.hasNextPage && this.state.isLastPageReached && (
+                            <ListGroupItem tag="div" className="text-center">
+                                You have reached the last page.
+                            </ListGroupItem>
+                        )}
+                    </ListGroup>
                 </Container>
             </>
         );

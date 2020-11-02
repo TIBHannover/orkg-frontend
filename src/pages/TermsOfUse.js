@@ -8,7 +8,7 @@ export default function DataProtection() {
 
     return (
         <div>
-            <Container className="p-0">
+            <Container>
                 <h1 className="h4 mt-4 mb-4">Terms of use </h1>
             </Container>
             <Container className="box rounded pt-4 pb-4 pl-5 pr-5">

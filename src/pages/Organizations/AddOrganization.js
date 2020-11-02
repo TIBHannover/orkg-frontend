@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { toast } from 'react-toastify';
-import { updateUserRole } from 'services/backend/users';
 import { createOrganization } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
@@ -41,7 +40,6 @@ class AddOrganization extends Component {
                     try {
                         const responseJson = await createOrganization(value, image[0], this.props.user.id, url);
                         const organizationId = responseJson.id;
-                        await updateUserRole();
                         this.navigateToOrganization(organizationId);
                     } catch (error) {
                         this.setState({ editorState: 'edit' });
