@@ -297,7 +297,9 @@ function Autocomplete(props) {
                 responseJson = await GetExternalClasses(value, pageOLS);
             }
 
-            responseJson = await IdMatch(value.trim(), responseJson);
+            if (page === 1) {
+                responseJson = await IdMatch(value.trim(), responseJson);
+            }
 
             if (responseJson.length > pageSize) {
                 // in case the endpoint doesn't support pagination!
