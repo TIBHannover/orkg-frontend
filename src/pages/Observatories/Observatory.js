@@ -36,7 +36,7 @@ class Observatory extends Component {
             error: null,
             label: '',
             description: '',
-            researchField: '',
+            researchField: null,
             isContributorsModalOpen: false,
             isLoading: false,
             isLoadingContributors: false,
@@ -222,9 +222,14 @@ class Observatory extends Component {
                             )}
                             {this.state.description}
                             <br />
-                            <div className="flex-grow-1">
-                                <small>Research field: {this.state.researchField}</small>
-                            </div>
+                            {this.state.researchField && this.state.researchField.id && (
+                                <div className="flex-grow-1 mt-2">
+                                    Research field:
+                                    <Link className="ml-2" to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.researchField.id })}>
+                                        {this.state.researchField && this.state.researchField.label}
+                                    </Link>
+                                </div>
+                            )}
                         </Container>
 
                         <Container>
