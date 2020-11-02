@@ -10,6 +10,7 @@ import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'bo
 import { withTheme } from 'styled-components';
 import { withCookies, Cookies } from 'react-cookie';
 import PropTypes from 'prop-types';
+import env from '@beam-australia/react-env';
 
 class ContributionsHelpTour extends Component {
     constructor(props) {
@@ -23,7 +24,7 @@ class ContributionsHelpTour extends Component {
         // check if a cookie of take a tour exist
         if (this.props.cookies && this.props.cookies.get('taketour') === 'take' && !this.props.cookies.get('showedContributions')) {
             this.props.openTour();
-            this.props.cookies.set('showedContributions', true, { path: process.env.PUBLIC_URL, maxAge: 604800 });
+            this.props.cookies.set('showedContributions', true, { path: env('PUBLIC_URL'), maxAge: 604800 });
         }
     }
 
@@ -31,7 +32,10 @@ class ContributionsHelpTour extends Component {
         clearAllBodyScrollLocks();
     }
 
-    disableBody = target => disableBodyScroll(target);
+    disableBody = target =>
+        disableBodyScroll(target, {
+            reserveScrollBarGap: true
+        });
     enableBody = target => enableBodyScroll(target);
 
     requestCloseTour = () => {

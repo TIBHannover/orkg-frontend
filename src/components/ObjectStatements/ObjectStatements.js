@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { getStatementsByObject } from 'network';
+import { getStatementsByObject } from 'services/backend/statements';
 import { Button, Table, Collapse } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -81,7 +81,7 @@ const ObjectStatements = props => {
                             <thead>
                                 <tr>
                                     <th width="33%">Subject</th>
-                                    <th width="33%">Predicate</th>
+                                    <th width="33%">Property</th>
                                     <th width="33%">Object</th>
                                 </tr>
                             </thead>
@@ -99,7 +99,7 @@ const ObjectStatements = props => {
                                 ))}
                                 {!isLoading && hasNextPage && (
                                     <tr style={{ cursor: 'pointer' }} className="text-center" onClick={handleLoadMore}>
-                                        <td colspan="3">View more object statements</td>
+                                        <td colSpan="3">View more object statements</td>
                                     </tr>
                                 )}
                             </tbody>

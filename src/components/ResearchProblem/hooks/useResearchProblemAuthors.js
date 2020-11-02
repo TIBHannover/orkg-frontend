@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getAuthorsByResearchProblemId } from 'network';
+import { getAuthorsByResearchProblemId } from 'services/backend/problems';
 import { useParams } from 'react-router-dom';
 
 function useResearchProblemAuthors() {

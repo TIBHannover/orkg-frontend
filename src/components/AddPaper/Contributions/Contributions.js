@@ -15,7 +15,7 @@ import {
     saveAddPaper,
     openTour,
     toggleAbstractDialog
-} from '../../../actions/addPaper';
+} from 'actions/addPaper';
 import Abstract from './../Abstract/Abstract';
 import Confirm from 'reactstrap-confirm';
 import Contribution from './Contribution';
@@ -114,18 +114,15 @@ class Contributions extends Component {
     };
 
     handleSelectContribution = contributionId => {
-        const resourceId = this.props.contributions.byId[contributionId].resourceId;
-
-        this.props.selectContribution({
-            id: contributionId,
-            resourceId
-        });
+        this.props.selectContribution(this.props.contributions.byId[contributionId]);
     };
 
     handleChange = (contributionId, label) => {
+        const contribution = this.props.contributions.byId[contributionId];
         this.props.updateContributionLabel({
             label: label,
-            contributionId: contributionId
+            contributionId: contributionId,
+            resourceId: contribution.resourceId
         });
     };
 

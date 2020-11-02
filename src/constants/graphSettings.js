@@ -34,7 +34,14 @@ export const PREDICATES = {
     TEMPLATE_COMPONENT_OCCURRENCE_MIN: 'TemplateComponentOccurrenceMin',
     TEMPLATE_COMPONENT_ORDER: 'TemplateComponentOrder',
     TEMPLATE_STRICT: 'TemplateStrict',
-    TEMPLATE_LABEL_FORMAT: 'TemplateLabelFormat'
+    TEMPLATE_LABEL_FORMAT: 'TemplateLabelFormat',
+    HAS_PART: 'HasPart',
+    HAS_CONTENT: 'hasContent',
+    CONTAINS: 'contains',
+    COMPARE_CONTRIBUTION: 'compareContribution',
+    HAS_PROPERTY: 'hasProperty',
+    HAS_PREVIOUS_VERSION: 'hasPreviousVersion',
+    HAS_SUBJECT: 'hasSubject'
 };
 
 export const CLASSES = {
@@ -51,12 +58,14 @@ export const CLASSES = {
     FEATURED_COMPARISON: 'FeaturedComparison',
     FEATURED_COMPARISON_CATEGORY: 'FeaturedComparisonCategory',
     CONTRIBUTION_TEMPLATE: 'ContributionTemplate',
-    PREDICATE: 'Predicate',
-    QB_DATASET_CLASS: 'QBDataset'
+    PREDICATE: 'Predicates',
+    QB_DATASET_CLASS: 'QBDataset',
+    LOCATION: 'DCLocation',
+    SENTENCE: 'Sentence'
 };
 
 export const MISC = {
     RESEARCH_FIELD_MAIN: 'R11',
     DEFAULT_LITERAL_DATATYPE: 'xsd:string',
-    ANONYMOUS_USER_ID: '00000000-0000-0000-0000-000000000000'
+    UNKNOWN_ID: '00000000-0000-0000-0000-000000000000'
 };

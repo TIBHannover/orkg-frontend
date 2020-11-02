@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { CLASSES } from 'constants/graphSettings';
 import Confirm from 'reactstrap-confirm';
-import { updateResourceClasses, getStatementsBySubjectAndPredicate } from 'network';
+import { getStatementsBySubjectAndPredicate } from 'services/backend/statements';
+import { updateResourceClasses } from 'services/backend/resources';
 import { toast } from 'react-toastify';
 import { PREDICATES } from 'constants/graphSettings';
 import { useHistory } from 'react-router-dom';

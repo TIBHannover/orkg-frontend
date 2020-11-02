@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { getUserInformationById } from 'network';
-import Items from '../components/UserProfile/Items';
+import { getUserInformationById } from 'services/backend/users';
+import Items from 'components/UserProfile/Items';
 import NotFound from 'pages/NotFound';
 import { useSelector } from 'react-redux';
 import { CLASSES } from 'constants/graphSettings';
@@ -72,7 +72,7 @@ const UserProfile = props => {
     return (
         <>
             <Container className="p-0">
-                <h1 className="h4 mt-4 mb-4">Profile of {displayName}</h1>
+                <h1 className="h4 mt-4 mb-4">Contributions by {displayName}</h1>
             </Container>
             {/*<Container className="box pt-4 pb-3 pl-5 pr-5">
                 <Row>

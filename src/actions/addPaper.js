@@ -1,8 +1,19 @@
-import * as network from '../network';
 import * as type from './types.js';
 import { guid } from '../utils';
 import { mergeWith, isArray, uniqBy } from 'lodash';
-import { createResource, selectResource, createProperty, createValue, loadStatementBrowserData } from './statementBrowser';
+import {
+    createResource,
+    selectResource,
+    createProperty,
+    createValue,
+    loadStatementBrowserData,
+    updateContributionLabel as updateContributionLabelInSB
+} from './statementBrowser';
+import { createResource as createResourceApi } from 'services/backend/resources';
+import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';
+import { saveFullPaper } from 'services/backend/misc';
+import { createLiteral } from 'services/backend/literals';
+import { createPredicate } from 'services/backend/predicates';
 import { toast } from 'react-toastify';
 import { PREDICATES, MISC } from 'constants/graphSettings';
 
@@ -113,21 +124,27 @@ export const clearAnnotations = () => dispatch => {
     });
 };
 
-export const createContribution = ({ selectAfterCreation = false, prefillStatements: performPrefill = false, statements = null }) => dispatch => {
+export const createContribution = ({ selectAfterCreation = false, prefillStatements: performPrefill = false, statements = null }) => (
+    dispatch,
+    getState
+) => {
     const newResourceId = guid();
     const newContributionId = guid();
+    const newContributionLabel = `Contribution ${getState().addPaper.contributions.allIds.length + 1}`;
 
     dispatch({
         type: type.CREATE_CONTRIBUTION,
         payload: {
             id: newContributionId,
-            resourceId: newResourceId
+            resourceId: newResourceId,
+            label: newContributionLabel
         }
     });
 
     dispatch(
         createResource({
-            resourceId: newResourceId
+            resourceId: newResourceId,
+            label: newContributionLabel
         })
     );
 
@@ -136,7 +153,7 @@ export const createContribution = ({ selectAfterCreation = false, prefillStateme
             selectResource({
                 increaseLevel: false,
                 resourceId: newResourceId,
-                label: 'Main'
+                label: newContributionLabel
             })
         );
 
@@ -180,6 +197,8 @@ export const prefillStatements = ({ statements, resourceId, syncBackend = false 
                 range: property.range ? property.range : null,
                 isTemplate: property.isTemplate ? property.isTemplate : false,
                 validationRules: property.validationRules ? property.validationRules : {},
+                minOccurs: property.minOccurs ? property.minOccurs : 0,
+                maxOccurs: property.maxOccurs ? property.maxOccurs : null,
                 isAnimated: property.isAnimated !== undefined ? property.isAnimated : false,
                 canDuplicate: property.canDuplicate ? true : false
             })
@@ -208,21 +227,21 @@ export const prefillStatements = ({ statements, resourceId, syncBackend = false 
             const predicate = getState().statementBrowser.properties.byId[value.propertyId];
             if (value.existingResourceId) {
                 // The value exist in the database
-                newStatement = await network.createResourceStatement(resourceId, predicate.existingPredicateId, value.existingResourceId);
+                newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, value.existingResourceId);
             } else {
                 // The value doesn't exist in the database
                 switch (value.type) {
                     case 'object':
-                        newObject = await network.createResource(value.label, value.classes ? value.classes : []);
-                        newStatement = await network.createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
+                        newObject = await createResourceApi(value.label, value.classes ? value.classes : []);
+                        newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
                         break;
                     case 'property':
-                        newObject = await network.createPredicate(value.label);
-                        newStatement = await network.createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
+                        newObject = await createPredicate(value.label);
+                        newStatement = await createResourceStatement(resourceId, predicate.existingPredicateId, newObject.id);
                         break;
                     default:
-                        newObject = await network.createLiteral(value.label, value.datatype);
-                        newStatement = await network.createLiteralStatement(resourceId, predicate.existingPredicateId, newObject.id);
+                        newObject = await createLiteral(value.label, value.datatype);
+                        newStatement = await createLiteralStatement(resourceId, predicate.existingPredicateId, newObject.id);
                 }
             }
         }
@@ -285,7 +304,7 @@ export const selectContribution = data => dispatch => {
         selectResource({
             increaseLevel: false,
             resourceId: data.resourceId,
-            label: 'Main',
+            label: data.label,
             resetLevel: true
         })
     );
@@ -296,6 +315,8 @@ export const updateContributionLabel = data => dispatch => {
         type: type.UPDATE_CONTRIBUTION_LABEL,
         payload: data
     });
+
+    dispatch(updateContributionLabelInSB({ id: data.resourceId, label: data.label }));
 };
 
 export const updateResearchProblems = data => dispatch => {
@@ -377,7 +398,7 @@ export const saveAddPaper = data => {
                 authors: data.authors.map(author => ({ label: author.label, ...(author.orcid ? { orcid: author.orcid } : {}) })),
                 publicationMonth: data.publicationMonth,
                 publicationYear: data.publicationYear,
-                publishedIn: data.publishedIn,
+                publishedIn: data.publishedIn ? data.publishedIn : undefined,
                 url: data.url,
                 researchField: data.selectedResearchField,
                 // Set the contributions data
@@ -406,7 +427,7 @@ export const saveAddPaper = data => {
         };
 
         try {
-            const paper = await network.saveFullPaper(paperObj);
+            const paper = await saveFullPaper(paperObj);
             dispatch({
                 type: type.SAVE_ADD_PAPER,
                 id: paper.id

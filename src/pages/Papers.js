@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { getResourcesByClass, getStatementsBySubjects } from '../network';
-import { Container } from 'reactstrap';
+import { getStatementsBySubjects } from 'services/backend/statements';
+import { getResourcesByClass } from 'services/backend/classes';
+import { Container, ListGroup, ListGroupItem } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import PaperCardDynamic from './../components/PaperCard/PaperCardDynamic';
+import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
+import PaperCardDynamic from 'components/PaperCard/PaperCardDynamic';
 import { CLASSES } from 'constants/graphSettings';
 
 export default class Papers extends Component {
@@ -101,31 +102,39 @@ export default class Papers extends Component {
     render() {
         return (
             <>
-                <Container className="p-0">
+                <Container>
                     <h1 className="h4 mt-4 mb-4">View all papers</h1>
                 </Container>
                 <Container className="p-0">
-                    {this.state.paperResources.length > 0 && <div>{this.renderPaperCards()}</div>}
-                    {this.state.paperResources.length === 0 && !this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">No Papers</div>
-                    )}
-                    {this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">
-                            <Icon icon={faSpinner} spin /> Loading
-                        </div>
-                    )}
-                    {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                        <div
-                            style={{ cursor: 'pointer' }}
-                            className="list-group-item list-group-item-action text-center mt-2"
-                            onClick={!this.state.isNextPageLoading ? this.loadMorePapers : undefined}
-                        >
-                            Load more papers
-                        </div>
-                    )}
-                    {!this.state.hasNextPage && this.state.isLastPageReached && (
-                        <div className="text-center mt-3">You have reached the last page.</div>
-                    )}
+                    <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
+                        {this.state.paperResources.length > 0 && this.renderPaperCards()}
+                        {this.state.paperResources.length === 0 && !this.state.isNextPageLoading && (
+                            <ListGroupItem tag="div" className="text-center">
+                                No Papers
+                            </ListGroupItem>
+                        )}
+                        {this.state.isNextPageLoading && (
+                            <ListGroupItem tag="div" className="text-center">
+                                <Icon icon={faSpinner} spin /> Loading
+                            </ListGroupItem>
+                        )}
+                        {!this.state.isNextPageLoading && this.state.hasNextPage && (
+                            <ListGroupItem
+                                style={{ cursor: 'pointer' }}
+                                action
+                                className="text-center"
+                                tag="div"
+                                onClick={!this.state.isNextPageLoading ? this.loadMorePapers : undefined}
+                            >
+                                <Icon icon={faAngleDoubleDown} /> Load more papers
+                            </ListGroupItem>
+                        )}
+                        {!this.state.hasNextPage && this.state.isLastPageReached && (
+                            <ListGroupItem tag="div" className="text-center">
+                                You have reached the last page.
+                            </ListGroupItem>
+                        )}
+                    </ListGroup>
                 </Container>
             </>
         );

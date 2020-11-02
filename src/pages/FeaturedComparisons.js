@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Container, Alert, Row, ButtonGroup } from 'reactstrap';
 import ROUTES from 'constants/routes';
-import FeaturedComparisonsItem from '../components/FeaturedComparisons/FeaturedComparisonsItem';
-import { getResourcesByClass, getStatementsBySubjects } from '../network';
+import FeaturedComparisonsItem from 'components/FeaturedComparisons/FeaturedComparisonsItem';
+import { getStatementsBySubjects } from 'services/backend/statements';
+import { getResourcesByClass } from 'services/backend/classes';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';

@@ -29,7 +29,18 @@ export default function ValueItemTemplate(props) {
 
     const validateValue = () => {
         if (props.valueClass && ['Date', 'Number', 'String'].includes(props.valueClass.id)) {
-            const schema = validationSchema(props.components[0]);
+            let component;
+            if (props.components && props.components.length > 0) {
+                component = props.components[0];
+            }
+            if (!component) {
+                component = {
+                    value: props.valueClass,
+                    property: { id: props.predicate.id, label: props.predicate.label },
+                    validationRules: props.predicate.validationRules
+                };
+            }
+            const schema = validationSchema(component);
             const { error, value } = schema.validate(draftLabel);
             if (error) {
                 setFormFeedback(error.message);
@@ -62,7 +73,7 @@ export default function ValueItemTemplate(props) {
                         <Button className="p-0 text-left" color="link" onClick={props.handleOnClick} style={{ userSelect: 'text' }}>
                             {props.showHelp && props.value.type === 'object' ? (
                                 <Pulse content="Click on the resource to browse it">
-                                    <ValuePlugins type="resource">{props.value.label}</ValuePlugins>
+                                    <ValuePlugins type="resource">{props.getLabel() || ''}</ValuePlugins>
                                 </Pulse>
                             ) : (
                                 <ValuePlugins type="resource">{props.getLabel() || ''}</ValuePlugins>
@@ -169,7 +180,6 @@ ValueItemTemplate.propTypes = {
     inline: PropTypes.bool.isRequired,
     showHelp: PropTypes.bool,
     enableEdit: PropTypes.bool.isRequired,
-    loadOptions: PropTypes.func.isRequired,
     getLabel: PropTypes.func.isRequired,
     predicate: PropTypes.object.isRequired,
 

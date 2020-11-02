@@ -37,10 +37,12 @@ import Tour from 'reactour';
 import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import { getPaperData } from 'utils';
-import { getPaperByDOI, getStatementsBySubject } from 'network';
+import { getStatementsBySubject } from 'services/backend/statements';
+import { getPaperByDOI } from 'services/backend/misc';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import ExistingDoiModal from './ExistingDoiModal';
-import { isString } from 'lodash';
+import { parseCiteResult } from 'utils';
+import env from '@beam-australia/react-env';
 
 const Container = styled(CSSTransition)`
     &.fadeIn-enter {
@@ -123,8 +125,11 @@ class GeneralData extends Component {
         clearAllBodyScrollLocks();
     }
 
-    disableBody = target => disableBodyScroll();
-    enableBody = target => enableBodyScroll();
+    disableBody = target =>
+        disableBodyScroll(target, {
+            reserveScrollBarGap: true
+        });
+    enableBody = target => enableBodyScroll(target);
 
     //moved callback after stateUpdate into a function
     updateGlobalStateForVisualization = () => {
@@ -221,48 +226,8 @@ class GeneralData extends Component {
             })
             .then(paper => {
                 if (paper) {
-                    let paperTitle = '',
-                        paperAuthors = [],
-                        paperPublicationMonth = '',
-                        paperPublicationYear = '',
-                        doi = '',
-                        publishedIn = '';
-                    try {
-                        const { title, subtitle, author, issued, DOI, 'container-title': containerTitle } = paper.data[0];
-
-                        paperTitle = title;
-                        if (subtitle && subtitle.length > 0) {
-                            // include the subtitle
-                            paperTitle = `${paperTitle}: ${subtitle[0]}`;
-                        }
-                        if (author) {
-                            paperAuthors = author.map(author => {
-                                let fullname = [author.given, author.family].join(' ').trim();
-                                if (!fullname) {
-                                    fullname = author.literal ? author.literal : '';
-                                }
-                                return {
-                                    label: fullname,
-                                    id: fullname,
-                                    orcid: author.ORCID ? author.ORCID : ''
-                                };
-                            });
-                        }
-                        const [year, month] = issued['date-parts'][0];
-
-                        if (month) {
-                            paperPublicationMonth = month;
-                        }
-                        if (year) {
-                            paperPublicationYear = year;
-                        }
-                        doi = DOI ? DOI : '';
-                        if (containerTitle && isString(containerTitle)) {
-                            publishedIn = containerTitle;
-                        }
-                    } catch (e) {
-                        console.log('Error setting paper data: ', e);
-                    }
+                    const parseResult = parseCiteResult(paper);
+                    const { paperTitle, paperAuthors, paperPublicationMonth, paperPublicationYear, doi, publishedIn } = parseResult;
 
                     this.setState(
                         {
@@ -323,7 +288,7 @@ class GeneralData extends Component {
     };
 
     handleSkipTour = () => {
-        this.props.cookies.set('taketour', 'skip', { path: process.env.PUBLIC_URL, maxAge: 604800 });
+        this.props.cookies.set('taketour', 'skip', { path: env('PUBLIC_URL'), maxAge: 604800 });
         this.toggle('isFirstVisit');
         if (this.props.cookies.get('taketourClosed')) {
             this.props.closeTour();
@@ -334,7 +299,7 @@ class GeneralData extends Component {
     };
 
     takeTour = () => {
-        this.props.cookies.set('taketour', 'take', { path: process.env.PUBLIC_URL, maxAge: 604800 });
+        this.props.cookies.set('taketour', 'take', { path: env('PUBLIC_URL'), maxAge: 604800 });
         this.toggle('isFirstVisit');
         this.props.openTour();
     };
@@ -632,7 +597,7 @@ class GeneralData extends Component {
                                             </Row>
                                             <FormGroup>
                                                 <Label for="publishedIn">
-                                                    <Tooltip message="The paper venue ">Published in</Tooltip>
+                                                    <Tooltip message="The conference or journal name">Published in</Tooltip>
                                                 </Label>
                                                 <Input
                                                     type="text"

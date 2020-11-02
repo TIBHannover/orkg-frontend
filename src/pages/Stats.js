@@ -4,7 +4,7 @@ import { faStream, faBars, faHeading, faTag } from '@fortawesome/free-solid-svg-
 import ColoredStatsBox from 'components/Stats/ColoredStatsBox';
 import InlineStatsBox from 'components/Stats/InlineStatsBox';
 import { toast } from 'react-toastify';
-import { getStats } from '../network';
+import { getStats } from 'services/backend/stats';
 
 class Stats extends Component {
     constructor(props) {
@@ -35,7 +35,7 @@ class Stats extends Component {
     render() {
         return (
             <div>
-                <Container className="p-0">
+                <Container>
                     <h1 className="h4 mt-4 mb-4">General statistics</h1>
                 </Container>
 
@@ -75,7 +75,7 @@ class Stats extends Component {
                     </Row>
                 </Container>
 
-                <Container className="p-0">
+                <Container>
                     <h1 className="h4 mt-4 mb-4">Technical values</h1>
                 </Container>
 

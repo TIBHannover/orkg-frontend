@@ -6,6 +6,7 @@ import {
     selectResource,
     createRequiredPropertiesInResource
 } from 'actions/statementBrowser';
+import { prefillStatements } from 'actions/addPaper';
 import { isLiteral, getValueClass } from './helpers/utils';
 import AddValue from './AddValue';
 
@@ -15,7 +16,7 @@ const mapStateToProps = (state, props) => {
     for (const key in state.statementBrowser.resources.byId) {
         const resource = state.statementBrowser.resources.byId[key];
 
-        if (!resource.existingResourceId) {
+        if (!resource.existingResourceId && resource.label && resource.id) {
             newResourcesList.push({
                 id: resource.id,
                 label: resource.label,
@@ -49,6 +50,7 @@ const mapDispatchToProps = dispatch => ({
     createValue: data => dispatch(createValue(data)),
     createProperty: data => dispatch(createProperty(data)),
     selectResource: data => dispatch(selectResource(data)),
+    prefillStatements: data => dispatch(prefillStatements(data)),
     fetchTemplatesofClassIfNeeded: data => dispatch(fetchTemplatesofClassIfNeeded(data)),
     createRequiredPropertiesInResource: data => dispatch(createRequiredPropertiesInResource(data))
 });

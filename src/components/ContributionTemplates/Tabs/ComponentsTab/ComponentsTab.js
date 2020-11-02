@@ -1,9 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import { Button, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, CustomInput } from 'reactstrap';
 import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
-import { setComponents } from 'actions/addTemplate';
-import { createPredicate, createClass } from 'network';
+import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
+import { setComponents, setIsStrictTemplate } from 'actions/addTemplate';
+import { createPredicate } from 'services/backend/predicates';
 import TemplateComponent from 'components/ContributionTemplates/TemplateComponent/TemplateComponent';
 import AddPropertyTemplate from 'components/StatementBrowser/AddProperty/AddPropertyTemplate';
 import update from 'immutability-helper';
@@ -49,35 +50,24 @@ function ComponentsTab(props) {
 
     const handleClassOfPropertySelect = async (selected, action, index) => {
         if (action.action === 'create-option') {
-            const result = await Confirm({
-                title: 'Are you sure you need a new class?',
-                message: 'Often there are existing classes that you can use as well. It is better to use existing classes than new ones.',
-                cancelColor: 'light'
+            const newClass = await ConfirmClass({
+                label: selected.label
             });
-            if (result) {
-                const newPredicate = await createClass(selected.label);
-                selected = { id: newPredicate.id, label: selected.label };
-
-                const templateComponents = props.components.map((item, j) => {
-                    if (j === index) {
-                        item.value = !selected ? null : selected;
-                        item.validationRules = {};
-                    }
-                    return item;
-                });
-                props.setComponents(templateComponents);
+            if (newClass) {
+                selected = { id: newClass.id, label: newClass.label };
+            } else {
+                return null;
             }
-        } else {
-            const templateComponents = props.components.map((item, j) => {
-                if (j === index) {
-                    item.value = !selected ? null : selected;
-                    item.validationRules = {};
-                }
-                return item;
-            });
-
-            props.setComponents(templateComponents);
         }
+        const templateComponents = props.components.map((item, j) => {
+            if (j === index) {
+                item.value = !selected ? null : selected;
+                item.validationRules = {};
+            }
+            return item;
+        });
+
+        props.setComponents(templateComponents);
     };
 
     const handleSelectNewProperty = ({ id, value: label }) => {
@@ -125,6 +115,10 @@ function ComponentsTab(props) {
         },
         [props]
     );
+
+    const handleSwitchIsStrictTemplate = event => {
+        props.setIsStrictTemplate(event.target.checked);
+    };
 
     return (
         <div className="p-4">
@@ -188,6 +182,19 @@ function ComponentsTab(props) {
                         </Modal>
                     </>
                 )}
+                <FormGroup className="mt-3">
+                    <div>
+                        <CustomInput
+                            onChange={handleSwitchIsStrictTemplate}
+                            checked={props.isStrictTemplate}
+                            id="switchIsStrictTemplate"
+                            type="switch"
+                            name="customSwitch"
+                            label="This template is strict (users cannot add additional properties themselves)"
+                            disabled={!props.editMode}
+                        />
+                    </div>
+                </FormGroup>
             </div>
         </div>
     );
@@ -196,18 +203,22 @@ function ComponentsTab(props) {
 ComponentsTab.propTypes = {
     components: PropTypes.array.isRequired,
     editMode: PropTypes.bool.isRequired,
-    setComponents: PropTypes.func.isRequired
+    setComponents: PropTypes.func.isRequired,
+    setIsStrictTemplate: PropTypes.func.isRequired,
+    isStrictTemplate: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => {
     return {
         components: state.addTemplate.components,
-        editMode: state.addTemplate.editMode
+        editMode: state.addTemplate.editMode,
+        isStrictTemplate: state.addTemplate.isStrict
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    setComponents: data => dispatch(setComponents(data))
+    setComponents: data => dispatch(setComponents(data)),
+    setIsStrictTemplate: data => dispatch(setIsStrictTemplate(data))
 });
 
 export default connect(

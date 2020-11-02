@@ -1,26 +1,32 @@
 import React, { Component } from 'react';
 import { Container, Modal, ModalBody, ModalHeader, Button } from 'reactstrap';
 import { Col, Row } from 'reactstrap';
+import { getStatementsBySubjects } from 'services/backend/statements';
+import { getOrganization } from 'services/backend/organizations';
 import {
+    getObservatoryById,
     getUsersByObservatoryId,
-    getOrganization,
     getResourcesByObservatoryId,
     getComparisonsByObservatoryId,
-    getProblemsByObservatoryId,
-    getObservatoryById,
-    getStatementsBySubjects
-} from 'network';
+    getProblemsByObservatoryId
+} from 'services/backend/observatories';
 import InternalServerError from 'pages/InternalServerError';
 import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
+import EditObservatory from 'components/Observatory/EditObservatory';
+import AddResearchProblem from 'components/Observatory/AddResearchProblem';
 import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
+import { faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { getPaperData, getComparisonData } from 'utils';
 import { find } from 'lodash';
+import capitalize from 'capitalize';
+import { connect } from 'react-redux';
 
 class Observatory extends Component {
     constructor(props) {
@@ -30,6 +36,7 @@ class Observatory extends Component {
             error: null,
             label: '',
             description: '',
+            researchField: '',
             isContributorsModalOpen: false,
             isLoading: false,
             isLoadingContributors: false,
@@ -42,7 +49,9 @@ class Observatory extends Component {
             activeTab: 1,
             papersList: [],
             organizationsList: [],
-            comparisonsList: []
+            comparisonsList: [],
+            showEditDialog: false,
+            showAddResearchProblemDialog: false
         };
     }
 
@@ -72,9 +81,10 @@ class Observatory extends Component {
                 this.setState({
                     label: observatory.name,
                     description: observatory.description,
-                    isLoading: false
+                    isLoading: false,
+                    researchField: observatory.research_field
                 });
-                this.loadOrganizations(observatory.organizations);
+                this.loadOrganizations(observatory.organization_ids);
             })
             .catch(error => {
                 this.setState({ error: error, isLoading: false });
@@ -149,6 +159,10 @@ class Observatory extends Component {
             });
     };
 
+    updateObservatoryResearchProblem = () => {
+        this.loadProblems();
+    };
+
     loadContributors = () => {
         this.setState({ isLoadingContributors: true });
         getUsersByObservatoryId(this.props.match.params.id)
@@ -165,12 +179,16 @@ class Observatory extends Component {
 
     loadOrganizations = organizationsData => {
         this.setState({ isLoadingOrganizations: true });
-        Promise.all(organizationsData.map(o => getOrganization(o.id))).then(data => {
+        Promise.all(organizationsData.map(o => getOrganization(o))).then(data => {
             this.setState({
                 organizationsList: data,
                 isLoadingOrganizations: false
             });
         });
+    };
+
+    updateObservatoryMetadata = (label, description, researchField) => {
+        this.setState({ label: label, description: description, researchField: researchField });
     };
 
     toggle = type => {
@@ -192,14 +210,38 @@ class Observatory extends Component {
 
                         <Container className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
                             <h3>{this.state.label}</h3>
+                            {this.props.user && (
+                                <Button
+                                    color="darkblue"
+                                    size="sm"
+                                    style={{ float: 'right', marginTop: '-40px' }}
+                                    onClick={() => this.toggle('showEditDialog')}
+                                >
+                                    <Icon icon={faPen} /> Edit
+                                </Button>
+                            )}
                             {this.state.description}
+                            <br />
+                            <div className="flex-grow-1">
+                                <small>Research field: {this.state.researchField}</small>
+                            </div>
                         </Container>
 
                         <Container>
                             <Row className="mt-4">
-                                <Col md={8} sm={12} style={{ minHeight: '500px' }} className="d-flex px-0 pr-4">
+                                <Col md={4} sm={12} style={{ minHeight: '300px' }} className="d-flex px-0 pr-3">
                                     <div className="box rounded-lg p-4 flex-grow-1">
                                         <h5>Research Problems</h5>
+                                        {this.props.user && (
+                                            <Button
+                                                outline
+                                                size="sm"
+                                                style={{ float: 'right', marginTop: '-33px' }}
+                                                onClick={() => this.toggle('showAddResearchProblemDialog')}
+                                            >
+                                                <Icon icon={faPlus} /> Add
+                                            </Button>
+                                        )}
                                         {!this.state.isLoadingProblems ? (
                                             <div className="mb-4 mt-2">
                                                 {this.state.problemsList.length > 0 ? (
@@ -211,7 +253,7 @@ class Observatory extends Component {
                                                                         <Link
                                                                             to={reverse(ROUTES.RESEARCH_PROBLEM, { researchProblemId: problem.id })}
                                                                         >
-                                                                            {problem.label}
+                                                                            {capitalize(problem.label)}
                                                                         </Link>
                                                                     </li>
                                                                 );
@@ -227,8 +269,8 @@ class Observatory extends Component {
                                         )}
                                     </div>
                                 </Col>
-                                <Col md={4} sm={12} style={{ display: 'flex', flexDirection: 'column' }} className="px-0">
-                                    <div className="box rounded-lg p-4">
+                                <Col md={4} sm={12} style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <div className="box rounded-lg p-4 flex-grow-1">
                                         <h5>Organizations</h5>
                                         {!this.state.isLoadingOrganizations ? (
                                             <div className="mb-4 mt-4">
@@ -250,7 +292,7 @@ class Observatory extends Component {
                                                                         <Link to={reverse(ROUTES.ORGANIZATION, { id: organization.id })}>
                                                                             <img
                                                                                 style={{ marginTop: 12 }}
-                                                                                height="70"
+                                                                                height="50"
                                                                                 src={organization.logo}
                                                                                 alt={`${organization.name} logo`}
                                                                             />
@@ -283,7 +325,9 @@ class Observatory extends Component {
                                             <div className="text-center mt-4 mb-4">Loading organizations ...</div>
                                         )}
                                     </div>
-                                    <div className="box rounded-lg mt-4 p-4 flex-grow-1">
+                                </Col>
+                                <Col md={4} sm={12} style={{ display: 'flex', flexDirection: 'column' }} className="px-0 pl-3">
+                                    <div className="box rounded-lg p-4 flex-grow-1">
                                         <h5>Contributors</h5>
 
                                         {!this.state.isLoadingContributors ? (
@@ -409,17 +453,39 @@ class Observatory extends Component {
                         </Container>
                     </>
                 )}
+                <EditObservatory
+                    showDialog={this.state.showEditDialog}
+                    toggle={() => this.toggle('showEditDialog')}
+                    label={this.state.label}
+                    id={this.props.match.params.id}
+                    description={this.state.description}
+                    researchField={this.state.researchField}
+                    updateObservatoryMetadata={this.updateObservatoryMetadata}
+                />
+
+                <AddResearchProblem
+                    showDialog={this.state.showAddResearchProblemDialog}
+                    toggle={() => this.toggle('showAddResearchProblemDialog')}
+                    id={this.props.match.params.id}
+                    organizationId={this.state.organizationsList.length > 0 ? this.state.organizationsList[0]['id'] : ''}
+                    updateObservatoryResearchProblem={this.updateObservatoryResearchProblem}
+                />
             </>
         );
     };
 }
+
+const mapStateToProps = state => ({
+    user: state.auth.user
+});
 
 Observatory.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
             id: PropTypes.string.isRequired
         }).isRequired
-    }).isRequired
+    }).isRequired,
+    user: PropTypes.object
 };
 
-export default Observatory;
+export default connect(mapStateToProps)(Observatory);

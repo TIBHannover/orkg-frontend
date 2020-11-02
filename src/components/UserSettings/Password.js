@@ -1,6 +1,6 @@
 import { Row, Form, FormGroup, Label, Input, Button, Alert, FormFeedback } from 'reactstrap';
 import React, { Component } from 'react';
-import { updateUserPassword } from '../../network';
+import { updateUserPassword } from 'services/backend/users';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { get_error_message } from 'utils';

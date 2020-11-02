@@ -25,6 +25,7 @@ export default {
         GENERAL_DATA: '/add-paper'
     },
     VIEW_PAPER: '/paper/:resourceId/:contributionId?',
+    CONTRIBUTION: '/contribution/:id',
     COMPARISON_SHORTLINK: '/c/:shortCode',
     COMPARISON: '/comparison/:comparisonId?',
     PAPERS: '/papers',
@@ -34,10 +35,15 @@ export default {
     VENUE_PAGE: '/venue/:venueId',
     AUTHOR_PAGE: '/author/:authorId',
     LICENSE: '/license',
+    DATA_PROTECTION: '/data-protection',
+    TERMS_OF_USE: '/terms-of-use',
     /* Legacy routes, only used for debugging now */
     SEARCH: '/search/:searchTerm?',
     TPDL: '/tpdl',
     STATS: '/stats',
     CHANGELOG: '/changelog',
-    FEATURED_COMPARISONS: '/featured-comparisons'
+    EXPORT_DATA: '/export-data',
+    FEATURED_COMPARISONS: '/featured-comparisons',
+    PDF_TEXT_ANNOTATION: '/pdf-text-annotation',
+    PDF_ANNOTATION: '/pdf-annotation'
 };

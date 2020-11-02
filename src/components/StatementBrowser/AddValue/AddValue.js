@@ -1,35 +1,98 @@
 import React, { Component } from 'react';
-import { createResourceStatement, createResource, createLiteral, createLiteralStatement, createPredicate } from 'network';
+import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';
+import { createLiteral } from 'services/backend/literals';
+import { createPredicate } from 'services/backend/predicates';
+import { createResource } from 'services/backend/resources';
 import AddValueTemplate from './AddValueTemplate';
 import { guid } from 'utils';
 import PropTypes from 'prop-types';
 import { MISC } from 'constants/graphSettings';
 
 export default class AddValue extends Component {
-    handleValueSelect = async (valueType, { id, value, shared, classes }) => {
+    /**
+     * Create statements for a resource starting from an array of statements
+     *
+     * @param {Array} data array of statement
+     * @return {Object} object of statements to use as an entry for prefillStatements action
+     */
+    generateStatementsFromExternalData = data => {
+        const statements = { properties: [], values: [] };
+        const createdProperties = {};
+        for (const statement of data) {
+            const propertyID = guid();
+            if (!createdProperties[statement.predicate.id]) {
+                createdProperties[statement.predicate.id] = propertyID;
+                statements['properties'].push({
+                    propertyId: createdProperties[statement.predicate.id],
+                    existingPredicateId: statement.predicate.id,
+                    label: statement.predicate.label
+                });
+            }
+            statements['values'].push({
+                type: 'literal',
+                propertyId: createdProperties[statement.predicate.id],
+                label: statement.value.label
+            });
+        }
+        return statements;
+    };
+
+    handleValueSelect = async (valueType, { id, value, shared, classes, external, statements }) => {
         if (this.props.syncBackend) {
             const predicate = this.props.properties.byId[this.props.propertyId ? this.props.propertyId : this.props.selectedProperty];
-            const newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, id);
-            this.props.createValue({
-                label: value,
-                type: valueType,
-                propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
-                classes: classes,
-                existingResourceId: id,
-                isExistingValue: true,
-                statementId: newStatement.id,
-                shared: shared
-            });
+            if (external) {
+                // create the object
+                const newObject = await createResource(value, this.props.valueClass ? [this.props.valueClass.id] : []);
+                const newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, newObject.id);
+                this.props.createValue({
+                    label: value,
+                    type: valueType,
+                    propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
+                    existingResourceId: newObject.id,
+                    isExistingValue: true,
+                    statementId: newStatement.id,
+                    shared: newObject.shared,
+                    classes: this.props.valueClass ? [this.props.valueClass.id] : []
+                });
+                //create statements
+                this.props.prefillStatements({
+                    statements: this.generateStatementsFromExternalData(statements),
+                    resourceId: newObject.id,
+                    syncBackend: this.props.syncBackend
+                });
+            } else {
+                const newStatement = await createResourceStatement(this.props.selectedResource, predicate.existingPredicateId, id);
+                this.props.createValue({
+                    label: value,
+                    type: valueType,
+                    propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
+                    classes: classes,
+                    existingResourceId: id,
+                    isExistingValue: true,
+                    statementId: newStatement.id,
+                    shared: shared
+                });
+            }
         } else {
-            this.props.createValue({
-                label: value,
-                type: valueType,
-                propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
-                classes: classes,
-                existingResourceId: id,
-                isExistingValue: true,
-                shared: shared
-            });
+            if (external) {
+                const newObject = await this.handleAddValue(valueType, value, null);
+                // create statements
+                this.props.prefillStatements({
+                    statements: this.generateStatementsFromExternalData(statements),
+                    resourceId: newObject,
+                    syncBackend: this.props.syncBackend
+                });
+            } else {
+                this.props.createValue({
+                    label: value,
+                    type: valueType,
+                    propertyId: this.props.propertyId ? this.props.propertyId : this.props.selectedProperty,
+                    classes: classes,
+                    existingResourceId: id,
+                    isExistingValue: true,
+                    shared: shared
+                });
+            }
         }
     };
 
@@ -113,6 +176,7 @@ export default class AddValue extends Component {
 AddValue.propTypes = {
     createValue: PropTypes.func.isRequired,
     selectedProperty: PropTypes.string.isRequired,
+    prefillStatements: PropTypes.func.isRequired,
     propertyId: PropTypes.string,
     selectedResource: PropTypes.string.isRequired,
     newResources: PropTypes.array.isRequired,

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { getLongLink } from 'network';
+import { getLongLink } from 'services/similarity/index';
 
 class RedirectShortLinks extends Component {
     constructor(props) {

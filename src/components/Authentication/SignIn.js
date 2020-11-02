@@ -3,10 +3,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { openAuthDialog, toggleAuthDialog, updateAuth } from 'actions/auth';
-import { signInWithEmailAndPassword, getUserInformation } from 'network';
+import { signInWithEmailAndPassword, getUserInformation } from 'services/backend/users';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Cookies } from 'react-cookie';
+import env from '@beam-australia/react-env';
+
 const cookies = new Cookies();
 
 class SignIn extends Component {
@@ -37,9 +39,9 @@ class SignIn extends Component {
         signInWithEmailAndPassword(this.state.email, this.state.password)
             .then(token => {
                 userToken = token.access_token;
-                cookies.set('token', token.access_token, { path: process.env.PUBLIC_URL, maxAge: token.expires_in });
+                cookies.set('token', token.access_token, { path: env('PUBLIC_URL'), maxAge: token.expires_in });
                 token_expires_in = new Date(Date.now() + token.expires_in * 1000);
-                cookies.set('token_expires_in', token_expires_in.toUTCString(), { path: process.env.PUBLIC_URL, maxAge: token.expires_in });
+                cookies.set('token_expires_in', token_expires_in.toUTCString(), { path: env('PUBLIC_URL'), maxAge: token.expires_in });
                 //window.location.reload();
                 return getUserInformation();
             })
@@ -50,7 +52,8 @@ class SignIn extends Component {
                         id: userData.id,
                         token: userToken,
                         email: userData.email,
-                        tokenExpire: token_expires_in
+                        tokenExpire: token_expires_in,
+                        isCurationAllowed: userData.is_curation_allowed
                     }
                 });
                 this.props.toggleAuthDialog();
@@ -75,6 +78,9 @@ class SignIn extends Component {
             <>
                 <Form className="pl-3 pr-3 pt-2" onSubmit={this.signIn}>
                     {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
+
+                    {this.props.signInRequired && <Alert color="info">You need to be signed in to use this functionality</Alert>}
+
                     <FormGroup>
                         <Label for="Email">Email address</Label>
                         <Input
@@ -128,8 +134,13 @@ class SignIn extends Component {
 SignIn.propTypes = {
     openAuthDialog: PropTypes.func.isRequired,
     updateAuth: PropTypes.func.isRequired,
-    toggleAuthDialog: PropTypes.func.isRequired
+    toggleAuthDialog: PropTypes.func.isRequired,
+    signInRequired: PropTypes.bool.isRequired
 };
+
+const mapStateToProps = state => ({
+    signInRequired: state.auth.signInRequired
+});
 
 const mapDispatchToProps = dispatch => ({
     openAuthDialog: action => dispatch(openAuthDialog(action)),
@@ -138,6 +149,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(SignIn);

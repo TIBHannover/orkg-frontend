@@ -14,11 +14,11 @@ import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
 
 const PaperHeader = props => {
     const viewPaper = useSelector(state => state.viewPaper, shallowEqual);
-    const role = useSelector(state => state.auth.role); //TODO: replace mocking value from (probably) user.role
+    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const userId = useSelector(state => state.auth.user?.id);
     const [deletePapers] = useDeletePapers({ paperIds: [viewPaper.paperResourceId], redirect: true });
     const userCreatedThisPaper = viewPaper.createdBy && userId && viewPaper.createdBy === userId; // make sure a user is signed in (not null)
-    const showDeleteButton = props.editMode && (role === 'admin' || userCreatedThisPaper);
+    const showDeleteButton = props.editMode && (isCurationAllowed || userCreatedThisPaper);
 
     return (
         <>
@@ -37,7 +37,7 @@ const PaperHeader = props => {
             ) : (
                 ''
             )}
-            {viewPaper.researchField && (
+            {viewPaper.researchField && viewPaper.researchField.id && (
                 <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: viewPaper.researchField.id })}>
                     <span className="badge badge-lightblue mr-2 mb-2">
                         <Icon icon={faBars} className="text-primary" /> {viewPaper.researchField.label}
@@ -59,7 +59,7 @@ const PaperHeader = props => {
             )}
             <br />
             <div className="d-flex justify-content-end align-items-center">
-                {viewPaper.publishedIn && (
+                {viewPaper.publishedIn && viewPaper.publishedIn.id && (
                     <div className="flex-grow-1">
                         <small>
                             Published in:{' '}

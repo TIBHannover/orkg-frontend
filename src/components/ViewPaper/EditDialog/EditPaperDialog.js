@@ -1,20 +1,18 @@
 import React, { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ListGroup } from 'reactstrap';
 import {
-    updateResource,
-    updateLiteral,
-    createLiteral as createLiteralAPI,
     createLiteralStatement,
-    submitGetRequest,
-    literalsUrl,
-    getStatementsByObject,
     createResourceStatement,
-    createResource,
     deleteStatementsByIds,
     deleteStatementById,
     updateStatement,
-    getStatementsBySubjectAndPredicate
-} from 'network';
+    getStatementsBySubjectAndPredicate,
+    getStatementsByPredicateAndLiteral
+} from 'services/backend/statements';
+import { updateLiteral, createLiteral as createLiteralApi } from 'services/backend/literals';
+import { updateResource, createResource } from 'services/backend/resources';
+import REGEX from 'constants/regex';
+import { toast } from 'react-toastify';
 import { connect } from 'react-redux';
 import EditItem from './EditItem';
 import { loadPaper } from 'actions/viewPaper';
@@ -85,6 +83,19 @@ class EditPaperDialog extends Component {
         });
         const loadPaper = {};
 
+        // Validate title
+        if (!this.state.title) {
+            toast.error('Please enter the title of this paper');
+            this.setState({ isLoading: false });
+            return;
+        }
+        // Validate URL
+        if (this.state.url && !new RegExp(REGEX.URL).test(this.state.url.trim())) {
+            toast.error(`Please enter a valid paper URL`);
+            this.setState({ isLoading: false });
+            return;
+        }
+
         //title
         updateResource(this.props.viewPaper.paperResourceId, this.state.title);
 
@@ -104,6 +115,15 @@ class EditPaperDialog extends Component {
         // research field
         if (this.state.researchField && this.state.researchField.statementId && this.state.researchField.id) {
             await updateStatement(this.state.researchField.statementId, { object_id: this.state.researchField.id });
+        } else if (this.state.researchField && !this.state.researchField.statementId && this.state.researchField.id) {
+            const statement = await createResourceStatement(
+                this.props.viewPaper.paperResourceId,
+                PREDICATES.HAS_RESEARCH_FIELD,
+                this.state.researchField.id
+            );
+            this.setState({
+                researchField: { ...this.state.researchField, statementId: statement.id }
+            });
         }
 
         //publication month
@@ -177,7 +197,7 @@ class EditPaperDialog extends Component {
     };
 
     createNewLiteral = async (resourceId, predicateId, label) => {
-        const newLiteral = await createLiteralAPI(label);
+        const newLiteral = await createLiteralApi(label);
         const statement = await createLiteralStatement(resourceId, predicateId, newLiteral.id);
 
         return {
@@ -207,11 +227,15 @@ class EditPaperDialog extends Component {
             if (author.orcid) {
                 // Create author with ORCID
                 // check if there's an author resource
-                const responseJson = await submitGetRequest(literalsUrl + '?q=' + encodeURIComponent(author.orcid) + '&exact=true');
+                const responseJson = await getStatementsByPredicateAndLiteral({
+                    predicateId: PREDICATES.HAS_ORCID,
+                    literal: author.orcid,
+                    subjectClass: CLASSES.AUTHOR,
+                    items: 1
+                });
                 if (responseJson.length > 0) {
                     // Author resource exists
-                    let authorResource = await getStatementsByObject({ id: responseJson[0].id });
-                    authorResource = authorResource.find(s => s.predicate.id === PREDICATES.HAS_ORCID);
+                    const authorResource = responseJson[0];
                     const authorStatement = await createResourceStatement(
                         this.props.viewPaper.paperResourceId,
                         PREDICATES.HAS_AUTHOR,
@@ -225,7 +249,7 @@ class EditPaperDialog extends Component {
                     // Author resource doesn't exist
                     // Create resource author
                     const authorResource = await createResource(author.label, [CLASSES.AUTHOR]);
-                    const createLiteral = await createLiteralAPI(author.orcid);
+                    const createLiteral = await createLiteralApi(author.orcid);
                     await createLiteralStatement(authorResource.id, PREDICATES.HAS_ORCID, createLiteral.id);
                     const authorStatement = await createResourceStatement(
                         this.props.viewPaper.paperResourceId,
@@ -239,7 +263,7 @@ class EditPaperDialog extends Component {
                 }
             } else {
                 // Author resource doesn't exist
-                const newLiteral = await createLiteralAPI(author.label);
+                const newLiteral = await createLiteralApi(author.label);
                 // Create literal of author
                 const authorStatement = await createLiteralStatement(this.props.viewPaper.paperResourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
                 authors[i].statementId = authorStatement.id;

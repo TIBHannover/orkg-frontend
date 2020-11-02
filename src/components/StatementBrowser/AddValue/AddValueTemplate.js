@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { resourcesUrl } from 'network';
+import { resourcesUrl } from 'services/backend/resources';
 import { InputGroup, InputGroupAddon, DropdownMenu, InputGroupButtonDropdown, FormFeedback } from 'reactstrap';
 import { StyledDropdownItem, StyledButton, StyledDropdownToggle, ValueItemStyle } from 'components/StatementBrowser/styled';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
@@ -8,7 +8,7 @@ import defaultDatatypes from 'components/ContributionTemplates/helpers/defaultDa
 import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import AutoComplete from 'components/StatementBrowser/AutoComplete';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
 import useTogggle from './helpers/useToggle';
 import validationSchema from './helpers/validationSchema';
 import InputField from 'components/StatementBrowser/InputField/InputField';
@@ -82,12 +82,15 @@ export default function AddValueTemplate(props) {
 
     /* Select component reference can be used to check if menu is opened */
     const isMenuOpen = () => {
-        return resourceInputRef.current.select.state.menuIsOpen && resourceInputRef.current.state.loadedOptions.length > 0;
+        return resourceInputRef.current.state.menuIsOpen && resourceInputRef.current.props.options.length > 0;
     };
 
     const validateValue = () => {
         if (props.valueClass && ['Date', 'Number', 'String'].includes(props.valueClass.id)) {
-            let component = props.components[0];
+            let component;
+            if (props.components && props.components.length > 0) {
+                component = props.components[0];
+            }
             if (!component) {
                 component = {
                     value: props.valueClass,
@@ -104,10 +107,12 @@ export default function AddValueTemplate(props) {
             } else {
                 setInputValue(value);
                 setFormFeedback(null);
+                setIsValid(true);
                 return value;
             }
         } else {
             setFormFeedback(null);
+            setIsValid(true);
             return inputValue;
         }
     };
@@ -235,7 +240,7 @@ export default function AddValueTemplate(props) {
                     <InputGroup size="sm">
                         {!props.valueClass && (
                             <InputGroupButtonDropdown addonType="prepend" isOpen={dropdownValueTypeOpen} toggle={setDropdownValueTypeOpen}>
-                                <StyledDropdownToggle>
+                                <StyledDropdownToggle disableBorderRadiusRight={true}>
                                     <Tippy content={valueType === 'object' ? resourceTooltip : literalTooltip}>
                                         <small>{valueType === 'object' ? 'Resource' : 'Literal'} </small>
                                     </Tippy>
@@ -268,6 +273,8 @@ export default function AddValueTemplate(props) {
                                 onInput={(e, value) => setInputValue(e ? e.target.value : value)}
                                 value={inputValue}
                                 additionalData={props.newResources}
+                                autoLoadOption={props.valueClass ? true : false}
+                                openMenuOnFocus={true}
                                 disableBorderRadiusRight
                                 disableBorderRadiusLeft={!props.valueClass}
                                 cssClasses="form-control-sm"
@@ -322,7 +329,7 @@ export default function AddValueTemplate(props) {
                                 }}
                             >
                                 {disabledCreate ? (
-                                    <Tippy content="Please use the existing research problem that has this label." arrow={true}>
+                                    <Tippy hideOnClick={false} content="Please use the existing research problem that has this label." arrow={true}>
                                         <span>Create</span>
                                     </Tippy>
                                 ) : (

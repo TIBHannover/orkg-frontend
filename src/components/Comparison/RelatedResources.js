@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getStatementsBySubject } from 'network';
+import { getStatementsBySubject } from 'services/backend/statements';
 import { Card, CardImg, CardText, CardBody, CardTitle, Button, CardColumns } from 'reactstrap';
 import { PREDICATES } from 'constants/graphSettings';
 
@@ -35,12 +35,12 @@ class RelatedResources extends Component {
             const relatedResources = [];
 
             for (const resource of this.props.resourcesStatements) {
-                if (resource.object._class === 'literal') {
+                if (resource._class === 'literal') {
                     relatedResources.push({
-                        url: resource.object.label
+                        url: resource.label
                     });
                 } else {
-                    await getStatementsBySubject({ id: resource.object.id }).then(statements => {
+                    await getStatementsBySubject({ id: resource.id }).then(statements => {
                         const imageStatement = statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
                         const urlStatement = statements.find(statement => statement.predicate.id === PREDICATES.URL);
                         const descriptionStatement = statements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
@@ -48,16 +48,14 @@ class RelatedResources extends Component {
                         relatedResources.push({
                             url: urlStatement ? urlStatement.object.label : '',
                             image: imageStatement ? imageStatement.object.label : '',
-                            title: resource.object.label,
+                            title: resource.label,
                             description: descriptionStatement ? descriptionStatement.object.label : ''
                         });
                     });
                 }
             }
 
-            this.setState(prevState => ({
-                relatedResources: [...prevState.relatedResources, ...relatedResources]
-            }));
+            this.setState({ relatedResources });
         }
     };
 

@@ -3,12 +3,55 @@ import queryString from 'query-string';
 import { flattenDepth, uniq } from 'lodash';
 import rdf from 'rdf';
 import { PREDICATES, MISC } from 'constants/graphSettings';
+import { isString } from 'lodash';
 
 export function hashCode(s) {
     return s.split('').reduce((a, b) => {
         a = (a << 5) - a + b.charCodeAt(0);
         return a & a;
     }, 0);
+}
+
+/**
+ * Parse comma separated values from the query string
+ *
+ * @param {String} locationSearch this.props.location.search
+ * @param {String} param parameter name
+ * @return {Array} the list of values
+ */
+
+export function getArrayParamFromQueryString(locationSearch, param) {
+    const values = queryString.parse(decodeURIComponent(locationSearch), { arrayFormat: 'comma' })[param];
+    if (!values) {
+        return [];
+    }
+    if (typeof values === 'string' || values instanceof String) {
+        return [values];
+    }
+    return values;
+}
+
+/**
+ * Parse value from the query string
+ *
+ * @param {String} locationSearch this.props.location.search
+ * @param {String} param parameter name
+ * @param {Boolean} boolean return false instead of null
+ * @return {String|Boolean} value
+ */
+
+export function getParamFromQueryString(locationSearch, param, boolean = false) {
+    const value = queryString.parse(locationSearch)[param];
+    if (!value) {
+        return boolean ? false : null;
+    }
+    if (typeof value === 'string' || value instanceof String) {
+        if (boolean && (value === 'false' || !value || !['true', '1'].includes(value))) {
+            return false;
+        }
+        return boolean ? true : value;
+    }
+    return value;
 }
 
 export function groupBy(array, group) {
@@ -106,7 +149,7 @@ export const get_error_message = (errors, field = null) => {
         return null;
     }
     if (field === null) {
-        return Boolean(errors.message) ? capitalize(errors.message) : null;
+        return Boolean(errors.message) ? errors.message : null;
     }
     const field_error = errors.errors ? errors.errors.find(e => e.field === field) : null;
     return field_error ? capitalize(field_error.message) : null;
@@ -147,7 +190,7 @@ export const getPaperData_ViewPaper = (paperResource, paperStatements) => {
         publishedIn,
         url,
         urlResourceId,
-        createdBy: paperResource.created_by !== MISC.ANONYMOUS_USER_ID ? paperResource.created_by : null
+        createdBy: paperResource.created_by !== MISC.UNKNOWN_ID ? paperResource.created_by : null
     };
 };
 
@@ -202,7 +245,7 @@ export const getComparisonData = (id, label, comparisonStatements) => {
         id,
         label,
         created_at: url ? url.object.created_at : '',
-        nbContributions: url ? getContributionIdsFromUrl(url.object.label).length : 0,
+        nbContributions: url ? getArrayParamFromQueryString(url.object.label, 'contributions').length : 0,
         url: url ? url.object.label : '',
         reference: reference ? reference.object.label : '',
         description: description ? description.object.label : ''
@@ -239,47 +282,6 @@ export const sortMethod = (a, b) => {
     }
     // returning 0 or undefined will use any subsequent column sorting methods or the row index as a tiebreaker
     return 0;
-};
-
-export const getContributionIdsFromUrl = locationSearch => {
-    const l = locationSearch.substring(locationSearch.indexOf('?'));
-    let ids = queryString.parse(l, { arrayFormat: 'comma' }).contributions;
-    if (!ids) {
-        return [];
-    }
-    if (typeof ids === 'string' || ids instanceof String) {
-        return [ids];
-    }
-    ids = ids.filter(n => n); //filter out empty element ids
-    return ids;
-};
-
-export const getPropertyIdsFromUrl = locationSearch => {
-    let ids = queryString.parse(locationSearch).properties;
-
-    if (!ids) {
-        return [];
-    }
-    ids = ids.split(',');
-    ids = ids.filter(n => n); //filter out empty elements
-
-    return ids;
-};
-
-export const getTransposeOptionFromUrl = locationSearch => {
-    const transpose = queryString.parse(locationSearch).transpose;
-    if (!transpose || !['true', '1'].includes(transpose)) {
-        return false;
-    }
-    return true;
-};
-
-export const getResponseHashFromUrl = locationSearch => {
-    const response_hash = queryString.parse(locationSearch).response_hash;
-    if (response_hash) {
-        return response_hash;
-    }
-    return null;
 };
 
 export const generateRdfDataVocabularyFile = (data, contributions, properties, metadata) => {
@@ -397,15 +399,36 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
  * @param {String} predicateID Predicate ID
  * @param {Boolean} isUnique if this predicate is unique and has one value
  */
-export const filterObjectOfStatementsByPredicate = (statementsArray, predicateID, oneStatement = true) => {
+export const filterObjectOfStatementsByPredicate = (statementsArray, predicateID, isUnique = true) => {
     if (!statementsArray) {
         return null;
     }
     const result = statementsArray.filter(statement => statement.predicate.id === predicateID);
-    if (result.length > 0 && oneStatement) {
+    if (result.length > 0 && isUnique) {
         return result[0].object;
-    } else if (result.length > 0 && !oneStatement) {
+    } else if (result.length > 0 && !isUnique) {
         return result.map(s => s.object);
+    } else {
+        return null;
+    }
+};
+
+/**
+ * Filter a list of statements by predicate id and return the subject
+ *
+ * @param {Array} statementsArray Array of statements
+ * @param {String} predicateID Predicate ID
+ * @param {Boolean} isUnique if this predicate is unique and has one value
+ */
+export const filterSubjectOfStatementsByPredicate = (statementsArray, predicateID, isUnique = true) => {
+    if (!statementsArray) {
+        return null;
+    }
+    const result = statementsArray.filter(statement => statement.predicate.id === predicateID);
+    if (result.length > 0 && isUnique) {
+        return result[0].subject;
+    } else if (result.length > 0 && !isUnique) {
+        return result.map(s => s.subject);
     } else {
         return null;
     }
@@ -481,14 +504,15 @@ export const similarPropertiesByLabel = (propertyLabel, propertyData) => {
 /**
  * Compare input value to select options
  * Builtins https://github.com/JedWatson/react-select/blob/d2a820efc70835adf864169eebc76947783a15e2/packages/react-select/src/Creatable.js
- * @param {String} propertyLabel property label
- * @param {Array} propertyData property comparison data
+ * @param {String} inputValue candidate label
+ * @param {Object} option option
  */
 export const compareOption = (inputValue = '', option) => {
     const candidate = String(inputValue).toLowerCase();
     const optionValue = String(option.value).toLowerCase();
     const optionLabel = String(option.label).toLowerCase();
-    return optionValue === candidate || optionLabel === candidate;
+    const optionURI = String(option.uri).toLowerCase();
+    return optionValue === candidate || optionLabel === candidate || optionURI === candidate;
 };
 
 /** Helper Functions to increase structure, readability and reuse **/
@@ -522,6 +546,62 @@ export function getPublicationYear(paperStatements) {
     return [publicationYear, publicationYearResourceId];
 }
 
+// TODO: could be part of a 'parseDoi' hook when the add paper wizard is refactored to support hooks
+export const parseCiteResult = paper => {
+    let paperTitle = '',
+        paperAuthors = [],
+        paperPublicationMonth = '',
+        paperPublicationYear = '',
+        doi = '',
+        publishedIn = '';
+
+    try {
+        const { title, subtitle, author, issued, DOI, 'container-title': containerTitle } = paper.data[0];
+
+        paperTitle = title;
+        if (subtitle && subtitle.length > 0) {
+            // include the subtitle
+            paperTitle = `${paperTitle}: ${subtitle[0]}`;
+        }
+        if (author) {
+            paperAuthors = author.map(author => {
+                let fullname = [author.given, author.family].join(' ').trim();
+                if (!fullname) {
+                    fullname = author.literal ? author.literal : '';
+                }
+                return {
+                    label: fullname,
+                    id: fullname,
+                    orcid: author.ORCID ? author.ORCID : ''
+                };
+            });
+        }
+        const [year, month] = issued['date-parts'][0];
+
+        if (month) {
+            paperPublicationMonth = month;
+        }
+        if (year) {
+            paperPublicationYear = year;
+        }
+        doi = DOI ? DOI : '';
+        if (containerTitle && isString(containerTitle)) {
+            publishedIn = containerTitle;
+        }
+    } catch (e) {
+        console.log('Error setting paper data: ', e);
+    }
+
+    return {
+        paperTitle,
+        paperAuthors,
+        paperPublicationMonth,
+        paperPublicationYear,
+        doi,
+        publishedIn
+    };
+};
+
 function getURL(paperStatements) {
     let url = paperStatements.filter(statement => statement.predicate.id === PREDICATES.URL);
     let urlResourceId = 0;
@@ -551,6 +631,8 @@ function getResearchField(paperStatements) {
     let researchField = paperStatements.filter(statement => statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD);
     if (researchField.length > 0) {
         researchField = { ...researchField[0].object, statementId: researchField[0].id };
+    } else {
+        researchField = {};
     }
     return researchField;
 }
@@ -584,7 +666,7 @@ function getDOI(paperStatements) {
             doi = doi.substring(doi.indexOf('10.'));
         }
     } else {
-        doi = null;
+        doi = '';
     }
     return [doi, doiResourceId];
 }
@@ -608,4 +690,31 @@ function getOrder(paperStatements) {
         order = Infinity;
     }
     return order;
+}
+
+/**
+ * Truncating middle portion of a string
+ *
+ * @param {String} str string
+ * @param {Number} firstCharCount first Char Count
+ * @param {Number} endCharCount end Char count
+ * @param {Number} dotCount dotCount
+ * @return {Array} the list of values
+ */
+export function truncStringPortion(str, firstCharCount = str.length, endCharCount = 0, dotCount = 3) {
+    if (str === null) {
+        return '';
+    }
+    if (
+        (firstCharCount === 0 && endCharCount === 0) ||
+        firstCharCount >= str.length ||
+        endCharCount >= str.length ||
+        firstCharCount + endCharCount >= str.length
+    ) {
+        return str;
+    } else if (endCharCount === 0) {
+        return str.slice(0, firstCharCount) + '.'.repeat(dotCount);
+    } else {
+        return str.slice(0, firstCharCount) + '.'.repeat(dotCount) + str.slice(str.length - endCharCount);
+    }
 }

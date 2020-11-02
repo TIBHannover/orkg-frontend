@@ -1,22 +1,30 @@
 import React, { Component } from 'react';
-import { createLiteralStatement, createResource, crossrefUrl, submitGetRequest, createLiteral } from '../../network';
-import { Redirect } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
+import { crossrefUrl, submitGetRequest } from 'network';
+import { createLiteralStatement } from 'services/backend/statements';
+import { classesUrl, getClassById } from 'services/backend/classes';
+import { createLiteral } from 'services/backend/literals';
+import { createResource } from 'services/backend/resources';
+import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
+import { Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { getAllClasses } from 'network';
-import Select from 'react-select';
 import { reverse } from 'named-urls';
-import ROUTES from '../../constants/routes';
+import ROUTES from 'constants/routes';
 import { PREDICATES } from 'constants/graphSettings';
+import { getArrayParamFromQueryString } from 'utils';
+import PropTypes from 'prop-types';
 
 export default class AddResource extends Component {
     constructor(props) {
         super(props);
 
         this.doi = null;
+        this.classesAutocompleteRef = React.createRef();
         this.state = {
             redirect: false,
             value: '',
+            loadingDefaultClasses: false,
             classes: [],
             /* Possible values: 'edit', 'loading'. */
             editorState: 'edit',
@@ -26,13 +34,22 @@ export default class AddResource extends Component {
     }
 
     componentDidMount = () => {
-        this.getClasses();
+        this.getDefaultClass();
     };
 
-    getClasses = () => {
-        getAllClasses({}).then(classes => {
-            this.setState({ classesOptions: classes });
-        });
+    getDefaultClass = async () => {
+        const classes = getArrayParamFromQueryString(this.props.location.search, 'classes');
+        if (classes && classes.length > 0) {
+            this.setState({ loadingDefaultClasses: true });
+            const fetchDefaultClasses = classes.map(c => getClassById(c));
+            Promise.all(fetchDefaultClasses)
+                .then(classesData => {
+                    this.setState({ loadingDefaultClasses: false, classes: classesData });
+                })
+                .catch(() => {
+                    this.setState({ loadingDefaultClasses: true });
+                });
+        }
     };
 
     setEditorState = editorState => {
@@ -41,13 +58,18 @@ export default class AddResource extends Component {
 
     handleAdd = async () => {
         this.setEditorState('loading');
-        const doiRegex = /\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&'<>])\S)+)\b/g;
-        if (!doiRegex.test(this.state.value)) {
-            await this.createNewResource(false);
+        if (this.state.value.trim()) {
+            const doiRegex = /\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&'<>])\S)+)\b/g;
+            if (!doiRegex.test(this.state.value)) {
+                await this.createNewResource(false);
+            } else {
+                console.log('this is a DOI');
+                this.doi = this.state.value;
+                await this.createResourceUsingDoi();
+            }
         } else {
-            console.log('this is a DOI');
-            this.doi = this.state.value;
-            await this.createResourceUsingDoi();
+            toast.error('Please enter a resource label');
+            this.setEditorState('edit');
         }
     };
 
@@ -68,8 +90,22 @@ export default class AddResource extends Component {
         this.setState({ [event.target.name]: event.target.value.trim() });
     };
 
-    handleClassesChange = classesArray => {
-        this.setState({ classes: classesArray });
+    handleClassSelect = async (selected, { action }) => {
+        if (action === 'create-option') {
+            const foundIndex = selected.findIndex(x => x.__isNew__);
+            const newClass = await ConfirmClass({
+                label: selected[foundIndex].label
+            });
+            if (newClass) {
+                const foundIndex = selected.findIndex(x => x.__isNew__);
+                selected[foundIndex] = newClass;
+                this.setState({ classes: selected });
+            } else {
+                return null;
+            }
+        } else {
+            this.setState({ classes: selected });
+        }
     };
 
     handleKeyUp = async event => {
@@ -131,47 +167,67 @@ export default class AddResource extends Component {
         }
 
         return (
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5">
-                <Form className="pl-3 pr-3 pt-2">
-                    {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
-                    <FormGroup>
-                        <Label for="ResourceLabel">Resource title or DOI</Label>
-                        <Input
-                            onChange={this.handleChange}
-                            onKeyUp={this.handleKeyUp}
-                            type="text"
-                            name="value"
-                            id="ResourceLabel"
+            <>
+                <Container className="d-flex align-items-center">
+                    <h1 className="h4 mt-4 mb-4">Create resources</h1>
+                </Container>
+                <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+                    <Form className="pl-3 pr-3 pt-2">
+                        {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
+                        <FormGroup>
+                            <Label for="ResourceLabel">Resource title or DOI</Label>
+                            <Input
+                                onChange={this.handleChange}
+                                onKeyUp={this.handleKeyUp}
+                                type="text"
+                                name="value"
+                                id="ResourceLabel"
+                                disabled={loading}
+                                placeholder="Resource title or DOI"
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="select-classes">Classes</Label>
+                            {!this.state.loadingDefaultClasses && (
+                                <AutoComplete
+                                    requestUrl={classesUrl}
+                                    onChange={(selected, action) => {
+                                        // blur the field allows to focus and open the menu again
+                                        this.classesAutocompleteRef.current && this.classesAutocompleteRef.current.blur();
+                                        this.handleClassSelect(selected, action);
+                                    }}
+                                    placeholder="Select or type to enter a class"
+                                    value={this.state.classes}
+                                    autoLoadOption={true}
+                                    openMenuOnFocus={true}
+                                    allowCreate={true}
+                                    isClearable
+                                    innerRef={instance => (this.classesAutocompleteRef = instance)}
+                                    isMulti
+                                    autoFocus={false}
+                                    ols={true}
+                                    inputId="select-classes"
+                                />
+                            )}
+                            {this.state.loadingDefaultClasses && <div>Loading default classes</div>}
+                        </FormGroup>
+                        <Button
+                            color="primary"
+                            onClick={() => {
+                                this.handleAdd();
+                            }}
+                            className="mt-3 mb-2"
                             disabled={loading}
-                            placeholder="Resource title or DOI"
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="Classes">Classes</Label>
-                        <Select
-                            isClearable
-                            isMulti
-                            value={this.state.classes}
-                            onChange={this.handleClassesChange}
-                            options={this.state.classesOptions}
-                            getOptionLabel={({ label }) => label.charAt(0).toUpperCase() + label.slice(1)}
-                            getOptionValue={({ id }) => id}
-                        />
-                    </FormGroup>
-                    <Button
-                        color="primary"
-                        onClick={() => {
-                            this.handleAdd();
-                        }}
-                        outline
-                        className="mt-4 mb-2"
-                        block
-                        disabled={loading}
-                    >
-                        {!loading ? 'Create Resource' : <span>Loading</span>}
-                    </Button>
-                </Form>
-            </Container>
+                        >
+                            {!loading ? 'Create Resource' : <span>Loading</span>}
+                        </Button>
+                    </Form>
+                </Container>
+            </>
         );
     }
 }
+
+AddResource.propTypes = {
+    location: PropTypes.object.isRequired
+};

@@ -4,7 +4,7 @@ const initialState = {
     dialogIsOpen: false,
     action: 'signin',
     user: null,
-    role: 'admin' // mocking, should be replace when the backend functionality is implemented (maybe something like user.role?)
+    signInRequired: null
 };
 
 export default (state = initialState, action) => {
@@ -26,7 +26,8 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 dialogIsOpen: true,
-                action: payload.action
+                action: payload.action,
+                signInRequired: payload.signInRequired
             };
         }
 

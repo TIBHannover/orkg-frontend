@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 import { Alert, Col, Container, Form, FormGroup, Row, Button } from 'reactstrap';
-import { getResource, getSimilaireContribution, deleteStatementById, createResource, createResourceStatement } from 'network';
+import { deleteStatementById, createResourceStatement } from 'services/backend/statements';
+import { getResource } from 'services/backend/resources';
+import { createResource } from 'services/backend/resources';
+import { getSimilarContribution } from 'services/similarity/index';
 import AddToComparison from './AddToComparison';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import ContentLoader from 'react-content-loader';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { isEmpty } from 'lodash';
 import ROUTES from 'constants/routes';
 import SimilarContributions from './SimilarContributions';
 import StatementBrowser from 'components/StatementBrowser/Statements/StatementsContainer';
 import ResearchProblemInput from 'components/AddPaper/Contributions/ResearchProblemInput';
 import ContributionItemList from 'components/AddPaper/Contributions/ContributionItemList';
+import ContributionComparisons from 'components/ViewPaper/ContirbutionComparisons/ContributionComparisons';
 import ProvenanceBox from 'components/ViewPaper/ProvenanceBox/ProvenanceBox';
 import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
@@ -71,7 +74,11 @@ class Contributions extends Component {
             similaireContributions: [],
             isSimilaireContributionsLoading: true,
             isSimilaireContributionsFailedLoading: false,
-            label: ''
+            label: '',
+            observatories: [],
+            organizationId: '',
+            observatoryId: '',
+            isLoadingObservatory: false
         };
     }
 
@@ -88,12 +95,17 @@ class Contributions extends Component {
 
     handleSelectContribution = contributionId => {
         this.setState({ loading: true, isSimilaireContributionsLoading: true });
-        const contributionIsLoaded = this.props.resources.byId[contributionId] ? true : false;
-        this.props.selectContribution({
-            contributionId,
-            contributionIsLoaded
-        });
-        getSimilaireContribution(this.state.selectedContribution)
+        const contributionIsLoaded = !!this.props.resources.byId[contributionId];
+        // get the contribution label
+        const contributionResource = this.props.contributions.find(c => c.id === this.props.selectedContribution);
+        if (contributionResource) {
+            this.props.selectContribution({
+                contributionId,
+                contributionIsLoaded,
+                contributionLabel: contributionResource.label
+            });
+        }
+        getSimilarContribution(this.state.selectedContribution)
             .then(similaireContributions => {
                 const similaireContributionsData = similaireContributions.map(paper => {
                     // Fetch the data of each paper
@@ -152,7 +164,12 @@ class Contributions extends Component {
 
         let shared = 1;
         if (Object.keys(this.props.resources.byId).length !== 0 && (this.props.selectedResource || selectedContributionId)) {
-            shared = this.props.resources.byId[this.props.selectedResource ? this.props.selectedResource : selectedContributionId].shared;
+            const resourceObj = this.props.resources.byId[this.props.selectedResource ? this.props.selectedResource : selectedContributionId];
+            if (resourceObj) {
+                shared = resourceObj.shared;
+            } else {
+                shared = 0;
+            }
         }
 
         return (
@@ -289,11 +306,13 @@ class Contributions extends Component {
                                                     syncBackend={this.props.enableEdit}
                                                     openExistingResourcesInDialog={false}
                                                     templatesFound={false}
+                                                    initOnLocationChange={false}
+                                                    keyToKeepStateOnLocationChange={this.props.paperId}
                                                 />
                                             )}
                                         </FormGroup>
 
-                                        <FormGroup>
+                                        <div>
                                             <Title>Similar contributions</Title>
                                             {this.state.isSimilaireContributionsLoading && (
                                                 <div>
@@ -336,14 +355,19 @@ class Contributions extends Component {
                                                     </span>
                                                 </Link>
                                             )}
-                                        </FormGroup>
+                                        </div>
+
+                                        {selectedContributionId && <ContributionComparisons contributionId={selectedContributionId} />}
                                     </Form>
                                 </StyledHorizontalContribution>
                             </AnimationContainer>
                         </TransitionGroup>
-                        {!isEmpty(this.props.observatoryInfo) && (
-                            <ProvenanceBox contributors={this.props.contributors} observatoryInfo={this.props.observatoryInfo} />
-                        )}
+                        <ProvenanceBox
+                            resourceId={this.props.paperId}
+                            contributors={this.props.contributors}
+                            observatoryInfo={this.props.observatoryInfo}
+                            changeObservatory={this.props.changeObservatory}
+                        />
                     </Row>
                 </Container>
             </div>
@@ -369,7 +393,8 @@ Contributions.propTypes = {
     observatoryInfo: PropTypes.object,
     contributors: PropTypes.array,
     researchField: PropTypes.object.isRequired,
-    selectedResource: PropTypes.string
+    selectedResource: PropTypes.string,
+    changeObservatory: PropTypes.func
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -388,7 +413,6 @@ const mapStateToProps = (state, ownProps) => {
         ),
         ...(researchProblems.length > 0 ? researchProblems.map(c => c.id) : [])
     ];
-
     return {
         researchProblemsIds: researchProblemsIds,
         researchProblems: researchProblems,

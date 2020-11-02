@@ -1,24 +1,31 @@
 import React, { useRef } from 'react';
-import { FormGroup, Label, FormText, Input, CustomInput } from 'reactstrap';
+import { FormGroup, Label, FormText, Input } from 'reactstrap';
 import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
 import { setLabel, setPredicate, setClass, setResearchFields, setResearchProblems, setIsStrictTemplate } from 'actions/addTemplate';
-import { predicatesUrl, resourcesUrl, classesUrl, createPredicate, createClass } from 'network';
-import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
+import { classesUrl } from 'services/backend/classes';
+import { createPredicate, predicatesUrl } from 'services/backend/predicates';
+import { resourcesUrl } from 'services/backend/resources';
+import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
+import { reverse } from 'named-urls';
+import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import { CLASSES } from 'constants/graphSettings';
 
 function GeneralSettings(props) {
     const inputRef = useRef(null);
+    const classAutocompleteRef = useRef(null);
+    const predicateAutocompleteRef = useRef(null);
 
     const handleChangeLabel = event => {
         props.setLabel(event.target.value);
     };
 
-    const handlePropertySelect = async (selected, action) => {
-        if (action.action === 'select-option') {
+    const handlePropertySelect = async (selected, { action }) => {
+        if (action === 'select-option') {
             props.setPredicate(selected);
-        } else if (action.action === 'create-option') {
+        } else if (action === 'create-option') {
             const result = await Confirm({
                 title: 'Are you sure you need a new property?',
                 message: 'Often there are existing properties that you can use as well. It is better to use existing properties than new ones.',
@@ -29,24 +36,27 @@ function GeneralSettings(props) {
                 selected.id = newPredicate.id;
                 props.setPredicate(selected);
             }
+            // blur the field allows to focus and open the menu again
+            predicateAutocompleteRef.current && predicateAutocompleteRef.current.blur();
+        } else if (action === 'clear') {
+            props.setPredicate(null);
         }
     };
 
-    const handleClassSelect = async (selected, action) => {
-        if (action.action === 'select-option') {
+    const handleClassSelect = async (selected, { action }) => {
+        if (action === 'select-option') {
             props.setClass(selected);
-        } else if (action.action === 'create-option') {
-            const result = await Confirm({
-                title: 'Are you sure you need a new class?',
-                message: 'Often there are existing classes that you can use as well. It is better to use existing classes than new ones.',
-                cancelColor: 'light'
+        } else if (action === 'create-option') {
+            const newClass = await ConfirmClass({
+                label: selected.label
             });
-            if (result) {
-                const newClass = await createClass(selected.label);
+            if (newClass) {
                 selected.id = newClass.id;
                 props.setClass(selected);
             }
-        } else if (action.action === 'clear') {
+            // blur the field allows to focus and open the menu again
+            classAutocompleteRef.current && classAutocompleteRef.current.blur();
+        } else if (action === 'clear') {
             props.setClass(null);
         }
     };
@@ -59,17 +69,11 @@ function GeneralSettings(props) {
         props.setResearchProblems(!selected ? [] : selected);
     };
 
-    if (inputRef.current) {
-        inputRef.current.focus();
-    }
     /*
     const handleSwitchIsDescription = event => {
         props.setIsClassDescription(event.target.checked);
     };
     */
-    const handleSwitchIsStrictTemplate = event => {
-        props.setIsStrictTemplate(event.target.checked);
-    };
 
     return (
         <div className="p-4">
@@ -77,48 +81,24 @@ function GeneralSettings(props) {
                 <Label>Name of template</Label>
                 <Input innerRef={inputRef} value={props.label} onChange={handleChangeLabel} disabled={!props.editMode} />
             </FormGroup>
-            <FormGroup>
-                <div>
-                    <CustomInput
-                        onChange={handleSwitchIsStrictTemplate}
-                        checked={props.isStrictTemplate}
-                        id="switchIsStrictTemplate"
-                        type="switch"
-                        name="customSwitch"
-                        label="This template is strict (users cannot add additional properties themselves)"
-                        disabled={!props.editMode}
-                    />
-                </div>
-            </FormGroup>
-            {/*
-            <FormGroup>
-                <div>
-                    <CustomInput
-                        onChange={handleSwitchIsDescription}
-                        checked={props.isClassDescription}
-                        id="switchIsClassDescription"
-                        type="switch"
-                        name="customSwitch"
-                        label="This template is a class description"
-                        disabled={!props.editMode}
-                    />
-                </div>
-            </FormGroup>
-             */}
 
             <FormGroup className="mb-4">
-                <Label>Class</Label>
+                <Label>Target class</Label>
                 <AutoComplete
-                    allowCreate
                     requestUrl={classesUrl}
-                    onItemSelected={handleClassSelect}
                     placeholder={props.editMode ? 'Select or type to enter a class' : 'No Classes'}
-                    autoFocus
-                    isClearable
-                    cacheOptions
+                    onChange={handleClassSelect}
                     value={props.class}
+                    autoLoadOption={true}
+                    openMenuOnFocus={true}
+                    allowCreate={true}
                     isDisabled={!props.editMode || (Boolean(props.templateID) && Boolean(props.class))}
                     copyValueButton={true}
+                    isClearable
+                    innerRef={classAutocompleteRef}
+                    autoFocus={false}
+                    linkButton={props.class && props.class.id ? reverse(ROUTES.CLASS, { id: props.class.id }) : ''}
+                    linkButtonTippy="Go to class page"
                 />
                 {props.editMode && <FormText>Specify the class of this template. If not specified, a class is generated automatically.</FormText>}
             </FormGroup>
@@ -134,14 +114,17 @@ function GeneralSettings(props) {
                     <FormGroup className="mb-4">
                         <Label>Property</Label>
                         <AutoComplete
-                            allowCreate
                             requestUrl={predicatesUrl}
-                            onItemSelected={handlePropertySelect}
-                            placeholder={props.editMode ? 'Select or type to enter a property' : 'No Properties'}
-                            autoFocus
-                            cacheOptions
+                            placeholder={props.editMode ? 'Select or type to enter a property' : 'No Property'}
+                            onChange={handlePropertySelect}
                             value={props.predicate}
+                            autoLoadOption={true}
+                            openMenuOnFocus={true}
+                            allowCreate={true}
                             isDisabled={!props.editMode}
+                            autoFocus={false}
+                            isClearable
+                            innerRef={predicateAutocompleteRef}
                         />
                         {props.editMode && (
                             <FormText>
@@ -154,13 +137,16 @@ function GeneralSettings(props) {
                         <AutoComplete
                             requestUrl={resourcesUrl}
                             optionsClass={CLASSES.RESEARCH_FIELD}
-                            onItemSelected={handleResearchFieldSelect}
                             placeholder={props.editMode ? 'Select or type to enter a research field' : 'No research fields'}
-                            autoFocus
-                            cacheOptions
-                            isMulti
+                            onChange={handleResearchFieldSelect}
                             value={props.researchFields}
+                            autoLoadOption={true}
+                            openMenuOnFocus={true}
+                            autoFocus={false}
+                            allowCreate={false}
                             isDisabled={!props.editMode}
+                            isClearable
+                            isMulti
                         />
                         {props.editMode && <FormText>Specify the research fields that uses this template.</FormText>}
                     </FormGroup>
@@ -169,13 +155,16 @@ function GeneralSettings(props) {
                         <AutoComplete
                             requestUrl={resourcesUrl}
                             optionsClass={CLASSES.PROBLEM}
-                            onItemSelected={handleResearchProblemSelect}
                             placeholder={props.editMode ? 'Select or type to enter a research problem' : 'No research problem'}
-                            autoFocus
-                            cacheOptions
-                            isMulti
+                            onChange={handleResearchProblemSelect}
                             value={props.researchProblems}
+                            autoLoadOption={true}
+                            openMenuOnFocus={true}
+                            autoFocus={false}
+                            allowCreate={false}
                             isDisabled={!props.editMode}
+                            isClearable
+                            isMulti
                         />
                         {props.editMode && <FormText>Specify the research problems that uses this template.</FormText>}
                     </FormGroup>

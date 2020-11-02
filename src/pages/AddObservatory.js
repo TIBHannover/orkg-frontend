@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createObservatory } from 'network';
+import { createObservatory } from 'services/backend/observatories';
 import { Redirect } from 'react-router-dom';
 import { Container, Button, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { toast } from 'react-toastify';

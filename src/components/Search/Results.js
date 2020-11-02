@@ -1,13 +1,15 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { ListGroup, ListGroupItem } from 'reactstrap';
-import ROUTES from '../../constants/routes.js';
-import { Link } from 'react-router-dom';
-import { reverse } from 'named-urls';
-import PropTypes from 'prop-types';
 import ContentLoader from 'react-content-loader';
-import styled from 'styled-components';
+import { Link, withRouter } from 'react-router-dom';
+import ROUTES from 'constants/routes.js';
 import { CLASSES } from 'constants/graphSettings';
+import { reverse } from 'named-urls';
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import moment from 'moment';
 
 const StyledLoadMoreButton = styled.div`
     padding-top: 0;
@@ -62,16 +64,20 @@ const Results = props => {
                 link = reverse(ROUTES.VENUE_PAGE, { venueId: resourceId });
                 break;
             }
+            case CLASSES.CONTRIBUTION_TEMPLATE: {
+                link = reverse(ROUTES.CONTRIBUTION_TEMPLATE, { id: resourceId });
+                break;
+            }
             case 'resource': {
-                link = '/resource/' + resourceId; //TODO: replace this with a better resource view
+                link = reverse(ROUTES.RESOURCE, { id: resourceId });
                 break;
             }
             case 'predicate': {
-                link = '/predicate/' + resourceId; // TODO: replace with better predicate view
+                link = reverse(ROUTES.PREDICATE, { id: resourceId });
                 break;
             }
             default: {
-                link = '';
+                link = reverse(ROUTES.RESOURCE, { id: resourceId });
                 break;
             }
         }
@@ -113,6 +119,16 @@ const Results = props => {
                                 return (
                                     <StyledListGroupItem rounded={props.hasNextPage.toString()} action key={`result-${index}`} className="pt-1 pb-1">
                                         <Link to={getResourceLink(props.class, item.id)}>{item.label}</Link>
+                                        {item.classes && item.classes.includes(CLASSES.COMPARISON) && (
+                                            <div>
+                                                <small>
+                                                    <i className="text-muted">
+                                                        <Icon size="sm" icon={faCalendar} className="mr-1" />{' '}
+                                                        {moment(item.created_at).format('DD MMMM YYYY')}
+                                                    </i>
+                                                </small>
+                                            </div>
+                                        )}
                                     </StyledListGroupItem>
                                 );
                             })}

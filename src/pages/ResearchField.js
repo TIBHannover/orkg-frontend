@@ -1,16 +1,30 @@
 import React, { Component } from 'react';
-import { Container, Button, Card, CardText, CardBody, CardHeader, CardFooter } from 'reactstrap';
+import {
+    Container,
+    Button,
+    Card,
+    CardText,
+    CardBody,
+    CardHeader,
+    CardFooter,
+    ButtonDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem
+} from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { getStatementsByObject, getResource, getStatementsBySubjects } from '../network';
+import { getStatementsByObjectAndPredicate, getStatementsBySubjects } from 'services/backend/statements';
+import { getResource } from 'services/backend/resources';
 import { reverse } from 'named-urls';
-import ROUTES from '../constants/routes.js';
-import PaperCard from '../components/PaperCard/PaperCard';
+import ROUTES from 'constants/routes.js';
+import PaperCard from 'components/PaperCard/PaperCard';
 import { getPaperData } from 'utils';
 import { find } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { NavLink } from 'react-router-dom';
 
 class ResearchField extends Component {
     constructor(props) {
@@ -26,7 +40,8 @@ class ResearchField extends Component {
             researchField: null,
             papers: [],
             parentResearchField: null,
-            isLastPageReached: false
+            isLastPageReached: false,
+            menuOpen: false
         };
     }
 
@@ -64,8 +79,9 @@ class ResearchField extends Component {
     loadMorePapers = () => {
         this.setState({ isNextPageLoading: true });
         // Get the statements that contains the research field as an object
-        getStatementsByObject({
-            id: this.props.match.params.researchFieldId,
+        getStatementsByObjectAndPredicate({
+            objectId: this.props.match.params.researchFieldId,
+            predicateId: PREDICATES.HAS_RESEARCH_FIELD,
             page: this.state.page,
             items: this.pageSize,
             sortBy: 'created_at',
@@ -126,7 +142,30 @@ class ResearchField extends Component {
                 )}
                 {!this.state.loading && (
                     <div>
-                        <Container>
+                        <Container className="d-flex align-items-center">
+                            <h1 className="h4 mt-4 mb-4 flex-grow-1">Research field</h1>
+
+                            <ButtonDropdown
+                                isOpen={this.state.menuOpen}
+                                toggle={() =>
+                                    this.setState(prevState => ({
+                                        menuOpen: !prevState.menuOpen
+                                    }))
+                                }
+                                nav
+                                inNavbar
+                            >
+                                <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                    <Icon icon={faEllipsisV} />
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.researchFieldId })}>
+                                        View resource
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </ButtonDropdown>
+                        </Container>
+                        <Container className="p-0">
                             <Card>
                                 <CardHeader>
                                     {/* TODO: Show the total number of papers when number of items is provided with the paginated result
@@ -153,7 +192,7 @@ class ResearchField extends Component {
                             </Card>
                         </Container>
                         <br />
-                        <Container>
+                        <Container className="p-0">
                             {this.state.papers.length > 0 && (
                                 <div>
                                     {this.state.papers.map(resource => {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getStatementsBySubject, getStatementsBySubjects } from '../../../network';
+import { getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
 import { connect } from 'react-redux';
 import * as PropTypes from 'prop-types';
 // import Graph from 'react-graph-vis';
@@ -12,7 +12,7 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap
 import flattenDeep from 'lodash/flattenDeep';
 
 // moving GraphVis here in order to maintain the layouts and status related stuff;
-import GraphVis from '../../../libs/gizmo/GraphVis';
+import GraphVis from 'libs/gizmo/GraphVis';
 import SearchAutoComplete from './SearchAutoComplete';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
@@ -144,13 +144,16 @@ class GraphView extends Component {
             title: statement.subject.label,
             classificationArray: statement.subject.classes
         });
+
         // check if node type is resource or literal
         if (statement.object._class === 'resource') {
             nodes.push({
                 id: statement.object.id,
                 label: objectLabel,
                 title: statement.object.label,
-                classificationArray: statement.object.classes
+                classificationArray: statement.object.classes,
+                isResearchFieldRelated:
+                    statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD || statement.predicate.id === PREDICATES.HAS_SUB_RESEARCH_FIELD
             });
         } else {
             nodes.push({
@@ -251,7 +254,6 @@ class GraphView extends Component {
                 const statements = await this.getResourceAndStatements(this.props.paperId, 0, []);
                 const auxiliaryMetaDataNode = true; // flag for using or not using auxiliary node for meta info
                 const result = this.processStatements(statements, auxiliaryMetaDataNode);
-                console.log(result);
                 this.setState({ nodes: result.nodes, edges: result.edges });
             } else {
                 await this.visualizeAddPaper();

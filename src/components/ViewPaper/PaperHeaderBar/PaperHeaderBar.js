@@ -36,7 +36,7 @@ const AnimationContainer = styled(CSSTransition)`
 function PaperHeaderBar(props) {
     return (
         <AnimationContainer in={true} appear={true} classNames="fade" timeout={500}>
-            <PaperHeaderBarContainer>
+            <PaperHeaderBarContainer id="paperHeaderBar">
                 <Container className="d-flex align-items-center py-2">
                     <div className="title flex-grow-1 text-truncate">
                         {props.editMode ? (
@@ -47,7 +47,7 @@ function PaperHeaderBar(props) {
                             props.paperTitle
                         )}
                     </div>
-                    <PaperMenuBar editMode={props.editMode} paperLink={props.paperLink} toggle={props.toggle} />
+                    <PaperMenuBar id={props.id} editMode={props.editMode} paperLink={props.paperLink} toggle={props.toggle} />
                 </Container>
             </PaperHeaderBarContainer>
         </AnimationContainer>
@@ -57,7 +57,8 @@ PaperHeaderBar.propTypes = {
     editMode: PropTypes.bool.isRequired,
     paperLink: PropTypes.string,
     toggle: PropTypes.func.isRequired,
-    paperTitle: PropTypes.string.isRequired
+    paperTitle: PropTypes.string.isRequired,
+    id: PropTypes.string
 };
 
 export default PaperHeaderBar;

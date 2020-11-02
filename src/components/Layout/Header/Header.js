@@ -19,6 +19,7 @@ import {
     Badge
 } from 'reactstrap';
 import { Link, NavLink as RouterNavLink } from 'react-router-dom';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import { ReactComponent as Logo } from 'assets/img/logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faUser } from '@fortawesome/free-solid-svg-icons';
@@ -31,14 +32,31 @@ import Authentication from 'components/Authentication/Authentication';
 import SearchForm from './SearchForm';
 import { openAuthDialog, updateAuth, resetAuth } from 'actions/auth';
 import { Redirect } from 'react-router-dom';
-import { getUserInformation } from 'network';
+import { getUserInformation } from 'services/backend/users';
 import greetingTime from 'greeting-time';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
 import { toast } from 'react-toastify';
+import { scrollbarWidth } from '@xobotyi/scrollbar-width';
+
 const cookies = new Cookies();
+
+// determine the scroll bar width and compensate the width when a modal is opened
+const GlobalStyle = createGlobalStyle`
+    body.modal-open {
+        #main-navbar, #paperHeaderBar {
+            right: ${props => props.scrollbarWidth}px
+        }
+        #helpIcon {
+            padding-right: ${props => props.scrollbarWidth}px
+        }
+        .woot-widget-bubble, .woot-widget-holder {
+            margin-right: ${props => props.scrollbarWidth}px
+        }
+    }
+`;
 
 const StyledLink = styled(Link)`
     :focus {
@@ -154,7 +172,8 @@ class Header extends Component {
                             id: userData.id,
                             token: token,
                             tokenExpire: token_expires_in,
-                            email: userData.email
+                            email: userData.email,
+                            isCurationAllowed: userData.is_curation_allowed
                         }
                     });
                 })
@@ -196,6 +215,14 @@ class Header extends Component {
         });
     };
 
+    requireAuthentication = e => {
+        if (!this.props.user) {
+            this.props.openAuthDialog('signin', true);
+            // Don't follow the link when user is not authenticated
+            e.preventDefault();
+        }
+    };
+
     render() {
         if (this.state.redirectLogout) {
             return <Redirect to={{ pathname: '/', state: { signedOut: true } }} />;
@@ -205,6 +232,8 @@ class Header extends Component {
 
         return (
             <Navbar color="light" expand="md" fixed="top" id="main-navbar" light>
+                <GlobalStyle scrollbarWidth={scrollbarWidth(true)} />
+
                 <Container className="p-0">
                     <StyledLink to={ROUTES.HOME} className="mr-4 p-0">
                         <Logo />
@@ -217,7 +246,6 @@ class Header extends Component {
                             <NavItem className="ml-2 ml-md-0">
                                 <NavLink tag={RouterNavLink} exact to={ROUTES.PAPERS}>
                                     Papers
-                                    {/* TODO: add taxonomy "Browse by research field" <FontAwesomeIcon icon={faSortDown} pull="right" /> */}
                                 </NavLink>
                             </NavItem>
 
@@ -229,24 +257,36 @@ class Header extends Component {
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.STATS}>
                                         Statistics
                                     </DropdownItem>
-                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>
-                                        Resources{' '}
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.PDF_ANNOTATION} onClick={this.requireAuthentication}>
+                                        PDF annotation{' '}
                                         <small>
                                             <Badge color="info">Beta</Badge>
                                         </small>
+                                    </DropdownItem>
+
+                                    <DropdownItem divider />
+                                    <DropdownItem header>Advanced tools</DropdownItem>
+
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>
+                                        Resources
                                     </DropdownItem>
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>
-                                        Predicates{' '}
-                                        <small>
-                                            <Badge color="info">Beta</Badge>
-                                        </small>
+                                        Properties
+                                    </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.CLASSES}>
+                                        Classes
                                     </DropdownItem>
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.CONTRIBUTION_TEMPLATES}>
-                                        Templates{' '}
+                                        Templates
+                                    </DropdownItem>
+                                    {/*
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.PDF_TEXT_ANNOTATION}>
+                                        PDF text annotation{' '}
                                         <small>
-                                            <Badge color="info">Beta</Badge>
+                                            <Badge color="danger">Alpha</Badge>
                                         </small>
                                     </DropdownItem>
+                                    */}
                                 </DropdownMenu>
                             </ButtonDropdown>
 
@@ -259,13 +299,22 @@ class Header extends Component {
                                         tag="a"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        href="https://projects.tib.eu/orkg/project/documentation/"
+                                        href="https://projects.tib.eu/orkg/documentation/"
                                     >
                                         Features <Icon size="sm" icon={faExternalLinkAlt} />
                                     </DropdownItem>
                                     <DropdownItem tag="a" target="_blank" rel="noopener noreferrer" href="https://projects.tib.eu/orkg/">
                                         Project <Icon size="sm" icon={faExternalLinkAlt} />
                                     </DropdownItem>
+                                    <DropdownItem
+                                        tag="a"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/home"
+                                    >
+                                        Documentation <Icon size="sm" icon={faExternalLinkAlt} />
+                                    </DropdownItem>
+                                    <DropdownItem divider />
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.OBSERVATORIES}>
                                         Observatories{' '}
                                         <small>
@@ -278,15 +327,25 @@ class Header extends Component {
                                             <Badge color="info">Beta</Badge>
                                         </small>
                                     </DropdownItem>
+                                    <DropdownItem divider />
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.EXPORT_DATA}>
+                                        Export data{' '}
+                                    </DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledButtonDropdown>
                         </Nav>
 
                         <SearchForm placeholder="Search..." />
 
-                        <Button color="primary" className="mr-3 pl-4 pr-4 flex-shrink-0" tag={Link} to={ROUTES.ADD_PAPER.GENERAL_DATA}>
+                        <RequireAuthentication
+                            component={Button}
+                            color="primary"
+                            className="mr-3 pl-4 pr-4 flex-shrink-0"
+                            tag={Link}
+                            to={ROUTES.ADD_PAPER.GENERAL_DATA}
+                        >
                             Add paper
-                        </Button>
+                        </RequireAuthentication>
 
                         {this.props.user !== null && (
                             <div>
@@ -359,7 +418,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     resetAuth: () => dispatch(resetAuth()),
-    openAuthDialog: action => dispatch(openAuthDialog(action)),
+    openAuthDialog: (action, signInRequired) => dispatch(openAuthDialog(action, signInRequired)),
     updateAuth: data => dispatch(updateAuth(data))
 });
 

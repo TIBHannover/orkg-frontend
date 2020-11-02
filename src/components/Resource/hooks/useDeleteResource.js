@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Confirm from 'reactstrap-confirm';
-import { deleteResource as deleteResourceNetwork } from 'network';
+import { deleteResource as deleteResourceNetwork } from 'services/backend/resources';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';

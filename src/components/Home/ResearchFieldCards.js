@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components/macro';
-import { getStatementsBySubject, getStatementsByObject, getResearchFieldsStats } from 'network';
+import { getStatementsBySubject, getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { getResearchFieldsStats } from 'services/backend/stats';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { PREDICATES, MISC } from 'constants/graphSettings';
+import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
 
 /* Bootstrap card column is not working correctly working with vertical alignment,
 thus used custom styling here */
@@ -143,15 +144,16 @@ class ResearchFieldCards extends Component {
                             papers: null // to show loading indicator
                         });
 
-                        let papers = await getStatementsByObject({
-                            id: fieldId,
+                        let papers = await getStatementsByObjectAndPredicate({
+                            objectId: fieldId,
+                            predicateId: PREDICATES.HAS_RESEARCH_FIELD,
                             page: 1,
                             items: 24,
                             sortBy: 'created_at',
                             desc: true
                         });
 
-                        papers = papers.filter(statement => statement.predicate.id === PREDICATES.HAS_RESEARCH_FIELD);
+                        papers = papers.filter(statement => statement.subject.classes.includes(CLASSES.PAPER));
 
                         this.setState({
                             papers
@@ -189,14 +191,14 @@ class ResearchFieldCards extends Component {
         const showPapers = this.state.breadcrumb.length > 1;
 
         return (
-            <div className="mt-5">
+            <div className="mt-3">
                 {this.state.breadcrumb.map((field, index) => (
                     <BreadcrumbLink key={field.id} onClick={() => this.handleClickBreadcrumb(field.id, field.label)}>
                         {field.label} {index !== this.state.breadcrumb.length - 1 && <Icon icon={faAngleDoubleRight} />}
                     </BreadcrumbLink>
                 ))}
 
-                <hr className="mt-3 mb-5" />
+                <hr className="mt-3 mb-3" />
                 <div>
                     <TransitionGroup id="research-field-cards" className="mt-2 justify-content-center d-flex flex-wrap" exit={false}>
                         {this.state.researchFields.map(field => {
@@ -216,8 +218,15 @@ class ResearchFieldCards extends Component {
                     </TransitionGroup>
                 </div>
                 {showPapers && (
-                    <div>
-                        <h2 className="h5">{this.state.breadcrumb[this.state.breadcrumb.length - 1].label} papers</h2>
+                    <div className="mt-3">
+                        <h2 className="h5">
+                            <Link
+                                to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.breadcrumb[this.state.breadcrumb.length - 1].id })}
+                            >
+                                {this.state.breadcrumb[this.state.breadcrumb.length - 1].label}
+                            </Link>{' '}
+                            papers
+                        </h2>
 
                         {!this.state.papers && (
                             <div className="mt-5 text-center">

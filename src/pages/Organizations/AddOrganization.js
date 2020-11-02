@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { toast } from 'react-toastify';
-import { updateUserRole, createOrganization } from '../../network';
+import { createOrganization } from 'services/backend/organizations';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { openAuthDialog } from '../../actions/auth';
+import { openAuthDialog } from 'actions/auth';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reverse } from 'named-urls';
-import ROUTES from '../../constants/routes';
+import ROUTES from 'constants/routes';
 
 class AddOrganization extends Component {
     constructor(props) {
@@ -25,6 +25,10 @@ class AddOrganization extends Component {
         };
     }
 
+    componentDidMount() {
+        document.title = 'Create new organization - ORKG';
+    }
+
     createNewOrganization = async () => {
         this.setState({ editorState: 'loading' });
         const value = this.state.value;
@@ -36,7 +40,6 @@ class AddOrganization extends Component {
                     try {
                         const responseJson = await createOrganization(value, image[0], this.props.user.id, url);
                         const organizationId = responseJson.id;
-                        await updateUserRole();
                         this.navigateToOrganization(organizationId);
                     } catch (error) {
                         this.setState({ editorState: 'edit' });
@@ -100,54 +103,59 @@ class AddOrganization extends Component {
         }
 
         return (
-            <Container className="box rounded pt-4 pb-4 pl-5 pr-5 mt-5">
-                {this.props.user ? (
-                    <Form className="pl-3 pr-3 pt-2">
-                        {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
-                        <FormGroup>
-                            <Label for="ResourceLabel">Organization Name</Label>
-                            <Input
-                                onChange={this.handleChange}
-                                type="text"
-                                name="value"
-                                id="ResourceLabel"
-                                disabled={loading}
-                                placeholder="Organization Name"
-                            />
-                        </FormGroup>
+            <>
+                <Container className="d-flex align-items-center">
+                    <h3 className="h4 my-4 flex-grow-1">Create new organization</h3>
+                </Container>
+                <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
+                    {this.props.user ? (
+                        <Form className="pl-3 pr-3 pt-2">
+                            {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
+                            <FormGroup>
+                                <Label for="ResourceLabel">Organization Name</Label>
+                                <Input
+                                    onChange={this.handleChange}
+                                    type="text"
+                                    name="value"
+                                    id="ResourceLabel"
+                                    disabled={loading}
+                                    placeholder="Organization Name"
+                                />
+                            </FormGroup>
 
-                        <FormGroup>
-                            <Label for="OrganizationUrl">Organization URL</Label>
-                            <Input
-                                onChange={this.handleChange}
-                                type="text"
-                                name="url"
-                                id="OrganizationUrl"
-                                disabled={loading}
-                                placeholder="https://www.example.com"
-                            />
-                        </FormGroup>
-                        <div>
-                            <img src={this.state.previewSrc} style={{ width: '20%', height: '20%' }} className="Avatar" alt="" />
-                        </div>
-                        <FormGroup>
-                            <Label>Logo</Label>
-                            <br />
-                            <Input type="file" onChange={this.handlePreview} />
-                        </FormGroup>
+                            <FormGroup>
+                                <Label for="OrganizationUrl">Organization URL</Label>
+                                <Input
+                                    onChange={this.handleChange}
+                                    type="text"
+                                    name="url"
+                                    id="OrganizationUrl"
+                                    disabled={loading}
+                                    placeholder="https://www.example.com"
+                                />
+                            </FormGroup>
+                            <div>
+                                <img src={this.state.previewSrc} style={{ width: '20%', height: '20%' }} className="Avatar" alt="" />
+                            </div>
+                            <FormGroup>
+                                <Label>Logo</Label>
+                                <br />
+                                <Input type="file" onChange={this.handlePreview} />
+                            </FormGroup>
 
-                        <Button color="primary" onClick={this.createNewOrganization} outline className="mt-4 mb-2" block disabled={loading}>
-                            {!loading ? 'Create Organization' : <span>Loading</span>}
-                        </Button>
-                    </Form>
-                ) : (
-                    <>
-                        <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog('signin')}>
-                            <Icon className="mr-1" icon={faUser} /> Signin to create organization
-                        </Button>
-                    </>
-                )}
-            </Container>
+                            <Button color="primary" onClick={this.createNewOrganization} outline className="mt-4 mb-2" block disabled={loading}>
+                                {!loading ? 'Create Organization' : <span>Loading</span>}
+                            </Button>
+                        </Form>
+                    ) : (
+                        <>
+                            <Button color="link" className="p-0 mb-2 mt-2 clearfix" onClick={() => this.props.openAuthDialog('signin')}>
+                                <Icon className="mr-1" icon={faUser} /> Signin to create organization
+                            </Button>
+                        </>
+                    )}
+                </Container>
+            </>
         );
     }
 }

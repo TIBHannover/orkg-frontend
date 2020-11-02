@@ -7,21 +7,21 @@ export const BreadcrumbList = styled.ul`
     margin: 0 0 10px;
     display: flex;
     width: 80%;
-    float: left;
 `;
 
 export const BreadcrumbItem = styled.li`
     border-radius: 6px;
     background: #f7f7f7;
-    padding: 4px 10px;
-    float: left;
+    padding: 4px 30px 4px 10px;
     border: 2px solid #e86161;
     font-size: 87%;
     white-space: nowrap;
     overflow: hidden;
+    display: flex;
     max-width: 55px;
     cursor: pointer;
     transition: max-width 0.5s;
+    position: relative;
 
     &:hover {
         max-width: 100%;
@@ -42,6 +42,14 @@ export const BreadcrumbItem = styled.li`
 
     &:not(:first-child) {
         margin-left: -15px;
+    }
+
+    .resourceLink {
+        position: absolute;
+        right: 0;
+        padding-right: 4px;
+        padding-left: 4px;
+        background-color: #e86161;
     }
 `;
 

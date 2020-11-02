@@ -5,6 +5,7 @@ import routes from './routes.config';
 import DefaultLayout from './components/Layout/DefaultLayout';
 import './assets/scss/CustomBootstrap.scss';
 import 'react-toastify/dist/ReactToastify.css';
+import { MatomoContext } from '@datapunt/matomo-tracker-react';
 import { ConnectedRouter } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import { withCookies } from 'react-cookie';
@@ -12,6 +13,7 @@ import { detect } from 'detect-browser';
 import ScrollToTop from './components/ScrollToTop';
 import MetaTags from 'react-meta-tags';
 import { Alert } from 'reactstrap';
+import env from '@beam-australia/react-env';
 
 class App extends Component {
     constructor(props) {
@@ -28,6 +30,23 @@ class App extends Component {
         }
     }
 
+    componentDidMount() {
+        const matomoTracker = this.context;
+        // Listen for changes to the current location.
+        this.unlisten = this.props.history.listen((location, action) => {
+            setTimeout(function() {
+                matomoTracker && matomoTracker.trackPageView();
+            }, 1000);
+        });
+    }
+
+    componentWillUnmount() {
+        // Unlisten when the component lifecycle ends.
+        this.unlisten();
+    }
+
+    static contextType = MatomoContext;
+
     render() {
         const alertStyle = { borderRadius: '0', marginTop: '-30px', marginBottom: '30px' };
 
@@ -41,7 +60,7 @@ class App extends Component {
                                 for the best experience
                             </Alert>
                         )}
-                        {process.env.REACT_APP_IS_TESTING_SERVER === 'true' && (
+                        {env('IS_TESTING_SERVER') === 'true' && (
                             <>
                                 <MetaTags>
                                     <meta name="robots" content="noindex" /> {/* make sure search engines are not indexing our test server */}

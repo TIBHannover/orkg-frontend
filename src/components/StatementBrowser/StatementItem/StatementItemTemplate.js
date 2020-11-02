@@ -7,9 +7,9 @@ import ValueItem from 'components/StatementBrowser/ValueItem/ValueItemContainer'
 import AddValue from 'components/StatementBrowser/AddValue/AddValueContainer';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import { StatementsGroupStyle, PropertyStyle, ValuesStyle } from 'components/StatementBrowser/styled';
-import { predicatesUrl } from 'network';
+import { predicatesUrl } from 'services/backend/predicates';
 import defaultProperties from 'components/StatementBrowser/AddProperty/helpers/defaultProperties';
-import AutoComplete from 'components/StatementBrowser/AutoComplete';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
@@ -132,7 +132,6 @@ StatementItemTemplate.propTypes = {
     selectedProperty: PropTypes.string,
     isLastItem: PropTypes.bool.isRequired,
     enableEdit: PropTypes.bool.isRequired,
-    loadOptions: PropTypes.func.isRequired,
     predicateLabel: PropTypes.string.isRequired,
     values: PropTypes.object.isRequired,
     syncBackend: PropTypes.bool.isRequired,

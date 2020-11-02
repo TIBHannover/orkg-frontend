@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
+import { Container, Col, Row, FormGroup, Label, Form, Input, ListGroup, ListGroupItem } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
+import { faAngleDoubleDown, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-import { getResourcesByClass, resourcesUrl, getStatementsByObjectAndPredicate } from 'network';
-import AutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
+import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { classesUrl } from 'services/backend/classes';
+import { getResourcesByClass } from 'services/backend/classes';
+import { resourcesUrl } from 'services/backend/resources';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
 import TemplateCard from 'components/ContributionTemplates/TemplateCard';
-import { Container, Col, Row, FormGroup, Label, Form } from 'reactstrap';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
@@ -23,7 +27,9 @@ export default class ContributionTemplates extends Component {
             page: 1,
             isLastPageReached: false,
             filterReseachField: null,
-            filterResearchProblem: null
+            filterResearchProblem: null,
+            filterClass: null,
+            filterLabel: ''
         };
     }
 
@@ -34,7 +40,12 @@ export default class ContributionTemplates extends Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (prevState.filterReseachField !== this.state.filterReseachField || prevState.filterResearchProblem !== this.state.filterResearchProblem) {
+        if (
+            prevState.filterReseachField !== this.state.filterReseachField ||
+            prevState.filterResearchProblem !== this.state.filterResearchProblem ||
+            prevState.filterClass !== this.state.filterClass ||
+            prevState.filterLabel !== this.state.filterLabel
+        ) {
             this.setState({ contributionTemplates: [], isNextPageLoading: false, hasNextPage: false, page: 1, isLastPageReached: false }, () =>
                 this.loadMoreContributionTemplates()
             );
@@ -66,14 +77,36 @@ export default class ContributionTemplates extends Component {
     handleResearchFieldSelect = selected => {
         this.setState({
             filterReseachField: !selected ? null : selected,
-            filterResearchProblem: null
+            filterResearchProblem: null,
+            filterClass: null,
+            filterLabel: ''
         });
     };
 
     handleResearchProblemSelect = selected => {
         this.setState({
             filterResearchProblem: !selected ? null : selected,
-            filterReseachField: null
+            filterReseachField: null,
+            filterClass: null,
+            filterLabel: ''
+        });
+    };
+
+    handleClassSelect = selected => {
+        this.setState({
+            filterResearchProblem: null,
+            filterReseachField: null,
+            filterClass: !selected ? null : selected,
+            filterLabel: ''
+        });
+    };
+
+    handleLabelFilter = e => {
+        this.setState({
+            filterResearchProblem: null,
+            filterReseachField: null,
+            filterClass: null,
+            filterLabel: e.target.value
         });
     };
 
@@ -84,10 +117,13 @@ export default class ContributionTemplates extends Component {
             templates = this.getTemplatesOfResourceId(this.state.filterReseachField.id, PREDICATES.TEMPLATE_OF_RESEARCH_FIELD);
         } else if (this.state.filterResearchProblem) {
             templates = this.getTemplatesOfResourceId(this.state.filterResearchProblem.id, PREDICATES.TEMPLATE_OF_RESEARCH_PROBLEM);
+        } else if (this.state.filterClass) {
+            templates = this.getTemplatesOfResourceId(this.state.filterClass.id, PREDICATES.TEMPLATE_OF_CLASS);
         } else {
             templates = getResourcesByClass({
                 id: CLASSES.CONTRIBUTION_TEMPLATE,
                 page: this.state.page,
+                q: this.state.filterLabel,
                 items: this.pageSize,
                 sortBy: 'created_at',
                 desc: true
@@ -115,16 +151,19 @@ export default class ContributionTemplates extends Component {
     render() {
         return (
             <>
-                <Container className="p-0">
-                    <h1 className="h4 mt-4 mb-4">View all contribution templates</h1>
+                <Container className="d-flex align-items-center">
+                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all contribution templates</h1>
+                    <RequireAuthentication
+                        component={Link}
+                        color="darkblue"
+                        size="sm"
+                        className="btn btn-darkblue btn-sm flex-shrink-0"
+                        to={reverse(ROUTES.CONTRIBUTION_TEMPLATE)}
+                    >
+                        <Icon icon={faPlus} /> Create template
+                    </RequireAuthentication>
                 </Container>
-                <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
-                    <div className="clearfix">
-                        <Link className="float-right mb-2 mt-2 clearfix" to={reverse(ROUTES.CONTRIBUTION_TEMPLATE)}>
-                            <span className="fa fa-plus" /> Create new template
-                        </Link>
-                    </div>
-
+                <Container className="box rounded pt-4 pb-2 pl-5 pr-5 clearfix">
                     <Form className="mb-3">
                         <Row form>
                             <Col md={6}>
@@ -133,12 +172,14 @@ export default class ContributionTemplates extends Component {
                                     <AutoComplete
                                         requestUrl={resourcesUrl}
                                         optionsClass={CLASSES.RESEARCH_FIELD}
-                                        onItemSelected={this.handleResearchFieldSelect}
                                         placeholder="Select or type to enter a research field"
-                                        autoFocus
-                                        isClearable
-                                        cacheOptions
+                                        onChange={this.handleResearchFieldSelect}
                                         value={this.state.filterReseachField}
+                                        autoLoadOption={true}
+                                        openMenuOnFocus={true}
+                                        allowCreate={false}
+                                        isClearable
+                                        autoFocus={false}
                                     />
                                 </FormGroup>
                             </Col>
@@ -148,44 +189,79 @@ export default class ContributionTemplates extends Component {
                                     <AutoComplete
                                         requestUrl={resourcesUrl}
                                         optionsClass={CLASSES.PROBLEM}
-                                        onItemSelected={this.handleResearchProblemSelect}
                                         placeholder="Select or type to enter a research problem"
-                                        autoFocus
-                                        isClearable
-                                        cacheOptions
+                                        onChange={this.handleResearchProblemSelect}
                                         value={this.state.filterResearchProblem}
+                                        autoLoadOption={true}
+                                        openMenuOnFocus={true}
+                                        allowCreate={false}
+                                        isClearable
+                                        autoFocus={false}
+                                    />
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Row form>
+                            <Col md={6}>
+                                <FormGroup>
+                                    <Label for="filterLabel">Filter by Label</Label>
+                                    <Input value={this.state.filterLabel} type="text" name="filterLabel" onChange={this.handleLabelFilter} />
+                                </FormGroup>
+                            </Col>
+                            <Col md={6}>
+                                <FormGroup>
+                                    <Label for="examplePassword">Filter by class</Label>
+                                    <AutoComplete
+                                        requestUrl={classesUrl}
+                                        placeholder="Select or type to enter a class"
+                                        onChange={this.handleClassSelect}
+                                        value={this.state.filterClass}
+                                        autoLoadOption={true}
+                                        openMenuOnFocus={true}
+                                        allowCreate={false}
+                                        isClearable
+                                        autoFocus={false}
                                     />
                                 </FormGroup>
                             </Col>
                         </Row>
                     </Form>
-                    {this.state.contributionTemplates.length > 0 && (
-                        <div>
-                            {this.state.contributionTemplates.map(contributionTemplate => {
-                                return <TemplateCard key={contributionTemplate.id} template={contributionTemplate} />;
-                            })}
-                        </div>
-                    )}
-                    {this.state.contributionTemplates.length === 0 && !this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">No contribution templates</div>
-                    )}
-                    {this.state.isNextPageLoading && (
-                        <div className="text-center mt-4 mb-4">
-                            <Icon icon={faSpinner} spin /> Loading
-                        </div>
-                    )}
-                    {!this.state.isNextPageLoading && this.state.hasNextPage && (
-                        <div
-                            style={{ cursor: 'pointer' }}
-                            className="list-group-item list-group-item-action text-center mt-2"
-                            onClick={!this.state.isNextPageLoading ? this.loadMoreContributionTemplates : undefined}
-                        >
-                            Load more contribution templates
-                        </div>
-                    )}
-                    {!this.state.hasNextPage && this.state.isLastPageReached && (
-                        <div className="text-center mt-3">You have reached the last page.</div>
-                    )}
+                </Container>
+                <Container className="p-0 mt-4">
+                    <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
+                        {this.state.contributionTemplates.length > 0 && (
+                            <div>
+                                {this.state.contributionTemplates.map(contributionTemplate => {
+                                    return <TemplateCard key={contributionTemplate.id} template={contributionTemplate} />;
+                                })}
+                            </div>
+                        )}
+                        {this.state.contributionTemplates.length === 0 && !this.state.isNextPageLoading && (
+                            <ListGroupItem tag="div" className="text-center">
+                                No contribution templates
+                            </ListGroupItem>
+                        )}
+                        {this.state.isNextPageLoading && (
+                            <ListGroupItem tag="div" className="text-center">
+                                <Icon icon={faSpinner} spin /> Loading
+                            </ListGroupItem>
+                        )}
+                        {!this.state.isNextPageLoading && this.state.hasNextPage && (
+                            <ListGroupItem
+                                style={{ cursor: 'pointer' }}
+                                className="text-center"
+                                action
+                                onClick={!this.state.isNextPageLoading ? this.loadMoreContributionTemplates : undefined}
+                            >
+                                <Icon icon={faAngleDoubleDown} /> Load more templates
+                            </ListGroupItem>
+                        )}
+                        {!this.state.hasNextPage && this.state.isLastPageReached && (
+                            <ListGroupItem tag="div" className="text-center">
+                                You have reached the last page.
+                            </ListGroupItem>
+                        )}
+                    </ListGroup>
                 </Container>
             </>
         );

@@ -1,26 +1,19 @@
 import React, { Component } from 'react';
 import { Container, Alert, UncontrolledAlert } from 'reactstrap';
-import {
-    getObservatoryAndOrganizationInformation,
-    getContributorsByResourceId,
-    getUserInformationById,
-    getStatementsBySubject,
-    getResource,
-    updateResource,
-    createResource,
-    createResourceStatement,
-    deleteStatementById
-} from 'network';
+import { getStatementsBySubject, createResourceStatement, deleteStatementById } from 'services/backend/statements';
+import { getUserInformationById } from 'services/backend/users';
+import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
+import { getResource, updateResource, createResource, getContributorsByResourceId } from 'services/backend/resources';
 import { connect } from 'react-redux';
-import NotFound from '../pages/NotFound';
+import NotFound from 'pages/NotFound';
 import ContentLoader from 'react-content-loader';
-import Contributions from '../components/ViewPaper/Contributions';
+import Contributions from 'components/ViewPaper/Contributions';
 import PropTypes from 'prop-types';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
-import PaperHeader from '../components/ViewPaper/PaperHeader';
-import { resetStatementBrowser } from 'actions/statementBrowser';
+import PaperHeader from 'components/ViewPaper/PaperHeader';
+import { resetStatementBrowser, updateContributionLabel } from 'actions/statementBrowser';
 import { loadPaper, selectContribution, setPaperAuthors } from 'actions/viewPaper';
-import GizmoGraphViewModal from '../components/ViewPaper/GraphView/GizmoGraphViewModal';
+import GizmoGraphViewModal from 'components/ViewPaper/GraphView/GizmoGraphViewModal';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
 import Confirm from 'reactstrap-confirm';
@@ -28,7 +21,7 @@ import VisibilitySensor from 'react-visibility-sensor';
 import PaperHeaderBar from 'components/ViewPaper/PaperHeaderBar/PaperHeaderBar';
 import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
-import SharePaper from '../components/ViewPaper/SharePaper';
+import SharePaper from 'components/ViewPaper/SharePaper';
 import { getPaperData_ViewPaper } from 'utils';
 import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 
@@ -60,7 +53,12 @@ class ViewPaper extends Component {
         editMode: false,
         observatoryInfo: {},
         contributors: [],
-        showHeaderBar: false
+        showHeaderBar: false,
+        isLoadingObservatory: false,
+        failedLoading: false,
+        observatories: [],
+        organizationId: '',
+        observatoryId: ''
     };
 
     componentDidMount() {
@@ -71,7 +69,15 @@ class ViewPaper extends Component {
         if (this.props.match.params.resourceId !== prevProps.match.params.resourceId) {
             this.loadPaperData();
         } else if (this.props.match.params.contributionId !== prevProps.match.params.contributionId) {
-            this.setState({ selectedContribution: this.props.match.params.contributionId });
+            const selectedContribution =
+                this.props.match.params.contributionId &&
+                this.state.contributions.some(el => {
+                    return el.id === this.props.match.params.contributionId;
+                })
+                    ? this.props.match.params.contributionId
+                    : this.state.contributions[0].id;
+
+            this.setState({ selectedContribution: selectedContribution });
         }
     };
 
@@ -84,7 +90,6 @@ class ViewPaper extends Component {
     loadPaperData = () => {
         this.setState({ loading: true });
         const resourceId = this.props.match.params.resourceId;
-
         this.props.resetStatementBrowser();
         getResource(resourceId)
             .then(paperResource => {
@@ -136,7 +141,10 @@ class ViewPaper extends Component {
             const updatedObj = { ...this.state.contributions[objIndex], label: label };
             // update the contributions array
             const newContributions = [...this.state.contributions.slice(0, objIndex), updatedObj, ...this.state.contributions.slice(objIndex + 1)];
-            this.setState({ contributions: newContributions });
+            this.setState({
+                contributions: newContributions
+            });
+            this.props.updateContributionLabel({ id: contributionId, label: label });
             await updateResource(contributionId, label);
             toast.success('Contribution name updated successfully');
         }
@@ -167,7 +175,9 @@ class ViewPaper extends Component {
                     selectedContribution: newContributions[0].id
                 },
                 () => {
-                    this.setState({ contributions: newContributions });
+                    this.setState({
+                        contributions: newContributions
+                    });
                 }
             );
             await deleteStatementById(statementId);
@@ -175,13 +185,24 @@ class ViewPaper extends Component {
         }
     };
 
+    getObservatoryInfo = () => {
+        const resourceId = this.props.match.params.resourceId;
+        getResource(resourceId)
+            .then(paperResource => {
+                this.processObservatoryInformation(paperResource, resourceId);
+            })
+            .catch(error => {
+                this.setState({ loading: false, loading_failed: true });
+            });
+    };
+
     /** PROCESSING HELPER :  Helper functions to increase code readability**/
     processObservatoryInformation(paperResource, resourceId) {
         if (
             paperResource.observatory_id &&
-            paperResource.observatory_id !== MISC.ANONYMOUS_USER_ID &&
+            paperResource.observatory_id !== MISC.UNKNOWN_ID &&
             paperResource.created_by &&
-            paperResource.created_by !== MISC.ANONYMOUS_USER_ID
+            paperResource.created_by !== MISC.UNKNOWN_ID
         ) {
             const observatory = getObservatoryAndOrganizationInformation(paperResource.observatory_id, paperResource.organization_id);
             const creator = getUserInformationById(paperResource.created_by);
@@ -299,13 +320,19 @@ class ViewPaper extends Component {
                                 paperLink={paperLink}
                                 editMode={this.state.editMode}
                                 toggle={this.toggle}
+                                id={this.props.match.params.resourceId}
                                 paperTitle={this.props.viewPaper.title}
                             />
                         )}
                         <VisibilitySensor onChange={this.handleShowHeaderBar}>
                             <Container className="d-flex align-items-center">
                                 <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
-                                <PaperMenuBar editMode={this.state.editMode} paperLink={paperLink} toggle={this.toggle} />
+                                <PaperMenuBar
+                                    editMode={this.state.editMode}
+                                    paperLink={paperLink}
+                                    toggle={this.toggle}
+                                    id={this.props.match.params.resourceId}
+                                />
                             </Container>
                         </VisibilitySensor>
 
@@ -360,6 +387,7 @@ class ViewPaper extends Component {
                                         toggleDeleteContribution={this.toggleDeleteContribution}
                                         observatoryInfo={this.state.observatoryInfo}
                                         contributors={this.state.contributors}
+                                        changeObservatory={this.getObservatoryInfo}
                                     />
 
                                     <ComparisonPopup />
@@ -394,21 +422,25 @@ ViewPaper.propTypes = {
     }).isRequired,
     resetStatementBrowser: PropTypes.func.isRequired,
     selectContribution: PropTypes.func.isRequired,
+    updateContributionLabel: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     viewPaper: PropTypes.object.isRequired,
     loadPaper: PropTypes.func.isRequired,
-    setPaperAuthors: PropTypes.func.isRequired
+    setPaperAuthors: PropTypes.func.isRequired,
+    user: PropTypes.object
 };
 
 const mapStateToProps = state => ({
-    viewPaper: state.viewPaper
+    viewPaper: state.viewPaper,
+    user: state.auth.user
 });
 
 const mapDispatchToProps = dispatch => ({
     resetStatementBrowser: () => dispatch(resetStatementBrowser()),
     loadPaper: payload => dispatch(loadPaper(payload)),
     selectContribution: payload => dispatch(selectContribution(payload)),
-    setPaperAuthors: payload => dispatch(setPaperAuthors(payload))
+    setPaperAuthors: payload => dispatch(setPaperAuthors(payload)),
+    updateContributionLabel: payload => dispatch(updateContributionLabel(payload))
 });
 
 export default connect(

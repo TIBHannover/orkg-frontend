@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
-import { PropertyStyle } from 'components/StatementBrowser/styled';
 import { InputGroup } from 'reactstrap';
-import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
-import PropTypes from 'prop-types';
-import TemplateEditorAutoComplete from 'components/ContributionTemplates/TemplateEditorAutoComplete';
-import { predicatesUrl } from 'network';
-import classNames from 'classnames';
+import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
+import AutoComplete from 'components/Autocomplete/Autocomplete';
+import { PropertyStyle } from 'components/StatementBrowser/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowsAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import PropTypes from 'prop-types';
+import { predicatesUrl } from 'services/backend/predicates';
+import classNames from 'classnames';
 import styled from 'styled-components';
 
 const DragHandler = styled.div`
@@ -54,17 +54,17 @@ function TemplateComponentProperty(props) {
             ) : (
                 <div>
                     <InputGroup size="sm">
-                        <TemplateEditorAutoComplete
+                        <AutoComplete
                             requestUrl={predicatesUrl}
                             placeholder={isEditing ? 'Select or type to enter a property' : 'No properties'}
-                            onItemSelected={(selected, action) => {
+                            onChange={(selected, action) => {
                                 props.handlePropertiesSelect(selected, action, props.id);
                                 setIsEditing(false);
                             }}
-                            onKeyUp={() => {}}
-                            allowCreate
-                            autoFocus
                             value={props.property}
+                            autoLoadOption={true}
+                            openMenuOnFocus={true}
+                            allowCreate={true}
                             cssClasses="form-control-sm"
                             onBlur={() => {
                                 setIsEditing(false);

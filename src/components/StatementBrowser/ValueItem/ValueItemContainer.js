@@ -28,7 +28,7 @@ const mapStateToProps = (state, props) => {
         resourcesAsLinks: state.statementBrowser.resourcesAsLinks,
         classes: state.statementBrowser.classes,
         templates: state.statementBrowser.templates,
-        valueClass: valueClass ? valueClass : predicate.range ? predicate.range : null,
+        valueClass: valueClass,
         isInlineResource: isInlineResource(state, valueClass)
     };
 };

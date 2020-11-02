@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Table } from 'reactstrap';
-import { classesUrl, submitGetRequest, getStatementsByObjectAndPredicate } from 'network';
+import { Container, Table, ButtonGroup, Button } from 'reactstrap';
+import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
+import { getClassById } from 'services/backend/classes';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faPlus, faFileCsv } from '@fortawesome/free-solid-svg-icons';
+import ClassInstances from 'components/ClassInstances/ClassInstances';
+import ImportCSVInstances from 'components/ClassInstances/ImportCSVInstances';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import InternalServerError from 'pages/InternalServerError';
 import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
@@ -14,15 +20,17 @@ function ClassDetails(props) {
     const location = useLocation();
     const [error, setError] = useState(null);
     const [label, setLabel] = useState('');
+    const [keyInstances, setKeyInstances] = useState(1);
     const [template, setTemplate] = useState(null);
     const [uri, setURI] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [modalImportIsOpen, setModalImportIsOpen] = useState(false);
 
     useEffect(() => {
         const findClass = async () => {
             setIsLoading(true);
             try {
-                const responseJson = await submitGetRequest(classesUrl + encodeURIComponent(props.match.params.id));
+                const responseJson = await getClassById(props.match.params.id);
                 document.title = `${responseJson.label} - Class - ORKG`;
                 // Get the template of the class
                 getStatementsByObjectAndPredicate({
@@ -72,6 +80,23 @@ function ClassDetails(props) {
                                             <small>No label</small>
                                         </i>
                                     )}
+                                    <ButtonGroup className="float-right mb-4 ml-1">
+                                        <RequireAuthentication
+                                            component={Link}
+                                            to={`${ROUTES.ADD_RESOURCE}?classes=${props.match.params.id}`}
+                                            className="float-right btn btn-darkblue flex-shrink-0 btn-sm"
+                                        >
+                                            <Icon icon={faPlus} /> Add resource
+                                        </RequireAuthentication>
+                                        <RequireAuthentication
+                                            component={Button}
+                                            size="sm"
+                                            color="darkblue"
+                                            onClick={() => setModalImportIsOpen(true)}
+                                        >
+                                            <Icon icon={faFileCsv} /> Import Instances
+                                        </RequireAuthentication>
+                                    </ButtonGroup>
                                 </h3>
                             </div>
                         </div>
@@ -93,12 +118,24 @@ function ClassDetails(props) {
                                         {template ? (
                                             <Link to={reverse(ROUTES.CONTRIBUTION_TEMPLATE, { id: template.id })}>{template.label}</Link>
                                         ) : (
-                                            <i>Not Defined</i>
+                                            <i>
+                                                Not Defined{' '}
+                                                <Link to={`${reverse(ROUTES.CONTRIBUTION_TEMPLATE)}?classID=${props.match.params.id}`}>
+                                                    Create a template
+                                                </Link>
+                                            </i>
                                         )}
                                     </td>
                                 </tr>
                             </tbody>
                         </Table>
+                        <ClassInstances classId={props.match.params.id} key={keyInstances} />
+                        <ImportCSVInstances
+                            classId={props.match.params.id}
+                            showDialog={modalImportIsOpen}
+                            toggle={() => setModalImportIsOpen(v => !v)}
+                            callBack={() => setKeyInstances(Math.random())}
+                        />
                     </div>
                 </Container>
             )}

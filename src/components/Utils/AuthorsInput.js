@@ -78,7 +78,7 @@ const AuthorTag = styled.div`
     }
 `;
 
-const SortableItem = sortableElement(({ author, index, authorIndex, editAuthor, removeAuthor }) => (
+const SortableItem = sortableElement(({ author, index, authorIndex, editAuthor, removeAuthor, itemLabel }) => (
     <AuthorTag>
         <DragHandle />
         <div className="name" onClick={e => editAuthor(authorIndex)}>
@@ -88,7 +88,7 @@ const SortableItem = sortableElement(({ author, index, authorIndex, editAuthor, 
         <div style={{ padding: '8px' }} onClick={e => editAuthor(authorIndex)}>
             <Icon icon={faPen} />
         </div>
-        <div title="Delete author" className="delete" onClick={e => removeAuthor(author.id)}>
+        <div title={`Delete ${itemLabel}`} className="delete" onClick={e => removeAuthor(author.id)}>
             <Icon icon={faTimes} />
         </div>
     </AuthorTag>
@@ -182,7 +182,7 @@ class AuthorsInput extends Component {
                     .catch(e => {
                         this.setState({
                             authorNameLoading: false,
-                            errors: { errors: [{ field: 'authorInput', message: 'Invalid ORCID ID. Please enter the author name' }] }
+                            errors: { errors: [{ field: 'authorInput', message: `Invalid ORCID ID. Please enter the ${this.props.itemLabel} name` }] }
                         });
                     });
             } else {
@@ -208,7 +208,7 @@ class AuthorsInput extends Component {
                 this.toggle('showAuthorForm');
             }
         } else {
-            this.setState({ errors: { errors: [{ field: 'authorInput', message: 'Please enter the author name' }] } });
+            this.setState({ errors: { errors: [{ field: 'authorInput', message: `Please enter the ${this.props.itemLabel} name` }] } });
         }
     };
 
@@ -254,6 +254,7 @@ class AuthorsInput extends Component {
                                         author={author}
                                         index={index}
                                         authorIndex={index}
+                                        itemLabel={this.props.itemLabel}
                                         editAuthor={() => this.editAuthor(index)}
                                         removeAuthor={() => this.removeAuthor(author.id)}
                                     />
@@ -272,15 +273,17 @@ class AuthorsInput extends Component {
                             this.toggle('showAuthorForm');
                         }}
                     >
-                        <Icon icon={faPlus} className="mr-2" /> Add author
+                        <Icon icon={faPlus} className="mr-2" /> Add {this.props.itemLabel}
                     </AddAuthor>
                 </div>
                 <Modal onOpened={() => this.inputRef.current.focus()} isOpen={this.state.showAuthorForm} toggle={() => this.toggle('showAuthorForm')}>
-                    <ModalHeader toggle={this.toggleVideoDialog}>{this.state.editMode ? 'Edit author' : 'Add author'}</ModalHeader>
+                    <ModalHeader toggle={this.toggleVideoDialog}>
+                        {this.state.editMode ? `Edit ${this.props.itemLabel}` : `Add ${this.props.itemLabel}`}
+                    </ModalHeader>
                     <ModalBody>
                         <FormGroup>
                             <Label for="authorInput">
-                                Enter author name <b>or</b> ORCID <Icon color="#A6CE39" icon={faOrcid} />
+                                Enter {this.props.itemLabel} name <b>or</b> ORCID <Icon color="#A6CE39" icon={faOrcid} />
                             </Label>
                             <Input
                                 onChange={this.handleChange}
@@ -313,7 +316,12 @@ class AuthorsInput extends Component {
 AuthorsInput.propTypes = {
     handler: PropTypes.func.isRequired,
     value: PropTypes.array.isRequired,
-    theme: PropTypes.object.isRequired
+    theme: PropTypes.object.isRequired,
+    itemLabel: PropTypes.string
+};
+
+AuthorsInput.defaultProps = {
+    itemLabel: 'author'
 };
 
 export default withTheme(AuthorsInput);

@@ -1,9 +1,12 @@
 import * as type from './types.js';
 import { guid } from 'utils';
-import * as network from 'network';
 import { prefillStatements } from './addPaper';
 import { orderBy, uniq, isEqual } from 'lodash';
 import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
+import { getResource } from 'services/backend/resources';
+import { getPredicate } from 'services/backend/predicates';
+import { getStatementsBySubject, getTemplateById, getTemplatesByClass } from 'services/backend/statements';
+import { createResource as createResourceApi } from 'services/backend/resources';
 
 export const updateSettings = data => dispatch => {
     dispatch({
@@ -34,7 +37,7 @@ export const initializeWithoutContribution = data => dispatch => {
             label: label,
             existingResourceId: resourceId,
             resourceId: resourceId,
-            ...(rootNodeType === 'predicate' ? { classes: ['Predicate'] } : {})
+            ...(rootNodeType === 'predicate' ? { classes: [CLASSES.PREDICATE] } : {})
         })
     );
 
@@ -353,12 +356,21 @@ export function canAddProperty(state, resourceId) {
  */
 export function canAddValue(state, resourceId, propertyId) {
     const property = state.statementBrowser.properties.byId[propertyId];
-    const typeComponents = getComponentsByResourceIDAndPredicateID(state, resourceId, property.existingPredicateId);
-    if (typeComponents && typeComponents.length > 0 && typeComponents[0].maxOccurs) {
-        if (property.valueIds.length >= parseInt(typeComponents[0].maxOccurs)) {
-            return false;
+    if (property) {
+        const typeComponents = getComponentsByResourceIDAndPredicateID(state, resourceId, property.existingPredicateId);
+        if (typeComponents && typeComponents.length > 0) {
+            if (typeComponents[0].maxOccurs && property.valueIds.length >= parseInt(typeComponents[0].maxOccurs)) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
-            return true;
+            if (property.maxOccurs && property.valueIds.length >= parseInt(property.maxOccurs)) {
+                // rules on the contribution level
+                return false;
+            } else {
+                return true;
+            }
         }
     } else {
         return true;
@@ -375,9 +387,22 @@ export function canAddValue(state, resourceId, propertyId) {
  */
 export function canDeleteProperty(state, resourceId, propertyId) {
     const property = state.statementBrowser.properties.byId[propertyId];
-    const typeComponents = getComponentsByResourceIDAndPredicateID(state, resourceId, property.existingPredicateId);
-    if (typeComponents && typeComponents.length > 0 && typeComponents[0].minOccurs >= 1) {
-        return false;
+    if (property) {
+        const typeComponents = getComponentsByResourceIDAndPredicateID(state, resourceId, property.existingPredicateId);
+        if (typeComponents && typeComponents.length > 0) {
+            if (typeComponents[0].minOccurs >= 1) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if (property.minOccurs >= 1) {
+                // rules on the contribution level
+                return false;
+            } else {
+                return true;
+            }
+        }
     } else {
         return true;
     }
@@ -583,7 +608,7 @@ export function fetchTemplateIfNeeded(templateID) {
                 type: type.IS_FETCHING_TEMPLATE_DATA,
                 templateID
             });
-            return network.getTemplateById(templateID).then(template => {
+            return getTemplateById(templateID).then(template => {
                 // Add template to the global state
                 dispatch({
                     type: type.DONE_FETCHING_TEMPLATE_DATA,
@@ -624,7 +649,9 @@ export function fillResourceWithTemplate({ templateID, selectedResource, syncBac
                                 existingPredicateId: component.property.id,
                                 label: component.property.label,
                                 range: component.value ? component.value : null,
-                                validationRules: component.validationRules
+                                validationRules: component.validationRules,
+                                minOccurs: component.minOccurs,
+                                maxOccurs: component.maxOccurs
                             });
                         }
                         dispatch(prefillStatements({ statements, resourceId: selectedResource, syncBackend: syncBackend }));
@@ -645,7 +672,7 @@ export function fillResourceWithTemplate({ templateID, selectedResource, syncBac
                         canDuplicate: true
                     });
                     if (syncBackend) {
-                        newObject = await network.createResource(template.label, template.class ? [template.class.id] : []);
+                        newObject = await createResourceApi(template.label, template.class ? [template.class.id] : []);
                     }
                     statements['values'].push({
                         valueId: vID,
@@ -709,7 +736,7 @@ export function fetchTemplatesofClassIfNeeded(classID) {
                 type: type.IS_FETCHING_TEMPLATES_OF_CLASS,
                 classID
             });
-            return network.getTemplatesByClass(classID).then(async templateIds => {
+            return getTemplatesByClass(classID).then(async templateIds => {
                 dispatch({
                     type: type.DONE_FETCHING_TEMPLATES_OF_CLASS,
                     classID
@@ -771,6 +798,13 @@ export const goToResourceHistory = data => dispatch => {
     });
 };
 
+export const updateContributionLabel = data => dispatch => {
+    dispatch({
+        type: type.STATEMENT_BROWSER_UPDATE_CONTRIBUTION_LABEL,
+        payload: data
+    });
+};
+
 /**
  * Check if it should fetch statements for resources
  *
@@ -823,15 +857,15 @@ export const fetchStatementsForResource = data => {
             });
             let subject;
             if (rootNodeType === 'predicate') {
-                subject = network.getPredicate(existingResourceId);
+                subject = getPredicate(existingResourceId);
             } else {
-                subject = network.getResource(existingResourceId);
+                subject = getResource(existingResourceId);
             }
 
             return subject.then(response => {
                 let promises;
                 // fetch the statements
-                const resourceStatementsPromise = network.getStatementsBySubject({ id: existingResourceId }).then(response => {
+                const resourceStatementsPromise = getStatementsBySubject({ id: existingResourceId }).then(response => {
                     resourceStatements = response;
                     return Promise.resolve();
                 });

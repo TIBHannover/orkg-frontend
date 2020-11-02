@@ -1,7 +1,7 @@
 import * as type from './types.js';
 import { createResource, fetchStatementsForResource, selectResource } from './statementBrowser';
 
-export const selectContribution = ({ contributionId: id, contributionIsLoaded }) => dispatch => {
+export const selectContribution = ({ contributionId: id, contributionIsLoaded, contributionLabel }) => dispatch => {
     if (!contributionIsLoaded) {
         //let resourceId = guid(); //use this as ID in the future, when changing the data is possible
 
@@ -15,12 +15,19 @@ export const selectContribution = ({ contributionId: id, contributionIsLoaded })
 
         dispatch(
             createResource({
-                //only needed for connecting properties, label is not shown
+                //only needed for connecting properties, label is shown in the breadcrumb
                 resourceId: id,
-                label: '',
+                label: contributionLabel,
                 existingResourceId: id
             })
         );
+        // this will create or set the selected contribution id in the statementBrowser (HERE CREATE)
+        dispatch({
+            type: type.STATEMENT_BROWSER_CREATE_CONTRIBUTION_OBJECT,
+            payload: {
+                id
+            }
+        });
 
         dispatch(
             fetchStatementsForResource({
@@ -30,26 +37,41 @@ export const selectContribution = ({ contributionId: id, contributionIsLoaded })
                 depth: 3 // load depth 3 the first time
             })
         );
+        dispatch({
+            type: type.CLEAR_RESOURCE_HISTORY
+        });
     }
-
-    dispatch({
-        type: type.CLEAR_RESOURCE_HISTORY
-    });
-
-    dispatch(
-        selectResource({
-            increaseLevel: false,
-            resourceId: id,
-            label: 'Main',
-            resetLevel: true
+    // this will create or set the selected contribution id in the statementBrowser (HERE SELECT)
+    Promise.resolve(
+        dispatch({
+            type: type.STATEMENT_BROWSER_CREATE_CONTRIBUTION_OBJECT,
+            payload: {
+                id
+            }
         })
-    );
+    ).then(() => {
+        dispatch(
+            selectResource({
+                increaseLevel: false,
+                resourceId: id,
+                label: contributionLabel,
+                resetLevel: false
+            })
+        );
+        dispatch({
+            type: type.SELECT_CONTRIBUTION,
+            payload: {
+                id
+            }
+        });
 
-    dispatch({
-        type: type.SELECT_CONTRIBUTION,
-        payload: {
-            id
-        }
+        // this will load the contribution data/history into the statementBrowser
+        dispatch({
+            type: type.STATEMENT_BROWSER_LOAD_CONTRIBUTION_HISTORY,
+            payload: {
+                id
+            }
+        });
     });
 };
 
