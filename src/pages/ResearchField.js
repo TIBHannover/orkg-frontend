@@ -21,6 +21,7 @@ import {
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faEllipsisV, faAngleDoubleRight, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
+import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
 import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
 import useResearchFieldComparison from 'components/ResearchField/hooks/useResearchFieldComparison';
 import useResearchFieldProblems from 'components/ResearchField/hooks/useResearchFieldProblems';
@@ -34,6 +35,7 @@ import ROUTES from 'constants/routes';
 
 function ResearchField(props) {
     const [researchFieldData, parentResearchFields, subResearchFields, isLoading, isFailedLoading] = useResearchField();
+    const [researchFieldObservatories] = useResearchFieldObservatories();
     const [papers, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchFieldPapers();
     const [comparisons, isLoadingComparisons, hasNextPageComparison, isLastPageReachedComparison, loadMoreComparisons] = useResearchFieldComparison();
     const [
@@ -49,6 +51,7 @@ function ResearchField(props) {
 
     const [isSubResearchFieldsModalOpen, setIsSubResearchFieldsModalOpen] = useState(false);
     const [isProblemsModalOpen, setIsProblemsModalOpen] = useState(false);
+    const [isObservatoriesModalOpen, setIsObservatoriesModalOpen] = useState(false);
 
     return (
         <div>
@@ -127,7 +130,7 @@ function ResearchField(props) {
                                             </Button>
                                         </>
                                     )}
-                                    {subResearchFields.length > 3 && (
+                                    {subResearchFields.length > 5 && (
                                         <Modal
                                             isOpen={isSubResearchFieldsModalOpen}
                                             toggle={() => setIsSubResearchFieldsModalOpen(v => !v)}
@@ -257,6 +260,50 @@ function ResearchField(props) {
                             <Col md="4" className="d-flex">
                                 <div className="box rounded-lg p-4 flex-grow-1">
                                     <h5>Observatories</h5>
+                                    {researchFieldObservatories && researchFieldObservatories.length > 0 && (
+                                        <ul className="pl-1 pt-2">
+                                            {researchFieldObservatories.slice(0, 5).map(observatory => (
+                                                <li key={`obsrf${observatory.id}`}>
+                                                    <Link to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}>{observatory.name} </Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                    {researchFieldObservatories.length > 5 && (
+                                        <>
+                                            <Button
+                                                onClick={() => setIsObservatoriesModalOpen(v => !v)}
+                                                className="mt-1 mb-2 mr-3 float-right clearfix p-0"
+                                                color="link"
+                                            >
+                                                <small>+ See more</small>
+                                            </Button>
+                                        </>
+                                    )}
+                                    {researchFieldObservatories.length > 5 && (
+                                        <Modal isOpen={isObservatoriesModalOpen} toggle={() => setIsObservatoriesModalOpen(v => !v)} size="lg">
+                                            <ModalHeader toggle={() => setIsObservatoriesModalOpen(v => !v)}>
+                                                Observatories of {researchFieldData && researchFieldData.label}{' '}
+                                            </ModalHeader>
+                                            <ModalBody>
+                                                <div className="pl-3 pr-3">
+                                                    <ListGroup>
+                                                        {researchFieldObservatories.map(observatory => (
+                                                            <ListGroupItem key={`obsrf${observatory.id}`} className="justify-content-between">
+                                                                <Link
+                                                                    onClick={() => setIsObservatoriesModalOpen(false)}
+                                                                    to={reverse(ROUTES.OBSERVATORY, { id: observatory.id })}
+                                                                >
+                                                                    {observatory.name}
+                                                                </Link>
+                                                            </ListGroupItem>
+                                                        ))}
+                                                    </ListGroup>
+                                                </div>
+                                            </ModalBody>
+                                        </Modal>
+                                    )}
+                                    {researchFieldObservatories && researchFieldObservatories.length === 0 && <>No observatories.</>}
                                 </div>
                             </Col>
                         </Row>

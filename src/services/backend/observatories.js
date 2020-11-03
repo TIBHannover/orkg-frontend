@@ -40,6 +40,10 @@ export const getProblemsByObservatoryId = id => {
     return submitGetRequest(`${observatoriesUrl}${encodeURIComponent(id)}/problems`);
 };
 
+export const getObservatoriesByResearchFieldId = id => {
+    return submitGetRequest(`${observatoriesUrl}research_field?researchField=${encodeURIComponent(id)}`);
+};
+
 export const getObservatoriesStats = id => {
     return submitGetRequest(`${observatoriesUrl}stats/observatories`);
 };
