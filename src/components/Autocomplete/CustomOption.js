@@ -13,7 +13,6 @@ const StyledSelectOption = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 12px;
 
     .badge {
         background-color: #ebecf0;
@@ -38,6 +37,11 @@ const StyledSelectOption = styled.div`
     }
 `;
 
+const StyledLabel = styled.span`
+    padding: 8px 12px;
+    flex: 1;
+`;
+
 const MAXIMUM_DESCRIPTION_LENGTH = 120;
 
 export default function CustomOption(props) {
@@ -48,8 +52,8 @@ export default function CustomOption(props) {
 
     return (
         <components.Option {...propsWithoutInnerProps} innerProps={newInnerProps}>
-            <StyledSelectOption onClick={onClick}>
-                <span style={{ flex: 1 }}>
+            <StyledSelectOption>
+                <StyledLabel onClick={onClick}>
                     {props.children}
                     {truncatedDescription && (
                         <div>
@@ -63,7 +67,7 @@ export default function CustomOption(props) {
                             </i>
                         </div>
                     )}
-                </span>
+                </StyledLabel>
                 <span>
                     {((truncatedDescription && props.data.description.length > MAXIMUM_DESCRIPTION_LENGTH) ||
                         (props.data.tooltipData && props.data.tooltipData.length > 0)) && (
@@ -101,7 +105,11 @@ export default function CustomOption(props) {
                             </Tippy>
                         </div>
                     )}
-                    {props.data.id && <span className="badge">{props.data.id}</span>}
+                    {props.data.id && (
+                        <span onClick={onClick} className="badge">
+                            {props.data.id}
+                        </span>
+                    )}
                 </span>
             </StyledSelectOption>
         </components.Option>
