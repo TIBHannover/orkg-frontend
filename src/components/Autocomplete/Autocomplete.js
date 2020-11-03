@@ -593,8 +593,8 @@ function Autocomplete(props) {
         control: (provided, state) => ({
             ...provided,
             background: props.theme.inputBg,
-            boxShadow: state.isFocused ? 0 : 0,
-            border: 0,
+            boxShadow: state.isFocused ? '0 0 0 0.2rem rgba(232, 97, 97, 0.25)' : 0, // color are hardcoded to match bootstrap computed styling
+            borderColor: state.isFocused ? '#f8d0d0!important' : '#ced4da!important', // same here
             paddingLeft: 0,
             paddingRight: 0,
             cursor: 'text',
@@ -636,7 +636,8 @@ function Autocomplete(props) {
         option: provided => ({
             ...provided,
             cursor: 'pointer',
-            whiteSpace: 'normal'
+            whiteSpace: 'normal',
+            padding: 0
         }),
         input: provided => ({
             ...provided, // custom style to fix when the input field doesn't get the full width
@@ -694,7 +695,7 @@ function Autocomplete(props) {
                 toggle={() => setOntologySelectorIsOpen(v => !v)}
                 showDialog={ontologySelectorIsOpen}
             />
-            <StyledAutoCompleteInputFormControl className={`form-control ${props.cssClasses ? props.cssClasses : 'default'}`}>
+            <StyledAutoCompleteInputFormControl className={`form-control ${props.cssClasses ? props.cssClasses : 'default'} border-0`}>
                 <AsyncPaginateBase
                     key={JSON.stringify(selectedOntologies.map(o => o.id))}
                     SelectComponent={Select}

@@ -415,7 +415,7 @@ function Publish(props) {
                                 })}
                         </FormGroup>
                         <FormGroup>
-                            <Label for="subject">
+                            <Label for="research-field">
                                 <Tooltip message="Enter a subject of the comparison">Research Field</Tooltip>
                             </Label>
 
@@ -430,6 +430,7 @@ function Publish(props) {
                                 autoLoadOption={true}
                                 openMenuOnFocus={false}
                                 allowCreate={false}
+                                inputId="research-field"
                             />
                         </FormGroup>
                         <FormGroup>

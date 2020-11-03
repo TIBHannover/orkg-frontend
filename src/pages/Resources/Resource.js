@@ -243,7 +243,7 @@ function Resource(props) {
                                 <>
                                     <EditableHeader id={props.match.params.id} value={label} onChange={handleHeaderChange} />
                                     <FormGroup className="mb-4">
-                                        <Label>Classes:</Label>
+                                        <Label for="classes-autocomplete">Classes</Label>
                                         <AutoComplete
                                             requestUrl={classesUrl}
                                             onChange={(selected, action) => {
@@ -261,6 +261,7 @@ function Resource(props) {
                                             isMulti
                                             autoFocus={false}
                                             ols={true}
+                                            inputId="classes-autocomplete"
                                         />
                                         {editMode && <FormText>Specify the classes of the resource.</FormText>}
                                     </FormGroup>

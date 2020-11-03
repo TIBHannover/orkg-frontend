@@ -13,6 +13,7 @@ const StyledSelectOption = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 8px 12px;
 
     .badge {
         background-color: #ebecf0;
@@ -47,8 +48,8 @@ export default function CustomOption(props) {
 
     return (
         <components.Option {...propsWithoutInnerProps} innerProps={newInnerProps}>
-            <StyledSelectOption>
-                <span onClick={onClick} style={{ flex: 1 }}>
+            <StyledSelectOption onClick={onClick}>
+                <span style={{ flex: 1 }}>
                     {props.children}
                     {truncatedDescription && (
                         <div>
@@ -100,11 +101,7 @@ export default function CustomOption(props) {
                             </Tippy>
                         </div>
                     )}
-                    {props.data.id && (
-                        <span onClick={onClick} className="badge">
-                            {props.data.id}
-                        </span>
-                    )}
+                    {props.data.id && <span className="badge">{props.data.id}</span>}
                 </span>
             </StyledSelectOption>
         </components.Option>
