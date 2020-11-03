@@ -12,8 +12,17 @@ export const createClass = (label, uri = null) => {
     return submitPostRequest(classesUrl, { 'Content-Type': 'application/json' }, { label: label, uri: uri });
 };
 
-export const getResourcesByClass = async ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null, creator = null }) => {
-    const params = queryString.stringify({ page, items, sortBy, desc, creator, ...(q ? { q } : {}) });
+export const getResourcesByClass = async ({
+    id,
+    page = 1,
+    items = 9999,
+    sortBy = 'created_at',
+    desc = true,
+    q = null,
+    creator = null,
+    exact = false
+}) => {
+    const params = queryString.stringify({ page, items, sortBy, desc, creator, exact, ...(q ? { q } : {}) });
 
     const resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/?${params}`);
 

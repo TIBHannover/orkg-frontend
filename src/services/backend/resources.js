@@ -23,14 +23,15 @@ export const getResource = id => {
     return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`);
 };
 
-export const getAllResources = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null, exclude = null }) => {
+export const getAllResources = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null, exclude = null, exact = false }) => {
     const params = queryString.stringify({
-        page: page,
-        items: items,
-        sortBy: sortBy,
-        desc: desc,
-        ...(q ? { q: q } : {}),
-        ...(exclude ? { exclude: exclude } : {})
+        page,
+        items,
+        sortBy,
+        desc,
+        exact,
+        ...(q ? { q } : {}),
+        ...(exclude ? { exclude } : {})
     });
 
     return submitGetRequest(`${resourcesUrl}?${params}`);
