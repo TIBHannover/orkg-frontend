@@ -37,6 +37,11 @@ class UserSettings extends Component {
         };
     }
 
+    componentDidMount() {
+        // Set document title
+        document.title = 'User Settings - ORKG';
+    }
+
     toggleTab = tab => {
         if (this.state.activeTab !== tab) {
             this.setState({
