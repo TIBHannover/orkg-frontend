@@ -210,7 +210,7 @@ class Observatory extends Component {
 
                         <Container className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
                             <h3>{this.state.label}</h3>
-                            {this.props.user && (
+                            {this.props.user && this.props.user.isCurationAllowed && (
                                 <Button
                                     color="darkblue"
                                     size="sm"
