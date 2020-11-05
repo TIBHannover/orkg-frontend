@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getResearchProblemsByResearchFieldId } from 'services/backend/fields';
+import { getResearchProblemsByResearchFieldId } from 'services/backend/research-fields';
 import { useParams } from 'react-router-dom';
 
 function useResearchFieldProblems() {
