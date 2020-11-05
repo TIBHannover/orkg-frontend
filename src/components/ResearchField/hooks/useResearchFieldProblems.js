@@ -19,19 +19,26 @@ function useResearchFieldProblems() {
                 id: researchFieldId,
                 page: page,
                 items: pageSize
-            }).then(result => {
-                if (result.length > 0) {
-                    setProblems(prevResources => [...prevResources, ...result]);
-                    setIsLoading(false);
-                    setHasNextPage(result.length < pageSize || result.length === 0 ? false : true);
-                    setIsLastPageReached(false);
-                    setPage(page + 1);
-                } else {
+            })
+                .then(result => {
+                    if (result.length > 0) {
+                        setProblems(prevResources => [...prevResources, ...result]);
+                        setIsLoading(false);
+                        setHasNextPage(result.length < pageSize || result.length === 0 ? false : true);
+                        setIsLastPageReached(false);
+                        setPage(page + 1);
+                    } else {
+                        setIsLoading(false);
+                        setHasNextPage(false);
+                        setIsLastPageReached(page > 1 ? true : false);
+                    }
+                })
+                .catch(error => {
+                    setProblems([]);
                     setIsLoading(false);
                     setHasNextPage(false);
                     setIsLastPageReached(page > 1 ? true : false);
-                }
-            });
+                });
         },
         [researchFieldId]
     );

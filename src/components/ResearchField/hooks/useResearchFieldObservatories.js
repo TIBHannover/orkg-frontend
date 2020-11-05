@@ -19,6 +19,7 @@ function useResearchFieldObservatories() {
                     setIsFailedLoadingData(false);
                 })
                 .catch(error => {
+                    setData([]);
                     setIsLoadingData(false);
                     setIsFailedLoadingData(true);
                 });
