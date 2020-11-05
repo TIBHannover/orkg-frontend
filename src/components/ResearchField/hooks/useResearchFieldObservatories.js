@@ -14,7 +14,7 @@ function useResearchFieldObservatories() {
             // Get the observatories
             getObservatoriesByResearchFieldId(rfId)
                 .then(result => {
-                    setData(result[Object.keys(result)[0]] ?? []);
+                    setData(result ?? []);
                     setIsLoadingData(false);
                     setIsFailedLoadingData(false);
                 })
