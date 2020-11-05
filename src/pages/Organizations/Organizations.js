@@ -53,15 +53,17 @@ class Organizations extends Component {
             <>
                 <Container className="d-flex align-items-center">
                     <h1 className="h4 mt-4 mb-4 flex-grow-1">View all organizations </h1>
-                    <RequireAuthentication
-                        component={Link}
-                        color="darkblue"
-                        size="sm"
-                        className="btn btn-darkblue btn-sm flex-shrink-0"
-                        to={ROUTES.ADD_ORGANIZATION}
-                    >
-                        <Icon icon={faPlus} /> Create new organization
-                    </RequireAuthentication>
+                    {this.props.user && this.props.user.isCurationAllowed && (
+                        <RequireAuthentication
+                            component={Link}
+                            color="darkblue"
+                            size="sm"
+                            className="btn btn-darkblue btn-sm flex-shrink-0"
+                            to={ROUTES.ADD_ORGANIZATION}
+                        >
+                            <Icon icon={faPlus} /> Create new organization
+                        </RequireAuthentication>
+                    )}
                 </Container>
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5 clearfix">
                     {this.state.organizations.length > 0 && (

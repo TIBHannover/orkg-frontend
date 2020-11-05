@@ -172,7 +172,8 @@ class Header extends Component {
                             id: userData.id,
                             token: token,
                             tokenExpire: token_expires_in,
-                            email: userData.email
+                            email: userData.email,
+                            isCurationAllowed: userData.is_curation_allowed
                         }
                     });
                 })
@@ -298,7 +299,7 @@ class Header extends Component {
                                         tag="a"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        href="https://projects.tib.eu/orkg/project/documentation/"
+                                        href="https://projects.tib.eu/orkg/documentation/"
                                     >
                                         Features <Icon size="sm" icon={faExternalLinkAlt} />
                                     </DropdownItem>

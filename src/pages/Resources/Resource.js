@@ -196,11 +196,11 @@ function Resource(props) {
                                     </Button>
                                 )
                             ) : (
-                                <Button className="float-right" color="darkblue" size="sm" disabled={true}>
-                                    <Tippy content="This resource can not be edited because it has a published DOI.">
-                                        <span>Edit</span>
-                                    </Tippy>
-                                </Button>
+                                <Tippy hideOnClick={false} content="This resource can not be edited because it has a published DOI.">
+                                    <span className="btn btn-darkblue btn-sm disabled">
+                                        <Icon icon={faPen} /> <span>Edit</span>
+                                    </span>
+                                </Tippy>
                             )}
                         </ButtonGroup>
                     </Container>
@@ -260,6 +260,7 @@ function Resource(props) {
                                             innerRef={classesAutocompleteRef}
                                             isMulti
                                             autoFocus={false}
+                                            ols={true}
                                         />
                                         {editMode && <FormText>Specify the classes of the resource.</FormText>}
                                     </FormGroup>

@@ -111,7 +111,7 @@ class Observatories extends Component {
                     }
                     observatoriesData.push(observatory);
                 }
-                const g = groupBy(observatoriesData, 'research_field');
+                const g = groupBy(observatoriesData, 'research_field.label');
                 g['All research fields'] = observatoriesData;
 
                 this.setState({
@@ -135,6 +135,14 @@ class Observatories extends Component {
                     <h1 className="h4 mt-4 mb-4">View all observatories</h1>
                 </Container>
                 <Container className="box rounded p-4 clearfix">
+                    <p>
+                        <i>Observatories</i> organize research contributions in a particular research field and are curated by research organizations
+                        active in the respective field.{' '}
+                    </p>
+                    <p>
+                        Further information about observatories can be also found in the{' '}
+                        <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Observatories"> ORKG wiki</a>.
+                    </p>
                     {this.state.observatories && Object.keys(this.state.observatories).length > 0 && (
                         <Row noGutters={true}>
                             <Col md={3} sm={12}>

@@ -23,7 +23,7 @@ import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
 import SharePaper from 'components/ViewPaper/SharePaper';
 import { getPaperData_ViewPaper } from 'utils';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 
 export const EditModeHeader = styled(Container)`
     background-color: #80869b !important;
@@ -53,7 +53,12 @@ class ViewPaper extends Component {
         editMode: false,
         observatoryInfo: {},
         contributors: [],
-        showHeaderBar: false
+        showHeaderBar: false,
+        isLoadingObservatory: false,
+        failedLoading: false,
+        observatories: [],
+        organizationId: '',
+        observatoryId: ''
     };
 
     componentDidMount() {
@@ -85,7 +90,6 @@ class ViewPaper extends Component {
     loadPaperData = () => {
         this.setState({ loading: true });
         const resourceId = this.props.match.params.resourceId;
-
         this.props.resetStatementBrowser();
         getResource(resourceId)
             .then(paperResource => {
@@ -176,13 +180,24 @@ class ViewPaper extends Component {
         }
     };
 
+    getObservatoryInfo = () => {
+        const resourceId = this.props.match.params.resourceId;
+        getResource(resourceId)
+            .then(paperResource => {
+                this.processObservatoryInformation(paperResource, resourceId);
+            })
+            .catch(error => {
+                this.setState({ loading: false, loading_failed: true });
+            });
+    };
+
     /** PROCESSING HELPER :  Helper functions to increase code readability**/
     processObservatoryInformation(paperResource, resourceId) {
         if (
             paperResource.observatory_id &&
-            paperResource.observatory_id !== '00000000-0000-0000-0000-000000000000' &&
+            paperResource.observatory_id !== MISC.UNKNOWN_ID &&
             paperResource.created_by &&
-            paperResource.created_by !== '00000000-0000-0000-0000-000000000000'
+            paperResource.created_by !== MISC.UNKNOWN_ID
         ) {
             const observatory = getObservatoryAndOrganizationInformation(paperResource.observatory_id, paperResource.organization_id);
             const creator = getUserInformationById(paperResource.created_by);
@@ -300,6 +315,7 @@ class ViewPaper extends Component {
                                 paperLink={paperLink}
                                 editMode={this.state.editMode}
                                 toggle={this.toggle}
+                                id={this.props.match.params.resourceId}
                                 paperTitle={this.props.viewPaper.title}
                             />
                         )}
@@ -366,6 +382,7 @@ class ViewPaper extends Component {
                                         toggleDeleteContribution={this.toggleDeleteContribution}
                                         observatoryInfo={this.state.observatoryInfo}
                                         contributors={this.state.contributors}
+                                        changeObservatory={this.getObservatoryInfo}
                                     />
 
                                     <ComparisonPopup />
@@ -404,11 +421,13 @@ ViewPaper.propTypes = {
     location: PropTypes.object.isRequired,
     viewPaper: PropTypes.object.isRequired,
     loadPaper: PropTypes.func.isRequired,
-    setPaperAuthors: PropTypes.func.isRequired
+    setPaperAuthors: PropTypes.func.isRequired,
+    user: PropTypes.object
 };
 
 const mapStateToProps = state => ({
-    viewPaper: state.viewPaper
+    viewPaper: state.viewPaper,
+    user: state.auth.user
 });
 
 const mapDispatchToProps = dispatch => ({

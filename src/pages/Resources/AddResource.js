@@ -58,13 +58,18 @@ export default class AddResource extends Component {
 
     handleAdd = async () => {
         this.setEditorState('loading');
-        const doiRegex = /\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&'<>])\S)+)\b/g;
-        if (!doiRegex.test(this.state.value)) {
-            await this.createNewResource(false);
+        if (this.state.value.trim()) {
+            const doiRegex = /\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&'<>])\S)+)\b/g;
+            if (!doiRegex.test(this.state.value)) {
+                await this.createNewResource(false);
+            } else {
+                console.log('this is a DOI');
+                this.doi = this.state.value;
+                await this.createResourceUsingDoi();
+            }
         } else {
-            console.log('this is a DOI');
-            this.doi = this.state.value;
-            await this.createResourceUsingDoi();
+            toast.error('Please enter a resource label');
+            this.setEditorState('edit');
         }
     };
 
@@ -200,6 +205,7 @@ export default class AddResource extends Component {
                                     innerRef={instance => (this.classesAutocompleteRef = instance)}
                                     isMulti
                                     autoFocus={false}
+                                    ols={true}
                                     inputId="select-classes"
                                 />
                             )}

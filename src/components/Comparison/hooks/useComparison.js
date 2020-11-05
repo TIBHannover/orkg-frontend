@@ -14,7 +14,7 @@ import {
     get_error_message
 } from 'utils';
 import { useParams, useLocation, useHistory } from 'react-router-dom';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 import { reverse } from 'named-urls';
 import { remove, flattenDepth } from 'lodash';
 import arrayMove from 'array-move';
@@ -222,7 +222,7 @@ function useComparison() {
      */
     const loadCreatedBy = created_by => {
         // Get Provenance data
-        if (created_by && created_by !== '00000000-0000-0000-0000-000000000000') {
+        if (created_by && created_by !== MISC.UNKNOWN_ID) {
             getUserInformationById(created_by).then(creator => {
                 setCreatedBy(creator);
             });
@@ -238,7 +238,7 @@ function useComparison() {
      * @param {String} organization_id organization ID
      */
     const loadProvenanceInfos = (observatory_id, organization_id) => {
-        if (observatory_id && observatory_id !== '00000000-0000-0000-0000-000000000000') {
+        if (observatory_id && observatory_id !== MISC.UNKNOWN_ID) {
             getObservatoryAndOrganizationInformation(observatory_id, organization_id).then(observatory => {
                 setProvenance(observatory);
             });

@@ -5,6 +5,19 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.21](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.20...V0.21) - 2020-10-28
+
+### Changes
+
+- feat: Support for existing ontologies using Ontology Lookup Service (EMBL-EBI) [`#363`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/363)
+- feat: Curating observatories [`#373`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/373)
+- fix: Keep tooltip open on click for disabled buttons [`#403`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/403)
+- fix: Missing parameter id for the resource page [`#404`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/404)
+- fix: Features link [`#409`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/409)
+- style: consolidate design across platform [`#406`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/406)
+- feat: links to resource page and vice versa [`#396`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/396)
+
+---
 ## [0.20](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.19...V0.20) - 2020-10-21
 
 ### Changes
