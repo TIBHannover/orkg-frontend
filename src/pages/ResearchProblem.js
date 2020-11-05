@@ -207,12 +207,10 @@ function ResearchProblem(props) {
                                 <div className="text-center mt-4 mb-4">
                                     There are no papers for this research problem, yet.
                                     <br />
-                                    Start the graphing in ORKG by sharing a paper.
-                                    <br />
                                     <br />
                                     <Link to={ROUTES.ADD_PAPER.GENERAL_DATA}>
                                         <Button size="sm" color="primary " className="mr-3">
-                                            Share paper
+                                            Add paper
                                         </Button>
                                     </Link>
                                 </div>
@@ -222,7 +220,7 @@ function ResearchProblem(props) {
                                     <Icon icon={faSpinner} spin /> Loading
                                 </ListGroupItem>
                             )}
-                            {!isLoadingPapers && hasNextPage && (
+                            {!isLoadingPapers && hasNextPage && !isLastPageReached && (
                                 <ListGroupItem
                                     style={{ cursor: 'pointer' }}
                                     className="text-center"
