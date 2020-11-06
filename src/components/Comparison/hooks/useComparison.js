@@ -25,6 +25,7 @@ function useComparison() {
     const location = useLocation();
     const history = useHistory();
     const { comparisonId } = useParams();
+    const highlightedFigure = history.location.hash;
 
     /**
      * @typedef {Object} MetaData
@@ -518,7 +519,6 @@ function useComparison() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoadingComparisonResult]);
-
     return [
         metaData,
         contributions,
@@ -555,7 +555,8 @@ function useComparison() {
         setShortLink,
         setAuthors,
         loadCreatedBy,
-        loadProvenanceInfos
+        loadProvenanceInfos,
+        highlightedFigure
     ];
 }
 export default useComparison;

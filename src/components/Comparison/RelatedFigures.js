@@ -11,7 +11,20 @@ import { PREDICATES } from 'constants/graphSettings';
 const CardStyled = styled(Card)`
     cursor: pointer;
     overflow: hidden;
+    .blink-figure {
+        color: #fff;
+        padding: 5px;
+        display: inline-block;
+        border-radius: 5px;
+        animation: blinkingBackground 5s 1;
+    }
+    @keyframes blinkingBackground {
+        0% {
+            background-color: #e86161;
+        }
+    }
 `;
+
 const RelatedFigures = props => {
     const [isOpen, setIsOpen] = useState(false);
     const [photoIndex, setPhotoIndex] = useState(0);
@@ -39,7 +52,8 @@ const RelatedFigures = props => {
                         return {
                             src: imageStatement ? imageStatement.object.label : '',
                             title: figureTitle.label,
-                            description: descriptionStatement ? descriptionStatement.object.label : ''
+                            description: descriptionStatement ? descriptionStatement.object.label : '',
+                            id: figureStatements.id
                         };
                     });
                     setFigures(_figures);
@@ -60,7 +74,14 @@ const RelatedFigures = props => {
                 <CardColumns>
                     {figures.map((url, index) => (
                         <CardStyled key={`figure${index}`} onClick={() => openLightBox(index)}>
-                            <CardImg top width="100%" src={url.src} alt="Card image cap" />
+                            <CardImg
+                                id={url.id}
+                                top
+                                width="100%"
+                                src={url.src}
+                                alt="Card image cap"
+                                className={props.highlightedFigure === '#' + url.id ? 'blink-figure' : ''}
+                            />
                         </CardStyled>
                     ))}
                 </CardColumns>
@@ -85,7 +106,8 @@ const RelatedFigures = props => {
 };
 
 RelatedFigures.propTypes = {
-    figureStatements: PropTypes.array.isRequired
+    figureStatements: PropTypes.array.isRequired,
+    highlightedFigure: PropTypes.string
 };
 
 RelatedFigures.defaultProps = {

@@ -15,6 +15,7 @@ import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import EditObservatory from 'components/Observatory/EditObservatory';
+import RelatedResourcesCard from 'pages/Observatories/RelatedResourcesCard';
 import AddResearchProblem from 'components/Observatory/AddResearchProblem';
 import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
@@ -27,6 +28,8 @@ import { getPaperData, getComparisonData } from 'utils';
 import { find } from 'lodash';
 import capitalize from 'capitalize';
 import { connect } from 'react-redux';
+import { filterObjectOfStatementsByPredicate } from 'utils';
+import { PREDICATES } from 'constants/graphSettings';
 
 class Observatory extends Component {
     constructor(props) {
@@ -82,7 +85,7 @@ class Observatory extends Component {
                     label: observatory.name,
                     description: observatory.description,
                     isLoading: false,
-                    researchField: observatory.research_field
+                    researchField: observatory.research_field.label
                 });
                 this.loadOrganizations(observatory.organization_ids);
             })
@@ -128,11 +131,18 @@ class Observatory extends Component {
                 }).then(resourcesStatements => {
                     const comparisonsData = resourcesStatements.map(resourceStatements => {
                         const comparisonSubject = find(comparisons, { id: resourceStatements.id });
-                        return getComparisonData(
+                        const resources = filterObjectOfStatementsByPredicate(resourceStatements.statements, PREDICATES.RELATED_RESOURCES, false);
+                        const figures = filterObjectOfStatementsByPredicate(resourceStatements.statements, PREDICATES.RELATED_FIGURE, false);
+
+                        const data = getComparisonData(
                             resourceStatements.id,
                             resourceStatements && comparisonSubject.label ? comparisonSubject.label : 'No Title',
                             resourceStatements.statements
                         );
+
+                        data.resources = resources;
+                        data.figures = figures;
+                        return data;
                     });
                     this.setState({
                         comparisonsList: comparisonsData,
@@ -408,14 +418,34 @@ class Observatory extends Component {
                         </Container>
 
                         <Container className="box rounded-lg p-4">
+                            <h5>Figures</h5>
+                            {!this.state.isLoadingComparisons ? (
+                                <div className="mb-4 mt-4">
+                                    {this.state.comparisonsList.length > 0 ? (
+                                        <div>
+                                            <RelatedResourcesCard figureStatements={this.state.comparisonsList ? this.state.comparisonsList : []} />
+                                        </div>
+                                    ) : (
+                                        <div className="text-center mt-4 mb-4">No Figures</div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="text-center mt-4 mb-4">Loading figures ...</div>
+                            )}
+                        </Container>
+                        <br />
+
+                        <Container className="box rounded-lg p-4">
                             <h5>Comparisons</h5>
                             {!this.state.isLoadingComparisons ? (
                                 <div className="mb-4 mt-4">
                                     {this.state.comparisonsList.length > 0 ? (
                                         <div>
-                                            {this.state.comparisonsList.map(comparison => {
-                                                return <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} />;
-                                            })}
+                                            {this.state.comparisonsList.map(comparison => (
+                                                <>
+                                                    <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} />
+                                                </>
+                                            ))}
                                         </div>
                                     ) : (
                                         <div className="text-center mt-4 mb-4">No Comparisons</div>

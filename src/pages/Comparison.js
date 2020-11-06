@@ -73,7 +73,8 @@ function Comparison(props) {
         setShortLink,
         setAuthors,
         loadCreatedBy,
-        loadProvenanceInfos
+        loadProvenanceInfos,
+        highlightedFigure
     ] = useComparison({});
 
     const [cookies, setCookie] = useCookies();
@@ -363,7 +364,10 @@ function Comparison(props) {
 
                 <div className="mt-3 clearfix">
                     <RelatedResources resourcesStatements={metaData.resources ? metaData.resources : []} />
-                    <RelatedFigures figureStatements={metaData.figures ? metaData.figures : []} />
+                    <RelatedFigures
+                        figureStatements={metaData.figures ? metaData.figures : []}
+                        highlightedFigure={highlightedFigure ? highlightedFigure : ''}
+                    />
                     {!isFailedLoadingMetaData && metaData.references && metaData.references.length > 0 && (
                         <div style={{ lineHeight: 1.5 }}>
                             <h3 className="mt-5 h5">Data sources</h3>
