@@ -15,7 +15,7 @@ import ContributorCard from 'components/ContributorCard/ContributorCard';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import EditObservatory from 'components/Observatory/EditObservatory';
-import RelatedResourcesCard from 'pages/Observatories/RelatedResourcesCard';
+import RelatedResourcesCard from 'components/Observatory/RelatedResourcesCard';
 import AddResearchProblem from 'components/Observatory/AddResearchProblem';
 import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';

@@ -79,7 +79,7 @@ const RelatedFigures = props => {
                                 top
                                 width="100%"
                                 src={url.src}
-                                alt="Card image cap"
+                                alt="#{url.id}"
                                 className={props.highlightedFigure === '#' + url.id ? 'blink-figure' : ''}
                             />
                         </CardStyled>

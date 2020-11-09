@@ -3,23 +3,24 @@ import PropTypes from 'prop-types';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { PREDICATES } from 'constants/graphSettings';
 import styled from 'styled-components';
-import ROUTES from '../../constants/routes';
+import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowCircleRight, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
 import ItemsCarousel from 'react-items-carousel';
 
-const noOfCards = 6;
-const autoPlayDelay = 2000;
-const chevronWidth = 40;
+const NO_OF_CARDS = 6;
+const AUTO_PLAY_DELAY = 2000;
+const CHEVRON_WIDTH = 0;
 
 const Wrapper = styled.div`
-    padding: 0 ${chevronWidth}px;
+    padding: 0 ${CHEVRON_WIDTH}px;
 `;
 
 const SlideItem = styled.div`
     padding-right: 50px;
+    padding-left: 0px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -31,17 +32,15 @@ class RelatedResourcesCard extends Component {
 
         this.state = {
             relatedFigures: [],
-            openBox: false,
-            activeItemIndex: 0
+            activeItemIndex: 0,
+            loadingFigures: false
         };
-
-        this.scrollAmount = 500;
     }
 
     componentDidMount() {
         this.loadFigureResources();
 
-        this.interval = setInterval(this.tick, autoPlayDelay);
+        this.interval = setInterval(this.tick, AUTO_PLAY_DELAY);
     }
 
     componentDidUpdate(prevProps) {
@@ -56,12 +55,13 @@ class RelatedResourcesCard extends Component {
 
     tick = () =>
         this.setState(prevState => ({
-            activeItemIndex: (prevState.activeItemIndex + 1) % (this.state.relatedFigures.length - noOfCards + 1)
+            activeItemIndex: (prevState.activeItemIndex + 1) % (this.state.relatedFigures.length - NO_OF_CARDS + 1)
         }));
 
     onChange = value => this.setState({ activeItemIndex: value });
 
     loadFigureResources = () => {
+        this.setState({ loadingFigures: true });
         if (this.props.figureStatements.length === 0) {
             return;
         }
@@ -69,12 +69,12 @@ class RelatedResourcesCard extends Component {
         for (let i = 0; i < this.props.figureStatements.length; i++) {
             if (this.props.figureStatements[i].figures !== null) {
                 for (let j = 0; j < this.props.figureStatements[i].figures.length; j++) {
-                    figuresData.push({ id: this.props.figureStatements[i].id, figureId: this.props.figureStatements[i].figures[j] });
+                    figuresData.push({ id: this.props.figureStatements[i].id, figure: this.props.figureStatements[i].figures[j] });
                 }
             }
         }
         getStatementsBySubjects({
-            ids: figuresData.map(resource => resource.figureId.id)
+            ids: figuresData.map(resource => resource.figure.id)
         })
             .then(figuresStatements => {
                 const _figures = figuresStatements.map((figureStatements, key) => {
@@ -86,45 +86,45 @@ class RelatedResourcesCard extends Component {
                     };
                 });
 
-                const item = [];
-                _figures.map((url, index) =>
-                    item.push(
-                        <SlideItem key={index}>
-                            <Link to={reverse(ROUTES.COMPARISON, { comparisonId: url.id }) + '#' + url.figureId}>
-                                <div className="logoContainer">
-                                    <img style={{ height: '100px' }} src={url.src} alt="pic" />
-                                </div>
-                            </Link>
-                        </SlideItem>
-                    )
-                );
-
-                this.setState({ relatedFigures: item });
+                this.setState({ relatedFigures: _figures, loadingFigures: false });
             })
             .catch(err => {
                 console.log(err);
+                this.setState({ loadingFigures: false });
             });
     };
 
     render() {
-        return (
-            this.props.figureStatements.length > 0 && (
+        return !this.state.loadingFigures ? (
+            this.state.relatedFigures.length > 0 ? (
                 <>
                     <Wrapper>
                         <ItemsCarousel
                             //gutter={12}
-                            numberOfCards={noOfCards}
+                            numberOfCards={NO_OF_CARDS}
                             activeItemIndex={this.state.activeItemIndex}
                             requestToChangeActive={this.onChange}
                             rightChevron={<Icon icon={faArrowCircleRight} />}
                             leftChevron={<Icon icon={faArrowCircleLeft} />}
-                            chevronWidth={chevronWidth}
+                            chevronWidth={CHEVRON_WIDTH}
                             outsideChevron
-                            children={this.state.relatedFigures}
+                            children={this.state.relatedFigures.map(url => (
+                                <SlideItem key={url.figureId}>
+                                    <Link to={reverse(ROUTES.COMPARISON, { comparisonId: url.id }) + '#' + url.figureId}>
+                                        <div className="logoContainer">
+                                            <img style={{ height: '100px' }} src={url.src} alt="#{url.figureId}" />
+                                        </div>
+                                    </Link>
+                                </SlideItem>
+                            ))}
                         />
                     </Wrapper>
                 </>
+            ) : (
+                <div className="text-center mt-4 mb-4">No Figures</div>
             )
+        ) : (
+            <div className="text-center mt-4 mb-4">Loading figures...</div>
         );
     }
 }
