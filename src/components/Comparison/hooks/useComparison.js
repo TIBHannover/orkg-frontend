@@ -224,9 +224,13 @@ function useComparison() {
     const loadCreatedBy = created_by => {
         // Get Provenance data
         if (created_by && created_by !== MISC.UNKNOWN_ID) {
-            getUserInformationById(created_by).then(creator => {
-                setCreatedBy(creator);
-            });
+            getUserInformationById(created_by)
+                .then(creator => {
+                    setCreatedBy(creator);
+                })
+                .catch(() => {
+                    setCreatedBy(null);
+                });
         } else {
             setCreatedBy(null);
         }
