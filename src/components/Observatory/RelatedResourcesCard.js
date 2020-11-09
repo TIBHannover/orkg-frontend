@@ -112,7 +112,7 @@ class RelatedResourcesCard extends Component {
                                 <SlideItem key={url.figureId}>
                                     <Link to={reverse(ROUTES.COMPARISON, { comparisonId: url.id }) + '#' + url.figureId}>
                                         <div className="logoContainer">
-                                            <img style={{ height: '100px' }} src={url.src} alt="#{url.figureId}" />
+                                            <img style={{ height: '100px' }} src={url.src} alt={`figure #${url.figureId}`} />
                                         </div>
                                     </Link>
                                 </SlideItem>

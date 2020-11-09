@@ -69,6 +69,7 @@
         "react-id-generator": "^3.0.0",
         "react-image-lightbox": "^5.1.1",
         "react-input-autosize": "^2.2.1",
+        "react-items-carousel": "^2.8.0",
         "react-loading-overlay": "^1.0.1",
         "react-mathjax-preview": "^0.1.16",
         "react-meta-tags": "^0.7.4",
@@ -113,8 +114,8 @@
         "test": "react-app-rewired test --env=jsdom",
         "eject": "react-app-rewired eject",
         "flow": "flow",
-        "lint": "eslint 'src/**/*.{js,jsx}'",
-        "lint:fix": "eslint 'src/**/*.{js,jsx}' --fix",
+        "lint": "eslint src/**/*.{js,jsx}",
+        "lint:fix": "eslint src/**/*.{js,jsx} --fix",
         "version": "auto-changelog && git add CHANGELOG.md"
     },
     "devDependencies": {
