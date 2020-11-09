@@ -441,11 +441,9 @@ class Observatory extends Component {
                                 <div className="mb-4 mt-4">
                                     {this.state.comparisonsList.length > 0 ? (
                                         <div>
-                                            {this.state.comparisonsList.map(comparison => (
-                                                <>
-                                                    <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} />
-                                                </>
-                                            ))}
+                                            {this.state.comparisonsList.map(comparison => {
+                                                return <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} />;
+                                            })}
                                         </div>
                                     ) : (
                                         <div className="text-center mt-4 mb-4">No Comparisons</div>
