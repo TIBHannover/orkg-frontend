@@ -141,7 +141,7 @@ export default function ProvenanceBox(props) {
                     </TransitionGroup>
                 </SidebarStyledBox>
             )}
-            {isEmpty(props.observatoryInfo) && user && user.isCurationAllowed && (
+            {isEmpty(props.observatoryInfo) && !!user && user.isCurationAllowed && (
                 <Button size="sm" outline onClick={() => setShowAssignObservatory(true)}>
                     Assign to observatory
                 </Button>
