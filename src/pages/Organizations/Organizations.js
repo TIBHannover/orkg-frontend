@@ -95,7 +95,7 @@ const mapDispatchToProps = dispatch => ({
 
 Organizations.propTypes = {
     openAuthDialog: PropTypes.func.isRequired,
-    user: PropTypes.object
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 export default connect(

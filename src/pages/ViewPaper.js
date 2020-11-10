@@ -422,7 +422,7 @@ ViewPaper.propTypes = {
     viewPaper: PropTypes.object.isRequired,
     loadPaper: PropTypes.func.isRequired,
     setPaperAuthors: PropTypes.func.isRequired,
-    user: PropTypes.object
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 const mapStateToProps = state => ({
