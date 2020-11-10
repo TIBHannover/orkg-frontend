@@ -141,7 +141,10 @@ class Observatories extends Component {
                     </p>
                     <p>
                         Further information about observatories can be also found in the{' '}
-                        <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Observatories"> ORKG wiki</a>.
+                        <a href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/wikis/Observatories" target="_blank" rel="noopener noreferrer">
+                            ORKG wiki
+                        </a>
+                        .
                     </p>
                     {this.state.observatories && Object.keys(this.state.observatories).length > 0 && (
                         <Row noGutters={true}>
