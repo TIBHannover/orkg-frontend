@@ -287,7 +287,7 @@ OrganizationDetails.propTypes = {
             id: PropTypes.string.isRequired
         }).isRequired
     }).isRequired,
-    user: PropTypes.object
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 const mapStateToProps = state => ({

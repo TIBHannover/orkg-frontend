@@ -280,7 +280,7 @@ ContributionTemplate.propTypes = {
     history: PropTypes.object.isRequired,
     template: PropTypes.object.isRequired,
     setClass: PropTypes.func.isRequired,
-    user: PropTypes.object
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 const mapStateToProps = state => {

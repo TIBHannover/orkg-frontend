@@ -94,9 +94,7 @@ class Search extends Component {
 
     componentDidMount() {
         document.title = 'Search - ORKG';
-        if (this.state.value) {
-            this.getResultsForFilters();
-        }
+        this.getResultsForFilters();
     }
 
     componentDidUpdate = (prevProps, prevState) => {
@@ -151,7 +149,7 @@ class Search extends Component {
     };
 
     loadMoreResults = (searchQuery, filter_type) => {
-        if (searchQuery.length === 0) {
+        if (!searchQuery || searchQuery.length === 0) {
             return;
         }
         this.setState({ isNextPageLoading: { ...this.state.isNextPageLoading, [filter_type]: true } });

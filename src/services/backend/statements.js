@@ -201,7 +201,7 @@ export const getTemplateById = templateId => {
                           id: templatePredicate.object.id,
                           label: templatePredicate.object.label
                       }
-                    : {},
+                    : null,
                 labelFormat: templateFormatLabel ? templateFormatLabel.object.label : '',
                 hasLabelFormat: templateFormatLabel ? true : false,
                 isStrict: templateIsStrict ? true : false,

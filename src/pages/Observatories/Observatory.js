@@ -490,7 +490,7 @@ Observatory.propTypes = {
             id: PropTypes.string.isRequired
         }).isRequired
     }).isRequired,
-    user: PropTypes.object
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 export default connect(mapStateToProps)(Observatory);
