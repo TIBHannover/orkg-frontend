@@ -102,9 +102,9 @@ function ResearchField(props) {
                         <Row className="mt-3">
                             <Col md="4" className="d-flex">
                                 <div className="box rounded-lg p-4 flex-grow-1">
-                                    <h5>Sub-research fields</h5>
+                                    <h5>Research subfields</h5>
                                     {subResearchFields && subResearchFields.length > 0 && (
-                                        <ul className="pl-1 pt-2">
+                                        <ul className="pl-3 pt-2">
                                             {subResearchFields.slice(0, 5).map(subRF => (
                                                 <li key={`subrp${subRF.id}`}>
                                                     <Link to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: subRF.id })}>
@@ -137,7 +137,7 @@ function ResearchField(props) {
                                             size="lg"
                                         >
                                             <ModalHeader toggle={() => setIsSubResearchFieldsModalOpen(v => !v)}>
-                                                Sub-research fields of {researchFieldData && researchFieldData.label}{' '}
+                                                Research subfields of {researchFieldData && researchFieldData.label}{' '}
                                             </ModalHeader>
                                             <ModalBody>
                                                 <div className="pl-3 pr-3">
@@ -248,7 +248,7 @@ function ResearchField(props) {
                                                 </ModalBody>
                                             </Modal>
                                         )}
-                                        {researchProblems && researchProblems.length === 0 && <>No sub research problems.</>}
+                                        {researchProblems && researchProblems.length === 0 && <>No research problems.</>}
                                     </>
                                     {isLoadingResearchProblems && currentPageProblems === 1 && (
                                         <ListGroupItem tag="div" className="text-center">
