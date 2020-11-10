@@ -53,7 +53,7 @@ class Organizations extends Component {
             <>
                 <Container className="d-flex align-items-center">
                     <h1 className="h4 mt-4 mb-4 flex-grow-1">View all organizations </h1>
-                    {this.props.user && this.props.user.isCurationAllowed && (
+                    {!!this.props.user && this.props.user.isCurationAllowed && (
                         <RequireAuthentication
                             component={Link}
                             color="darkblue"

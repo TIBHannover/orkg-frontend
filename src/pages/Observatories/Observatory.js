@@ -220,7 +220,7 @@ class Observatory extends Component {
 
                         <Container className="box rounded-lg clearfix pt-4 pb-4 pl-5 pr-5">
                             <h3>{this.state.label}</h3>
-                            {this.props.user && this.props.user.isCurationAllowed && (
+                            {!!this.props.user && this.props.user.isCurationAllowed && (
                                 <Button
                                     color="darkblue"
                                     size="sm"
@@ -247,7 +247,7 @@ class Observatory extends Component {
                                 <Col md={4} sm={12} style={{ minHeight: '300px' }} className="d-flex px-0 pr-3">
                                     <div className="box rounded-lg p-4 flex-grow-1">
                                         <h5>Research Problems</h5>
-                                        {this.props.user && this.props.user.isCurationAllowed && (
+                                        {!!this.props.user && this.props.user.isCurationAllowed && (
                                             <Button
                                                 outline
                                                 size="sm"

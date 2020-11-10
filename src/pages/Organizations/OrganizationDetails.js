@@ -159,7 +159,7 @@ class OrganizationDetails extends Component {
                                                 {this.state.label} {this.state.url && <Icon size="sm" icon={faExternalLinkAlt} />}
                                             </h4>
                                         </NavLink>
-                                        {this.props.user && (this.props.user.id === this.state.createdBy || this.props.user.isCurationAllowed) && (
+                                        {!!this.props.user && (this.props.user.id === this.state.createdBy || this.props.user.isCurationAllowed) && (
                                             <div>
                                                 <Button
                                                     outline
