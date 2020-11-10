@@ -422,9 +422,7 @@ class Observatory extends Component {
                             {!this.state.isLoadingComparisons ? (
                                 <div className="mb-4 mt-4">
                                     {this.state.comparisonsList.length > 0 ? (
-                                        <div>
-                                            <RelatedResourcesCard figureStatements={this.state.comparisonsList ? this.state.comparisonsList : []} />
-                                        </div>
+                                        <RelatedResourcesCard figureStatements={this.state.comparisonsList} />
                                     ) : (
                                         <div className="text-center mt-4 mb-4">No Figures</div>
                                     )}

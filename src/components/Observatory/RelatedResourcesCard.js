@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { PREDICATES } from 'constants/graphSettings';
 import styled from 'styled-components';
+import { Button } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
@@ -10,22 +11,28 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowCircleRight, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
 import ItemsCarousel from 'react-items-carousel';
 
-const NO_OF_CARDS = 6;
-const AUTO_PLAY_DELAY = 2000;
-const CHEVRON_WIDTH = 0;
+const NO_OF_CARDS = 5;
+const CHEVRON_WIDTH = 40;
 
 const Wrapper = styled.div`
     padding: 0 ${CHEVRON_WIDTH}px;
 `;
 
 const SlideItem = styled.div`
-    padding-right: 50px;
+    overflow: hidden;
+    border: 1px solid #d8d8d8;
+    border-radius: 5px;
     padding-left: 0px;
     display: flex;
     align-items: center;
     justify-content: center;
 `;
 
+const SlideImg = styled.img`
+    height: 140px;
+    max-width: 100%;
+    object-fit: contain;
+`;
 class RelatedResourcesCard extends Component {
     constructor(props) {
         super(props);
@@ -39,8 +46,6 @@ class RelatedResourcesCard extends Component {
 
     componentDidMount() {
         this.loadFigureResources();
-
-        this.interval = setInterval(this.tick, AUTO_PLAY_DELAY);
     }
 
     componentDidUpdate(prevProps) {
@@ -48,15 +53,6 @@ class RelatedResourcesCard extends Component {
             this.loadFigureResources();
         }
     }
-
-    componentWillUnmount() {
-        clearInterval(this.interval);
-    }
-
-    tick = () =>
-        this.setState(prevState => ({
-            activeItemIndex: (prevState.activeItemIndex + 1) % (this.state.relatedFigures.length - NO_OF_CARDS + 1)
-        }));
 
     onChange = value => this.setState({ activeItemIndex: value });
 
@@ -79,10 +75,13 @@ class RelatedResourcesCard extends Component {
             .then(figuresStatements => {
                 const _figures = figuresStatements.map((figureStatements, key) => {
                     const imageStatement = figureStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
+                    const alt = figureStatements.statements.length ? figureStatements.statements[0]?.subject?.label : null;
+
                     return {
                         src: imageStatement ? imageStatement.object.label : '',
                         id: figuresData[key].id,
-                        figureId: figureStatements.id
+                        figureId: figureStatements.id,
+                        alt
                     };
                 });
 
@@ -97,29 +96,35 @@ class RelatedResourcesCard extends Component {
     render() {
         return !this.state.loadingFigures ? (
             this.state.relatedFigures.length > 0 ? (
-                <>
-                    <Wrapper>
-                        <ItemsCarousel
-                            //gutter={12}
-                            numberOfCards={NO_OF_CARDS}
-                            activeItemIndex={this.state.activeItemIndex}
-                            requestToChangeActive={this.onChange}
-                            rightChevron={<Icon icon={faArrowCircleRight} />}
-                            leftChevron={<Icon icon={faArrowCircleLeft} />}
-                            chevronWidth={CHEVRON_WIDTH}
-                            outsideChevron
-                            children={this.state.relatedFigures.map(url => (
-                                <SlideItem key={url.figureId}>
-                                    <Link to={reverse(ROUTES.COMPARISON, { comparisonId: url.id }) + '#' + url.figureId}>
-                                        <div className="logoContainer">
-                                            <img style={{ height: '100px' }} src={url.src} alt={`figure #${url.figureId}`} />
-                                        </div>
-                                    </Link>
-                                </SlideItem>
-                            ))}
-                        />
-                    </Wrapper>
-                </>
+                <Wrapper>
+                    <ItemsCarousel
+                        gutter={12}
+                        numberOfCards={NO_OF_CARDS}
+                        activeItemIndex={this.state.activeItemIndex}
+                        requestToChangeActive={this.onChange}
+                        rightChevron={
+                            <Button color="link" className="p-0">
+                                <Icon icon={faArrowCircleRight} className="text-darkblue h3 m-0" />
+                            </Button>
+                        }
+                        leftChevron={
+                            <Button color="link" className="p-0">
+                                <Icon icon={faArrowCircleLeft} className="text-darkblue h3 m-0" />
+                            </Button>
+                        }
+                        chevronWidth={CHEVRON_WIDTH}
+                        outsideChevron
+                        children={this.state.relatedFigures.map(url => (
+                            <SlideItem key={url.figureId}>
+                                <Link to={reverse(ROUTES.COMPARISON, { comparisonId: url.id }) + '#' + url.figureId}>
+                                    <div className="logoContainer">
+                                        <SlideImg src={url.src} alt={url.alt} />
+                                    </div>
+                                </Link>
+                            </SlideItem>
+                        ))}
+                    />
+                </Wrapper>
             ) : (
                 <div className="text-center mt-4 mb-4">No Figures</div>
             )
