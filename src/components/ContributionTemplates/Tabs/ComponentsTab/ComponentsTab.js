@@ -134,7 +134,7 @@ function ComponentsTab(props) {
                     props.components.map((templateProperty, index) => {
                         return (
                             <TemplateComponent
-                                key={`tc${index}`}
+                                key={`tc${templateProperty.property.id}`}
                                 enableEdit={props.editMode}
                                 handleDeleteTemplateComponent={handleDeleteTemplateComponent}
                                 id={index}
