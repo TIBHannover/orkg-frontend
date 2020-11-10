@@ -111,7 +111,7 @@ class Observatories extends Component {
                     }
                     observatoriesData.push(observatory);
                 }
-                const g = groupBy(observatoriesData, 'research_field');
+                const g = groupBy(observatoriesData, 'research_field.label');
                 g['All research fields'] = observatoriesData;
 
                 this.setState({

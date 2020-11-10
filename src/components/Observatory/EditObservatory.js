@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup } from 'reactstrap';
 import { resourcesUrl } from 'services/backend/resources';
 import { updateObservatoryName, updateObservatoryDescription, updateObservatoryResearchField } from 'services/backend/observatories';
+import { isEqual } from 'lodash';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
@@ -15,7 +16,7 @@ class EditObservatory extends Component {
             description: '',
             isLoadingName: false,
             isLoadingDescription: false,
-            researchField: '',
+            researchField: null,
             isLoadingResearchField: false
         };
     }
@@ -30,7 +31,7 @@ class EditObservatory extends Component {
         }
 
         if (prevProps.researchField !== this.props.researchField) {
-            this.setState({ researchField: { label: this.props.researchField } });
+            this.setState({ researchField: this.props.researchField });
         }
     };
 
@@ -42,7 +43,7 @@ class EditObservatory extends Component {
         const value = this.state.label;
         const description = this.state.description;
         const id = this.props.id;
-        const researchField = this.state.researchField.label;
+        const researchField = this.state.researchField;
 
         let isUpdatedLabel = true;
         let isUpdatedDescription = true;
@@ -60,7 +61,7 @@ class EditObservatory extends Component {
             return false;
         }
 
-        if (researchField !== this.props.researchField && researchField.length === 0) {
+        if (!isEqual(researchField, this.props.researchField) && researchField === null) {
             toast.error(`Please enter an observatory research field`);
             return false;
         }
@@ -75,7 +76,7 @@ class EditObservatory extends Component {
             isUpdatedDescription = true;
         }
 
-        if (researchField !== this.props.researchField && researchField.length !== 0) {
+        if (!isEqual(researchField, this.props.researchField) && researchField !== null) {
             await this.updateObservatoryResearchField(id, researchField);
             isUpdatedResearchField = true;
         }
@@ -116,7 +117,7 @@ class EditObservatory extends Component {
     updateObservatoryResearchField = async (id, researchField) => {
         this.setState({ isLoadingResearchField: true });
         try {
-            await updateObservatoryResearchField(id, researchField);
+            await updateObservatoryResearchField(id, researchField.id);
             this.setState({ isLoadingResearchField: false });
         } catch (error) {
             this.setState({ isLoadingResearchField: false });
@@ -151,11 +152,11 @@ class EditObservatory extends Component {
                                 <AutoComplete
                                     requestUrl={resourcesUrl}
                                     optionsClass="ResearchField"
-                                    placeholder="Observatory research field"
+                                    placeholder="Select research field"
                                     onItemSelected={async rf => {
                                         this.setState({ researchField: { ...rf, label: rf.value } });
                                     }}
-                                    value={this.state.researchField || ''}
+                                    value={this.state.researchField && this.state.researchField.id ? this.state.researchField : null}
                                     allowCreate={false}
                                     autoLoadOption={true}
                                     isDisabled={isLoading}
@@ -195,7 +196,7 @@ EditObservatory.propTypes = {
     label: PropTypes.string.isRequired,
     id: PropTypes.string,
     description: PropTypes.string,
-    researchField: PropTypes.string,
+    researchField: PropTypes.object,
     updateObservatoryMetadata: PropTypes.func.isRequired
 };
 
