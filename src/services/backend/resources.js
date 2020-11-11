@@ -1,5 +1,6 @@
 import { submitPostRequest, submitPutRequest, submitGetRequest } from 'network';
 import { getUserInformationById } from 'services/backend/users';
+import { classesUrl } from 'services/backend/classes';
 import { MISC } from 'constants/graphSettings';
 import queryString from 'query-string';
 import { orderBy } from 'lodash';
@@ -54,4 +55,12 @@ export const getContributorsByResourceId = id => {
 
 export const addResourceToObservatory = (observatory_id, organization_id, id) => {
     return submitPutRequest(`${resourcesUrl}${id}/observatory`, { 'Content-Type': 'application/json' }, { observatory_id, organization_id });
+};
+
+export const getResourcesByClass = async ({ id, page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null, creator = null }) => {
+    const params = queryString.stringify({ page, items, sortBy, desc, creator, ...(q ? { q } : {}) });
+
+    const resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/?${params}`);
+
+    return resources;
 };

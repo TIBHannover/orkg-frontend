@@ -3,14 +3,13 @@ import PropTypes from 'prop-types';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import { getStatementsBySubjects, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
-import { getResourcesByClass } from 'services/backend/classes';
 import { getPaperData, getComparisonData } from 'utils';
 import { find } from 'lodash';
 import { Button } from 'reactstrap';
 import Confirm from 'reactstrap-confirm';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { updateResourceClasses } from 'services/backend/resources';
+import { updateResourceClasses, getResourcesByClass } from 'services/backend/resources';
 import { toast } from 'react-toastify';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
 
