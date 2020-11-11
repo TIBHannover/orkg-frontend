@@ -45,8 +45,8 @@ export const Title = styled.div`
 class ViewPaper extends Component {
     state = {
         loading: true,
-        loading_failed: false,
-        unfoundContribution: false,
+        loadingFailed: false,
+        loadingContributionFailed: false,
         contributions: [],
         selectedContribution: '',
         showGraphModal: false,
@@ -93,6 +93,11 @@ class ViewPaper extends Component {
         this.props.resetStatementBrowser();
         getResource(resourceId)
             .then(paperResource => {
+                if (!paperResource.classes.includes(CLASSES.PAPER)) {
+                    this.setState({ loading: false, loadingFailed: true });
+                    return;
+                }
+
                 this.processObservatoryInformation(paperResource, resourceId);
 
                 getStatementsBySubject({ id: resourceId })
@@ -109,15 +114,15 @@ class ViewPaper extends Component {
                             .catch(error => {
                                 console.log(error);
                                 if (error.message === 'No Contribution found') {
-                                    this.setState({ unfoundContribution: true, loading: false, loading_failed: false });
+                                    this.setState({ loadingContributionFailed: true, loading: false, loadingFailed: false });
                                 } else {
-                                    this.setState({ loading: false, loading_failed: true });
+                                    this.setState({ loading: false, loadingFailed: true });
                                 }
                             });
                     });
             })
             .catch(error => {
-                this.setState({ loading: false, loading_failed: true });
+                this.setState({ loading: false, loadingFailed: true });
             });
     };
 
@@ -227,7 +232,7 @@ class ViewPaper extends Component {
     }
 
     processPaperStatements = (paperResource, paperStatements) => {
-        const paperData = getPaperData_ViewPaper(paperResource.id, paperResource.label, paperStatements);
+        const paperData = getPaperData_ViewPaper(paperResource, paperStatements);
 
         // Set document title
         document.title = `${paperResource.label} - ORKG`;
@@ -307,8 +312,8 @@ class ViewPaper extends Component {
 
         return (
             <div>
-                {!this.state.loading && this.state.loading_failed && <NotFound />}
-                {!this.state.loading_failed && (
+                {!this.state.loading && this.state.loadingFailed && <NotFound />}
+                {!this.state.loadingFailed && (
                     <>
                         {this.state.showHeaderBar && (
                             <PaperHeaderBar
@@ -351,7 +356,7 @@ class ViewPaper extends Component {
                                     <rect x="105" y="28" rx="5" ry="5" width="30" height="8" />
                                 </ContentLoader>
                             )}
-                            {!this.state.loading && !this.state.loading_failed && (
+                            {!this.state.loading && !this.state.loadingFailed && (
                                 <>
                                     {comingFromWizard && (
                                         <UncontrolledAlert color="info">
@@ -365,7 +370,7 @@ class ViewPaper extends Component {
                                     <PaperHeader editMode={this.state.editMode} />
                                 </>
                             )}
-                            {!this.state.loading_failed && !this.state.unfoundContribution && (
+                            {!this.state.loadingFailed && !this.state.loadingContributionFailed && (
                                 <>
                                     <hr className="mt-3" />
                                     <SharePaper title={this.props.viewPaper.title} />
@@ -388,7 +393,7 @@ class ViewPaper extends Component {
                                     <ComparisonPopup />
                                 </>
                             )}
-                            {!this.state.loading_failed && this.state.unfoundContribution && (
+                            {!this.state.loadingFailed && this.state.loadingContributionFailed && (
                                 <>
                                     <hr className="mt-4 mb-5" />
                                     <Alert color="danger">Failed to load contributions.</Alert>

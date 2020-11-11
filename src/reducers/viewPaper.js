@@ -21,7 +21,8 @@ const initialState = {
     researchField: {},
     publishedIn: '',
     url: '',
-    urlResourceId: 0
+    urlResourceId: 0,
+    createdBy: null
 };
 //const cookies = new Cookies();
 
@@ -46,7 +47,8 @@ export default (state = initialState, action) => {
                 researchField: typeof payload.researchField !== 'undefined' ? payload.researchField : state.researchField,
                 publishedIn: typeof payload.publishedIn !== 'undefined' ? payload.publishedIn : state.publishedIn,
                 url: typeof payload.url !== 'undefined' ? payload.url : state.url,
-                urlResourceId: typeof payload.urlResourceId !== 'undefined' ? payload.urlResourceId : state.urlResourceId
+                urlResourceId: typeof payload.urlResourceId !== 'undefined' ? payload.urlResourceId : state.urlResourceId,
+                createdBy: typeof payload.createdBy !== 'undefined' ? payload.createdBy : state.createdBy
             };
         }
 
