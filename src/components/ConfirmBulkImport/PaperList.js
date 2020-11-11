@@ -71,10 +71,12 @@ const PaperList = props => {
                                 <span className="flex-grow-1">
                                     {existingPaperIds[i] ? (
                                         <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: existingPaperIds[i] })} target="_blank">
-                                            {paper.title}
+                                            {paper.title ? paper.title : <i>No title</i>}
                                         </Link>
-                                    ) : (
+                                    ) : paper.title ? (
                                         paper.title
+                                    ) : (
+                                        'No title'
                                     )}
                                 </span>
                                 <div className="flex-shrink-1 text-muted pl-3" style={{ fontSize: '140%', opacity: 0.7 }}>
@@ -88,23 +90,26 @@ const PaperList = props => {
                                     </>
                                 )}
                                 {(paper.publicationMonth || paper.publicationYear) && <Icon size="sm" icon={faCalendar} className="ml-2 mr-1" />}
-                                {paper.publicationMonth && paper.publicationMonth > 0
-                                    ? moment(this.state.optimizedPaperObject.publicationMonth, 'M').format('MMMM')
-                                    : ''}{' '}
+                                {paper.publicationMonth && paper.publicationMonth > 0 ? moment(paper.publicationMonth, 'M').format('MMMM') : ''}{' '}
                                 {paper.publicationYear}
                             </small>
                         </PaperCardStyled>
                         {showContributions.includes(i) && (
                             <PaperCardStyled className="list-group-item">
                                 <ListGroup className="listGroupEnlarge" style={{ fontSize: '90%' }}>
-                                    {Object.keys(paper.contributions[0].values).map(property => (
-                                        <StatementList
-                                            key={property}
-                                            property={property}
-                                            idToLabel={idToLabel}
-                                            values={paper.contributions[0].values[property]}
-                                        />
-                                    ))}
+                                    {Object.keys(paper.contributions[0].values).length > 0 && (
+                                        <>
+                                            {Object.keys(paper.contributions[0].values).map(property => (
+                                                <StatementList
+                                                    key={property}
+                                                    property={property}
+                                                    idToLabel={idToLabel}
+                                                    values={paper.contributions[0].values[property]}
+                                                />
+                                            ))}
+                                        </>
+                                    )}
+                                    {Object.keys(paper.contributions[0].values).length === 0 && <>No contribution data to import.</>}
                                 </ListGroup>
                             </PaperCardStyled>
                         )}
