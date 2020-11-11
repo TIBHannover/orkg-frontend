@@ -263,7 +263,9 @@ class Header extends Component {
                                             <Badge color="info">Beta</Badge>
                                         </small>
                                     </DropdownItem>
-
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.CSV_IMPORT} onClick={this.requireAuthentication}>
+                                        CSV import
+                                    </DropdownItem>
                                     <DropdownItem divider />
                                     <DropdownItem header>Advanced tools</DropdownItem>
 
