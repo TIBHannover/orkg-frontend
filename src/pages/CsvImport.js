@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import StepContainer from 'components/StepContainer';
 import HelpModal from 'components/CsvImport/HelpModal';
 import Tippy from '@tippy.js/react';
+import checkDataValidation from 'components/ConfirmBulkImport/CSVSchema';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
@@ -39,16 +40,14 @@ const CsvImport = () => {
     };
 
     const validateCsv = _data => {
-        const titleFound = _data.length && _data[0].length ? _data[0].find(label => label === 'paper:title') : false;
-        if (!titleFound) {
-            setError(
-                <span>
-                    Missing required column <em>paper:title</em>
-                </span>
-            );
-        } else {
-            setError(null);
+        const validations = checkDataValidation(_data);
+        for (const { context, error } of validations) {
+            if (error) {
+                setError(`<b>${context}</b>: ${error.message}`);
+                return;
+            }
         }
+        return setError(null);
     };
 
     const title = (
@@ -104,7 +103,11 @@ const CsvImport = () => {
                     <>
                         {error ? (
                             <Alert color="danger" className="mt-3">
-                                {error}
+                                <div
+                                    dangerouslySetInnerHTML={{
+                                        __html: error
+                                    }}
+                                />
                             </Alert>
                         ) : (
                             <Alert color="success" className="mt-3">
@@ -113,9 +116,10 @@ const CsvImport = () => {
                         )}
 
                         <TableContainerStyled>
-                            <Table size="sm" bordered className="m-0">
+                            <Table size="sm" bordered hover className="m-0">
                                 <thead>
                                     <tr>
+                                        <th>#</th>
                                         {data[0].map((value, i) => (
                                             <th key={i}>{value}</th>
                                         ))}
@@ -124,6 +128,7 @@ const CsvImport = () => {
                                 <tbody>
                                     {data.slice(1).map((row, i) => (
                                         <tr key={i}>
+                                            <td>{i + 1}</td>
                                             {row.map((value, i) => (
                                                 <td key={i}>{value}</td>
                                             ))}
