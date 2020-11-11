@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Alert, Button, Form, FormGroup, Label, Table } from 'reactstrap';
 import ConfirmBulkImport from 'components/ConfirmBulkImport/ConfirmBulkImport';
 import CsvReader from 'react-csv-reader';
@@ -38,6 +38,10 @@ const CsvImport = () => {
         setFileName(fileInfo.name);
         validateCsv(_data);
     };
+
+    useEffect(() => {
+        document.title = 'CSV import - ORKG';
+    }, []);
 
     const validateCsv = _data => {
         const validations = checkDataValidation(_data);
