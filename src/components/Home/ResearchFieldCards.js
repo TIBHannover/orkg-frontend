@@ -247,9 +247,11 @@ class ResearchFieldCards extends Component {
                                     ))}
                                 </ul>
                                 {this.state.papers.length >= MAX_PAPER_AMOUNT && (
-                                    <Button tag={Link} to={researchFieldLink} size="sm" color="primary" className="ml-4">
-                                        View more papers
-                                    </Button>
+                                    <div className="text-center">
+                                        <Button tag={Link} to={researchFieldLink} size="sm" color="primary">
+                                            View more papers
+                                        </Button>
+                                    </div>
                                 )}
                             </>
                         )}
