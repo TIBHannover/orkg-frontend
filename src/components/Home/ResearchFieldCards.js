@@ -6,6 +6,7 @@ import { getStatementsBySubject, getStatementsByObjectAndPredicate } from 'servi
 import { getResearchFieldsStats } from 'services/backend/stats';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
+import { Button } from 'reactstrap';
 import ROUTES from 'constants/routes.js';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { PREDICATES, MISC, CLASSES } from 'constants/graphSettings';
@@ -84,6 +85,8 @@ const AnimationContainer = styled(CSSTransition)`
     }
 `;
 
+const MAX_PAPER_AMOUNT = 24;
+
 class ResearchFieldCards extends Component {
     state = {
         researchFields: [],
@@ -148,7 +151,7 @@ class ResearchFieldCards extends Component {
                             objectId: fieldId,
                             predicateId: PREDICATES.HAS_RESEARCH_FIELD,
                             page: 1,
-                            items: 24,
+                            items: MAX_PAPER_AMOUNT,
                             sortBy: 'created_at',
                             desc: true
                         });
@@ -189,6 +192,9 @@ class ResearchFieldCards extends Component {
         }
 
         const showPapers = this.state.breadcrumb.length > 1;
+        const researchFieldLink = this.state.breadcrumb.length
+            ? reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.breadcrumb[this.state.breadcrumb.length - 1].id })
+            : null;
 
         return (
             <div className="mt-3">
@@ -220,12 +226,7 @@ class ResearchFieldCards extends Component {
                 {showPapers && (
                     <div className="mt-3">
                         <h2 className="h5">
-                            <Link
-                                to={reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: this.state.breadcrumb[this.state.breadcrumb.length - 1].id })}
-                            >
-                                {this.state.breadcrumb[this.state.breadcrumb.length - 1].label}
-                            </Link>{' '}
-                            papers
+                            <Link to={researchFieldLink}>{this.state.breadcrumb[this.state.breadcrumb.length - 1].label}</Link> papers
                         </h2>
 
                         {!this.state.papers && (
@@ -237,15 +238,22 @@ class ResearchFieldCards extends Component {
                         {this.state.papers && this.state.papers.length === 0 ? <div className="mt-5 text-center">No papers found</div> : null}
 
                         {this.state.papers && (
-                            <ul className="mt-3">
-                                {this.state.papers.map((paper, index) => {
-                                    return (
+                            <>
+                                <ul className="mt-3">
+                                    {this.state.papers.map((paper, index) => (
                                         <li key={index}>
                                             <Link to={reverse(ROUTES.VIEW_PAPER, { resourceId: paper.subject.id })}>{paper.subject.label}</Link>
                                         </li>
-                                    );
-                                })}
-                            </ul>
+                                    ))}
+                                </ul>
+                                {this.state.papers.length >= MAX_PAPER_AMOUNT && (
+                                    <div className="text-center">
+                                        <Button tag={Link} to={researchFieldLink} size="sm" color="primary">
+                                            View more papers
+                                        </Button>
+                                    </div>
+                                )}
+                            </>
                         )}
                     </div>
                 )}
