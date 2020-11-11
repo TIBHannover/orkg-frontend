@@ -108,7 +108,7 @@ class AddOrganization extends Component {
                     <h3 className="h4 my-4 flex-grow-1">Create new organization</h3>
                 </Container>
                 <Container className="box rounded pt-4 pb-4 pl-5 pr-5">
-                    {this.props.user ? (
+                    {!!this.props.user && this.props.user.isCurationAllowed ? (
                         <Form className="pl-3 pr-3 pt-2">
                             {this.state.errors && <Alert color="danger">{this.state.errors}</Alert>}
                             <FormGroup>

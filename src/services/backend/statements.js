@@ -201,7 +201,7 @@ export const getTemplateById = templateId => {
                           id: templatePredicate.object.id,
                           label: templatePredicate.object.label
                       }
-                    : {},
+                    : null,
                 labelFormat: templateFormatLabel ? templateFormatLabel.object.label : '',
                 hasLabelFormat: templateFormatLabel ? true : false,
                 isStrict: templateIsStrict ? true : false,
@@ -246,6 +246,32 @@ export const getParentResearchFields = (researchFieldId, parents = []) => {
             if (parentResearchField && parentResearchField[0]) {
                 parents.push(parentResearchField[0].object);
                 return getParentResearchFields(parentResearchField[0].subject.id, parents);
+            } else {
+                return Promise.resolve(parents);
+            }
+        });
+    }
+};
+
+/**
+ * Get Parents of research problems
+ *
+ * @param {String} researchProblemId research problem Id
+ */
+export const getParentResearchProblems = (researchProblemId, parents = []) => {
+    if (parents.length > 5) {
+        return Promise.resolve(parents);
+    } else {
+        return getStatementsByObjectAndPredicate({
+            objectId: researchProblemId,
+            predicateId: PREDICATES.SUB_PROBLEM
+        }).then(parentResearchProblem => {
+            if (parentResearchProblem && parentResearchProblem[0]) {
+                if (parents.length === 0) {
+                    parents.push(parentResearchProblem[0].object);
+                }
+                parents.push(parentResearchProblem[0].subject);
+                return getParentResearchProblems(parentResearchProblem[0].subject.id, parents);
             } else {
                 return Promise.resolve(parents);
             }

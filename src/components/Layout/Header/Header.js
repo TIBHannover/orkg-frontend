@@ -347,7 +347,7 @@ class Header extends Component {
                             Add paper
                         </RequireAuthentication>
 
-                        {this.props.user !== null && (
+                        {!!this.props.user && (
                             <div>
                                 <StyledGravatar className="rounded-circle" email={email} size={40} id="TooltipExample" />
                                 <StyledAuthTooltip
@@ -425,7 +425,7 @@ const mapDispatchToProps = dispatch => ({
 Header.propTypes = {
     openAuthDialog: PropTypes.func.isRequired,
     updateAuth: PropTypes.func.isRequired,
-    user: PropTypes.object,
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
     resetAuth: PropTypes.func.isRequired
 };
 

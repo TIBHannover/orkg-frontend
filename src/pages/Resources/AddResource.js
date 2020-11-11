@@ -34,6 +34,8 @@ export default class AddResource extends Component {
     }
 
     componentDidMount = () => {
+        // Set document title
+        document.title = 'Add resource - ORKG';
         this.getDefaultClass();
     };
 

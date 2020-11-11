@@ -63,19 +63,20 @@ export default function ProvenanceBox(props) {
                                             <br />
                                             {moment(props.observatoryInfo.created_at).format('DD MMM YYYY')}
                                         </StyledItemProvenanceBox>
-
-                                        <StyledItemProvenanceBox>
-                                            <b>ADDED BY</b>
-                                            <br />
-                                            <Link to={reverse(ROUTES.USER_PROFILE, { userId: props.observatoryInfo.created_by.id })}>
-                                                {props.observatoryInfo.created_by.display_name}
-                                            </Link>
-                                        </StyledItemProvenanceBox>
+                                        {props.observatoryInfo.created_by && props.observatoryInfo.created_by.id && (
+                                            <StyledItemProvenanceBox>
+                                                <b>ADDED BY</b>
+                                                <br />
+                                                <Link to={reverse(ROUTES.USER_PROFILE, { userId: props.observatoryInfo.created_by.id })}>
+                                                    {props.observatoryInfo.created_by.display_name}
+                                                </Link>
+                                            </StyledItemProvenanceBox>
+                                        )}
                                         <StyledItemProvenanceBox>
                                             <b>CONTRIBUTORS</b>
                                             {props.contributors &&
-                                                props.contributors.map(contributor => (
-                                                    <div key={`cntbrs-${contributor.id}`}>
+                                                props.contributors.map((contributor, index) => (
+                                                    <div key={`cntbrs-${contributor.id}${index}`}>
                                                         {contributor.created_by.display_name !== 'Unknown' && (
                                                             <span>
                                                                 <Link to={reverse(ROUTES.USER_PROFILE, { userId: contributor.created_by.id })}>
@@ -87,7 +88,7 @@ export default function ProvenanceBox(props) {
                                                 ))}
                                         </StyledItemProvenanceBox>
                                     </ul>
-                                    {user && user.isCurationAllowed && (
+                                    {!!user && user.isCurationAllowed && (
                                         <Button size="sm" className="float-right" onClick={() => setShowAssignObservatory(true)} color="link">
                                             <Icon icon={faPen} /> Edit
                                         </Button>
@@ -140,7 +141,7 @@ export default function ProvenanceBox(props) {
                     </TransitionGroup>
                 </SidebarStyledBox>
             )}
-            {isEmpty(props.observatoryInfo) && user && user.isCurationAllowed && (
+            {isEmpty(props.observatoryInfo) && !!user && user.isCurationAllowed && (
                 <Button size="sm" outline onClick={() => setShowAssignObservatory(true)}>
                     Assign to observatory
                 </Button>
