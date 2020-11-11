@@ -5,8 +5,8 @@ import { reverse } from 'named-urls';
 import dotProp from 'dot-prop-immutable';
 import PropTypes from 'prop-types';
 import ContentLoader from 'react-content-loader';
-import { getResourcesByClass, getClassById } from 'services/backend/classes';
-import { getAllResources } from 'services/backend/resources';
+import { getClassById } from 'services/backend/classes';
+import { getAllResources, getResourcesByClass } from 'services/backend/resources';
 import { getAllPredicates } from 'services/backend/predicates';
 import ROUTES from 'constants/routes.js';
 import Results from 'components/Search/Results';
@@ -94,9 +94,7 @@ class Search extends Component {
 
     componentDidMount() {
         document.title = 'Search - ORKG';
-        if (this.state.value) {
-            this.getResultsForFilters();
-        }
+        this.getResultsForFilters();
     }
 
     componentDidUpdate = (prevProps, prevState) => {
@@ -151,7 +149,7 @@ class Search extends Component {
     };
 
     loadMoreResults = (searchQuery, filter_type) => {
-        if (searchQuery.length === 0) {
+        if (!searchQuery || searchQuery.length === 0) {
             return;
         }
         this.setState({ isNextPageLoading: { ...this.state.isNextPageLoading, [filter_type]: true } });

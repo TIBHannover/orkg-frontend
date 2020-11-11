@@ -5,7 +5,7 @@ import AsyncCreatableSelect from 'react-select/async-creatable';
 import { components } from 'react-select';
 import { connect } from 'react-redux';
 import { guid, compareOption } from 'utils';
-import { getResourcesByClass } from 'services/backend/classes';
+import { getResourcesByClass } from 'services/backend/resources';
 import styled from 'styled-components';
 import { CLASSES } from 'constants/graphSettings';
 

@@ -5,6 +5,19 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.22](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.21...V0.22) - 2020-11-10
+
+### Changes
+
+- enhancement: Research field and observatory pages [`#408`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/408)
+- feat: Comparisons related figures carousel in observatory page [`#417`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/417)
+- autocomplete: fix duplicate result when searching by ID [`#410`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/410)
+- fix: Use a unique key to render TemplateComponent [`#413`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/413)
+- fix: Check if the user is authenticated on the first load [`#414`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/414)
+- fix: Search page issue [`#418`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/418)
+- ux: improve autocomplete component [`#415`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/415)
+
+---
 ## [0.21](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.20...V0.21) - 2020-10-28
 
 ### Changes

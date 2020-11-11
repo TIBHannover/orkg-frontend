@@ -200,7 +200,7 @@ class ViewPaper extends Component {
             paperResource.created_by !== MISC.UNKNOWN_ID
         ) {
             const observatory = getObservatoryAndOrganizationInformation(paperResource.observatory_id, paperResource.organization_id);
-            const creator = getUserInformationById(paperResource.created_by);
+            const creator = getUserInformationById(paperResource.created_by).catch(e => {});
             Promise.all([observatory, creator]).then(data => {
                 this.setState({
                     observatoryInfo: {
@@ -422,7 +422,7 @@ ViewPaper.propTypes = {
     viewPaper: PropTypes.object.isRequired,
     loadPaper: PropTypes.func.isRequired,
     setPaperAuthors: PropTypes.func.isRequired,
-    user: PropTypes.object
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 const mapStateToProps = state => ({

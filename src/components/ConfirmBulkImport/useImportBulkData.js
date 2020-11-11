@@ -3,7 +3,7 @@ import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
 import { omit, isString } from 'lodash';
 import { getStatementsBySubject } from 'services/backend/statements';
 import { getPaperByDOI } from 'services/backend/misc';
-import { getResourcesByClass } from 'services/backend/classes';
+import { getResourcesByClass } from 'services/backend/resources';
 import { getResource } from 'services/backend/resources';
 import { getPredicate, getAllPredicates, createPredicate } from 'services/backend/predicates';
 import { saveFullPaper } from 'services/backend/misc';

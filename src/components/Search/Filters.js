@@ -63,7 +63,7 @@ const Filters = props => {
                 />
             ))}
             <br />
-            <Label>Other filters</Label>
+            <Label for="other-filters">Other filters</Label>
             <AutoComplete
                 requestUrl={classesUrl}
                 onChange={(_, action) => {
@@ -83,6 +83,7 @@ const Filters = props => {
                 isClearable
                 isMulti={true}
                 autoFocus={false}
+                inputId="other-filters"
             />
         </Form>
     );

@@ -54,7 +54,7 @@ function ProvenanceBox(props) {
                             <>
                                 <p>
                                     Observatory:{' '}
-                                    {user && user.isCurationAllowed && (
+                                    {!!user && user.isCurationAllowed && (
                                         <Button size="sm" onClick={() => setShowAssignObservatory(true)} color="link">
                                             <Icon icon={faPen} /> Edit
                                         </Button>
@@ -73,7 +73,7 @@ function ProvenanceBox(props) {
                             </>
                         )}
                         <br /> <br />
-                        {isEmpty(props.provenance) && user && user.isCurationAllowed && (
+                        {isEmpty(props.provenance) && !!user && user.isCurationAllowed && (
                             <Button size="sm" outline onClick={() => setShowAssignObservatory(true)}>
                                 Assign to observatory
                             </Button>

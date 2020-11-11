@@ -5,7 +5,8 @@ import { faClipboard, faLink, faAtom } from '@fortawesome/free-solid-svg-icons';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import OntologiesModal from './OntologiesModal';
 import { submitGetRequest, olsBaseUrl } from 'network';
-import { getResourcesByClass, classesUrl, createClass } from 'services/backend/classes';
+import { classesUrl, createClass } from 'services/backend/classes';
+import { getResourcesByClass } from 'services/backend/resources';
 import { AsyncPaginateBase } from 'react-select-async-paginate';
 import Creatable from 'react-select/creatable';
 import PropTypes from 'prop-types';
@@ -297,7 +298,9 @@ function Autocomplete(props) {
                 responseJson = await GetExternalClasses(value, pageOLS);
             }
 
-            responseJson = await IdMatch(value.trim(), responseJson);
+            if (page === 1) {
+                responseJson = await IdMatch(value.trim(), responseJson);
+            }
 
             if (responseJson.length > pageSize) {
                 // in case the endpoint doesn't support pagination!
@@ -329,7 +332,7 @@ function Autocomplete(props) {
             }
 
             if (!hasMore && !pageOLS) {
-                hasMore = true;
+                hasMore = !props.ols ? hasMore : true;
                 return {
                     options,
                     hasMore,
@@ -593,8 +596,8 @@ function Autocomplete(props) {
         control: (provided, state) => ({
             ...provided,
             background: props.theme.inputBg,
-            boxShadow: state.isFocused ? 0 : 0,
-            border: 0,
+            boxShadow: state.isFocused ? '0 0 0 0.2rem rgba(232, 97, 97, 0.25)' : 0, // color are hardcoded to match bootstrap computed styling
+            borderColor: state.isFocused ? '#f8d0d0!important' : '#ced4da!important', // same here
             paddingLeft: 0,
             paddingRight: 0,
             cursor: 'text',
@@ -636,7 +639,8 @@ function Autocomplete(props) {
         option: provided => ({
             ...provided,
             cursor: 'pointer',
-            whiteSpace: 'normal'
+            whiteSpace: 'normal',
+            padding: 0
         }),
         input: provided => ({
             ...provided, // custom style to fix when the input field doesn't get the full width
@@ -694,7 +698,7 @@ function Autocomplete(props) {
                 toggle={() => setOntologySelectorIsOpen(v => !v)}
                 showDialog={ontologySelectorIsOpen}
             />
-            <StyledAutoCompleteInputFormControl className={`form-control ${props.cssClasses ? props.cssClasses : 'default'}`}>
+            <StyledAutoCompleteInputFormControl className={`form-control ${props.cssClasses ? props.cssClasses : 'default'} border-0`}>
                 <AsyncPaginateBase
                     key={JSON.stringify(selectedOntologies.map(o => o.id))}
                     SelectComponent={Select}
