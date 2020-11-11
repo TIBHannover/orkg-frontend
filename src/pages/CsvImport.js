@@ -132,7 +132,7 @@ const CsvImport = () => {
                                 <tbody>
                                     {data.slice(1).map((row, i) => (
                                         <tr key={i}>
-                                            <td>{i + 1}</td>
+                                            <th scope="row">{i + 1}</th>
                                             {row.map((value, i) => (
                                                 <td key={i}>{value}</td>
                                             ))}
