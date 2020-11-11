@@ -1,4 +1,4 @@
-import { submitPostRequest, submitPutRequest, submitGetRequest } from 'network';
+import { submitPostRequest, submitPutRequest, submitGetRequest, submitDeleteRequest } from 'network';
 import { getUserInformationById } from 'services/backend/users';
 import { classesUrl } from 'services/backend/classes';
 import { MISC } from 'constants/graphSettings';
@@ -22,6 +22,10 @@ export const createResource = (label, classes = []) => {
 
 export const getResource = id => {
     return submitGetRequest(`${resourcesUrl}${encodeURIComponent(id)}/`);
+};
+
+export const deleteResource = id => {
+    return submitDeleteRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' });
 };
 
 export const getAllResources = ({ page = 1, items = 9999, sortBy = 'created_at', desc = true, q = null, exclude = null, exact = false }) => {

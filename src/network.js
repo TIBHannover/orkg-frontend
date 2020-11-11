@@ -130,8 +130,15 @@ export const submitDeleteRequest = (url, headers, data) => {
         throw new Error('Cannot submit DELETE request. URL is null or undefined.');
     }
 
+    const cookies = new Cookies();
+    const token = cookies.get('token') ? cookies.get('token') : null;
+    const myHeaders = new Headers(headers);
+    if (token) {
+        myHeaders.append('Authorization', `Bearer ${token}`);
+    }
+
     return new Promise((resolve, reject) => {
-        fetch(url, { method: 'DELETE', headers: headers, body: JSON.stringify(data) })
+        fetch(url, { method: 'DELETE', headers: myHeaders, body: JSON.stringify(data) })
             .then(response => {
                 if (!response.ok) {
                     reject(new Error(`Error response. (${response.status}) ${response.statusText}`));

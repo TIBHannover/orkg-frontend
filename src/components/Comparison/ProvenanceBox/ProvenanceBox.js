@@ -5,7 +5,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import ObservatoryModal from 'components/ObservatoryModal/ObservatoryModal';
 import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes.js';
+import ROUTES from 'constants/routes';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { isEmpty } from 'lodash';

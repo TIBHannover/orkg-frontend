@@ -13,20 +13,21 @@ import EditableHeader from 'components/EditableHeader';
 import ObjectStatements from 'components/ObjectStatements/ObjectStatements';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import NotFound from 'pages/NotFound';
-import { useLocation } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import Tippy from '@tippy.js/react';
 import ROUTES from 'constants/routes.js';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { resetStatementBrowser } from 'actions/statementBrowser';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrash, faExternalLinkAlt, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Confirm from 'components/ConfirmationModal/ConfirmationModal';
 import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { orderBy } from 'lodash';
+import useDeleteResource from 'components/Resource/hooks/useDeleteResource';
+import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 
 const DEDICATED_PAGE_LINKS = {
     [CLASSES.PAPER]: {
@@ -71,19 +72,27 @@ const DEDICATED_PAGE_LINKS = {
     }
 };
 function Resource(props) {
+    const resourceId = props.match.params.id;
     const location = useLocation();
     const [error, setError] = useState(null);
     const [label, setLabel] = useState('');
     const [classes, setClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
+    const [canBeDeleted, setCanBeDeleted] = useState(false);
+    const values = useSelector(state => state.statementBrowser.values);
+    const properties = useSelector(state => state.statementBrowser.properties);
+    const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
+    const showDeleteButton = editMode && isCurationAllowed;
+    const [hasObjectStatement, setHasObjectStatement] = useState(false);
+    const { deleteResource } = useDeleteResource({ resourceId, redirect: true });
     const [canEdit, setCanEdit] = useState(false);
     const classesAutocompleteRef = useRef(null);
 
     useEffect(() => {
         const findResource = async () => {
             setIsLoading(true);
-            getResource(props.match.params.id)
+            getResource(resourceId)
                 .then(responseJson => {
                     document.title = `${responseJson.label} - Resource - ORKG`;
                     const classesCalls = responseJson.classes.map(classResource => getClassById(classResource));
@@ -118,7 +127,11 @@ function Resource(props) {
                 });
         };
         findResource();
-    }, [location, props.match.params.id]);
+    }, [location, props.match.params.id, resourceId]);
+
+    useEffect(() => {
+        setCanBeDeleted((values.allIds.length === 0 || properties.allIds.length === 0) && !hasObjectStatement);
+    }, [values, properties, hasObjectStatement]);
 
     const handleClassSelect = async (selected, action) => {
         if (action.action === 'create-option') {
@@ -138,7 +151,7 @@ function Resource(props) {
         // (When a key changes, React will create a new component instance rather than update the current one)
         props.resetStatementBrowser();
         setClasses(newClasses);
-        await updateResourceClassesNetwork(props.match.params.id, newClasses.map(c => c.id));
+        await updateResourceClassesNetwork(resourceId, newClasses.map(c => c.id));
         toast.success('Resource classes updated successfully');
     };
 
@@ -242,7 +255,28 @@ function Resource(props) {
                             ) : (
                                 <>
                                     <EditableHeader id={props.match.params.id} value={label} onChange={handleHeaderChange} />
-                                    <FormGroup className="mb-4">
+                                    {showDeleteButton && (
+                                        <ConditionalWrapper
+                                            condition={!canBeDeleted}
+                                            wrapper={children => (
+                                                <Tippy content="The resource cannot be deleted because it is used in statements (either as subject or object)">
+                                                    <span>{children}</span>
+                                                </Tippy>
+                                            )}
+                                        >
+                                            <Button
+                                                color="danger"
+                                                size="sm"
+                                                className="mt-2"
+                                                style={{ marginLeft: 'auto' }}
+                                                onClick={deleteResource}
+                                                disabled={!canBeDeleted}
+                                            >
+                                                <Icon icon={faTrash} /> Delete resource
+                                            </Button>
+                                        </ConditionalWrapper>
+                                    )}
+                                    <FormGroup className="mb-4 mt-3">
                                         <Label for="classes-autocomplete">Classes</Label>
                                         <AutoComplete
                                             requestUrl={classesUrl}
@@ -276,7 +310,7 @@ function Resource(props) {
                                 enableEdit={editMode && canEdit}
                                 syncBackend={editMode}
                                 openExistingResourcesInDialog={false}
-                                initialResourceId={props.match.params.id}
+                                initialResourceId={resourceId}
                                 initialResourceLabel={label}
                                 newStore={true}
                                 propertiesAsLinks={true}
@@ -285,7 +319,7 @@ function Resource(props) {
 
                             <SameAsStatements />
                         </div>
-                        <ObjectStatements resourceId={props.match.params.id} />
+                        <ObjectStatements resourceId={props.match.params.id} setHasObjectStatement={setHasObjectStatement} />
                     </Container>
                 </>
             )}
