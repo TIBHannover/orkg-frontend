@@ -20,7 +20,7 @@ function useDeleteResource({ resourceId, redirect = false }) {
             setIsLoading(true);
             try {
                 await deleteResourceNetwork(resourceId);
-                toast.success(`Successfully delete this resource`);
+                toast.success(`Resource deleted successfully`);
 
                 if (redirect) {
                     history.push(ROUTES.RESOURCES);
