@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getResourcesByClass } from 'services/backend/classes';
 import { getPaperData, getComparisonData } from 'utils';
 import { find } from 'lodash';
 import { Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { CLASSES } from 'constants/graphSettings';
+import { getResourcesByClass } from 'services/backend/resources';
 import useDeletePapers from 'components/ViewPaper/hooks/useDeletePapers';
+import { CLASSES } from 'constants/graphSettings';
 
 const Items = props => {
     const pageSize = 5;

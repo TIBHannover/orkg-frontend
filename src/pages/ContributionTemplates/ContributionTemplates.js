@@ -6,8 +6,7 @@ import { faAngleDoubleDown, faPlus, faSpinner } from '@fortawesome/free-solid-sv
 import { Link } from 'react-router-dom';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
 import { classesUrl } from 'services/backend/classes';
-import { getResourcesByClass } from 'services/backend/classes';
-import { resourcesUrl } from 'services/backend/resources';
+import { resourcesUrl, getResourcesByClass } from 'services/backend/resources';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import TemplateCard from 'components/ContributionTemplates/TemplateCard';
 import { reverse } from 'named-urls';
