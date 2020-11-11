@@ -84,7 +84,7 @@ function Resource(props) {
     const properties = useSelector(state => state.statementBrowser.properties);
     const isCurationAllowed = useSelector(state => state.auth.user?.isCurationAllowed);
     const showDeleteButton = editMode && isCurationAllowed;
-    const [hasObjectStatement] = useState(false);
+    const [hasObjectStatement, setHasObjectStatement] = useState(false);
     const { deleteResource } = useDeleteResource({ resourceId, redirect: true });
     const [canEdit, setCanEdit] = useState(false);
     const classesAutocompleteRef = useRef(null);
@@ -319,7 +319,7 @@ function Resource(props) {
 
                             <SameAsStatements />
                         </div>
-                        <ObjectStatements resourceId={props.match.params.id} />
+                        <ObjectStatements resourceId={props.match.params.id} setHasObjectStatement={setHasObjectStatement} />
                     </Container>
                 </>
             )}
