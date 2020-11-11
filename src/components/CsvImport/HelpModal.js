@@ -3,6 +3,7 @@ import { Modal, ModalBody, ModalHeader, Table, Alert } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
+import ImportTemplate from 'assets/csv/import-template.csv';
 import { Link } from 'react-router-dom';
 
 const HelpModal = props => {
@@ -12,7 +13,7 @@ const HelpModal = props => {
 
             <ModalBody>
                 <Alert color="info">
-                    <a href="https://gitlab.com/TIBHannover/orkg/orkg-pypi/snippets/1984764" target="_blank" rel="noopener noreferrer">
+                    <a href={ImportTemplate} target="_blank" rel="noopener noreferrer">
                         Download the CSV template
                     </a>{' '}
                     to get started
