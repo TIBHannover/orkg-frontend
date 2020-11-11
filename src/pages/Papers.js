@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { getResourcesByClass } from 'services/backend/classes';
+import { getResourcesByClass } from 'services/backend/resources';
 import { Container, ListGroup, ListGroupItem } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
