@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import { Button, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, CustomInput } from 'reactstrap';
 import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
-import { setComponents } from 'actions/addTemplate';
+import { setComponents, setIsStrictTemplate } from 'actions/addTemplate';
 import { createPredicate } from 'services/backend/predicates';
 import TemplateComponent from 'components/ContributionTemplates/TemplateComponent/TemplateComponent';
 import AddPropertyTemplate from 'components/StatementBrowser/AddProperty/AddPropertyTemplate';
@@ -116,6 +116,10 @@ function ComponentsTab(props) {
         [props]
     );
 
+    const handleSwitchIsStrictTemplate = event => {
+        props.setIsStrictTemplate(event.target.checked);
+    };
+
     return (
         <div className="p-4">
             <div className="pb-4">
@@ -130,7 +134,7 @@ function ComponentsTab(props) {
                     props.components.map((templateProperty, index) => {
                         return (
                             <TemplateComponent
-                                key={`tc${index}`}
+                                key={`tc${templateProperty.property.id}`}
                                 enableEdit={props.editMode}
                                 handleDeleteTemplateComponent={handleDeleteTemplateComponent}
                                 id={index}
@@ -178,6 +182,19 @@ function ComponentsTab(props) {
                         </Modal>
                     </>
                 )}
+                <FormGroup className="mt-3">
+                    <div>
+                        <CustomInput
+                            onChange={handleSwitchIsStrictTemplate}
+                            checked={props.isStrictTemplate}
+                            id="switchIsStrictTemplate"
+                            type="switch"
+                            name="customSwitch"
+                            label="This template is strict (users cannot add additional properties themselves)"
+                            disabled={!props.editMode}
+                        />
+                    </div>
+                </FormGroup>
             </div>
         </div>
     );
@@ -186,18 +203,22 @@ function ComponentsTab(props) {
 ComponentsTab.propTypes = {
     components: PropTypes.array.isRequired,
     editMode: PropTypes.bool.isRequired,
-    setComponents: PropTypes.func.isRequired
+    setComponents: PropTypes.func.isRequired,
+    setIsStrictTemplate: PropTypes.func.isRequired,
+    isStrictTemplate: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => {
     return {
         components: state.addTemplate.components,
-        editMode: state.addTemplate.editMode
+        editMode: state.addTemplate.editMode,
+        isStrictTemplate: state.addTemplate.isStrict
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    setComponents: data => dispatch(setComponents(data))
+    setComponents: data => dispatch(setComponents(data)),
+    setIsStrictTemplate: data => dispatch(setIsStrictTemplate(data))
 });
 
 export default connect(

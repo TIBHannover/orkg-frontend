@@ -33,6 +33,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import env from '@beam-australia/react-env';
 
 const StyledCustomInput = styled(CustomInput)`
     margin-right: 0;
@@ -319,7 +320,9 @@ function Publish(props) {
                     <FormGroup>
                         <div>
                             <Tooltip
-                                message={`A DOI ${process.env.REACT_APP_DATACITE_DOI_PREFIX}/${props.comparisonId} will be assigned to published comparison and it cannot be changed in future.`}
+                                message={`A DOI ${env('DATACITE_DOI_PREFIX')}/${
+                                    props.comparisonId
+                                } will be assigned to published comparison and it cannot be changed in future.`}
                             >
                                 <StyledCustomInput
                                     onChange={e => {
@@ -412,7 +415,7 @@ function Publish(props) {
                                 })}
                         </FormGroup>
                         <FormGroup>
-                            <Label for="subject">
+                            <Label for="research-field">
                                 <Tooltip message="Enter a subject of the comparison">Research Field</Tooltip>
                             </Label>
 
@@ -427,6 +430,7 @@ function Publish(props) {
                                 autoLoadOption={true}
                                 openMenuOnFocus={false}
                                 allowCreate={false}
+                                inputId="research-field"
                             />
                         </FormGroup>
                         <FormGroup>

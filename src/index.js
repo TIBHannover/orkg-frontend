@@ -12,6 +12,7 @@ import { CookiesProvider } from 'react-cookie';
 import { ThemeProvider } from 'styled-components';
 import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
 import { DndProvider } from 'react-dnd';
+import env from '@beam-australia/react-env';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 // Extract Sass variables into a JS object
@@ -19,12 +20,12 @@ import HTML5Backend from 'react-dnd-html5-backend';
 const theme = require('sass-extract-loader?{plugins: ["sass-extract-js"]}!./assets/scss/ThemeVariables.scss');
 
 const matomoInstance =
-    process.env.REACT_APP_MATOMO_TRACKER === 'true'
+    env('MATOMO_TRACKER') === 'true'
         ? createInstance({
               urlBase: 'https://www.orkg.org/',
-              siteId: process.env.REACT_APP_MATOMO_TRACKER_SITE_ID,
-              trackerUrl: `${process.env.REACT_APP_MATOMO_TRACKER_URL}matomo.php`,
-              srcUrl: `${process.env.REACT_APP_MATOMO_TRACKER_URL}matomo.js`,
+              siteId: env('MATOMO_TRACKER_SITE_ID'),
+              trackerUrl: `${env('MATOMO_TRACKER_URL')}matomo.php`,
+              srcUrl: `${env('MATOMO_TRACKER_URL')}matomo.js`,
               disabled: false,
               linkTracking: true,
               trackPageView: true,

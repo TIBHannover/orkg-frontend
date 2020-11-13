@@ -20,6 +20,7 @@
           Learn how to configure a non-root public URL by running `npm run build`.
         -->
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+        <script src="%PUBLIC_URL%/env.js"></script>
         <title>Open Research Knowledge Graph</title>
     </head>
     <body>
@@ -39,21 +40,23 @@
         -->
 
         <script>
-            const woochat_token = '%REACT_APP_CHATWOOT_WEBSITE_TOKEN%';
-            if (woochat_token && !woochat_token.includes('REACT_APP_CHATWOOT_WEBSITE_TOKEN')) {
-                (function(d, t) {
-                    var BASE_URL = 'https://app.chatwoot.com';
-                    var g = d.createElement(t),
-                        s = d.getElementsByTagName(t)[0];
-                    g.src = BASE_URL + '/packs/js/sdk.js';
-                    s.parentNode.insertBefore(g, s);
-                    g.onload = function() {
-                        window.chatwootSDK.run({
-                            websiteToken: woochat_token,
-                            baseUrl: BASE_URL
-                        });
-                    };
-                })(document, 'script');
+            if (window._env) {
+                const chatwoot_token = window._env.REACT_APP_CHATWOOT_WEBSITE_TOKEN;
+                if (chatwoot_token && !chatwoot_token.includes('REACT_APP_CHATWOOT_WEBSITE_TOKEN')) {
+                    (function(d, t) {
+                        var BASE_URL = 'https://app.chatwoot.com';
+                        var g = d.createElement(t),
+                            s = d.getElementsByTagName(t)[0];
+                        g.src = BASE_URL + '/packs/js/sdk.js';
+                        s.parentNode.insertBefore(g, s);
+                        g.onload = function() {
+                            window.chatwootSDK.run({
+                                websiteToken: chatwoot_token,
+                                baseUrl: BASE_URL
+                            });
+                        };
+                    })(document, 'script');
+                }
             }
         </script>
     </body>

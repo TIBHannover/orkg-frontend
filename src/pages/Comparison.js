@@ -19,6 +19,7 @@ import ComparisonVersions from 'components/Comparison/ComparisonVersions.js';
 import Publish from 'components/Comparison/Publish.js';
 import { ContainerAnimated, ComparisonTypeButton } from 'components/Comparison/styled';
 import useComparison from 'components/Comparison/hooks/useComparison';
+import { getResource } from 'services/backend/resources';
 import ROUTES from 'constants/routes.js';
 import { useHistory, Link } from 'react-router-dom';
 import { openAuthDialog } from 'actions/auth';
@@ -32,6 +33,9 @@ import PropTypes from 'prop-types';
 import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
 import AddVisualizationModal from '../components/Comparison/AddVisualizationModal';
+import { NavLink } from 'react-router-dom';
+import { reverse } from 'named-urls';
+import env from '@beam-australia/react-env';
 
 function Comparison(props) {
     const [
@@ -70,7 +74,8 @@ function Comparison(props) {
         setShortLink,
         setAuthors,
         loadCreatedBy,
-        loadProvenanceInfos
+        loadProvenanceInfos,
+        highlightedFigure
     ] = useComparison({});
 
     /** adding some additional state for meta data **/
@@ -109,19 +114,19 @@ function Comparison(props) {
     };
     const onDismissShiftMouseWheelScroll = () => {
         // dismiss function for the alert thingy!;
-        setCookie('seenShiftMouseWheelScroll', true, { path: process.env.PUBLIC_URL, maxAge: 315360000 }); // << TEN YEARS
+        setCookie('seenShiftMouseWheelScroll', true, { path: env('PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
         setHideScrollHint(true);
     };
 
     const handleFullWidth = () => {
         setFullWidth(v => {
-            setCookie('useFullWidthForComparisonTable', !v, { path: process.env.PUBLIC_URL, maxAge: 315360000 }); // << TEN YEARS
+            setCookie('useFullWidthForComparisonTable', !v, { path: env('PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
             return !v;
         });
     };
 
     const handleViewDensity = density => {
-        setCookie('viewDensityComparisonTable', density, { path: process.env.PUBLIC_URL, maxAge: 315360000 }); // << TEN YEARS
+        setCookie('viewDensityComparisonTable', density, { path: env('PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
         setViewDensity(density);
     };
 
@@ -138,6 +143,13 @@ function Comparison(props) {
         console.log('This has propagated the click to the page', visIndex);
         setReconstructionData({ dataForReconstruction });
         setShowVisualizationModal(true);
+    };
+
+    const getObservatoryInfo = async () => {
+        const resourceId = metaData.id;
+        const comparisonResource = await getResource(resourceId);
+        await loadCreatedBy(comparisonResource.created_by);
+        loadProvenanceInfos(comparisonResource.observatory_id, comparisonResource.organization_id);
     };
 
     return (
@@ -204,7 +216,7 @@ function Comparison(props) {
                                 <DropdownToggle color="darkblue" size="sm" className="rounded-right">
                                     <span className="mr-2">More</span> <Icon icon={faEllipsisV} />
                                 </DropdownToggle>
-                                <DropdownMenu>
+                                <DropdownMenu right>
                                     <DropdownItem header>Customize</DropdownItem>
                                     <DropdownItem onClick={() => setShowPropertiesDialog(v => !v)}>Select properties</DropdownItem>
                                     <DropdownItem onClick={() => toggleTranspose(v => !v)}>Transpose table</DropdownItem>
@@ -269,6 +281,10 @@ function Comparison(props) {
                                             </DropdownItem>
                                         </>
                                     )}
+                                    <DropdownItem divider />
+                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: metaData?.id })}>
+                                        View resource
+                                    </DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </ButtonGroup>
@@ -376,7 +392,10 @@ function Comparison(props) {
 
                 <div className="mt-3 clearfix">
                     <RelatedResources resourcesStatements={metaData.resources ? metaData.resources : []} />
-                    <RelatedFigures figureStatements={metaData.figures ? metaData.figures : []} />
+                    <RelatedFigures
+                        figureStatements={metaData.figures ? metaData.figures : []}
+                        highlightedFigure={highlightedFigure ? highlightedFigure : ''}
+                    />
                     {!isFailedLoadingMetaData && metaData.references && metaData.references.length > 0 && (
                         <div style={{ lineHeight: 1.5 }}>
                             <h3 className="mt-5 h5">Data sources</h3>
@@ -396,7 +415,9 @@ function Comparison(props) {
                 </div>
             </ContainerAnimated>
 
-            {metaData.id && ((isObject(createdBy) && createdBy.id) || provenance) && <ProvenanceBox creator={createdBy} provenance={provenance} />}
+            {metaData.id && ((isObject(createdBy) && createdBy.id) || provenance) && (
+                <ProvenanceBox creator={createdBy} provenance={provenance} changeObservatory={getObservatoryInfo} resourceId={metaData.id} />
+            )}
 
             <SelectProperties
                 properties={properties}
@@ -508,7 +529,7 @@ const mapDispatchToProps = dispatch => ({
 
 Comparison.propTypes = {
     openAuthDialog: PropTypes.func.isRequired,
-    user: PropTypes.object
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 export default connect(

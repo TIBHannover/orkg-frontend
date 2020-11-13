@@ -172,7 +172,8 @@ class Header extends Component {
                             id: userData.id,
                             token: token,
                             tokenExpire: token_expires_in,
-                            email: userData.email
+                            email: userData.email,
+                            isCurationAllowed: userData.is_curation_allowed
                         }
                     });
                 })
@@ -262,25 +263,23 @@ class Header extends Component {
                                             <Badge color="info">Beta</Badge>
                                         </small>
                                     </DropdownItem>
-
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.CSV_IMPORT} onClick={this.requireAuthentication}>
+                                        CSV import
+                                    </DropdownItem>
                                     <DropdownItem divider />
+                                    <DropdownItem header>Advanced tools</DropdownItem>
+
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.RESOURCES}>
-                                        Resources{' '}
-                                        <small>
-                                            <Badge color="info">Beta</Badge>
-                                        </small>
+                                        Resources
                                     </DropdownItem>
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.PREDICATES}>
-                                        Properties{' '}
-                                        <small>
-                                            <Badge color="info">Beta</Badge>
-                                        </small>
+                                        Properties
+                                    </DropdownItem>
+                                    <DropdownItem tag={RouterNavLink} exact to={ROUTES.CLASSES}>
+                                        Classes
                                     </DropdownItem>
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.CONTRIBUTION_TEMPLATES}>
-                                        Templates{' '}
-                                        <small>
-                                            <Badge color="info">Beta</Badge>
-                                        </small>
+                                        Templates
                                     </DropdownItem>
                                     {/*
                                     <DropdownItem tag={RouterNavLink} exact to={ROUTES.PDF_TEXT_ANNOTATION}>
@@ -302,7 +301,7 @@ class Header extends Component {
                                         tag="a"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        href="https://projects.tib.eu/orkg/project/documentation/"
+                                        href="https://projects.tib.eu/orkg/documentation/"
                                     >
                                         Features <Icon size="sm" icon={faExternalLinkAlt} />
                                     </DropdownItem>
@@ -350,7 +349,7 @@ class Header extends Component {
                             Add paper
                         </RequireAuthentication>
 
-                        {this.props.user !== null && (
+                        {!!this.props.user && (
                             <div>
                                 <StyledGravatar className="rounded-circle" email={email} size={40} id="TooltipExample" />
                                 <StyledAuthTooltip
@@ -428,7 +427,7 @@ const mapDispatchToProps = dispatch => ({
 Header.propTypes = {
     openAuthDialog: PropTypes.func.isRequired,
     updateAuth: PropTypes.func.isRequired,
-    user: PropTypes.object,
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
     resetAuth: PropTypes.func.isRequired
 };
 

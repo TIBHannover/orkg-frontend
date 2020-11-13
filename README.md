@@ -31,6 +31,7 @@ The **environment variables** descriptions:
 
 | Variable                           | Development | Production  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | ---------------------------------- | ----------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| REACT_APP_PUBLIC_URL               | ✅ Used     | ✅ Used     | The directory from which the frontend is served (set to "/" for running in the root directory)                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | BROWSER                            | ✅ Used     | 🚫 Ignored  | By default, Create React App will open the default system browser, favoring Chrome on macOS. Specify a [browser](https://github.com/sindresorhus/open#app) to override this behavior, or set it to `none` to disable it completely. If you need to customize the way the browser is launched, you can specify a node script instead. Any arguments passed to `npm start` will also be passed to this script, and the url where your app is served will be the last argument. Your script's file name must have the `.js` extension. |
 | REACT_APP_SERVER_URL               | ✅ Used     | ✅ Used     | ORKG backend endpoint                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | REACT_APP_SIMILARITY_SERVICE_URL   | ✅ Used     | ✅ Used     | ORKG similarity service endpoint                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
@@ -46,6 +47,9 @@ The **environment variables** descriptions:
 | REACT_APP_MATOMO_TRACKER           | ✅ Used     | ✅ Used     | Tracking visitors using Matomo Tracker. Accepted values : true or false                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | REACT_APP_MATOMO_TRACKER_URL       | ✅ Optional | ✅ Optional | Tracker URL of Matomo configuration                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | REACT_APP_MATOMO_TRACKER_SITE_ID   | ✅ Optional | ✅ Optional | Site ID of Matomo configuration                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| REACT_APP_OLS_BASE_URL             | ✅ Used     | ✅ Used     | [Ontology Lookup Service](https://www.ebi.ac.uk/ols/) API                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+
+_PLEASE MAKE SURE YOU USE HTTPS INSTEAD OF HTTP URLS._
 
 ### Backend service
 
@@ -58,6 +62,22 @@ Two additional services are used in the frontend. These services are: [ORKG simi
 Run the following command:
 
     npm run start
+
+Open the browser and enter the URL of the application: http://localhost:3000/.
+
+### Running in Docker
+
+It is also possible to run the frontend in Docker. It is easiest to use Docker Compose.
+
+Make sure you have a configured .env file:
+
+Copy the file `default.env` to `.env`:
+
+    cp default.env .env
+
+Start the application
+
+    docker-compose up -d
 
 Open the browser and enter the URL of the application: http://localhost:3000/.
 

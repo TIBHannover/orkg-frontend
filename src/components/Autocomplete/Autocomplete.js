@@ -1,13 +1,16 @@
 import React, { useState, useCallback } from 'react';
 import { InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faClipboard, faLink } from '@fortawesome/free-solid-svg-icons';
+import { faClipboard, faLink, faAtom } from '@fortawesome/free-solid-svg-icons';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
-import { submitGetRequest } from 'network';
-import { getResourcesByClass, classesUrl } from 'services/backend/classes';
+import OntologiesModal from './OntologiesModal';
+import { submitGetRequest, olsBaseUrl } from 'network';
+import { classesUrl, createClass } from 'services/backend/classes';
+import { getResourcesByClass } from 'services/backend/resources';
 import { AsyncPaginateBase } from 'react-select-async-paginate';
 import Creatable from 'react-select/creatable';
 import PropTypes from 'prop-types';
+import { truncate } from 'lodash';
 import { components } from 'react-select';
 import { compareOption } from 'utils';
 import styled, { withTheme } from 'styled-components';
@@ -30,14 +33,27 @@ export const StyledAutoCompleteInputFormControl = styled.div`
     padding: 0 !important;
 `;
 
+export const StyledMenuListHeader = styled.div`
+    background-color: #f3f5f9 !important;
+    border-bottom: 1px solid #f3f5f9;
+    color: #5b6987;
+    border-radius: 0 0 8px 8px;
+    font-size: 12px;
+    line-height: 12px;
+    cursor: default;
+`;
+
 function Autocomplete(props) {
     const [inputValue, setInputValue] = useState(typeof props.value !== 'object' || props.value === null ? props.value : props.value.label);
     const [menuIsOpen, setMenuIsOpen] = useState(false);
+    const [ontologySelectorIsOpen, setOntologySelectorIsOpen] = useState(false);
+    const [selectedOntologies, setSelectedOntologies] = useState([]);
 
     // Pagination params
     const pageSize = 10;
     const defaultAdditional = {
-        page: 1
+        page: 1,
+        pageOLS: undefined
     };
 
     /**
@@ -114,6 +130,119 @@ function Autocomplete(props) {
     };
 
     /**
+     * Lookup for an ontology
+     *
+     * @param {String} value Search input
+     * @param {Array} page Page number
+     * @return {Array} The list of ontologies
+     */
+    const OntologyLookup = async (value, page) => {
+        let responseJson;
+        const options = [];
+        if (value) {
+            try {
+                const queryParams = `&type=ontology&rows=${pageSize}&start=${(page - 1) * pageSize}`;
+                responseJson = await submitGetRequest(`${props.requestUrl}select?q=${encodeURIComponent(value.trim())}${queryParams}`);
+                if (responseJson.response.numFound > 0) {
+                    for (const item of responseJson.response.docs) {
+                        options.push({
+                            label: item.label,
+                            id: item.ontology_prefix,
+                            ontologyId: item.id,
+                            ...(item.iri ? { uri: item.iri } : {})
+                        });
+                    }
+                }
+            } catch (error) {
+                // No matching class
+                return [];
+            }
+        } else {
+            // List all ontologies
+            try {
+                responseJson = await submitGetRequest(`${props.requestUrl}ontologies?page=${page}&size=${pageSize}`);
+                if (responseJson._embedded.ontologies.length > 0) {
+                    for (const item of responseJson._embedded.ontologies) {
+                        options.push({
+                            label: item.config.title,
+                            id: item.config.preferredPrefix,
+                            ontologyId: item.ontologyId,
+                            ...(item.config.fileLocation ? { uri: item.config.fileLocation } : {})
+                        });
+                    }
+                }
+            } catch (error) {
+                // No matching class
+                return [];
+            }
+        }
+        return options;
+    };
+
+    /**
+     * Lookup for an ontology
+     *
+     * @param {String} value Search input
+     * @param {Array} page Page number
+     * @return {Array} The list of classes or properties
+     */
+    const GetExternalClasses = async (value, page) => {
+        // Add the parameters for pagination
+        const type = props.requestUrl === classesUrl ? 'class' : 'property';
+        let queryParams = `&type=${type}&rows=${pageSize}&start=${(page - 1) * pageSize}`;
+        if (selectedOntologies) {
+            queryParams = queryParams + '&ontology=' + selectedOntologies.map(o => o.ontologyId.replace(':', '')).join(',');
+        }
+        let responseJson;
+        const options = [];
+        if (value) {
+            try {
+                responseJson = await submitGetRequest(`${olsBaseUrl}select?q=${encodeURIComponent(value.trim())}${queryParams}`);
+                if (responseJson.response.numFound > 0) {
+                    for (const item of responseJson.response.docs) {
+                        options.push({
+                            external: true,
+                            label: item.label,
+                            id: item.ontology_prefix,
+                            ...(item.iri ? { uri: item.iri } : {}),
+                            ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {})
+                        });
+                    }
+                }
+            } catch (error) {
+                // No matching class
+                return [];
+            }
+        } else {
+            // list all external classes
+            try {
+                if (selectedOntologies && selectedOntologies.length > 0) {
+                    responseJson = await submitGetRequest(
+                        `${olsBaseUrl}ontologies/${selectedOntologies.map(s => s.ontologyId.replace(':', ''))[0]}/terms?page=${page}&size=${pageSize}`
+                    );
+                } else {
+                    responseJson = await submitGetRequest(`${olsBaseUrl}terms?page=${page}&size=${pageSize}`);
+                }
+                if (responseJson._embedded.terms.length > 0) {
+                    for (const item of responseJson._embedded.terms) {
+                        options.push({
+                            external: true,
+                            label: item.label,
+                            id: item.ontology_prefix,
+                            ...(item.iri ? { uri: item.iri } : {}),
+                            ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {})
+                        });
+                    }
+                }
+            } catch (error) {
+                // No matching class
+                return [];
+            }
+        }
+        return options;
+    };
+
+    /**
      * Add Additional data
      *
      * @param {String} value Search input
@@ -145,7 +274,7 @@ function Autocomplete(props) {
      * @return {Boolean} Object.hasMore To detect end of options list for current search
      * @return {Number} Object.Object.page Next page number
      */
-    const loadOptions = async (value, prevOptions, { page }) => {
+    const loadOptions = async (value, prevOptions, { page, pageOLS }) => {
         try {
             const defaultOpts = props.defaultOptions ?? true;
             if ((!value || value === '' || value.trim() === '') && (!defaultOpts || !props.autoLoadOption)) {
@@ -154,14 +283,24 @@ function Autocomplete(props) {
                     options: [],
                     hasMore: false,
                     additional: {
-                        page: 1
+                        page: 1,
+                        pageOLS: undefined
                     }
                 };
             }
 
-            let responseJson = await InternalORKGLookup(value, page);
+            let responseJson = [];
+            if (props.requestUrl === olsBaseUrl) {
+                responseJson = await OntologyLookup(value, page);
+            } else if (!pageOLS && selectedOntologies.length === 0) {
+                responseJson = await InternalORKGLookup(value, page);
+            } else if (props.ols) {
+                responseJson = await GetExternalClasses(value, pageOLS);
+            }
 
-            responseJson = await IdMatch(value.trim(), responseJson);
+            if (page === 1) {
+                responseJson = await IdMatch(value.trim(), responseJson);
+            }
 
             if (responseJson.length > pageSize) {
                 // in case the endpoint doesn't support pagination!
@@ -177,11 +316,13 @@ function Autocomplete(props) {
                     ...(item.uri ? { uri: item.uri } : {}),
                     ...(item.shared ? { shared: item.shared } : {}),
                     ...(item.classes ? { classes: item.classes } : {}),
-                    ...(item.description ? { description: item.description } : {})
+                    ...(item.description ? { description: item.description } : {}),
+                    ...(item.ontologyId ? { ontologyId: item.ontologyId } : {}), // for ontology lookup
+                    external: item.external ? true : false
                 })
             );
 
-            const hasMore = options.length < pageSize ? false : true;
+            let hasMore = options.length < pageSize ? false : true;
 
             options = AddAdditionalData(value, options, page);
 
@@ -190,21 +331,36 @@ function Autocomplete(props) {
                 options = await getExternalData(value, options, props.optionsClass);
             }
 
-            return {
-                options,
-                hasMore,
+            if (!hasMore && !pageOLS) {
+                hasMore = !props.ols ? hasMore : true;
+                return {
+                    options,
+                    hasMore,
 
-                additional: {
-                    page: page + 1
-                }
-            };
+                    additional: {
+                        page: page + 1,
+                        pageOLS: 1
+                    }
+                };
+            } else {
+                return {
+                    options,
+                    hasMore,
+
+                    additional: {
+                        page: page + 1,
+                        pageOLS: pageOLS === undefined ? undefined : pageOLS + 1
+                    }
+                };
+            }
         } catch (err) {
             console.error(err);
             return {
                 options: prevOptions,
                 hasMore: false,
                 additional: {
-                    page: 1
+                    page: 1,
+                    pageOLS: undefined
                 }
             };
         }
@@ -218,6 +374,48 @@ function Autocomplete(props) {
      */
     const noResults = value => {
         return value.inputValue !== '' ? 'No results found' : 'Start typing to find results';
+    };
+
+    /**
+     * Handle selecting external class
+     *
+     * @param {Object} selected Selected option
+     * @param {String} Object.action Change action, one of : "select-option","deselect-option", "remove-value", "pop-value", "set-value", "clear", "create-option"
+     */
+    const handleExternalSelect = async (selected, action) => {
+        if (
+            props.requestUrl === classesUrl &&
+            action.action === 'select-option' &&
+            ((!action.option && selected.external) || (action.option && action.option.external))
+        ) {
+            let foundIndex;
+            if (props.isMulti) {
+                foundIndex = selected.findIndex(x => x.id === action.option.id);
+            }
+            try {
+                const internalClass = await submitGetRequest(
+                    classesUrl + '?uri=' + encodeURIComponent(props.isMulti ? action.option.uri.trim() : selected.uri.trim())
+                );
+                if (props.isMulti) {
+                    selected[foundIndex] = internalClass;
+                } else {
+                    selected = internalClass;
+                }
+            } catch (error) {
+                const newClass = await createClass(
+                    props.isMulti ? action.option.label : selected.label,
+                    props.isMulti ? (action.option.uri ? action.option.uri : null) : selected.uri ? selected.uri : null
+                );
+                if (props.isMulti) {
+                    selected[foundIndex] = newClass;
+                } else {
+                    selected = newClass;
+                }
+            }
+            props.onChange(selected, action);
+        } else {
+            props.onChange(selected, action);
+        }
     };
 
     /**
@@ -311,6 +509,72 @@ function Autocomplete(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const Menu = useCallback(
+        ({ children, ...innerProps }) => {
+            return (
+                <components.Menu {...innerProps}>
+                    <div>{children}</div>
+                    {props.ols && (
+                        <StyledMenuListHeader className=" align-items-center p-1 d-flex clearfix">
+                            <div className=" flex-grow-1 justify-content-end">
+                                {inputValue && props.allowCreate && (
+                                    <Button
+                                        outline
+                                        color="info"
+                                        onClick={() => {
+                                            if (props.onNewItemSelected) {
+                                                props.onNewItemSelected(inputValue);
+                                            } else {
+                                                props.onChange(
+                                                    props.isMulti ? [...props.value, { label: inputValue, __isNew__: true }] : { label: inputValue },
+                                                    { action: 'create-option' }
+                                                );
+                                                setInputValue('');
+                                            }
+                                        }}
+                                        size="sm"
+                                    >
+                                        Create "{truncate(inputValue, { length: 15 })}"
+                                    </Button>
+                                )}
+                            </div>
+                            {props.requestUrl !== olsBaseUrl && (
+                                <>
+                                    <Button
+                                        outline
+                                        color="info"
+                                        className="justify-content-end"
+                                        onClick={() => setOntologySelectorIsOpen(v => !v)}
+                                        size="sm"
+                                    >
+                                        <Tippy
+                                            content={
+                                                selectedOntologies.length > 0
+                                                    ? `${selectedOntologies.length} ontologies selected`
+                                                    : 'Select an ontology'
+                                            }
+                                        >
+                                            <span>
+                                                <Icon
+                                                    color={selectedOntologies.length > 0 ? props.theme.primary : undefined}
+                                                    icon={faAtom}
+                                                    size="sm"
+                                                />{' '}
+                                                Ontologies
+                                            </span>
+                                        </Tippy>
+                                    </Button>
+                                </>
+                            )}
+                        </StyledMenuListHeader>
+                    )}
+                </components.Menu>
+            );
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [selectedOntologies.map(o => o.id).join(','), inputValue]
+    );
+
     const Option = useCallback(({ children, ...innerProps }) => {
         if (props.eventListener) {
             return (
@@ -332,8 +596,8 @@ function Autocomplete(props) {
         control: (provided, state) => ({
             ...provided,
             background: props.theme.inputBg,
-            boxShadow: state.isFocused ? 0 : 0,
-            border: 0,
+            boxShadow: state.isFocused ? '0 0 0 0.2rem rgba(232, 97, 97, 0.25)' : 0, // color are hardcoded to match bootstrap computed styling
+            borderColor: state.isFocused ? '#f8d0d0!important' : '#ced4da!important', // same here
             paddingLeft: 0,
             paddingRight: 0,
             cursor: 'text',
@@ -375,7 +639,8 @@ function Autocomplete(props) {
         option: provided => ({
             ...provided,
             cursor: 'pointer',
-            whiteSpace: 'normal'
+            whiteSpace: 'normal',
+            padding: 0
         }),
         input: provided => ({
             ...provided, // custom style to fix when the input field doesn't get the full width
@@ -396,15 +661,15 @@ function Autocomplete(props) {
     };
 
     // Creatable with adding new options : https://codesandbox.io/s/6pznz
-    const Select = props.allowCreate ? Creatable : undefined;
+    const Select = props.allowCreate && !props.ols ? Creatable : undefined;
 
     return (
         <ConditionalWrapper
             condition={props.copyValueButton}
             wrapper={children => (
-                <InputGroup size="sm">
+                <ConditionalWrapper condition={props.inputGroup} wrapper={children => <InputGroup size="sm">{children}</InputGroup>}>
                     {children}
-                    {props.value && props.value.id && (
+                    {props.copyValueButton && props.value && props.value.id && (
                         <InputGroupAddon addonType="append">
                             <Button disabled={!props.value || !props.value.label} onClick={handleCopyClick} outline>
                                 <Tippy content="Copy the label to clipboard">
@@ -424,11 +689,18 @@ function Autocomplete(props) {
                             )}
                         </InputGroupAddon>
                     )}
-                </InputGroup>
+                </ConditionalWrapper>
             )}
         >
-            <StyledAutoCompleteInputFormControl className={`form-control ${props.cssClasses ? props.cssClasses : 'default'}`}>
+            <OntologiesModal
+                selectedOntologies={selectedOntologies}
+                setSelectedOntologies={setSelectedOntologies}
+                toggle={() => setOntologySelectorIsOpen(v => !v)}
+                showDialog={ontologySelectorIsOpen}
+            />
+            <StyledAutoCompleteInputFormControl className={`form-control ${props.cssClasses ? props.cssClasses : 'default'} border-0`}>
                 <AsyncPaginateBase
+                    key={JSON.stringify(selectedOntologies.map(o => o.id))}
                     SelectComponent={Select}
                     value={props.value}
                     loadOptions={loadOptions}
@@ -437,7 +709,7 @@ function Autocomplete(props) {
                     onChange={
                         props.onChange
                             ? (select, action) => {
-                                  props.onChange(select, action);
+                                  handleExternalSelect(select, action);
                                   setInputValue('');
                               }
                             : handleChange
@@ -447,13 +719,19 @@ function Autocomplete(props) {
                     styles={customStyles}
                     placeholder={props.placeholder}
                     autoFocus={props.autoFocus}
-                    cacheOptions
+                    cacheOptions={false}
+                    cache={false}
                     defaultOptions={props.defaultOptions ?? true}
                     openMenuOnFocus={props.openMenuOnFocus}
                     onBlur={props.onBlur}
                     onKeyDown={props.onKeyDown}
                     selectRef={props.innerRef}
-                    components={{ Option: Option, Control: Control, DropdownIndicator: DropdownIndicator }}
+                    components={{
+                        Option: Option,
+                        Menu: Menu,
+                        Control: Control,
+                        DropdownIndicator: DropdownIndicator
+                    }}
                     menuIsOpen={menuIsOpen}
                     onMenuOpen={() => setMenuIsOpen(true)}
                     onMenuClose={() => setMenuIsOpen(false)}
@@ -462,6 +740,7 @@ function Autocomplete(props) {
                     isClearable={props.isClearable}
                     isDisabled={props.isDisabled}
                     isMulti={props.isMulti}
+                    inputId={props.inputId}
                     isValidNewOption={(inputValue, selectValue, selectOptions) => {
                         if (props.handleCreateExistingLabel) {
                             // to disable the create button
@@ -513,7 +792,10 @@ Autocomplete.propTypes = {
     linkButton: PropTypes.string,
     linkButtonTippy: PropTypes.string,
     isMulti: PropTypes.bool,
-    autoFocus: PropTypes.bool
+    autoFocus: PropTypes.bool,
+    ols: PropTypes.bool,
+    inputGroup: PropTypes.bool,
+    inputId: PropTypes.string
 };
 
 Autocomplete.defaultProps = {
@@ -525,6 +807,9 @@ Autocomplete.defaultProps = {
     copyValueButton: false,
     linkButton: null,
     isMulti: false,
-    autoFocus: true
+    autoFocus: true,
+    ols: false,
+    inputGroup: true,
+    inputId: null
 };
 export default withTheme(Autocomplete);

@@ -17,6 +17,7 @@ import { resetStatementBrowser } from '../actions/statementBrowser';
 import { openTour, closeTour, blockNavigation, loadPaperData } from '../actions/addPaper';
 import { Prompt } from 'react-router';
 import GizmoGraphViewModal from '../components/ViewPaper/GraphView/GizmoGraphViewModal';
+import env from '@beam-australia/react-env';
 
 const Help = styled.div`
     box-sizing: border-box;
@@ -245,7 +246,7 @@ class AddPaper extends Component {
                         this.toggleTour();
                     }}
                     id="helpIcon"
-                    woochat={process.env.REACT_APP_CHATWOOT_WEBSITE_TOKEN}
+                    woochat={env('CHATWOOT_WEBSITE_TOKEN')}
                 >
                     <HelpIcon icon={faQuestion} />
                 </Help>

@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row, Col, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { getStatementsByObject, getStatementsBySubject, getStatementsBySubjects } from 'services/backend/statements';
 import PaperCard from 'components/PaperCard/PaperCard';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faOrcid } from '@fortawesome/free-brands-svg-icons';
-import { faSpinner, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faExternalLinkAlt, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import { getPaperData } from 'utils';
 import { find } from 'lodash';
 import PropTypes from 'prop-types';
 import { PREDICATES } from 'constants/graphSettings';
+import { NavLink } from 'react-router-dom';
+import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
 
 const AuthorMetaInfo = styled.div`
     .key {
@@ -44,7 +47,8 @@ class AuthorPage extends Component {
             author: null,
             orcid: '',
             papers: [],
-            isLastPageReached: false
+            isLastPageReached: false,
+            menuOpen: false
         };
     }
 
@@ -144,8 +148,28 @@ class AuthorPage extends Component {
                 )}
                 {!this.state.loading && (
                     <div>
-                        <Container className="p-0">
-                            <h1 className="h4 mt-4 mb-4">Author: {this.state.author.label}</h1>
+                        <Container className="p-0 d-flex align-items-center">
+                            <h1 className="h4 mt-4 mb-4 flex-grow-1">Author: {this.state.author.label}</h1>
+
+                            <ButtonDropdown
+                                isOpen={this.state.menuOpen}
+                                toggle={() =>
+                                    this.setState(prevState => ({
+                                        menuOpen: !prevState.menuOpen
+                                    }))
+                                }
+                                nav
+                                inNavbar
+                            >
+                                <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                    <Icon icon={faEllipsisV} />
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.authorId })}>
+                                        View resource
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </ButtonDropdown>
                         </Container>
                         <Container className="p-0">
                             <Row>

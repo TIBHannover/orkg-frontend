@@ -1,8 +1,9 @@
 import { url } from 'constants/misc';
 import { submitGetRequest, submitPutRequest, submitPostRequest } from 'network';
+import env from '@beam-australia/react-env';
 
 export const userUrl = `${url}user/`;
-export const authenticationUrl = process.env.REACT_APP_SERVER_URL;
+export const authenticationUrl = env('SERVER_URL');
 
 export const getUserInformation = () => {
     return submitGetRequest(`${userUrl}`, {}, true);
@@ -35,10 +36,6 @@ export const updateUserPassword = ({ current_password, new_password, new_matchin
     return submitPutRequest(`${userUrl}password/`, headers, data);
 };
 
-export const updateUserRole = () => {
-    return submitPutRequest(`${userUrl}role/`);
-};
-
 export const signInWithEmailAndPassword = async (email, password) => {
     // because of the spring oauth implementation, these calls don't send json
     const headers = {
@@ -49,7 +46,7 @@ export const signInWithEmailAndPassword = async (email, password) => {
     const data = {
         username: email,
         grant_type: 'password',
-        client_id: `${process.env.REACT_APP_AUTHENTICATION_CLIENT_ID}`,
+        client_id: `${env('AUTHENTICATION_CLIENT_ID')}`,
         password
     };
 

@@ -157,7 +157,7 @@ class StatementOptionButton extends Component {
                 </Tippy>
             </Tippy>
         ) : (
-            <Tippy interactive={false} trigger="mouseenter" content={this.props.title}>
+            <Tippy hideOnClick={false} interactive={false} trigger="mouseenter" content={this.props.title}>
                 {tippyTarget}
             </Tippy>
         );

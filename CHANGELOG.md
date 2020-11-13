@@ -5,6 +5,48 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.22](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.21...V0.22) - 2020-11-10
+
+### Changes
+
+- enhancement: Research field and observatory pages [`#408`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/408)
+- feat: Comparisons related figures carousel in observatory page [`#417`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/417)
+- autocomplete: fix duplicate result when searching by ID [`#410`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/410)
+- fix: Use a unique key to render TemplateComponent [`#413`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/413)
+- fix: Check if the user is authenticated on the first load [`#414`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/414)
+- fix: Search page issue [`#418`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/418)
+- ux: improve autocomplete component [`#415`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/415)
+
+---
+## [0.21](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.20...V0.21) - 2020-10-28
+
+### Changes
+
+- feat: Support for existing ontologies using Ontology Lookup Service (EMBL-EBI) [`#363`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/363)
+- feat: Curating observatories [`#373`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/373)
+- fix: Keep tooltip open on click for disabled buttons [`#403`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/403)
+- fix: Missing parameter id for the resource page [`#404`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/404)
+- fix: Features link [`#409`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/409)
+- style: consolidate design across platform [`#406`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/406)
+- feat: links to resource page and vice versa [`#396`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/396)
+
+---
+## [0.20](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.19...V0.20) - 2020-10-21
+
+### Changes
+
+- fix: create env.js on build (run react-env on build) [`#401`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/401)
+- legal: new paragraph in terms of use [`#400`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/400)
+- feat: Disable edit button on resource page for published comparisons with DOI [`#397`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/397)
+- legal: Accept terms checkboxes during registration [`#398`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/398)
+- ux: Add template help modal [`#381`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/381)
+- Runtime env variables and Docker compose support [`#393`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/393)
+- legal: update terms of use [`#395`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/395)
+- refactor: introduce services folder for structuring network requests [`#385`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/385)
+- feat: Figures as links [`#384`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/384)
+- feat: add terms of use page [`#394`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/394)
+
+---
 ## [0.19](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.18.2...V0.19) - 2020-10-14
 
 ### Changes

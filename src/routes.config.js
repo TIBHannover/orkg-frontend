@@ -41,6 +41,8 @@ import FeaturedComparisons from 'pages/FeaturedComparisons';
 import PdfTextAnnotation from 'pages/PdfTextAnnotation';
 import PdfAnnotation from 'pages/PdfAnnotation';
 import ExportData from 'pages/ExportData';
+import Contribution from 'pages/Contribution';
+import CsvImport from 'pages/CsvImport';
 import requireAuthentication from 'requireAuthentication';
 import { reverse } from 'named-urls';
 
@@ -242,8 +244,16 @@ const routes = [
         component: requireAuthentication(PdfAnnotation)
     },
     {
+        path: ROUTES.CONTRIBUTION,
+        component: Contribution
+    },
+    {
         path: ROUTES.EXPORT_DATA,
         component: ExportData
+    },
+    {
+        path: ROUTES.CSV_IMPORT,
+        component: CsvImport
     },
     /* Don't add routes below this line */
     {

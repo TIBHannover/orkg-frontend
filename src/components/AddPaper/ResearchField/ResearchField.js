@@ -15,6 +15,7 @@ import Tooltip from '../../Utils/Tooltip';
 import flattenDeep from 'lodash/flattenDeep';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import { MISC } from 'constants/graphSettings';
+import env from '@beam-australia/react-env';
 
 const ListGroupItemTransition = styled(CSSTransition)`
     &.fadeIn-enter,
@@ -58,7 +59,7 @@ class ResearchField extends Component {
         // check if a cookie of take a tour exist
         if (this.props.cookies && this.props.cookies.get('taketour') === 'take' && !this.props.cookies.get('showedReaseachFiled')) {
             this.props.openTour();
-            this.props.cookies.set('showedReaseachFiled', true, { path: process.env.PUBLIC_URL, maxAge: 604800 });
+            this.props.cookies.set('showedReaseachFiled', true, { path: env('PUBLIC_URL'), maxAge: 604800 });
         }
     }
 

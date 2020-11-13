@@ -1,11 +1,16 @@
-import React from 'react';
-import { Button, ButtonGroup } from 'reactstrap';
+import React, { useState } from 'react';
+import { Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faProjectDiagram, faPen, faTimes, faFile } from '@fortawesome/free-solid-svg-icons';
+import { faProjectDiagram, faPen, faTimes, faFile, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
+import ROUTES from 'constants/routes.js';
+import { reverse } from 'named-urls';
 
 function PaperMenuBar(props) {
+    const [menuOpen, setMenuOpen] = useState(false);
+
     return (
         <>
             <ButtonGroup className="flex-shrink-0">
@@ -40,6 +45,16 @@ function PaperMenuBar(props) {
                         <Icon icon={faTimes} /> Stop editing
                     </Button>
                 )}
+                <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
+                    <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                        <Icon icon={faEllipsisV} />
+                    </DropdownToggle>
+                    <DropdownMenu right>
+                        <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: props.id })}>
+                            View resource
+                        </DropdownItem>
+                    </DropdownMenu>
+                </ButtonDropdown>
             </ButtonGroup>
         </>
     );
@@ -48,6 +63,7 @@ function PaperMenuBar(props) {
 PaperMenuBar.propTypes = {
     editMode: PropTypes.bool.isRequired,
     paperLink: PropTypes.string,
+    id: PropTypes.string,
     toggle: PropTypes.func.isRequired
 };
 
