@@ -108,13 +108,11 @@ class ComparisonCard extends Component {
                     await getStatementsBySubject({ id: resource.id }).then(statements => {
                         const imageStatement = statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
                         const urlStatement = statements.find(statement => statement.predicate.id === PREDICATES.URL);
-                        const descriptionStatement = statements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
 
                         relatedResources.push({
                             url: urlStatement ? urlStatement.object.label : '',
                             image: imageStatement ? imageStatement.object.label : '',
-                            title: resource.label,
-                            description: descriptionStatement ? descriptionStatement.object.label : '',
+                            alt: resource.label,
                             id: statements[0].subject.id
                         });
                     });
