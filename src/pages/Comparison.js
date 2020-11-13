@@ -73,6 +73,8 @@ function Comparison(props) {
         loadProvenanceInfos
     ] = useComparison({});
 
+    /** adding some additional state for meta data **/
+
     const [cookies, setCookie] = useCookies();
     const history = useHistory();
 
@@ -92,6 +94,8 @@ function Comparison(props) {
     const [showComparisonVersions, setShowComparisonVersions] = useState(false);
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
     const [showVisualizationModal, setShowVisualizationModal] = useState(false);
+    const [reconstructionData, setReconstructionData] = useState(false);
+    const [reloadingFlag, setReloadingFlag] = useState(false);
     /**
      * Is case of an error the user can go to the previous link in history
      */
@@ -99,6 +103,10 @@ function Comparison(props) {
         history.goBack();
     };
 
+    const closeOnExport = () => {
+        setShowVisualizationModal(false);
+        setReloadingFlag(!reloadingFlag);
+    };
     const onDismissShiftMouseWheelScroll = () => {
         // dismiss function for the alert thingy!;
         setCookie('seenShiftMouseWheelScroll', true, { path: process.env.PUBLIC_URL, maxAge: 315360000 }); // << TEN YEARS
@@ -126,6 +134,12 @@ function Comparison(props) {
         setDropdownMethodOpen(false);
     };
 
+    const propagateTheClick = (visIndex, dataForReconstruction) => {
+        console.log('This has propagated the click to the page', visIndex);
+        setReconstructionData({ dataForReconstruction });
+        setShowVisualizationModal(true);
+    };
+
     return (
         <div>
             <ContainerAnimated className="d-flex align-items-center">
@@ -149,6 +163,7 @@ function Comparison(props) {
                                 color="darkblue"
                                 size="sm"
                                 onClick={() => {
+                                    setReconstructionData(false);
                                     setShowVisualizationModal(!showVisualizationModal);
                                 }}
                                 style={{ marginRight: 3 }}
@@ -323,7 +338,9 @@ function Comparison(props) {
                             </ButtonGroup>
                         </div>
                     )}
-                    {!isFailedLoadingMetaData && <ComparisonMetaData authors={authors} metaData={metaData} />}
+                    {!isFailedLoadingMetaData && (
+                        <ComparisonMetaData authors={authors} metaData={metaData} propagateClick={propagateTheClick} reloadingFlag={reloadingFlag} />
+                    )}
                     {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && (
                         <>
                             {contributionsList.length > 3 && (
@@ -473,6 +490,8 @@ function Comparison(props) {
                         contributionsList,
                         predicatesList
                     }}
+                    closeOnExport={closeOnExport}
+                    reconstructionData={reconstructionData}
                 />
             )}
         </div>

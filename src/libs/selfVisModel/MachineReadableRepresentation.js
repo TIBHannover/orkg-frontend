@@ -85,8 +85,6 @@ export default class MachineReadableRepresentation {
         // linear storing the items;
         // got through the propertyAnchors;
         model.propertyAnchors.forEach((property, rowIndex) => {
-            console.log(rowIndex, property.propertyAnchor.id);
-            // get it from the input data;
             const thatData = this.inputDataAsJsonObject.data[property.propertyAnchor.id];
             if (thatData) {
                 thatData.forEach((cell, colIndex) => {
@@ -115,7 +113,6 @@ export default class MachineReadableRepresentation {
         // go through the input data and create the anchors for the contributions (add AnchorId)
         model.propertyAnchors = [];
         this.inputDataAsJsonObject.properties.forEach((property, index) => {
-            console.log(property);
             // create a cell as contributionAnchor;
             const aCell = new Cell();
             aCell.setFlagByName('property');

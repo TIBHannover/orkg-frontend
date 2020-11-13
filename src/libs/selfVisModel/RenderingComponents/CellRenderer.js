@@ -3,9 +3,6 @@ import * as PropTypes from 'prop-types';
 import SelfVisDataMode from '../SelfVisDataModel';
 import styled from 'styled-components';
 import Tippy from '@tippy.js/react';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faClipboard } from '@fortawesome/free-solid-svg-icons';
-import { Button } from 'reactstrap';
 
 /** Cell renderer has three flags obtained from props
  * >> 1) isColHeader, 2) isRowHeader, 3) isCellValue
@@ -47,7 +44,10 @@ export default class CellRenderer extends Component {
                         <ValueCell>{this.props.data.label}</ValueCell>
                     </Tippy>
                 )}
-                {this.props.type === 'metaNode' && <MetaCell>Narf</MetaCell>}
+                {this.props.type === 'metaNode' && <MetaCell> - </MetaCell>}
+                {this.props.type === 'metaNodeHeader' && <MetaMapperSelector> - </MetaMapperSelector>}
+                {this.props.type === 'metaNodeSelector' && <MetaMapperSelector>{this.props.children}</MetaMapperSelector>}
+                {this.props.type === 'metaNodeSelectorSimple' && <MetaMapperSelectorSimple>{this.props.children}</MetaMapperSelectorSimple>}
             </>
         );
     }
@@ -55,7 +55,8 @@ export default class CellRenderer extends Component {
 
 CellRenderer.propTypes = {
     type: PropTypes.string.isRequired,
-    data: PropTypes.object
+    data: PropTypes.object,
+    children: PropTypes.any
 };
 
 /** adding styled divs for different cell items **/
@@ -63,11 +64,13 @@ export const PropertyCell = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     display: ruby;
-
-    background: #ccc;
-    color: red;
+    color: white;
+    background: #80869b;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     width: 100px;
     height: 30px;
+    padding: 0 2px;
     margin: 0 2px;
 `;
 
@@ -87,9 +90,10 @@ export const ContributionCell = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     display: ruby;
-
-    background: #0f0;
-    color: red;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    background: #e86161;
+    color: white;
     width: 100px;
     height: 30px;
     margin: 2px 2px;
@@ -100,6 +104,23 @@ export const MetaCell = styled.div`
     text-overflow: ellipsis;
     display: ruby;
 
+    background: black;
+    color: white;
+    width: 100px;
+    height: 30px;
+    margin: 2px 2px;
+`;
+
+export const MetaMapperSelector = styled.div`
+    overflow: visible;
+    background: black;
+    color: white;
+    width: 100px;
+    height: 60px;
+    margin: 2px 2px;
+`;
+export const MetaMapperSelectorSimple = styled.div`
+    overflow: visible;
     background: black;
     color: white;
     width: 100px;

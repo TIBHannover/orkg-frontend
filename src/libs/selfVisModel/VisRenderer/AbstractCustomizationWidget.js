@@ -1,0 +1,66 @@
+import React, { Component } from 'react';
+import * as PropTypes from 'prop-types';
+import SelfVisDataMode from '../SelfVisDataModel';
+import CustomizationColumnChart from './ChartRenderers/CustomizationColumnChart';
+import CustomizationBarChart from './ChartRenderers/CustomizationBarChart';
+import CustomizationScatterChart from './ChartRenderers/CustomizationScatterChart';
+import CustomizationLineChart from './ChartRenderers/CustomizationScatterChart';
+
+export default class AbstractCustomizationWidget extends Component {
+    constructor(props) {
+        super(props);
+        this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
+        this.state = { updateFlipFlop: false, requiresUpdate: false };
+    }
+
+    componentDidMount() {}
+
+    componentDidUpdate = prevProps => {};
+
+    createCustomizationWidget = () => {
+        // get the rendering method
+        const renderingMethod = this.selfVisModel.getRenderingMethod();
+        if (!renderingMethod) {
+            this.selfVisModel.setRenderingMethod('Table');
+        }
+
+        switch (renderingMethod) {
+            case 'Table': {
+                return <div> Tables dont have customizations {renderingMethod}</div>;
+            }
+            case 'ColumnChart': {
+                return <CustomizationColumnChart propagateUpdates={this.props.propagateUpdates} />;
+            }
+            case 'BarChart': {
+                return <CustomizationBarChart propagateUpdates={this.props.propagateUpdates} />;
+            }
+            case 'ScatterChart': {
+                return <CustomizationScatterChart propagateUpdates={this.props.propagateUpdates} />;
+            }
+            case 'LineChart': {
+                return <CustomizationLineChart propagateUpdates={this.props.propagateUpdates} />;
+            }
+            default: {
+                return <div>ERROR</div>;
+            }
+        }
+    };
+
+    applySelectorMethod = () => {
+        this.setState({ updateFlipFlop: !this.state.updateFlipFlop });
+        // try to read the customizationWidget;
+    };
+    /** component rendering entrance point **/
+    render() {
+        return (
+            <div>
+                Hello I am abstract customization widget
+                {this.createCustomizationWidget()}
+            </div>
+        );
+    }
+}
+
+AbstractCustomizationWidget.propTypes = {
+    propagateUpdates: PropTypes.func.isRequired
+};

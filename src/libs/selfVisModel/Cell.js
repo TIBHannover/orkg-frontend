@@ -34,6 +34,7 @@ export default class Cell {
 
         // some additional vars;
         this.label = 'EMPTY';
+        this.originalLabel = 'EMPTY';
         this.positionContribAnchor = -1;
         this.positionPropertyAnchor = -1;
 
@@ -41,7 +42,40 @@ export default class Cell {
         // but it can happen that we have multiple values in one cell
         // this flag allows us to check for that
         this.multiDimensionalCell = false;
+
+        this.propertyMapperType = undefined;
+        this.isSelectedColumnForUse = false;
+        this.isSelectedRowForUse = false;
+        this.itemIsSelectedForUse = false;
     }
+
+    setPropertyMapperType = name => {
+        this.propertyMapperType = name;
+    };
+    getPropertyMapperType = () => {
+        return this.propertyMapperType;
+    };
+
+    isSelectedColumn = () => {
+        return this.isSelectedColumnForUse;
+    };
+    setSelectedColumn = value => {
+        this.isSelectedColumnForUse = value;
+    };
+
+    isSelectedRow = () => {
+        return this.isSelectedRowForUse;
+    };
+    setSelectedRow = value => {
+        this.isSelectedRowForUse = value;
+    };
+
+    isItemSelected = () => {
+        return this.itemIsSelectedForUse;
+    };
+    setItemSelected = value => {
+        this.itemIsSelectedForUse = value;
+    };
 
     setFlagByName = name => {
         if (name === 'property') {
@@ -53,6 +87,9 @@ export default class Cell {
         if (name === 'value') {
             this.valueAnchorFlag = true;
         }
+    };
+    setLabel = value => {
+        this.label = value;
     };
 
     initializeCellFromData = (data, index) => {
@@ -66,11 +103,13 @@ export default class Cell {
             this.contributionAnchor = data;
             this.positionContribAnchor = index;
             this.label = data.contributionLabel + '(' + data.paperId + ')'; // << for now to keep string short
+            this.originalLabel = data.contributionLabel + '(' + data.paperId + ')'; // << for now to keep string short
         }
         if (this.propertyAnchorFlag === true) {
             this.propertyAnchor = data;
             this.positionPropertyAnchor = index;
             this.label = data.label;
+            this.originalLabel = data.label;
         }
     };
 
@@ -84,6 +123,7 @@ export default class Cell {
             this.positionContribAnchor = colIndex;
             if (!this.multiDimensionalCell) {
                 this.label = data[0].label;
+                this.originalLabel = data[0].label;
                 this.pathAnchor = data[0].path;
             } else {
                 this.label = 'MULTI DIMENSIONAL CELLS ARE NOT SUPPORTED';

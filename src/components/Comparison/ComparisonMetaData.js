@@ -8,12 +8,14 @@ import { Link } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import PreviewComponent from 'libs/selfVisModel/ComparisonComponents/PreviewComponent';
 
 function ComparisonMetaData(props) {
     return (
         <div>
             {props.metaData.title ? (
                 <>
+                    <PreviewComponent comparisonId={props.metaData.id} propagateClick={props.propagateClick} reloadingFlag={props.reloadingFlag} />
                     {props.metaData.description && (
                         <div style={{ lineHeight: 1.5 }} className="h6 mb-2">
                             {props.metaData.description}
@@ -85,7 +87,9 @@ function ComparisonMetaData(props) {
 
 ComparisonMetaData.propTypes = {
     metaData: PropTypes.object,
-    authors: PropTypes.array
+    authors: PropTypes.array,
+    reloadingFlag: PropTypes.bool,
+    propagateClick: PropTypes.func
 };
 
 export default ComparisonMetaData;
