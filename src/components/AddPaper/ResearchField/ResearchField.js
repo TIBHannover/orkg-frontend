@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Button, Card, ListGroup, ListGroupItem, CardDeck } from 'reactstrap';
-import { getStatementsBySubject } from 'services/backend/statements';
+import { getStatementsBySubjectAndPredicate, getParentResearchFields } from 'services/backend/statements';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
+import { resourcesUrl } from 'services/backend/resources';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { updateResearchField, nextStep, previousStep, openTour, closeTour } from 'actions/addPaper';
@@ -11,7 +14,7 @@ import styled, { withTheme } from 'styled-components';
 import { withCookies, Cookies } from 'react-cookie';
 import PropTypes from 'prop-types';
 import Tour from 'reactour';
-import Tooltip from '../../Utils/Tooltip';
+import Tooltip from 'components/Utils/Tooltip';
 import flattenDeep from 'lodash/flattenDeep';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import { MISC } from 'constants/graphSettings';
@@ -94,7 +97,10 @@ class ResearchField extends Component {
     };
 
     getFields(fieldId, level) {
-        getStatementsBySubject({ id: fieldId }).then(res => {
+        return getStatementsBySubjectAndPredicate({
+            subjectId: fieldId,
+            predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD
+        }).then(res => {
             let researchFields = [];
 
             res.forEach(elm => {
@@ -138,8 +144,25 @@ class ResearchField extends Component {
         if (this.props.isTourOpen) {
             this.requestCloseTour();
         }
-        this.getFields(fieldId, currentLevel + 1);
+        return this.getFields(fieldId, currentLevel + 1);
     }
+
+    handleFieldSelect = selected => {
+        getParentResearchFields(selected.id).then(parents => {
+            parents = parents.reverse();
+            if (parents.length >= 2) {
+                this.handleFieldClick(parents[1].id, 0).then(() => {
+                    if (parents.length >= 3) {
+                        this.handleFieldClick(parents[2].id, 1).then(() => {
+                            if (parents.length >= 4) {
+                                this.handleFieldClick(parents[3].id, 2);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    };
 
     requestCloseTour = () => {
         this.enableBody();
@@ -161,7 +184,7 @@ class ResearchField extends Component {
 
         return (
             <div>
-                <h2 className="h4 mt-4 mb-5">
+                <h2 className="h4 mt-4 mb-4">
                     <Tooltip
                         message={
                             <span>
@@ -175,6 +198,17 @@ class ResearchField extends Component {
                         Select the research field
                     </Tooltip>
                 </h2>
+                <div className="mb-4">
+                    <Autocomplete
+                        requestUrl={resourcesUrl}
+                        optionsClass={CLASSES.RESEARCH_FIELD}
+                        placeholder="Search for fields"
+                        onItemSelected={this.handleFieldSelect}
+                        value={this.state.researchField}
+                        allowCreate={false}
+                        autoLoadOption={true}
+                    />
+                </div>
                 <CardDeck>
                     {this.props.researchFields.length > 0 &&
                         this.props.researchFields.map((fields, level) => {
