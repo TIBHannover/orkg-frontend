@@ -11,7 +11,12 @@ const ObservatoryCardStyled = styled.div`
     .observatoryStats {
         text-align: left;
         font-size: smaller;
-        color: #4f4f4f;
+    }
+
+    .orgLogo {
+        margin-top: 10px;
+        border: 1px;
+        padding: 2px;
     }
 
     .observatoryName {
@@ -34,8 +39,7 @@ function ObservatoryCard(props) {
                             {props.observatory.organization_ids.map(o => (
                                 <span key={o.id} style={{ marginLeft: '10px' }}>
                                     <img
-                                        className="justify-content-center"
-                                        style={{ marginTop: '10px', border: '1px', padding: '2px' }}
+                                        className="justify-content-center orgLogo"
                                         key={`imageLogo${o.id}`}
                                         height="45px"
                                         src={o.logo}
@@ -46,7 +50,7 @@ function ObservatoryCard(props) {
                             <div className="mt-2">
                                 <div className="observatoryName">{props.observatory.name}</div>
 
-                                <div className="observatoryStats">
+                                <div className="observatoryStats text-muted">
                                     Papers: <b>{props.observatory.numPapers}</b> <br />
                                     Comparisons: <b>{props.observatory.numComparisons}</b>
                                 </div>
