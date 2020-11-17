@@ -131,6 +131,7 @@
         "enzyme-to-json": "^3.4.0",
         "eslint": "^6.8.0",
         "eslint-config-prettier": "^6.4.0",
+        "eslint-plugin-jsx-a11y": "^6.4.1",
         "eslint-plugin-prettier": "^3.1.1",
         "husky": "^3.0.7",
         "jest-canvas-mock": "^2.1.1",
@@ -175,10 +176,12 @@
     "eslintConfig": {
         "extends": [
             "react-app",
-            "prettier"
+            "prettier",
+            "plugin:jsx-a11y/recommended"
         ],
         "plugins": [
-            "prettier"
+            "prettier",
+            "jsx-a11y"
         ],
         "rules": {
             "prettier/prettier": [
@@ -228,6 +231,18 @@
             ],
             "react/jsx-curly-brace-presence": [
                 "error"
+            ],
+            "jsx-a11y/no-autofocus": [
+                "warn"
+            ],
+            "jsx-a11y/click-events-have-key-events": [
+                "warn"
+            ],
+            "jsx-a11y/no-static-element-interactions": [
+                "warn"
+            ],
+            "jsx-a11y/no-noninteractive-element-interactions": [
+                "warn"
             ]
         }
     }
