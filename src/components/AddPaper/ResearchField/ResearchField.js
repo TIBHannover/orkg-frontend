@@ -72,10 +72,15 @@ function ResearchField() {
 
     const handleFieldSelect = selected => {
         setIsLoading(true);
+        // current researchFields
         getParentResearchFields(selected.id).then(parents => {
             parents = parents.reverse();
-            Promise.all(
-                parents.map((parent, i) =>
+            Promise.all([
+                researchFields[0].map(elm => ({
+                    ...elm,
+                    active: elm.id === parents[1]?.id ? true : false
+                })),
+                ...parents.slice(1).map((parent, i) =>
                     getStatementsBySubjectAndPredicate({
                         subjectId: parent.id,
                         predicateId: PREDICATES.HAS_SUB_RESEARCH_FIELD
@@ -84,7 +89,7 @@ function ResearchField() {
                             .map(elm => ({
                                 label: elm.object.label,
                                 id: elm.object.id,
-                                active: elm.object.id === parents[i + 1]?.id ? true : false
+                                active: elm.object.id === parents[i + 2]?.id ? true : false
                             }))
                             .sort((a, b) => {
                                 // sort research fields alphabetically
@@ -92,7 +97,7 @@ function ResearchField() {
                             })
                     )
                 )
-            ).then(data => {
+            ]).then(data => {
                 dispatch(
                     updateResearchField({
                         researchFields: data,
@@ -232,7 +237,5 @@ function ResearchField() {
         </div>
     );
 }
-
-ResearchField.propTypes = {};
 
 export default ResearchField;
