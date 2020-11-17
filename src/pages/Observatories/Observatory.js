@@ -445,7 +445,9 @@ class Observatory extends Component {
                                     {this.state.comparisonsList.length > 0 ? (
                                         <div>
                                             {this.state.comparisonsList.map(comparison => {
-                                                return <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} />;
+                                                return (
+                                                    <ComparisonCard comparison={{ ...comparison }} key={`pc${comparison.id}`} loadResources={true} />
+                                                );
                                             })}
                                         </div>
                                     ) : (

@@ -8,9 +8,8 @@ import { faCalendar, faFile } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { getStatementsBySubjects } from 'services/backend/statements';
+import { getStatementsBySubjects, getStatementsBySubject } from 'services/backend/statements';
 import { PREDICATES } from 'constants/graphSettings';
-import { getStatementsBySubject } from 'services/backend/statements';
 
 const PaperCardStyled = styled.div`
     & .options {
@@ -25,13 +24,13 @@ const PaperCardStyled = styled.div`
     &.selected .options {
         display: block;
     }
-    cursor: pointer;
+
     &:last-child {
         border-bottom-right-radius: ${props => (props.rounded === 'true' ? '0 !important' : '')};
     }
 `;
 
-const SlideItem = styled.div`
+const ResourceItem = styled.div`
     overflow: hidden;
     border: 1px solid #d8d8d8;
     border-radius: 5px;
@@ -39,19 +38,19 @@ const SlideItem = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 5px;
+    margin-left: 4px;
 `;
 
-const SlideImg = styled.img`
+const Img = styled.img`
     height: 50px;
     max-width: 100%;
     object-fit: contain;
 `;
 
-const Content = styled.div`
+const RelatedResourceWrapper = styled.div`
     overflow: hidden;
     display: flex;
-    margin-top: 20px;
+    margin-top: 0px;
 `;
 
 class ComparisonCard extends Component {
@@ -66,14 +65,14 @@ class ComparisonCard extends Component {
     }
 
     componentDidMount() {
-        this.loadFigures();
-        this.loadResources();
+        if (this.props.loadResources) {
+            this.loadFigures();
+            this.loadResources();
+        }
     }
 
     loadFigures = () => {
         if (this.props.comparison.figures && this.props.comparison.figures.length > 0) {
-            console.log(this.props.comparison.figures);
-
             getStatementsBySubjects({
                 ids: this.props.comparison.figures.map(resource => resource.id)
             })
@@ -131,7 +130,10 @@ class ComparisonCard extends Component {
         return (
             <PaperCardStyled
                 {...(((this.state.relatedFigures && this.state.relatedFigures.length > 0) ||
-                    (this.state.relatedResources && this.state.relatedResources.length > 0)) && { onClick: this.handleChange })}
+                    (this.state.relatedResources && this.state.relatedResources.length > 0)) && {
+                    onClick: this.handleChange,
+                    ...{ style: { cursor: 'pointer' } }
+                })}
                 rounded={this.props.rounded}
                 className="list-group-item list-group-item-action "
             >
@@ -160,50 +162,56 @@ class ComparisonCard extends Component {
                     <Col md={3} style={{ marginTop: '8px' }}>
                         {!this.state.openBox &&
                             this.state.relatedFigures.slice(0, 2).map(url => (
-                                <SlideItem key={url.figureId} style={{ float: 'right', padding: '3px' }}>
-                                    <div className="logoContainer">
-                                        <SlideImg src={url.src} alt={url.alt} />
+                                <ResourceItem key={url.figureId} style={{ float: 'right', padding: '3px' }}>
+                                    <div>
+                                        <Img src={url.src} alt={url.alt} />
                                     </div>
-                                </SlideItem>
+                                </ResourceItem>
                             ))}
                     </Col>
                 </Row>
                 <Collapse isOpen={this.state.openBox}>
                     <hr />
-                    <Content>
+                    <RelatedResourceWrapper>
                         {this.state.relatedFigures.length > 0 && (
                             <>
-                                <small style={{ color: '#e86161' }}>Figures</small>
-                                <Content style={{ marginLeft: '-45px' }}>
-                                    {this.state.relatedFigures.map(url => (
-                                        <SlideItem key={url.figureId}>
-                                            <Link to={reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparison.id }) + '#' + url.figureId}>
-                                                <div className="logoContainer" style={{ padding: '5px' }}>
-                                                    <SlideImg src={url.src} alt={url.alt} style={{ height: '80px' }} />
-                                                </div>
-                                            </Link>
-                                        </SlideItem>
-                                    ))}
-                                </Content>
+                                <p style={{ display: 'block', color: '#e86161' }}>
+                                    Figures
+                                    <div style={{ display: 'flex' }}>
+                                        {this.state.relatedFigures.map(url => (
+                                            <ResourceItem key={url.figureId}>
+                                                <Link
+                                                    to={reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparison.id }) + '#' + url.figureId}
+                                                >
+                                                    <div style={{ padding: '5px' }}>
+                                                        <Img src={url.src} alt={url.alt} style={{ height: '80px' }} />
+                                                    </div>
+                                                </Link>
+                                            </ResourceItem>
+                                        ))}
+                                    </div>
+                                </p>
                             </>
                         )}
                         {this.state.relatedResources.length > 0 && (
                             <>
-                                <small style={{ color: '#e86161', marginLeft: '12px' }}>Resources</small>
-                                <Content style={{ marginLeft: '-70px' }}>
-                                    {this.state.relatedResources.map(resource => (
-                                        <SlideItem key={resource.id}>
-                                            <Link to={reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparison.id }) + '#' + resource.id}>
-                                                <div className="logoContainer" style={{ padding: '5px' }}>
-                                                    <SlideImg src={resource.image} alt={resource.alt} style={{ height: '80px' }} />
-                                                </div>
-                                            </Link>
-                                        </SlideItem>
-                                    ))}
-                                </Content>
+                                <p style={{ display: 'block', color: '#e86161' }}>
+                                    Resources
+                                    <div style={{ display: 'flex' }}>
+                                        {this.state.relatedResources.map(resource => (
+                                            <ResourceItem key={resource.id}>
+                                                <Link to={reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparison.id }) + '#' + resource.id}>
+                                                    <div style={{ padding: '5px' }}>
+                                                        <Img src={resource.image} alt={resource.alt} style={{ height: '80px' }} />
+                                                    </div>
+                                                </Link>
+                                            </ResourceItem>
+                                        ))}
+                                    </div>
+                                </p>
                             </>
                         )}
-                    </Content>
+                    </RelatedResourceWrapper>
                 </Collapse>
             </PaperCardStyled>
         );
@@ -222,7 +230,8 @@ ComparisonCard.propTypes = {
         resources: PropTypes.array,
         figures: PropTypes.array
     }).isRequired,
-    rounded: PropTypes.string
+    rounded: PropTypes.string,
+    loadResources: PropTypes.bool
 };
 
 export default ComparisonCard;
