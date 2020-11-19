@@ -692,6 +692,19 @@ function getOrder(paperStatements) {
     return order;
 }
 
+export function loadFiguresResources(figuresStatements) {
+    const _figures = figuresStatements.map(figureStatements => {
+        const imageStatement = figureStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
+        const alt = figureStatements.statements.length ? figureStatements.statements[0]?.subject?.label : null;
+        return {
+            src: imageStatement ? imageStatement.object.label : '',
+            figureId: figureStatements.id,
+            alt
+        };
+    });
+    return _figures;
+}
+
 /**
  * Truncating middle portion of a string
  *
