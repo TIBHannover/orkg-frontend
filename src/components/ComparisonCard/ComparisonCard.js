@@ -8,7 +8,7 @@ import { faCalendar, faFile } from '@fortawesome/free-solid-svg-icons';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { getStatementsBySubjects, getStatementsBySubject } from 'services/backend/statements';
+import { getStatementsBySubjects } from 'services/backend/statements';
 import { PREDICATES } from 'constants/graphSettings';
 import { loadFiguresResources } from 'utils';
 
