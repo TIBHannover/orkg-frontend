@@ -4,9 +4,8 @@ import { getStatementsBySubjects } from 'services/backend/statements';
 import { Card, CardImg, CardColumns } from 'reactstrap';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
-import { find } from 'lodash';
 import styled from 'styled-components';
-import { PREDICATES } from 'constants/graphSettings';
+import { loadFiguresResources } from 'utils';
 
 const CardStyled = styled(Card)`
     cursor: pointer;
@@ -45,18 +44,8 @@ const RelatedFigures = props => {
                 ids: props.figureStatements.map(resource => resource.id)
             })
                 .then(figuresStatements => {
-                    const _figures = figuresStatements.map(figureStatements => {
-                        const figureTitle = find(props.figureStatements, { id: figureStatements.id });
-                        const imageStatement = figureStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
-                        const descriptionStatement = figureStatements.statements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
-                        return {
-                            src: imageStatement ? imageStatement.object.label : '',
-                            title: figureTitle.label,
-                            description: descriptionStatement ? descriptionStatement.object.label : '',
-                            id: figureStatements.id
-                        };
-                    });
-                    setFigures(_figures);
+                    const response = loadFiguresResources(figuresStatements);
+                    setFigures(response);
                 })
                 .catch(err => {
                     console.log(err);

@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { getStatementsBySubjects, getStatementsBySubject } from 'services/backend/statements';
 import { PREDICATES } from 'constants/graphSettings';
+import { loadFiguresResources } from 'utils';
 
 const PaperCardStyled = styled.div`
     & .options {
@@ -77,16 +78,8 @@ class ComparisonCard extends Component {
                 ids: this.props.comparison.figures.map(resource => resource.id)
             })
                 .then(figuresStatements => {
-                    const _figures = figuresStatements.map(figureStatements => {
-                        const imageStatement = figureStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
-                        const alt = figureStatements.statements.length ? figureStatements.statements[0]?.subject?.label : null;
-                        return {
-                            src: imageStatement ? imageStatement.object.label : '',
-                            figureId: figureStatements.id,
-                            alt
-                        };
-                    });
-                    this.setState({ relatedFigures: _figures });
+                    const response = loadFiguresResources(figuresStatements);
+                    this.setState({ relatedFigures: response });
                 })
                 .catch(err => {
                     console.log(err);
@@ -96,29 +89,19 @@ class ComparisonCard extends Component {
 
     loadResources = async () => {
         if (this.props.comparison.resources && this.props.comparison.resources.length > 0) {
-            const relatedResources = [];
-
-            for (const resource of this.props.comparison.resources) {
-                if (resource._class === 'literal') {
-                    relatedResources.push({
-                        url: resource.label
-                    });
-                } else {
-                    await getStatementsBySubject({ id: resource.id }).then(statements => {
-                        const imageStatement = statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
-                        const urlStatement = statements.find(statement => statement.predicate.id === PREDICATES.URL);
-
-                        relatedResources.push({
-                            url: urlStatement ? urlStatement.object.label : '',
-                            image: imageStatement ? imageStatement.object.label : '',
-                            alt: resource.label,
-                            id: statements[0].subject.id
-                        });
-                    });
-                }
-            }
-
-            this.setState({ relatedResources: relatedResources });
+            await getStatementsBySubjects({ ids: this.props.comparison.resources.map(resource => resource.id) }).then(resourcesStatements => {
+                const resources = resourcesStatements.map(resourceStatements => {
+                    const imageStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
+                    const urlStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.URL);
+                    return {
+                        url: urlStatement ? urlStatement.object.label : '',
+                        image: imageStatement ? imageStatement.object.label : '',
+                        id: resourceStatements.id,
+                        alt: resourceStatements.statements[0]?.subject?.label
+                    };
+                });
+                this.setState({ relatedResources: resources });
+            });
         }
     };
 
@@ -174,42 +157,36 @@ class ComparisonCard extends Component {
                     <hr />
                     <RelatedResourceWrapper>
                         {this.state.relatedFigures.length > 0 && (
-                            <>
-                                <p style={{ display: 'block', color: '#e86161' }}>
-                                    Figures
-                                    <div style={{ display: 'flex' }}>
-                                        {this.state.relatedFigures.map(url => (
-                                            <ResourceItem key={url.figureId}>
-                                                <Link
-                                                    to={reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparison.id }) + '#' + url.figureId}
-                                                >
-                                                    <div style={{ padding: '5px' }}>
-                                                        <Img src={url.src} alt={url.alt} style={{ height: '80px' }} />
-                                                    </div>
-                                                </Link>
-                                            </ResourceItem>
-                                        ))}
-                                    </div>
-                                </p>
-                            </>
+                            <div style={{ color: '#e86161' }}>
+                                Figures
+                                <div style={{ display: 'flex' }}>
+                                    {this.state.relatedFigures.map(url => (
+                                        <ResourceItem key={url.figureId}>
+                                            <Link to={reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparison.id }) + '#' + url.figureId}>
+                                                <div style={{ padding: '5px' }}>
+                                                    <Img src={url.src} alt={url.alt} style={{ height: '80px' }} />
+                                                </div>
+                                            </Link>
+                                        </ResourceItem>
+                                    ))}
+                                </div>
+                            </div>
                         )}
                         {this.state.relatedResources.length > 0 && (
-                            <>
-                                <p style={{ display: 'block', color: '#e86161' }}>
-                                    Resources
-                                    <div style={{ display: 'flex' }}>
-                                        {this.state.relatedResources.map(resource => (
-                                            <ResourceItem key={resource.id}>
-                                                <Link to={reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparison.id }) + '#' + resource.id}>
-                                                    <div style={{ padding: '5px' }}>
-                                                        <Img src={resource.image} alt={resource.alt} style={{ height: '80px' }} />
-                                                    </div>
-                                                </Link>
-                                            </ResourceItem>
-                                        ))}
-                                    </div>
-                                </p>
-                            </>
+                            <div style={{ color: '#e86161' }}>
+                                Resources
+                                <div style={{ display: 'flex' }}>
+                                    {this.state.relatedResources.map(resource => (
+                                        <ResourceItem key={resource.id}>
+                                            <Link to={reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparison.id }) + '#' + resource.id}>
+                                                <div style={{ padding: '5px' }}>
+                                                    <Img src={resource.image} alt={resource.alt} style={{ height: '80px' }} />
+                                                </div>
+                                            </Link>
+                                        </ResourceItem>
+                                    ))}
+                                </div>
+                            </div>
                         )}
                     </RelatedResourceWrapper>
                 </Collapse>
