@@ -5,7 +5,7 @@ import { Card, CardImg, CardColumns } from 'reactstrap';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import styled from 'styled-components';
-import { loadFiguresResources } from 'utils';
+import { getRelatedFiguresData } from 'utils';
 
 const CardStyled = styled(Card)`
     cursor: pointer;
@@ -44,8 +44,7 @@ const RelatedFigures = props => {
                 ids: props.figureStatements.map(resource => resource.id)
             })
                 .then(figuresStatements => {
-                    const response = loadFiguresResources(figuresStatements);
-                    setFigures(response);
+                    setFigures(getRelatedFiguresData(figuresStatements));
                 })
                 .catch(err => {
                     console.log(err);

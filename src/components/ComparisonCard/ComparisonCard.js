@@ -9,8 +9,7 @@ import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { getStatementsBySubjects } from 'services/backend/statements';
-import { PREDICATES } from 'constants/graphSettings';
-import { loadFiguresResources } from 'utils';
+import { getRelatedFiguresData, getRelatedResourcesData } from 'utils';
 
 const PaperCardStyled = styled.div`
     & .options {
@@ -78,8 +77,7 @@ class ComparisonCard extends Component {
                 ids: this.props.comparison.figures.map(resource => resource.id)
             })
                 .then(figuresStatements => {
-                    const response = loadFiguresResources(figuresStatements);
-                    this.setState({ relatedFigures: response });
+                    this.setState({ relatedFigures: getRelatedFiguresData(figuresStatements) });
                 })
                 .catch(err => {
                     console.log(err);
@@ -89,18 +87,18 @@ class ComparisonCard extends Component {
 
     loadResources = async () => {
         if (this.props.comparison.resources && this.props.comparison.resources.length > 0) {
-            await getStatementsBySubjects({ ids: this.props.comparison.resources.map(resource => resource.id) }).then(resourcesStatements => {
-                const resources = resourcesStatements.map(resourceStatements => {
-                    const imageStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
-                    const urlStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.URL);
-                    return {
-                        url: urlStatement ? urlStatement.object.label : '',
-                        image: imageStatement ? imageStatement.object.label : '',
-                        id: resourceStatements.id,
-                        alt: resourceStatements.statements[0]?.subject?.label
-                    };
-                });
-                this.setState({ relatedResources: resources });
+            /*
+            let relatedResources = this.props.comparison.resources
+                .filter(r => r._class === 'literal')
+                .map(resource => ({
+                    url: resource.label
+                }));
+             */
+            getStatementsBySubjects({
+                // No support for related resources in the format  Resource -[Url]-> "Literal url"
+                ids: this.props.comparison.resources.filter(r => r._class !== 'literal').map(resource => resource.id)
+            }).then(resourcesStatements => {
+                this.setState({ relatedResources: getRelatedResourcesData(resourcesStatements) });
             });
         }
     };
@@ -180,7 +178,7 @@ class ComparisonCard extends Component {
                                         <ResourceItem key={resource.id}>
                                             <Link to={reverse(ROUTES.COMPARISON, { comparisonId: this.props.comparison.id }) + '#' + resource.id}>
                                                 <div style={{ padding: '5px' }}>
-                                                    <Img src={resource.image} alt={resource.alt} style={{ height: '80px' }} />
+                                                    <Img src={resource.image} alt={resource.title} style={{ height: '80px' }} />
                                                 </div>
                                             </Link>
                                         </ResourceItem>
