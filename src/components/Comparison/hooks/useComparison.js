@@ -25,7 +25,6 @@ function useComparison() {
     const location = useLocation();
     const history = useHistory();
     const { comparisonId } = useParams();
-    const highlightedFigure = history.location.hash;
 
     /**
      * @typedef {Object} MetaData
@@ -559,8 +558,7 @@ function useComparison() {
         setShortLink,
         setAuthors,
         loadCreatedBy,
-        loadProvenanceInfos,
-        highlightedFigure
+        loadProvenanceInfos
     ];
 }
 export default useComparison;

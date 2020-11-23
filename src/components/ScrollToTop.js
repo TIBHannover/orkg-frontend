@@ -9,10 +9,17 @@ but preserves scroll position when previous page is visited */
 class ScrollToTop extends Component {
     componentDidUpdate(prevProps) {
         if (this.props.location !== prevProps.location) {
-            const matchViewPaper = match(ROUTES.VIEW_PAPER);
-            const contributionChange = matchViewPaper(this.props.location.pathname) && matchViewPaper(prevProps.location.pathname);
-            // don't scroll to top when only the contribution changes on the view paper page
-            if (!contributionChange) {
+            const excludePages = [ROUTES.VIEW_PAPER, ROUTES.FEATURED_COMPARISONS];
+            let preventScrollTop = false;
+
+            for (const page of excludePages) {
+                const matchPage = match(page);
+                if (matchPage(this.props.location.pathname) && matchPage(prevProps.location.pathname)) {
+                    preventScrollTop = true;
+                    break;
+                }
+            }
+            if (!preventScrollTop) {
                 window.scrollTo(0, 0);
             }
         }
