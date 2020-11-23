@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Card, CardFooter } from 'reactstrap';
 import { getParentResearchFields, getStatementsBySubjectAndPredicate } from 'services/backend/statements';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faAngleDoubleRight, faAngleDoubleDown, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDoubleRight, faAngleDoubleDown, faSpinner, faHome } from '@fortawesome/free-solid-svg-icons';
 import { PREDICATES } from 'constants/graphSettings';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import { Link } from 'react-router-dom';
@@ -53,8 +53,14 @@ function Breadcrumbs(props) {
                         <span key={field.id}>
                             {index !== parentResearchFields.length - 1 ? (
                                 <Link to={index === 0 ? reverse(ROUTES.HOME) : reverse(ROUTES.RESEARCH_FIELD, { researchFieldId: field.id })}>
-                                    {' '}
-                                    {index === 0 ? 'Home' : field.label}
+                                    {index === 0 ? (
+                                        <>
+                                            <Icon className="mr-1" icon={faHome} />
+                                            Home
+                                        </>
+                                    ) : (
+                                        field.label
+                                    )}
                                 </Link>
                             ) : (
                                 field.label
