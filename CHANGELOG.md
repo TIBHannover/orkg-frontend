@@ -5,6 +5,19 @@ Changelog](https://keepachangelog.com/en/1.0.0/) and we adhere to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.23](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.22...V0.23) - 2020-11-16
+
+### Changes
+
+- optimization: Support code splitting to reduce bundle size [`#419`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/419)
+- ux: Observatory card as a link [`#424`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/424)
+- fix: Save research field when creating a new observatory [`#426`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/426)
+- feat: CSV import page [`#416`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/416)
+- ux: add button to view more papers for research field cards [`#421`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/421)
+- feat: delete buttons for curators [`#337`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/337)
+- chore: move getResourcesByClass to resources network file [`#422`](https://gitlab.com/TIBHannover/orkg/orkg-frontend/merge_requests/422)
+
+---
 ## [0.22](https://gitlab.com/TIBHannover/orkg/orkg-frontend/compare/V0.21...V0.22) - 2020-11-10
 
 ### Changes
