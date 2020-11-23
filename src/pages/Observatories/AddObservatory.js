@@ -53,7 +53,7 @@ class AddObservatory extends Component {
         this.setState({ editorState: 'loading' });
         const value = this.state.value;
         const description = this.state.description;
-        const researchField = this.state.researchField.label;
+        const researchField = this.state.researchField.id;
 
         if (value && value.length !== 0 && description && description.length !== 0 && researchField) {
             try {

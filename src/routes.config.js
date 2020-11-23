@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import { Redirect } from 'react-router-dom';
 import ResourceDetails from 'pages/Resources/Resource';
 import AddPaper from 'pages/AddPaper';
@@ -38,13 +38,16 @@ import Stats from 'pages/Stats';
 import UserSettings from 'pages/UserSettings';
 import UserProfile from 'pages/UserProfile';
 import FeaturedComparisons from 'pages/FeaturedComparisons';
-import PdfTextAnnotation from 'pages/PdfTextAnnotation';
-import PdfAnnotation from 'pages/PdfAnnotation';
 import ExportData from 'pages/ExportData';
 import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
 import requireAuthentication from 'requireAuthentication';
 import { reverse } from 'named-urls';
+
+// use lazy loading of pages that contain large dependencies
+// run "npm run analyze" to ensure the listed dependencies are not loaded elsewhere and thus end up in the bundle
+const PdfTextAnnotation = lazy(() => import('pages/PdfTextAnnotation')); // for dependency "react-pdf-highlighter" ~1.16MB
+const PdfAnnotation = lazy(() => import('pages/PdfAnnotation')); // for dependency "handsontable" ~887.4KB
 
 const routes = [
     {
