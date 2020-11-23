@@ -52,7 +52,8 @@ function Breadcrumbs(props) {
         <Container className="p-0">
             <Card>
                 <CardFooter style={{ borderTop: 0, borderRadius: '6px' }}>
-                    {!isLoading &&
+                    {props.researchFieldID &&
+                        !isLoading &&
                         parentResearchFields.map((field, index) => (
                             <span key={field.id}>
                                 {index !== parentResearchFields.length - 1 ? (
@@ -111,9 +112,9 @@ function Breadcrumbs(props) {
                                 )}
                             </span>
                         ))}
-                    {isLoading && (
+                    {(!props.researchFieldID || isLoading) && (
                         <ContentLoader height={1} width={50} speed={2} primaryColor="#F7F7F7" secondaryColor="#ecebeb">
-                            <rect x="0" y="0" rx="0" ry="0" width="50" height="20" />
+                            <rect x="0" y="0" rx="0" ry="0" width="50" height="100" />
                         </ContentLoader>
                     )}
                 </CardFooter>

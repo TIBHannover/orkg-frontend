@@ -58,16 +58,23 @@ export const createObservatory = (observatoryName, organizationId, description, 
 
 export const getObservatoryAndOrganizationInformation = (observatoryId, organizationId) => {
     return getObservatoryById(observatoryId).then(obsResponse => {
-        return getOrganization(organizationId).then(orgResponse => {
-            return {
+        return getOrganization(organizationId)
+            .then(orgResponse => {
+                return {
+                    id: observatoryId,
+                    name: obsResponse.name,
+                    organization: {
+                        id: organizationId,
+                        name: orgResponse.name,
+                        logo: orgResponse.logo
+                    }
+                };
+            })
+            .catch(() => ({
+                // some observatories are not related to an organization!
                 id: observatoryId,
                 name: obsResponse.name,
-                organization: {
-                    id: organizationId,
-                    name: orgResponse.name,
-                    logo: orgResponse.logo
-                }
-            };
-        });
+                organization: null
+            }));
     });
 };
