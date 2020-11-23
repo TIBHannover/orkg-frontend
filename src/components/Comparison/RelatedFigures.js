@@ -17,10 +17,16 @@ const CardStyled = styled(Card)`
         padding: 5px;
         display: inline-block;
         border-radius: 5px;
-        animation: blinkingBackground 5s 1;
+        animation: blinkingBackground 5s infinite;
     }
     @keyframes blinkingBackground {
-        0% {
+        from {
+            background-color: #e86161;
+        }
+        50% {
+            background-color: #fff;
+        }
+        to {
             background-color: #e86161;
         }
     }
@@ -78,7 +84,7 @@ const RelatedFigures = props => {
             }
             window.scrollTo({
                 behavior: 'smooth',
-                top: header.offsetTop - 400
+                top: header.offsetTop - 90
             });
         },
         [location.hash]
