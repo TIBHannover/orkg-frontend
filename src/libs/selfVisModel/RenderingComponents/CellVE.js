@@ -88,11 +88,9 @@ export default class CellVE extends Component {
     };
 
     cellValueDoubleClicked = () => {
-        console.log('CELL VALUE CLICKED');
         this.setState({ renderingItem: 'input' });
     };
     cellValueChanged = event => {
-        console.log('Change event', event);
         this.setState({ cellLabelValue: event.target.value });
     };
     /** Rendering functions **/
@@ -247,10 +245,11 @@ export const PropertyCell = styled.div`
     background: #80869b;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    width: 100px;
+    width: 150px;
+    min-width: 150px;
     height: 30px;
     padding: 0 2px;
-    margin: 0 2px;
+    margin: 0 1px;
     cursor: pointer;
 `;
 
@@ -263,7 +262,8 @@ export const PropertyCellInput = styled(Input)`
     padding: 0 4px;
     display: block;
     height: 30px !important;
-    width: 100px !important;
+    width: 150px !important;
+    min-width: 150px;
 
     &:focus {
         background: #fff;
@@ -281,11 +281,12 @@ export const ValueCell = styled.div`
     text-overflow: ellipsis;
     display: ruby;
 
-    background: ${props => (props.isValid ? 'green' : 'red')};
+    background: ${props => (props.isValid ? '#4caf50' : '#fda9a9')};
     color: black;
-    width: 100px;
+    width: 150px;
+    min-width: 150px;
     height: 30px;
-    margin: 2px 2px;
+    margin: 1px 1px;
 `;
 
 export const ValueCellInput = styled(Input)`
@@ -297,8 +298,9 @@ export const ValueCellInput = styled(Input)`
     padding: 0 4px;
     display: block;
     height: 30px !important;
-    width: 100px !important;
-    margin: 2px 2px;
+    width: 150px !important;
+    min-width: 150px;
+    margin: 1px 1px;
 
     &:focus {
         background: #fff;
@@ -319,9 +321,10 @@ export const ContributionCell = styled.div`
     border-bottom-left-radius: 5px;
     background: #e86161;
     color: white;
-    width: 100px;
+    width: 150px;
+    min-width: 150px;
     height: 30px;
-    margin: 2px 2px;
+    margin: 1px 1px;
     cursor: pointer;
 `;
 
@@ -334,8 +337,9 @@ export const ContributionCellInput = styled(Input)`
     padding: 0 4px;
     display: block;
     height: 30px !important;
-    width: 100px !important;
-    margin: 2px 2px;
+    width: 150px !important;
+    min-width: 150px;
+    margin: 1px 1px;
 
     &:focus {
         background: #fff;
@@ -353,26 +357,31 @@ export const MetaCell = styled.div`
     text-overflow: ellipsis;
     display: ruby;
 
-    background: black;
+    background: white;
     color: white;
-    width: 100px;
+    width: 150px;
+    min-width: 150px;
     height: 30px;
-    margin: 2px 2px;
+    margin: 1px 1px;
 `;
 
 export const MetaMapperSelector = styled.div`
     overflow: visible;
     background: black;
     color: white;
-    width: 100px;
+    width: 150px;
+    min-width: 150px;
     height: 60px;
-    margin: 2px 2px;
+    margin: 1px 1px;
 `;
 export const MetaMapperSelectorSimple = styled.div`
     overflow: visible;
-    background: black;
+    background: white;
+
     color: white;
-    width: 100px;
+    width: 150px;
+    min-width: 150px;
     height: 30px;
-    margin: 2px 2px;
+    margin: 1px 1px;
+    padding-left: 27px;
 `;

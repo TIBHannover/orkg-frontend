@@ -12,15 +12,6 @@ export default class CellEditor extends Component {
         this.state = { updateFlipFlop: false };
     }
 
-    componentDidUpdate = prevProps => {
-        // always make sure that you have the pointer to the data;
-        // this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
-
-        if (this.props.isLoading === false) {
-            console.log(this.selfVisModel, '<< should have data >> YOOO ');
-        }
-    };
-
     validationCallback = () => {
         // this is used to trigger the re-rendering of the cells which will then validate them on update;
         this.setState({ updateFlipFlop: !this.state.updateFlipFlop });
@@ -31,11 +22,9 @@ export default class CellEditor extends Component {
         // filter the propertyAnchors by selectionFlag;
 
         const filteredProperties = this.selfVisModel.mrrModel.propertyAnchors.filter(item => item.isSelectedColumnForUse === true);
-        console.log(filteredProperties);
         const renderingDimX = filteredProperties.length + 1;
         // now figure out how many rows we do have;
         const filteredContribs = this.selfVisModel.mrrModel.contributionAnchors.filter(item => item.isSelectedRowForUse === true);
-        console.log(filteredContribs);
         const renderingDimY = filteredContribs.length + 1;
         // now we know the dimensions of the matrix to render;
 
@@ -43,7 +32,6 @@ export default class CellEditor extends Component {
         // why do we dont want to use a tr/ td/ th table renderer? >> some idea about table interactions
         // draggable cols and row
 
-        // test
         for (let i = -1; i < renderingDimY; i++) {
             // renders row;
             const rowArray = [];
@@ -53,11 +41,7 @@ export default class CellEditor extends Component {
                     // renders the cell
                     const keyVal = 'key_cellIdMeta' + i + '_' + j;
                     if (j === 0) {
-                        rowArray.push(
-                            <CellVE key={keyVal} type="metaNode" data={null}>
-                                MapperHeader
-                            </CellVE>
-                        );
+                        rowArray.push(<CellVE key={keyVal} type="metaNode" data={null} />);
                     } else {
                         const propertyItem = filteredProperties[j - 1];
                         rowArray.push(
@@ -74,11 +58,7 @@ export default class CellEditor extends Component {
                 const keyVal = 'key_cellId' + i + '_' + j;
 
                 if (i === 0 && j === 0) {
-                    rowArray.push(
-                        <CellVE key={keyVal} type="metaNode" data={null}>
-                            MetaNode
-                        </CellVE>
-                    );
+                    rowArray.push(<CellVE key={keyVal} type="metaNode" data={null} />);
                 }
                 if (i === 0 && j !== 0) {
                     const propertyItem = filteredProperties[j - 1];

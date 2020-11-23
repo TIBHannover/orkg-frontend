@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default class DataForChart {
     constructor() {
         this.header = [];
@@ -17,28 +15,42 @@ export default class DataForChart {
         };
     };
 
-    createDataFromXYSelectors = (xSelector, ySelectors) => {
+    createDataFromSelectors = state => {
         const oldHeaders = this.header;
         // create headers;
         let xSelectorIndex;
         const ySelectorIndices = [];
         const newHeaders = [];
+
+        const headerMap = {};
         oldHeaders.forEach((oh, index) => {
-            if (oh.label === xSelector) {
-                xSelectorIndex = index;
-                newHeaders.push(this.header[index]);
-            }
-            if (ySelectors.indexOf(oh.label) !== -1) {
-                ySelectorIndices.push(index);
-                newHeaders.push(this.header[index]);
-            }
+            headerMap[oh.label] = index;
         });
 
-        // reconstruct the data
-        if (newHeaders.length >= 4) {
-            newHeaders[2].role = 'interval';
-            newHeaders[3].role = 'interval';
+        if (headerMap[state.xAxis] !== undefined) {
+            newHeaders.push(oldHeaders[headerMap[state.xAxis]]);
+            xSelectorIndex = headerMap[state.xAxis];
         }
+
+        state.yAxis.forEach((yax, yaxID) => {
+            // find yAx in headerMap;
+            if (headerMap[yax]) {
+                newHeaders.push(oldHeaders[headerMap[yax]]);
+                ySelectorIndices.push(headerMap[yax]);
+                if (state.yAxisIntervals && state.yAxisIntervals[yaxID]) {
+                    const intervals = state.yAxisIntervals[yaxID];
+                    intervals.forEach((int, i) => {
+                        const i_label = int.label;
+
+                        // if we have such an interval label
+                        if (headerMap[i_label] !== undefined) {
+                            newHeaders.push({ id: 'i' + i, type: 'number', role: 'interval' });
+                            ySelectorIndices.push(headerMap[i_label]);
+                        }
+                    });
+                }
+            }
+        });
 
         const newRows = [];
 
@@ -50,44 +62,6 @@ export default class DataForChart {
                 newR.push(row.c[ySelectorIndices[i]].v);
             }
 
-            // remainingData is not used for now;
-            this.addRow2(newRows, ...newR);
-        });
-
-        console.log('Headers/ ', newHeaders);
-        return {
-            cols: newHeaders,
-            rows: newRows
-        };
-    };
-
-    updateXYAxisSelectors = (xSelector, ySelector) => {
-        const oldHeaders = this.header;
-        // whats the index in the  oldHeaders;
-        let firstIndex;
-        let secondIndex;
-        oldHeaders.forEach((oh, index) => {
-            if (oh.label === xSelector) {
-                firstIndex = index;
-            }
-            if (oh.label === ySelector) {
-                secondIndex = index;
-            }
-        });
-        // console.log('First index', firstIndex, 'secondIndex', secondIndex);
-
-        // build new data structure;
-        const newHeaders = [];
-        newHeaders.push(this.header[firstIndex]);
-        newHeaders.push(this.header[secondIndex]);
-
-        const newRows = [];
-
-        // fetch the data from the table itself;
-        this.rowls.forEach(row => {
-            const newR = [];
-            newR.push(row.c[firstIndex].v);
-            newR.push(row.c[secondIndex].v);
             // remainingData is not used for now;
             this.addRow2(newRows, ...newR);
         });

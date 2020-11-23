@@ -20,14 +20,23 @@ export const validateCellMapping = (mapper, value) => {
         }
     }
     if (mapper === 'Date') {
-        const validationSchema = Joi.object({
-            value: Joi.date().required()
+        // if this validates to number return false;
+        const numValidationSchema = Joi.object({
+            value: Joi.number().required()
         });
-        const res = resolver({ value: value }, validationSchema);
-        if (res.values.value) {
-            return true;
+        const numRes = resolver({ value: value }, numValidationSchema);
+        if (numRes.values.value) {
+            return { value: { message: 'Value must be a valid data (YYYY-MM-DD) ' } };
         } else {
-            return res.errors;
+            const validationSchema = Joi.object({
+                value: Joi.date().required()
+            });
+            const res = resolver({ value: value }, validationSchema);
+            if (res.values.value) {
+                return true;
+            } else {
+                return res.errors;
+            }
         }
     }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
 import SelfVisDataMode from '../SelfVisDataModel';
-import Tippy from '@tippy.js/react';
+// import Tippy from '@tippy.js/react';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 export default class VisualizationSelector extends Component {
     constructor(props) {
@@ -22,7 +22,9 @@ export default class VisualizationSelector extends Component {
         this.selfVisModel.setRenderingEngine('Google-Charts'); // we only have GC at the moment;
     }
 
-    componentDidMount = () => {};
+    componentDidMount = () => {
+        this.setState({ visualizationMethod: this.selfVisModel.getRenderingMethod() ? this.selfVisModel.getRenderingMethod() : 'Table' });
+    };
 
     componentDidUpdate = prevProps => {
         this.selfVisModel.setRenderingMethod(this.state.visualizationMethod);
@@ -34,19 +36,17 @@ export default class VisualizationSelector extends Component {
     createVisualizationSelector = () => {
         const items = this.supportedVisualizationMethods.map((item, id) => {
             return (
-                <Tippy content="HELLO " placement="right" key={'visSelectionDropdownItemTippyKey_' + id}>
-                    <div key={'visSelectionDropdownDivItemIndexKey_' + id}>
-                        <DropdownItem
-                            key={'visSelectionDropdownItemIndexKey_' + id}
-                            onClick={() => {
-                                this.selfVisModel.setRenderingMethod(item);
-                                this.setState({ visualizationMethod: item });
-                            }}
-                        >
-                            <span>{item}</span>
-                        </DropdownItem>
-                    </div>
-                </Tippy>
+                <div key={'visSelectionDropdownDivItemIndexKey_' + id}>
+                    <DropdownItem
+                        key={'visSelectionDropdownItemIndexKey_' + id}
+                        onClick={() => {
+                            this.selfVisModel.setRenderingMethod(item);
+                            this.setState({ visualizationMethod: item });
+                        }}
+                    >
+                        <span>{item}</span>
+                    </DropdownItem>
+                </div>
             );
         });
 

@@ -12,36 +12,19 @@ export default class CellSelector extends Component {
         this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
     }
 
-    componentDidUpdate = prevProps => {
-        // always make sure that you have the pointer to the data;
-        // this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
-
-        if (this.props.isLoading === false) {
-            console.log(this.selfVisModel, '<< should have data >> YOOO ');
-        }
-    };
-
     /** some data handlers **/
     toggleCheckboxForCol = (id, value) => {
-        // this is the correct id for the init from the propertyAnchros
-        console.log('ID:', id, 'Value:', value);
+        // this is the correct id for the init from the propertyAnchors
         this.setFullColumnSelection(id, value);
     };
 
     /** Rendering functions for the frame (headers for rows and cols ) **/
-    createFrame = () => {};
-    createPropertyHeaders = () => {};
-    createContributionHeaders = () => {};
-    createComparisonDataMatrix = () => {};
     createTable = () => {
-        console.log('TODO:', 'Create the table , 1 frame then data matrix ');
         // we have a rootItem which is a split between properties and contributions
-
         /* [root] [property], [property]
           cId  [ value 0,0] value [1,0]...]
-          cId  [ value 0,1] value [1,1]...] 
-      
-       */
+          cId  [ value 0,1] value [1,1]...]      
+        */
 
         // we need some meta information to create the frame
         // basic Idea create a matrix which has +1 entries from the data dimensions (in x and in y direct)
@@ -50,38 +33,31 @@ export default class CellSelector extends Component {
 
         const renderingDimX = this.selfVisModel.mrrModel.propertyAnchors.length + 1;
         const renderingDimY = this.selfVisModel.mrrModel.contributionAnchors.length + 1;
-        console.log('Rendering Matrix dimensions ', renderingDimX, renderingDimY);
-
         // we do render it as a row and cells
         const itemsToRender = [];
         // why do we dont want to use a tr/ td/ th table renderer? >> some idea about table interactions
         // draggable cols and row
 
-        // test
         for (let i = -1; i < renderingDimY; i++) {
             // renders row;
             const rowArray = [];
-
             if (i === -1) {
                 for (let j = 0; j < renderingDimX; j++) {
                     // renders the cell
                     const keyVal = 'key_cellIdMeta' + i + '_' + j;
                     if (j === 0) {
-                        rowArray.push(
-                            <CellRenderer key={keyVal} type="metaNodeHeader" data={null}>
-                                MapperHeader
-                            </CellRenderer>
-                        );
+                        rowArray.push(<CellRenderer key={keyVal} type="metaNodeHeader" data={null} />);
                     } else {
                         rowArray.push(
                             <CellRenderer key={keyVal} type="metaNodeSelector" data={null}>
-                                <DropDownMapperSelector key={keyVal + 'dropdown'} data={this.selfVisModel.mrrModel.propertyAnchors[j - 1]} />
                                 <CheckboxSelector
-                                    label="Use"
+                                    label=""
                                     initializedValue={this.selfVisModel.mrrModel.propertyAnchors[j - 1]}
                                     handleCheckboxChange={v => this.toggleCheckboxForCol(j - 1, v)}
+                                    cbx_id={'useValue+' + i + '_' + j}
                                     key={'useValue+' + i + '_' + j}
                                 />
+                                <DropDownMapperSelector key={keyVal + 'dropdown'} data={this.selfVisModel.mrrModel.propertyAnchors[j - 1]} />
                             </CellRenderer>
                         );
                     }
@@ -93,11 +69,7 @@ export default class CellSelector extends Component {
                 const keyVal = 'key_cellId' + i + '_' + j;
 
                 if (i === 0 && j === 0) {
-                    rowArray.push(
-                        <CellRenderer key={keyVal} type="metaNode" data={null}>
-                            MetaNode
-                        </CellRenderer>
-                    );
+                    rowArray.push(<CellRenderer key={keyVal} type="metaNode" data={null} />);
                 }
                 if (i === 0 && j !== 0) {
                     rowArray.push(<CellRenderer key={keyVal} type="property" data={this.selfVisModel.mrrModel.propertyAnchors[j - 1]} />);
@@ -139,7 +111,6 @@ export default class CellSelector extends Component {
 
     setFullColumnSelection = (columnId, value) => {
         // check the source of origin;
-        console.log('TODO', 'Set all flags to value for a specific col');
         const colItems = this.selfVisModel.modelAccess.getCol(columnId);
         this.selfVisModel.mrrModel.propertyAnchors[columnId].setSelectedColumn(value);
 
@@ -156,7 +127,6 @@ export default class CellSelector extends Component {
 
     /** component rendering entrance point **/
     render() {
-        console.log(this.selfVisModel.mrrModel);
         return (
             <div className="tableSelectionAreaRoot" style={{ height: this.props.height + 'px', overflow: 'auto' }}>
                 Select cells for visualization and map to types.

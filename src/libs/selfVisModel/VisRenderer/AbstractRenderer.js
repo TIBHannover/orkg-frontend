@@ -35,16 +35,15 @@ export default class AbstractRenderer extends Component {
         this.setState({ updateFlipFlop: !this.state.updateFlipFlop });
         // try to read the customizationWidget;
     };
+
     setCustomizationState = state => {
         this.customizationState = state;
-        console.log(this.customizationState);
         this.setState({ updateFlipFlop: !this.state.updateFlipFlop });
     };
 
     createVisualization = () => {
         // get the rendering method
         const renderingMethod = this.selfVisModel.getRenderingMethod();
-        console.log('HAS RENDERING METHOD', renderingMethod);
 
         if (
             renderingMethod === 'ColumnChart' ||

@@ -44,8 +44,8 @@ export default class CellRenderer extends Component {
                         <ValueCell>{this.props.data.label}</ValueCell>
                     </Tippy>
                 )}
-                {this.props.type === 'metaNode' && <MetaCell> - </MetaCell>}
-                {this.props.type === 'metaNodeHeader' && <MetaMapperSelector> - </MetaMapperSelector>}
+                {this.props.type === 'metaNode' && <MetaCell />}
+                {this.props.type === 'metaNodeHeader' && <MetaMapperSelector style={{ backgroundColor: 'white' }} />}
                 {this.props.type === 'metaNodeSelector' && <MetaMapperSelector>{this.props.children}</MetaMapperSelector>}
                 {this.props.type === 'metaNodeSelectorSimple' && <MetaMapperSelectorSimple>{this.props.children}</MetaMapperSelectorSimple>}
             </>
@@ -68,10 +68,11 @@ export const PropertyCell = styled.div`
     background: #80869b;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    width: 100px;
+    width: 150px;
+    min-width: 150px;
     height: 30px;
     padding: 0 2px;
-    margin: 0 2px;
+    margin: 0 1px;
 `;
 
 export const ValueCell = styled.div`
@@ -81,9 +82,10 @@ export const ValueCell = styled.div`
 
     background: #ccc;
     color: black;
-    width: 100px;
+    width: 150px;
+    min-width: 150px;
     height: 30px;
-    margin: 2px 2px;
+    margin: 1px 1px;
 `;
 
 export const ContributionCell = styled.div`
@@ -94,9 +96,10 @@ export const ContributionCell = styled.div`
     border-bottom-left-radius: 5px;
     background: #e86161;
     color: white;
-    width: 100px;
+    width: 150px;
+    min-width: 150px;
     height: 30px;
-    margin: 2px 2px;
+    margin: 1px 1px;
 `;
 
 export const MetaCell = styled.div`
@@ -104,26 +107,32 @@ export const MetaCell = styled.div`
     text-overflow: ellipsis;
     display: ruby;
 
-    background: black;
+    background: white;
     color: white;
-    width: 100px;
+    width: 150px;
+    min-width: 150px;
     height: 30px;
-    margin: 2px 2px;
+    margin: 1px 1px;
 `;
 
 export const MetaMapperSelector = styled.div`
     overflow: visible;
-    background: black;
+    background: white;
+    display: flex;
     color: white;
-    width: 100px;
-    height: 60px;
-    margin: 2px 2px;
+    width: 150px;
+    min-width: 150px;
+    height: 30px;
+
+    margin: 1px 1px;
 `;
 export const MetaMapperSelectorSimple = styled.div`
     overflow: visible;
     background: black;
     color: white;
-    width: 100px;
+    display: flex;
+    width: 150px;
+    min-width: 150px;
     height: 30px;
-    margin: 2px 2px;
+    margin: 1px 1px;
 `;

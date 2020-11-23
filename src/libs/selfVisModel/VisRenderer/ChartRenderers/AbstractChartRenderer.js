@@ -12,9 +12,7 @@ class AbstractChartRenderer extends Component {
         };
     }
 
-    componentDidMount() {}
-
-    componentDidUpdate = (prevProps, prevState) => {
+    componentDidUpdate = prevProps => {
         if (prevProps.visualizationWidth !== this.props.visualizationWidth || prevProps.visualizationHeight !== this.props.visualizationHeight) {
             this.setState({ fakeControls: [] });
         }
@@ -24,13 +22,18 @@ class AbstractChartRenderer extends Component {
         // we have now some data here;
         // create a rendering data for this visualization;
         const gdc = this.selfVisModel._googleChartsData;
-        if (gdc && this.props.customizationState && this.props.customizationState.xAxis && this.props.customizationState.yAxis.length !== 0) {
-            const resultingData = gdc.createDataFromXYSelectors(this.props.customizationState.xAxis, this.props.customizationState.yAxis);
 
+        if (gdc && this.props.visualizationMethod === 'Table') {
+            return gdc.useAllColumns();
+        }
+
+        if (gdc && this.props.customizationState && this.props.customizationState.xAxis && this.props.customizationState.yAxis.length !== 0) {
+            const resultingData = gdc.createDataFromSelectors(this.props.customizationState);
             if (resultingData.cols[0].type === 'date' && this.props.visualizationMethod === 'LineChart') {
                 // we need to sort the input data if date and if we have a line chart...
-
-                return resultingData.rows.sort((a, b) => a.c[0].v <= b.c[0].v);
+                const sortedData = { ...resultingData };
+                sortedData.rows.sort((a, b) => a.c[0].v <= b.c[0].v);
+                return sortedData;
             }
 
             return resultingData;

@@ -11,20 +11,14 @@ export default class SingleVisualizationComponent extends Component {
         };
     }
     componentDidMount() {
-        //console.log('Graph View Modal is mounted');
         window.addEventListener('resize', this.updateDimensions);
         this.updateDimensions();
     }
-    componentDidUpdate = prevProps => {
-        // always make sure that you have the pointer to the data;
-        // this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
-    };
+
     componentWillUnmount() {
-        //console.log('View modal un mounting');
         window.removeEventListener('resize', this.updateDimensions);
     }
     updateDimensions = () => {
-        // test
         this.setState({ windowHeight: 0.5 * window.innerHeight, windowWidth: 0.5 * window.innerWidth });
     };
 
@@ -48,7 +42,7 @@ export default class SingleVisualizationComponent extends Component {
                     onMouseLeave={this.handleMouseLeave}
                     isHovered={this.state.isHovering}
                 >
-                    <div style={{ padding: '5px', pointerEvents: 'none' }}>
+                    <div style={{ padding: '5px', pointerEvents: 'none', minWidth: '200px', minHeight: '100px' }}>
                         <Chart
                             chartType={this.props.input.visMethod}
                             data={this.props.input.renderingData}

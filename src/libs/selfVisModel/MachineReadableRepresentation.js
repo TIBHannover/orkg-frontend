@@ -8,37 +8,14 @@ export default class MachineReadableRepresentation {
 
     execute = () => {
         // parser execution function;
-        console.log('THIS IS OUR INPUT ! ', this.inputDataAsJsonObject);
-
         // we actually dont care about transposition >> we create it always like row based entries for a single paper.
-
-        // our data model will hold the contributionAnchros, propertyAnchors and valueAnhors
+        // our data model will hold the contributionAnchors, propertyAnchors and valueAnchors
 
         this.createContributionAnchors(this.mrrModel);
         this.createPropertyAnchors(this.mrrModel);
         this.createDataItemAnchors(this.mrrModel);
 
-        // NEXT STEPS:
-        // parse the dataAnchors
-        // which create a label and we should be add functions to get rows and cols
-        // we use a single linear array to store the cell values
-        // cells will have a row and column index
-        // add function : getRow(index) => filters all cells with this index
-        // add function : getCol(index) => filters all cells with this index
-
-        // this function declaration is a bit shady, but lets simply use it
-        // NO: this should be handled by the model tho the data!!!!
-        this.mrrModel.getRow = function(index) {
-            console.log(index, 'IT WORKS', this.propertyAnchors);
-        };
-
-        console.log('-----------------\n\n-------------------');
-        console.log(this.mrrModel);
-        console.log('^^^^ THE OUTPUT MODEL ^^^');
-        console.log('all contributions for a property', this.getCol(0));
-        console.log('all properties for a contribution', this.getRow(0));
-        console.log('An Item', this.getItem(1, 1));
-        console.log('----------------------------');
+        this.mrrModel.getRow = function(index) {};
     };
 
     getResult = () => {
@@ -66,18 +43,6 @@ export default class MachineReadableRepresentation {
             return null; //<< ERROR
         }
     };
-
-    // getPropertyAnchors = () => {
-    //     // gives us the header information for the rendering
-    //     return this.mrrModel.propertyAnchors;
-    // };
-    // getContributionAnchors = () => {
-    //     // gives us the header information for the rendering
-    //     return this.mrrModel.contributionAnchors;
-    // };
-    // getDataItems = () => {
-    //     return this.mrrModel.dataItems;
-    // };
 
     createDataItemAnchors(model) {
         this.mrrModel.dataItems = [];

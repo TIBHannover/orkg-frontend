@@ -22,7 +22,6 @@ export default class VisualizationWidget extends Component {
     }
 
     componentDidMount() {
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VIS WIDGET MOUNTS');
         new SelfVisDataModel().createGDCDataModel();
         window.addEventListener('resize', this.updateDimensions);
         this.updateDimensions();
@@ -102,8 +101,10 @@ export default class VisualizationWidget extends Component {
                                 <div
                                     style={{
                                         // backgroundColor: 'red',
-                                        width: '300px',
-                                        minWidth: '300px'
+                                        width: '320px',
+                                        minWidth: '300px',
+                                        overflow: 'auto',
+                                        height: this.props.height - 5
                                     }}
                                 >
                                     <Button
@@ -137,19 +138,6 @@ export default class VisualizationWidget extends Component {
                         </ControlWidgetContainer>
                     </div>
                 )}
-
-                {/*<TableInput />*/}
-                {/*<div>*/}
-                {/*    Customizations*/}
-                {/*    <div style={{ display: 'flex' }}>*/}
-                {/*        <div style={{ width: '40%' }}>*/}
-                {/*            <VisualizationSelector propagationFunction={this.propagateSelectionToPreview} />*/}
-                {/*        </div>*/}
-                {/*        <div style={{ width: '40%' }}>*/}
-                {/*            <AbstractRenderer ref={this.refPrevSelector} />*/}
-                {/*        </div>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
             </div>
         );
     }

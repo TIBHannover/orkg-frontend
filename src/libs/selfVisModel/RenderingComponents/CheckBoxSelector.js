@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
+import { CustomInput, FormGroup } from 'reactstrap';
 
 class CheckboxSelector extends Component {
     constructor(props) {
@@ -24,16 +25,25 @@ class CheckboxSelector extends Component {
     };
 
     render() {
-        const { label } = this.props;
         const { isChecked } = this.state;
 
         return (
-            <div className="checkbox">
-                <label>
-                    <input type="checkbox" value={label} checked={isChecked} onChange={this.toggleCheckboxChange} />
+            <div className="checkbox" style={{ marginLeft: '5px', paddingTop: '3px' }}>
+                <FormGroup style={{ fontSize: '90%' }}>
+                    <CustomInput type="checkbox" id={this.props.cbx_id} onChange={this.toggleCheckboxChange} checked={isChecked} label="" />
+                </FormGroup>
+                {/*<label>*/}
+                {/*    <CheckBoxInput*/}
+                {/*        // style={{ width: '20px', height: '20px' }}*/}
 
-                    {label}
-                </label>
+                {/*        type="checkbox"*/}
+                {/*        value={label}*/}
+                {/*        checked={isChecked}*/}
+                {/*        onChange={this.toggleCheckboxChange}*/}
+                {/*    />*/}
+
+                {/*    {label}*/}
+                {/*</label>*/}
             </div>
         );
     }
@@ -42,7 +52,8 @@ class CheckboxSelector extends Component {
 CheckboxSelector.propTypes = {
     label: PropTypes.string.isRequired,
     handleCheckboxChange: PropTypes.func.isRequired,
-    initializedValue: PropTypes.any
+    initializedValue: PropTypes.any,
+    cbx_id: PropTypes.any
 };
 
 export default CheckboxSelector;

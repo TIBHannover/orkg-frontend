@@ -12,6 +12,7 @@ export default class SelfVisDataMode {
         this._inputData = {};
         this.requiresParing = false;
         this._googleChartsData = undefined;
+        this.__customizationStateObject = undefined;
     }
 
     /** exposed functions ----------------------------------------------------------------------**/
@@ -38,16 +39,11 @@ export default class SelfVisDataMode {
         this._googleChartsData = data;
     };
 
-    setXAxisSelector = val => {
-        this.xAxisSelector = val;
+    saveCustomizationState = state => {
+        this.__customizationStateObject = state;
     };
-    // TODO: this should support an array
-    setYAxisSelector = val => {
-        this.yAxisSelector = val;
-    };
-
-    setDataForRendering = data => {
-        this._dataForRendering = data; // this is the data we store for the rendering of the charts ( it has the data that is fed into the chart renderer
+    loadCustomizationState = () => {
+        return this.__customizationStateObject;
     };
 
     getReconstructionModel = () => {
@@ -93,8 +89,25 @@ export default class SelfVisDataMode {
             });
         });
 
+        const customizationState = { ...this.loadCustomizationState() };
+        // HACKIS: TODO: read only required options;
+        delete customizationState.errorDataNotSupported;
+        delete customizationState.errorMessage;
+        customizationState.xAxisSelectorOpen = false; // overwrites it for the reconstruction
+        for (let i = 0; i < customizationState.yAxisSelectorOpen.length; i++) {
+            customizationState.yAxisSelectorOpen[i] = false;
+        }
+        for (const name in customizationState.yAxisInterValSelectors) {
+            if (customizationState.yAxisInterValSelectors.hasOwnProperty(name)) {
+                customizationState.yAxisInterValSelectors[name].isOpen = false;
+            }
+        }
+
+        reconstructionModel.customizationState = customizationState;
         console.log('This is the reconstruction model');
         console.log(reconstructionModel);
+
+        return JSON.stringify(reconstructionModel);
     };
 
     /** HACKISH ENDS**/
@@ -103,9 +116,7 @@ export default class SelfVisDataMode {
 
     createGDCDataModel = () => {
         // filter the propertyAnchors by selectionFlag;
-        console.log('CREATING GDC DATA MODEL   2  ');
         const filteredProperties = this.mrrModel.propertyAnchors.filter(item => item.isSelectedColumnForUse === true);
-        console.log(filteredProperties, '<< selected for use');
         // now figure out how many rows we do have;
         const filteredContribs = this.mrrModel.contributionAnchors.filter(item => item.isSelectedRowForUse === true);
 
@@ -116,7 +127,6 @@ export default class SelfVisDataMode {
         // then the properties if they have a mapper;
 
         const gdc = new DataForChart();
-
         gdc.addColumn('string', 'Contribution');
 
         filteredProperties.forEach(property => {
@@ -167,7 +177,6 @@ export default class SelfVisDataMode {
             }
             gdc.addRow(...rowArray);
         }
-        console.log(gdc.getChartData(), '<< CHART DATA ');
         this.setGCData(gdc);
     };
 
@@ -188,7 +197,6 @@ export default class SelfVisDataMode {
         } else {
             // we have some data, but check if we use the same contributions or not
             if (this._inputData.contributionsList === data.contributionsList) {
-                // thing to do;
                 this.requiresParing = false;
             } else {
                 this.__setInputData(data);
@@ -199,24 +207,17 @@ export default class SelfVisDataMode {
 
     __parseInputIfNeeded = () => {
         // debug msg
-        if (!this.requiresParing) {
-            console.log('[Debug]: -- No parsing required!, for now parsing anyways');
-        }
 
         if (this.requiresParing) {
             this.__parseInput();
+            this.requiresParing = false;
         }
-        this.requiresParing = false;
     };
     __parseInput = () => {
         // parses input of the input data
-        console.log('PARSE INPUT CALLED ');
-
         const parser = new MachineReadableRepresentation(this._inputData);
         parser.execute();
         this.mrrModel = parser.getResult();
-        console.log(this.mrrModel);
         this.modelAccess = parser;
-        // modularize the parser as a class
     };
 }

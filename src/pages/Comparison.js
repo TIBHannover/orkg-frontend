@@ -140,7 +140,6 @@ function Comparison(props) {
     };
 
     const propagateTheClick = (visIndex, dataForReconstruction) => {
-        console.log('This has propagated the click to the page', visIndex);
         setReconstructionData({ dataForReconstruction });
         setShowVisualizationModal(true);
     };

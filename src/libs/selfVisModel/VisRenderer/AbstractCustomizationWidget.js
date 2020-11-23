@@ -4,7 +4,7 @@ import SelfVisDataMode from '../SelfVisDataModel';
 import CustomizationColumnChart from './ChartRenderers/CustomizationColumnChart';
 import CustomizationBarChart from './ChartRenderers/CustomizationBarChart';
 import CustomizationScatterChart from './ChartRenderers/CustomizationScatterChart';
-import CustomizationLineChart from './ChartRenderers/CustomizationScatterChart';
+import CustomizationLineChart from './ChartRenderers/CustomizationLineChart';
 
 export default class AbstractCustomizationWidget extends Component {
     constructor(props) {
@@ -23,22 +23,43 @@ export default class AbstractCustomizationWidget extends Component {
         if (!renderingMethod) {
             this.selfVisModel.setRenderingMethod('Table');
         }
+        const keepCustomizationWidgetWhenChanged = true;
 
         switch (renderingMethod) {
             case 'Table': {
-                return <div> Tables dont have customizations {renderingMethod}</div>;
+                return <div> Tables dont have customizations</div>;
             }
             case 'ColumnChart': {
-                return <CustomizationColumnChart propagateUpdates={this.props.propagateUpdates} />;
+                return (
+                    <CustomizationColumnChart
+                        propagateUpdates={this.props.propagateUpdates}
+                        restoreCustomizationState={keepCustomizationWidgetWhenChanged}
+                    />
+                );
             }
             case 'BarChart': {
-                return <CustomizationBarChart propagateUpdates={this.props.propagateUpdates} />;
+                return (
+                    <CustomizationBarChart
+                        propagateUpdates={this.props.propagateUpdates}
+                        restoreCustomizationState={keepCustomizationWidgetWhenChanged}
+                    />
+                );
             }
             case 'ScatterChart': {
-                return <CustomizationScatterChart propagateUpdates={this.props.propagateUpdates} />;
+                return (
+                    <CustomizationScatterChart
+                        propagateUpdates={this.props.propagateUpdates}
+                        restoreCustomizationState={keepCustomizationWidgetWhenChanged}
+                    />
+                );
             }
             case 'LineChart': {
-                return <CustomizationLineChart propagateUpdates={this.props.propagateUpdates} />;
+                return (
+                    <CustomizationLineChart
+                        propagateUpdates={this.props.propagateUpdates}
+                        restoreCustomizationState={keepCustomizationWidgetWhenChanged}
+                    />
+                );
             }
             default: {
                 return <div>ERROR</div>;
@@ -52,12 +73,7 @@ export default class AbstractCustomizationWidget extends Component {
     };
     /** component rendering entrance point **/
     render() {
-        return (
-            <div>
-                Hello I am abstract customization widget
-                {this.createCustomizationWidget()}
-            </div>
-        );
+        return <div>{this.createCustomizationWidget()}</div>;
     }
 }
 

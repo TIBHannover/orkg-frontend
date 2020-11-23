@@ -12,7 +12,7 @@ import VisualizationWidget from '../../libs/selfVisModel/VisRenderer/Visualizati
 import { getStatementsBySubject, createLiteralStatement, createResourceStatement } from '../../services/backend/statements';
 import { createLiteral } from '../../services/backend/literals';
 import { createResource } from '../../services/backend/resources';
-import { faPen, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippy.js/react';
 import { openAuthDialog } from '../../actions/auth';
@@ -23,19 +23,20 @@ const TabButton = styled.div`
     cursor: pointer;
     color: #000000;
     padding: 4px 20px 4px 20px;
-    border-right: 2px solid #ef8282;
+    border-right: 2px solid #black;
     border-radius: 10px;
-
+    margin: 0 3px;
     background-color: #f8f9fb;
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
+    border: 1px solid #dbdde5;
+    border-bottom: none;
 `;
 
 class AddVisualizationModal extends Component {
     constructor(props) {
         super(props);
-        this.initializedData = props.initialData;
-        this.modalBodyRef = React.createRef();
+        this.callingTimeoutCount = 0;
     }
 
     state = {
@@ -57,11 +58,17 @@ class AddVisualizationModal extends Component {
     updateDimensions = () => {
         // test
         const offset = 28 * 2 + 85;
-        let width = 300;
+        let width = 800;
         // try to find the element int the dom
         const modalBody = document.getElementById('selfVisServiceModalBody');
         if (modalBody) {
             width = modalBody.getBoundingClientRect().width;
+        } else {
+            // using a timeout to force an update when the modalBody is present and provides its width
+            if (this.callingTimeoutCount < 10) {
+                setTimeout(setTimeout(this.updateDimensions, 500));
+                this.callingTimeoutCount++;
+            }
         }
 
         this.setState({ windowHeight: window.innerHeight - offset, windowWidth: width });
@@ -71,10 +78,6 @@ class AddVisualizationModal extends Component {
         // check if we need to run the parser
         const mmr = new SelfVisDataModel(); // this is a singleton
         mmr.integrateInputData(this.props.initialData);
-
-        // this.parseComparisionData();
-        // // reset the selection data ;
-        // this.setState({ tabSelected: 0, mappedData: undefined, mappedTableData: undefined });
     };
 
     createDataOnBackend = data => {
@@ -120,10 +123,6 @@ class AddVisualizationModal extends Component {
         });
     };
 
-    createReconstructionData = model => {
-        return { zort: 'narf' };
-    };
-
     render() {
         return (
             <Modal
@@ -140,12 +139,13 @@ class AddVisualizationModal extends Component {
                     <div style={{ height: '60px', width: '800px' }}>
                         {/*todo : make window size adjustments! */}
                         <div style={{ width: '100%', height: '40px', paddingTop: '5px' }}>Create visualization of comparision table</div>
-                        <div style={{ flexDirection: 'row', display: 'flex', flexGrow: '1' }}>
+                        <div style={{ flexDirection: 'row', display: 'flex', flexGrow: '1', marginLeft: '-15px', height: '36px' }}>
                             {/*  TAB BUTTONS*/}
 
                             <TabButton
                                 style={{
                                     backgroundColor: this.state.processStep === 0 ? '#e86161' : '',
+                                    border: this.state.processStep === 0 ? 'none' : '',
                                     color: this.state.processStep === 0 ? '#ffffff' : ''
                                 }}
                                 onClick={() => {
@@ -157,7 +157,8 @@ class AddVisualizationModal extends Component {
                             <TabButton
                                 style={{
                                     backgroundColor: this.state.processStep === 1 ? '#e86161' : '',
-                                    color: this.state.processStep === 1 ? '#ffffff' : ''
+                                    color: this.state.processStep === 1 ? '#ffffff' : '',
+                                    border: this.state.processStep === 1 ? 'none' : ''
                                 }}
                                 onClick={() => {
                                     this.setState({ processStep: 1 });
@@ -168,7 +169,8 @@ class AddVisualizationModal extends Component {
                             <TabButton
                                 style={{
                                     backgroundColor: this.state.processStep === 2 ? '#e86161' : '',
-                                    color: this.state.processStep === 2 ? '#ffffff' : ''
+                                    color: this.state.processStep === 2 ? '#ffffff' : '',
+                                    border: this.state.processStep === 2 ? 'none' : ''
                                 }}
                                 onClick={() => {
                                     this.setState({ processStep: 2 });
@@ -182,12 +184,12 @@ class AddVisualizationModal extends Component {
                 <ModalBody id="selfVisServiceModalBody" style={{ padding: '0', minHeight: '100px', height: this.state.windowHeight }}>
                     {/*  Should render different views based on the current step in the process*/}
                     {/*    For Now we render the selection Table */}
-                    {this.state.processStep === 0 && (
+                    {this.state.processStep === 0 && this.props.showDialog && (
                         <>
                             <CellSelector isLoading={!this.state.loadedModel} height={this.state.windowHeight - 50} />
                             <Button
                                 color="primary"
-                                style={{ float: 'right', margin: '10px' }}
+                                style={{ float: 'right', margin: '7px' }}
                                 onClick={() => {
                                     this.setState({ processStep: this.state.processStep + 1 });
                                 }}
@@ -201,7 +203,7 @@ class AddVisualizationModal extends Component {
                             <CellEditor isLoading={!this.state.loadedModel} height={this.state.windowHeight - 50} />
                             <Button
                                 color="primary"
-                                style={{ float: 'right', margin: '10px' }}
+                                style={{ float: 'right', margin: '7px' }}
                                 onClick={() => {
                                     this.setState({ processStep: this.state.processStep + 1 });
                                 }}
@@ -210,7 +212,7 @@ class AddVisualizationModal extends Component {
                             </Button>
                             <Button
                                 color="primary"
-                                style={{ float: 'right', margin: '10px' }}
+                                style={{ float: 'right', margin: '7px' }}
                                 onClick={() => {
                                     this.setState({ processStep: this.state.processStep - 1 });
                                 }}
@@ -230,7 +232,7 @@ class AddVisualizationModal extends Component {
                                 <RequireAuthentication
                                     component={Button}
                                     color="primary"
-                                    style={{ float: 'right', margin: '10px' }}
+                                    style={{ float: 'right', margin: '7px' }}
                                     disabled={this.state.currentlyExporting}
                                     onClick={() => {
                                         this.setState({ currentlyExporting: true });
@@ -239,13 +241,10 @@ class AddVisualizationModal extends Component {
                                         const metaVisData = {};
                                         metaVisData.renderingEngine = currModel._renderingEngine;
                                         metaVisData.visMethod = currModel._renderingMethod;
-                                        metaVisData.renderingData = currModel._dataForRendering; // shall be removed later
-                                        // use the reconstruction model to add the meta information
                                         metaVisData.reconstructionData = currModel.getReconstructionModel();
-                                        // TODO:
-                                        // metaVisData.reconstructionData = this.createReconstructionData(currModel);
                                         console.log(JSON.stringify(metaVisData));
-                                        this.createDataOnBackend(metaVisData);
+                                        console.log('THIS IS THE DATE THAT WE DO FOR RECONSTRUCTION!');
+                                        // this.createDataOnBackend(metaVisData);
                                     }}
                                 >
                                     {this.state.currentlyExporting ? (
@@ -286,7 +285,7 @@ class AddVisualizationModal extends Component {
 
                             <Button
                                 color="primary"
-                                style={{ float: 'right', margin: '10px' }}
+                                style={{ float: 'right', margin: '7px' }}
                                 onClick={() => {
                                     const currModel = new SelfVisDataModel();
                                     //collect Data
@@ -298,7 +297,7 @@ class AddVisualizationModal extends Component {
 
                             <Button
                                 color="primary"
-                                style={{ float: 'right', margin: '10px' }}
+                                style={{ float: 'right', margin: '7px' }}
                                 onClick={() => {
                                     this.setState({ processStep: this.state.processStep - 1 });
                                 }}
@@ -319,7 +318,7 @@ AddVisualizationModal.propTypes = {
     closeOnExport: PropTypes.func.isRequired,
     initialData: PropTypes.object,
     openAuthDialog: PropTypes.func.isRequired,
-    user: PropTypes.object
+    user: PropTypes.any
 };
 
 const mapStateToProps = state => ({

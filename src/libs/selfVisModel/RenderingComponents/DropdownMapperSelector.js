@@ -46,7 +46,6 @@ export default class DropDownMapperSelector extends Component {
                 <DropdownItem
                     key={'dropdownItemIndexKey_' + id}
                     onClick={() => {
-                        console.log(this.props.data);
                         this.props.data.setPropertyMapperType(item);
                         this.setState({ selectedMapper: item });
                     }}
@@ -81,14 +80,14 @@ export default class DropDownMapperSelector extends Component {
                             padding: '0px',
                             paddingLeft: '0px',
                             marginLeft: '2px',
-                            border: 'solid 1px black',
-                            width: '85px',
+                            // border: 'solid 1px black',
+                            width: '120px',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             display: 'ruby'
                         }}
                     >
-                        {this.state.selectedMapper}
+                        <div style={{ width: '80%' }}>{this.state.selectedMapper}</div>
                     </DropdownToggle>
                     <DropdownMenu>{items}</DropdownMenu>
                 </Dropdown>
