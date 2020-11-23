@@ -11,6 +11,7 @@ import Contributions from 'components/ViewPaper/Contributions';
 import PropTypes from 'prop-types';
 import ComparisonPopup from 'components/ComparisonPopup/ComparisonPopup';
 import PaperHeader from 'components/ViewPaper/PaperHeader';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { resetStatementBrowser, updateContributionLabel } from 'actions/statementBrowser';
 import { loadPaper, selectContribution, setPaperAuthors } from 'actions/viewPaper';
 import GizmoGraphViewModal from 'components/ViewPaper/GraphView/GizmoGraphViewModal';
@@ -324,6 +325,9 @@ class ViewPaper extends Component {
                                 paperTitle={this.props.viewPaper.title}
                             />
                         )}
+
+                        <Breadcrumbs researchFieldID={this.props.viewPaper.researchField.id} />
+
                         <VisibilitySensor onChange={this.handleShowHeaderBar}>
                             <Container className="d-flex align-items-center">
                                 <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
