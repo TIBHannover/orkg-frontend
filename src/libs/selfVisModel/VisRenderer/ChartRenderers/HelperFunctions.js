@@ -107,16 +107,14 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                 caret
                 color="darkblue"
                 style={{
-                    padding: '5px',
                     paddingLeft: '3px',
-                    border: 'solid 1px black',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-
-                    width: '150px'
+                    width: '150px',
+                    display: 'ruby'
                 }}
             >
-                {ref.state.yAxisInterValSelectors[id][interval_id].label}
+                <div style={{ width: '120px', height: '20px', overflow: 'hidden', textOverflow: 'ellipsis', paddingTop: '2px' }}>
+                    {ref.state.yAxisInterValSelectors[id][interval_id].label}
+                </div>
             </DropdownToggle>
             <DropdownMenu>{itemsArray}</DropdownMenu>
         </Dropdown>
@@ -223,16 +221,14 @@ export const createValueSelectors = ref => {
                                 caret
                                 color="darkblue"
                                 style={{
-                                    padding: '5px',
                                     paddingLeft: '3px',
-                                    border: 'solid 1px black',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-
-                                    width: '150px'
+                                    width: '150px',
+                                    display: 'ruby'
                                 }}
                             >
-                                {ref.state.yAxisSelector[id] ? ref.state.yAxisSelector[id] : possibleValueCandidates[0].label}
+                                <div style={{ width: '120px', height: '20px', overflow: 'hidden', textOverflow: 'ellipsis', paddingTop: '2px' }}>
+                                    {ref.state.yAxisSelector[id] ? ref.state.yAxisSelector[id] : possibleValueCandidates[0].label}
+                                </div>
                             </DropdownToggle>
                             <DropdownMenu>{itemsArray[id]}</DropdownMenu>
                         </Dropdown>
@@ -311,16 +307,14 @@ export const createLabelSelectors = ref => {
                     caret
                     color="darkblue"
                     style={{
-                        padding: '5px',
                         paddingLeft: '3px',
-                        border: 'solid 1px black',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
                         display: 'ruby',
                         width: '150px'
                     }}
                 >
-                    {ref.state.xAxisSelector ? ref.state.xAxisSelector : possibleLabelCandidates[0].label}
+                    <div style={{ width: '120px', height: '20px', overflow: 'hidden', textOverflow: 'ellipsis', paddingTop: '2px' }}>
+                        {ref.state.xAxisSelector ? ref.state.xAxisSelector : possibleLabelCandidates[0].label}
+                    </div>
                 </DropdownToggle>
                 <DropdownMenu>{items}</DropdownMenu>
             </Dropdown>

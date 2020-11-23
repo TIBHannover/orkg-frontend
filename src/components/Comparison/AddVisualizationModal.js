@@ -198,7 +198,7 @@ class AddVisualizationModal extends Component {
                             </Button>
                         </>
                     )}
-                    {this.state.processStep === 1 && (
+                    {this.state.processStep === 1 && this.props.showDialog && (
                         <>
                             <CellEditor isLoading={!this.state.loadedModel} height={this.state.windowHeight - 50} />
                             <Button
@@ -221,7 +221,7 @@ class AddVisualizationModal extends Component {
                             </Button>
                         </>
                     )}
-                    {this.state.processStep === 2 && (
+                    {this.state.processStep === 2 && this.props.showDialog && (
                         <>
                             <VisualizationWidget
                                 isLoading={!this.state.loadedModel}
