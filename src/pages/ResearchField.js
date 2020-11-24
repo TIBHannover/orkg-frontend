@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     Container,
     Button,
@@ -19,22 +19,36 @@ import {
     ListGroupItem
 } from 'reactstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faEllipsisV, faAngleDoubleRight, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faEllipsisV, faAngleDoubleRight, faAngleDoubleDown, faPen } from '@fortawesome/free-solid-svg-icons';
 import useResearchField from 'components/ResearchField/hooks/useResearchField';
 import useResearchFieldObservatories from 'components/ResearchField/hooks/useResearchFieldObservatories';
 import useResearchFieldPapers from 'components/ResearchField/hooks/useResearchFieldPapers';
 import useResearchFieldComparison from 'components/ResearchField/hooks/useResearchFieldComparison';
 import useResearchFieldProblems from 'components/ResearchField/hooks/useResearchFieldProblems';
+import StatementBrowserDialog from 'components/StatementBrowser/StatementBrowserDialog';
+import RequireAuthentication from 'components/RequireAuthentication/RequireAuthentication';
 import ComparisonCard from 'components/ComparisonCard/ComparisonCard';
+import ExternalDescription from 'components/ResearchProblem/ExternalDescription';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { reverse } from 'named-urls';
 import { NavLink } from 'react-router-dom';
 import PaperCard from 'components/PaperCard/PaperCard';
 import ROUTES from 'constants/routes';
 
+function usePrevious(value) {
+    const ref = useRef();
+    useEffect(() => {
+        ref.current = value;
+    });
+    return ref.current;
+}
+
 function ResearchField(props) {
-    const [researchFieldData, parentResearchFields, subResearchFields, isLoading, isFailedLoading] = useResearchField();
+    const [researchFieldData, parentResearchFields, subResearchFields, isLoading, isFailedLoading, loadResearchFieldData] = useResearchField();
+    const [editMode, setEditMode] = useState(false);
+    const prevEditMode = usePrevious({ editMode });
     const [researchFieldObservatories] = useResearchFieldObservatories();
     const [papers, isLoadingPapers, hasNextPage, isLastPageReached, loadMorePapers] = useResearchFieldPapers();
     const [comparisons, isLoadingComparisons, hasNextPageComparison, isLastPageReachedComparison, loadMoreComparisons] = useResearchFieldComparison();
@@ -53,6 +67,15 @@ function ResearchField(props) {
     const [isProblemsModalOpen, setIsProblemsModalOpen] = useState(false);
     const [isObservatoriesModalOpen, setIsObservatoriesModalOpen] = useState(false);
 
+    const user = useSelector(state => state.auth.user);
+
+    useEffect(() => {
+        if (!editMode && prevEditMode && prevEditMode.editMode !== editMode) {
+            loadResearchFieldData(researchFieldId);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [editMode]);
+
     return (
         <div>
             {isLoading && (
@@ -63,10 +86,25 @@ function ResearchField(props) {
             {!isLoading && isFailedLoading && <div className="text-center mt-4 mb-4">Failed loading the resource</div>}
             {!isLoading && !isFailedLoading && (
                 <div>
+                    {editMode && (
+                        <StatementBrowserDialog
+                            show={editMode}
+                            toggleModal={() => setEditMode(v => !v)}
+                            resourceId={researchFieldId}
+                            resourceLabel={researchFieldId.label}
+                            enableEdit={true}
+                            syncBackend={true}
+                        />
+                    )}
                     <Container className="d-flex align-items-center">
                         <h1 className="h4 mt-4 mb-4 flex-grow-1">Research field</h1>
 
                         <ButtonDropdown isOpen={menuOpen} toggle={() => setMenuOpen(v => !v)} nav inNavbar>
+                            {!!user && user.isCurationAllowed && (
+                                <Button size="sm" className="float-right" onClick={() => setEditMode(v => !v)} color="darkblue">
+                                    <Icon icon={faPen} /> Edit
+                                </Button>
+                            )}
                             <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
                                 <Icon icon={faEllipsisV} />
                             </DropdownToggle>
@@ -81,6 +119,12 @@ function ResearchField(props) {
                         <Card>
                             <CardBody>
                                 <h3 className="mt-4 mb-4">{researchFieldData && researchFieldData.label}</h3>
+                                {researchFieldData.description && <div className="mb-4">{researchFieldData.description}</div>}
+                                {researchFieldData.sameAs && (
+                                    <ExternalDescription
+                                        query={researchFieldData.sameAs ? researchFieldData.sameAs.label : researchFieldData.label}
+                                    />
+                                )}
                             </CardBody>
 
                             <CardFooter>
