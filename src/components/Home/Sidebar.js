@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import RecentlyAddedPapers from './RecentlyAddedPapers';
+import React, { useState } from 'react';
+import FeaturedComparisons from './FeaturedComparisons';
 import FeaturedPapers from './FeaturedPapers';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
@@ -21,7 +21,7 @@ const FeaturedTabs = styled.div`
         padding: 15px;
         color: #bebbac;
         cursor: pointer;
-        border-bottom: 2px solid #fff;
+        border-bottom: 2px solid ${props => props.theme.ultraLightBlueDarker};
         -webkit-transition: border 500ms ease-out;
         -moz-transition: border 500ms ease-out;
         -o-transition: border 500ms ease-out;
@@ -42,58 +42,42 @@ const SidebarStyledBox = styled.div`
     }
 `;
 
-class Sidebar extends Component {
-    constructor(props) {
-        super(props);
+export default function Sidebar() {
+    const [activeTab, setActiveState] = useState(1);
 
-        this.state = {
-            activeTab: 1
-        };
-    }
-
-    toggle = tab => {
-        if (this.state.activeTab !== tab) {
-            this.setState({ activeTab: tab });
-        }
-    };
-
-    render = () => {
-        let rightSidebar;
-
-        switch (this.state.activeTab) {
-            case 1:
-            default:
-                rightSidebar = (
+    return (
+        <SidebarStyledBox className="box rounded-lg mt-3">
+            <FeaturedTabs className="clearfix d-flex">
+                <div
+                    role="button"
+                    tabIndex="0"
+                    onKeyDown={e => e.keyCode === 13 && setActiveState(2)}
+                    className={`h6 col-md-6 text-center tab ${activeTab === 2 ? 'active' : ''}`}
+                    onClick={() => setActiveState(2)}
+                >
+                    Comparisons
+                </div>
+                <div
+                    role="button"
+                    tabIndex="0"
+                    onKeyDown={e => e.keyCode === 13 && setActiveState(1)}
+                    className={`h6 col-md-6 text-center tab ${activeTab === 1 ? 'active' : ''}`}
+                    onClick={() => setActiveState(1)}
+                >
+                    Featured papers
+                </div>
+            </FeaturedTabs>
+            <TransitionGroup exit={false}>
+                {activeTab === 1 ? (
                     <AnimationContainer key={1} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
                         <FeaturedPapers />
                     </AnimationContainer>
-                );
-                break;
-            case 2:
-                rightSidebar = (
+                ) : (
                     <AnimationContainer key={2} classNames="fadeIn" timeout={{ enter: 700, exit: 0 }}>
-                        <RecentlyAddedPapers />
+                        <FeaturedComparisons />
                     </AnimationContainer>
-                );
-                break;
-        }
-
-        return (
-            <SidebarStyledBox className="box rounded-lg">
-                <FeaturedTabs className="clearfix d-flex">
-                    <div className={`h6 col-md-6 text-center tab ${this.state.activeTab === 1 ? 'active' : ''}`} onClick={() => this.toggle(1)}>
-                        Featured papers
-                    </div>
-                    <div className={`h6 col-md-6 text-center tab ${this.state.activeTab === 2 ? 'active' : ''}`} onClick={() => this.toggle(2)}>
-                        Recently added papers
-                    </div>
-                </FeaturedTabs>
-                <TransitionGroup exit={false}>{rightSidebar}</TransitionGroup>
-            </SidebarStyledBox>
-        );
-    };
+                )}
+            </TransitionGroup>
+        </SidebarStyledBox>
+    );
 }
-
-Sidebar.propTypes = {};
-
-export default Sidebar;

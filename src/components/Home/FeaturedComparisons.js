@@ -1,59 +1,22 @@
-import React, { Component } from 'react';
-import { Carousel, CarouselItem, CarouselIndicators } from 'reactstrap';
+import React, { useState, useEffect } from 'react';
+import { ListGroup, ListGroupItem, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import ROUTES from 'constants/routes.js';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { getResourcesByClass } from 'services/backend/resources';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
 import Dotdotdot from 'react-dotdotdot';
-import styled from 'styled-components';
-import { sortMethod } from 'utils';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { reverse } from 'named-urls';
-import ContentLoader from 'react-content-loader';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { sortMethod } from 'utils';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
 
-const CarouselContainer = styled.div`
-    width: 100%;
+export default function FeaturedComparisons() {
+    const [comparisons, setComparisons] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
-    & li {
-        width: 10px !important;
-        height: 10px !important;
-        border-radius: 100% !important;
-        background-color: ${props => props.theme.orkgPrimaryColor} !important;
-    }
-`;
-
-const CarouselItemStyled = styled(CarouselItem)`
-    border-left: 4px solid ${props => props.theme.orkgPrimaryColor};
-`;
-
-const DescriptionPreview = styled.div`
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    font-style: italic;
-`;
-
-class FeaturedComparisons extends Component {
-    state = {
-        loading: false,
-        comparisons: [],
-        activeIndex: 0,
-        animating: false
-    };
-    componentDidMount = () => {
-        document.title = 'Featured comparisons - ORKG';
-
-        this.getFeaturedComparisons();
-    };
-
-    getFeaturedComparisons = async () => {
-        this.setState({
-            loading: true
-        });
+    const getFeaturedComparisons = async () => {
+        setIsLoading(true);
 
         const responseJson = await getResourcesByClass({
             id: CLASSES.FEATURED_COMPARISON,
@@ -113,91 +76,63 @@ class FeaturedComparisons extends Component {
 
         // order featured comparison
         comparisons = comparisons.sort((c1, c2) => sortMethod(c1.order, c2.order));
-
-        this.setState({
-            comparisons,
-            loading: false
-        });
+        setComparisons(comparisons);
+        setIsLoading(false);
     };
 
-    next = () => {
-        if (this.state.animating) {
-            return;
-        }
-        const nextIndex = this.state.activeIndex === this.state.comparisons.length - 1 ? 0 : this.state.activeIndex + 1;
-        this.setState({ activeIndex: nextIndex });
-    };
+    useEffect(() => {
+        getFeaturedComparisons();
+    }, []);
 
-    previous = () => {
-        if (this.state.animating) {
-            return;
-        }
-        const nextIndex = this.state.activeIndex === 0 ? this.state.comparisons.length - 1 : this.state.activeIndex - 1;
-        this.setState({ activeIndex: nextIndex });
-    };
+    const [dropdownOpen, setOpen] = useState(false);
 
-    goToIndex = newIndex => {
-        this.setState({ activeIndex: newIndex });
-    };
+    const toggle = () => setOpen(!dropdownOpen);
 
-    slides = () => {
-        return this.state.comparisons.map((comparison, index) => {
-            return (
-                <CarouselItemStyled
-                    onExiting={() => this.setState({ animating: true })}
-                    onExited={() => this.setState({ animating: false })}
-                    className="pt-4 pb-1 pl-4 pr-4"
-                    key={`fp${comparison.id}`}
-                >
-                    <div style={{ minHeight: '120px' }} className="d-flex">
-                        <div>
-                            <h5>
-                                <Link className="" to={reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })}>
-                                    <Dotdotdot clamp={2}>{comparison.label}</Dotdotdot>
-                                </Link>
-                            </h5>
-                            <DescriptionPreview>{comparison.description}</DescriptionPreview>
-                        </div>
-                    </div>
-                </CarouselItemStyled>
-            );
-        });
-    };
-
-    render() {
-        return (
-            <div className="box rounded-lg" style={{ overflow: 'hidden' }}>
-                <h2
-                    className="h5"
-                    style={{
-                        marginBottom: 0,
-                        padding: '15px'
-                    }}
-                >
-                    <Icon icon={faStar} className="text-primary" /> Featured paper comparisons
-                    <Link to={ROUTES.FEATURED_COMPARISONS}>
-                        <span style={{ fontSize: '0.9rem', float: 'right', marginTop: 2, marginBottom: 15 }}>More comparisons</span>
-                    </Link>
-                </h2>
-
-                <CarouselContainer>
-                    {!this.state.loading ? (
-                        <Carousel activeIndex={this.state.activeIndex} next={this.next} previous={this.previous}>
-                            {this.slides()}
-                            <CarouselIndicators items={this.state.comparisons} activeIndex={this.state.activeIndex} onClickHandler={this.goToIndex} />
-                        </Carousel>
-                    ) : (
-                        <div style={{ height: '130px' }} className="pt-4 pb-1 pl-4 pr-4">
-                            <ContentLoader speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb" ariaLabel={false}>
-                                <rect x="1" y="0" rx="4" ry="4" width="300" height="20" />
-                                <rect x="1" y="25" rx="3" ry="3" width="250" height="20" />
-                            </ContentLoader>
-                        </div>
-                    )}
-                </CarouselContainer>
+    return (
+        <div className="pl-3 pr-3 pt-2 pb-3">
+            <div className="d-flex justify-content-end mb-2">
+                <ButtonDropdown size="sm" isOpen={dropdownOpen} toggle={toggle}>
+                    <DropdownToggle caret color="lightblue">
+                        Featured
+                    </DropdownToggle>
+                    <DropdownMenu>
+                        <DropdownItem>Featured</DropdownItem>
+                        <DropdownItem>Latest</DropdownItem>
+                    </DropdownMenu>
+                </ButtonDropdown>
             </div>
-        );
-    }
-}
+            {!isLoading ? (
+                comparisons.length > 0 ? (
+                    <>
+                        <ListGroup>
+                            {comparisons.map((comparison, index) => (
+                                <ListGroupItem key={index} className="p-0 m-0 mb-2" style={{ border: 0 }}>
+                                    <Link to={reverse(ROUTES.COMPARISON, { comparisonId: comparison.id })}>
+                                        {comparison.label ? comparison.label : <em>No title</em>}
+                                    </Link>
+                                    <p style={{ fontSize: '13px' }} className="text-muted">
+                                        <Dotdotdot clamp={3}>{comparison.description}</Dotdotdot>
+                                    </p>
+                                </ListGroupItem>
+                            ))}
+                        </ListGroup>
 
-export default FeaturedComparisons;
+                        <div className="text-center">
+                            <Link to={ROUTES.FEATURED_COMPARISONS}>
+                                <Button color="primary" className="mr-3" size="sm">
+                                    View more
+                                </Button>
+                            </Link>
+                        </div>
+                    </>
+                ) : (
+                    <div className="text-center">No features comparison found</div>
+                )
+            ) : (
+                <div className="text-center">
+                    <Icon icon={faSpinner} spin /> Loading
+                </div>
+            )}
+        </div>
+    );
+}
