@@ -41,7 +41,9 @@ export const PREDICATES = {
     COMPARE_CONTRIBUTION: 'compareContribution',
     HAS_PROPERTY: 'hasProperty',
     HAS_PREVIOUS_VERSION: 'hasPreviousVersion',
-    HAS_SUBJECT: 'hasSubject'
+    HAS_SUBJECT: 'hasSubject',
+    IS_LISTED: 'isListed',
+    HAS_SECTION: 'HasSection'
 };
 
 export const CLASSES = {
@@ -61,7 +63,15 @@ export const CLASSES = {
     PREDICATE: 'Predicates',
     QB_DATASET_CLASS: 'QBDataset',
     LOCATION: 'DCLocation',
-    SENTENCE: 'Sentence'
+    SENTENCE: 'Sentence',
+    SMART_ARTICLE: 'SmartArticle',
+    SECTION: 'Section'
+    /*FABIO_SCHOLARLY_WORK: 'ScholarlyWork',
+    DOCO_FRONT_MATTER: 'FrontMatter',
+    DOCO_BACK_MATTER: 'BackMatter',
+    DOCO_BODY_MATTER: 'BodyMatter',
+    DOCO_TITLE: 'Title',
+    DOCO_LIST_OF_AUTHORS: 'ListOfAuthors'*/
 };
 
 export const MISC = {

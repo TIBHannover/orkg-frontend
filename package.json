@@ -52,6 +52,7 @@
         "react-bootstrap-table-next": "^4.0.1",
         "react-bootstrap-table2-editor": "^1.4.0",
         "react-content-loader": "^4.2.2",
+        "react-contenteditable": "^3.3.5",
         "react-cookie": "^4.0.1",
         "react-copy-to-clipboard": "^5.0.1",
         "react-csv": "^2.0.3",

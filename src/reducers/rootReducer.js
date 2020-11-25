@@ -7,6 +7,7 @@ import pdfTextAnnotation from './pdfTextAnnotation';
 import viewPaper from './viewPaper';
 import pdfAnnotation from './pdfAnnotation';
 import addTemplate from './addTemplate';
+import smartArticle from './smartArticle';
 
 export default history =>
     combineReducers({
@@ -17,5 +18,6 @@ export default history =>
         pdfAnnotation,
         auth,
         addTemplate,
-        pdfTextAnnotation
+        pdfTextAnnotation,
+        smartArticle
     });

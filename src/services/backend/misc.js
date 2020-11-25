@@ -18,3 +18,7 @@ export const generateDOIForComparison = (comparison_id, title, subject, descript
         { comparison_id, title, subject, description, related_resources, authors, url }
     );
 };
+
+export const createObject = payload => {
+    return submitPostRequest(`${url}objects/`, { 'Content-Type': 'application/json' }, payload);
+};

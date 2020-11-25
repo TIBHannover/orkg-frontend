@@ -41,6 +41,8 @@ import FeaturedComparisons from 'pages/FeaturedComparisons';
 import ExportData from 'pages/ExportData';
 import Contribution from 'pages/Contribution';
 import CsvImport from 'pages/CsvImport';
+import SmartArticle from 'pages/SmartArticle/SmartArticle';
+import SmartArticleNew from 'pages/SmartArticle/SmartArticleNew';
 import requireAuthentication from 'requireAuthentication';
 import { reverse } from 'named-urls';
 
@@ -257,6 +259,14 @@ const routes = [
     {
         path: ROUTES.CSV_IMPORT,
         component: CsvImport
+    },
+    {
+        path: ROUTES.SMART_ARTICLE,
+        component: SmartArticle
+    },
+    {
+        path: ROUTES.SMART_ARTICLE_NEW,
+        component: SmartArticleNew
     },
     /* Don't add routes below this line */
     {
