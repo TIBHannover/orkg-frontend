@@ -3,7 +3,19 @@ import queryString from 'query-string';
 import { flattenDepth, uniq } from 'lodash';
 import rdf from 'rdf';
 import { PREDICATES, MISC } from 'constants/graphSettings';
-import { isString } from 'lodash';
+import { isString, isEqual } from 'lodash';
+import {
+    createLiteralStatement,
+    createResourceStatement,
+    deleteStatementsByIds,
+    deleteStatementById,
+    updateStatement,
+    getStatementsBySubjectAndPredicate,
+    getStatementsByPredicateAndLiteral
+} from 'services/backend/statements';
+import { updateLiteral, createLiteral as createLiteralApi } from 'services/backend/literals';
+import { updateResource, createResource } from 'services/backend/resources';
+import { CLASSES } from 'constants/graphSettings';
 
 export function hashCode(s) {
     return s.split('').reduce((a, b) => {
@@ -717,4 +729,66 @@ export function truncStringPortion(str, firstCharCount = str.length, endCharCoun
     } else {
         return str.slice(0, firstCharCount) + '.'.repeat(dotCount) + str.slice(str.length - endCharCount);
     }
+}
+
+// TODO: refactor the authors dialog and create a hook to put this function
+export async function saveAuthors({ prevAuthors, newAuthors, paperId }) {
+    if (isEqual(prevAuthors, newAuthors)) {
+        return newAuthors;
+    }
+
+    const statementsIds = [];
+    // remove all authors statement from reducer
+    for (const author of prevAuthors) {
+        statementsIds.push(author.statementId);
+    }
+    console.log(statementsIds);
+    deleteStatementsByIds(statementsIds);
+
+    // Add all authors from the state
+    const authors = newAuthors;
+    for (const [i, author] of newAuthors.entries()) {
+        // create the author
+        if (author.orcid) {
+            // Create author with ORCID
+            // check if there's an author resource
+            const responseJson = await getStatementsByPredicateAndLiteral({
+                predicateId: PREDICATES.HAS_ORCID,
+                literal: author.orcid,
+                subjectClass: CLASSES.AUTHOR,
+                items: 1
+            });
+            if (responseJson.length > 0) {
+                // Author resource exists
+                const authorResource = responseJson[0];
+                const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, authorResource.subject.id);
+                authors[i].statementId = authorStatement.id;
+                authors[i].id = authorResource.subject.id;
+                authors[i].class = authorResource.subject._class;
+                authors[i].classes = authorResource.subject.classes;
+            } else {
+                // Author resource doesn't exist
+                // Create resource author
+                const authorResource = await createResource(author.label, [CLASSES.AUTHOR]);
+                const createLiteral = await createLiteralApi(author.orcid);
+                await createLiteralStatement(authorResource.id, PREDICATES.HAS_ORCID, createLiteral.id);
+                const authorStatement = await createResourceStatement(paperId, PREDICATES.HAS_AUTHOR, authorResource.id);
+                authors[i].statementId = authorStatement.id;
+                authors[i].id = authorResource.id;
+                authors[i].class = authorResource._class;
+                authors[i].classes = authorResource.classes;
+            }
+        } else {
+            // Author resource doesn't exist
+            const newLiteral = await createLiteralApi(author.label);
+            // Create literal of author
+            const authorStatement = await createLiteralStatement(paperId, PREDICATES.HAS_AUTHOR, newLiteral.id);
+            authors[i].statementId = authorStatement.id;
+            authors[i].id = newLiteral.id;
+            authors[i].class = authorStatement.object._class;
+            authors[i].classes = authorStatement.object.classes;
+        }
+    }
+
+    return authors;
 }

@@ -44,10 +44,14 @@ export const SectionType = styled.button`
     position: absolute;
     right: -6px;
     top: -6px;
-    color: #5c6873;
+    color: ${props => props.theme.darkblue};
     text-transform: uppercase;
     font-weight: bold;
     font-size: 90%;
     padding: 1px 15px;
     box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.13);
+
+    &:disabled {
+        cursor: not-allowed;
+    }
 `;

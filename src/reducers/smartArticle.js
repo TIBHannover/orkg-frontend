@@ -5,7 +5,7 @@ import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
 
 const initialState = {
-    titleResource: {},
+    paperResource: {},
     authorResources: [],
     sectionResources: [],
     isLoading: false
@@ -14,11 +14,11 @@ const initialState = {
 export default (state = initialState, action) => {
     switch (action.type) {
         case type.ARTICLE_WRITER_LOAD: {
-            const { titleResource, authorResources, sectionResources } = action.payload;
+            const { paperResource, authorResources, sectionResources } = action.payload;
 
             return {
                 ...state,
-                titleResource,
+                paperResource,
                 authorResources,
                 sectionResources
             };
@@ -38,10 +38,19 @@ export default (state = initialState, action) => {
 
             return {
                 ...state,
-                titleResource: {
-                    ...state.titleResource,
+                paperResource: {
+                    ...state.paperResource,
                     title
                 }
+            };
+        }
+
+        case type.ARTICLE_WRITER_UPDATE_AUTHORS: {
+            const { authorResources } = action;
+
+            return {
+                ...state,
+                authorResources
             };
         }
 

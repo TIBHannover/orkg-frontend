@@ -18,7 +18,6 @@ const useHeaderBar = () => {
                 id
             });
 
-            const titleResource = paperResource;
             const authorResources = getObjectsByPredicateAndLevel(paperStatements, PREDICATES.HAS_AUTHOR, 0);
             const sectionResources = getObjectsByPredicateAndLevel(paperStatements, PREDICATES.HAS_SECTION, 1);
 
@@ -27,10 +26,25 @@ const useHeaderBar = () => {
                 sectionResources[index].statements = sectionStatements;
             }
 
+            // add the orcid and statement id to the author statements
+            for (const [index, author] of authorResources.entries()) {
+                // orcid
+                const orcidStatements = getStatementsBySubjectId(paperStatements, author.id);
+                if (orcidStatements.length) {
+                    const orcidStatement = orcidStatements.find(({ statement }) => statement.predicate.id === PREDICATES.HAS_ORCID);
+                    const orcid = orcidStatement ? orcidStatement.statement.object.label : '';
+                    authorResources[index].orcid = orcid;
+                }
+
+                // statementId
+                const statementId = getStatementsByObjectId(paperStatements, author.id)[0].statement.id;
+                authorResources[index].statementId = statementId;
+            }
+
             dispatch(
                 loadArticle({
-                    titleResource,
-                    authorResources,
+                    paperResource,
+                    authorResources: authorResources.reverse(),
                     sectionResources
                 })
             );
@@ -48,6 +62,10 @@ const useHeaderBar = () => {
 
     const getStatementsBySubjectId = (statements, subjectId) => {
         return statements.filter(statement => statement.statement.subject.id === subjectId);
+    };
+
+    const getStatementsByObjectId = (statements, objectId) => {
+        return statements.filter(statement => statement.statement.object.id === objectId);
     };
 
     //const getStatementsBySubjectClassId = ({ bundle: statements }, classId) =>

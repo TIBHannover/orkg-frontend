@@ -25,3 +25,10 @@ export const updateTitle = ({ id, title }) => async dispatch => {
     await updateResource(id, title);
     dispatch(setIsLoading(false));
 };
+
+export const updateAuthors = authorResources => async dispatch => {
+    dispatch({
+        type: type.ARTICLE_WRITER_UPDATE_AUTHORS,
+        authorResources
+    });
+};

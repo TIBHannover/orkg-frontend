@@ -6,8 +6,7 @@ import {
     deleteStatementsByIds,
     deleteStatementById,
     updateStatement,
-    getStatementsBySubjectAndPredicate,
-    getStatementsByPredicateAndLiteral
+    getStatementsBySubjectAndPredicate
 } from 'services/backend/statements';
 import { updateLiteral, createLiteral as createLiteralApi } from 'services/backend/literals';
 import { updateResource, createResource } from 'services/backend/resources';
@@ -20,10 +19,10 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import LoadingOverlay from 'react-loading-overlay';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { isEqual } from 'lodash';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { PREDICATES } from 'constants/graphSettings';
 import { CLASSES } from 'constants/graphSettings';
+import { saveAuthors } from 'utils';
 
 const LoadingOverlayStyled = styled(LoadingOverlay)`
     //border-radius: 7px;
@@ -208,70 +207,11 @@ class EditPaperDialog extends Component {
 
     // TODO: improve code by using reduce function
     updateAuthors = async () => {
-        // Check if there is changes on the authors
-        if (isEqual(this.props.viewPaper.authors, this.state.authors)) {
-            return null;
-        }
-
-        const statementsIds = [];
-        // remove all authors statement from reducer
-        for (const author of this.props.viewPaper.authors) {
-            statementsIds.push(author.statementId);
-        }
-        deleteStatementsByIds(statementsIds);
-
-        // Add all authors from the state
-        const authors = this.state.authors;
-        for (const [i, author] of this.state.authors.entries()) {
-            // create the author
-            if (author.orcid) {
-                // Create author with ORCID
-                // check if there's an author resource
-                const responseJson = await getStatementsByPredicateAndLiteral({
-                    predicateId: PREDICATES.HAS_ORCID,
-                    literal: author.orcid,
-                    subjectClass: CLASSES.AUTHOR,
-                    items: 1
-                });
-                if (responseJson.length > 0) {
-                    // Author resource exists
-                    const authorResource = responseJson[0];
-                    const authorStatement = await createResourceStatement(
-                        this.props.viewPaper.paperResourceId,
-                        PREDICATES.HAS_AUTHOR,
-                        authorResource.subject.id
-                    );
-                    authors[i].statementId = authorStatement.id;
-                    authors[i].id = authorResource.subject.id;
-                    authors[i].class = authorResource.subject._class;
-                    authors[i].classes = authorResource.subject.classes;
-                } else {
-                    // Author resource doesn't exist
-                    // Create resource author
-                    const authorResource = await createResource(author.label, [CLASSES.AUTHOR]);
-                    const createLiteral = await createLiteralApi(author.orcid);
-                    await createLiteralStatement(authorResource.id, PREDICATES.HAS_ORCID, createLiteral.id);
-                    const authorStatement = await createResourceStatement(
-                        this.props.viewPaper.paperResourceId,
-                        PREDICATES.HAS_AUTHOR,
-                        authorResource.id
-                    );
-                    authors[i].statementId = authorStatement.id;
-                    authors[i].id = authorResource.id;
-                    authors[i].class = authorResource._class;
-                    authors[i].classes = authorResource.classes;
-                }
-            } else {
-                // Author resource doesn't exist
-                const newLiteral = await createLiteralApi(author.label);
-                // Create literal of author
-                const authorStatement = await createLiteralStatement(this.props.viewPaper.paperResourceId, PREDICATES.HAS_AUTHOR, newLiteral.id);
-                authors[i].statementId = authorStatement.id;
-                authors[i].id = newLiteral.id;
-                authors[i].class = authorStatement.object._class;
-                authors[i].classes = authorStatement.object.classes;
-            }
-        }
+        const authors = await saveAuthors({
+            prevAuthors: this.props.viewPaper.authors,
+            newAuthors: this.state.authors,
+            paperId: this.props.viewPaper.paperResourceId
+        });
 
         this.setState({
             authors
