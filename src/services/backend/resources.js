@@ -85,10 +85,10 @@ export const getResourcesByClass = async ({
     return resources;
 };
 
-export const markAsValidated = id => {
-    return submitPutRequest(`${resourcesUrl}${id}/validation`, { 'Content-Type': 'application/json' }, { validated_manually: true });
+export const markAsVerified = id => {
+    return submitPutRequest(`${resourcesUrl}${id}/verified`, { 'Content-Type': 'application/json' });
 };
 
-export const markAsInvalidated = id => {
-    return submitPutRequest(`${resourcesUrl}${id}/validation`, { 'Content-Type': 'application/json' }, { validated_manually: false });
+export const markAsUnverified = id => {
+    return submitDeleteRequest(`${resourcesUrl}${id}/verified`, { 'Content-Type': 'application/json' });
 };

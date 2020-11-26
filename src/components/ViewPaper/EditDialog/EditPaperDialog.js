@@ -10,7 +10,7 @@ import {
     getStatementsByPredicateAndLiteral
 } from 'services/backend/statements';
 import { updateLiteral, createLiteral as createLiteralApi } from 'services/backend/literals';
-import { updateResource, createResource, markAsValidated, markAsInvalidated } from 'services/backend/resources';
+import { updateResource, createResource, markAsVerified, markAsUnverified } from 'services/backend/resources';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
 import Tippy from '@tippy.js/react';
@@ -52,7 +52,7 @@ class EditPaperDialog extends Component {
             publishedIn: this.props.viewPaper.publishedIn,
             url: this.props.viewPaper.url,
             researchField: this.props.viewPaper.researchField,
-            validated: this.props.viewPaper.validated
+            verified: this.props.viewPaper.verified
         };
     };
 
@@ -74,7 +74,7 @@ class EditPaperDialog extends Component {
         // fixing publication month and year as int number edit;
         if (name === 'publicationMonth' || name === 'publicationYear') {
             this.setState({ [name]: parseInt(event.target.value) });
-        } else if (name === 'validated') {
+        } else if (name === 'verified') {
             this.setState({ [name]: event.target.checked });
         } else {
             this.setState({ [name]: event.target.value });
@@ -158,12 +158,12 @@ class EditPaperDialog extends Component {
             predicateIdForCreate: PREDICATES.URL
         });
 
-        //validated
+        //verified
         if (!!this.props.user && this.props.user.isCurationAllowed) {
-            if (this.state.validated) {
-                markAsValidated(this.props.viewPaper.paperResourceId, this.state.validated).catch(() => console.log('Error'));
+            if (this.state.verified) {
+                markAsVerified(this.props.viewPaper.paperResourceId, this.state.verified).catch(() => console.log('Error'));
             } else {
-                markAsInvalidated(this.props.viewPaper.paperResourceId, this.state.validated).catch(() => console.log('Error'));
+                markAsUnverified(this.props.viewPaper.paperResourceId, this.state.verified).catch(() => console.log('Error'));
             }
         }
 
@@ -178,7 +178,7 @@ class EditPaperDialog extends Component {
             publishedIn: this.state.publishedIn,
             url: this.state.url,
             researchField: this.state.researchField,
-            validated: this.state.validated
+            verified: this.state.verified
         });
 
         this.setState({
@@ -431,16 +431,16 @@ class EditPaperDialog extends Component {
                             </ListGroup>
                             <div className="d-flex" style={{ justifyContent: 'flex-end' }}>
                                 {!!this.props.user && this.props.user.isCurationAllowed && (
-                                    <Tippy content="Mark this meta-data as validated">
+                                    <Tippy content="Mark this meta-data as verified">
                                         <span>
                                             <CustomInput
                                                 className="mt-2 mr-2 pt-2"
                                                 type="checkbox"
                                                 id="replaceTitles"
-                                                label="Validated"
-                                                name="validated"
-                                                onChange={e => this.handleChange(e, 'validated')}
-                                                checked={this.state.validated}
+                                                label="Verified"
+                                                name="verified"
+                                                onChange={e => this.handleChange(e, 'verified')}
+                                                checked={this.state.verified}
                                             />
                                         </span>
                                     </Tippy>
@@ -469,7 +469,7 @@ EditPaperDialog.propTypes = {
         publishedIn: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
         url: PropTypes.string,
         researchField: PropTypes.object.isRequired,
-        validated: PropTypes.bool.isRequired,
+        verified: PropTypes.bool.isRequired,
         authors: PropTypes.arrayOf(
             PropTypes.shape({
                 id: PropTypes.string.isRequired,

@@ -236,7 +236,7 @@ class ViewPaper extends Component {
 
         // Set document title
         document.title = `${paperResource.label} - ORKG`;
-        this.props.loadPaper({ ...paperData, validated: paperResource.validated });
+        this.props.loadPaper({ ...paperData, verified: paperResource.verified });
         this.setState({
             loading: false,
             contributions: paperData.contributions

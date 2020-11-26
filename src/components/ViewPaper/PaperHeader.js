@@ -92,10 +92,10 @@ const PaperHeader = props => {
                         </Button>
                     )}
                 </div>
-                {isCurationAllowed && !viewPaper.validated && (
+                {isCurationAllowed && !viewPaper.verified && (
                     <div className="mt-3 justify-content-end">
                         <Icon icon={faCheckCircle} className="mt-1 mr-1 text-success" />
-                        Validated
+                        Verified
                     </div>
                 )}
             </div>
