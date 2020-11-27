@@ -1,4 +1,5 @@
 import * as type from 'actions/types';
+import dotProp from 'dot-prop-immutable';
 
 const initialState = {
     paperResource: {},
@@ -41,58 +42,47 @@ export default (state = initialState, action) => {
             };
         }
         case type.ARTICLE_WRITER_UPDATE_SECTION_TITLE: {
-            const { sectionId, title } = action;
-
-            return {
-                ...state,
-                sectionResources: [
-                    ...state.sections.map(sectionResource => {
-                        if (sectionResource.id === sectionId) {
-                            return {
-                                ...sectionResource,
-                                title
-                            };
-                        }
-                        return sectionResource;
-                    })
-                ]
-            };
+            const { sectionId, title } = action.payload;
+            const index = state.sections.findIndex(section => section.id === sectionId);
+            return dotProp.set(state, `sections.${index}.title.label`, title);
         }
 
         case type.ARTICLE_WRITER_UPDATE_SECTION_MARKDOWN: {
-            const { sectionId, markdown } = action;
-
-            return {
-                ...state,
-                sectionResources: [
-                    ...state.sections.map(sectionResource => {
-                        if (sectionResource.id === sectionId) {
-                            return {
-                                ...sectionResource,
-                                markdown
-                            };
-                        }
-                        return sectionResource;
-                    })
-                ]
-            };
+            const { id, markdown } = action.payload;
+            const index = state.sections.findIndex(section => section.markdown.id === id);
+            return dotProp.set(state, `sections.${index}.markdown.label`, markdown);
         }
 
         case type.ARTICLE_WRITER_UPDATE_SECTION_TYPE: {
-            const { sectionId, type } = action;
+            const { sectionId, sectionType } = action.payload;
+            console.log(action);
+            console.log('sectionId', sectionId);
+            const index = state.sections.findIndex(section => section.id === sectionId);
+            return dotProp.set(state, `sections.${index}.type.id`, sectionType);
+        }
+
+        case type.ARTICLE_WRITER_CREATE_SECTION: {
+            const { afterIndex, sectionId, markdownId, typeId } = action.payload;
 
             return {
                 ...state,
-                sectionResources: [
-                    ...state.sections.map(sectionResource => {
-                        if (sectionResource.id === sectionId) {
-                            return {
-                                ...sectionResource,
-                                type
-                            };
+                sections: [
+                    ...state.sections.slice(0, afterIndex),
+                    {
+                        id: sectionId,
+                        title: {
+                            id: sectionId,
+                            label: ''
+                        },
+                        type: {
+                            id: typeId
+                        },
+                        markdown: {
+                            id: markdownId,
+                            label: 'text'
                         }
-                        return sectionResource;
-                    })
+                    },
+                    ...state.sections.slice(afterIndex)
                 ]
             };
         }

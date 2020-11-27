@@ -54,9 +54,9 @@ const SmartArticle = props => {
 
             <Title />
             <Authors />
-            <AddSection />
-            {sections.map(section => (
-                <Section key={section.title.id} section={section} />
+            <AddSection index={0} />
+            {sections.map((section, index) => (
+                <Section key={section.title.id} section={section} index={index + 1} />
             ))}
         </div>
     );

@@ -51,7 +51,7 @@ const SectionType = props => {
 
         dispatch(
             updateSectionType({
-                id: props.sectionId,
+                sectionId: props.sectionId,
                 type: selected.value
             })
         );

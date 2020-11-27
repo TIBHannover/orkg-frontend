@@ -1,12 +1,17 @@
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import React, { useState } from 'react';
+import OutsideClickHandler from 'react-outside-click-handler';
+import { Button, ButtonGroup } from 'reactstrap';
 import styled from 'styled-components';
-import { Button } from 'reactstrap';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { createSection } from 'actions/smartArticle';
+import { props } from 'lodash/fp';
 
-export const InvisibleByDefault = styled.div`
+const InvisibleByDefault = styled.div`
     button {
-        visibility: hidden;
+        visibility: visible;
     }
 
     &:hover button {
@@ -14,24 +19,73 @@ export const InvisibleByDefault = styled.div`
     }
 `;
 
-export const AddSectionStyled = styled(Button)`
+const AddSectionStyled = styled(Button)`
     color: ${props => props.theme.darkblue}!important;
     font-size: 140% !important;
     margin: 5px 0 !important;
 `;
 
-const AddSection = () => {
-    const handleClick = () => {
+const Toolbar = styled(ButtonGroup)`
+    position: absolute !important;
+    top: -25px;
+
+    button {
+        margin-right: 2px;
+    }
+`;
+
+const AddSection = props => {
+    const [isToolbarVisible, setIsToolbarVisible] = useState(false);
+    const dispatch = useDispatch();
+    const paperResource = useSelector(state => state.smartArticle.paperResource);
+    const paperId = paperResource.id;
+
+    const handleShowToolbar = () => {
+        setIsToolbarVisible(true);
         // show toolbar
     };
 
+    const handleOutsideClick = () => {
+        setIsToolbarVisible(false);
+    };
+
+    const handleAddSection = sectionType => {
+        setIsToolbarVisible(false);
+
+        dispatch(
+            createSection({
+                afterIndex: props.index,
+                paperId,
+                sectionType
+            })
+        );
+    };
+
     return (
-        <InvisibleByDefault className="d-flex align-items-center justify-content-center add">
-            <AddSectionStyled color="link" className="p-0" onClick={handleClick}>
+        <InvisibleByDefault className="d-flex align-items-center justify-content-center add position-relative">
+            <AddSectionStyled color="link" className="p-0" onClick={handleShowToolbar}>
                 <Icon icon={faPlusCircle} />
             </AddSectionStyled>
+            {isToolbarVisible && (
+                <OutsideClickHandler onOutsideClick={handleOutsideClick} display="contents">
+                    <Toolbar size="sm">
+                        <Button color="dark" onClick={() => handleAddSection('content')}>
+                            Content
+                        </Button>
+                        <Button color="dark">Survey</Button>
+                        <Button color="dark">Visualization</Button>
+                        <Button color="dark">Problem</Button>
+                        <Button color="dark">Property</Button>
+                        <Button color="dark">Resource</Button>
+                    </Toolbar>
+                </OutsideClickHandler>
+            )}
         </InvisibleByDefault>
     );
+};
+
+AddSection.propTypes = {
+    index: PropTypes.number.isRequired
 };
 
 export default AddSection;

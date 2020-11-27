@@ -51,6 +51,7 @@ const useHeaderBar = () => {
                 const content = contentStatement?.statement?.object;
 
                 sections.push({
+                    id: section.id,
                     title: {
                         id: section.id,
                         label: section.label

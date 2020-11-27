@@ -58,7 +58,7 @@ const Section = props => {
     const handleBlurTitle = async () => {
         dispatch(
             updateSectionTitle({
-                id: title.id,
+                sectionId: title.id,
                 title: text.current
             })
         );
@@ -108,13 +108,14 @@ const Section = props => {
                     />
                 )}
             </SectionStyled>
-            <AddSection />
+            <AddSection index={props.index} />
         </>
     );
 };
 
 Section.propTypes = {
-    section: PropTypes.object.isRequired
+    section: PropTypes.object.isRequired,
+    index: PropTypes.number.isRequired
 };
 
 export default Section;

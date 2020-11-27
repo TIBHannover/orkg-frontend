@@ -1,7 +1,8 @@
 import * as type from 'actions/types';
-import { updateLiteral } from 'services/backend/literals';
-import { updateResource, updateResourceClasses } from 'services/backend/resources';
-import { CLASSES } from 'constants/graphSettings';
+import { createLiteral, updateLiteral } from 'services/backend/literals';
+import { createResource, updateResource, updateResourceClasses } from 'services/backend/resources';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { createLiteralStatement, createResourceStatement } from 'services/backend/statements';
 
 export const load = payload => dispatch => {
     dispatch({
@@ -28,16 +29,16 @@ export const updateTitle = ({ id, title }) => async dispatch => {
     dispatch(setIsLoading(false));
 };
 
-export const updateSectionTitle = ({ id, title }) => async dispatch => {
+export const updateSectionTitle = ({ sectionId, title }) => async dispatch => {
     dispatch({
         type: type.ARTICLE_WRITER_UPDATE_SECTION_TITLE,
         payload: {
             title,
-            id
+            sectionId
         }
     });
     dispatch(setIsLoading(true));
-    await updateResource(id, title);
+    await updateResource(sectionId, title);
     dispatch(setIsLoading(false));
 };
 
@@ -54,16 +55,16 @@ export const updateSectionMarkdown = ({ id, markdown }) => async dispatch => {
     dispatch(setIsLoading(false));
 };
 
-export const updateSectionType = ({ id, type: sectionType }) => async dispatch => {
+export const updateSectionType = ({ sectionId, type: sectionType }) => async dispatch => {
     dispatch({
         type: type.ARTICLE_WRITER_UPDATE_SECTION_TYPE,
         payload: {
             sectionType,
-            id
+            sectionId
         }
     });
     dispatch(setIsLoading(true));
-    await updateResourceClasses(id, [CLASSES.SECTION, sectionType]);
+    await updateResourceClasses(sectionId, [CLASSES.SECTION, sectionType]);
     dispatch(setIsLoading(false));
 };
 
@@ -73,10 +74,20 @@ export const updateAuthors = authorResources => async dispatch => {
         authorResources
     });
 };
-
-export const createSection = afterIndex => async dispatch => {
-    /*dispatch({
-        type: type.ARTICLE_WRITER_UPDATE_AUTHORS,
-        authorResources
-    });*/
+export const createSection = ({ paperId, afterIndex, sectionType }) => async dispatch => {
+    // TODO: based on sectionType decide what to do...
+    // TODO: replace by contribution id instead of paper id
+    const sectionResource = await createResource('Title', [CLASSES.SECTION, 'Introduction']);
+    const markdownResource = await createLiteral('Text');
+    await createResourceStatement(paperId, PREDICATES.HAS_SECTION, sectionResource.id);
+    await createLiteralStatement(sectionResource.id, PREDICATES.HAS_CONTENT, markdownResource.id);
+    dispatch({
+        type: type.ARTICLE_WRITER_CREATE_SECTION,
+        payload: {
+            afterIndex,
+            sectionId: sectionResource.id,
+            markdownId: markdownResource.id,
+            typeId: 'Introduction'
+        }
+    });
 };
