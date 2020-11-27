@@ -21,9 +21,13 @@ export const AddSectionStyled = styled(Button)`
 `;
 
 const AddSection = () => {
+    const handleClick = () => {
+        // show toolbar
+    };
+
     return (
         <InvisibleByDefault className="d-flex align-items-center justify-content-center add">
-            <AddSectionStyled color="link" className="p-0">
+            <AddSectionStyled color="link" className="p-0" onClick={handleClick}>
                 <Icon icon={faPlusCircle} />
             </AddSectionStyled>
         </InvisibleByDefault>

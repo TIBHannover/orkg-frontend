@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SectionStyled, SectionType } from 'components/SmartArticle/styled';
+import { SectionStyled, SectionTypeStyled } from 'components/SmartArticle/styled';
 import { useSelector } from 'react-redux';
 import { CLASSES } from 'constants/graphSettings';
 import { faPen, faUser } from '@fortawesome/free-solid-svg-icons';
@@ -17,15 +17,15 @@ const Title = () => {
 
     return (
         <SectionStyled className="box rounded py-3">
-            <SectionType disabled>
-                <Tippy content="The type of the authors cannot be changed">
+            <SectionTypeStyled disabled>
+                <Tippy hideOnClick={false} content="The type of the authors cannot be changed">
                     <span>authors</span>
                 </Tippy>
-            </SectionType>
-            {authorResources.length === 0 && <span className="text-muted">No authors added yet</span>}
+            </SectionTypeStyled>
+            {authorResources.length === 0 && <span className="text-muted mr-2">No authors added yet</span>}
             {authorResources.map((author, index) =>
                 author.classes && author.classes.includes(CLASSES.AUTHOR) ? (
-                    <Link key={index} to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })}>
+                    <Link key={index} to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })} target="_blank">
                         <Badge color="lightblue" className="mr-2 mb-2" key={index}>
                             <Icon icon={faUser} className="text-primary" /> {author.label}
                         </Badge>

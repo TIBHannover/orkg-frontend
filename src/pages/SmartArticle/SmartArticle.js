@@ -1,23 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Container, ButtonGroup, Button, Input } from 'reactstrap';
+import { faCheckCircle, faCog, faDownload, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faBars, faCheckCircle, faCog, faDownload, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
-import styled from 'styled-components';
-import Section from 'components/SmartArticle/Section';
-import PropTypes from 'prop-types';
-import useLoad from 'components/SmartArticle/hooks/useLoad';
-import { useSelector } from 'react-redux';
-import Title from 'components/SmartArticle/Title';
-import Authors from 'components/SmartArticle/Authors';
-import AddSection from 'components/SmartArticle/AddSection';
 import Tippy from '@tippy.js/react';
+import AddSection from 'components/SmartArticle/AddSection';
+import Authors from 'components/SmartArticle/Authors';
+import useLoad from 'components/SmartArticle/hooks/useLoad';
+import Section from 'components/SmartArticle/Section';
+import Title from 'components/SmartArticle/Title';
+import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { Button, ButtonGroup, Container } from 'reactstrap';
 
 const SmartArticle = props => {
     const id = props.match.params.id || null;
     const { load } = useLoad();
-    const sections = useSelector(state => state.smartArticle.sectionResources);
+    const sections = useSelector(state => state.smartArticle.sections);
     const isLoading = useSelector(state => state.smartArticle.isLoading);
-
     useEffect(() => {
         document.title = 'Smart survey - ORKG';
 
@@ -58,7 +56,7 @@ const SmartArticle = props => {
             <Authors />
             <AddSection />
             {sections.map(section => (
-                <Section key={section.id} section={section} />
+                <Section key={section.title.id} section={section} />
             ))}
         </div>
     );

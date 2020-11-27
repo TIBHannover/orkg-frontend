@@ -1,26 +1,22 @@
 import * as type from 'actions/types';
-import merge from 'lodash/merge';
-import dotProp from 'dot-prop-immutable';
-import { Cookies } from 'react-cookie';
-import env from '@beam-australia/react-env';
 
 const initialState = {
     paperResource: {},
     authorResources: [],
-    sectionResources: [],
+    sections: [],
     isLoading: false
 };
 
 export default (state = initialState, action) => {
     switch (action.type) {
         case type.ARTICLE_WRITER_LOAD: {
-            const { paperResource, authorResources, sectionResources } = action.payload;
+            const { paperResource, authorResources, sections } = action.payload;
 
             return {
                 ...state,
                 paperResource,
                 authorResources,
-                sectionResources
+                sections
             };
         }
 
@@ -42,6 +38,62 @@ export default (state = initialState, action) => {
                     ...state.paperResource,
                     title
                 }
+            };
+        }
+        case type.ARTICLE_WRITER_UPDATE_SECTION_TITLE: {
+            const { sectionId, title } = action;
+
+            return {
+                ...state,
+                sectionResources: [
+                    ...state.sections.map(sectionResource => {
+                        if (sectionResource.id === sectionId) {
+                            return {
+                                ...sectionResource,
+                                title
+                            };
+                        }
+                        return sectionResource;
+                    })
+                ]
+            };
+        }
+
+        case type.ARTICLE_WRITER_UPDATE_SECTION_MARKDOWN: {
+            const { sectionId, markdown } = action;
+
+            return {
+                ...state,
+                sectionResources: [
+                    ...state.sections.map(sectionResource => {
+                        if (sectionResource.id === sectionId) {
+                            return {
+                                ...sectionResource,
+                                markdown
+                            };
+                        }
+                        return sectionResource;
+                    })
+                ]
+            };
+        }
+
+        case type.ARTICLE_WRITER_UPDATE_SECTION_TYPE: {
+            const { sectionId, type } = action;
+
+            return {
+                ...state,
+                sectionResources: [
+                    ...state.sections.map(sectionResource => {
+                        if (sectionResource.id === sectionId) {
+                            return {
+                                ...sectionResource,
+                                type
+                            };
+                        }
+                        return sectionResource;
+                    })
+                ]
             };
         }
 

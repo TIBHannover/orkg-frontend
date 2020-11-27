@@ -1,7 +1,6 @@
 import { updateTitle } from 'actions/smartArticle';
-import { SectionStyled, SectionType } from 'components/SmartArticle/styled';
+import { SectionStyled, SectionTypeStyled, ContentEditableStyled } from 'components/SmartArticle/styled';
 import React, { useEffect, useRef } from 'react';
-import ContentEditable from 'react-contenteditable';
 import { useDispatch, useSelector } from 'react-redux';
 import Tippy from '@tippy.js/react';
 
@@ -34,15 +33,15 @@ const Title = () => {
 
     return (
         <SectionStyled className="box rounded mb-4">
-            <SectionType disabled>
-                <Tippy content="The type of the paper title cannot be changed">
+            <SectionTypeStyled disabled>
+                <Tippy hideOnClick={false} content="The type of the paper title cannot be changed">
                     <span>paper title</span>
                 </Tippy>
-            </SectionType>
+            </SectionTypeStyled>
 
-            <h2 className="py-2 m-0">
-                <ContentEditable html={text.current} onBlur={handleBlur} onChange={handleChange} />
-            </h2>
+            <h1 className="h2 py-2 m-0">
+                <ContentEditableStyled html={text.current} onBlur={handleBlur} onChange={handleChange} placeholder="Enter a paper title..." />
+            </h1>
         </SectionStyled>
     );
 };

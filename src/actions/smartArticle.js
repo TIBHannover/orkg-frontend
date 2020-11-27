@@ -1,5 +1,7 @@
 import * as type from 'actions/types';
-import { updateResource } from 'services/backend/resources';
+import { updateLiteral } from 'services/backend/literals';
+import { updateResource, updateResourceClasses } from 'services/backend/resources';
+import { CLASSES } from 'constants/graphSettings';
 
 export const load = payload => dispatch => {
     dispatch({
@@ -26,9 +28,55 @@ export const updateTitle = ({ id, title }) => async dispatch => {
     dispatch(setIsLoading(false));
 };
 
+export const updateSectionTitle = ({ id, title }) => async dispatch => {
+    dispatch({
+        type: type.ARTICLE_WRITER_UPDATE_SECTION_TITLE,
+        payload: {
+            title,
+            id
+        }
+    });
+    dispatch(setIsLoading(true));
+    await updateResource(id, title);
+    dispatch(setIsLoading(false));
+};
+
+export const updateSectionMarkdown = ({ id, markdown }) => async dispatch => {
+    dispatch({
+        type: type.ARTICLE_WRITER_UPDATE_SECTION_MARKDOWN,
+        payload: {
+            markdown,
+            id
+        }
+    });
+    dispatch(setIsLoading(true));
+    await updateLiteral(id, markdown);
+    dispatch(setIsLoading(false));
+};
+
+export const updateSectionType = ({ id, type: sectionType }) => async dispatch => {
+    dispatch({
+        type: type.ARTICLE_WRITER_UPDATE_SECTION_TYPE,
+        payload: {
+            sectionType,
+            id
+        }
+    });
+    dispatch(setIsLoading(true));
+    await updateResourceClasses(id, [CLASSES.SECTION, sectionType]);
+    dispatch(setIsLoading(false));
+};
+
 export const updateAuthors = authorResources => async dispatch => {
     dispatch({
         type: type.ARTICLE_WRITER_UPDATE_AUTHORS,
         authorResources
     });
+};
+
+export const createSection = afterIndex => async dispatch => {
+    /*dispatch({
+        type: type.ARTICLE_WRITER_UPDATE_AUTHORS,
+        authorResources
+    });*/
 };

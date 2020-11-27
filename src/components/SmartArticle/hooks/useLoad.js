@@ -41,11 +41,36 @@ const useHeaderBar = () => {
                 authorResources[index].statementId = statementId;
             }
 
+            const sections = [];
+            for (const [index, section] of sectionResources.entries()) {
+                const sectionStatements = getStatementsBySubjectId(paperStatements, section.id);
+                sectionResources[index].statements = sectionStatements;
+                console.log(section);
+                const type = section.classes.find(_class => _class !== CLASSES.SECTION);
+                const contentStatement = section.statements.find(({ statement }) => statement.predicate.id === PREDICATES.HAS_CONTENT);
+                const content = contentStatement?.statement?.object;
+
+                sections.push({
+                    title: {
+                        id: section.id,
+                        label: section.label
+                    },
+                    type: {
+                        id: type
+                    },
+                    markdown: {
+                        id: content.id,
+                        label: content.label
+                    }
+                });
+            }
+            console.log(sections);
+
             dispatch(
                 loadArticle({
                     paperResource,
                     authorResources: authorResources.reverse(),
-                    sectionResources
+                    sections
                 })
             );
 
