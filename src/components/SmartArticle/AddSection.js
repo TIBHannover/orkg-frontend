@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSection } from 'actions/smartArticle';
-import { props } from 'lodash/fp';
 
 const InvisibleByDefault = styled.div`
     button {
@@ -37,8 +36,7 @@ const Toolbar = styled(ButtonGroup)`
 const AddSection = props => {
     const [isToolbarVisible, setIsToolbarVisible] = useState(false);
     const dispatch = useDispatch();
-    const paperResource = useSelector(state => state.smartArticle.paperResource);
-    const paperId = paperResource.id;
+    const contributionId = useSelector(state => state.smartArticle.contributionId);
 
     const handleShowToolbar = () => {
         setIsToolbarVisible(true);
@@ -55,7 +53,7 @@ const AddSection = props => {
         dispatch(
             createSection({
                 afterIndex: props.index,
-                paperId,
+                contributionId,
                 sectionType
             })
         );

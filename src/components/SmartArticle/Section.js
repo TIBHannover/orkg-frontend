@@ -1,16 +1,17 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { SectionStyled, DeleteButton, MoveHandle, ContentEditableStyled } from 'components/SmartArticle/styled';
-import AddSection from 'components/SmartArticle/AddSection';
-import PropTypes from 'prop-types';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { updateSectionTitle, updateSectionMarkdown } from 'actions/smartArticle';
-import { useDispatch } from 'react-redux';
-import * as Showdown from 'showdown';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippy.js/react';
-import Textarea from 'react-textarea-autosize';
+import { deleteSection, updateSectionMarkdown, updateSectionTitle } from 'actions/smartArticle';
+import AddSection from 'components/SmartArticle/AddSection';
 import SectionType from 'components/SmartArticle/SectionType';
+import { ContentEditableStyled, DeleteButton, MoveHandle, SectionStyled } from 'components/SmartArticle/styled';
+import PropTypes from 'prop-types';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { SortableElement, sortableHandle } from 'react-sortable-hoc';
+import Textarea from 'react-textarea-autosize';
+import Confirm from 'reactstrap-confirm';
+import * as Showdown from 'showdown';
 
 const converter = new Showdown.Converter({
     tables: true,
@@ -27,6 +28,12 @@ const Section = props => {
     const dispatch = useDispatch();
     const markdownEditorRef = useRef(null);
     const text = useRef('');
+
+    const SortableHandle = sortableHandle(() => (
+        <MoveHandle className={isHovering ? 'hover' : ''}>
+            <Icon icon={faBars} />
+        </MoveHandle>
+    ));
 
     // initial data loading
     useEffect(() => {
@@ -75,15 +82,26 @@ const Section = props => {
         );
     };
 
+    const handleDelete = async () => {
+        const confirm = await Confirm({
+            title: 'Are you sure?',
+            message: 'Are you sure you want to delete this section?',
+            cancelColor: 'light'
+        });
+
+        if (confirm) {
+            console.log('delete', title.id);
+            dispatch(deleteSection(title.id));
+        }
+    };
+
     return (
         <>
             <SectionStyled className="box rounded" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
-                <DeleteButton className={isHovering ? 'hover' : ''} color="primary">
+                <DeleteButton className={isHovering ? 'hover' : ''} color="primary" onClick={handleDelete}>
                     <Icon icon={faTimes} />
                 </DeleteButton>
-                <MoveHandle className={isHovering ? 'hover' : ''}>
-                    <Icon icon={faBars} />
-                </MoveHandle>
+                <SortableHandle />
                 <SectionType type={type.id} sectionId={title.id} />
                 <h2 className="h4 border-bottom pb-1 mb-3" placeholder="trd">
                     <ContentEditableStyled
@@ -108,14 +126,14 @@ const Section = props => {
                     />
                 )}
             </SectionStyled>
-            <AddSection index={props.index} />
+            <AddSection index={props.atIndex} />
         </>
     );
 };
 
 Section.propTypes = {
     section: PropTypes.object.isRequired,
-    index: PropTypes.number.isRequired
+    atIndex: PropTypes.number.isRequired
 };
 
-export default Section;
+export default SortableElement(Section);

@@ -65,7 +65,8 @@ export const CLASSES = {
     LOCATION: 'DCLocation',
     SENTENCE: 'Sentence',
     SMART_ARTICLE: 'SmartArticle',
-    SECTION: 'Section'
+    SECTION: 'Section',
+    CONTRIBUTION_SMART_ARTICLE: 'ContributionSmartArticle'
     /*FABIO_SCHOLARLY_WORK: 'ScholarlyWork',
     DOCO_FRONT_MATTER: 'FrontMatter',
     DOCO_BACK_MATTER: 'BackMatter',

@@ -17,6 +17,20 @@ const useHeaderBar = () => {
             const { bundle: paperStatements } = await getStatementsBundleBySubject({
                 id
             });
+            const contributionResources = getObjectsByPredicateAndLevel(paperStatements, PREDICATES.HAS_CONTRIBUTION, 0);
+            console.log('contributionResource', contributionResources);
+
+            if (contributionResources.length === 0) {
+                console.log('no contributions found');
+                return;
+            }
+
+            const contributionResource = contributionResources.find(statement => statement.classes.includes(CLASSES.CONTRIBUTION_SMART_ARTICLE));
+
+            if (contributionResource.length === 0) {
+                console.log('no contribution with class "CONTRIBUTION_SMART_ARTICLE" found');
+                return;
+            }
 
             const authorResources = getObjectsByPredicateAndLevel(paperStatements, PREDICATES.HAS_AUTHOR, 0);
             const sectionResources = getObjectsByPredicateAndLevel(paperStatements, PREDICATES.HAS_SECTION, 1);
@@ -70,8 +84,9 @@ const useHeaderBar = () => {
             dispatch(
                 loadArticle({
                     paperResource,
+                    contributionId: contributionResource.id,
                     authorResources: authorResources.reverse(),
-                    sections
+                    sections: sections.reverse()
                 })
             );
 

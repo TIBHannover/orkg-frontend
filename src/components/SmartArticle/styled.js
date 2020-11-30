@@ -50,7 +50,7 @@ export const DeleteButton = styled(Button)`
     }
 `;
 
-export const SectionStyled = styled(Container)`
+export const SectionStyled = styled.div`
     position: relative;
     padding: 10px 10px 10px 40px !important;
 `;

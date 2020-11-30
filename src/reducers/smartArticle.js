@@ -4,6 +4,7 @@ import dotProp from 'dot-prop-immutable';
 const initialState = {
     paperResource: {},
     authorResources: [],
+    contributionId: 0,
     sections: [],
     isLoading: false
 };
@@ -11,10 +12,11 @@ const initialState = {
 export default (state = initialState, action) => {
     switch (action.type) {
         case type.ARTICLE_WRITER_LOAD: {
-            const { paperResource, authorResources, sections } = action.payload;
+            const { paperResource, authorResources, sections, contributionId } = action.payload;
 
             return {
                 ...state,
+                contributionId,
                 paperResource,
                 authorResources,
                 sections
@@ -55,8 +57,6 @@ export default (state = initialState, action) => {
 
         case type.ARTICLE_WRITER_UPDATE_SECTION_TYPE: {
             const { sectionId, sectionType } = action.payload;
-            console.log(action);
-            console.log('sectionId', sectionId);
             const index = state.sections.findIndex(section => section.id === sectionId);
             return dotProp.set(state, `sections.${index}.type.id`, sectionType);
         }
@@ -93,6 +93,21 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 authorResources
+            };
+        }
+
+        case type.ARTICLE_WRITER_DELETE_SECTION: {
+            const { id } = action.payload;
+            const index = state.sections.findIndex(section => section.id === id);
+            return dotProp.delete(state, `sections.${index}`);
+        }
+
+        case type.ARTICLE_WRITER_SORT_SECTIONS: {
+            const { sections } = action.payload;
+
+            return {
+                ...state,
+                sections
             };
         }
 

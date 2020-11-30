@@ -4,7 +4,7 @@ import Tippy from '@tippy.js/react';
 import AddSection from 'components/SmartArticle/AddSection';
 import Authors from 'components/SmartArticle/Authors';
 import useLoad from 'components/SmartArticle/hooks/useLoad';
-import Section from 'components/SmartArticle/Section';
+import Sections from 'components/SmartArticle/Sections';
 import Title from 'components/SmartArticle/Title';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
@@ -14,7 +14,6 @@ import { Button, ButtonGroup, Container } from 'reactstrap';
 const SmartArticle = props => {
     const id = props.match.params.id || null;
     const { load } = useLoad();
-    const sections = useSelector(state => state.smartArticle.sections);
     const isLoading = useSelector(state => state.smartArticle.isLoading);
     useEffect(() => {
         document.title = 'Smart survey - ORKG';
@@ -51,13 +50,12 @@ const SmartArticle = props => {
                     </div>
                 </div>
             </Container>
-
-            <Title />
-            <Authors />
+            <Container>
+                <Title />
+                <Authors />
+            </Container>
             <AddSection index={0} />
-            {sections.map((section, index) => (
-                <Section key={section.title.id} section={section} index={index + 1} />
-            ))}
+            <Sections />
         </div>
     );
 };
