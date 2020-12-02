@@ -87,3 +87,7 @@ export const SectionTypeContainerStyled = styled.div`
         cursor: not-allowed;
     }
 `;
+
+export const MarkdownPlaceholder = styled.span`
+    color: #aaa;
+`;

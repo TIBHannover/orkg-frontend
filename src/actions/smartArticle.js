@@ -50,15 +50,17 @@ export const updateSectionTitle = ({ sectionId, title }) => async dispatch => {
 };
 
 export const updateSectionMarkdown = ({ id, markdown }) => async dispatch => {
+    // literals don't support empty values... so we have provide a string (null which is later converted to an actual null value in the frontend)
+    const _markdown = markdown || 'null';
     dispatch({
         type: type.ARTICLE_WRITER_UPDATE_SECTION_MARKDOWN,
         payload: {
-            markdown,
+            markdown: _markdown,
             id
         }
     });
     dispatch(setIsLoading(true));
-    await updateLiteral(id, markdown);
+    await updateLiteral(id, _markdown);
     dispatch(setIsLoading(false));
 };
 
@@ -84,19 +86,24 @@ export const updateAuthors = authorResources => async dispatch => {
 
 export const createSection = ({ contributionId, afterIndex, sectionType }) => async (dispatch, getState) => {
     dispatch(setIsLoading(true));
+
     // TODO: based on sectionType decide what to do...
-    // TODO: replace by contribution id instead of paper id
-    const sectionResource = await createResource('Title', [CLASSES.SECTION, 'Introduction']);
-    const markdownResource = await createLiteral('Text');
+    let typeId = '';
+    if (sectionType === 'content') {
+        typeId = CLASSES.SECTION;
+    }
+    const sectionResource = await createResource('', [CLASSES.SECTION]);
+    const markdownResource = await createLiteral('null');
     await createResourceStatement(contributionId, PREDICATES.HAS_SECTION, sectionResource.id);
     await createLiteralStatement(sectionResource.id, PREDICATES.HAS_CONTENT, markdownResource.id);
+
     dispatch({
         type: type.ARTICLE_WRITER_CREATE_SECTION,
         payload: {
             afterIndex,
             sectionId: sectionResource.id,
             markdownId: markdownResource.id,
-            typeId: 'Introduction'
+            typeId
         }
     });
     // sort the sections after adding a new section

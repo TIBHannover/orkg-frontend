@@ -60,7 +60,7 @@ const useHeaderBar = () => {
                 const sectionStatements = getStatementsBySubjectId(paperStatements, section.id);
                 sectionResources[index].statements = sectionStatements;
                 console.log(section);
-                const type = section.classes.find(_class => _class !== CLASSES.SECTION);
+                const type = section.classes.length > 1 ? section.classes.find(_class => _class !== CLASSES.SECTION) : section.classes[0];
                 const contentStatement = section.statements.find(({ statement }) => statement.predicate.id === PREDICATES.HAS_CONTENT);
                 const content = contentStatement?.statement?.object;
 

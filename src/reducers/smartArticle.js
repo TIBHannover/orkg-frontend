@@ -79,7 +79,7 @@ export default (state = initialState, action) => {
                         },
                         markdown: {
                             id: markdownId,
-                            label: 'text'
+                            label: ''
                         }
                     },
                     ...state.sections.slice(afterIndex)

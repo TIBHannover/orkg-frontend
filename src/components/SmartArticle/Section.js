@@ -4,7 +4,7 @@ import Tippy from '@tippy.js/react';
 import { deleteSection, updateSectionMarkdown, updateSectionTitle } from 'actions/smartArticle';
 import AddSection from 'components/SmartArticle/AddSection';
 import SectionType from 'components/SmartArticle/SectionType';
-import { ContentEditableStyled, DeleteButton, MoveHandle, SectionStyled } from 'components/SmartArticle/styled';
+import { ContentEditableStyled, DeleteButton, MoveHandle, SectionStyled, MarkdownPlaceholder } from 'components/SmartArticle/styled';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -114,11 +114,15 @@ const Section = props => {
 
                 {!editMode ? (
                     <Tippy hideOnClick={false} content="Double click to edit">
-                        <div dangerouslySetInnerHTML={{ __html: converter.makeHtml(markdownValue) }} onDoubleClick={() => setEditMode(true)} />
+                        {markdownValue && markdownValue !== 'null' ? (
+                            <div dangerouslySetInnerHTML={{ __html: converter.makeHtml(markdownValue) }} onDoubleClick={() => setEditMode(true)} />
+                        ) : (
+                            <MarkdownPlaceholder onDoubleClick={() => setEditMode(true)}>Double click to edit this text</MarkdownPlaceholder>
+                        )}
                     </Tippy>
                 ) : (
                     <Textarea
-                        value={markdownValue}
+                        value={markdownValue !== 'null' ? markdownValue : ''}
                         onChange={e => setMarkdownValue(e.target.value)}
                         onBlur={handleBlurMarkdown}
                         className="form-control"
