@@ -11,7 +11,7 @@ import {
 } from './statementBrowser';
 import { createResource as createResourceApi } from 'services/backend/resources';
 import { createResourceStatement, createLiteralStatement } from 'services/backend/statements';
-import { saveFullPaper } from 'services/backend/misc';
+import { saveFullPaper } from 'services/backend/papers';
 import { createLiteral } from 'services/backend/literals';
 import { createPredicate } from 'services/backend/predicates';
 import { toast } from 'react-toastify';

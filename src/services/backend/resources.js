@@ -84,11 +84,3 @@ export const getResourcesByClass = async ({
 
     return resources;
 };
-
-export const markAsVerified = id => {
-    return submitPutRequest(`${resourcesUrl}${id}/verified`, { 'Content-Type': 'application/json' });
-};
-
-export const markAsUnverified = id => {
-    return submitDeleteRequest(`${resourcesUrl}${id}/verified`, { 'Content-Type': 'application/json' });
-};

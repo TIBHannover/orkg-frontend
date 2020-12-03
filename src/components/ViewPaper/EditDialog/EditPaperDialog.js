@@ -10,7 +10,8 @@ import {
     getStatementsByPredicateAndLiteral
 } from 'services/backend/statements';
 import { updateLiteral, createLiteral as createLiteralApi } from 'services/backend/literals';
-import { updateResource, createResource, markAsVerified, markAsUnverified } from 'services/backend/resources';
+import { updateResource, createResource } from 'services/backend/resources';
+import { markAsVerified, markAsUnverified } from 'services/backend/papers';
 import REGEX from 'constants/regex';
 import { toast } from 'react-toastify';
 import Tippy from '@tippy.js/react';
