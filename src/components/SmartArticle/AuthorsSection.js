@@ -10,8 +10,9 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 import Tippy from '@tippy.js/react';
 import AuthorsModal from 'components/SmartArticle/AuthorsModal';
+import AuthorsList from 'components/SmartArticle/AuthorsList';
 
-const Title = () => {
+const AuthorsSection = () => {
     const authorResources = useSelector(state => state.smartArticle.authorResources);
     const [showModal, setShowModal] = useState(false);
 
@@ -22,20 +23,7 @@ const Title = () => {
                     <span>authors</span>
                 </Tippy>
             </SectionTypeStyled>
-            {authorResources.length === 0 && <span className="text-muted mr-2">No authors added yet</span>}
-            {authorResources.map((author, index) =>
-                author.classes && author.classes.includes(CLASSES.AUTHOR) ? (
-                    <Link key={index} to={reverse(ROUTES.AUTHOR_PAGE, { authorId: author.id })} target="_blank">
-                        <Badge color="lightblue" className="mr-2 mb-2" key={index}>
-                            <Icon icon={faUser} className="text-primary" /> {author.label}
-                        </Badge>
-                    </Link>
-                ) : (
-                    <Badge color="lightblue" className="mr-2 mb-2" key={index}>
-                        <Icon icon={faUser} className="text-darkblue" /> {author.label}
-                    </Badge>
-                )
-            )}
+            <AuthorsList authors={authorResources} />
             <Button size="sm" color="darkblue" className="ml-2" onClick={() => setShowModal(true)}>
                 <Icon icon={faPen} /> Edit
             </Button>
@@ -45,4 +33,4 @@ const Title = () => {
     );
 };
 
-export default Title;
+export default AuthorsSection;
