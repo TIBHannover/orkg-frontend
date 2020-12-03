@@ -18,7 +18,8 @@ export default class Classes extends Component {
             isNextPageLoading: false,
             hasNextPage: false,
             page: 0,
-            isLastPageReached: false
+            isLastPageReached: false,
+            totalElements: 0
         };
     }
 
@@ -35,29 +36,26 @@ export default class Classes extends Component {
             items: this.pageSize,
             sortBy: 'created_at',
             desc: true
-        }).then(classes => {
-            if (classes.length > 0) {
-                this.setState({
-                    classes: [...this.state.classes, ...classes],
-                    isNextPageLoading: false,
-                    hasNextPage: classes.length < this.pageSize ? false : true,
-                    page: this.state.page + 1
-                });
-            } else {
-                this.setState({
-                    isNextPageLoading: false,
-                    hasNextPage: false,
-                    isLastPageReached: true
-                });
-            }
+        }).then(result => {
+            this.setState({
+                classes: [...this.state.classes, ...result.content],
+                isNextPageLoading: false,
+                hasNextPage: !result.last,
+                isLastPageReached: result.last,
+                page: this.state.page + 1,
+                totalElements: result.totalElements
+            });
         });
     };
 
     render() {
         return (
             <>
-                <Container>
-                    <h1 className="h4 mt-4 mb-4">View all classes</h1>
+                <Container className="d-flex mt-4 mb-4">
+                    <div className="d-flex flex-grow-1">
+                        <h1 className="h4">View all classes</h1>
+                        <div className="text-muted ml-3 mt-1">{this.state.totalElements} Class</div>
+                    </div>
                 </Container>
                 <Container className="p-0">
                     <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
@@ -72,7 +70,7 @@ export default class Classes extends Component {
                                 })}
                             </div>
                         )}
-                        {this.state.classes.length === 0 && !this.state.isNextPageLoading && (
+                        {this.state.totalElements === 0 && !this.state.isNextPageLoading && (
                             <ListGroupItem tag="div" className="text-center">
                                 No Classes
                             </ListGroupItem>

@@ -13,14 +13,14 @@ export const createClass = (label, uri = null) => {
 };
 
 export const getRDFDataCubeVocabularyClasses = () => {
-    return submitGetRequest(`${classesUrl}?q=qb:`);
+    return submitGetRequest(`${classesUrl}?q=qb:`).then(res => res.content);
 };
 
 export const getAllClasses = ({ page = 0, items: size = 9999, sortBy = 'created_at', desc = true, q = null }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify({ page, size, sort, ...(q ? { q: q } : {}) });
 
-    return submitGetRequest(`${classesUrl}?${params}`).then(res => res.content);
+    return submitGetRequest(`${classesUrl}?${params}`);
 };
 
 export const getClassOfTemplate = templateId => {

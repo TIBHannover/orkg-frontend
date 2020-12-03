@@ -163,7 +163,7 @@ export const saveTemplate = data => {
         } else {
             // Generate class for the template
             let templateClass = await getClassOfTemplate(templateResource);
-            if (templateClass && templateClass.length === 1) {
+            if (templateClass && templateClass.totalElements === 1) {
                 promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_CLASS, templateClass[0].id));
             } else {
                 templateClass = await createClass(templateResource);
