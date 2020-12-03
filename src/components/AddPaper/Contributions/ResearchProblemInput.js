@@ -38,7 +38,7 @@ function ResearchProblemInput(props) {
                 // Get the resoures that contains 'Problem' as a class
                 const responseJson = await getResourcesByClass({
                     id: CLASSES.PROBLEM,
-                    page: 1,
+                    page: 0,
                     items: 999,
                     sortBy: 'created_at',
                     desc: true,

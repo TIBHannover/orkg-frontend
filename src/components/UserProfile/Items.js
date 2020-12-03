@@ -39,7 +39,7 @@ const Items = props => {
 
         getResourcesByClass({
             id: props.filterClass,
-            page: page + 1,
+            page: page,
             items: pageSize,
             sortBy: 'id',
             desc: true,

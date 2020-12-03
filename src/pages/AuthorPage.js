@@ -43,7 +43,7 @@ class AuthorPage extends Component {
             loading: true,
             isNextPageLoading: false,
             hasNextPage: false,
-            page: 1,
+            page: 0,
             author: null,
             orcid: '',
             papers: [],

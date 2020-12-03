@@ -17,7 +17,7 @@ export default class Classes extends Component {
             classes: [],
             isNextPageLoading: false,
             hasNextPage: false,
-            page: 1,
+            page: 0,
             isLastPageReached: false
         };
     }

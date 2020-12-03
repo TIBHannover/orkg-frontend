@@ -20,7 +20,7 @@ export default class Resources extends Component {
             results: null,
             isNextPageLoading: false,
             hasNextPage: false,
-            page: 1,
+            page: 0,
             isLastPageReached: false
         };
     }

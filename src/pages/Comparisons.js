@@ -19,7 +19,7 @@ export default class Comparisons extends Component {
             statements: [],
             isNextPageLoading: false,
             hasNextPage: false,
-            page: 1,
+            page: 0,
             isLastPageReached: false
         };
     }

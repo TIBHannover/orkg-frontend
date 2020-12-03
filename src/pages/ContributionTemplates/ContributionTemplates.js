@@ -23,7 +23,7 @@ export default class ContributionTemplates extends Component {
             contributionTemplates: [],
             isNextPageLoading: false,
             hasNextPage: false,
-            page: 1,
+            page: 0,
             isLastPageReached: false,
             filterReseachField: null,
             filterResearchProblem: null,
@@ -45,7 +45,7 @@ export default class ContributionTemplates extends Component {
             prevState.filterClass !== this.state.filterClass ||
             prevState.filterLabel !== this.state.filterLabel
         ) {
-            this.setState({ contributionTemplates: [], isNextPageLoading: false, hasNextPage: false, page: 1, isLastPageReached: false }, () =>
+            this.setState({ contributionTemplates: [], isNextPageLoading: false, hasNextPage: false, page: 0, isLastPageReached: false }, () =>
                 this.loadMoreContributionTemplates()
             );
         }

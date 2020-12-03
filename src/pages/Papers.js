@@ -19,7 +19,7 @@ export default class Papers extends Component {
             paperResources: [],
             isNextPageLoading: false,
             hasNextPage: false,
-            page: 1,
+            page: 0,
             isLastPageReached: false
         };
     }

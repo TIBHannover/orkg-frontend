@@ -24,7 +24,7 @@ class FeaturedPapers extends Component {
         this.setState({ loadingPapers: true });
         getResourcesByClass({
             id: CLASSES.FEATURED_PAPER,
-            page: 1,
+            page: 0,
             items: 7,
             desc: true
         }).then(result => {

@@ -20,7 +20,7 @@ class RecentlyAddedPapers extends Component {
     async componentDidMount() {
         getResourcesByClass({
             id: CLASSES.PAPER,
-            page: 1,
+            page: 0,
             items: 7,
             sortBy: 'created_at',
             desc: true
