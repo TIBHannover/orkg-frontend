@@ -72,7 +72,13 @@ export const getResourcesByClass = async ({
     creator = null,
     exact = false
 }) => {
-    const params = queryString.stringify({ page, items, sortBy, desc, creator, exact, ...(q ? { q } : {}) });
+    const params = queryString.stringify(
+        { page, items, sortBy, desc, creator, exact, ...(q ? { q } : {}) },
+        {
+            skipNull: true,
+            skipEmptyString: true
+        }
+    );
 
     const resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/?${params}`);
 
