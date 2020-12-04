@@ -17,6 +17,8 @@ class CustomizationColumnChart extends Component {
         };
 
         this.yAxisSelectorMaxCount = -1;
+        this.cachedXAxisSelector = undefined;
+        this.cachedYAxisSelector = undefined;
     }
 
     state = {
@@ -35,10 +37,10 @@ class CustomizationColumnChart extends Component {
         isMounted(this);
     }
 
-    componentDidUpdate = (prevProps, prevState) => {
+    componentDidUpdate = () => {
         if (this.props.propagateUpdates) {
             this.props.propagateUpdates(getSelectorsState(this));
-            this.selfVisModel.saveCustomizationState({ ...this.state });
+            this.selfVisModel.saveCustomizationState({ ...this.state, errorDataNotSupported: false, errorMessage: undefined, errorValue: -1 });
         }
     };
 

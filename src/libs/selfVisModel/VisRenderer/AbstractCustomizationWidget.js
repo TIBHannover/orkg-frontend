@@ -13,10 +13,6 @@ export default class AbstractCustomizationWidget extends Component {
         this.state = { updateFlipFlop: false, requiresUpdate: false };
     }
 
-    componentDidMount() {}
-
-    componentDidUpdate = prevProps => {};
-
     createCustomizationWidget = () => {
         // get the rendering method
         const renderingMethod = this.selfVisModel.getRenderingMethod();
@@ -69,7 +65,6 @@ export default class AbstractCustomizationWidget extends Component {
 
     applySelectorMethod = () => {
         this.setState({ updateFlipFlop: !this.state.updateFlipFlop });
-        // try to read the customizationWidget;
     };
     /** component rendering entrance point **/
     render() {

@@ -2,12 +2,6 @@ import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
 import SelfVisDataMode from '../SelfVisDataModel';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
-/** Cell renderer has three flags obtained from props
- * >> 1) isColHeader, 2) isRowHeader, 3) isCellValue
- * >> add flags for editing.
- *
- *
- * **/
 
 export default class DropDownMapperSelector extends Component {
     constructor(props) {
@@ -24,13 +18,9 @@ export default class DropDownMapperSelector extends Component {
             selectedMapper: initMapper
         };
         this.mapperTypes = ['Select Mapper', 'Number', 'String', 'Date'];
-        // see data;
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        // always make sure that you have the pointer to the data;
-        // this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
-
         if (this.state.selectedMapper !== prevState.selectedMapper) {
             if (this.props.callBack) {
                 this.props.callBack();
@@ -73,21 +63,8 @@ export default class DropDownMapperSelector extends Component {
                         });
                     }}
                 >
-                    <DropdownToggle
-                        caret
-                        color="darkblue"
-                        style={{
-                            padding: '0px',
-                            paddingLeft: '0px',
-                            marginLeft: '2px',
-                            // border: 'solid 1px black',
-                            width: '120px',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            display: 'ruby'
-                        }}
-                    >
-                        <div style={{ width: '80%' }}>{this.state.selectedMapper}</div>
+                    <DropdownToggle caret color="darkblue" className="dropdownToggleCaret">
+                        {this.state.selectedMapper}
                     </DropdownToggle>
                     <DropdownMenu>{items}</DropdownMenu>
                 </Dropdown>

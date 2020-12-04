@@ -16,6 +16,8 @@ class CustomizationLineChart extends Component {
             LINE_CHART_NO_NUMBER_TYPES_FOR_VALUE: 'LineChart error: It appears there is no column mapped as number for values'
         };
         this.yAxisSelectorMaxCount = -1;
+        this.cachedXAxisSelector = undefined;
+        this.cachedYAxisSelector = undefined;
     }
 
     state = {
@@ -33,10 +35,10 @@ class CustomizationLineChart extends Component {
         isMounted(this);
     }
 
-    componentDidUpdate = (prevProps, prevState) => {
+    componentDidUpdate = () => {
         if (this.props.propagateUpdates) {
             this.props.propagateUpdates(getSelectorsState(this));
-            this.selfVisModel.saveCustomizationState({ ...this.state });
+            this.selfVisModel.saveCustomizationState({ ...this.state, errorDataNotSupported: false, errorMessage: undefined, errorValue: -1 });
         }
     };
 

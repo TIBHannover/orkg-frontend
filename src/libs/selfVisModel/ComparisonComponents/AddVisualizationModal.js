@@ -1,23 +1,19 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
-import { Modal, ModalHeader, ModalBody, Button } from 'reactstrap';
-import SelfVisDataModel from '../../libs/selfVisModel/SelfVisDataModel';
-// import styled from 'styled-components';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import SelfVisDataModel from '../SelfVisDataModel';
 
-// TODO: investigate performance, somehow it takes way to long to render the modal (like 800ms) -- oO --
 import styled from 'styled-components';
-import CellEditor from '../../libs/selfVisModel/RenderingComponents/CellEditor';
-import CellSelector from '../../libs/selfVisModel/RenderingComponents/CellSelector';
-import VisualizationWidget from '../../libs/selfVisModel/VisRenderer/VisualizationWidget';
-import { getStatementsBySubject, createLiteralStatement, createResourceStatement } from '../../services/backend/statements';
-import { createLiteral } from '../../services/backend/literals';
-import { createResource } from '../../services/backend/resources';
+import CellEditor from '../RenderingComponents/CellEditor';
+import CellSelector from '../RenderingComponents/CellSelector';
+import VisualizationWidget from '../VisRenderer/VisualizationWidget';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippy.js/react';
-import { openAuthDialog } from '../../actions/auth';
+import { openAuthDialog } from '../../../actions/auth';
 import { connect } from 'react-redux';
-import RequireAuthentication from '../RequireAuthentication/RequireAuthentication';
+import RequireAuthentication from '../../../components/RequireAuthentication/RequireAuthentication';
+import PublishVisualization from './PublishVisualization';
 
 const TabButton = styled.div`
     cursor: pointer;
@@ -25,7 +21,7 @@ const TabButton = styled.div`
     padding: 4px 20px 4px 20px;
     border-right: 2px solid #black;
     border-radius: 10px;
-    margin: 0 3px;
+    margin: 0 0;
     background-color: #f8f9fb;
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
@@ -41,7 +37,8 @@ class AddVisualizationModal extends Component {
 
     state = {
         processStep: 0,
-        currentlyExporting: false
+        currentlyExporting: false,
+        showPublishVisualizationDialog: false
     };
 
     componentDidMount() {
@@ -49,7 +46,26 @@ class AddVisualizationModal extends Component {
         this.updateDimensions();
     }
 
-    componentDidUpdate = prevProps => {};
+    componentDidUpdate = (prevProps, prevState) => {
+        if (prevProps.showDialog === false && this.props.showDialog === true) {
+            if (this.props.useReconstructedData === true) {
+                // set the state last tab;
+                this.setState({ processStep: 2 });
+            } else {
+                // reset the model
+                new SelfVisDataModel().resetCustomizationModel();
+                this.setState({ processStep: 0 });
+            }
+        }
+        if (prevProps.showDialog === true && this.props.showDialog === true) {
+            if (prevState.processStep === 0 && this.state.processStep === 2) {
+                // this shall trigger the cell validation
+                // shall be done when the user switches between select directly to visualize
+                new SelfVisDataModel().forceCellValidation(); // singleton call
+                new SelfVisDataModel().createGDCDataModel(); // gets the singleton ptr and creates the gdc model
+            }
+        }
+    };
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateDimensions);
@@ -57,7 +73,7 @@ class AddVisualizationModal extends Component {
 
     updateDimensions = () => {
         // test
-        const offset = 28 * 2 + 85;
+        const offset = 250;
         let width = 800;
         // try to find the element int the dom
         const modalBody = document.getElementById('selfVisServiceModalBody');
@@ -74,53 +90,22 @@ class AddVisualizationModal extends Component {
         this.setState({ windowHeight: window.innerHeight - offset, windowWidth: width });
     };
 
+    compareWidth = assumedWidth => {
+        const modalBody = document.getElementById('selfVisServiceModalBody');
+        if (modalBody) {
+            return modalBody.getBoundingClientRect().width;
+        }
+        return assumedWidth;
+    };
+
     onLoadModal = () => {
         // check if we need to run the parser
         const mmr = new SelfVisDataModel(); // this is a singleton
         mmr.integrateInputData(this.props.initialData);
     };
 
-    createDataOnBackend = data => {
-        console.log(this.props.initialData);
-        const comparisonId = this.props.initialData.metaData.id;
-        // check if there is a metaVisNode
-        getStatementsBySubject({ id: comparisonId }).then(comparisionStatements => {
-            // test:
-            const metaStatements = comparisionStatements.find(statement => statement.object.classes && statement.object.classes.includes('C11019'));
-            if (!metaStatements) {
-                createResource('MetaVisualizationCollection', ['C11019']).then(res => {
-                    // we need not to create a resource statement on the comparision;
-                    createResourceStatement(comparisonId, 'P30026', res.id).then(() => {
-                        const subjectId = res.id;
-                        const predicateId = 'P30027'; // << FIXED    resolves to "HasMetaVisualizationDefinition"
-                        createLiteral(JSON.stringify(data)).then(res => {
-                            const literalId = res.id;
-                            // create literal statement;
-                            createLiteralStatement(subjectId, predicateId, literalId).then(() => {
-                                // WE HAVE CREATED EVERYTHING, NOW WE CAN CLOSE THE MODEL
-                                this.setState({ currentlyExporting: false });
-                                this.props.closeOnExport();
-                            });
-                        });
-                    });
-                });
-            } else {
-                const metaNodeId = metaStatements.object.id;
-                getStatementsBySubject({ id: metaNodeId }).then(metaInformationStatements => {
-                    const subjectId = metaNodeId;
-                    const predicateId = 'P30027'; // << FIXED    resolves to "HasMetaVisualizationDefinition"
-                    createLiteral(JSON.stringify(data)).then(res => {
-                        const literalId = res.id;
-                        // create literal statement;
-                        createLiteralStatement(subjectId, predicateId, literalId).then(() => {
-                            // WE HAVE CREATED EVERYTHING, NOW WE CAN CLOSE THE MODEL
-                            this.setState({ currentlyExporting: false });
-                            this.props.closeOnExport();
-                        });
-                    });
-                });
-            }
-        });
+    setShowPublishVisualizationDialog = val => {
+        this.setState({ showPublishVisualizationDialog: val });
     };
 
     render() {
@@ -137,13 +122,14 @@ class AddVisualizationModal extends Component {
             >
                 <ModalHeader toggle={this.props.toggle} style={{ width: '100%' }}>
                     <div style={{ height: '60px', width: '800px' }}>
-                        {/*todo : make window size adjustments! */}
                         <div style={{ width: '100%', height: '40px', paddingTop: '5px' }}>Create visualization of comparision table</div>
                         <div style={{ flexDirection: 'row', display: 'flex', flexGrow: '1', marginLeft: '-15px', height: '36px' }}>
                             {/*  TAB BUTTONS*/}
-
                             <TabButton
                                 style={{
+                                    marginLeft: '5px',
+                                    borderTopRightRadius: '0',
+                                    borderRight: '0px',
                                     backgroundColor: this.state.processStep === 0 ? '#e86161' : '',
                                     border: this.state.processStep === 0 ? 'none' : '',
                                     color: this.state.processStep === 0 ? '#ffffff' : ''
@@ -156,6 +142,7 @@ class AddVisualizationModal extends Component {
                             </TabButton>
                             <TabButton
                                 style={{
+                                    borderRadius: '0',
                                     backgroundColor: this.state.processStep === 1 ? '#e86161' : '',
                                     color: this.state.processStep === 1 ? '#ffffff' : '',
                                     border: this.state.processStep === 1 ? 'none' : ''
@@ -168,6 +155,8 @@ class AddVisualizationModal extends Component {
                             </TabButton>
                             <TabButton
                                 style={{
+                                    borderTopLeftRadius: '0',
+                                    borderLeft: '0px',
                                     backgroundColor: this.state.processStep === 2 ? '#e86161' : '',
                                     color: this.state.processStep === 2 ? '#ffffff' : '',
                                     border: this.state.processStep === 2 ? 'none' : ''
@@ -182,69 +171,86 @@ class AddVisualizationModal extends Component {
                     </div>
                 </ModalHeader>
                 <ModalBody id="selfVisServiceModalBody" style={{ padding: '0', minHeight: '100px', height: this.state.windowHeight }}>
-                    {/*  Should render different views based on the current step in the process*/}
-                    {/*    For Now we render the selection Table */}
+                    {/*  renders different views based on the current step in the process*/}
                     {this.state.processStep === 0 && this.props.showDialog && (
-                        <>
-                            <CellSelector isLoading={!this.state.loadedModel} height={this.state.windowHeight - 50} />
-                            <Button
-                                color="primary"
-                                style={{ float: 'right', margin: '7px' }}
-                                onClick={() => {
-                                    this.setState({ processStep: this.state.processStep + 1 });
-                                }}
-                            >
-                                Next
-                            </Button>
-                        </>
+                        <CellSelector isLoading={!this.state.loadedModel} height={this.state.windowHeight - 50} />
+                    )}
+                    {this.state.processStep === 1 && this.props.showDialog && (
+                        <CellEditor isLoading={!this.state.loadedModel} height={this.state.windowHeight - 50} />
+                    )}
+                    {this.state.processStep === 2 && this.props.showDialog && (
+                        <VisualizationWidget
+                            isLoading={!this.state.loadedModel}
+                            height={this.state.windowHeight - 10}
+                            width={this.state.windowWidth}
+                            comparePropsWithActualWidth={this.compareWidth}
+                        />
+                    )}
+
+                    <PublishVisualization
+                        showDialog={this.state.showPublishVisualizationDialog}
+                        toggle={() => this.setShowPublishVisualizationDialog(!this.state.showPublishVisualizationDialog)}
+                        closeAllAndReloadVisualizations={() => {
+                            this.setShowPublishVisualizationDialog(!this.state.showPublishVisualizationDialog);
+                            this.props.toggle();
+                            this.props.updatePreviewComponent();
+                        }}
+                        comparisonId={this.props.initialData.metaData.id}
+                    />
+                </ModalBody>
+                <ModalFooter className="p-2">
+                    {this.state.processStep === 0 && this.props.showDialog && (
+                        <Button
+                            color="primary"
+                            style={{ float: 'right', margin: '2px' }}
+                            onClick={() => {
+                                this.setState({ processStep: this.state.processStep + 1 });
+                            }}
+                        >
+                            Next
+                        </Button>
                     )}
                     {this.state.processStep === 1 && this.props.showDialog && (
                         <>
-                            <CellEditor isLoading={!this.state.loadedModel} height={this.state.windowHeight - 50} />
                             <Button
                                 color="primary"
-                                style={{ float: 'right', margin: '7px' }}
-                                onClick={() => {
-                                    this.setState({ processStep: this.state.processStep + 1 });
-                                }}
-                            >
-                                Next
-                            </Button>
-                            <Button
-                                color="primary"
-                                style={{ float: 'right', margin: '7px' }}
+                                style={{ float: 'right', margin: '2px' }}
                                 onClick={() => {
                                     this.setState({ processStep: this.state.processStep - 1 });
                                 }}
                             >
                                 Prev
                             </Button>
+                            <Button
+                                color="primary"
+                                style={{ float: 'right', margin: '2px' }}
+                                onClick={() => {
+                                    this.setState({ processStep: this.state.processStep + 1 });
+                                }}
+                            >
+                                Next
+                            </Button>
                         </>
                     )}
                     {this.state.processStep === 2 && this.props.showDialog && (
                         <>
-                            <VisualizationWidget
-                                isLoading={!this.state.loadedModel}
-                                height={this.state.windowHeight - 50}
-                                width={this.state.windowWidth}
-                            />
+                            <Button
+                                color="primary"
+                                style={{ float: 'right', margin: '2px' }}
+                                onClick={() => {
+                                    this.setState({ processStep: this.state.processStep - 1 });
+                                }}
+                            >
+                                Prev
+                            </Button>
                             {this.props.initialData.metaData.id && (
                                 <RequireAuthentication
                                     component={Button}
                                     color="primary"
-                                    style={{ float: 'right', margin: '7px' }}
+                                    style={{ float: 'right', margin: '2px' }}
                                     disabled={this.state.currentlyExporting}
                                     onClick={() => {
-                                        this.setState({ currentlyExporting: true });
-                                        const currModel = new SelfVisDataModel();
-                                        //collect Data
-                                        const metaVisData = {};
-                                        metaVisData.renderingEngine = currModel._renderingEngine;
-                                        metaVisData.visMethod = currModel._renderingMethod;
-                                        metaVisData.reconstructionData = currModel.getReconstructionModel();
-                                        console.log(JSON.stringify(metaVisData));
-                                        console.log('THIS IS THE DATE THAT WE DO FOR RECONSTRUCTION!');
-                                        // this.createDataOnBackend(metaVisData);
+                                        this.setShowPublishVisualizationDialog(!this.state.showPublishVisualizationDialog);
                                     }}
                                 >
                                     {this.state.currentlyExporting ? (
@@ -282,39 +288,19 @@ class AddVisualizationModal extends Component {
                                     </Tippy>
                                 </span>
                             )}
-
-                            <Button
-                                color="primary"
-                                style={{ float: 'right', margin: '7px' }}
-                                onClick={() => {
-                                    const currModel = new SelfVisDataModel();
-                                    //collect Data
-                                    console.log(currModel.getReconstructionModel());
-                                }}
-                            >
-                                Test MODEL
-                            </Button>
-
-                            <Button
-                                color="primary"
-                                style={{ float: 'right', margin: '7px' }}
-                                onClick={() => {
-                                    this.setState({ processStep: this.state.processStep - 1 });
-                                }}
-                            >
-                                Prev
-                            </Button>
                         </>
                     )}
-                </ModalBody>
+                </ModalFooter>
             </Modal>
         );
     }
 }
 
 AddVisualizationModal.propTypes = {
+    useReconstructedData: PropTypes.bool.isRequired,
     showDialog: PropTypes.bool.isRequired,
     toggle: PropTypes.func.isRequired,
+    updatePreviewComponent: PropTypes.func.isRequired,
     closeOnExport: PropTypes.func.isRequired,
     initialData: PropTypes.object,
     openAuthDialog: PropTypes.func.isRequired,

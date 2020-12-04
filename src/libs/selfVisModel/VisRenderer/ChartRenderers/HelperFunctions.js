@@ -3,16 +3,24 @@ import React from 'react';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import '../../RenderingComponents/selfVisStyles.css';
 
 export const isMounted = ref => {
     if (ref.props.propagateUpdates) {
         if (ref.props.restoreCustomizationState === true) {
             const prevState = ref.selfVisModel.loadCustomizationState();
-            if (prevState) {
+            if (prevState && prevState.xAxisSelector !== undefined && prevState.yAxisSelector.length !== 0) {
                 ref.setState({ ...ref.selfVisModel.loadCustomizationState() });
                 ref.props.propagateUpdates({ xAxis: prevState.xAxisSelector, yAxis: prevState.yAxisSelector });
             } else {
-                ref.props.propagateUpdates(getSelectorsState(ref));
+                if (ref.cachedXAxisSelector && ref.cachedYAxisSelector) {
+                    const newState = { ...ref.cachedXAxisSelector, ...ref.cachedYAxisSelector };
+                    if (ref.state.xAxisSelector === undefined || ref.state.yAxisSelector.length === 0) {
+                        ref.setState(newState, () => {
+                            ref.props.propagateUpdates(getSelectorsState(ref));
+                        });
+                    }
+                }
             }
         } else {
             ref.props.propagateUpdates(getSelectorsState(ref));
@@ -68,7 +76,6 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                 onClick={() => {
                     const intervalSelectors = ref.state.yAxisInterValSelectors;
                     intervalSelectors[id][interval_id].label = pvc.label;
-
                     ref.setState({ yAxisInterValSelectors: intervalSelectors });
                 }}
             >
@@ -82,7 +89,6 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
         <Dropdown
             color="darkblue"
             size="sm"
-            //    className='mb-4 mt-4'
             style={{
                 marginLeft: '10px',
                 marginBottom: '5px',
@@ -92,7 +98,6 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                 paddingTop: '-5px',
                 width: '80px'
             }}
-            // isOpen={ref.state.yAxisInterValSelectors[id][interval_id]}
             isOpen={isItemOpen}
             toggle={() => {
                 const yAxisSelectorOpen = ref.state.yAxisInterValSelectors;
@@ -103,18 +108,8 @@ const createIntervalDropDownSelectors = (ref, id, interval_id, possibleValueCand
                 });
             }}
         >
-            <DropdownToggle
-                caret
-                color="darkblue"
-                style={{
-                    paddingLeft: '3px',
-                    width: '150px',
-                    display: 'ruby'
-                }}
-            >
-                <div style={{ width: '120px', height: '20px', overflow: 'hidden', textOverflow: 'ellipsis', paddingTop: '2px' }}>
-                    {ref.state.yAxisInterValSelectors[id][interval_id].label}
-                </div>
+            <DropdownToggle caret color="darkblue" className="dropdownToggleCaret">
+                {ref.state.yAxisInterValSelectors[id][interval_id].label}
             </DropdownToggle>
             <DropdownMenu>{itemsArray}</DropdownMenu>
         </Dropdown>
@@ -127,7 +122,7 @@ const createIntervalSelectors = (ref, id, possibleValueCandidates) => {
     if (yAxisIntervals && yAxisIntervals.length > 0) {
         return yAxisIntervals.map((interval, interval_id) => {
             return (
-                <div className="d-flex" style={{ marginLeft: '35px', paddingBottom: '5px' }}>
+                <div key={'IntervalKey_' + interval_id} className="d-flex" style={{ marginLeft: '35px', paddingBottom: '5px' }}>
                     {' '}
                     <IconWrapper>
                         <DeleteIcon
@@ -178,7 +173,7 @@ export const createValueSelectors = ref => {
             for (let i = 0; i < ref.state.yAxisSelectorCount; i++) {
                 possibleSelectors.push(possibleValueCandidates[0].label);
             }
-            ref.setState({ yAxisSelector: possibleSelectors });
+            ref.cachedYAxisSelector = { yAxisSelector: possibleSelectors };
         }
 
         return itemsArray.map((selector, id) => {
@@ -217,18 +212,8 @@ export const createValueSelectors = ref => {
                                 });
                             }}
                         >
-                            <DropdownToggle
-                                caret
-                                color="darkblue"
-                                style={{
-                                    paddingLeft: '3px',
-                                    width: '150px',
-                                    display: 'ruby'
-                                }}
-                            >
-                                <div style={{ width: '120px', height: '20px', overflow: 'hidden', textOverflow: 'ellipsis', paddingTop: '2px' }}>
-                                    {ref.state.yAxisSelector[id] ? ref.state.yAxisSelector[id] : possibleValueCandidates[0].label}
-                                </div>
+                            <DropdownToggle caret color="darkblue" className="dropdownToggleCaret">
+                                {ref.state.yAxisSelector[id] ? ref.state.yAxisSelector[id] : possibleValueCandidates[0].label}
                             </DropdownToggle>
                             <DropdownMenu>{itemsArray[id]}</DropdownMenu>
                         </Dropdown>
@@ -280,7 +265,7 @@ export const createLabelSelectors = ref => {
         });
 
         if (!ref.state.xAxisSelector) {
-            ref.setState({ xAxisSelector: possibleLabelCandidates[0].label });
+            ref.cachedXAxisSelector = { xAxisSelector: possibleLabelCandidates[0].label };
         }
         return (
             <Dropdown
@@ -303,18 +288,8 @@ export const createLabelSelectors = ref => {
                     });
                 }}
             >
-                <DropdownToggle
-                    caret
-                    color="darkblue"
-                    style={{
-                        paddingLeft: '3px',
-                        display: 'ruby',
-                        width: '150px'
-                    }}
-                >
-                    <div style={{ width: '120px', height: '20px', overflow: 'hidden', textOverflow: 'ellipsis', paddingTop: '2px' }}>
-                        {ref.state.xAxisSelector ? ref.state.xAxisSelector : possibleLabelCandidates[0].label}
-                    </div>
+                <DropdownToggle caret color="darkblue" className="dropdownToggleCaret">
+                    {ref.state.xAxisSelector ? ref.state.xAxisSelector : possibleLabelCandidates[0].label}
                 </DropdownToggle>
                 <DropdownMenu>{items}</DropdownMenu>
             </Dropdown>

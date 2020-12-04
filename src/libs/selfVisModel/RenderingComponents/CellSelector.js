@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
-// import Selection from '@simonwep/selection-js';
 import SelfVisDataMode from '../SelfVisDataModel';
 import CellRenderer from './CellRenderer';
 import DropDownMapperSelector from './DropdownMapperSelector';
@@ -26,17 +25,10 @@ export default class CellSelector extends Component {
           cId  [ value 0,1] value [1,1]...]      
         */
 
-        // we need some meta information to create the frame
-        // basic Idea create a matrix which has +1 entries from the data dimensions (in x and in y direct)
-
-        // this rendering matrix will be then populated by the corresponding items;
-
         const renderingDimX = this.selfVisModel.mrrModel.propertyAnchors.length + 1;
         const renderingDimY = this.selfVisModel.mrrModel.contributionAnchors.length + 1;
-        // we do render it as a row and cells
+
         const itemsToRender = [];
-        // why do we dont want to use a tr/ td/ th table renderer? >> some idea about table interactions
-        // draggable cols and row
 
         for (let i = -1; i < renderingDimY; i++) {
             // renders row;
@@ -93,7 +85,7 @@ export default class CellSelector extends Component {
         // we will use a similar styles as done in the table renderer of the comparison.
     };
 
-    /** Cell interactions for single entries or rows & cols or full **/
+    /** Preparations for mouse are selection:  Cell interactions for single entries or rows & cols or full **/
     setSelectionFlagInData = (row, col) => {
         // check the source of origin;
         console.log('TODO', 'access data and set selected Flag in the cell ');
@@ -109,20 +101,19 @@ export default class CellSelector extends Component {
         console.log('TODO', 'remove all selection flags');
     };
 
-    setFullColumnSelection = (columnId, value) => {
+    setFullRowSelection = (rowId, value) => {
         // check the source of origin;
+        console.log('TODO', 'Set all flags to value for a specific row');
+    };
+
+    setFullColumnSelection = (columnId, value) => {
         const colItems = this.selfVisModel.modelAccess.getCol(columnId);
         this.selfVisModel.mrrModel.propertyAnchors[columnId].setSelectedColumn(value);
 
         for (let i = 0; i < this.selfVisModel.mrrModel.contributionAnchors.length; i++) {
-            this.selfVisModel.mrrModel.contributionAnchors[i].setSelectedRow(value);
+            this.selfVisModel.mrrModel.contributionAnchors[i].setSelectedRow(true);
             colItems[i].setItemSelected(value);
         }
-    };
-
-    setFullRowSelection = (rowId, value) => {
-        // check the source of origin;
-        console.log('TODO', 'Set all flags to value for a specific row');
     };
 
     /** component rendering entrance point **/

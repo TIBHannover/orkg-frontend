@@ -7,6 +7,7 @@ import TableInput from './tableInput';
 import { Button } from 'reactstrap';
 import styled, { keyframes } from 'styled-components';
 import SelfVisDataModel from '../SelfVisDataModel';
+
 export default class VisualizationWidget extends Component {
     constructor(props) {
         super(props);
@@ -22,21 +23,15 @@ export default class VisualizationWidget extends Component {
     }
 
     componentDidMount() {
-        new SelfVisDataModel().createGDCDataModel();
+        new SelfVisDataModel().createGDCDataModel(); // gets the singleton ptr and creates the gdc model
         window.addEventListener('resize', this.updateDimensions);
         this.updateDimensions();
     }
-
-    componentDidUpdate = prevProps => {
-        // always make sure that you have the pointer to the data;
-        // this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
-    };
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateDimensions);
     }
     updateDimensions = () => {
-        // test
         this.setState({ windowWidth: window.innerWidth, enableAnimations: false });
     };
 
@@ -50,19 +45,26 @@ export default class VisualizationWidget extends Component {
             this.refAbstractCustomizationWidget.current.applySelectorMethod();
         }
     };
+
     customizerPropagateUpdates = state => {
         if (this.refAbstractRenderer.current) {
             this.refAbstractRenderer.current.setCustomizationState(state);
         }
     };
+
     ensureConnection = () => {
         if (this.refAbstractRenderer.current) {
             this.refAbstractRenderer.current.applySelectors();
         }
     };
+    makeRequestAreaWidth = () => {
+        return this.props.comparePropsWithActualWidth(this.props.width);
+    };
 
     /** component rendering entrance point **/
     render() {
+        const areaWidth = this.makeRequestAreaWidth();
+        const widthOffset = 400;
         return (
             <div style={{ height: this.props.height + 'px', overflow: 'auto' }}>
                 {!this.props.isLoading && (
@@ -88,21 +90,20 @@ export default class VisualizationWidget extends Component {
                             expanded={this.state.inputTableExpanded}
                             initialRendering={this.state.enableAnimations}
                             parentWidth="400"
-                            totalWidth={this.props.width}
+                            totalWidth={areaWidth}
                             style={{
                                 float: 'left',
                                 position: 'absolute',
                                 padding: '10px',
                                 // backgroundColor: 'green',
-                                width: this.state.inputTableExpanded ? this.props.width - 400 : this.props.width
+                                width: this.state.inputTableExpanded ? areaWidth - widthOffset : areaWidth
                             }}
                         >
                             <div style={{ display: 'flex' }}>
                                 <div
                                     style={{
-                                        // backgroundColor: 'red',
                                         width: '320px',
-                                        minWidth: '300px',
+                                        minWidth: '320px',
                                         overflow: 'auto',
                                         height: this.props.height - 5
                                     }}
@@ -131,7 +132,7 @@ export default class VisualizationWidget extends Component {
                                     ensureConnection={this.ensureConnection}
                                     propageUpdates={this.propagateUpdateForTheSelector}
                                     isInputTableExpanded={this.state.inputTableExpanded}
-                                    visualizationWidth={this.state.inputTableExpanded ? this.props.width - 400 - 320 : this.props.width - 320}
+                                    visualizationWidth={this.state.inputTableExpanded ? areaWidth - 400 - 320 : areaWidth - 320}
                                     visualizationHeight={this.props.height - 5}
                                 />
                             </div>
@@ -146,7 +147,8 @@ export default class VisualizationWidget extends Component {
 VisualizationWidget.propTypes = {
     isLoading: PropTypes.bool,
     height: PropTypes.number,
-    width: PropTypes.number
+    width: PropTypes.number,
+    comparePropsWithActualWidth: PropTypes.func
 };
 
 const expandAndHideContentContainerAnimation = ({ expanded, width, initialRendering }) => {

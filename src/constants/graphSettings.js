@@ -41,7 +41,8 @@ export const PREDICATES = {
     COMPARE_CONTRIBUTION: 'compareContribution',
     HAS_PROPERTY: 'hasProperty',
     HAS_PREVIOUS_VERSION: 'hasPreviousVersion',
-    HAS_SUBJECT: 'hasSubject'
+    HAS_SUBJECT: 'hasSubject',
+    HAS_VISUALIZATION_DEFINITION: 'HAS_VISUALIZATION_DEFINITION'
 };
 
 export const CLASSES = {
@@ -61,7 +62,8 @@ export const CLASSES = {
     PREDICATE: 'Predicates',
     QB_DATASET_CLASS: 'QBDataset',
     LOCATION: 'DCLocation',
-    SENTENCE: 'Sentence'
+    SENTENCE: 'Sentence',
+    VISUALIZATION_DEFINITION: 'VISUALIZATION_DEFINITION'
 };
 
 export const MISC = {

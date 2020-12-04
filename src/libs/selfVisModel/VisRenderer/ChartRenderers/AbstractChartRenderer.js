@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
-
 import { Chart } from 'react-google-charts';
 import SelfVisDataMode from '../../SelfVisDataModel';
+
 class AbstractChartRenderer extends Component {
     constructor(props) {
         super(props);
         this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
         this.state = {
-            fakeControls: []
+            fakeControls: [] // used to trigger an update event on the chart rendering engine
         };
     }
 
@@ -19,8 +19,6 @@ class AbstractChartRenderer extends Component {
     };
 
     createRenderingData = () => {
-        // we have now some data here;
-        // create a rendering data for this visualization;
         const gdc = this.selfVisModel._googleChartsData;
 
         if (gdc && this.props.visualizationMethod === 'Table') {
@@ -35,7 +33,6 @@ class AbstractChartRenderer extends Component {
                 sortedData.rows.sort((a, b) => a.c[0].v <= b.c[0].v);
                 return sortedData;
             }
-
             return resultingData;
         }
     };

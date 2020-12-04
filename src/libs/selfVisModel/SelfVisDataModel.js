@@ -1,5 +1,6 @@
 import MachineReadableRepresentation from './MachineReadableRepresentation';
 import DataForChart from './VisRenderer/googleDataWrapper';
+import { validateCellMapping } from './ValidateCellMapping';
 
 export default class SelfVisDataMode {
     static instance;
@@ -51,51 +52,77 @@ export default class SelfVisDataMode {
         // get propertyAnchors;
         const reconstructionModel = {};
         const selectedPropertyAnchors = this.mrrModel.propertyAnchors.filter(item => item.isSelectedColumn() === true);
-        console.log('This is the propertyAnchors that are selected:22 ', selectedPropertyAnchors);
 
         reconstructionModel.propertyAnchors = [];
         reconstructionModel.contributionAnchors = [];
         reconstructionModel.dataCells = [];
         selectedPropertyAnchors.forEach(anchor => {
             // extract some information to be able to reconstruct it later;
-            reconstructionModel.propertyAnchors.push({
-                label: anchor.label,
-                originalLabel: anchor.originalLabel,
-                positionPropertyAnchor: anchor.positionPropertyAnchor,
-                propertyMapperType: anchor.propertyMapperType
-            });
+            if (anchor.label !== anchor.originalLabel) {
+                reconstructionModel.propertyAnchors.push({
+                    label: anchor.label,
+                    originalLabel: anchor.originalLabel,
+                    positionPropertyAnchor: anchor.positionPropertyAnchor,
+                    propertyMapperType: anchor.propertyMapperType
+                });
+            } else {
+                reconstructionModel.propertyAnchors.push({
+                    positionPropertyAnchor: anchor.positionPropertyAnchor,
+                    propertyMapperType: anchor.propertyMapperType
+                });
+            }
         });
 
         // reconstruct the contribution anchors;
         const selectedContribAnchors = this.mrrModel.contributionAnchors.filter(item => item.isSelectedRow() === true);
         selectedContribAnchors.forEach(anchor => {
             // extract some information to be able to reconstruct it later;
-            reconstructionModel.contributionAnchors.push({
-                label: anchor.label,
-                originalLabel: anchor.originalLabel,
-                positionContribAnchor: anchor.positionContribAnchor
-            });
+            if (anchor.label !== anchor.originalLabel) {
+                reconstructionModel.contributionAnchors.push({
+                    label: anchor.label,
+                    originalLabel: anchor.originalLabel,
+                    positionContribAnchor: anchor.positionContribAnchor
+                });
+            } else {
+                reconstructionModel.contributionAnchors.push({
+                    positionContribAnchor: anchor.positionContribAnchor
+                });
+            }
         });
 
         // reconstruct the cell Values;
         const selectedCells = this.mrrModel.dataItems.filter(item => item.itemIsSelectedForUse === true);
         selectedCells.forEach(cell => {
             // extract some information to be able to reconstruct it later;
-            reconstructionModel.dataCells.push({
-                label: cell.label,
-                originalLabel: cell.originalLabel,
-                positionContribAnchor: cell.positionContribAnchor,
-                positionPropertyAnchor: cell.positionPropertyAnchor
-            });
+
+            if (cell.label !== cell.originalLabel) {
+                reconstructionModel.dataCells.push({
+                    label: cell.label,
+                    originalLabel: cell.originalLabel,
+                    positionContribAnchor: cell.positionContribAnchor,
+                    positionPropertyAnchor: cell.positionPropertyAnchor
+                });
+            } else {
+                reconstructionModel.dataCells.push({
+                    positionContribAnchor: cell.positionContribAnchor,
+                    positionPropertyAnchor: cell.positionPropertyAnchor
+                });
+            }
         });
+
+        if (selectedPropertyAnchors.length === 0 || selectedCells.length === 0 || selectedContribAnchors.length === 0) {
+            return undefined; // << this is an error there is no data in the model
+        }
 
         const customizationState = { ...this.loadCustomizationState() };
         // HACKIS: TODO: read only required options;
         delete customizationState.errorDataNotSupported;
         delete customizationState.errorMessage;
         customizationState.xAxisSelectorOpen = false; // overwrites it for the reconstruction
-        for (let i = 0; i < customizationState.yAxisSelectorOpen.length; i++) {
-            customizationState.yAxisSelectorOpen[i] = false;
+        if (customizationState.yAxisSelectorOpen) {
+            for (let i = 0; i < customizationState.yAxisSelectorOpen.length; i++) {
+                customizationState.yAxisSelectorOpen[i] = false;
+            }
         }
         for (const name in customizationState.yAxisInterValSelectors) {
             if (customizationState.yAxisInterValSelectors.hasOwnProperty(name)) {
@@ -104,10 +131,124 @@ export default class SelfVisDataMode {
         }
 
         reconstructionModel.customizationState = customizationState;
-        console.log('This is the reconstruction model');
-        console.log(reconstructionModel);
 
         return JSON.stringify(reconstructionModel);
+    };
+
+    resetCustomizationModel = () => {
+        // applySelection in the contribution anchors;
+        this.mrrModel.contributionAnchors.forEach(anchor => {
+            const position = anchor.positionContribAnchor;
+            if (this.mrrModel.contributionAnchors[position]) {
+                // set this to be selected in the model;
+                this.mrrModel.contributionAnchors[position].isSelectedRowForUse = false;
+                this.mrrModel.contributionAnchors[position].label = anchor.originalLabel;
+            }
+        });
+
+        this.mrrModel.propertyAnchors.forEach(anchor => {
+            const position = anchor.positionPropertyAnchor;
+            if (this.mrrModel.propertyAnchors[position]) {
+                // set this to be selected in the model;
+                this.mrrModel.propertyAnchors[position].isSelectedColumnForUse = false;
+                this.mrrModel.propertyAnchors[position].propertyMapperType = '';
+                this.mrrModel.propertyAnchors[position].label = anchor.originalLabel;
+            }
+        });
+        this.mrrModel.dataItems.forEach(cell => {
+            const rowIndex = cell.positionContribAnchor;
+            const colIndex = cell.positionPropertyAnchor;
+            const item = this.modelAccess.getItem(rowIndex, colIndex);
+            item.setItemSelected(false);
+            if (cell.label) {
+                item.setLabel(cell.originalLabel);
+            }
+            item.cellValueIsValid = false;
+        });
+
+        this.setRenderingMethod('Table'); // << Default rendering Method
+
+        // rest the customizationState
+        this.saveCustomizationState({
+            errorDataNotSupported: false,
+            errorMessage: undefined,
+            xAxisSelector: undefined,
+            xAxisSelectorOpen: false,
+            yAxisSelector: [],
+            yAxisInterValSelectors: {},
+            yAxisSelectorOpen: [],
+            yAxisSelectorCount: 1
+        });
+        this.createGDCDataModel();
+    };
+
+    applyReconstructionModel = model => {
+        const data = model.data;
+        this.setRenderingMethod(data.visMethod);
+        this.setRenderingEngine(data.renderingEngine);
+
+        if (!this.mrrModel) {
+            console.log('Model Failed!');
+            console.log(this._inputData);
+            return;
+        }
+        // reconstruct the data;
+        const reconstructionObject = JSON.parse(data.reconstructionData);
+        // applySelection in the contribution anchors;
+        reconstructionObject.contributionAnchors.forEach(anchor => {
+            const position = anchor.positionContribAnchor;
+            if (this.mrrModel.contributionAnchors[position]) {
+                // set this to be selected in the model;
+                this.mrrModel.contributionAnchors[position].isSelectedRowForUse = true;
+                // always reset the label to original
+                this.mrrModel.contributionAnchors[position].label = this.mrrModel.contributionAnchors[position].originalLabel;
+                // overwrite a label
+                if (anchor.label) {
+                    this.mrrModel.contributionAnchors[position].label = anchor.label;
+                }
+            }
+        });
+
+        // apply Selection for property anchors;
+        reconstructionObject.propertyAnchors.forEach(anchor => {
+            const position = anchor.positionPropertyAnchor;
+            if (this.mrrModel.propertyAnchors[position]) {
+                // set this to be selected in the model;
+                this.mrrModel.propertyAnchors[position].isSelectedColumnForUse = true;
+                this.mrrModel.propertyAnchors[position].propertyMapperType = anchor.propertyMapperType;
+
+                // always reset the label to original
+                this.mrrModel.propertyAnchors[position].label = this.mrrModel.propertyAnchors[position].originalLabel;
+                // overwrite a label
+                if (anchor.label) {
+                    this.mrrModel.propertyAnchors[position].label = anchor.label;
+                }
+            }
+        });
+
+        // apply selection for cell values;
+        reconstructionObject.dataCells.forEach(cell => {
+            const rowIndex = cell.positionContribAnchor;
+            const colIndex = cell.positionPropertyAnchor;
+            const item = this.modelAccess.getItem(rowIndex, colIndex);
+            item.setItemSelected(true);
+            item.setLabel(item.originalLabel);
+            if (cell.label) {
+                item.setLabel(cell.label);
+            }
+            item.cellValueIsValid = true;
+        });
+        this.createGDCDataModel();
+        // this now neeeds to apply some selectors
+        this.saveCustomizationState(reconstructionObject.customizationState);
+        const stateForGDC = {
+            xAxis: reconstructionObject.customizationState.xAxisSelector,
+            yAxis: reconstructionObject.customizationState.yAxisSelector,
+            yAxisIntervals: reconstructionObject.customizationState.yAxisInterValSelectors
+        };
+
+        const resultingData = this._googleChartsData.createDataFromSelectors(stateForGDC);
+        return resultingData;
     };
 
     /** HACKISH ENDS**/
@@ -119,12 +260,6 @@ export default class SelfVisDataMode {
         const filteredProperties = this.mrrModel.propertyAnchors.filter(item => item.isSelectedColumnForUse === true);
         // now figure out how many rows we do have;
         const filteredContribs = this.mrrModel.contributionAnchors.filter(item => item.isSelectedRowForUse === true);
-
-        // lets build the table information
-        // headers First;
-        // const headersArray = [];
-        // headersArray.push('Contribution');
-        // then the properties if they have a mapper;
 
         const gdc = new DataForChart();
         gdc.addColumn('string', 'Contribution');
@@ -159,7 +294,6 @@ export default class SelfVisDataMode {
                 const propertyItem = filteredProperties[j];
                 if (propertyItem.propertyMapperType) {
                     // we should get this value;
-
                     const rowIndex = contribItem.positionContribAnchor;
                     const colIndex = propertyItem.positionPropertyAnchor;
                     const item = this.modelAccess.getItem(rowIndex, colIndex);
@@ -184,6 +318,20 @@ export default class SelfVisDataMode {
     /** private functions ----------------------------------------------------------------------**/
     /** ----------------------------------------------------------------------------------------**/
 
+    // Force Cell Validation
+    forceCellValidation = () => {
+        // get selected cells;
+        const selectedCells = this.mrrModel.dataItems.filter(item => item.itemIsSelectedForUse);
+        selectedCells.forEach(cell => {
+            const pos = cell.positionPropertyAnchor;
+            const mapper = this.mrrModel.propertyAnchors[pos].getPropertyMapperType();
+            if (mapper) {
+                // call the validator for this cell value;
+                cell.cellValueIsValid = validateCellMapping(mapper, cell.label);
+            }
+        });
+    };
+
     /** GROUPED FUNCTIONS : handling input model and parse it **/
     __setInputData = data => {
         this._inputData = data;
@@ -207,7 +355,6 @@ export default class SelfVisDataMode {
 
     __parseInputIfNeeded = () => {
         // debug msg
-
         if (this.requiresParing) {
             this.__parseInput();
             this.requiresParing = false;

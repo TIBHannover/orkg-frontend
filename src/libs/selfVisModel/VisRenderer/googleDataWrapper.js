@@ -16,6 +16,12 @@ export default class DataForChart {
     };
 
     createDataFromSelectors = state => {
+        if (state.xAxis === undefined || state.yAxis.length === 0) {
+            return {
+                cols: [],
+                rows: []
+            };
+        }
         const oldHeaders = this.header;
         // create headers;
         let xSelectorIndex;
@@ -76,8 +82,6 @@ export default class DataForChart {
         if (arguments.length === 2) {
             const first = arguments[0];
             const second = arguments[1];
-
-            // console.log(first + ' ' + second);
             const col = { type: first, label: second };
             this.header.push(col);
         }

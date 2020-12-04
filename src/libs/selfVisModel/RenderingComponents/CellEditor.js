@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
-// import Selection from '@simonwep/selection-js';
+// TODO: add mouse area selection from :  import Selection from '@simonwep/selection-js';
 import SelfVisDataMode from '../SelfVisDataModel';
 import CellVE from './CellVE';
 import DropDownMapperSelector from './DropdownMapperSelector';
@@ -19,23 +19,15 @@ export default class CellEditor extends Component {
 
     /** Rendering functions for the frame (headers for rows and cols ) **/
     createTable = () => {
-        // filter the propertyAnchors by selectionFlag;
-
         const filteredProperties = this.selfVisModel.mrrModel.propertyAnchors.filter(item => item.isSelectedColumnForUse === true);
         const renderingDimX = filteredProperties.length + 1;
-        // now figure out how many rows we do have;
         const filteredContribs = this.selfVisModel.mrrModel.contributionAnchors.filter(item => item.isSelectedRowForUse === true);
         const renderingDimY = filteredContribs.length + 1;
-        // now we know the dimensions of the matrix to render;
 
         const itemsToRender = [];
-        // why do we dont want to use a tr/ td/ th table renderer? >> some idea about table interactions
-        // draggable cols and row
-
         for (let i = -1; i < renderingDimY; i++) {
             // renders row;
             const rowArray = [];
-
             if (i === -1) {
                 for (let j = 0; j < renderingDimX; j++) {
                     // renders the cell
@@ -85,7 +77,6 @@ export default class CellEditor extends Component {
         }
 
         return itemsToRender;
-        // we will use a similar styles as done in the table renderer of the comparison.
     };
 
     /** component rendering entrance point **/

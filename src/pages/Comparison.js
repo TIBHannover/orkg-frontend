@@ -32,10 +32,12 @@ import { useCookies } from 'react-cookie';
 import PropTypes from 'prop-types';
 import ExactMatch from 'assets/img/comparison-exact-match.svg';
 import IntelligentMerge from 'assets/img/comparison-intelligent-merge.svg';
-import AddVisualizationModal from '../components/Comparison/AddVisualizationModal';
+import AddVisualizationModal from '../libs/selfVisModel/ComparisonComponents/AddVisualizationModal';
 import { NavLink } from 'react-router-dom';
 import { reverse } from 'named-urls';
 import env from '@beam-australia/react-env';
+import SelfVisDataModel from '../libs/selfVisModel/SelfVisDataModel';
+import PreviewComponent from 'libs/selfVisModel/ComparisonComponents/PreviewComponent';
 
 function Comparison(props) {
     const [
@@ -98,8 +100,9 @@ function Comparison(props) {
     const [showComparisonVersions, setShowComparisonVersions] = useState(false);
     const [showExportCitationsDialog, setShowExportCitationsDialog] = useState(false);
     const [showVisualizationModal, setShowVisualizationModal] = useState(false);
-    const [reconstructionData, setReconstructionData] = useState(false);
+    const [applyReconstruction, setUseReconstructedData] = useState(false);
     const [reloadingFlag, setReloadingFlag] = useState(false);
+    const [reloadingSizeFlag, setReloadingSizeFlag] = useState(false);
     /**
      * Is case of an error the user can go to the previous link in history
      */
@@ -117,9 +120,20 @@ function Comparison(props) {
         setHideScrollHint(true);
     };
 
+    const timedSizeValidation = () => {
+        // Quick and Dirty, Todo: check when the expand animation is finished and then set tell the preview to update
+        setTimeout(() => {
+            setReloadingSizeFlag(!reloadingSizeFlag);
+        }, 700);
+    };
+
     const handleFullWidth = () => {
         setFullWidth(v => {
             setCookie('useFullWidthForComparisonTable', !v, { path: env('PUBLIC_URL'), maxAge: 315360000 }); // << TEN YEARS
+
+            // tell the previewComponent to check for its size
+            timedSizeValidation();
+
             return !v;
         });
     };
@@ -138,9 +152,22 @@ function Comparison(props) {
         setDropdownMethodOpen(false);
     };
 
-    const propagateTheClick = (visIndex, dataForReconstruction) => {
-        setReconstructionData({ dataForReconstruction });
+    const propagateTheClick = val => {
+        setUseReconstructedData(val);
+
+        if (val === false) {
+            const model = new SelfVisDataModel();
+            model.resetCustomizationModel();
+        }
+
         setShowVisualizationModal(true);
+    };
+
+    const integrateData = initData => {
+        const model = new SelfVisDataModel();
+        model.integrateInputData(initData);
+
+        return true;
     };
 
     const getObservatoryInfo = async () => {
@@ -173,7 +200,7 @@ function Comparison(props) {
                                 color="darkblue"
                                 size="sm"
                                 onClick={() => {
-                                    setReconstructionData(false);
+                                    setUseReconstructedData(false);
                                     setShowVisualizationModal(!showVisualizationModal);
                                 }}
                                 style={{ marginRight: 3 }}
@@ -352,9 +379,7 @@ function Comparison(props) {
                             </ButtonGroup>
                         </div>
                     )}
-                    {!isFailedLoadingMetaData && (
-                        <ComparisonMetaData authors={authors} metaData={metaData} propagateClick={propagateTheClick} reloadingFlag={reloadingFlag} />
-                    )}
+                    {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && <ComparisonMetaData authors={authors} metaData={metaData} />}
                     {!isFailedLoadingMetaData && !isFailedLoadingComparisonResult && (
                         <>
                             {contributionsList.length > 3 && (
@@ -372,6 +397,23 @@ function Comparison(props) {
                             )}
                             {contributionsList.length > 1 && !isLoadingComparisonResult ? (
                                 <div className="mt-1">
+                                    {integrateData({
+                                        metaData,
+                                        contributions,
+                                        properties,
+                                        data,
+                                        authors, // do we need this? maybe to add a new author who creates the comparison
+                                        contributionsList,
+                                        predicatesList
+                                    }) && (
+                                        <PreviewComponent
+                                            comparisonId={metaData.id}
+                                            propagateClick={propagateTheClick}
+                                            reloadingFlag={reloadingFlag}
+                                            reloadingSizeFlag={reloadingSizeFlag}
+                                        />
+                                    )}
+
                                     <ComparisonTable
                                         data={data}
                                         properties={properties}
@@ -511,7 +553,8 @@ function Comparison(props) {
                         predicatesList
                     }}
                     closeOnExport={closeOnExport}
-                    reconstructionData={reconstructionData}
+                    updatePreviewComponent={() => setReloadingFlag(v => !v)}
+                    useReconstructedData={applyReconstruction}
                 />
             )}
         </div>

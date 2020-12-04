@@ -16,9 +16,7 @@ class CheckboxSelector extends Component {
 
     toggleCheckboxChange = () => {
         const { handleCheckboxChange } = this.props;
-
         handleCheckboxChange(!this.state.isChecked);
-
         this.setState(({ isChecked }) => ({
             isChecked: !isChecked
         }));
@@ -30,20 +28,15 @@ class CheckboxSelector extends Component {
         return (
             <div className="checkbox" style={{ marginLeft: '5px', paddingTop: '3px' }}>
                 <FormGroup style={{ fontSize: '90%' }}>
-                    <CustomInput type="checkbox" id={this.props.cbx_id} onChange={this.toggleCheckboxChange} checked={isChecked} label="" />
+                    <CustomInput
+                        style={{ marginRight: '-1px' }}
+                        type="checkbox"
+                        id={this.props.cbx_id}
+                        onChange={this.toggleCheckboxChange}
+                        checked={isChecked}
+                        label=""
+                    />
                 </FormGroup>
-                {/*<label>*/}
-                {/*    <CheckBoxInput*/}
-                {/*        // style={{ width: '20px', height: '20px' }}*/}
-
-                {/*        type="checkbox"*/}
-                {/*        value={label}*/}
-                {/*        checked={isChecked}*/}
-                {/*        onChange={this.toggleCheckboxChange}*/}
-                {/*    />*/}
-
-                {/*    {label}*/}
-                {/*</label>*/}
             </div>
         );
     }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
 import SelfVisDataMode from '../SelfVisDataModel';
-
 import AbstractChartRenderer from './ChartRenderers/AbstractChartRenderer';
 
 export default class AbstractRenderer extends Component {

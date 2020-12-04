@@ -1,18 +1,20 @@
-/**
-  This is a Cell that takes as input the propertyAnchor, and the cellValue
-  PropertyAnchor provides us with the mapper
-  Cell Value provides an initial label 
-  This label can be edited;
-    
- **/
-
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
 import SelfVisDataMode from '../SelfVisDataModel';
-import styled from 'styled-components';
+
 import Tippy from '@tippy.js/react';
 import './selfVisStyles.css';
-import { Input } from 'reactstrap';
+import {
+    PropertyCellEditor,
+    ContributionCell,
+    MetaCell,
+    MetaMapperSelector,
+    MetaMapperSelectorSimple,
+    ValueCellValidator,
+    PropertyCellInput,
+    ContributionCellInput,
+    ValueCellInput
+} from './styledComponents';
 import { validateCellMapping } from '../ValidateCellMapping.js';
 
 //TODO: ADD a revert button on hover if the value is not original
@@ -47,7 +49,7 @@ export default class CellVE extends Component {
             cellValue = props.data.label;
         }
 
-        // see data;
+        // set data state in constructor
         this.state = {
             renderingItem: 'text',
             cellLabelValue: cellValue,
@@ -61,8 +63,6 @@ export default class CellVE extends Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        // always make sure that you have the pointer to the data;
-        // this.selfVisModel = new SelfVisDataMode(); // this access the instance of the data (its a singleton)
         if (this.state.renderingItem === 'input') {
             return;
         } //  block updates if we edit the label
@@ -93,8 +93,7 @@ export default class CellVE extends Component {
     cellValueChanged = event => {
         this.setState({ cellLabelValue: event.target.value });
     };
-    /** Rendering functions **/
-    /** render based on propFlag **/
+
     render() {
         return (
             <>
@@ -107,14 +106,14 @@ export default class CellVE extends Component {
                                 : this.props.data.originalLabel + '>>' + this.props.data.label
                         }
                     >
-                        <PropertyCell
+                        <PropertyCellEditor
                             className="noselect"
                             onDoubleClick={() => {
                                 this.cellValueDoubleClicked();
                             }}
                         >
                             {this.props.data.label}
-                        </PropertyCell>
+                        </PropertyCellEditor>
                     </Tippy>
                 )}
                 {this.props.type === 'property' && this.state.renderingItem === 'input' && (
@@ -137,7 +136,6 @@ export default class CellVE extends Component {
                 )}
 
                 {/*CONTRIBUTION LABELS */}
-
                 {this.props.type === 'contribution' && this.state.renderingItem === 'text' && (
                     <Tippy
                         content={
@@ -190,7 +188,7 @@ export default class CellVE extends Component {
                                   this.props.data.originalLabel
                         }
                     >
-                        <ValueCell
+                        <ValueCellValidator
                             className="noselect"
                             isValid={this.state.cellValueIsValid}
                             onDoubleClick={() => {
@@ -198,7 +196,7 @@ export default class CellVE extends Component {
                             }}
                         >
                             {this.props.data.label}
-                        </ValueCell>
+                        </ValueCellValidator>
                     </Tippy>
                 )}
 
@@ -235,153 +233,3 @@ CellVE.propTypes = {
     data: PropTypes.object,
     children: PropTypes.any
 };
-
-/** adding styled divs for different cell items **/
-export const PropertyCell = styled.div`
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: ruby;
-    color: white;
-    background: #80869b;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    width: 150px;
-    min-width: 150px;
-    height: 30px;
-    padding: 0 2px;
-    margin: 0 1px;
-    cursor: pointer;
-`;
-
-export const PropertyCellInput = styled(Input)`
-    background: #fff;
-    color: ${props => props.theme.orkgPrimaryColor};
-    outline: 0;
-    border: dotted 2px ${props => props.theme.listGroupBorderColor};
-    border-radius: 0;
-    padding: 0 4px;
-    display: block;
-    height: 30px !important;
-    width: 150px !important;
-    min-width: 150px;
-
-    &:focus {
-        background: #fff;
-        color: ${props => props.theme.orkgPrimaryColor};
-        outline: 0;
-        border: dotted 2px ${props => props.theme.listGroupBorderColor};
-        padding: 0 4px;
-        border-radius: 0;
-        display: block;
-    }
-`;
-
-export const ValueCell = styled.div`
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: ruby;
-
-    background: ${props => (props.isValid ? '#4caf50' : '#fda9a9')};
-    color: black;
-    width: 150px;
-    min-width: 150px;
-    height: 30px;
-    margin: 1px 1px;
-`;
-
-export const ValueCellInput = styled(Input)`
-    background: #fff;
-    color: black
-    outline: 0;
-    border: dotted 2px ${props => props.theme.listGroupBorderColor};
-    border-radius: 0;
-    padding: 0 4px;
-    display: block;
-    height: 30px !important;
-    width: 150px !important;
-    min-width: 150px;
-    margin: 1px 1px;
-
-    &:focus {
-        background: #fff;
-        color: black
-        outline: 0;
-        border: dotted 2px ${props => props.theme.listGroupBorderColor};
-        padding: 0 4px;
-        border-radius: 0;
-        display: block;
-    }
-`;
-
-export const ContributionCell = styled.div`
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: ruby;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    background: #e86161;
-    color: white;
-    width: 150px;
-    min-width: 150px;
-    height: 30px;
-    margin: 1px 1px;
-    cursor: pointer;
-`;
-
-export const ContributionCellInput = styled(Input)`
-    background: #fff;
-    color: black
-    outline: 0;
-    border: dotted 2px ${props => props.theme.listGroupBorderColor};
-    border-radius: 0;
-    padding: 0 4px;
-    display: block;
-    height: 30px !important;
-    width: 150px !important;
-    min-width: 150px;
-    margin: 1px 1px;
-
-    &:focus {
-        background: #fff;
-        color: black
-        outline: 0;
-        border: dotted 2px ${props => props.theme.listGroupBorderColor};
-        padding: 0 4px;
-        border-radius: 0;
-        display: block;
-    }
-`;
-
-export const MetaCell = styled.div`
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: ruby;
-
-    background: white;
-    color: white;
-    width: 150px;
-    min-width: 150px;
-    height: 30px;
-    margin: 1px 1px;
-`;
-
-export const MetaMapperSelector = styled.div`
-    overflow: visible;
-    background: black;
-    color: white;
-    width: 150px;
-    min-width: 150px;
-    height: 60px;
-    margin: 1px 1px;
-`;
-export const MetaMapperSelectorSimple = styled.div`
-    overflow: visible;
-    background: white;
-
-    color: white;
-    width: 150px;
-    min-width: 150px;
-    height: 30px;
-    margin: 1px 1px;
-    padding-left: 27px;
-`;
