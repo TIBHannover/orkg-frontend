@@ -3,7 +3,7 @@ import { Container, ListGroup, ListGroupItem } from 'reactstrap';
 import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
-import { getAllClasses } from 'services/backend/classes';
+import { getClasses } from 'services/backend/classes';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
 
@@ -31,7 +31,7 @@ export default class Classes extends Component {
 
     loadMoreClasses = () => {
         this.setState({ isNextPageLoading: true });
-        getAllClasses({
+        getClasses({
             page: this.state.page,
             items: this.pageSize,
             sortBy: 'created_at',

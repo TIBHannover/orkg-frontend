@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import ContentLoader from 'react-content-loader';
 import { getClassById } from 'services/backend/classes';
 import { getAllResources, getResourcesByClass } from 'services/backend/resources';
-import { getAllPredicates } from 'services/backend/predicates';
+import { getPredicates } from 'services/backend/predicates';
 import ROUTES from 'constants/routes.js';
 import Results from 'components/Search/Results';
 import Filters from 'components/Search/Filters';
@@ -155,12 +155,13 @@ class Search extends Component {
         this.setState({ isNextPageLoading: { ...this.state.isNextPageLoading, [filter_type]: true } });
         let request;
         if (filter_type === 'predicate') {
-            request = getAllPredicates({
+            request = getPredicates({
                 page: this.state.currentPage['predicate'] || 1,
                 items: this.itemsPerFilter,
                 sortBy: 'id',
                 desc: true,
-                q: searchQuery
+                q: searchQuery,
+                returnContent: true
             });
         } else if (filter_type === 'resource') {
             request = getAllResources({

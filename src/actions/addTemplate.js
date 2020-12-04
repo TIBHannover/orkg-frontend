@@ -1,6 +1,6 @@
 import * as type from './types.js';
 import { deleteStatementsByIds, createResourceStatement, getTemplateById, getTemplatesByClass } from 'services/backend/statements';
-import { getClassOfTemplate } from 'services/backend/classes';
+import { getClasses } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
 import { createClass } from 'services/backend/classes';
 import { createResource, updateResource } from 'services/backend/resources';
@@ -162,7 +162,10 @@ export const saveTemplate = data => {
             promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_CLASS, data.class.id));
         } else {
             // Generate class for the template
-            let templateClass = await getClassOfTemplate(templateResource);
+            let templateClass = await getClasses({
+                q: templateResource,
+                exact: true
+            });
             if (templateClass && templateClass.totalElements === 1) {
                 promises.push(createResourceStatement(templateResource, PREDICATES.TEMPLATE_OF_CLASS, templateClass[0].id));
             } else {

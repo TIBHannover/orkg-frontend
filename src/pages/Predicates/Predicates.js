@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import ShortRecord from '../../components/ShortRecord/ShortRecord';
+import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
-import { getAllPredicates } from 'services/backend/predicates';
+import { getPredicates } from 'services/backend/predicates';
 import { Container, ListGroup, ListGroupItem } from 'reactstrap';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
@@ -18,7 +18,8 @@ export default class Predicates extends Component {
             isNextPageLoading: false,
             hasNextPage: false,
             page: 0,
-            isLastPageReached: false
+            isLastPageReached: false,
+            totalElements: 0
         };
     }
 
@@ -30,34 +31,31 @@ export default class Predicates extends Component {
 
     loadMorePredicates = () => {
         this.setState({ isNextPageLoading: true });
-        getAllPredicates({
+        getPredicates({
             page: this.state.page,
             items: this.pageSize,
             sortBy: 'created_at',
             desc: true
-        }).then(predicates => {
-            if (predicates.length > 0) {
-                this.setState({
-                    predicates: [...this.state.predicates, ...predicates],
-                    isNextPageLoading: false,
-                    hasNextPage: predicates.length < this.pageSize ? false : true,
-                    page: this.state.page + 1
-                });
-            } else {
-                this.setState({
-                    isNextPageLoading: false,
-                    hasNextPage: false,
-                    isLastPageReached: true
-                });
-            }
+        }).then(result => {
+            this.setState({
+                predicates: [...this.state.predicates, ...result.content],
+                isNextPageLoading: false,
+                hasNextPage: !result.last,
+                isLastPageReached: result.last,
+                page: this.state.page + 1,
+                totalElements: result.totalElements
+            });
         });
     };
 
     render() {
         return (
             <>
-                <Container>
-                    <h1 className="h4 mt-4 mb-4">View all properties</h1>
+                <Container className="d-flex mt-4 mb-4">
+                    <div className="d-flex flex-grow-1">
+                        <h1 className="h4">View all properties</h1>
+                        <div className="text-muted ml-3 mt-1">{this.state.totalElements} property</div>
+                    </div>
                 </Container>
                 <Container className="p-0">
                     <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
@@ -76,7 +74,7 @@ export default class Predicates extends Component {
                                 })}
                             </div>
                         )}
-                        {this.state.predicates.length === 0 && !this.state.isNextPageLoading && (
+                        {this.state.totalElements === 0 && !this.state.isNextPageLoading && (
                             <ListGroupItem tag="div" className="text-center">
                                 No properties
                             </ListGroupItem>
