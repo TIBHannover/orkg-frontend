@@ -28,7 +28,16 @@ export const deleteResource = id => {
     return submitDeleteRequest(`${resourcesUrl}${id}`, { 'Content-Type': 'application/json' });
 };
 
-export const getAllResources = ({ page = 0, items: size = 9999, sortBy = 'created_at', desc = true, q = null, exclude = null, exact = false }) => {
+export const getResources = ({
+    page = 0,
+    items: size = 9999,
+    sortBy = 'created_at',
+    desc = true,
+    q = null,
+    exclude = null,
+    exact = false,
+    returnContent = false
+}) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify({
         page,
@@ -40,7 +49,7 @@ export const getAllResources = ({ page = 0, items: size = 9999, sortBy = 'create
         ...(exclude ? { exclude } : {})
     });
 
-    return submitGetRequest(`${resourcesUrl}?${params}`).then(res => res.content);
+    return submitGetRequest(`${resourcesUrl}?${params}`).then(res => (returnContent ? res.content : res));
 };
 
 export const getContributorsByResourceId = id => {

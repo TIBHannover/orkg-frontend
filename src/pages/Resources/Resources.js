@@ -4,7 +4,7 @@ import ShortRecord from 'components/ShortRecord/ShortRecord';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
-import { getAllResources } from 'services/backend/resources';
+import { getResources } from 'services/backend/resources';
 import { Container, ListGroup, ListGroupItem } from 'reactstrap';
 import ROUTES from 'constants/routes';
 import { reverse } from 'named-urls';
@@ -21,7 +21,8 @@ export default class Resources extends Component {
             isNextPageLoading: false,
             hasNextPage: false,
             page: 0,
-            isLastPageReached: false
+            isLastPageReached: false,
+            totalElements: 0
         };
     }
 
@@ -33,43 +34,42 @@ export default class Resources extends Component {
 
     loadMoreResources = () => {
         this.setState({ isNextPageLoading: true });
-        getAllResources({
+        getResources({
             page: this.state.page,
             items: this.pageSize,
             sortBy: 'created_at',
             desc: true
-        }).then(resources => {
-            if (resources.length > 0) {
-                this.setState({
-                    resources: [...this.state.resources, ...resources],
-                    isNextPageLoading: false,
-                    hasNextPage: resources.length < this.pageSize ? false : true,
-                    page: this.state.page + 1
-                });
-            } else {
-                this.setState({
-                    isNextPageLoading: false,
-                    hasNextPage: false,
-                    isLastPageReached: true
-                });
-            }
+        }).then(result => {
+            this.setState({
+                resources: [...this.state.resources, ...result.content],
+                isNextPageLoading: false,
+                hasNextPage: !result.last,
+                isLastPageReached: result.last,
+                page: this.state.page + 1,
+                totalElements: result.totalElements
+            });
         });
     };
 
     render() {
         return (
             <>
-                <Container className="d-flex align-items-center">
-                    <h1 className="h4 mt-4 mb-4 flex-grow-1">View all resources</h1>
-                    <RequireAuthentication
-                        component={Link}
-                        color="darkblue"
-                        size="sm"
-                        className="btn btn-darkblue btn-sm flex-shrink-0"
-                        to={ROUTES.ADD_RESOURCE}
-                    >
-                        <Icon icon={faPlus} /> Create resource
-                    </RequireAuthentication>
+                <Container className="d-flex mt-4 mb-4">
+                    <div className="d-flex flex-grow-1">
+                        <h1 className="h4">View all resources</h1>
+                        <div className="text-muted ml-3 mt-1">{this.state.totalElements} resource</div>
+                    </div>
+                    <div className="flex-shrink-0">
+                        <RequireAuthentication
+                            component={Link}
+                            color="darkblue"
+                            size="sm"
+                            className="btn btn-darkblue btn-sm"
+                            to={ROUTES.ADD_RESOURCE}
+                        >
+                            <Icon icon={faPlus} /> Create resource
+                        </RequireAuthentication>
+                    </div>
                 </Container>
                 <Container className="p-0">
                     <ListGroup flush className="box rounded" style={{ overflow: 'hidden' }}>
@@ -84,7 +84,7 @@ export default class Resources extends Component {
                                 })}
                             </div>
                         )}
-                        {this.state.resources.length === 0 && !this.state.isNextPageLoading && (
+                        {this.state.totalElements === 0 && !this.state.isNextPageLoading && (
                             <ListGroupItem tag="div" className="text-center">
                                 No Resources
                             </ListGroupItem>

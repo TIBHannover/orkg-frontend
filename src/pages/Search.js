@@ -6,7 +6,7 @@ import dotProp from 'dot-prop-immutable';
 import PropTypes from 'prop-types';
 import ContentLoader from 'react-content-loader';
 import { getClassById } from 'services/backend/classes';
-import { getAllResources, getResourcesByClass } from 'services/backend/resources';
+import { getResources, getResourcesByClass } from 'services/backend/resources';
 import { getPredicates } from 'services/backend/predicates';
 import ROUTES from 'constants/routes.js';
 import Results from 'components/Search/Results';
@@ -164,7 +164,7 @@ class Search extends Component {
                 returnContent: true
             });
         } else if (filter_type === 'resource') {
-            request = getAllResources({
+            request = getResources({
                 page: this.state.currentPage['resource'] || 1,
                 items: this.itemsPerFilter,
                 sortBy: 'id',
@@ -173,7 +173,8 @@ class Search extends Component {
                 exclude: this.defaultsFilters
                     .map(df => df.id)
                     .concat(this.ignored_classes)
-                    .join(',')
+                    .join(','),
+                returnContent: true
             });
         } else {
             request = getResourcesByClass({
