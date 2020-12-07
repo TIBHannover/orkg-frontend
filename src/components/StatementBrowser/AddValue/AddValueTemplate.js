@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { resourcesUrl } from 'services/backend/resources';
 import { InputGroup, InputGroupAddon, DropdownMenu, InputGroupButtonDropdown, FormFeedback } from 'reactstrap';
 import { StyledDropdownItem, StyledButton, StyledDropdownToggle, ValueItemStyle } from 'components/StatementBrowser/styled';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
@@ -9,11 +8,11 @@ import Tippy from '@tippy.js/react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBars, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
-import useTogggle from './helpers/useToggle';
+import useToggle from './helpers/useToggle';
 import validationSchema from './helpers/validationSchema';
 import InputField from 'components/StatementBrowser/InputField/InputField';
 import PropTypes from 'prop-types';
-import { CLASSES, MISC } from 'constants/graphSettings';
+import { CLASSES, MISC, ENTITIES } from 'constants/graphSettings';
 
 export default function AddValueTemplate(props) {
     const literalInputRef = useRef(null);
@@ -25,8 +24,8 @@ export default function AddValueTemplate(props) {
 
     const [valueType, setValueType] = useState(props.isLiteral ? 'literal' : 'object');
     const [inputValue, setInputValue] = useState('');
-    const [dropdownValueTypeOpen, setDropdownValueTypeOpen] = useTogggle(false);
-    const [showAddValue, setShowAddValue] = useTogggle(false);
+    const [dropdownValueTypeOpen, setDropdownValueTypeOpen] = useToggle(false);
+    const [showAddValue, setShowAddValue] = useToggle(false);
     const [isValid, setIsValid] = useState(true);
     const [formFeedback, setFormFeedback] = useState(null);
     const [templateIsLoading, setTemplateIsLoading] = useState(false); // to show loading indicator of the template if the value class has a template
@@ -262,7 +261,7 @@ export default function AddValueTemplate(props) {
                         )}
                         {valueType === 'object' ? (
                             <AutoComplete
-                                requestUrl={resourcesUrl}
+                                entityType={ENTITIES.RESOURCE}
                                 excludeClasses={`${CLASSES.CONTRIBUTION},${CLASSES.PROBLEM},${CLASSES.CONTRIBUTION_TEMPLATE}`}
                                 optionsClass={props.valueClass ? props.valueClass.id : undefined}
                                 placeholder="Enter a resource"

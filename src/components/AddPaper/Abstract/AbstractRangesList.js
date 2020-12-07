@@ -6,7 +6,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { updateAnnotationClass, removeAnnotation, toggleEditAnnotation } from 'actions/addPaper';
 import Tippy from '@tippy.js/react';
-import { predicatesUrl } from 'services/backend/predicates';
+import { ENTITIES } from 'constants/graphSettings';
 import capitalize from 'capitalize';
 import styled, { withTheme } from 'styled-components';
 import { StyledStatementItem } from '../Contributions/styled';
@@ -98,7 +98,7 @@ class AbstractRangesList extends Component {
                                             </>
                                         ) : (
                                             <AutoComplete
-                                                requestUrl={predicatesUrl}
+                                                entityType={ENTITIES.PREDICATE}
                                                 defaultOptions={this.props.classOptions}
                                                 placeholder="Select or type to enter a property"
                                                 onChange={(e, a) => {

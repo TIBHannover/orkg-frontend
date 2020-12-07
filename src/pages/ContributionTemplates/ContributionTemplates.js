@@ -5,13 +5,12 @@ import RequireAuthentication from 'components/RequireAuthentication/RequireAuthe
 import { faAngleDoubleDown, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { getStatementsByObjectAndPredicate } from 'services/backend/statements';
-import { classesUrl } from 'services/backend/classes';
-import { resourcesUrl, getResourcesByClass } from 'services/backend/resources';
+import { getResourcesByClass } from 'services/backend/resources';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import TemplateCard from 'components/ContributionTemplates/TemplateCard';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { CLASSES, PREDICATES, ENTITIES } from 'constants/graphSettings';
 
 export default class ContributionTemplates extends Component {
     constructor(props) {
@@ -170,7 +169,7 @@ export default class ContributionTemplates extends Component {
                                 <FormGroup>
                                     <Label for="exampleEmail">Filter by research field</Label>
                                     <AutoComplete
-                                        requestUrl={resourcesUrl}
+                                        entityType={ENTITIES.RESOURCE}
                                         optionsClass={CLASSES.RESEARCH_FIELD}
                                         placeholder="Select or type to enter a research field"
                                         onChange={this.handleResearchFieldSelect}
@@ -187,7 +186,7 @@ export default class ContributionTemplates extends Component {
                                 <FormGroup>
                                     <Label for="examplePassword">Filter by reseach problem</Label>
                                     <AutoComplete
-                                        requestUrl={resourcesUrl}
+                                        entityType={ENTITIES.RESOURCE}
                                         optionsClass={CLASSES.PROBLEM}
                                         placeholder="Select or type to enter a research problem"
                                         onChange={this.handleResearchProblemSelect}
@@ -212,7 +211,7 @@ export default class ContributionTemplates extends Component {
                                 <FormGroup>
                                     <Label for="examplePassword">Filter by class</Label>
                                     <AutoComplete
-                                        requestUrl={classesUrl}
+                                        entityType={ENTITIES.CLASS}
                                         placeholder="Select or type to enter a class"
                                         onChange={this.handleClassSelect}
                                         value={this.state.filterClass}

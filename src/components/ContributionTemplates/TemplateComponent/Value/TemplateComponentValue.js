@@ -7,7 +7,7 @@ import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import { setComponents } from 'actions/addTemplate';
 import { connect } from 'react-redux';
-import { classesUrl } from 'services/backend/classes';
+import { ENTITIES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import ValidationRules from '../ValidationRules/ValidationRules';
 
@@ -46,7 +46,7 @@ function TemplateComponentValue(props) {
             <div>
                 <InputGroup size="sm">
                     <AutoComplete
-                        requestUrl={classesUrl}
+                        entityType={ENTITIES.CLASS}
                         placeholder={props.enableEdit ? 'Select or type to enter a class' : 'No Class'}
                         onChange={(selected, action) => {
                             // blur the field allows to focus and open the menu again

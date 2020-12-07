@@ -69,3 +69,9 @@ export const MISC = {
     DEFAULT_LITERAL_DATATYPE: 'xsd:string',
     UNKNOWN_ID: '00000000-0000-0000-0000-000000000000'
 };
+
+export const ENTITIES = {
+    CLASS: 'class',
+    PREDICATE: 'predicate',
+    RESOURCE: 'resource'
+};

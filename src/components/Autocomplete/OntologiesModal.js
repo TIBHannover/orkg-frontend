@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { olsBaseUrl } from 'network';
+import { olsBaseUrl } from 'services/ols/index';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import PropTypes from 'prop-types';
 

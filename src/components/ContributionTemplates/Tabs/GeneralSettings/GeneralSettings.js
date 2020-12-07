@@ -3,15 +3,13 @@ import { FormGroup, Label, FormText, Input } from 'reactstrap';
 import { connect } from 'react-redux';
 import Confirm from 'reactstrap-confirm';
 import { setLabel, setPredicate, setClass, setResearchFields, setResearchProblems, setIsStrictTemplate } from 'actions/addTemplate';
-import { classesUrl } from 'services/backend/classes';
-import { createPredicate, predicatesUrl } from 'services/backend/predicates';
-import { resourcesUrl } from 'services/backend/resources';
+import { createPredicate } from 'services/backend/predicates';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes.js';
 import PropTypes from 'prop-types';
-import { CLASSES } from 'constants/graphSettings';
+import { CLASSES, ENTITIES } from 'constants/graphSettings';
 
 function GeneralSettings(props) {
     const inputRef = useRef(null);
@@ -85,7 +83,7 @@ function GeneralSettings(props) {
             <FormGroup className="mb-4">
                 <Label>Target class</Label>
                 <AutoComplete
-                    requestUrl={classesUrl}
+                    entityType={ENTITIES.CLASS}
                     placeholder={props.editMode ? 'Select or type to enter a class' : 'No Classes'}
                     onChange={handleClassSelect}
                     value={props.class}
@@ -114,7 +112,7 @@ function GeneralSettings(props) {
                     <FormGroup className="mb-4">
                         <Label>Property</Label>
                         <AutoComplete
-                            requestUrl={predicatesUrl}
+                            entityType={ENTITIES.PREDICATE}
                             placeholder={props.editMode ? 'Select or type to enter a property' : 'No Property'}
                             onChange={handlePropertySelect}
                             value={props.predicate}
@@ -135,7 +133,7 @@ function GeneralSettings(props) {
                     <FormGroup className="mb-4">
                         <Label>Research fields</Label>
                         <AutoComplete
-                            requestUrl={resourcesUrl}
+                            entityType={ENTITIES.RESOURCE}
                             optionsClass={CLASSES.RESEARCH_FIELD}
                             placeholder={props.editMode ? 'Select or type to enter a research field' : 'No research fields'}
                             onChange={handleResearchFieldSelect}
@@ -153,7 +151,7 @@ function GeneralSettings(props) {
                     <FormGroup className="mb-4">
                         <Label>Research problems</Label>
                         <AutoComplete
-                            requestUrl={resourcesUrl}
+                            entityType={ENTITIES.RESOURCE}
                             optionsClass={CLASSES.PROBLEM}
                             placeholder={props.editMode ? 'Select or type to enter a research problem' : 'No research problem'}
                             onChange={handleResearchProblemSelect}

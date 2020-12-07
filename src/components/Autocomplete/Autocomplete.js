@@ -4,9 +4,10 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faClipboard, faLink, faAtom } from '@fortawesome/free-solid-svg-icons';
 import ConditionalWrapper from 'components/Utils/ConditionalWrapper';
 import OntologiesModal from './OntologiesModal';
-import { submitGetRequest, olsBaseUrl } from 'network';
-import { classesUrl, createClass } from 'services/backend/classes';
+import { getEntity, getEntities } from 'services/backend/misc';
+import { createClass, getClasses } from 'services/backend/classes';
 import { getResourcesByClass } from 'services/backend/resources';
+import { olsBaseUrl, selectTerms, getAllOntologies, getOntologyTerms, getTermMatchingAcrossOntologies } from 'services/ols/index';
 import { AsyncPaginateBase } from 'react-select-async-paginate';
 import Creatable from 'react-select/creatable';
 import PropTypes from 'prop-types';
@@ -21,6 +22,7 @@ import Tippy from '@tippy.js/react';
 import REGEX from 'constants/regex';
 import NativeListener from 'react-native-listener';
 import CustomOption from './CustomOption';
+import { ENTITIES } from 'constants/graphSettings';
 
 export const StyledAutoCompleteInputFormControl = styled.div`
     padding-top: 0 !important;
@@ -52,7 +54,7 @@ function Autocomplete(props) {
     // Pagination params
     const pageSize = 10;
     const defaultAdditional = {
-        page: 1,
+        page: 0,
         pageOLS: undefined
     };
 
@@ -69,7 +71,7 @@ function Autocomplete(props) {
             if (valueWithoutHashtag.length > 0) {
                 let responseJsonExact;
                 try {
-                    responseJsonExact = await submitGetRequest(props.requestUrl + encodeURIComponent(valueWithoutHashtag));
+                    responseJsonExact = await getEntity(props.entityType, valueWithoutHashtag);
                 } catch (err) {
                     responseJsonExact = null;
                 }
@@ -89,41 +91,39 @@ function Autocomplete(props) {
      * @return {Array} The list of loaded options
      */
     const InternalORKGLookup = async (value, page) => {
-        // Add the parameters for pagination
-        let queryParams = '&page=' + page + '&items=' + pageSize;
-
-        if (value.startsWith('"') && value.endsWith('"') && value.length > 2) {
+        const exact = value.startsWith('"') && value.endsWith('"') && value.length > 2 ? true : false;
+        if (exact) {
             value = value.substring(1, value.length - 1).trim();
-            queryParams = '&exact=true';
         }
         let responseJson;
         if (props.optionsClass) {
             responseJson = await getResourcesByClass({ id: props.optionsClass, q: value.trim(), page: page, items: pageSize, returnContent: true });
         } else {
             const isURI = new RegExp(REGEX.URL).test(value.trim());
-            if (props.requestUrl === classesUrl && isURI) {
+            if (props.entityType === ENTITIES.CLASS && isURI) {
                 // Lookup a class by uri
                 try {
-                    responseJson = await submitGetRequest(
-                        props.requestUrl +
-                            '?uri=' +
-                            encodeURIComponent(value.trim()) +
-                            queryParams +
-                            (props.excludeClasses ? '&exclude=' + encodeURIComponent(props.excludeClasses) : '')
-                    );
+                    responseJson = await getClasses({
+                        page,
+                        items: pageSize,
+                        exact,
+                        uri: encodeURIComponent(value.trim()),
+                        returnContent: true
+                    });
                 } catch (error) {
                     // No matching class
                     return [];
                 }
                 responseJson = responseJson ? [responseJson] : [];
             } else {
-                responseJson = await submitGetRequest(
-                    props.requestUrl +
-                        '?q=' +
-                        encodeURIComponent(value.trim()) +
-                        queryParams +
-                        (props.excludeClasses ? '&exclude=' + encodeURIComponent(props.excludeClasses) : '')
-                );
+                responseJson = await getEntities(props.entityType, {
+                    page,
+                    items: pageSize,
+                    q: encodeURIComponent(value.trim()),
+                    exclude: props.excludeClasses ? encodeURIComponent(props.excludeClasses) : null,
+                    exact,
+                    returnContent: true
+                });
             }
         }
         return responseJson;
@@ -137,22 +137,9 @@ function Autocomplete(props) {
      * @return {Array} The list of ontologies
      */
     const OntologyLookup = async (value, page) => {
-        let responseJson;
-        const options = [];
         if (value) {
             try {
-                const queryParams = `&type=ontology&rows=${pageSize}&start=${(page - 1) * pageSize}`;
-                responseJson = await submitGetRequest(`${props.requestUrl}select?q=${encodeURIComponent(value.trim())}${queryParams}`);
-                if (responseJson.response.numFound > 0) {
-                    for (const item of responseJson.response.docs) {
-                        options.push({
-                            label: item.label,
-                            id: item.ontology_prefix,
-                            ontologyId: item.id,
-                            ...(item.iri ? { uri: item.iri } : {})
-                        });
-                    }
-                }
+                return await selectTerms({ page, pageSize, type: 'ontology', q: encodeURIComponent(value.trim()) });
             } catch (error) {
                 // No matching class
                 return [];
@@ -160,23 +147,12 @@ function Autocomplete(props) {
         } else {
             // List all ontologies
             try {
-                responseJson = await submitGetRequest(`${props.requestUrl}ontologies?page=${page}&size=${pageSize}`);
-                if (responseJson._embedded.ontologies.length > 0) {
-                    for (const item of responseJson._embedded.ontologies) {
-                        options.push({
-                            label: item.config.title,
-                            id: item.config.preferredPrefix,
-                            ontologyId: item.ontologyId,
-                            ...(item.config.fileLocation ? { uri: item.config.fileLocation } : {})
-                        });
-                    }
-                }
+                return await getAllOntologies({ page, pageSize });
             } catch (error) {
                 // No matching class
                 return [];
             }
         }
-        return options;
     };
 
     /**
@@ -187,28 +163,15 @@ function Autocomplete(props) {
      * @return {Array} The list of classes or properties
      */
     const GetExternalClasses = async (value, page) => {
-        // Add the parameters for pagination
-        const type = props.requestUrl === classesUrl ? 'class' : 'property';
-        let queryParams = `&type=${type}&rows=${pageSize}&start=${(page - 1) * pageSize}`;
-        if (selectedOntologies) {
-            queryParams = queryParams + '&ontology=' + selectedOntologies.map(o => o.ontologyId.replace(':', '')).join(',');
-        }
-        let responseJson;
-        const options = [];
         if (value) {
             try {
-                responseJson = await submitGetRequest(`${olsBaseUrl}select?q=${encodeURIComponent(value.trim())}${queryParams}`);
-                if (responseJson.response.numFound > 0) {
-                    for (const item of responseJson.response.docs) {
-                        options.push({
-                            external: true,
-                            label: item.label,
-                            id: item.ontology_prefix,
-                            ...(item.iri ? { uri: item.iri } : {}),
-                            ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {})
-                        });
-                    }
-                }
+                return await selectTerms({
+                    page,
+                    pageSize,
+                    type: props.entityType === ENTITIES.CLASS ? 'class' : 'property',
+                    q: encodeURIComponent(value.trim()),
+                    ontology: selectedOntologies ? selectedOntologies.map(o => o.ontologyId.replace(':', '')).join(',') : null
+                });
             } catch (error) {
                 // No matching class
                 return [];
@@ -217,29 +180,22 @@ function Autocomplete(props) {
             // list all external classes
             try {
                 if (selectedOntologies && selectedOntologies.length > 0) {
-                    responseJson = await submitGetRequest(
-                        `${olsBaseUrl}ontologies/${selectedOntologies.map(s => s.ontologyId.replace(':', ''))[0]}/terms?page=${page}&size=${pageSize}`
-                    );
+                    return await getOntologyTerms({
+                        ontology_id: selectedOntologies.map(s => s.ontologyId.replace(':', ''))[0],
+                        page,
+                        pageSize
+                    });
                 } else {
-                    responseJson = await submitGetRequest(`${olsBaseUrl}terms?page=${page}&size=${pageSize}`);
-                }
-                if (responseJson._embedded.terms.length > 0) {
-                    for (const item of responseJson._embedded.terms) {
-                        options.push({
-                            external: true,
-                            label: item.label,
-                            id: item.ontology_prefix,
-                            ...(item.iri ? { uri: item.iri } : {}),
-                            ...(item.description && item.description.length > 0 ? { description: item.description[0] } : {})
-                        });
-                    }
+                    return await getTermMatchingAcrossOntologies({
+                        page,
+                        pageSize
+                    });
                 }
             } catch (error) {
                 // No matching class
                 return [];
             }
         }
-        return options;
     };
 
     /**
@@ -250,7 +206,7 @@ function Autocomplete(props) {
      * @return {Array} The list of loaded options including the  additionalData in the beginning it's the first page
      */
     const AddAdditionalData = (value, prevOptions, page) => {
-        if (props.additionalData && props.additionalData.length > 0 && page === 1) {
+        if (props.additionalData && props.additionalData.length > 0 && page === 0) {
             let additionalOptions = props.additionalData;
             additionalOptions = additionalOptions.filter(({ label, classes }) => {
                 return (
@@ -283,7 +239,7 @@ function Autocomplete(props) {
                     options: [],
                     hasMore: false,
                     additional: {
-                        page: 1,
+                        page: 0,
                         pageOLS: undefined
                     }
                 };
@@ -298,7 +254,7 @@ function Autocomplete(props) {
                 responseJson = await GetExternalClasses(value, pageOLS);
             }
 
-            if (page === 1) {
+            if (page === 0) {
                 responseJson = await IdMatch(value.trim(), responseJson);
             }
 
@@ -339,7 +295,7 @@ function Autocomplete(props) {
 
                     additional: {
                         page: page + 1,
-                        pageOLS: 1
+                        pageOLS: 0
                     }
                 };
             } else {
@@ -359,7 +315,7 @@ function Autocomplete(props) {
                 options: prevOptions,
                 hasMore: false,
                 additional: {
-                    page: 1,
+                    page: 0,
                     pageOLS: undefined
                 }
             };
@@ -384,7 +340,7 @@ function Autocomplete(props) {
      */
     const handleExternalSelect = async (selected, action) => {
         if (
-            props.requestUrl === classesUrl &&
+            props.entityType === ENTITIES.CLASS &&
             action.action === 'select-option' &&
             ((!action.option && selected.external) || (action.option && action.option.external))
         ) {
@@ -393,9 +349,10 @@ function Autocomplete(props) {
                 foundIndex = selected.findIndex(x => x.id === action.option.id);
             }
             try {
-                const internalClass = await submitGetRequest(
-                    classesUrl + '?uri=' + encodeURIComponent(props.isMulti ? action.option.uri.trim() : selected.uri.trim())
-                );
+                const internalClass = await await getClasses({
+                    uri: encodeURIComponent(props.isMulti ? action.option.uri.trim() : selected.uri.trim()),
+                    returnContent: true
+                });
                 if (props.isMulti) {
                     selected[foundIndex] = internalClass;
                 } else {
@@ -763,7 +720,8 @@ function Autocomplete(props) {
 }
 
 Autocomplete.propTypes = {
-    requestUrl: PropTypes.string.isRequired,
+    requestUrl: PropTypes.string,
+    entityType: PropTypes.string.isRequired,
     excludeClasses: PropTypes.string,
     optionsClass: PropTypes.string,
     placeholder: PropTypes.string.isRequired,

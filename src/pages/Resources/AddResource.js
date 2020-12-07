@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import { crossrefUrl, submitGetRequest } from 'network';
 import { createLiteralStatement } from 'services/backend/statements';
-import { classesUrl, getClassById } from 'services/backend/classes';
+import { getClassById } from 'services/backend/classes';
 import { createLiteral } from 'services/backend/literals';
 import { createResource } from 'services/backend/resources';
 import ConfirmClass from 'components/ConfirmationModal/ConfirmationModal';
@@ -11,7 +11,7 @@ import { Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
 import ROUTES from 'constants/routes';
-import { PREDICATES } from 'constants/graphSettings';
+import { PREDICATES, ENTITIES } from 'constants/graphSettings';
 import { getArrayParamFromQueryString } from 'utils';
 import PropTypes from 'prop-types';
 
@@ -192,7 +192,7 @@ export default class AddResource extends Component {
                             <Label for="select-classes">Classes</Label>
                             {!this.state.loadingDefaultClasses && (
                                 <AutoComplete
-                                    requestUrl={classesUrl}
+                                    entityType={ENTITIES.CLASS}
                                     onChange={(selected, action) => {
                                         // blur the field allows to focus and open the menu again
                                         this.classesAutocompleteRef.current && this.classesAutocompleteRef.current.blur();

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup } from 'reactstrap';
-import { resourcesUrl } from 'services/backend/resources';
 import { updateObservatoryName, updateObservatoryDescription, updateObservatoryResearchField } from 'services/backend/observatories';
 import { isEqual } from 'lodash';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import { ENTITIES, CLASSES } from 'constants/graphSettings';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
 
 class EditObservatory extends Component {
@@ -150,8 +150,8 @@ class EditObservatory extends Component {
                             <FormGroup>
                                 <Label for="ObservatoryResearchField">Observatory Research Field</Label>
                                 <AutoComplete
-                                    requestUrl={resourcesUrl}
-                                    optionsClass="ResearchField"
+                                    entityType={ENTITIES.RESOURCE}
+                                    optionsClass={CLASSES.RESEARCH_FIELD}
                                     placeholder="Select research field"
                                     onItemSelected={async rf => {
                                         this.setState({ researchField: { ...rf, label: rf.value } });

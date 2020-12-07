@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { createLiteralStatement, createResourceStatement, getStatementsByPredicateAndLiteral } from 'services/backend/statements';
 import { generateDOIForComparison } from 'services/backend/misc';
 import { createLiteral } from 'services/backend/literals';
-import { createResource, resourcesUrl } from 'services/backend/resources';
+import { createResource } from 'services/backend/resources';
 import { getComparison } from 'services/similarity/index';
 import Tooltip from 'components/Utils/Tooltip';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
@@ -32,7 +32,7 @@ import { reverse } from 'named-urls';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { PREDICATES, CLASSES, ENTITIES } from 'constants/graphSettings';
 import env from '@beam-australia/react-env';
 
 const StyledCustomInput = styled(CustomInput)`
@@ -420,7 +420,7 @@ function Publish(props) {
                             </Label>
 
                             <Autocomplete
-                                requestUrl={resourcesUrl}
+                                entityType={ENTITIES.RESOURCE}
                                 optionsClass={CLASSES.RESEARCH_FIELD}
                                 placeholder="Enter a research field"
                                 onItemSelected={i => {

@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { InputGroup } from 'reactstrap';
 import StatementOptionButton from 'components/StatementBrowser/StatementOptionButton/StatementOptionButton';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
+import { ENTITIES } from 'constants/graphSettings';
 import { PropertyStyle } from 'components/StatementBrowser/styled';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faArrowsAlt } from '@fortawesome/free-solid-svg-icons';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import { predicatesUrl } from 'services/backend/predicates';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
@@ -55,7 +55,7 @@ function TemplateComponentProperty(props) {
                 <div>
                     <InputGroup size="sm">
                         <AutoComplete
-                            requestUrl={predicatesUrl}
+                            entityType={ENTITIES.PREDICATE}
                             placeholder={isEditing ? 'Select or type to enter a property' : 'No properties'}
                             onChange={(selected, action) => {
                                 props.handlePropertiesSelect(selected, action, props.id);
