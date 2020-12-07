@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Container, Alert, UncontrolledAlert } from 'reactstrap';
 import { getStatementsBySubject, createResourceStatement, deleteStatementById } from 'services/backend/statements';
 import { getUserInformationById } from 'services/backend/users';
+import { getIsVerified } from 'services/backend/papers';
 import { getObservatoryAndOrganizationInformation } from 'services/backend/observatories';
 import { getResource, updateResource, createResource, getContributorsByResourceId } from 'services/backend/resources';
 import { connect } from 'react-redux';
@@ -99,10 +100,9 @@ class ViewPaper extends Component {
                 }
 
                 this.processObservatoryInformation(paperResource, resourceId);
-
-                getStatementsBySubject({ id: resourceId })
-                    .then(paperStatements => {
-                        this.processPaperStatements(paperResource, paperStatements);
+                Promise.all([getStatementsBySubject({ id: resourceId }), getIsVerified(resourceId)])
+                    .then(([paperStatements, verified]) => {
+                        this.processPaperStatements(paperResource, paperStatements, verified);
                     })
                     .then(() => {
                         // read ORCID of authors
@@ -231,12 +231,12 @@ class ViewPaper extends Component {
         }
     }
 
-    processPaperStatements = (paperResource, paperStatements) => {
+    processPaperStatements = (paperResource, paperStatements, verified) => {
         const paperData = getPaperData_ViewPaper(paperResource, paperStatements);
 
         // Set document title
         document.title = `${paperResource.label} - ORKG`;
-        this.props.loadPaper({ ...paperData, verified: paperResource.verified });
+        this.props.loadPaper({ ...paperData, verified: verified });
         this.setState({
             loading: false,
             contributions: paperData.contributions

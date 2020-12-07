@@ -162,9 +162,9 @@ class EditPaperDialog extends Component {
         //verified
         if (!!this.props.user && this.props.user.isCurationAllowed) {
             if (this.state.verified) {
-                markAsVerified(this.props.viewPaper.paperResourceId, this.state.verified).catch(() => console.log('Error'));
+                markAsVerified(this.props.viewPaper.paperResourceId, this.state.verified).catch(e => console.log(e));
             } else {
-                markAsUnverified(this.props.viewPaper.paperResourceId, this.state.verified).catch(() => console.log('Error'));
+                markAsUnverified(this.props.viewPaper.paperResourceId, this.state.verified).catch(e => console.log(e));
             }
         }
 
