@@ -46,7 +46,8 @@ class Papers extends Component {
             items: this.pageSize,
             sortBy: 'created_at',
             desc: true,
-            verified: this.state.verified
+            verified: this.state.verified,
+            returnContent: this.state.verified !== null ? true : false
         }).then(papers => {
             if (papers.length > 0) {
                 // update paper resources for paperCards preview
