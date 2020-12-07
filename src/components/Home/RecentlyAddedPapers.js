@@ -23,7 +23,8 @@ class RecentlyAddedPapers extends Component {
             page: 0,
             items: 7,
             sortBy: 'created_at',
-            desc: true
+            desc: true,
+            returnContent: true
         }).then(result => {
             if (result.length > 0) {
                 // Fetch the data of each paper

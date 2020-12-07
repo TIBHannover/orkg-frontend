@@ -125,7 +125,8 @@ export default class ContributionTemplates extends Component {
                 q: this.state.filterLabel,
                 items: this.pageSize,
                 sortBy: 'created_at',
-                desc: true
+                desc: true,
+                returnContent: true
             });
         }
 

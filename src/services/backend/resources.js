@@ -80,7 +80,8 @@ export const getResourcesByClass = async ({
     desc = true,
     q = null,
     creator = null,
-    exact = false
+    exact = false,
+    returnContent = false
 }) => {
     const sort = `${sortBy},${desc ? 'desc' : 'asc'}`;
     const params = queryString.stringify(
@@ -91,7 +92,9 @@ export const getResourcesByClass = async ({
         }
     );
 
-    const resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/?${params}`).then(res => res.content);
+    const resources = await submitGetRequest(`${classesUrl}${encodeURIComponent(id)}/resources/?${params}`).then(res =>
+        returnContent ? res.content : res
+    );
 
     return resources;
 };

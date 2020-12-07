@@ -203,7 +203,8 @@ const useImportBulkData = ({ data, onFinish }) => {
         const paperResources = await getResourcesByClass({
             id: CLASSES.PAPER,
             q: title,
-            exact: true
+            exact: true,
+            returnContent: true
         });
 
         return paperResources.length ? paperResources[0].id : null;

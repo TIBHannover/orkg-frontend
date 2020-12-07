@@ -37,7 +37,8 @@ export default class Comparisons extends Component {
             page: this.state.page,
             items: this.pageSize,
             sortBy: 'created_at',
-            desc: true
+            desc: true,
+            returnContent: true
         }).then(comparisons => {
             if (comparisons.length > 0) {
                 // Fetch the data of each paper

@@ -42,7 +42,8 @@ function ResearchProblemInput(props) {
                     items: 999,
                     sortBy: 'created_at',
                     desc: true,
-                    q: value
+                    q: value,
+                    returnContent: true
                 });
 
                 const research_problems = [];

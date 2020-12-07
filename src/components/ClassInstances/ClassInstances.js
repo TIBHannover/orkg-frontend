@@ -18,6 +18,7 @@ const ClassInstances = props => {
     const [page, setPage] = useState(0);
     const [instances, setInstances] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
+    const [totalElements, setTotalElements] = useState(0);
 
     const loadInstances = useCallback(
         debounce((page, searchQuery) => {
@@ -32,17 +33,12 @@ const ClassInstances = props => {
                 q: searchQuery
             }).then(result => {
                 // Resources
-                if (result.length === 0) {
-                    setIsLoading(false);
-                    setHasNextPage(false);
-                    setIsLastPageReached(page > 1 ? true : false);
-                    return;
-                } else {
-                    setInstances(prevResources => [...prevResources, ...result]);
-                    setIsLoading(false);
-                    setPage(page + 1);
-                    setHasNextPage(result.length < pageSize || result.length === 0 ? false : true);
-                }
+                setInstances(prevResources => [...prevResources, ...result.content]);
+                setIsLoading(false);
+                setPage(page + 1);
+                setHasNextPage(!result.last);
+                setTotalElements(result.totalElements);
+                setIsLastPageReached(result.last);
             });
         }, 500),
         [props.classId]
@@ -53,11 +49,11 @@ const ClassInstances = props => {
         setInstances([]);
         setHasNextPage(false);
         setIsLastPageReached(false);
-        setPage(1);
+        setPage(0);
     }, [props.classId]);
 
     useEffect(() => {
-        loadInstances(1, searchQuery);
+        loadInstances(0, searchQuery);
     }, [loadInstances, searchQuery]);
 
     const handleLoadMore = () => {
@@ -77,7 +73,7 @@ const ClassInstances = props => {
         setHasNextPage(false);
         setIsLastPageReached(false);
         setIsLoading(true);
-        loadInstances(1, searchQuery);
+        loadInstances(0, searchQuery);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchQuery]);
 
@@ -101,7 +97,9 @@ const ClassInstances = props => {
                         />
                     </FormGroup>
                 </Form>
-
+                <p className="mt-2">
+                    Total number of instances: <b>{totalElements}</b>
+                </p>
                 {instances.length > 0 && (
                     <div className="mt-3">
                         <Table size="sm" bordered>
@@ -129,7 +127,11 @@ const ClassInstances = props => {
                                         <td colSpan="3">View more class instances</td>
                                     </tr>
                                 )}
-                                {!hasNextPage && isLastPageReached && <div className="text-center mt-3">You have reached the last page.</div>}
+                                {!hasNextPage && isLastPageReached && page !== 0 && (
+                                    <tr className="text-center mt-3">
+                                        <td colSpan="3">You have reached the last page.</td>
+                                    </tr>
+                                )}
                             </tbody>
                         </Table>
                     </div>
@@ -137,7 +139,7 @@ const ClassInstances = props => {
 
                 {isLoading && loadingIndicator}
 
-                {instances.length === 0 && !isLoading && (
+                {totalElements === 0 && !isLoading && (
                     <div className="text-center mb-2">
                         {searchQuery ? (
                             <>

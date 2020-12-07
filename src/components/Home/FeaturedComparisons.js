@@ -58,7 +58,8 @@ class FeaturedComparisons extends Component {
         const responseJson = await getResourcesByClass({
             id: CLASSES.FEATURED_COMPARISON,
             sortBy: 'created_at',
-            desc: false
+            desc: false,
+            returnContent: true
         });
 
         const ids = responseJson.map(comparison => comparison.id);

@@ -26,7 +26,8 @@ class FeaturedPapers extends Component {
             id: CLASSES.FEATURED_PAPER,
             page: 0,
             items: 7,
-            desc: true
+            desc: true,
+            returnContent: true
         }).then(result => {
             getStatementsBySubjects({ ids: result.map(p => p.id) })
                 .then(papersStatements => {

@@ -183,7 +183,8 @@ class Search extends Component {
                 sortBy: 'id',
                 desc: true,
                 q: searchQuery,
-                id: filter_type
+                id: filter_type,
+                returnContent: true
             });
         }
         request

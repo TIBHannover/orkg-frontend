@@ -41,7 +41,8 @@ export default class Papers extends Component {
             page: this.state.page,
             items: this.pageSize,
             sortBy: 'created_at',
-            desc: true
+            desc: true,
+            returnContent: true
         }).then(papers => {
             if (papers.length > 0) {
                 // update paper resources for paperCards preview

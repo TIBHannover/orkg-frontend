@@ -98,7 +98,7 @@ function Autocomplete(props) {
         }
         let responseJson;
         if (props.optionsClass) {
-            responseJson = await getResourcesByClass({ id: props.optionsClass, q: value.trim(), page: page, items: pageSize });
+            responseJson = await getResourcesByClass({ id: props.optionsClass, q: value.trim(), page: page, items: pageSize, returnContent: true });
         } else {
             const isURI = new RegExp(REGEX.URL).test(value.trim());
             if (props.requestUrl === classesUrl && isURI) {
