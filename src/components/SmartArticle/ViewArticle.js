@@ -18,7 +18,7 @@ const ViewArticle = () => {
     const sections = useSelector(state => state.smartArticle.sections);
 
     return (
-        <Container>
+        <Container className="print-only">
             <SectionStyled className="box rounded pr-4">
                 <h1 className="mb-2 mt-4">{title.label}</h1>
                 <div className="my-3">
@@ -27,10 +27,10 @@ const ViewArticle = () => {
                 {sections.map(section => {
                     //if (section.type === '')
                     return (
-                        <>
+                        <React.Fragment key={section.id}>
                             <h2 className="h4 border-bottom mt-4">{section.title.label}</h2>
                             <p dangerouslySetInnerHTML={{ __html: converter.makeHtml(section.markdown.label) }} />
-                        </>
+                        </React.Fragment>
                     );
                 })}
             </SectionStyled>

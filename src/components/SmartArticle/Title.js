@@ -1,14 +1,18 @@
 import { updateTitle } from 'actions/smartArticle';
 import { SectionStyled, SectionTypeStyled, ContentEditableStyled } from 'components/SmartArticle/styled';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Tippy from '@tippy.js/react';
 
 const Title = () => {
     const { id, label } = useSelector(state => state.smartArticle.paperResource);
     const dispatch = useDispatch();
+    const [, updateState] = useState();
+    const forceUpdate = useCallback(() => updateState({}), []);
+
     // react-contenteditable doesn't support useState, so we use a ref
     // https://github.com/lovasoa/react-contenteditable/issues/161
+    // we need forceUpdate because changing to ref doesn't trigger a rerender
     const text = useRef('');
 
     useEffect(() => {
@@ -16,7 +20,8 @@ const Title = () => {
             return;
         }
         text.current = label;
-    }, [label]);
+        forceUpdate();
+    }, [label, forceUpdate]);
 
     const handleChange = evt => {
         text.current = evt.target.value;

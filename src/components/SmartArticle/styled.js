@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Container, Button } from 'reactstrap';
+import { Button } from 'reactstrap';
 import ContentEditable from 'react-contenteditable';
 
 export const ContentEditableStyled = styled(ContentEditable)`

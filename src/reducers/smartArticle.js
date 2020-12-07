@@ -39,7 +39,7 @@ export default (state = initialState, action) => {
                 ...state,
                 paperResource: {
                     ...state.paperResource,
-                    title
+                    label: title
                 }
             };
         }
