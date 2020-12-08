@@ -74,7 +74,9 @@ const AddSection = props => {
                         <Button color="dark">Visualization</Button>
                         <Button color="dark">Problem</Button>
                         <Button color="dark">Property</Button>
-                        <Button color="dark">Resource</Button>
+                        <Button color="dark" onClick={() => handleAddSection('resource')}>
+                            Resource
+                        </Button>
                     </Toolbar>
                 </OutsideClickHandler>
             )}

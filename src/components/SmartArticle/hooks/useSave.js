@@ -4,13 +4,11 @@ import { CLASSES, PREDICATES } from 'constants/graphSettings';
 
 const useHeaderBar = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [createdPaperId, setCreatedPaperId] = useState(null);
 
     const create = async title => {
-        console.log('create article with title: ', title);
         setIsLoading(true);
 
-        const paper = {
+        /*const paper = {
             predicates: [],
             resource: {
                 name: title,
@@ -66,15 +64,32 @@ const useHeaderBar = () => {
                     ]
                 }
             }
+        };*/
+
+        const paper = {
+            predicates: [],
+            resource: {
+                name: title,
+                classes: [CLASSES.PAPER, CLASSES.SMART_ARTICLE], //TODO: paper should probably be removed?
+                values: {
+                    [PREDICATES.HAS_CONTRIBUTION]: [
+                        {
+                            label: 'Contribution',
+                            classes: [CLASSES.CONTRIBUTION, CLASSES.CONTRIBUTION_SMART_ARTICLE],
+                            values: {}
+                        }
+                    ]
+                }
+            }
         };
 
         const createdPaper = await createObject(paper);
-        console.log('createdPaper', createdPaper);
-        setCreatedPaperId(createdPaper.id);
         setIsLoading(false);
+
+        return createdPaper.id;
     };
 
-    return { create, isLoading, createdPaperId };
+    return { create, isLoading };
 };
 
 export default useHeaderBar;

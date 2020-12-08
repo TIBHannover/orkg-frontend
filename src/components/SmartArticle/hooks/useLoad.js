@@ -1,37 +1,43 @@
-import { useState, useCallback } from 'react';
-import { createObject } from 'services/backend/misc';
-import { CLASSES, PREDICATES } from 'constants/graphSettings';
-import { getStatementsBundleBySubject } from 'services/backend/statements';
-import { getResource } from 'services/backend/resources';
 import { load as loadArticle } from 'actions/smartArticle';
+import { CLASSES, PREDICATES } from 'constants/graphSettings';
+import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { getResource } from 'services/backend/resources';
+import { getStatementsBundleBySubject } from 'services/backend/statements';
 
 const useHeaderBar = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [isNotFound, setIsNotFound] = useState(false);
     const dispatch = useDispatch();
 
     const load = useCallback(
         async id => {
             setIsLoading(true);
-            const paperResource = await getResource(id);
+            const paperResource = await getResource(id).catch(e => {});
+
+            if (!paperResource) {
+                notFound();
+                return;
+            }
+
             const { bundle: paperStatements } = await getStatementsBundleBySubject({
                 id
             });
             const contributionResources = getObjectsByPredicateAndLevel(paperStatements, PREDICATES.HAS_CONTRIBUTION, 0);
-            console.log('contributionResource', contributionResources);
 
             if (contributionResources.length === 0) {
                 console.log('no contributions found');
+                notFound();
                 return;
             }
 
             const contributionResource = contributionResources.find(statement => statement.classes.includes(CLASSES.CONTRIBUTION_SMART_ARTICLE));
 
-            if (contributionResource.length === 0) {
+            if (!contributionResource) {
                 console.log('no contribution with class "CONTRIBUTION_SMART_ARTICLE" found');
+                notFound();
                 return;
             }
-
             const authorResources = getObjectsByPredicateAndLevel(paperStatements, PREDICATES.HAS_AUTHOR, 0);
             const sectionResources = getObjectsByPredicateAndLevel(paperStatements, PREDICATES.HAS_SECTION, 1);
 
@@ -59,10 +65,27 @@ const useHeaderBar = () => {
             for (const [index, section] of sectionResources.entries()) {
                 const sectionStatements = getStatementsBySubjectId(paperStatements, section.id);
                 sectionResources[index].statements = sectionStatements;
-                console.log(section);
                 const type = section.classes.length > 1 ? section.classes.find(_class => _class !== CLASSES.SECTION) : section.classes[0];
-                const contentStatement = section.statements.find(({ statement }) => statement.predicate.id === PREDICATES.HAS_CONTENT);
-                const content = contentStatement?.statement?.object;
+                let markdown = null;
+                let contentLink = null;
+
+                if (type === CLASSES.RESOURCE_SECTION) {
+                    const linkStatement = section.statements.find(({ statement }) => statement.predicate.id === PREDICATES.HAS_LINK);
+                    const link = linkStatement?.statement?.object;
+
+                    contentLink = {
+                        id: section?.id,
+                        objectId: link?.id,
+                        label: link?.label
+                    };
+                } else {
+                    const contentStatement = section.statements.find(({ statement }) => statement.predicate.id === PREDICATES.HAS_CONTENT);
+                    const content = contentStatement?.statement?.object;
+                    markdown = {
+                        id: content.id,
+                        label: content.label
+                    };
+                }
 
                 sections.push({
                     id: section.id,
@@ -73,13 +96,10 @@ const useHeaderBar = () => {
                     type: {
                         id: type
                     },
-                    markdown: {
-                        id: content.id,
-                        label: content.label
-                    }
+                    markdown,
+                    contentLink
                 });
             }
-            console.log(sections);
 
             dispatch(
                 loadArticle({
@@ -94,6 +114,11 @@ const useHeaderBar = () => {
         },
         [dispatch]
     );
+
+    const notFound = () => {
+        setIsNotFound(true);
+        setIsLoading(false);
+    };
 
     const getObjectsByPredicateAndLevel = (statements, predicateId, level) => {
         return statements
@@ -112,7 +137,7 @@ const useHeaderBar = () => {
     //const getStatementsBySubjectClassId = ({ bundle: statements }, classId) =>
     //    statements.filter(({ statement }) => statement.subject.classes.includes(classId)).map(({ statement }) => statement);
 
-    return { load, isLoading };
+    return { load, isLoading, isNotFound };
 };
 
 export default useHeaderBar;

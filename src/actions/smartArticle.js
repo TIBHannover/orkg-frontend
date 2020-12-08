@@ -8,7 +8,9 @@ import {
     createResourceStatement,
     deleteStatementsByIds,
     getStatementsByObject,
-    getStatementsBySubject
+    getStatementsBySubject,
+    getStatementsBySubjectAndPredicate,
+    deleteStatementById
 } from 'services/backend/statements';
 
 export const load = payload => dispatch => {
@@ -64,6 +66,25 @@ export const updateSectionMarkdown = ({ id, markdown }) => async dispatch => {
     dispatch(setIsLoading(false));
 };
 
+export const updateSectionLink = ({ id, label, objectId }) => async dispatch => {
+    dispatch({
+        type: type.ARTICLE_WRITER_UPDATE_SECTION_LINK,
+        payload: {
+            id,
+            label,
+            objectId
+        }
+    });
+    dispatch(setIsLoading(true));
+    // delete the current statement (if it exists, not empty sections, this statement doesn't exist)
+    const contentStatement = await getStatementsBySubjectAndPredicate({ subjectId: id, predicateId: PREDICATES.HAS_LINK });
+    if (contentStatement.length) {
+        await deleteStatementById(contentStatement[0].id);
+    }
+    await createResourceStatement(id, PREDICATES.HAS_LINK, objectId);
+    dispatch(setIsLoading(false));
+};
+
 export const updateSectionType = ({ sectionId, type: sectionType }) => async dispatch => {
     dispatch({
         type: type.ARTICLE_WRITER_UPDATE_SECTION_TYPE,
@@ -89,20 +110,33 @@ export const createSection = ({ contributionId, afterIndex, sectionType }) => as
 
     // TODO: based on sectionType decide what to do...
     let typeId = '';
+    let sectionResourceId = null;
+    let markdownLiteralId = null;
+
     if (sectionType === 'content') {
+        // markdown section
         typeId = CLASSES.SECTION;
+
+        const sectionResource = await createResource('', [typeId]);
+        const markdownLiteral = await createLiteral('null');
+        await createResourceStatement(contributionId, PREDICATES.HAS_SECTION, sectionResource.id);
+        await createLiteralStatement(sectionResource.id, PREDICATES.HAS_CONTENT, markdownLiteral.id);
+        sectionResourceId = sectionResource.id;
+        markdownLiteralId = markdownLiteral.id;
+    } else if (sectionType === 'resource') {
+        // link section
+        typeId = CLASSES.RESOURCE_SECTION;
+        const sectionResource = await createResource('', [typeId]);
+        await createResourceStatement(contributionId, PREDICATES.HAS_SECTION, sectionResource.id);
+        sectionResourceId = sectionResource.id;
     }
-    const sectionResource = await createResource('', [CLASSES.SECTION]);
-    const markdownResource = await createLiteral('null');
-    await createResourceStatement(contributionId, PREDICATES.HAS_SECTION, sectionResource.id);
-    await createLiteralStatement(sectionResource.id, PREDICATES.HAS_CONTENT, markdownResource.id);
 
     dispatch({
         type: type.ARTICLE_WRITER_CREATE_SECTION,
         payload: {
             afterIndex,
-            sectionId: sectionResource.id,
-            markdownId: markdownResource.id,
+            sectionId: sectionResourceId,
+            markdownId: markdownLiteralId,
             typeId
         }
     });

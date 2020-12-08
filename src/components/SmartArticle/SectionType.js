@@ -1,12 +1,13 @@
+import Tippy from '@tippy.js/react';
 import { updateSectionType } from 'actions/smartArticle';
 import useOntology from 'components/PdfTextAnnotation/hooks/useOntology';
 import { SectionTypeContainerStyled, SectionTypeStyled } from 'components/SmartArticle/styled';
-import { upperFirst } from 'lodash';
+import { CLASSES } from 'constants/graphSettings';
+import { sortBy, upperFirst } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Select, { components } from 'react-select';
-import { sortBy } from 'lodash';
 
 const Option = ({ children, ...props }) => {
     return <components.Option {...props}>{children}</components.Option>;
@@ -18,6 +19,7 @@ Option.propTypes = {
 };
 
 const SectionType = props => {
+    const { type, isDisabled, disabledTooltip } = props;
     const [editMode, setEditMode] = useState(false);
     const [options, setOptions] = useState([]);
     const [typeValue, setTypeValue] = useState({
@@ -25,7 +27,6 @@ const SectionType = props => {
         value: null
     });
     const { classes } = useOntology();
-    const { type } = props;
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -39,6 +40,10 @@ const SectionType = props => {
                 {
                     label: 'Section',
                     value: 'Section'
+                },
+                {
+                    label: 'Resource',
+                    value: CLASSES.RESOURCE_SECTION
                 }
             ];
             const _options = sortBy([...ontologyClasses, ...additionalClasses], 'label');
@@ -49,6 +54,9 @@ const SectionType = props => {
     useEffect(() => {
         if (type && options.length) {
             const selected = options.find(option => option.value === type);
+            if (!selected) {
+                return;
+            }
             setTypeValue(selected);
         }
     }, [type, options]);
@@ -68,27 +76,45 @@ const SectionType = props => {
         );
     };
 
-    return !editMode ? (
-        <SectionTypeStyled onClick={() => setEditMode(true)}>{typeValue.label}</SectionTypeStyled>
-    ) : (
-        <SectionTypeContainerStyled>
-            <Select
-                value={typeValue}
-                onChange={handleChange}
-                options={options}
-                components={{ Option }}
-                onBlur={handleBlur}
-                blurInputOnSelect
-                autoFocus
-                openMenuOnFocus
-            />
-        </SectionTypeContainerStyled>
+    return (
+        <>
+            {isDisabled && (
+                <SectionTypeStyled disabled>
+                    <Tippy hideOnClick={false} content={disabledTooltip}>
+                        <span>{typeValue.label}</span>
+                    </Tippy>
+                </SectionTypeStyled>
+            )}
+
+            {!isDisabled && !editMode && <SectionTypeStyled onClick={() => setEditMode(true)}>{typeValue.label}</SectionTypeStyled>}
+            {editMode && (
+                <SectionTypeContainerStyled>
+                    <Select
+                        value={typeValue}
+                        onChange={handleChange}
+                        options={options}
+                        components={{ Option }}
+                        onBlur={handleBlur}
+                        blurInputOnSelect
+                        autoFocus
+                        openMenuOnFocus
+                    />
+                </SectionTypeContainerStyled>
+            )}
+        </>
     );
 };
 
 SectionType.propTypes = {
     sectionId: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired
+    type: PropTypes.string.isRequired,
+    isDisabled: PropTypes.bool,
+    disabledTooltip: PropTypes.string
+};
+
+SectionType.defaultProps = {
+    isDisabled: false,
+    disabledTooltip: 'The type of this section cannot be changed'
 };
 
 export default SectionType;

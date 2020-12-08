@@ -1,4 +1,4 @@
-import { faCheckCircle, faCog, faDownload, faPen, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faDownload, faPen, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippy.js/react';
 import AddSection from 'components/SmartArticle/AddSection';
@@ -7,12 +7,13 @@ import useLoad from 'components/SmartArticle/hooks/useLoad';
 import Sections from 'components/SmartArticle/Sections';
 import Title from 'components/SmartArticle/Title';
 import ViewArticle from 'components/SmartArticle/ViewArticle';
+import { times } from 'lodash';
+import NotFound from 'pages/NotFound';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
+import ContentLoader from 'react-content-loader';
 import { useSelector } from 'react-redux';
 import { Button, ButtonGroup, Container } from 'reactstrap';
-import ContentLoader from 'react-content-loader';
-import { times } from 'lodash';
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
@@ -38,7 +39,7 @@ const GlobalStyle = createGlobalStyle`
 
 const SmartArticle = props => {
     const id = props.match.params.id || null;
-    const { load, isLoading } = useLoad();
+    const { load, isLoading, isNotFound } = useLoad();
     const isLoadingInline = useSelector(state => state.smartArticle.isLoading);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -47,6 +48,10 @@ const SmartArticle = props => {
 
         load(id);
     }, [id, load]);
+
+    if (isNotFound) {
+        return <NotFound />;
+    }
 
     return (
         <div>
@@ -120,7 +125,7 @@ const SmartArticle = props => {
             {isLoading && (
                 <Container>
                     <div className="box rounded p-5">
-                        <ContentLoader height={45} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ccc">
+                        <ContentLoader height={42} width={100} speed={2} primaryColor="#f3f3f3" secondaryColor="#ccc">
                             {/* title */}
                             <rect x="0" y="0" rx="0" ry="0" width="100" height="5" />
                             {/* authors */}

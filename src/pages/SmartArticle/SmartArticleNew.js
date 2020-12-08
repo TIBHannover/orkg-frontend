@@ -1,20 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Button, Input, FormGroup, Label } from 'reactstrap';
+import { faQuestionCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippy.js/react';
 import useSave from 'components/SmartArticle/hooks/useSave';
+import ROUTES from 'constants/routes';
+import { reverse } from 'named-urls';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Button, Container, FormGroup, Input, Label } from 'reactstrap';
 
 const SmartArticleNew = () => {
     const [title, setTitle] = useState('');
     const { create, isLoading } = useSave();
+    const history = useHistory();
 
     useEffect(() => {
         document.title = 'Create new article - ORKG';
     });
 
-    const handleCreate = () => {
-        create(title);
+    const handleCreate = async () => {
+        if (!title) {
+            toast.error('Enter a paper title');
+        }
+        const id = await create(title);
+        history.push(reverse(ROUTES.SMART_ARTICLE, { id }));
     };
 
     return (
@@ -36,7 +45,13 @@ const SmartArticleNew = () => {
                 </FormGroup>
                 <div className="text-right">
                     <Button color="primary" onClick={handleCreate} disabled={isLoading}>
-                        Create
+                        {!isLoading ? (
+                            'Create'
+                        ) : (
+                            <>
+                                <Icon icon={faSpinner} spin /> Loading
+                            </>
+                        )}
                     </Button>
                 </div>
             </Container>

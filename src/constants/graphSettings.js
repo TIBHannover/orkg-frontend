@@ -43,7 +43,8 @@ export const PREDICATES = {
     HAS_PREVIOUS_VERSION: 'hasPreviousVersion',
     HAS_SUBJECT: 'hasSubject',
     IS_LISTED: 'isListed',
-    HAS_SECTION: 'HasSection'
+    HAS_SECTION: 'HasSection',
+    HAS_LINK: 'HasLink'
 };
 
 export const CLASSES = {
@@ -66,7 +67,8 @@ export const CLASSES = {
     SENTENCE: 'Sentence',
     SMART_ARTICLE: 'SmartArticle',
     SECTION: 'Section',
-    CONTRIBUTION_SMART_ARTICLE: 'ContributionSmartArticle'
+    CONTRIBUTION_SMART_ARTICLE: 'ContributionSmartArticle',
+    RESOURCE_SECTION: 'ResourceSection'
     /*FABIO_SCHOLARLY_WORK: 'ScholarlyWork',
     DOCO_FRONT_MATTER: 'FrontMatter',
     DOCO_BACK_MATTER: 'BackMatter',

@@ -1,16 +1,12 @@
-import React, { useState } from 'react';
-import { SectionStyled, SectionTypeStyled } from 'components/SmartArticle/styled';
-import { useSelector } from 'react-redux';
-import { CLASSES } from 'constants/graphSettings';
-import { faPen, faUser } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
-import { Badge, Button } from 'reactstrap';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { reverse } from 'named-urls';
-import ROUTES from 'constants/routes';
 import Tippy from '@tippy.js/react';
-import AuthorsModal from 'components/SmartArticle/AuthorsModal';
 import AuthorsList from 'components/SmartArticle/AuthorsList';
+import AuthorsModal from 'components/SmartArticle/AuthorsModal';
+import { SectionStyled, SectionTypeStyled } from 'components/SmartArticle/styled';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Button } from 'reactstrap';
 
 const AuthorsSection = () => {
     const authorResources = useSelector(state => state.smartArticle.authorResources);

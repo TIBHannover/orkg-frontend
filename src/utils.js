@@ -1,21 +1,16 @@
 import capitalize from 'capitalize';
+import { CLASSES, MISC, PREDICATES } from 'constants/graphSettings';
+import { flattenDepth, isEqual, isString, uniq } from 'lodash';
 import queryString from 'query-string';
-import { flattenDepth, uniq } from 'lodash';
 import rdf from 'rdf';
-import { PREDICATES, MISC } from 'constants/graphSettings';
-import { isString, isEqual } from 'lodash';
+import { createLiteral as createLiteralApi } from 'services/backend/literals';
+import { createResource } from 'services/backend/resources';
 import {
     createLiteralStatement,
     createResourceStatement,
     deleteStatementsByIds,
-    deleteStatementById,
-    updateStatement,
-    getStatementsBySubjectAndPredicate,
     getStatementsByPredicateAndLiteral
 } from 'services/backend/statements';
-import { updateLiteral, createLiteral as createLiteralApi } from 'services/backend/literals';
-import { updateResource, createResource } from 'services/backend/resources';
-import { CLASSES } from 'constants/graphSettings';
 
 export function hashCode(s) {
     return s.split('').reduce((a, b) => {

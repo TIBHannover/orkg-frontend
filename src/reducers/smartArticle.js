@@ -51,8 +51,17 @@ export default (state = initialState, action) => {
 
         case type.ARTICLE_WRITER_UPDATE_SECTION_MARKDOWN: {
             const { id, markdown } = action.payload;
-            const index = state.sections.findIndex(section => section.markdown.id === id);
+            const index = state.sections.findIndex(section => section.markdown && section.markdown.id === id);
             return dotProp.set(state, `sections.${index}.markdown.label`, markdown);
+        }
+
+        case type.ARTICLE_WRITER_UPDATE_SECTION_LINK: {
+            const { id, label, objectId } = action.payload;
+            const index = state.sections.findIndex(section => section?.id === id);
+            let newState;
+            newState = dotProp.set(state, `sections.${index}.contentLink.objectId`, objectId);
+            newState = dotProp.set(newState, `sections.${index}.contentLink.label`, label);
+            return newState;
         }
 
         case type.ARTICLE_WRITER_UPDATE_SECTION_TYPE: {
@@ -77,10 +86,12 @@ export default (state = initialState, action) => {
                         type: {
                             id: typeId
                         },
-                        markdown: {
-                            id: markdownId,
-                            label: ''
-                        }
+                        markdown: markdownId
+                            ? {
+                                  id: markdownId,
+                                  label: ''
+                              }
+                            : undefined
                     },
                     ...state.sections.slice(afterIndex)
                 ]

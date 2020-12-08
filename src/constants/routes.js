@@ -37,9 +37,8 @@ export default {
     LICENSE: '/license',
     DATA_PROTECTION: '/data-protection',
     TERMS_OF_USE: '/terms-of-use',
-    /* Legacy routes, only used for debugging now */
     SEARCH: '/search/:searchTerm?',
-    TPDL: '/tpdl',
+    TPDL: '/tpdl', // legacy
     STATS: '/stats',
     CHANGELOG: '/changelog',
     EXPORT_DATA: '/export-data',

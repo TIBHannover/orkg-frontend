@@ -3,8 +3,11 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Tippy from '@tippy.js/react';
 import { deleteSection, updateSectionMarkdown, updateSectionTitle } from 'actions/smartArticle';
 import AddSection from 'components/SmartArticle/AddSection';
+import ContentEditable from 'components/SmartArticle/ContentEditable';
+import SectionStatementBrowser from 'components/SmartArticle/SectionStatementBrowser';
 import SectionType from 'components/SmartArticle/SectionType';
-import { ContentEditableStyled, DeleteButton, MoveHandle, SectionStyled, MarkdownPlaceholder } from 'components/SmartArticle/styled';
+import { DeleteButton, MarkdownPlaceholder, MoveHandle, SectionStyled } from 'components/SmartArticle/styled';
+import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -27,21 +30,12 @@ const Section = props => {
     const { type, markdown, title } = props.section;
     const dispatch = useDispatch();
     const markdownEditorRef = useRef(null);
-    const text = useRef('');
 
     const SortableHandle = sortableHandle(() => (
         <MoveHandle className={isHovering ? 'hover' : ''}>
             <Icon icon={faBars} />
         </MoveHandle>
     ));
-
-    // initial data loading
-    useEffect(() => {
-        if (!title) {
-            return;
-        }
-        text.current = title.label;
-    }, [title]);
 
     // initial data loading
     useEffect(() => {
@@ -58,15 +52,11 @@ const Section = props => {
         }
     }, [editMode]);
 
-    const handleChange = evt => {
-        text.current = evt.target.value;
-    };
-
-    const handleBlurTitle = async () => {
+    const handleBlurTitle = async text2 => {
         dispatch(
             updateSectionTitle({
                 sectionId: title.id,
-                title: text.current
+                title: text2
             })
         );
     };
@@ -90,10 +80,12 @@ const Section = props => {
         });
 
         if (confirm) {
-            console.log('delete', title.id);
             dispatch(deleteSection(title.id));
         }
     };
+
+    const isStatementBrowserSection = props.section.type.id === CLASSES.RESOURCE_SECTION;
+    const isTypeChangeDisabled = isStatementBrowserSection;
 
     return (
         <>
@@ -102,17 +94,14 @@ const Section = props => {
                     <Icon icon={faTimes} />
                 </DeleteButton>
                 <SortableHandle />
-                <SectionType type={type.id} sectionId={title.id} />
+                <SectionType type={type.id} sectionId={title.id} isDisabled={isTypeChangeDisabled} />
                 <h2 className="h4 border-bottom pb-1 mb-3" placeholder="trd">
-                    <ContentEditableStyled
-                        html={text.current}
-                        onBlur={handleBlurTitle}
-                        onChange={handleChange}
-                        placeholder="Enter a section title..."
-                    />
+                    <ContentEditable text={title.label} onBlur={handleBlurTitle} placeholder="Enter a section title..." />
                 </h2>
 
-                {!editMode ? (
+                {isStatementBrowserSection && <SectionStatementBrowser section={props.section} />}
+
+                {!isStatementBrowserSection && !editMode && (
                     <Tippy hideOnClick={false} content="Double click to edit">
                         {markdownValue && markdownValue !== 'null' ? (
                             <div dangerouslySetInnerHTML={{ __html: converter.makeHtml(markdownValue) }} onDoubleClick={() => setEditMode(true)} />
@@ -120,7 +109,9 @@ const Section = props => {
                             <MarkdownPlaceholder onDoubleClick={() => setEditMode(true)}>Double click to edit this text</MarkdownPlaceholder>
                         )}
                     </Tippy>
-                ) : (
+                )}
+
+                {!isStatementBrowserSection && editMode && (
                     <Textarea
                         value={markdownValue !== 'null' ? markdownValue : ''}
                         onChange={e => setMarkdownValue(e.target.value)}
