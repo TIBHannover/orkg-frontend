@@ -26,7 +26,11 @@ export const selectTerms = ({ page = 0, pageSize = 10, type = 'ontology', q = nu
                 });
             }
         }
-        return options;
+        return {
+            content: options,
+            last: Math.ceil(res.response.numFound / pageSize) <= page ? true : false,
+            totalElements: res.response.numFound
+        };
     });
 };
 
@@ -51,7 +55,7 @@ export const getAllOntologies = ({ page = 0, pageSize = 10 }) => {
                 });
             }
         }
-        return options;
+        return { content: options, last: res.page.totalPages <= res.page.number ? true : false, totalElements: res.page.totalElements };
     });
 };
 
@@ -77,7 +81,7 @@ export const getOntologyTerms = ({ ontology_id, page = 0, pageSize = 10 }) => {
                 });
             }
         }
-        return options;
+        return { content: options, last: res.page.totalPages <= res.page.number ? true : false, totalElements: res.page.totalElements };
     });
 };
 
@@ -103,6 +107,6 @@ export const getTermMatchingAcrossOntologies = ({ page = 0, pageSize = 10 }) => 
                 });
             }
         }
-        return options;
+        return { content: options, last: res.page.totalPages <= res.page.number ? true : false, totalElements: res.page.totalElements };
     });
 };

@@ -52,7 +52,7 @@ function Autocomplete(props) {
     const [selectedOntologies, setSelectedOntologies] = useState([]);
 
     // Pagination params
-    const pageSize = 10;
+    const PAGE_SIZE = 10;
     const defaultAdditional = {
         page: 0,
         pageOLS: undefined
@@ -97,7 +97,7 @@ function Autocomplete(props) {
         }
         let responseJson;
         if (props.optionsClass) {
-            responseJson = await getResourcesByClass({ id: props.optionsClass, q: value.trim(), page: page, items: pageSize, returnContent: true });
+            responseJson = await getResourcesByClass({ id: props.optionsClass, q: value.trim(), page: page, items: PAGE_SIZE });
         } else {
             const isURI = new RegExp(REGEX.URL).test(value.trim());
             if (props.entityType === ENTITIES.CLASS && isURI) {
@@ -105,24 +105,24 @@ function Autocomplete(props) {
                 try {
                     responseJson = await getClasses({
                         page,
-                        items: pageSize,
+                        items: PAGE_SIZE,
                         exact,
-                        uri: encodeURIComponent(value.trim()),
-                        returnContent: true
+                        uri: value.trim()
                     });
                 } catch (error) {
                     // No matching class
-                    return [];
+                    return { content: [], last: true, totalElements: 0 };
                 }
-                responseJson = responseJson ? [responseJson] : [];
+                responseJson = responseJson
+                    ? { content: [responseJson], last: true, totalElements: 1 }
+                    : { content: [], last: true, totalElements: 0 };
             } else {
                 responseJson = await getEntities(props.entityType, {
                     page,
-                    items: pageSize,
+                    items: PAGE_SIZE,
                     q: encodeURIComponent(value.trim()),
                     exclude: props.excludeClasses ? encodeURIComponent(props.excludeClasses) : null,
-                    exact,
-                    returnContent: true
+                    exact
                 });
             }
         }
@@ -139,18 +139,18 @@ function Autocomplete(props) {
     const OntologyLookup = async (value, page) => {
         if (value) {
             try {
-                return await selectTerms({ page, pageSize, type: 'ontology', q: encodeURIComponent(value.trim()) });
+                return await selectTerms({ page, PAGE_SIZE, type: 'ontology', q: encodeURIComponent(value.trim()) });
             } catch (error) {
                 // No matching class
-                return [];
+                return { content: [], last: true, totalElements: 0 };
             }
         } else {
             // List all ontologies
             try {
-                return await getAllOntologies({ page, pageSize });
+                return await getAllOntologies({ page, PAGE_SIZE });
             } catch (error) {
                 // No matching class
-                return [];
+                return { content: [], last: true, totalElements: 0 };
             }
         }
     };
@@ -167,14 +167,14 @@ function Autocomplete(props) {
             try {
                 return await selectTerms({
                     page,
-                    pageSize,
+                    PAGE_SIZE,
                     type: props.entityType === ENTITIES.CLASS ? 'class' : 'property',
                     q: encodeURIComponent(value.trim()),
                     ontology: selectedOntologies ? selectedOntologies.map(o => o.ontologyId.replace(':', '')).join(',') : null
                 });
             } catch (error) {
                 // No matching class
-                return [];
+                return { content: [], last: true, totalElements: 0 };
             }
         } else {
             // list all external classes
@@ -183,17 +183,17 @@ function Autocomplete(props) {
                     return await getOntologyTerms({
                         ontology_id: selectedOntologies.map(s => s.ontologyId.replace(':', ''))[0],
                         page,
-                        pageSize
+                        PAGE_SIZE
                     });
                 } else {
                     return await getTermMatchingAcrossOntologies({
                         page,
-                        pageSize
+                        PAGE_SIZE
                     });
                 }
             } catch (error) {
                 // No matching class
-                return [];
+                return { content: [], last: true, totalElements: 0 };
             }
         }
     };
@@ -246,21 +246,25 @@ function Autocomplete(props) {
             }
 
             let responseJson = [];
+            let hasMore = false;
             if (props.requestUrl === olsBaseUrl) {
                 responseJson = await OntologyLookup(value, page);
-            } else if (!pageOLS && selectedOntologies.length === 0) {
+            } else if (pageOLS === undefined && selectedOntologies.length === 0) {
                 responseJson = await InternalORKGLookup(value, page);
             } else if (props.ols) {
                 responseJson = await GetExternalClasses(value, pageOLS);
             }
 
+            hasMore = !responseJson.last;
+            responseJson = responseJson.content;
+
             if (page === 0) {
                 responseJson = await IdMatch(value.trim(), responseJson);
             }
 
-            if (responseJson.length > pageSize) {
+            if (responseJson.length > PAGE_SIZE) {
                 // in case the endpoint doesn't support pagination!
-                responseJson = responseJson.slice(0, pageSize);
+                responseJson = responseJson.slice(0, PAGE_SIZE);
             }
 
             let options = [];
@@ -278,8 +282,6 @@ function Autocomplete(props) {
                 })
             );
 
-            let hasMore = options.length < pageSize ? false : true;
-
             options = AddAdditionalData(value, options, page);
 
             // Add resources from third party registries
@@ -287,8 +289,8 @@ function Autocomplete(props) {
                 options = await getExternalData(value, options, props.optionsClass);
             }
 
-            if (!hasMore && !pageOLS) {
-                hasMore = !props.ols ? hasMore : true;
+            if (!hasMore && pageOLS === undefined) {
+                hasMore = !props.ols ? hasMore : true; // when there is no more item in ORKG continue loading from OLS
                 return {
                     options,
                     hasMore,
@@ -721,7 +723,7 @@ function Autocomplete(props) {
 
 Autocomplete.propTypes = {
     requestUrl: PropTypes.string,
-    entityType: PropTypes.string.isRequired,
+    entityType: PropTypes.string,
     excludeClasses: PropTypes.string,
     optionsClass: PropTypes.string,
     placeholder: PropTypes.string.isRequired,
