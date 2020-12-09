@@ -84,16 +84,16 @@ const RelatedFigures = props => {
             <>
                 <h3 className="mt-5 h5">Related figures</h3>{' '}
                 <CardColumns>
-                    {figures.map((url, index) => (
-                        <span key={`figure${index}`} ref={scrollTo} id={url.id}>
+                    {figures.map((figure, index) => (
+                        <span key={`figure${figure.figureId}`} ref={scrollTo} id={figure.figureId}>
                             <CardStyled onClick={() => openLightBox(index)}>
                                 <CardImg
-                                    id={url.id}
+                                    id={figure.figureId}
                                     top
                                     width="100%"
-                                    src={url.src}
-                                    alt={`figure #${url.id}`}
-                                    className={location.hash === '#' + url.id ? 'blink-figure' : ''}
+                                    src={figure.src}
+                                    alt={`figure #${figure.figureId}`}
+                                    className={location.hash === '#' + figure.figureId ? 'blink-figure' : ''}
                                 />
                             </CardStyled>
                         </span>
