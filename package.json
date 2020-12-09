@@ -82,7 +82,7 @@
         "react-router": "^5.1.2",
         "react-router-config": "^5.0.1",
         "react-router-dom": "^5.0.1",
-        "react-scripts": "^3.4.1",
+        "react-scripts": "3.4.4",
         "react-scroll-sync": "^0.8.0",
         "react-select": "^3.1.0",
         "react-select-async-paginate": "^0.3.14",
