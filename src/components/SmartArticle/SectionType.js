@@ -44,6 +44,10 @@ const SectionType = props => {
                 {
                     label: 'Resource',
                     value: CLASSES.RESOURCE_SECTION
+                },
+                {
+                    label: 'Property',
+                    value: CLASSES.PROPERTY_SECTION
                 }
             ];
             const _options = sortBy([...ontologyClasses, ...additionalClasses], 'label');

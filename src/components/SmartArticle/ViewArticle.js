@@ -30,14 +30,19 @@ const ViewArticle = () => {
                     <AuthorsList authors={authors} />
                 </div>
                 {sections.map(section => {
-                    if (section.type.id === CLASSES.RESOURCE_SECTION) {
+                    if (section.type.id === CLASSES.RESOURCE_SECTION || section.type.id === CLASSES.PROPERTY_SECTION) {
                         return (
                             <React.Fragment key={section.id}>
                                 <h2 className="h4 border-bottom mt-4">{section.title.label}</h2>
                                 {section?.contentLink?.objectId && (
                                     <>
                                         <div className="mt-3 mb-2">
-                                            <Link to={reverse(ROUTES.RESOURCE, { id: section.contentLink.objectId })} target="_blank">
+                                            <Link
+                                                to={reverse(section.type.id === CLASSES.RESOURCE_SECTION ? ROUTES.RESOURCE : ROUTES.PREDICATE, {
+                                                    id: section.contentLink.objectId
+                                                })}
+                                                target="_blank"
+                                            >
                                                 {section.contentLink.label}
                                             </Link>
                                         </div>
@@ -46,6 +51,7 @@ const ViewArticle = () => {
                                             initialResourceId={section.contentLink.objectId}
                                             initialResourceLabel="Main"
                                             newStore={true}
+                                            rootNodeType={section.type.id === CLASSES.RESOURCE_SECTION ? 'resource' : 'predicate'}
                                         />
                                     </>
                                 )}

@@ -69,7 +69,7 @@ const useHeaderBar = () => {
                 let markdown = null;
                 let contentLink = null;
 
-                if (type === CLASSES.RESOURCE_SECTION) {
+                if (type === CLASSES.RESOURCE_SECTION || type === CLASSES.PROPERTY_SECTION) {
                     const linkStatement = section.statements.find(({ statement }) => statement.predicate.id === PREDICATES.HAS_LINK);
                     const link = linkStatement?.statement?.object;
 
@@ -82,8 +82,8 @@ const useHeaderBar = () => {
                     const contentStatement = section.statements.find(({ statement }) => statement.predicate.id === PREDICATES.HAS_CONTENT);
                     const content = contentStatement?.statement?.object;
                     markdown = {
-                        id: content.id,
-                        label: content.label
+                        id: content?.id,
+                        label: content?.label
                     };
                 }
 

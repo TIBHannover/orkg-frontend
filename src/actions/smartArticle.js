@@ -123,9 +123,9 @@ export const createSection = ({ contributionId, afterIndex, sectionType }) => as
         await createLiteralStatement(sectionResource.id, PREDICATES.HAS_CONTENT, markdownLiteral.id);
         sectionResourceId = sectionResource.id;
         markdownLiteralId = markdownLiteral.id;
-    } else if (sectionType === 'resource') {
+    } else if (sectionType === 'resource' || sectionType === 'property') {
         // link section
-        typeId = CLASSES.RESOURCE_SECTION;
+        typeId = sectionType === 'resource' ? CLASSES.RESOURCE_SECTION : CLASSES.PROPERTY_SECTION;
         const sectionResource = await createResource('', [typeId]);
         await createResourceStatement(contributionId, PREDICATES.HAS_SECTION, sectionResource.id);
         sectionResourceId = sectionResource.id;

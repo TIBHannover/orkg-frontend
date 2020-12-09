@@ -3,6 +3,7 @@ import StatementBrowser from 'components/StatementBrowser/Statements/StatementsC
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { resourcesUrl, createResource } from 'services/backend/resources';
+import { predicatesUrl } from 'services/backend/predicates';
 import { updateSectionLink } from 'actions/smartArticle';
 import { useDispatch } from 'react-redux';
 
@@ -55,16 +56,17 @@ const SectionStatementBrowser = props => {
         );
     };
 
+    const requestUrl = props.type === 'resource' ? resourcesUrl : predicatesUrl;
     return (
         <div>
             <Autocomplete
-                requestUrl={resourcesUrl}
+                requestUrl={requestUrl}
                 //optionsClass={CLASSES.RESEARCH_FIELD}
-                placeholder="Enter a resource"
+                placeholder={`Enter a ${props.type}`}
                 onChange={handleItemSelected}
                 value={selectedResource}
                 openMenuOnFocus={false}
-                allowCreate={true}
+                allowCreate={props.type === 'resource'} // only allow create for resources
                 autoFocus={false}
                 cssClasses="mb-2"
             />
@@ -77,6 +79,7 @@ const SectionStatementBrowser = props => {
                     initialResourceLabel="Main"
                     newStore={true}
                     key={statementBrowserKey}
+                    rootNodeType={props.type === 'resource' ? 'resource' : 'predicate'}
                 />
             )}
         </div>
@@ -84,7 +87,8 @@ const SectionStatementBrowser = props => {
 };
 
 SectionStatementBrowser.propTypes = {
-    section: PropTypes.object.isRequired
+    section: PropTypes.object.isRequired,
+    type: PropTypes.string.isRequired
 };
 
 export default SectionStatementBrowser;

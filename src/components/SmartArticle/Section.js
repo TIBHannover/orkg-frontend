@@ -46,7 +46,7 @@ const Section = props => {
         }
     };
 
-    const isStatementBrowserSection = props.section.type.id === CLASSES.RESOURCE_SECTION;
+    const isStatementBrowserSection = props.section.type.id === CLASSES.RESOURCE_SECTION || props.section.type.id === CLASSES.PROPERTY_SECTION;
     const isTypeChangeDisabled = isStatementBrowserSection;
 
     return (
@@ -61,7 +61,12 @@ const Section = props => {
                     <ContentEditable text={title.label} onBlur={handleBlurTitle} placeholder="Enter a section title..." />
                 </h2>
 
-                {isStatementBrowserSection && <SectionStatementBrowser section={props.section} />}
+                {isStatementBrowserSection && (
+                    <SectionStatementBrowser
+                        section={props.section}
+                        type={props.section.type.id === CLASSES.RESOURCE_SECTION ? 'resource' : 'property'}
+                    />
+                )}
 
                 {!isStatementBrowserSection && markdown && <SectionMarkdown markdown={markdown} />}
             </SectionStyled>
