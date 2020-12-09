@@ -19,16 +19,19 @@ function Breadcrumbs(props) {
     const [siblings, setSiblings] = useState([]);
 
     useEffect(() => {
-        console.log('props.researchFieldId', props.researchFieldId);
         if (props.researchFieldId !== undefined) {
             setIsLoading(true);
-            getParentResearchFields(props.researchFieldId).then(result => {
-                setParentResearchFields(result.reverse());
-                setIsLoading(false);
-                setIsOpen(result.map(s => false));
-                setSiblings(result.map(s => []));
-                setIsLoadingSiblings(result.map(s => false));
-            });
+            getParentResearchFields(props.researchFieldId)
+                .then(result => {
+                    setParentResearchFields(result.reverse());
+                    setIsLoading(false);
+                    setIsOpen(result.map(s => false));
+                    setSiblings(result.map(s => []));
+                    setIsLoadingSiblings(result.map(s => false));
+                })
+                .catch(() => setIsLoading(false));
+        } else {
+            setIsLoading(false);
         }
     }, [props.researchFieldId]);
 
@@ -49,6 +52,9 @@ function Breadcrumbs(props) {
         }
     };
 
+    if (!props.researchFieldId) {
+        return null;
+    }
     return (
         <Container className="p-0">
             <Card>
@@ -112,7 +118,7 @@ function Breadcrumbs(props) {
                                 )}
                             </span>
                         ))}
-                    {(!props.researchFieldId || isLoading) && (
+                    {isLoading && (
                         <ContentLoader height={1} width={50} speed={2} primaryColor="#F7F7F7" secondaryColor="#ecebeb">
                             <rect x="0" y="0" rx="0" ry="0" width="50" height="100" />
                         </ContentLoader>
