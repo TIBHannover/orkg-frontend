@@ -33,7 +33,7 @@
         "htmlparser2": "^4.1.0",
         "immutability-helper": "^3.0.2",
         "jspdf": "^1.5.3",
-        "lodash": "^4.17.15",
+        "lodash": "^4.17.19",
         "make-latex": "^0.1.0",
         "markdown-into-html": "^1.0.3",
         "marked": "^0.7.0",
