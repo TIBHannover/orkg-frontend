@@ -16,12 +16,22 @@ export default class PreviewCarouselComponent extends Component {
 
     componentDidMount = () => {
         this.executeUpdates();
+        // add resize event
+        window.addEventListener('resize', this.resizeEvent);
     };
 
     componentDidUpdate = prevProps => {
         if (prevProps.reloadingSizeFlag !== this.props.reloadingSizeFlag) {
             this.executeUpdates();
         }
+    };
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.resizeEvent);
+    }
+
+    // just a wrapper function for better code reading
+    resizeEvent = () => {
+        this.executeUpdates();
     };
 
     executeUpdates = () => {

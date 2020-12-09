@@ -16,15 +16,24 @@ export default class PreviewComponent extends Component {
             activeItemIndex: 0,
             visData: []
         };
+        this.carouselRef = React.createRef();
     }
 
     componentDidMount = () => {
-        this.fetchData().then();
+        this.fetchData().then(this.updateHandler);
     };
 
     componentDidUpdate = prevProps => {
         if (prevProps.comparisonId !== this.props.comparisonId || prevProps.reloadingFlag !== this.props.reloadingFlag) {
             this.fetchData().then();
+        }
+    };
+
+    updateHandler = () => {
+        // ensure that the carousel executes the logic for scroll area functions;
+        if (this.carouselRef.current) {
+            // timed function (quick and dirty)
+            setTimeout(this.carouselRef.current.executeUpdates, 300);
         }
     };
 
@@ -92,11 +101,21 @@ export default class PreviewComponent extends Component {
                         input={data}
                         itemIndex={index}
                         propagateClick={this.props.propagateClick}
+                        propagateUpdate={() => {
+                            if (this.carouselRef.current) {
+                                // ensures that on some update the scrollarea is checked
+                                this.carouselRef.current.executeUpdates();
+                            }
+                        }}
                     />
                 );
             });
             if (mappedData && mappedData.length > 0) {
-                return <PreviewCarouselComponent reloadingSizeFlag={this.props.reloadingSizeFlag}> {mappedData}</PreviewCarouselComponent>;
+                return (
+                    <PreviewCarouselComponent ref={this.carouselRef} reloadingSizeFlag={this.props.reloadingSizeFlag}>
+                        {mappedData}
+                    </PreviewCarouselComponent>
+                );
             } else {
                 return <></>;
             }

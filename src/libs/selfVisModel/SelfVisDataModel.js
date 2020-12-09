@@ -192,6 +192,10 @@ export default class SelfVisDataMode {
             console.log(this._inputData);
             return;
         }
+
+        // reset the data model to original
+        this.resetCustomizationModel();
+
         // reconstruct the data;
         const reconstructionObject = JSON.parse(data.reconstructionData);
         // applySelection in the contribution anchors;
@@ -239,6 +243,10 @@ export default class SelfVisDataMode {
             item.cellValueIsValid = true;
         });
         this.createGDCDataModel();
+
+        if (data.visMethod === 'Table') {
+            return this._googleChartsData.useAllColumns();
+        }
         // this now neeeds to apply some selectors
         this.saveCustomizationState(reconstructionObject.customizationState);
         const stateForGDC = {

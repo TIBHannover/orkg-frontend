@@ -26,6 +26,8 @@ export default class SingleVisualizationComponent extends Component {
             const renderingData = this.selfVisModel.applyReconstructionModel(this.props.input.reconstructionModel);
             this.setState({ renderingData: renderingData });
         }
+        // ensure on hovering that the scrollarea state is always correct
+        this.props.propagateUpdate();
     };
 
     getAvailableWidth = () => {
@@ -46,7 +48,6 @@ export default class SingleVisualizationComponent extends Component {
     /** component rendering entrance point **/
     render() {
         const visMethod = this.props.input.reconstructionModel.data.visMethod;
-
         return (
             <>
                 <VisualizationCard
@@ -112,7 +113,8 @@ export default class SingleVisualizationComponent extends Component {
 SingleVisualizationComponent.propTypes = {
     input: PropTypes.object,
     itemIndex: PropTypes.number,
-    propagateClick: PropTypes.func
+    propagateClick: PropTypes.func,
+    propagateUpdate: PropTypes.func
 };
 
 export const VisualizationCard = styled.div`
