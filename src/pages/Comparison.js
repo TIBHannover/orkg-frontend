@@ -215,6 +215,7 @@ function Comparison(props) {
                                     <DropdownItem onClick={handleFullWidth}>
                                         <span className="mr-2">{fullWidth ? 'Reduced width' : 'Full width'}</span>
                                     </DropdownItem>
+                                    <DropdownItem onClick={() => toggleTranspose(v => !v)}>Transpose table</DropdownItem>
                                     <DropdownItem divider />
                                     <DropdownItem header>View density</DropdownItem>
                                     <DropdownItem active={viewDensity === 'spacious'} onClick={() => handleViewDensity('spacious')}>
@@ -244,7 +245,6 @@ function Comparison(props) {
                                 <DropdownMenu right>
                                     <DropdownItem header>Customize</DropdownItem>
                                     <DropdownItem onClick={() => setShowPropertiesDialog(v => !v)}>Select properties</DropdownItem>
-                                    <DropdownItem onClick={() => toggleTranspose(v => !v)}>Transpose table</DropdownItem>
                                     <DropdownItem divider />
                                     <DropdownItem header>Export</DropdownItem>
                                     <DropdownItem onClick={() => setShowLatexDialog(v => !v)}>Export as LaTeX</DropdownItem>
@@ -514,7 +514,7 @@ function Comparison(props) {
 
             <ExportToLatex
                 data={matrixData}
-                contributions={contributions}
+                contributions={contributions.filter(c => c.active)}
                 properties={properties}
                 showDialog={showLatexDialog}
                 toggle={() => setShowLatexDialog(v => !v)}
