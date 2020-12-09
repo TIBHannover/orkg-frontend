@@ -322,9 +322,11 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
     //components
     const columns = [
         { id: 'Properties', title: 'Properties' },
-        ...contributions.map((contribution, index) => {
-            return contribution;
-        })
+        ...contributions
+            .filter(c => c.active)
+            .map((contribution, index) => {
+                return contribution;
+            })
     ];
     columns.forEach(function(column, index) {
         if (column.id === 'Properties') {
@@ -359,18 +361,20 @@ export const generateRdfDataVocabularyFile = (data, contributions, properties, m
             gds.add(new rdf.Triple(bno, cubens('dataSet'), ds));
             gds.add(new rdf.Triple(bno, dt['Properties'].toString(), new rdf.Literal(property.label.toString())));
             contributions.map((contribution, index2) => {
-                const cell = data[property.id][index2];
-                if (cell.length > 0) {
-                    cell.map(v => {
-                        if (v.type && v.type === 'resource') {
-                            gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), orkgResource(`${v.resourceId}`)));
-                        } else {
-                            gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal(`${v.label ? v.label : ''}`)));
-                        }
-                        return null;
-                    });
-                } else {
-                    gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal('Empty')));
+                if (contribution.active) {
+                    const cell = data[property.id][index2];
+                    if (cell.length > 0) {
+                        cell.map(v => {
+                            if (v.type && v.type === 'resource') {
+                                gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), orkgResource(`${v.resourceId}`)));
+                            } else {
+                                gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal(`${v.label ? v.label : ''}`)));
+                            }
+                            return null;
+                        });
+                    } else {
+                        gds.add(new rdf.Triple(bno, dt[contribution.id].toString(), new rdf.Literal('Empty')));
+                    }
                 }
                 return null;
             });
