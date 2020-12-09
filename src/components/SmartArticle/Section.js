@@ -1,35 +1,23 @@
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippy.js/react';
-import { deleteSection, updateSectionMarkdown, updateSectionTitle } from 'actions/smartArticle';
+import { deleteSection, updateSectionTitle } from 'actions/smartArticle';
 import AddSection from 'components/SmartArticle/AddSection';
 import ContentEditable from 'components/SmartArticle/ContentEditable';
+import SectionMarkdown from 'components/SmartArticle/SectionMarkdown';
 import SectionStatementBrowser from 'components/SmartArticle/SectionStatementBrowser';
 import SectionType from 'components/SmartArticle/SectionType';
-import { DeleteButton, MarkdownPlaceholder, MoveHandle, SectionStyled } from 'components/SmartArticle/styled';
+import { DeleteButton, MoveHandle, SectionStyled } from 'components/SmartArticle/styled';
 import { CLASSES } from 'constants/graphSettings';
 import PropTypes from 'prop-types';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { SortableElement, sortableHandle } from 'react-sortable-hoc';
-import Textarea from 'react-textarea-autosize';
 import Confirm from 'reactstrap-confirm';
-import * as Showdown from 'showdown';
-
-const converter = new Showdown.Converter({
-    tables: true,
-    simplifiedAutoLink: true,
-    strikethrough: true,
-    tasklists: true
-});
 
 const Section = props => {
-    const [markdownValue, setMarkdownValue] = useState('');
-    const [editMode, setEditMode] = useState(false);
     const [isHovering, setIsHovering] = useState(false);
     const { type, markdown, title } = props.section;
     const dispatch = useDispatch();
-    const markdownEditorRef = useRef(null);
 
     const SortableHandle = sortableHandle(() => (
         <MoveHandle className={isHovering ? 'hover' : ''}>
@@ -37,37 +25,11 @@ const Section = props => {
         </MoveHandle>
     ));
 
-    // initial data loading
-    useEffect(() => {
-        if (!markdown) {
-            return;
-        }
-        setMarkdownValue(markdown.label);
-    }, [markdown]);
-
-    // set focus to editor when starting edit mode
-    useEffect(() => {
-        if (editMode) {
-            markdownEditorRef.current.focus();
-        }
-    }, [editMode]);
-
-    const handleBlurTitle = async text2 => {
+    const handleBlurTitle = async text => {
         dispatch(
             updateSectionTitle({
                 sectionId: title.id,
-                title: text2
-            })
-        );
-    };
-
-    const handleBlurMarkdown = () => {
-        setEditMode(false);
-
-        dispatch(
-            updateSectionMarkdown({
-                id: markdown.id,
-                markdown: markdownValue
+                title: text
             })
         );
     };
@@ -101,25 +63,7 @@ const Section = props => {
 
                 {isStatementBrowserSection && <SectionStatementBrowser section={props.section} />}
 
-                {!isStatementBrowserSection && !editMode && (
-                    <Tippy hideOnClick={false} content="Double click to edit">
-                        {markdownValue && markdownValue !== 'null' ? (
-                            <div dangerouslySetInnerHTML={{ __html: converter.makeHtml(markdownValue) }} onDoubleClick={() => setEditMode(true)} />
-                        ) : (
-                            <MarkdownPlaceholder onDoubleClick={() => setEditMode(true)}>Double click to edit this text</MarkdownPlaceholder>
-                        )}
-                    </Tippy>
-                )}
-
-                {!isStatementBrowserSection && editMode && (
-                    <Textarea
-                        value={markdownValue !== 'null' ? markdownValue : ''}
-                        onChange={e => setMarkdownValue(e.target.value)}
-                        onBlur={handleBlurMarkdown}
-                        className="form-control"
-                        inputRef={markdownEditorRef}
-                    />
-                )}
+                {!isStatementBrowserSection && markdown && <SectionMarkdown markdown={markdown} />}
             </SectionStyled>
             <AddSection index={props.atIndex} />
         </>
