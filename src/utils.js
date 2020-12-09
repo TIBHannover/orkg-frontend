@@ -697,6 +697,43 @@ function getOrder(paperStatements) {
 }
 
 /**
+ * Parse resources statements and return a related figures objects
+ * @param {Array} resourceStatements
+ */
+export function getRelatedFiguresData(resourcesStatements) {
+    const _figures = resourcesStatements.map(resourceStatements => {
+        const imageStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
+        const alt = resourceStatements.statements.length ? resourceStatements.statements[0]?.subject?.label : null;
+        return {
+            src: imageStatement ? imageStatement.object.label : '',
+            figureId: resourceStatements.id,
+            alt
+        };
+    });
+    return _figures;
+}
+
+/**
+ * Parse resources statements and return a related resources objects
+ * @param {Array} resourceStatements
+ */
+export function getRelatedResourcesData(resourcesStatements) {
+    const _resources = resourcesStatements.map(resourceStatements => {
+        const imageStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.IMAGE);
+        const urlStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.URL);
+        const descriptionStatement = resourceStatements.statements.find(statement => statement.predicate.id === PREDICATES.DESCRIPTION);
+        return {
+            url: urlStatement ? urlStatement.object.label : '',
+            image: imageStatement ? imageStatement.object.label : '',
+            id: resourceStatements.id,
+            title: resourceStatements.statements[0]?.subject?.label,
+            description: descriptionStatement ? descriptionStatement.object.label : ''
+        };
+    });
+    return _resources;
+}
+
+/**
  * Truncating middle portion of a string
  *
  * @param {String} str string
