@@ -160,22 +160,20 @@ function ResearchField() {
     return (
         <div>
             <h2 className="h4 mt-4 mb-4">Select the research field</h2>
-            <p className="text-muted">Select a close research field to the paper from the list.</p>
+            <p className="text-muted">
+                Select a research field by using the search field or select a field form the list {isLoading && <Icon icon={faSpinner} spin />}
+            </p>
             <div className="mb-4">
                 <Autocomplete
                     requestUrl={resourcesUrl}
                     optionsClass={CLASSES.RESEARCH_FIELD}
-                    placeholder="Search for fields"
+                    placeholder="Search for fields..."
                     onItemSelected={handleFieldSelect}
                     value={selectedResearchField !== MISC.RESEARCH_FIELD_MAIN ? { id: selectedResearchField, label: researchFieldLabel } : null}
                     allowCreate={false}
                     autoLoadOption={true}
                 />
             </div>
-            <p className="text-muted">
-                The research field can be selected from a hierarchical structure of fields and their subfields.{' '}
-                {isLoading && <Icon icon={faSpinner} spin />}
-            </p>
 
             <CardDeck>
                 {researchFields.length > 0 &&
