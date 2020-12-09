@@ -326,7 +326,7 @@ class ViewPaper extends Component {
                             />
                         )}
 
-                        <Breadcrumbs researchFieldID={this.props.viewPaper.researchField.id} />
+                        <Breadcrumbs researchFieldId={this.props.viewPaper.researchField.id} />
 
                         <VisibilitySensor onChange={this.handleShowHeaderBar}>
                             <Container className="d-flex align-items-center">

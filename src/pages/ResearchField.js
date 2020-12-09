@@ -63,7 +63,7 @@ function ResearchField(props) {
             {!isLoading && isFailedLoading && <div className="text-center mt-4 mb-4">Failed loading the resource</div>}
             {!isLoading && !isFailedLoading && (
                 <div>
-                    <Breadcrumbs researchFieldID={researchFieldId} />
+                    <Breadcrumbs researchFieldId={researchFieldId} />
 
                     <Container className="d-flex align-items-center">
                         <h1 className="h4 mt-4 mb-4 flex-grow-1">Research field</h1>

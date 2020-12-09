@@ -19,9 +19,10 @@ function Breadcrumbs(props) {
     const [siblings, setSiblings] = useState([]);
 
     useEffect(() => {
-        if (props.researchFieldID !== undefined) {
+        console.log('props.researchFieldId', props.researchFieldId);
+        if (props.researchFieldId !== undefined) {
             setIsLoading(true);
-            getParentResearchFields(props.researchFieldID).then(result => {
+            getParentResearchFields(props.researchFieldId).then(result => {
                 setParentResearchFields(result.reverse());
                 setIsLoading(false);
                 setIsOpen(result.map(s => false));
@@ -29,7 +30,7 @@ function Breadcrumbs(props) {
                 setIsLoadingSiblings(result.map(s => false));
             });
         }
-    }, [props.researchFieldID]);
+    }, [props.researchFieldId]);
 
     const handleClickArrow = index => {
         setIsLoadingSiblings(isLoadingSiblings.map((el, i) => (i === index ? true : el)));
@@ -51,8 +52,8 @@ function Breadcrumbs(props) {
     return (
         <Container className="p-0">
             <Card>
-                <CardFooter style={{ borderTop: 0, borderRadius: '6px' }}>
-                    {props.researchFieldID &&
+                <CardFooter className="rounded border-top-0" style={{ fontSize: '95%' }}>
+                    {props.researchFieldId &&
                         !isLoading &&
                         parentResearchFields.map((field, index) => (
                             <span key={field.id}>
@@ -61,7 +62,6 @@ function Breadcrumbs(props) {
                                         {index === 0 ? (
                                             <>
                                                 <Icon className="mr-1" icon={faHome} />
-                                                Home
                                             </>
                                         ) : (
                                             field.label
@@ -112,7 +112,7 @@ function Breadcrumbs(props) {
                                 )}
                             </span>
                         ))}
-                    {(!props.researchFieldID || isLoading) && (
+                    {(!props.researchFieldId || isLoading) && (
                         <ContentLoader height={1} width={50} speed={2} primaryColor="#F7F7F7" secondaryColor="#ecebeb">
                             <rect x="0" y="0" rx="0" ry="0" width="50" height="100" />
                         </ContentLoader>
@@ -124,7 +124,7 @@ function Breadcrumbs(props) {
 }
 
 Breadcrumbs.propTypes = {
-    researchFieldID: PropTypes.string
+    researchFieldId: PropTypes.string
 };
 
 export default Breadcrumbs;
