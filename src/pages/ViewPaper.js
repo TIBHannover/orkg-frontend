@@ -23,7 +23,7 @@ import PaperMenuBar from 'components/ViewPaper/PaperHeaderBar/PaperMenuBar';
 import styled from 'styled-components';
 import SharePaper from 'components/ViewPaper/SharePaper';
 import { getPaperData_ViewPaper } from 'utils';
-import { PREDICATES, CLASSES } from 'constants/graphSettings';
+import { PREDICATES, CLASSES, MISC } from 'constants/graphSettings';
 
 export const EditModeHeader = styled(Container)`
     background-color: #80869b !important;
@@ -45,15 +45,20 @@ export const Title = styled.div`
 class ViewPaper extends Component {
     state = {
         loading: true,
-        loading_failed: false,
-        unfoundContribution: false,
+        loadingFailed: false,
+        loadingContributionFailed: false,
         contributions: [],
         selectedContribution: '',
         showGraphModal: false,
         editMode: false,
         observatoryInfo: {},
         contributors: [],
-        showHeaderBar: false
+        showHeaderBar: false,
+        isLoadingObservatory: false,
+        failedLoading: false,
+        observatories: [],
+        organizationId: '',
+        observatoryId: ''
     };
 
     componentDidMount() {
@@ -85,10 +90,14 @@ class ViewPaper extends Component {
     loadPaperData = () => {
         this.setState({ loading: true });
         const resourceId = this.props.match.params.resourceId;
-
         this.props.resetStatementBrowser();
         getResource(resourceId)
             .then(paperResource => {
+                if (!paperResource.classes.includes(CLASSES.PAPER)) {
+                    this.setState({ loading: false, loadingFailed: true });
+                    return;
+                }
+
                 this.processObservatoryInformation(paperResource, resourceId);
 
                 getStatementsBySubject({ id: resourceId })
@@ -105,15 +114,15 @@ class ViewPaper extends Component {
                             .catch(error => {
                                 console.log(error);
                                 if (error.message === 'No Contribution found') {
-                                    this.setState({ unfoundContribution: true, loading: false, loading_failed: false });
+                                    this.setState({ loadingContributionFailed: true, loading: false, loadingFailed: false });
                                 } else {
-                                    this.setState({ loading: false, loading_failed: true });
+                                    this.setState({ loading: false, loadingFailed: true });
                                 }
                             });
                     });
             })
             .catch(error => {
-                this.setState({ loading: false, loading_failed: true });
+                this.setState({ loading: false, loadingFailed: true });
             });
     };
 
@@ -176,16 +185,27 @@ class ViewPaper extends Component {
         }
     };
 
+    getObservatoryInfo = () => {
+        const resourceId = this.props.match.params.resourceId;
+        getResource(resourceId)
+            .then(paperResource => {
+                this.processObservatoryInformation(paperResource, resourceId);
+            })
+            .catch(error => {
+                this.setState({ loading: false, loading_failed: true });
+            });
+    };
+
     /** PROCESSING HELPER :  Helper functions to increase code readability**/
     processObservatoryInformation(paperResource, resourceId) {
         if (
             paperResource.observatory_id &&
-            paperResource.observatory_id !== '00000000-0000-0000-0000-000000000000' &&
+            paperResource.observatory_id !== MISC.UNKNOWN_ID &&
             paperResource.created_by &&
-            paperResource.created_by !== '00000000-0000-0000-0000-000000000000'
+            paperResource.created_by !== MISC.UNKNOWN_ID
         ) {
             const observatory = getObservatoryAndOrganizationInformation(paperResource.observatory_id, paperResource.organization_id);
-            const creator = getUserInformationById(paperResource.created_by);
+            const creator = getUserInformationById(paperResource.created_by).catch(e => {});
             Promise.all([observatory, creator]).then(data => {
                 this.setState({
                     observatoryInfo: {
@@ -212,7 +232,7 @@ class ViewPaper extends Component {
     }
 
     processPaperStatements = (paperResource, paperStatements) => {
-        const paperData = getPaperData_ViewPaper(paperResource.id, paperResource.label, paperStatements);
+        const paperData = getPaperData_ViewPaper(paperResource, paperStatements);
 
         // Set document title
         document.title = `${paperResource.label} - ORKG`;
@@ -292,21 +312,27 @@ class ViewPaper extends Component {
 
         return (
             <div>
-                {!this.state.loading && this.state.loading_failed && <NotFound />}
-                {!this.state.loading_failed && (
+                {!this.state.loading && this.state.loadingFailed && <NotFound />}
+                {!this.state.loadingFailed && (
                     <>
                         {this.state.showHeaderBar && (
                             <PaperHeaderBar
                                 paperLink={paperLink}
                                 editMode={this.state.editMode}
                                 toggle={this.toggle}
+                                id={this.props.match.params.resourceId}
                                 paperTitle={this.props.viewPaper.title}
                             />
                         )}
                         <VisibilitySensor onChange={this.handleShowHeaderBar}>
                             <Container className="d-flex align-items-center">
                                 <h1 className="h4 mt-4 mb-4 flex-grow-1">View paper</h1>
-                                <PaperMenuBar editMode={this.state.editMode} paperLink={paperLink} toggle={this.toggle} />
+                                <PaperMenuBar
+                                    editMode={this.state.editMode}
+                                    paperLink={paperLink}
+                                    toggle={this.toggle}
+                                    id={this.props.match.params.resourceId}
+                                />
                             </Container>
                         </VisibilitySensor>
 
@@ -330,7 +356,7 @@ class ViewPaper extends Component {
                                     <rect x="105" y="28" rx="5" ry="5" width="30" height="8" />
                                 </ContentLoader>
                             )}
-                            {!this.state.loading && !this.state.loading_failed && (
+                            {!this.state.loading && !this.state.loadingFailed && (
                                 <>
                                     {comingFromWizard && (
                                         <UncontrolledAlert color="info">
@@ -344,7 +370,7 @@ class ViewPaper extends Component {
                                     <PaperHeader editMode={this.state.editMode} />
                                 </>
                             )}
-                            {!this.state.loading_failed && !this.state.unfoundContribution && (
+                            {!this.state.loadingFailed && !this.state.loadingContributionFailed && (
                                 <>
                                     <hr className="mt-3" />
                                     <SharePaper title={this.props.viewPaper.title} />
@@ -361,12 +387,13 @@ class ViewPaper extends Component {
                                         toggleDeleteContribution={this.toggleDeleteContribution}
                                         observatoryInfo={this.state.observatoryInfo}
                                         contributors={this.state.contributors}
+                                        changeObservatory={this.getObservatoryInfo}
                                     />
 
                                     <ComparisonPopup />
                                 </>
                             )}
-                            {!this.state.loading_failed && this.state.unfoundContribution && (
+                            {!this.state.loadingFailed && this.state.loadingContributionFailed && (
                                 <>
                                     <hr className="mt-4 mb-5" />
                                     <Alert color="danger">Failed to load contributions.</Alert>
@@ -399,11 +426,13 @@ ViewPaper.propTypes = {
     location: PropTypes.object.isRequired,
     viewPaper: PropTypes.object.isRequired,
     loadPaper: PropTypes.func.isRequired,
-    setPaperAuthors: PropTypes.func.isRequired
+    setPaperAuthors: PropTypes.func.isRequired,
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 const mapStateToProps = state => ({
-    viewPaper: state.viewPaper
+    viewPaper: state.viewPaper,
+    user: state.auth.user
 });
 
 const mapDispatchToProps = dispatch => ({

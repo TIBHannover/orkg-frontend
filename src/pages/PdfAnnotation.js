@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Toolbar from 'components/PdfAnnotation/Toolbar';
 import TableSelect from 'components/PdfAnnotation/TableSelect';
 import styled from 'styled-components';
@@ -22,6 +22,10 @@ const PdfAnnotation = () => {
     const pdf = useSelector(state => state.pdfAnnotation.pdf);
     const pages = useSelector(state => state.pdfAnnotation.pages);
     const styles = useSelector(state => state.pdfAnnotation.styles);
+
+    useEffect(() => {
+        document.title = 'Survey table extractor - ORKG';
+    }, []);
 
     const handleZoomChange = zoom => {
         if (zoom) {

@@ -22,8 +22,6 @@ class GeneralSettings extends Component {
         this.state = {
             display_name: '',
             email: '',
-            organization: '',
-            bio: '',
             loading: false,
             errors: null
         };
@@ -69,7 +67,7 @@ class GeneralSettings extends Component {
         })
             .then(response => {
                 toast.success('Your changes have been saved successfully');
-                this.props.updateAuth({ user: { displayName: display_name } });
+                this.props.updateAuth({ user: { ...this.props.user, displayName: display_name } });
 
                 this.setState({
                     loading: false,
@@ -127,29 +125,6 @@ class GeneralSettings extends Component {
                         </p>
                     </Alert>
                 </FormGroup>
-                {/*
-                <FormGroup>
-          <Label for="organization">Organization</Label>
-          <Input
-            onChange={this.handleInputChange}
-            value={this.state.organization}
-            type="text"
-            name="organization"
-            id="organization"
-            placeholder="Organization"
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label for="bio">Bio</Label>
-          <Input
-            onChange={this.handleInputChange}
-            value={this.state.bio}
-            type="textarea"
-            name="bio"
-            id="bio"
-            placeholder="Bio"
-          />
-        </FormGroup>*/}
                 <Button
                     color="primary"
                     onClick={() => {
@@ -165,14 +140,6 @@ class GeneralSettings extends Component {
                         </span>
                     )}
                 </Button>
-                {/*<span
-          onClick={() => {
-            this.toggleTab('delete');
-          }}
-          className="pull-right mt-4 mb-2 text-danger btn"
-        >
-          Delete account
-        </span>*/}
             </Form>
         </>
     );
@@ -182,11 +149,16 @@ const mapDispatchToProps = dispatch => ({
     updateAuth: data => dispatch(updateAuth(data))
 });
 
+const mapStateToProps = state => ({
+    user: state.auth.user
+});
+
 GeneralSettings.propTypes = {
-    updateAuth: PropTypes.func.isRequired
+    updateAuth: PropTypes.func.isRequired,
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
 };
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(GeneralSettings);

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import { Switch } from 'react-router-dom';
 import { renderRoutes } from 'react-router-config';
 import routes from './routes.config';
@@ -71,7 +71,10 @@ class App extends Component {
                                 </Alert>
                             </>
                         )}
-                        <Switch>{renderRoutes(routes)}</Switch>
+                        {/* Suspense is used for when the component is lazy loaded */}
+                        <Suspense fallback={<div className="mt-5 mb-2 text-center">Loading...</div>}>
+                            <Switch>{renderRoutes(routes)}</Switch>
+                        </Suspense>
                     </DefaultLayout>
                 </ScrollToTop>
             </ConnectedRouter>

@@ -57,8 +57,8 @@ function Format(props) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {props.components.map((component, index) => (
-                                    <tr key={`row${index}`}>
+                                {props.components.map(component => (
+                                    <tr key={`row${component.property.id}`}>
                                         <th scope="row">{component.property.id}</th>
                                         <td style={{}}>{component.property.label.charAt(0).toUpperCase() + component.property.label.slice(1)}</td>
                                     </tr>

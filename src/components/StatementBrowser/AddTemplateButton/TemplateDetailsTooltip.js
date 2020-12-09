@@ -49,8 +49,8 @@ export default class TemplateDetailsTooltip extends Component {
                                 <ul>
                                     {this.state.template.components &&
                                         this.state.template.components.length > 0 &&
-                                        this.state.template.components.map((component, index) => {
-                                            return <li key={`t-${index}-${component.property.id}`}>{component.property.label}</li>;
+                                        this.state.template.components.map(component => {
+                                            return <li key={`t-${component.property.id}`}>{component.property.label}</li>;
                                         })}
                                 </ul>
                             </div>

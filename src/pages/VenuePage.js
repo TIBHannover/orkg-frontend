@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Card, CardText, CardBody, CardHeader } from 'reactstrap';
+import { Container, Button, Card, CardText, CardBody, CardHeader, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { getStatementsByObject, getStatementsBySubjects } from 'services/backend/statements';
 import { getResource } from 'services/backend/resources';
@@ -8,9 +8,11 @@ import PaperCard from 'components/PaperCard/PaperCard';
 import { getPaperData } from 'utils';
 import { find } from 'lodash';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { PREDICATES } from 'constants/graphSettings';
+import { NavLink } from 'react-router-dom';
+import { reverse } from 'named-urls';
 
 class VenuePage extends Component {
     constructor(props) {
@@ -25,7 +27,8 @@ class VenuePage extends Component {
             page: 1,
             venue: null,
             papers: [],
-            isLastPageReached: false
+            isLastPageReached: false,
+            menuOpen: false
         };
     }
 
@@ -119,7 +122,30 @@ class VenuePage extends Component {
                 )}
                 {!this.state.loading && (
                     <div>
-                        <Container>
+                        <Container className="d-flex align-items-center">
+                            <h1 className="h4 mt-4 mb-4 flex-grow-1">Venue</h1>
+
+                            <ButtonDropdown
+                                isOpen={this.state.menuOpen}
+                                toggle={() =>
+                                    this.setState(prevState => ({
+                                        menuOpen: !prevState.menuOpen
+                                    }))
+                                }
+                                nav
+                                inNavbar
+                            >
+                                <DropdownToggle size="sm" color="darkblue" className="px-3 rounded-right" style={{ marginLeft: 2 }}>
+                                    <Icon icon={faEllipsisV} />
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: this.props.match.params.venueId })}>
+                                        View resource
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </ButtonDropdown>
+                        </Container>
+                        <Container className="p-0">
                             <Card>
                                 <CardHeader>
                                     {/* TODO: Show the total number of papers when number of items is provided with the paginated result
@@ -135,7 +161,7 @@ class VenuePage extends Component {
                             </Card>
                         </Container>
                         <br />
-                        <Container>
+                        <Container className="p-0">
                             {this.state.papers.length > 0 && (
                                 <div>
                                     {this.state.papers.map(resource => {

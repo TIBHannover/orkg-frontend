@@ -3,7 +3,7 @@ import * as type from '../actions/types';
 const initialState = {
     dialogIsOpen: false,
     action: 'signin',
-    user: null,
+    user: 0, // possible values: 0 (to differentiate first load from non-signedin but stay falsy), null (non signedin), or object (signedin)
     signInRequired: null
 };
 
@@ -17,7 +17,7 @@ export default (state = initialState, action) => {
         case type.RESET_AUTH:
             return {
                 ...state,
-                user: null
+                user: null // ensure user is null (signedout) not 0 (first load)
             };
 
         case type.OPEN_AUTHENTICATION_DIALOG: {

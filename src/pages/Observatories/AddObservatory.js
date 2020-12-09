@@ -6,6 +6,7 @@ import { createObservatory } from 'services/backend/observatories';
 import NotFound from 'pages/NotFound';
 import InternalServerError from 'pages/InternalServerError';
 import AutoComplete from 'components/Autocomplete/Autocomplete';
+import { CLASSES } from 'constants/graphSettings';
 import { Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { reverse } from 'named-urls';
@@ -53,7 +54,7 @@ class AddObservatory extends Component {
         this.setState({ editorState: 'loading' });
         const value = this.state.value;
         const description = this.state.description;
-        const researchField = this.state.researchField.label;
+        const researchField = this.state.researchField.id;
 
         if (value && value.length !== 0 && description && description.length !== 0 && researchField) {
             try {
@@ -122,7 +123,7 @@ class AddObservatory extends Component {
                                         <Label for="ObservatoryResearchField">Research Field</Label>
                                         <AutoComplete
                                             requestUrl={resourcesUrl}
-                                            optionsClass="ResearchField"
+                                            optionsClass={CLASSES.RESEARCH_FIELD}
                                             placeholder="Observatory research field"
                                             onItemSelected={async rf => {
                                                 this.setState({ researchField: { ...rf, label: rf.value } });

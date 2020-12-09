@@ -66,6 +66,7 @@ function TemplateComponentValue(props) {
                         linkButtonTippy="Go to class page"
                         cssClasses="form-control-sm"
                         autoFocus={false}
+                        ols={true}
                     />
                 </InputGroup>
                 <div className="mt-2">

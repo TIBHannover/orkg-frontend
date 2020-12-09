@@ -1,21 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { getStatementsBySubjects } from 'services/backend/statements';
 import { Card, CardImg, CardColumns } from 'reactstrap';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
-import { find } from 'lodash';
+import { find, isString } from 'lodash';
 import styled from 'styled-components';
 import { PREDICATES } from 'constants/graphSettings';
+import { useLocation } from 'react-router';
 
 const CardStyled = styled(Card)`
     cursor: pointer;
     overflow: hidden;
+    .blink-figure {
+        color: #fff;
+        padding: 5px;
+        display: inline-block;
+        border-radius: 5px;
+        animation: blinkingBackground 5s infinite;
+    }
+    @keyframes blinkingBackground {
+        from {
+            background-color: #e86161;
+        }
+        50% {
+            background-color: #fff;
+        }
+        to {
+            background-color: #e86161;
+        }
+    }
 `;
+
 const RelatedFigures = props => {
     const [isOpen, setIsOpen] = useState(false);
     const [photoIndex, setPhotoIndex] = useState(0);
     const [figures, setFigures] = useState([]);
+    const location = useLocation();
 
     const openLightBox = (index = 0) => {
         setIsOpen(!isOpen);
@@ -39,7 +60,8 @@ const RelatedFigures = props => {
                         return {
                             src: imageStatement ? imageStatement.object.label : '',
                             title: figureTitle.label,
-                            description: descriptionStatement ? descriptionStatement.object.label : ''
+                            description: descriptionStatement ? descriptionStatement.object.label : '',
+                            id: figureStatements.id
                         };
                     });
                     setFigures(_figures);
@@ -53,15 +75,39 @@ const RelatedFigures = props => {
         loadResources();
     }, [props.figureStatements]);
 
+    const scrollTo = useCallback(
+        header => {
+            const hash = location.hash;
+            const id = isString(hash) ? hash.replace('#', '') : null;
+            if (!header || header.id !== id) {
+                return;
+            }
+            window.scrollTo({
+                behavior: 'smooth',
+                top: header.offsetTop - 90
+            });
+        },
+        [location.hash]
+    );
+
     if (props.figureStatements.length > 0) {
         return (
             <>
                 <h3 className="mt-5 h5">Related figures</h3>{' '}
                 <CardColumns>
                     {figures.map((url, index) => (
-                        <CardStyled key={`figure${index}`} onClick={() => openLightBox(index)}>
-                            <CardImg top width="100%" src={url.src} alt="Card image cap" />
-                        </CardStyled>
+                        <span key={`figure${index}`} ref={scrollTo} id={url.id}>
+                            <CardStyled onClick={() => openLightBox(index)}>
+                                <CardImg
+                                    id={url.id}
+                                    top
+                                    width="100%"
+                                    src={url.src}
+                                    alt={`figure #${url.id}`}
+                                    className={location.hash === '#' + url.id ? 'blink-figure' : ''}
+                                />
+                            </CardStyled>
+                        </span>
                     ))}
                 </CardColumns>
                 {isOpen && (
