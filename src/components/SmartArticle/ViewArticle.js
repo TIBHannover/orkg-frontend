@@ -18,14 +18,14 @@ const converter = new Showdown.Converter({
 });
 
 const ViewArticle = () => {
-    const title = useSelector(state => state.smartArticle.paperResource);
+    const paper = useSelector(state => state.smartArticle.paper);
     const authors = useSelector(state => state.smartArticle.authorResources);
     const sections = useSelector(state => state.smartArticle.sections);
 
     return (
         <Container className="print-only">
             <SectionStyled className="box rounded pr-4">
-                <h1 className="mb-2 mt-4">{title.label}</h1>
+                <h1 className="mb-2 mt-4">{paper.title}</h1>
                 <div className="my-3">
                     <AuthorsList authors={authors} />
                 </div>

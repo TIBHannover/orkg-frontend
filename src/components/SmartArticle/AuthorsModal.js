@@ -10,7 +10,7 @@ const AuthorsModal = props => {
     const { show, toggle } = props;
     const [authors, setAuthors] = useState([]);
     const authorResources = useSelector(state => state.smartArticle.authorResources);
-    const paperResource = useSelector(state => state.smartArticle.paperResource);
+    const paper = useSelector(state => state.smartArticle.paper);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const AuthorsModal = props => {
     };
 
     const handleSave = async () => {
-        const _authors = await saveAuthors({ prevAuthors: authorResources, newAuthors: authors, paperId: paperResource.id });
+        const _authors = await saveAuthors({ prevAuthors: authorResources, newAuthors: authors, paperId: paper.id });
         dispatch(updateAuthors(_authors));
         toggle();
     };

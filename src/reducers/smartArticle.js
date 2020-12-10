@@ -2,7 +2,7 @@ import * as type from 'actions/types';
 import dotProp from 'dot-prop-immutable';
 
 const initialState = {
-    paperResource: {},
+    paper: {},
     authorResources: [],
     contributionId: 0,
     sections: [],
@@ -12,12 +12,12 @@ const initialState = {
 export default (state = initialState, action) => {
     switch (action.type) {
         case type.ARTICLE_WRITER_LOAD: {
-            const { paperResource, authorResources, sections, contributionId } = action.payload;
+            const { paper, authorResources, sections, contributionId } = action.payload;
 
             return {
                 ...state,
                 contributionId,
-                paperResource,
+                paper,
                 authorResources,
                 sections
             };
@@ -34,15 +34,9 @@ export default (state = initialState, action) => {
 
         case type.ARTICLE_WRITER_UPDATE_TITLE: {
             const { title } = action;
-
-            return {
-                ...state,
-                paperResource: {
-                    ...state.paperResource,
-                    label: title
-                }
-            };
+            return dotProp.set(state, `paper.title`, title);
         }
+
         case type.ARTICLE_WRITER_UPDATE_SECTION_TITLE: {
             const { sectionId, title } = action.payload;
             const index = state.sections.findIndex(section => section.id === sectionId);

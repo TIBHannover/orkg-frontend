@@ -103,7 +103,10 @@ const useHeaderBar = () => {
 
             dispatch(
                 loadArticle({
-                    paperResource,
+                    paper: {
+                        id: paperResource.id,
+                        title: paperResource.label
+                    },
                     contributionId: contributionResource.id,
                     authorResources: authorResources.reverse(),
                     sections: sections.reverse()

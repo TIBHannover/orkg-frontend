@@ -6,7 +6,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Title = () => {
-    const { id, label } = useSelector(state => state.smartArticle.paperResource);
+    const { id, title } = useSelector(state => state.smartArticle.paper);
     const dispatch = useDispatch();
 
     const handleBlur = async text => {
@@ -27,7 +27,7 @@ const Title = () => {
             </SectionTypeStyled>
 
             <h1 className="h2 py-2 m-0">
-                <ContentEditable text={label} onBlur={handleBlur} placeholder="Enter a paper title..." />
+                <ContentEditable text={title} onBlur={handleBlur} placeholder="Enter a paper title..." />
             </h1>
         </SectionStyled>
     );
