@@ -92,7 +92,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    openAuthDialog: action => dispatch(openAuthDialog(action))
+    openAuthDialog: payload => dispatch(openAuthDialog(payload))
 });
 
 Organizations.propTypes = {

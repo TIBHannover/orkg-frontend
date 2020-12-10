@@ -10,6 +10,7 @@ import SelectProperties from 'components/Comparison/SelectProperties';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
 import ProvenanceBox from 'components/Comparison/ProvenanceBox/ProvenanceBox';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import RelatedResources from 'components/Comparison/RelatedResources';
 import RelatedFigures from 'components/Comparison/RelatedFigures';
 import ExportCitation from 'components/Comparison/ExportCitation';
@@ -63,6 +64,7 @@ function Comparison(props) {
         hasNextVersions,
         createdBy,
         provenance,
+        researchField,
         setMetaData,
         setComparisonType,
         toggleProperty,
@@ -179,6 +181,8 @@ function Comparison(props) {
 
     return (
         <div>
+            <Breadcrumbs researchFieldId={researchField ? researchField.id : null} />
+
             <ContainerAnimated className="d-flex align-items-center">
                 <h1 className="h4 mt-4 mb-4 flex-grow-1">
                     Contribution comparison{' '}
@@ -289,7 +293,7 @@ function Comparison(props) {
                                     <DropdownItem
                                         onClick={e => {
                                             if (!props.user) {
-                                                props.openAuthDialog('signin', true);
+                                                props.openAuthDialog({ action: 'signin', signInRequired: true });
                                             } else {
                                                 setShowPublishDialog(v => !v);
                                             }
@@ -306,10 +310,14 @@ function Comparison(props) {
                                             </DropdownItem>
                                         </>
                                     )}
-                                    <DropdownItem divider />
-                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: metaData?.id })}>
-                                        View resource
-                                    </DropdownItem>
+                                    {metaData?.id && (
+                                        <>
+                                            <DropdownItem divider />
+                                            <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: metaData.id })}>
+                                                View resource
+                                            </DropdownItem>
+                                        </>
+                                    )}
                                 </DropdownMenu>
                             </Dropdown>
                         </ButtonGroup>
@@ -566,7 +574,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    openAuthDialog: (action, signInRequired) => dispatch(openAuthDialog(action, signInRequired))
+    openAuthDialog: payload => dispatch(openAuthDialog(payload))
 });
 
 Comparison.propTypes = {

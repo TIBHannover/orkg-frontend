@@ -9,7 +9,8 @@ const RequireAuthentication = ({ component: Component, ...rest }) => {
 
     const requireAuthentication = e => {
         if (!user) {
-            dispatch(openAuthDialog('signin', true));
+            const redirectRoute = rest.to || null;
+            dispatch(openAuthDialog({ action: 'signin', signInRequired: true, redirectRoute }));
             // Don't follow the link when user is not authenticated
             e.preventDefault();
             return null;
