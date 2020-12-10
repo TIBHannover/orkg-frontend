@@ -258,10 +258,14 @@ function Comparison(props) {
                                             </DropdownItem>
                                         </>
                                     )}
-                                    <DropdownItem divider />
-                                    <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: metaData?.id })}>
-                                        View resource
-                                    </DropdownItem>
+                                    {metaData?.id && (
+                                        <>
+                                            <DropdownItem divider />
+                                            <DropdownItem tag={NavLink} exact to={reverse(ROUTES.RESOURCE, { id: metaData.id })}>
+                                                View resource
+                                            </DropdownItem>
+                                        </>
+                                    )}
                                 </DropdownMenu>
                             </Dropdown>
                         </ButtonGroup>
