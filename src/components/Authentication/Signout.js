@@ -28,7 +28,10 @@ class Signout extends Component {
                             to the home page
                         </Link>{' '}
                         or{' '}
-                        <span style={{ color: 'inherit', textDecoration: 'underline' }} onClick={() => this.props.openAuthDialog('signin')}>
+                        <span
+                            style={{ color: 'inherit', textDecoration: 'underline' }}
+                            onClick={() => this.props.openAuthDialog({ action: 'signin' })}
+                        >
                             sigin in again
                         </span>
                         .
@@ -46,7 +49,7 @@ Signout.propTypes = {
 
 const mapDispatchToProps = dispatch => ({
     resetAuth: () => dispatch(resetAuth()),
-    openAuthDialog: action => dispatch(openAuthDialog(action))
+    openAuthDialog: payload => dispatch(openAuthDialog(payload))
 });
 
 export default connect(
