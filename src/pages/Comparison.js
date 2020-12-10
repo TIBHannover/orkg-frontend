@@ -241,7 +241,7 @@ function Comparison(props) {
                                     <DropdownItem
                                         onClick={e => {
                                             if (!props.user) {
-                                                props.openAuthDialog('signin', true);
+                                                props.openAuthDialog({ action: 'signin', signInRequired: true });
                                             } else {
                                                 setShowPublishDialog(v => !v);
                                             }
@@ -486,7 +486,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    openAuthDialog: (action, signInRequired) => dispatch(openAuthDialog(action, signInRequired))
+    openAuthDialog: payload => dispatch(openAuthDialog(payload))
 });
 
 Comparison.propTypes = {

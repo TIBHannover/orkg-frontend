@@ -1,4 +1,4 @@
-import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from 'reactstrap';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -51,42 +51,35 @@ class Authentication extends Component {
                     </ModalBody>
                     <ModalFooter className="justify-content-center">
                         {this.props.action === 'signin' && (
-                            <div>
+                            <>
                                 Not a member?
-                                <span
-                                    className="ml-2"
-                                    style={{
-                                        cursor: 'pointer',
-                                        color: 'inherit',
-                                        textDecoration: 'underline'
-                                    }}
+                                <Button
+                                    className="p-0 my-0 ml-2"
+                                    color="link"
                                     onClick={() => {
-                                        this.props.openAuthDialog('signup');
+                                        this.props.openAuthDialog({ action: 'signup' });
                                     }}
                                 >
                                     Create an account
-                                </span>
-                            </div>
+                                </Button>
+                            </>
                         )}
                         {this.props.action === 'signup' && (
-                            <div>
+                            <>
                                 Already a member?
-                                <span
-                                    className="ml-2"
-                                    style={{
-                                        cursor: 'pointer',
-                                        color: 'inherit',
-                                        textDecoration: 'underline'
-                                    }}
+                                <Button
+                                    className="p-0 my-0 ml-2"
+                                    color="link"
                                     onClick={() => {
-                                        this.props.openAuthDialog('signin');
+                                        this.props.openAuthDialog({ action: 'signin' });
                                     }}
                                 >
                                     Sign in
-                                </span>
-                            </div>
+                                </Button>
+                            </>
                         )}
-                        {this.props.action === 'forgotpassword' && (
+                        {/** Forgot password is currently not supported */}
+                        {/*this.props.action === 'forgotpassword' && (
                             <div>
                                 Remember you password again ?
                                 <b
@@ -97,13 +90,13 @@ class Authentication extends Component {
                                         textDecoration: 'underline'
                                     }}
                                     onClick={() => {
-                                        this.props.openAuthDialog('signin');
+                                        this.props.openAuthDialog({ action: 'signin' });
                                     }}
                                 >
                                     Login now
                                 </b>
                             </div>
-                        )}
+                        )*/}
                     </ModalFooter>
                 </Modal>
             </>
@@ -117,7 +110,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    openAuthDialog: action => dispatch(openAuthDialog(action)),
+    openAuthDialog: payload => dispatch(openAuthDialog(payload)),
     toggleAuthDialog: () => dispatch(toggleAuthDialog())
 });
 

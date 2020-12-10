@@ -8,6 +8,8 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Cookies } from 'react-cookie';
 import env from '@beam-australia/react-env';
+import { withRouter } from 'react-router-dom';
+import { compose } from 'redux';
 
 const cookies = new Cookies();
 
@@ -46,6 +48,7 @@ class SignIn extends Component {
                 return getUserInformation();
             })
             .then(userData => {
+                const { redirectRoute } = this.props;
                 this.props.updateAuth({
                     user: {
                         displayName: userData.display_name,
@@ -54,10 +57,14 @@ class SignIn extends Component {
                         email: userData.email,
                         tokenExpire: token_expires_in,
                         isCurationAllowed: userData.is_curation_allowed
-                    }
+                    },
+                    redirectRoute: null
                 });
                 this.props.toggleAuthDialog();
                 this.setState({ loading: false });
+                if (redirectRoute) {
+                    this.props.history.push(redirectRoute);
+                }
             })
             .catch(e => {
                 let error = 'Something went wrong, please try again';
@@ -135,20 +142,30 @@ SignIn.propTypes = {
     openAuthDialog: PropTypes.func.isRequired,
     updateAuth: PropTypes.func.isRequired,
     toggleAuthDialog: PropTypes.func.isRequired,
-    signInRequired: PropTypes.bool.isRequired
+    signInRequired: PropTypes.bool.isRequired,
+    history: PropTypes.object.isRequired,
+    redirectRoute: PropTypes.string
+};
+
+SignIn.defaultProps = {
+    redirectRoute: null
 };
 
 const mapStateToProps = state => ({
-    signInRequired: state.auth.signInRequired
+    signInRequired: state.auth.signInRequired,
+    redirectRoute: state.auth.redirectRoute
 });
 
 const mapDispatchToProps = dispatch => ({
-    openAuthDialog: action => dispatch(openAuthDialog(action)),
+    openAuthDialog: payload => dispatch(openAuthDialog(payload)),
     updateAuth: data => dispatch(updateAuth(data)),
     toggleAuthDialog: () => dispatch(toggleAuthDialog())
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+export default compose(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    ),
+    withRouter
 )(SignIn);
