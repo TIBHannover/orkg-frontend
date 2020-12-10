@@ -101,7 +101,7 @@ class ViewPaper extends Component {
                 }
 
                 this.processObservatoryInformation(paperResource, resourceId);
-                Promise.all([getStatementsBySubject({ id: resourceId }), getIsVerified(resourceId)])
+                Promise.all([getStatementsBySubject({ id: resourceId }), getIsVerified(resourceId).catch(() => false)])
                     .then(([paperStatements, verified]) => {
                         this.processPaperStatements(paperResource, paperStatements, verified);
                     })
