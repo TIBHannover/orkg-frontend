@@ -2,7 +2,6 @@
 
 export default {
     HOME: '/',
-    SIGNOUT: '/signout',
     USER_SETTINGS: '/settings',
     USER_PROFILE: '/u/:userId',
     RESOURCES: '/resources',
