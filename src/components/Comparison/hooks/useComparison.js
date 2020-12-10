@@ -67,6 +67,9 @@ function useComparison() {
     const [createdBy, setCreatedBy] = useState(null);
     const [provenance, setProvenance] = useState(null);
 
+    // research fields (only the research field of the first contribution)
+    const [researchField, setResearchField] = useState(null);
+
     // urls
     const [urlNeedsToUpdate, setUrlNeedsToUpdate] = useState(false);
     const [publicURL, setPublicURL] = useState(window.location.href);
@@ -304,6 +307,18 @@ function useComparison() {
     const getComparisonResult = () => {
         setIsLoadingComparisonResult(true);
         getComparison({ contributionIds: contributionsList, type: comparisonType, response_hash: responseHash, save_response: false })
+            .then(comparisonData => {
+                // get Research field of the first contributions
+                return getStatementsBySubjectAndPredicate({
+                    subjectId: comparisonData.contributions[0].paperId,
+                    predicateId: PREDICATES.HAS_RESEARCH_FIELD
+                }).then(s => {
+                    if (s.length) {
+                        setResearchField(s[0].object);
+                    }
+                    return Promise.resolve(comparisonData);
+                });
+            })
             .then(comparisonData => {
                 // mocking function to allow for deletion of contributions via the url
                 comparisonData.contributions.forEach((contribution, index) => {
@@ -558,6 +573,7 @@ function useComparison() {
         hasNextVersions,
         createdBy,
         provenance,
+        researchField,
         setMetaData,
         setComparisonType,
         toggleProperty,

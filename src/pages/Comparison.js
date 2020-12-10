@@ -10,6 +10,7 @@ import SelectProperties from 'components/Comparison/SelectProperties';
 import ValuePlugins from 'components/ValuePlugins/ValuePlugins';
 import AddContribution from 'components/Comparison/AddContribution/AddContribution';
 import ProvenanceBox from 'components/Comparison/ProvenanceBox/ProvenanceBox';
+import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import RelatedResources from 'components/Comparison/RelatedResources';
 import RelatedFigures from 'components/Comparison/RelatedFigures';
 import ExportCitation from 'components/Comparison/ExportCitation';
@@ -60,6 +61,7 @@ function Comparison(props) {
         hasNextVersions,
         createdBy,
         provenance,
+        researchField,
         setMetaData,
         setComparisonType,
         toggleProperty,
@@ -138,6 +140,8 @@ function Comparison(props) {
 
     return (
         <div>
+            <Breadcrumbs researchFieldId={researchField ? researchField.id : null} />
+
             <ContainerAnimated className="d-flex align-items-center">
                 <h1 className="h4 mt-4 mb-4 flex-grow-1">
                     Contribution comparison{' '}
